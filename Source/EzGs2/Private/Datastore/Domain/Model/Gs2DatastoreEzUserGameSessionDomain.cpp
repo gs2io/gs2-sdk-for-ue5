@@ -20,6 +20,8 @@
 
 #include "HttpManager.h"
 #include "HttpModule.h"
+#include "Core/Net/Rest/RestResponseState.h"
+#include "Core/Net/Rest/RestBinaryResponseState.h"
 #include "Interfaces/IHttpResponse.h"
 
 namespace Gs2::UE5::Datastore::Domain::Model
@@ -212,6 +214,21 @@ namespace Gs2::UE5::Datastore::Domain::Model
         );
     }
 
+    Gs2::Core::Domain::CallbackID FEzUserGameSessionDomain::SubscribeDataObjects(TFunction<void()> Callback)
+    {
+        return Domain->SubscribeDataObjects(
+            Callback
+        );
+    }
+
+    void FEzUserGameSessionDomain::UnsubscribeDataObjects(
+            Gs2::Core::Domain::CallbackID CallbackId)
+    {
+        Domain->UnsubscribeDataObjects(
+            CallbackId
+        );
+    }
+
     Gs2::UE5::Datastore::Domain::Model::FEzDataObjectGameSessionDomainPtr FEzUserGameSessionDomain::DataObject(
         const FString DataObjectName
     ) const
@@ -277,21 +294,20 @@ namespace Gs2::UE5::Datastore::Domain::Model
                     Task->EnsureCompletion();
                 }
                 {
-                    auto Processing = true;
-                    int32 ResponseCode;
-                    FString ResponseBody("");
+                    const auto Completion = MakeShared<Gs2::Core::Net::Rest::FRestResponseState, ESPMode::ThreadSafe>();
                     {
                         const auto Request = FHttpModule::Get().CreateRequest();
                         Request->OnProcessRequestComplete().BindLambda(
-                            [&Processing, &ResponseCode, &ResponseBody](FHttpRequestPtr _, FHttpResponsePtr Response, bool Successful)
+                            [Completion](FHttpRequestPtr _, FHttpResponsePtr Response, bool Successful)
                             {
-                                if (Successful) {
-                                    ResponseCode = Response->GetResponseCode();
-                                    ResponseBody = Response->GetContentAsString();
-                                } else {
-                                    ResponseCode = 999;
+                                if (Successful && Response.IsValid())
+                                {
+                                    Completion->Complete(Response->GetResponseCode(), Response->GetContentAsString());
                                 }
-                                Processing = false;
+                                else
+                                {
+                                    Completion->Complete(999, FString());
+                                }
                             }
                         );
                         Request->SetURL(Url);
@@ -307,10 +323,18 @@ namespace Gs2::UE5::Datastore::Domain::Model
                     }
                     else
                     {
-                        while (Processing)
+                        while (!Completion->IsComplete())
                         {
                             FPlatformProcess::Sleep(0.01f);
                         }
+                    }
+
+                    int32 ResponseCode = 999;
+                    FString ResponseBody;
+                    if (!Completion->TryGetResponse(ResponseCode, ResponseBody))
+                    {
+                        const auto Details = MakeShared<TArray<TSharedPtr<Gs2::Core::Model::FGs2ErrorDetail>>>();
+                        return MakeShared<Gs2::Core::Model::FUnknownError>(Details);
                     }
 
                     if (ResponseCode / 100 != 2)
@@ -402,21 +426,20 @@ namespace Gs2::UE5::Datastore::Domain::Model
                     Task->EnsureCompletion();
                 }
                 {
-                    auto Processing = true;
-                    int32 ResponseCode;
-                    TArray<uint8> ResponseBody;
+                    const auto Completion = MakeShared<Gs2::Core::Net::Rest::FRestBinaryResponseState, ESPMode::ThreadSafe>();
                     {
                         const auto request = FHttpModule::Get().CreateRequest();
                         request->OnProcessRequestComplete().BindLambda(
-                            [&Processing, &ResponseCode, &ResponseBody](FHttpRequestPtr _, FHttpResponsePtr Response, bool Successful)
+                            [Completion](FHttpRequestPtr _, FHttpResponsePtr Response, bool Successful)
                             {
-                                if (Successful) {
-                                    ResponseCode = Response->GetResponseCode();
-                                    ResponseBody = Response->GetContent();
-                                } else {
-                                    ResponseCode = 999;
+                                if (Successful && Response.IsValid())
+                                {
+                                    Completion->Complete(Response->GetResponseCode(), Response->GetContent());
                                 }
-                                Processing = false;
+                                else
+                                {
+                                    Completion->Complete(999, TArray<uint8>());
+                                }
                             }
                         );
                         request->SetURL(Url);
@@ -432,10 +455,18 @@ namespace Gs2::UE5::Datastore::Domain::Model
                     }
                     else
                     {
-                        while (Processing)
+                        while (!Completion->IsComplete())
                         {
                             FPlatformProcess::Sleep(0.01f);
                         }
+                    }
+
+                    int32 ResponseCode = 999;
+                    TArray<uint8> ResponseBody;
+                    if (!Completion->TryGetResponse(ResponseCode, ResponseBody))
+                    {
+                        const auto Details = MakeShared<TArray<TSharedPtr<Gs2::Core::Model::FGs2ErrorDetail>>>();
+                        return MakeShared<Gs2::Core::Model::FUnknownError>(Details);
                     }
 
                     if (ResponseCode / 100 != 2)

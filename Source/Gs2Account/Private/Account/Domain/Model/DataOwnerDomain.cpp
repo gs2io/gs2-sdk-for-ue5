@@ -12,8 +12,6 @@
  * on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either
  * express or implied. See the License for the specific language governing
  * permissions and limitations under the License.
- *
- * deny overwrite
  */
 
 #if defined(_MSC_VER)
@@ -37,6 +35,7 @@
 #include "Account/Domain/Model/TakeOverTypeModel.h"
 #include "Account/Domain/Model/TakeOverTypeModelMaster.h"
 #include "Account/Domain/Model/CurrentModelMaster.h"
+#include "Account/Model/Cache/DataOwner.h"
 
 #include "Core/Domain/Gs2.h"
 #include "Core/Domain/Transaction/JobQueueJobDomainFactory.h"
@@ -98,7 +97,7 @@ namespace Gs2::Account::Domain::Model
     )
     {
         Request
-            ->WithContextStack(Self->Gs2->DefaultContextStack)
+            ->WithContextStack((!Request->GetContextStack().IsSet() || Request->GetContextStack()->IsEmpty()) ? Self->Gs2->DefaultContextStack : Request->GetContextStack())
             ->WithNamespaceName(Self->NamespaceName)
             ->WithUserId(Self->UserId);
         const auto Future = Self->Client->GetDataOwnerByUserId(
@@ -111,6 +110,25 @@ namespace Gs2::Account::Domain::Model
         }
         const auto ResultModel = Future->GetTask().Result();
         Future->EnsureCompletion();
+
+            if (ResultModel.IsValid() && ResultModel->GetItem() != nullptr)
+            {
+
+        if (!ResultModel.IsValid() || !((ResultModel.IsValid() && ResultModel->GetItem().IsValid() ? ResultModel->GetItem()->GetUserId() : TOptional<FString>())).IsSet())
+            {
+              const auto Details = MakeShared<TArray<TSharedPtr<Gs2::Core::Model::FGs2ErrorDetail>>>();
+                Details->Add(MakeShared<Gs2::Core::Model::FGs2ErrorDetail>(TEXT("userId"), TEXT("userId is invalid."), TEXT("invalid_response")));
+                return MakeShared<Gs2::Core::Model::FUnknownError>(Details);
+              }
+        Gs2::Account::Model::Cache::FDataOwnerCache::Put(
+            Self->Gs2->Cache,
+
+            Request->GetNamespaceName(),
+            (ResultModel.IsValid() && ResultModel->GetItem().IsValid() ? ResultModel->GetItem()->GetUserId() : TOptional<FString>()),
+            TOptional<int32>(),
+            ResultModel->GetItem()
+        );
+            }
         *Result = ResultModel->GetItem();
         return nullptr;
     }
@@ -152,10 +170,9 @@ namespace Gs2::Account::Domain::Model
             return nullptr;
         }
         Request
-            ->WithContextStack(Self->Gs2->DefaultContextStack)
+            ->WithContextStack((!Request->GetContextStack().IsSet() || Request->GetContextStack()->IsEmpty()) ? Self->Gs2->DefaultContextStack : Request->GetContextStack())
             ->WithNamespaceName(Self->NamespaceName)
-            ->WithUserId(Self->UserId)
-            ->WithDataOwnerName(Model->GetName());
+            ->WithUserId(Self->UserId);
         const auto Future = Self->Client->UpdateDataOwnerByUserId(
             Request
         );
@@ -166,18 +183,25 @@ namespace Gs2::Account::Domain::Model
         }
         const auto ResultModel = Future->GetTask().Result();
         Future->EnsureCompletion();
-        if (ResultModel->GetItem() != nullptr)
-        {
-            const auto Key = Gs2::Account::Domain::Model::FDataOwnerDomain::CreateCacheKey(
-            );
-            Self->Gs2->Cache->Put(
-                Gs2::Account::Model::FDataOwner::TypeName,
-                Self->ParentKey,
-                Key,
-                ResultModel->GetItem(),
-                FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
-            );
-        }
+
+            if (ResultModel.IsValid() && ResultModel->GetItem() != nullptr)
+            {
+
+        if (!ResultModel.IsValid() || !((ResultModel.IsValid() && ResultModel->GetItem().IsValid() ? ResultModel->GetItem()->GetUserId() : TOptional<FString>())).IsSet())
+            {
+              const auto Details = MakeShared<TArray<TSharedPtr<Gs2::Core::Model::FGs2ErrorDetail>>>();
+                Details->Add(MakeShared<Gs2::Core::Model::FGs2ErrorDetail>(TEXT("userId"), TEXT("userId is invalid."), TEXT("invalid_response")));
+                return MakeShared<Gs2::Core::Model::FUnknownError>(Details);
+              }
+        Gs2::Account::Model::Cache::FDataOwnerCache::Put(
+            Self->Gs2->Cache,
+
+            Request->GetNamespaceName(),
+            (ResultModel.IsValid() && ResultModel->GetItem().IsValid() ? ResultModel->GetItem()->GetUserId() : TOptional<FString>()),
+            TOptional<int32>(),
+            ResultModel->GetItem()
+        );
+            }
         auto Domain = Self;
 
         *Result = Domain;
@@ -226,79 +250,158 @@ namespace Gs2::Account::Domain::Model
         TSharedPtr<TSharedPtr<Gs2::Account::Model::FDataOwner>> Result
     )
     {
-        // ReSharper disable once CppLocalVariableMayBeConst
-        TSharedPtr<Gs2::Account::Model::FDataOwner> Value;
-        auto bCacheHit = Self->Gs2->Cache->TryGet<Gs2::Account::Model::FDataOwner>(
-            Self->ParentKey,
-            Gs2::Account::Domain::Model::FDataOwnerDomain::CreateCacheKey(
-            ),
-            &Value
+        const auto CacheParentKey = Gs2::Account::Model::Cache::FDataOwnerCache::CreateCacheParentKey(
+
+            Self->NamespaceName,
+            Self->UserId,
+            TOptional<int32>()
         );
-        if (!bCacheHit) {
-            const auto Future = Self->Get(
-                MakeShared<Gs2::Account::Request::FGetDataOwnerByUserIdRequest>()
-            );
-            Future->StartSynchronousTask();
-            if (Future->GetTask().IsError())
+        const auto CacheKey = Gs2::Account::Model::Cache::FDataOwnerCache::CreateCacheKey(
+
+        );
+        return Self->Gs2->Cache->ExecuteWithKeyLock(
+            Gs2::Account::Model::FDataOwner::TypeName,
+            CacheParentKey,
+            CacheKey,
+            [Self = Self, Result]() -> Gs2::Core::Model::FGs2ErrorPtr
             {
-                if (Future->GetTask().Error()->Type() != Gs2::Core::Model::FNotFoundError::TypeString)
-                {
-                    return Future->GetTask().Error();
-                }
+                Gs2::Account::Model::FDataOwnerPtr Value;
+                const auto CacheHit = Gs2::Account::Model::Cache::FDataOwnerCache::TryGet(
+                    Self->Gs2->Cache,
 
-                const auto Key = Gs2::Account::Domain::Model::FDataOwnerDomain::CreateCacheKey(
+                    Self->NamespaceName,
+                    Self->UserId,
+                    TOptional<int32>(),
+                    &Value
                 );
-                Self->Gs2->Cache->Put(
-                    Gs2::Account::Model::FDataOwner::TypeName,
-                    Self->ParentKey,
-                    Key,
-                    nullptr,
-                    FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
+                if (CacheHit)
+                {
+                    *Result = Value;
+                    return nullptr;
+                }
+                const auto Error = Gs2::Account::Model::Cache::FDataOwnerCache::Fetch(
+                    Self->Gs2->Cache,
+
+                    Self->NamespaceName,
+                    Self->UserId,
+                    TOptional<int32>(),
+                    [Self](Gs2::Account::Model::FDataOwnerPtr* OutItem) -> Gs2::Core::Model::FGs2ErrorPtr
+                    {
+                        const auto Future = Self->Get(
+                            MakeShared<Gs2::Account::Request::FGetDataOwnerByUserIdRequest>()
+                        );
+                        Future->StartSynchronousTask();
+                        if (Future->GetTask().IsError()) return Future->GetTask().Error();
+                        *OutItem = Future->GetTask().Result();
+                        Future->EnsureCompletion();
+                        return nullptr;
+                    },
+                    &Value
                 );
-
-                if (Future->GetTask().Error()->Detail(0)->GetComponent() != "dataOwner")
-                {
-                    return Future->GetTask().Error();
-                }
+                if (Error.IsValid()) return Error;
+                *Result = Value;
+                return nullptr;
             }
-            else
-            {
-                Value = Future->GetTask().Result();
-                if (Value.IsValid())
-                {
-                    Self->Gs2->Cache->Put(
-                        Gs2::Account::Model::FDataOwner::TypeName,
-                        Self->ParentKey,
-                        FDataOwnerDomain::CreateCacheKey(
-                        ),
-                        Value,
-                        FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
-                    );
-                }
-            }
-            Future->EnsureCompletion();
-        }
-        *Result = Value;
-
-        return nullptr;
+        );
     }
 
     TSharedPtr<FAsyncTask<FDataOwnerDomain::FModelTask>> FDataOwnerDomain::Model() {
         return Gs2::Core::Util::New<FAsyncTask<FDataOwnerDomain::FModelTask>>(this->AsShared());
     }
 
+    void FDataOwnerDomain::Invalidate()
+    {
+        Gs2::Account::Model::Cache::FDataOwnerCache::Delete(
+            Gs2->Cache,
+
+            NamespaceName,
+            UserId,
+            TOptional<int32>()
+        );
+    }
+
+    FDataOwnerDomain::FSubscribeWithInitialCallTask::FSubscribeWithInitialCallTask(
+        const TSharedPtr<FDataOwnerDomain>& Self,
+        TFunction<void(Gs2::Account::Model::FDataOwnerPtr)> Callback
+    ):
+        Self(Self),
+        Callback(Callback)
+    {
+    }
+
+    FDataOwnerDomain::FSubscribeWithInitialCallTask::FSubscribeWithInitialCallTask(
+        const FSubscribeWithInitialCallTask& From
+    ):
+        TGs2Future(From),
+        Self(From.Self),
+        Callback(From.Callback)
+    {
+    }
+
+    Gs2::Core::Model::FGs2ErrorPtr FDataOwnerDomain::FSubscribeWithInitialCallTask::Action(
+        TSharedPtr<TSharedPtr<Gs2::Core::Domain::CallbackID>> Result
+    )
+    {
+        const auto Task = Self->Model();
+        Task->StartSynchronousTask();
+        Task->EnsureCompletion();
+        if (Task->GetTask().IsError()) return Task->GetTask().Error();
+        const auto Item = Task->GetTask().Result();
+        const auto CallbackId = Self->Subscribe(Callback);
+        Callback(Item);
+        *Result = MakeShared<Gs2::Core::Domain::CallbackID>(CallbackId);
+        return nullptr;
+    }
+
+    TSharedPtr<FAsyncTask<FDataOwnerDomain::FSubscribeWithInitialCallTask>> FDataOwnerDomain::SubscribeWithInitialCall(
+        TFunction<void(Gs2::Account::Model::FDataOwnerPtr)> Callback
+    )
+    {
+        return Gs2::Core::Util::New<FAsyncTask<FSubscribeWithInitialCallTask>>(this->AsShared(), Callback);
+    }
+
     Gs2::Core::Domain::CallbackID FDataOwnerDomain::Subscribe(
         TFunction<void(Gs2::Account::Model::FDataOwnerPtr)> Callback
     )
     {
+        const auto SubscriptionParentKey = Gs2::Account::Model::Cache::FDataOwnerCache::CreateCacheParentKey(
+
+            NamespaceName,
+            UserId,
+            TOptional<int32>()
+        );
+        const auto SubscriptionCacheKey = Gs2::Account::Model::Cache::FDataOwnerCache::CreateCacheKey(
+
+        );
+        const TWeakPtr<Gs2::Core::Domain::FGs2> WeakGs2 = Gs2;
+        const TWeakPtr<Account::Domain::FGs2AccountDomain> WeakService = Service;
+        const FString RegisteredParentKey = SubscriptionParentKey;
+        const TOptional<FString> QueryNamespaceName = NamespaceName;
+        const TOptional<FString> QueryUserId = UserId;
         return Gs2->Cache->Subscribe(
             Gs2::Account::Model::FDataOwner::TypeName,
-            ParentKey,
-            Gs2::Account::Domain::Model::FDataOwnerDomain::CreateCacheKey(
-            ),
+            SubscriptionParentKey,
+            SubscriptionCacheKey,
             [Callback](TSharedPtr<FGs2Object> obj)
             {
                 Callback(StaticCastSharedPtr<Gs2::Account::Model::FDataOwner>(obj));
+            },
+            [WeakGs2, WeakService, RegisteredParentKey, QueryNamespaceName, QueryUserId]()
+            {
+                const auto Owner = WeakGs2.Pin();
+                if (!Owner.IsValid())
+                {
+                    return;
+                }
+                const auto Domain = MakeShared<FDataOwnerDomain>(
+                    Owner,
+                    WeakService.Pin(),
+                    QueryNamespaceName,
+                    QueryUserId
+                );
+                Domain->ParentKey = RegisteredParentKey;
+                const auto Task = Domain->Model();
+                Task->StartBackgroundTask();
             }
         );
     }
@@ -307,11 +410,19 @@ namespace Gs2::Account::Domain::Model
         Gs2::Core::Domain::CallbackID CallbackID
     )
     {
+        const auto SubscriptionParentKey = Gs2::Account::Model::Cache::FDataOwnerCache::CreateCacheParentKey(
+
+            NamespaceName,
+            UserId,
+            TOptional<int32>()
+        );
+        const auto SubscriptionCacheKey = Gs2::Account::Model::Cache::FDataOwnerCache::CreateCacheKey(
+
+        );
         Gs2->Cache->Unsubscribe(
             Gs2::Account::Model::FDataOwner::TypeName,
-            ParentKey,
-            Gs2::Account::Domain::Model::FDataOwnerDomain::CreateCacheKey(
-            ),
+            SubscriptionParentKey,
+            SubscriptionCacheKey,
             CallbackID
         );
     }
@@ -322,4 +433,3 @@ namespace Gs2::Account::Domain::Model
 #elif defined(__clang__)
 #pragma clang diagnostic pop
 #endif
-

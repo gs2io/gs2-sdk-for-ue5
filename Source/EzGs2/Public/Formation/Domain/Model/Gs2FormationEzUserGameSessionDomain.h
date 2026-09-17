@@ -68,15 +68,18 @@ namespace Gs2::UE5::Formation::Domain::Model
 
         Gs2::Core::Domain::CallbackID SubscribeMolds(TFunction<void()> Callback);
 
-        void UnsubscribeMolds(Gs2::Core::Domain::CallbackID CallbackId);
+        void UnsubscribeMolds(
+                Gs2::Core::Domain::CallbackID CallbackId);
 
         Gs2::UE5::Formation::Domain::Iterator::FEzDescribePropertyFormsIteratorPtr PropertyForms(
             const FString PropertyFormModelName
         ) const;
 
-        Gs2::Core::Domain::CallbackID SubscribePropertyForms(TFunction<void()> Callback);
+        Gs2::Core::Domain::CallbackID SubscribePropertyForms(TFunction<void()> Callback, const FString PropertyFormModelName);
 
-        void UnsubscribePropertyForms(Gs2::Core::Domain::CallbackID CallbackId);
+        void UnsubscribePropertyForms(
+                const FString PropertyFormModelName,
+                Gs2::Core::Domain::CallbackID CallbackId);
 
         Gs2::UE5::Formation::Domain::Model::FEzMoldGameSessionDomainPtr Mold(
             const FString MoldModelName

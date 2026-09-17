@@ -39,6 +39,8 @@
 #include "Log/Domain/Model/Dashboard.h"
 #include "Log/Domain/Model/LogEntry.h"
 #include "Log/Domain/Model/MetricModel.h"
+#include "Log/Model/Cache/InGameLog.h"
+#include "Log/Model/Cache/Namespace.h"
 
 #include "Core/Domain/Gs2.h"
 #include "Core/Domain/Transaction/JobQueueJobDomainFactory.h"
@@ -102,6 +104,8 @@ namespace Gs2::Log::Domain::Model
             ->WithContextStack((!Request->GetContextStack().IsSet() || Request->GetContextStack()->IsEmpty()) ? Self->Gs2->DefaultContextStack : Request->GetContextStack())
             ->WithNamespaceName(Self->NamespaceName)
             ->WithAccessToken(Self->AccessToken->GetToken());
+        const auto CacheOwnerSnapshotUserId = Self->AccessToken.IsValid() ? Self->UserId() : TOptional<FString>();
+        const auto CacheOwnerSnapshotTimeOffset = Self->AccessToken.IsValid() ? Self->AccessToken->GetTimeOffset() : TOptional<int32>();
         const auto Future = Self->Client->SendInGameLog(
             Request
         );
@@ -112,19 +116,31 @@ namespace Gs2::Log::Domain::Model
         }
         const auto ResultModel = Future->GetTask().Result();
         Future->EnsureCompletion();
-        if (ResultModel->GetItem() != nullptr)
-        {
-            const auto Key = Gs2::Log::Domain::Model::FInGameLogDomain::CreateCacheKey(
-                ResultModel->GetItem()->GetRequestId()
-            );
-            Self->Gs2->Cache->Put(
-                Gs2::Log::Model::FInGameLog::TypeName,
-                Self->ParentKey,
-                Key,
-                ResultModel->GetItem(),
-                FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
-            );
-        }
+
+            if (ResultModel.IsValid() && ResultModel->GetItem() != nullptr)
+            {
+
+        if (!ResultModel.IsValid() || !ResultModel->GetItem().IsValid())
+            {
+              const auto Details = MakeShared<TArray<TSharedPtr<Gs2::Core::Model::FGs2ErrorDetail>>>();
+                Details->Add(MakeShared<Gs2::Core::Model::FGs2ErrorDetail>(TEXT("result.item"), TEXT("result.item is invalid."), TEXT("invalid_response")));
+                return MakeShared<Gs2::Core::Model::FUnknownError>(Details);
+              }if (!((CacheOwnerSnapshotUserId)).IsSet())
+            {
+              const auto Details = MakeShared<TArray<TSharedPtr<Gs2::Core::Model::FGs2ErrorDetail>>>();
+                Details->Add(MakeShared<Gs2::Core::Model::FGs2ErrorDetail>(TEXT("userId"), TEXT("userId is invalid."), TEXT("invalid_response")));
+                return MakeShared<Gs2::Core::Model::FUnknownError>(Details);
+              }
+        Gs2::Log::Model::Cache::FInGameLogCache::Put(
+            Self->Gs2->Cache,
+
+            Request->GetNamespaceName(),
+            (CacheOwnerSnapshotUserId),
+            ResultModel->GetItem()->GetRequestId(),
+            CacheOwnerSnapshotTimeOffset,
+            ResultModel->GetItem()
+        );
+            }
         auto Domain = MakeShared<Gs2::Log::Domain::Model::FInGameLogAccessTokenDomain>(
             Self->Gs2,
             Self->Service,
@@ -169,4 +185,3 @@ namespace Gs2::Log::Domain::Model
 #elif defined(__clang__)
 #pragma clang diagnostic pop
 #endif
-

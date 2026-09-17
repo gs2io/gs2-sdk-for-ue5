@@ -17,6 +17,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "Core/Model/Gs2Error.h"
 #include "Math/BigInt.h"
 
 namespace Gs2::Auth::Model
@@ -32,6 +33,14 @@ namespace Gs2::Core::Model
 
     class FAcquireAction;
     typedef TSharedPtr<FAcquireAction> FAcquireActionPtr;
+
+    class FVerifyAction;
+    typedef TSharedPtr<FVerifyAction> FVerifyActionPtr;
+}
+
+namespace Gs2::Core::Domain::SpeculativeExecutor
+{
+    class FPreparedSpeculativeCommit;
 }
 
 namespace Gs2::Core::Domain::Model
@@ -42,6 +51,11 @@ namespace Gs2::Core::Domain::Model
         const TSharedPtr<TArray<Gs2::Core::Model::FConsumeActionPtr>> ConsumeActions;
         const TSharedPtr<TArray<Gs2::Core::Model::FAcquireActionPtr>> AcquireActions;
         const TBigInt<1024, false> Rate;
+        const Gs2::Core::Model::FVerifyActionPtr VerifyAction;
+        const bool InverseVerify;
+        Gs2::Core::Model::FGs2ErrorPtr Error;
+        TSharedPtr<TFunction<void()>> Commit;
+        TSharedPtr<Gs2::Core::Domain::SpeculativeExecutor::FPreparedSpeculativeCommit> PreparedCommit;
         
     public:
         FIssueTransactionEvent(
@@ -52,6 +66,13 @@ namespace Gs2::Core::Domain::Model
         );
 
         FIssueTransactionEvent(
+            const Gs2::Auth::Model::FAccessTokenPtr& AccessToken,
+            const Gs2::Core::Model::FVerifyActionPtr& VerifyAction,
+            const TBigInt<1024, false>& Rate,
+            bool InverseVerify
+        );
+
+        FIssueTransactionEvent(
             const FIssueTransactionEvent& From
         );
 
@@ -59,6 +80,16 @@ namespace Gs2::Core::Domain::Model
         TSharedPtr<TArray<Gs2::Core::Model::FConsumeActionPtr>> GetConsumeActions() const;
         TSharedPtr<TArray<Gs2::Core::Model::FAcquireActionPtr>> GetAcquireActions() const;
         TBigInt<1024, false> GetRate() const;
+        Gs2::Core::Model::FVerifyActionPtr GetVerifyAction() const;
+        bool IsInverseVerify() const;
+        Gs2::Core::Model::FGs2ErrorPtr GetError() const;
+        void SetError(const Gs2::Core::Model::FGs2ErrorPtr& Error);
+        TSharedPtr<TFunction<void()>> GetCommit() const;
+        void SetCommit(const TSharedPtr<TFunction<void()>>& Commit);
+        TSharedPtr<Gs2::Core::Domain::SpeculativeExecutor::FPreparedSpeculativeCommit> GetPreparedCommit() const;
+        void SetPreparedCommit(
+            const TSharedPtr<Gs2::Core::Domain::SpeculativeExecutor::FPreparedSpeculativeCommit>& PreparedCommit
+        );
     };
     typedef TSharedPtr<FIssueTransactionEvent> FIssueTransactionEventPtr;
 }

@@ -39,6 +39,9 @@
 #include "Guild/Domain/Model/ReceiveMemberRequest.h"
 #include "Guild/Domain/Model/SendMemberRequest.h"
 #include "Guild/Domain/Model/SendMemberRequestAccessToken.h"
+#include "Guild/Model/Cache/SendMemberRequest.h"
+#include "Guild/Model/Cache/JoinedGuild.h"
+
 
 #include "Core/Domain/Gs2.h"
 #include "Core/Domain/Transaction/JobQueueJobDomainFactory.h"
@@ -269,20 +272,12 @@ namespace Gs2::Guild::Domain::Model
             }
             if (ResultModel->GetSendMemberRequest() != nullptr)
             {
-                const auto ParentKey = Gs2::Guild::Domain::Model::FUserDomain::CreateCacheParentKey(
-                    Self->NamespaceName,
-                    Self->UserId(),
-                    "SendMemberRequest::" + *RequestModel->GetGuildModelName()
-                );
-                const auto Key = Gs2::Guild::Domain::Model::FSendMemberRequestDomain::CreateCacheKey(
-                    ResultModel->GetSendMemberRequest()->GetTargetGuildName()
-                );
-                Self->Gs2->Cache->Put(
-                    Gs2::Guild::Model::FSendMemberRequest::TypeName,
-                    ParentKey,
-                    Key,
-                    ResultModel->GetSendMemberRequest(),
-                    FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
+                Gs2::Guild::Model::Cache::FSendMemberRequestCache::Put(
+
+                    Self->Gs2->Cache, Self->NamespaceName, Self->UserId(), RequestModel->GetGuildModelName(),
+
+                    ResultModel->GetSendMemberRequest()->GetTargetGuildName(), Self->AccessToken->GetTimeOffset(), ResultModel->GetSendMemberRequest()
+
                 );
             }
         }
@@ -341,15 +336,13 @@ namespace Gs2::Guild::Domain::Model
             
             if (ResultModel->GetItem() != nullptr)
             {
-                const auto ParentKey = Gs2::Guild::Domain::Model::FUserDomain::CreateCacheParentKey(
-                    Self->NamespaceName,
-                    Self->UserId(),
-                    "SendMemberRequest::" + *RequestModel->GetGuildModelName()
+                Gs2::Guild::Model::Cache::FSendMemberRequestCache::Delete(
+
+                    Self->Gs2->Cache, Self->NamespaceName, Self->UserId(), RequestModel->GetGuildModelName(),
+
+                    ResultModel->GetItem()->GetTargetGuildName(), Self->AccessToken->GetTimeOffset()
+
                 );
-                const auto Key = Gs2::Guild::Domain::Model::FSendMemberRequestDomain::CreateCacheKey(
-                    ResultModel->GetItem()->GetTargetGuildName()
-                );
-                Self->Gs2->Cache->Delete(Gs2::Guild::Model::FSendMemberRequest::TypeName, ParentKey, Key);
             }
         }
         auto Domain = MakeShared<Gs2::Guild::Domain::Model::FSendMemberRequestAccessTokenDomain>(
@@ -385,19 +378,34 @@ namespace Gs2::Guild::Domain::Model
     }
 
     Gs2::Core::Domain::CallbackID FUserAccessTokenDomain::SubscribeSendRequests(
+
+        TFunction<void()> Callback,
+
+        const FString GuildModelName
+
+    )
+
+    {
+
+        return Gs2::Guild::Model::Cache::FSendMemberRequestCache::ListSubscribe(
+
+            Gs2->Cache, NamespaceName, GuildModelName, UserId(), AccessToken.IsValid() ? AccessToken->GetTimeOffset() : TOptional<int32>(),
+
+            [Callback](const TArray<Gs2::Guild::Model::FSendMemberRequestPtr>&) { Callback(); }
+
+        );
+
+    }
+
+
+
+    Gs2::Core::Domain::CallbackID FUserAccessTokenDomain::SubscribeSendRequests(
         const FString GuildModelName,
         TFunction<void()> Callback
     )
     {
-        return Gs2->Cache->ListSubscribe(
-            Gs2::Guild::Model::FSendMemberRequest::TypeName,
-            Gs2::Guild::Domain::Model::FUserDomain::CreateCacheParentKey(
-                NamespaceName,
-                UserId(),
-                    "SendMemberRequest::" + GuildModelName
-            ),
-            Callback
-        );
+        return SubscribeSendRequests(Callback, GuildModelName);
+
     }
 
     void FUserAccessTokenDomain::UnsubscribeSendRequests(
@@ -405,16 +413,118 @@ namespace Gs2::Guild::Domain::Model
         Gs2::Core::Domain::CallbackID CallbackID
     )
     {
-        Gs2->Cache->ListUnsubscribe(
-            Gs2::Guild::Model::FSendMemberRequest::TypeName,
-            Gs2::Guild::Domain::Model::FUserDomain::CreateCacheParentKey(
-                NamespaceName,
-                UserId(),
-                    "SendMemberRequest::" + GuildModelName
-            ),
-            CallbackID
+        Gs2::Guild::Model::Cache::FSendMemberRequestCache::ListUnsubscribe(
+
+            Gs2->Cache, NamespaceName, GuildModelName, UserId(), AccessToken.IsValid() ? AccessToken->GetTimeOffset() : TOptional<int32>(), CallbackID
+
         );
     }
+
+    class FUserAccessTokenDomain::FCollectSendRequestsTask : public Gs2::Core::Util::TGs2Future<TArray<Gs2::Guild::Model::FSendMemberRequestPtr>>, public TSharedFromThis<FCollectSendRequestsTask>
+
+    {
+
+        const TSharedPtr<FUserAccessTokenDomain> Self;
+
+        const TFunction<void(TArray<Gs2::Guild::Model::FSendMemberRequestPtr>)> OnCollected;
+
+        const FString QueryGuildModelName;
+
+    public:
+
+        FCollectSendRequestsTask(const TSharedPtr<FUserAccessTokenDomain>& Self, TFunction<void(TArray<Gs2::Guild::Model::FSendMemberRequestPtr>)> OnCollected, const FString GuildModelName): Self(Self), OnCollected(OnCollected), QueryGuildModelName(GuildModelName) {}
+
+        FCollectSendRequestsTask(const FCollectSendRequestsTask& From): TGs2Future(From), Self(From.Self), OnCollected(From.OnCollected), QueryGuildModelName(From.QueryGuildModelName) {}
+
+        virtual Gs2::Core::Model::FGs2ErrorPtr Action(TSharedPtr<TSharedPtr<TArray<Gs2::Guild::Model::FSendMemberRequestPtr>>> Result) override
+
+        {
+
+            TArray<Gs2::Guild::Model::FSendMemberRequestPtr> Items;
+
+            auto Iterator = Self->SendRequests(QueryGuildModelName)->begin();
+
+            while (Iterator.HasNext()) { if (Iterator.IsError()) return Iterator.Error(); if (Iterator.IsCurrentValid()) Items.Add(Iterator.Current()); ++Iterator; }
+
+            if (Iterator.IsError()) return Iterator.Error();
+
+            *Result = MakeShared<TArray<Gs2::Guild::Model::FSendMemberRequestPtr>>(Items);
+
+            if (OnCollected) OnCollected(Items);
+
+            return nullptr;
+
+        }
+
+    };
+
+
+
+    Gs2::Core::Domain::CallbackID FUserAccessTokenDomain::SubscribeSendRequests(
+
+        TFunction<void(TArray<Gs2::Guild::Model::FSendMemberRequestPtr>)> Callback,
+
+        const FString GuildModelName
+
+    )
+
+    {
+
+        const auto Parent = Gs2::Guild::Model::Cache::FSendMemberRequestCache::CreateCacheParentKey(NamespaceName, GuildModelName, UserId(), AccessToken.IsValid() ? AccessToken->GetTimeOffset() : TOptional<int32>());
+
+        const auto WeakGs2 = this->Gs2;
+
+        const auto WeakService = this->Service;
+
+        const auto SourceToken = this->AccessToken;
+
+        const auto QueryNamespaceName = this->NamespaceName;
+
+        return Gs2->Cache->ListSubscribeTyped(
+
+            Gs2::Guild::Model::FSendMemberRequest::TypeName, Parent,
+
+            [Callback](const TArray<FGs2ObjectPtr>& Values) { TArray<Gs2::Guild::Model::FSendMemberRequestPtr> Items; for (const auto& Value : Values) if (Value.IsValid()) Items.Add(StaticCastSharedPtr<Gs2::Guild::Model::FSendMemberRequest>(Value)); Callback(Items); },
+
+            [WeakGs2, WeakService, Callback, GuildModelName, SourceToken, QueryNamespaceName]() { if (!WeakGs2.IsValid() || !SourceToken.IsValid()) return; const auto Domain = MakeShared<FUserAccessTokenDomain>(WeakGs2, WeakService, QueryNamespaceName, SourceToken); const auto Task = Gs2::Core::Util::New<FAsyncTask<FCollectSendRequestsTask>>(Domain, Callback, GuildModelName); Task->StartBackgroundTask(); }
+
+        );
+
+    }
+
+
+
+    void FUserAccessTokenDomain::InvalidateSendRequests(const FString GuildModelName)
+
+    {
+
+        Gs2->Cache->ClearListCache(Gs2::Guild::Model::FSendMemberRequest::TypeName, Gs2::Guild::Model::Cache::FSendMemberRequestCache::CreateCacheParentKey(NamespaceName, GuildModelName, UserId(), AccessToken.IsValid() ? AccessToken->GetTimeOffset() : TOptional<int32>()));
+
+    }
+
+
+
+    FUserAccessTokenDomain::FSubscribeSendRequestsWithInitialCallTask::FSubscribeSendRequestsWithInitialCallTask(const TSharedPtr<FUserAccessTokenDomain>& Self, TFunction<void(TArray<Gs2::Guild::Model::FSendMemberRequestPtr>)> Callback, const FString GuildModelName): Self(Self), Callback(Callback), QueryGuildModelName(GuildModelName) {}
+
+    FUserAccessTokenDomain::FSubscribeSendRequestsWithInitialCallTask::FSubscribeSendRequestsWithInitialCallTask(const FSubscribeSendRequestsWithInitialCallTask& From): TGs2Future(From), Self(From.Self), Callback(From.Callback), QueryGuildModelName(From.QueryGuildModelName) {}
+
+    Gs2::Core::Model::FGs2ErrorPtr FUserAccessTokenDomain::FSubscribeSendRequestsWithInitialCallTask::Action(TSharedPtr<TSharedPtr<Gs2::Core::Domain::CallbackID>> Result)
+
+    {
+
+        const auto Task = Gs2::Core::Util::New<FAsyncTask<FCollectSendRequestsTask>>(Self, TFunction<void(TArray<Gs2::Guild::Model::FSendMemberRequestPtr>)>(), QueryGuildModelName); Task->StartSynchronousTask(); Task->EnsureCompletion(); if (Task->GetTask().IsError()) return Task->GetTask().Error(); const auto Values = Task->GetTask().Result(); const auto CallbackId = Self->SubscribeSendRequests(Callback, QueryGuildModelName); Callback(*Values); *Result = MakeShared<Gs2::Core::Domain::CallbackID>(CallbackId); return nullptr;
+
+    }
+
+    TSharedPtr<FAsyncTask<FUserAccessTokenDomain::FSubscribeSendRequestsWithInitialCallTask>> FUserAccessTokenDomain::SubscribeSendRequestsWithInitialCall(TFunction<void(TArray<Gs2::Guild::Model::FSendMemberRequestPtr>)> Callback, const FString GuildModelName)
+
+    {
+
+        return Gs2::Core::Util::New<FAsyncTask<FSubscribeSendRequestsWithInitialCallTask>>(this->AsShared(), Callback, GuildModelName);
+
+    }
+
+
 
     TSharedPtr<Gs2::Guild::Domain::Model::FSendMemberRequestAccessTokenDomain> FUserAccessTokenDomain::SendMemberRequest(
         const FString GuildModelName,
@@ -476,32 +586,126 @@ namespace Gs2::Guild::Domain::Model
 
     Gs2::Core::Domain::CallbackID FUserAccessTokenDomain::SubscribeJoinedGuilds(
     TFunction<void()> Callback
+        , const TOptional<FString> GuildModelName
     )
     {
         return Gs2->Cache->ListSubscribe(
             Gs2::Guild::Model::FJoinedGuild::TypeName,
-            Gs2::Guild::Domain::Model::FUserDomain::CreateCacheParentKey(
+            Gs2::Guild::Model::Cache::FJoinedGuildCache::CreateCacheParentKey(
                 NamespaceName,
-                UserId(),
-                "JoinedGuild"
+                AccessToken.IsValid() ? AccessToken->GetUserId() : TOptional<FString>(),
+                AccessToken.IsValid() ? AccessToken->GetTimeOffset() : TOptional<int32>()
             ),
+            Callback,
             Callback
         );
     }
-
     void FUserAccessTokenDomain::UnsubscribeJoinedGuilds(
-        Gs2::Core::Domain::CallbackID CallbackID
+
+        Gs2::Core::Domain::CallbackID CallbackID, const TOptional<FString> GuildModelName
     )
     {
         Gs2->Cache->ListUnsubscribe(
             Gs2::Guild::Model::FJoinedGuild::TypeName,
-            Gs2::Guild::Domain::Model::FUserDomain::CreateCacheParentKey(
+            Gs2::Guild::Model::Cache::FJoinedGuildCache::CreateCacheParentKey(
                 NamespaceName,
-                UserId(),
-                "JoinedGuild"
+                AccessToken.IsValid() ? AccessToken->GetUserId() : TOptional<FString>(),
+                AccessToken.IsValid() ? AccessToken->GetTimeOffset() : TOptional<int32>()
             ),
             CallbackID
         );
+    }
+    class FUserAccessTokenDomain::FCollectJoinedGuildsTask : public Gs2::Core::Util::TGs2Future<TArray<Gs2::Guild::Model::FJoinedGuildPtr>>, public TSharedFromThis<FCollectJoinedGuildsTask>
+    {
+        const TSharedPtr<FUserAccessTokenDomain> Self;
+        const TFunction<void(TArray<Gs2::Guild::Model::FJoinedGuildPtr>)> OnCollected;
+    const TOptional<FString> QueryGuildModelName;
+    public:
+        explicit FCollectJoinedGuildsTask(const TSharedPtr<FUserAccessTokenDomain>& Self, TFunction<void(TArray<Gs2::Guild::Model::FJoinedGuildPtr>)> OnCollected,const TOptional<FString> GuildModelName) : Self(Self), OnCollected(OnCollected), QueryGuildModelName(GuildModelName) {}
+        FCollectJoinedGuildsTask(const FCollectJoinedGuildsTask& From) : TGs2Future(From), Self(From.Self), OnCollected(From.OnCollected), QueryGuildModelName(From.QueryGuildModelName) {}
+        virtual Gs2::Core::Model::FGs2ErrorPtr Action(TSharedPtr<TSharedPtr<TArray<Gs2::Guild::Model::FJoinedGuildPtr>>> Result) override
+        {
+            TArray<Gs2::Guild::Model::FJoinedGuildPtr> Items;
+            auto Iterator = Self->JoinedGuilds(QueryGuildModelName)->begin();
+            while (Iterator.HasNext())
+            {
+                if (Iterator.IsError()) return Iterator.Error();
+                if (Iterator.IsCurrentValid()) Items.Add(Iterator.Current());
+                ++Iterator;
+            }
+            if (Iterator.IsError()) return Iterator.Error();
+            *Result = MakeShared<TArray<Gs2::Guild::Model::FJoinedGuildPtr>>(Items);
+            if (OnCollected) OnCollected(Items);
+            return nullptr;
+        }
+    };
+
+    Gs2::Core::Domain::CallbackID FUserAccessTokenDomain::SubscribeJoinedGuilds(
+        TFunction<void(TArray<Gs2::Guild::Model::FJoinedGuildPtr>)> Callback,const TOptional<FString> GuildModelName
+    )
+    {
+        const TWeakPtr<Gs2::Core::Domain::FGs2> WeakGs2 = this->Gs2;
+        const TWeakPtr<Guild::Domain::FGs2GuildDomain> WeakService = this->Service;
+        const auto SourceToken = this->AccessToken;
+        const TOptional<FString> RegisteredUserId = SourceToken.IsValid() ? TOptional<FString>(SourceToken->GetUserId()) : TOptional<FString>();
+        const int32 RegisteredTimeOffset = SourceToken.IsValid() ? SourceToken->GetTimeOffset().Get(0) : 0;
+        const auto QueryNamespaceName = NamespaceName;
+        const auto QueryGuildModelName = GuildModelName;
+        const auto Parent = Gs2::Guild::Model::Cache::FJoinedGuildCache::CreateCacheParentKey(
+        NamespaceName,
+        AccessToken.IsValid() ? AccessToken->GetUserId() : TOptional<FString>(),
+        AccessToken.IsValid() ? AccessToken->GetTimeOffset() : TOptional<int32>()
+    );
+        return Gs2->Cache->ListSubscribeTyped(
+            Gs2::Guild::Model::FJoinedGuild::TypeName,
+            Parent,
+            [Callback, WeakGs2](const TArray<FGs2ObjectPtr>& Values)
+            {
+                if (!WeakGs2.Pin().IsValid()) return;
+                TArray<Gs2::Guild::Model::FJoinedGuildPtr> TypedValues;
+                for (const auto& Value : Values) if (Value.IsValid()) TypedValues.Add(StaticCastSharedPtr<Gs2::Guild::Model::FJoinedGuild>(Value));
+                Callback(TypedValues);
+            },
+            [WeakGs2, WeakService, Callback, QueryNamespaceName, QueryGuildModelName, SourceToken, RegisteredUserId, RegisteredTimeOffset]()
+            {
+                const auto Owner = WeakGs2.Pin();
+                if (!Owner.IsValid() || !SourceToken.IsValid() || !RegisteredUserId.IsSet()) return;
+                const auto TokenSnapshot = MakeShared<Gs2::Auth::Model::FAccessToken>(*SourceToken);
+                if (TokenSnapshot->GetUserId() != RegisteredUserId || TokenSnapshot->GetTimeOffset().Get(0) != RegisteredTimeOffset) return;
+                const auto Domain = MakeShared<FUserAccessTokenDomain>(Owner, WeakService.Pin(), QueryNamespaceName, TokenSnapshot);
+                const auto Task = Gs2::Core::Util::New<FAsyncTask<FCollectJoinedGuildsTask>>(Domain, Callback, QueryGuildModelName);
+                Task->StartBackgroundTask();
+            }
+        );
+    }
+
+    void FUserAccessTokenDomain::InvalidateJoinedGuilds(const TOptional<FString> GuildModelName)
+    {
+        Gs2->Cache->ClearListCache(
+            Gs2::Guild::Model::FJoinedGuild::TypeName,
+            Gs2::Guild::Model::Cache::FJoinedGuildCache::CreateCacheParentKey(
+        NamespaceName,
+        AccessToken.IsValid() ? AccessToken->GetUserId() : TOptional<FString>(),
+        AccessToken.IsValid() ? AccessToken->GetTimeOffset() : TOptional<int32>()
+    )
+        );
+    }
+
+    FUserAccessTokenDomain::FSubscribeJoinedGuildsWithInitialCallTask::FSubscribeJoinedGuildsWithInitialCallTask(const TSharedPtr<FUserAccessTokenDomain>& Self, TFunction<void(TArray<Gs2::Guild::Model::FJoinedGuildPtr>)> Callback,const TOptional<FString> GuildModelName) : Self(Self), Callback(Callback), QueryGuildModelName(GuildModelName) {}
+    FUserAccessTokenDomain::FSubscribeJoinedGuildsWithInitialCallTask::FSubscribeJoinedGuildsWithInitialCallTask(const FSubscribeJoinedGuildsWithInitialCallTask& From) : TGs2Future(From), Self(From.Self), Callback(From.Callback), QueryGuildModelName(From.QueryGuildModelName) {}
+    Gs2::Core::Model::FGs2ErrorPtr FUserAccessTokenDomain::FSubscribeJoinedGuildsWithInitialCallTask::Action(TSharedPtr<TSharedPtr<Gs2::Core::Domain::CallbackID>> Result)
+    {
+        const auto Task = Gs2::Core::Util::New<FAsyncTask<FCollectJoinedGuildsTask>>(Self, TFunction<void(TArray<Gs2::Guild::Model::FJoinedGuildPtr>)>(), QueryGuildModelName);
+        Task->StartSynchronousTask(); Task->EnsureCompletion();
+        if (Task->GetTask().IsError()) return Task->GetTask().Error();
+        const auto Values = Task->GetTask().Result();
+        const auto CallbackId = Self->SubscribeJoinedGuilds(Callback, QueryGuildModelName);
+        Callback(*Values); *Result = MakeShared<Gs2::Core::Domain::CallbackID>(CallbackId);
+        return nullptr;
+    }
+    TSharedPtr<FAsyncTask<FUserAccessTokenDomain::FSubscribeJoinedGuildsWithInitialCallTask>> FUserAccessTokenDomain::SubscribeJoinedGuildsWithInitialCall(TFunction<void(TArray<Gs2::Guild::Model::FJoinedGuildPtr>)> Callback,const TOptional<FString> GuildModelName)
+    {
+        return Gs2::Core::Util::New<FAsyncTask<FSubscribeJoinedGuildsWithInitialCallTask>>(this->AsShared(), Callback, GuildModelName);
     }
 
     TSharedPtr<Gs2::Guild::Domain::Model::FJoinedGuildAccessTokenDomain> FUserAccessTokenDomain::JoinedGuild(
@@ -545,4 +749,3 @@ namespace Gs2::Guild::Domain::Model
 #elif defined(__clang__)
 #pragma clang diagnostic pop
 #endif
-

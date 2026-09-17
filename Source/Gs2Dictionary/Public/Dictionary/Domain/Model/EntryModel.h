@@ -81,6 +81,8 @@ namespace Gs2::Dictionary::Domain::Model
             const FEntryModelDomain& From
         );
 
+
+
         class GS2DICTIONARY_API FGetTask final :
             public Gs2::Core::Util::TGs2Future<Gs2::Dictionary::Model::FEntryModel>,
             public TSharedFromThis<FGetTask>
@@ -139,7 +141,34 @@ namespace Gs2::Dictionary::Domain::Model
 
         TSharedPtr<FAsyncTask<FModelTask>> Model();
 
+        void Invalidate();
+
         Gs2::Core::Domain::CallbackID Subscribe(
+            TFunction<void(Gs2::Dictionary::Model::FEntryModelPtr)> Callback
+        );
+
+        class GS2DICTIONARY_API FSubscribeWithInitialCallTask final :
+            public Gs2::Core::Util::TGs2Future<Gs2::Core::Domain::CallbackID>,
+            public TSharedFromThis<FSubscribeWithInitialCallTask>
+        {
+            const TSharedPtr<FEntryModelDomain> Self;
+            const TFunction<void(Gs2::Dictionary::Model::FEntryModelPtr)> Callback;
+        public:
+            FSubscribeWithInitialCallTask(
+                const TSharedPtr<FEntryModelDomain>& Self,
+                TFunction<void(Gs2::Dictionary::Model::FEntryModelPtr)> Callback
+            );
+
+            FSubscribeWithInitialCallTask(
+                const FSubscribeWithInitialCallTask& From
+            );
+
+            virtual Gs2::Core::Model::FGs2ErrorPtr Action(
+                TSharedPtr<TSharedPtr<Gs2::Core::Domain::CallbackID>> Result
+            ) override;
+        };
+
+        TSharedPtr<FAsyncTask<FSubscribeWithInitialCallTask>> SubscribeWithInitialCall(
             TFunction<void(Gs2::Dictionary::Model::FEntryModelPtr)> Callback
         );
 

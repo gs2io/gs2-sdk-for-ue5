@@ -39,6 +39,7 @@
 #include "Formation/Domain/Model/PropertyFormAccessToken.h"
 #include "Formation/Domain/Model/User.h"
 #include "Formation/Domain/Model/UserAccessToken.h"
+#include "Formation/Model/Cache/FormModel.h"
 
 #include "Core/Domain/Gs2.h"
 #include "Core/Domain/Transaction/JobQueueJobDomainFactory.h"
@@ -113,6 +114,20 @@ namespace Gs2::Formation::Domain::Model
         }
         const auto ResultModel = Future->GetTask().Result();
         Future->EnsureCompletion();
+
+            if (ResultModel.IsValid() && ResultModel->GetItem() != nullptr)
+            {
+
+
+        Gs2::Formation::Model::Cache::FFormModelCache::Put(
+            Self->Gs2->Cache,
+
+            Request->GetNamespaceName(),
+            Request->GetMoldModelName(),
+            TOptional<int32>(),
+            ResultModel->GetItem()
+        );
+            }
         *Result = ResultModel->GetItem();
         return nullptr;
     }
@@ -159,68 +174,158 @@ namespace Gs2::Formation::Domain::Model
         TSharedPtr<TSharedPtr<Gs2::Formation::Model::FFormModel>> Result
     )
     {
-        // ReSharper disable once CppLocalVariableMayBeConst
-        TSharedPtr<Gs2::Formation::Model::FFormModel> Value;
-        auto bCacheHit = Self->Gs2->Cache->TryGet<Gs2::Formation::Model::FFormModel>(
-            Self->ParentKey,
-            Gs2::Formation::Domain::Model::FFormModelDomain::CreateCacheKey(
-            ),
-            &Value
+        const auto CacheParentKey = Gs2::Formation::Model::Cache::FFormModelCache::CreateCacheParentKey(
+
+            Self->NamespaceName,
+            Self->MoldModelName,
+            TOptional<int32>()
         );
-        if (!bCacheHit) {
-            const auto Future = Self->Get(
-                MakeShared<Gs2::Formation::Request::FGetFormModelRequest>()
-            );
-            Future->StartSynchronousTask();
-            if (Future->GetTask().IsError())
+        const auto CacheKey = Gs2::Formation::Model::Cache::FFormModelCache::CreateCacheKey(
+
+        );
+        return Self->Gs2->Cache->ExecuteWithKeyLock(
+            Gs2::Formation::Model::FFormModel::TypeName,
+            CacheParentKey,
+            CacheKey,
+            [Self = Self, Result]() -> Gs2::Core::Model::FGs2ErrorPtr
             {
-                if (Future->GetTask().Error()->Type() != Gs2::Core::Model::FNotFoundError::TypeString)
-                {
-                    return Future->GetTask().Error();
-                }
+                Gs2::Formation::Model::FFormModelPtr Value;
+                const auto CacheHit = Gs2::Formation::Model::Cache::FFormModelCache::TryGet(
+                    Self->Gs2->Cache,
 
-                const auto Key = Gs2::Formation::Domain::Model::FFormModelDomain::CreateCacheKey(
+                    Self->NamespaceName,
+                    Self->MoldModelName,
+                    TOptional<int32>(),
+                    &Value
                 );
-                Self->Gs2->Cache->Put(
-                    Gs2::Formation::Model::FFormModel::TypeName,
-                    Self->ParentKey,
-                    Key,
-                    nullptr,
-                    FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
-                );
-
-                if (Future->GetTask().Error()->Detail(0)->GetComponent() != "formModel")
+                if (CacheHit)
                 {
-                    return Future->GetTask().Error();
+                    *Result = Value;
+                    return nullptr;
                 }
-            }
-            else
-            {
-                Value = Future->GetTask().Result();
-            }
-            Future->EnsureCompletion();
-        }
-        *Result = Value;
+                const auto Error = Gs2::Formation::Model::Cache::FFormModelCache::Fetch(
+                    Self->Gs2->Cache,
 
-        return nullptr;
+                    Self->NamespaceName,
+                    Self->MoldModelName,
+                    TOptional<int32>(),
+                    [Self](Gs2::Formation::Model::FFormModelPtr* OutItem) -> Gs2::Core::Model::FGs2ErrorPtr
+                    {
+                        const auto Future = Self->Get(
+                            MakeShared<Gs2::Formation::Request::FGetFormModelRequest>()
+                        );
+                        Future->StartSynchronousTask();
+                        if (Future->GetTask().IsError()) return Future->GetTask().Error();
+                        *OutItem = Future->GetTask().Result();
+                        Future->EnsureCompletion();
+                        return nullptr;
+                    },
+                    &Value
+                );
+                if (Error.IsValid()) return Error;
+                *Result = Value;
+                return nullptr;
+            }
+        );
     }
 
     TSharedPtr<FAsyncTask<FFormModelDomain::FModelTask>> FFormModelDomain::Model() {
         return Gs2::Core::Util::New<FAsyncTask<FFormModelDomain::FModelTask>>(this->AsShared());
     }
 
+    void FFormModelDomain::Invalidate()
+    {
+        Gs2::Formation::Model::Cache::FFormModelCache::Delete(
+            Gs2->Cache,
+
+            NamespaceName,
+            MoldModelName,
+            TOptional<int32>()
+        );
+    }
+
+    FFormModelDomain::FSubscribeWithInitialCallTask::FSubscribeWithInitialCallTask(
+        const TSharedPtr<FFormModelDomain>& Self,
+        TFunction<void(Gs2::Formation::Model::FFormModelPtr)> Callback
+    ):
+        Self(Self),
+        Callback(Callback)
+    {
+    }
+
+    FFormModelDomain::FSubscribeWithInitialCallTask::FSubscribeWithInitialCallTask(
+        const FSubscribeWithInitialCallTask& From
+    ):
+        TGs2Future(From),
+        Self(From.Self),
+        Callback(From.Callback)
+    {
+    }
+
+    Gs2::Core::Model::FGs2ErrorPtr FFormModelDomain::FSubscribeWithInitialCallTask::Action(
+        TSharedPtr<TSharedPtr<Gs2::Core::Domain::CallbackID>> Result
+    )
+    {
+        const auto Task = Self->Model();
+        Task->StartSynchronousTask();
+        Task->EnsureCompletion();
+        if (Task->GetTask().IsError()) return Task->GetTask().Error();
+        const auto Item = Task->GetTask().Result();
+        const auto CallbackId = Self->Subscribe(Callback);
+        Callback(Item);
+        *Result = MakeShared<Gs2::Core::Domain::CallbackID>(CallbackId);
+        return nullptr;
+    }
+
+    TSharedPtr<FAsyncTask<FFormModelDomain::FSubscribeWithInitialCallTask>> FFormModelDomain::SubscribeWithInitialCall(
+        TFunction<void(Gs2::Formation::Model::FFormModelPtr)> Callback
+    )
+    {
+        return Gs2::Core::Util::New<FAsyncTask<FSubscribeWithInitialCallTask>>(this->AsShared(), Callback);
+    }
+
     Gs2::Core::Domain::CallbackID FFormModelDomain::Subscribe(
         TFunction<void(Gs2::Formation::Model::FFormModelPtr)> Callback
     )
     {
+        const auto SubscriptionParentKey = Gs2::Formation::Model::Cache::FFormModelCache::CreateCacheParentKey(
+
+            NamespaceName,
+            MoldModelName,
+            TOptional<int32>()
+        );
+        const auto SubscriptionCacheKey = Gs2::Formation::Model::Cache::FFormModelCache::CreateCacheKey(
+
+        );
+        const TWeakPtr<Gs2::Core::Domain::FGs2> WeakGs2 = Gs2;
+        const TWeakPtr<Formation::Domain::FGs2FormationDomain> WeakService = Service;
+        const FString RegisteredParentKey = SubscriptionParentKey;
+        const TOptional<FString> QueryNamespaceName = NamespaceName;
+        const TOptional<FString> QueryMoldModelName = MoldModelName;
         return Gs2->Cache->Subscribe(
             Gs2::Formation::Model::FFormModel::TypeName,
-            ParentKey,
-            Gs2::Formation::Domain::Model::FFormModelDomain::CreateCacheKey(
-            ),
+            SubscriptionParentKey,
+            SubscriptionCacheKey,
             [Callback](TSharedPtr<FGs2Object> obj)
             {
                 Callback(StaticCastSharedPtr<Gs2::Formation::Model::FFormModel>(obj));
+            },
+            [WeakGs2, WeakService, RegisteredParentKey, QueryNamespaceName, QueryMoldModelName]()
+            {
+                const auto Owner = WeakGs2.Pin();
+                if (!Owner.IsValid())
+                {
+                    return;
+                }
+                const auto Domain = MakeShared<FFormModelDomain>(
+                    Owner,
+                    WeakService.Pin(),
+                    QueryNamespaceName,
+                    QueryMoldModelName
+                );
+                Domain->ParentKey = RegisteredParentKey;
+                const auto Task = Domain->Model();
+                Task->StartBackgroundTask();
             }
         );
     }
@@ -229,11 +334,19 @@ namespace Gs2::Formation::Domain::Model
         Gs2::Core::Domain::CallbackID CallbackID
     )
     {
+        const auto SubscriptionParentKey = Gs2::Formation::Model::Cache::FFormModelCache::CreateCacheParentKey(
+
+            NamespaceName,
+            MoldModelName,
+            TOptional<int32>()
+        );
+        const auto SubscriptionCacheKey = Gs2::Formation::Model::Cache::FFormModelCache::CreateCacheKey(
+
+        );
         Gs2->Cache->Unsubscribe(
             Gs2::Formation::Model::FFormModel::TypeName,
-            ParentKey,
-            Gs2::Formation::Domain::Model::FFormModelDomain::CreateCacheKey(
-            ),
+            SubscriptionParentKey,
+            SubscriptionCacheKey,
             CallbackID
         );
     }
@@ -244,4 +357,3 @@ namespace Gs2::Formation::Domain::Model
 #elif defined(__clang__)
 #pragma clang diagnostic pop
 #endif
-

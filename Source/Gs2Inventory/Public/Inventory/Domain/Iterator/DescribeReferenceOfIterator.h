@@ -21,7 +21,6 @@
 #include "Core/Domain/Gs2Core.h"
 #include "Auth/Gs2Auth.h"
 #include "Inventory/Gs2Inventory.h"
-#include "Inventory/Domain/Model/ReferenceOfEntry.h"
 
 namespace Gs2::Inventory::Domain::Iterator
 {
@@ -56,7 +55,7 @@ namespace Gs2::Inventory::Domain::Iterator
         class FIterator;
 
         class GS2INVENTORY_API FIteratorNextTask :
-            public Gs2::Core::Util::TGs2Future<Inventory::Model::FReferenceOfEntry>
+            public Gs2::Core::Util::TGs2Future<FString>
         {
         private:
             FIterator& Iterator;
@@ -66,7 +65,7 @@ namespace Gs2::Inventory::Domain::Iterator
                 Iterator(Iterator)
             {}
 
-            virtual Gs2::Core::Model::FGs2ErrorPtr Action(TSharedPtr<TSharedPtr<Inventory::Model::FReferenceOfEntry>> Result) override;
+            virtual Gs2::Core::Model::FGs2ErrorPtr Action(TSharedPtr<TSharedPtr<FString>> Result) override;
 
             static TSharedPtr<FAsyncTask<FIteratorNextTask>> Issue(FIterator& Iterator)
             {
@@ -77,8 +76,8 @@ namespace Gs2::Inventory::Domain::Iterator
         class GS2INVENTORY_API FIterator
         {
             TSharedRef<FDescribeReferenceOfIterator> Self;
-            TSharedPtr<TArray<Gs2::Inventory::Model::FReferenceOfEntryPtr>> Range;
-            TOptional<TArray<Gs2::Inventory::Model::FReferenceOfEntryPtr>::TIterator> RangeIteratorOpt;
+            TSharedPtr<TArray<FString>> Range;
+            TOptional<TArray<FString>::TIterator> RangeIteratorOpt;
             Gs2::Core::Model::FGs2ErrorPtr ErrorValue;
             bool bLast;
             bool bEnd;
@@ -160,7 +159,7 @@ namespace Gs2::Inventory::Domain::Iterator
                 return FIteratorNextTask::Issue(*this);
             }
 
-            Gs2::Inventory::Model::FReferenceOfEntryPtr& Current()
+            FString& Current()
             {
                 return **RangeIteratorOpt;
             }

@@ -82,7 +82,7 @@ namespace Gs2::UE5::SeasonRating::Domain::Model
     Gs2::Core::Domain::CallbackID FEzSeasonModelDomain::Subscribe(TFunction<void(Gs2::UE5::SeasonRating::Model::FEzSeasonModelPtr)> Callback)
     {
         return Domain->Subscribe(
-            [&](Gs2::SeasonRating::Model::FSeasonModelPtr Item)
+            [Callback](Gs2::SeasonRating::Model::FSeasonModelPtr Item)
             {
                 Callback(Gs2::UE5::SeasonRating::Model::FEzSeasonModel::FromModel(Item));
             }

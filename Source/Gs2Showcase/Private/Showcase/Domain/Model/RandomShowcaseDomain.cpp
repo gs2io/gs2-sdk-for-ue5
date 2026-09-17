@@ -41,6 +41,8 @@
 #include "Showcase/Domain/Model/RandomShowcaseStatusAccessToken.h"
 #include "Showcase/Domain/Model/RandomDisplayItem.h"
 #include "Showcase/Domain/Model/RandomDisplayItemAccessToken.h"
+#include "Showcase/Model/Cache/RandomShowcase.h"
+#include "Showcase/Model/Cache/RandomDisplayItem.h"
 
 #include "Core/Domain/Gs2.h"
 #include "Core/Domain/Transaction/JobQueueJobDomainFactory.h"
@@ -102,34 +104,126 @@ namespace Gs2::Showcase::Domain::Model
 
     Gs2::Core::Domain::CallbackID FRandomShowcaseDomain::SubscribeRandomDisplayItems(
     TFunction<void()> Callback
+
     )
     {
         return Gs2->Cache->ListSubscribe(
             Gs2::Showcase::Model::FRandomDisplayItem::TypeName,
-            Gs2::Showcase::Domain::Model::FRandomShowcaseDomain::CreateCacheParentKey(
+            Gs2::Showcase::Model::Cache::FRandomDisplayItemCache::CreateCacheParentKey(
                 NamespaceName,
                 UserId,
                 ShowcaseName,
-                "RandomDisplayItem"
+                TOptional<int32>()
             ),
+            Callback,
             Callback
         );
     }
-
     void FRandomShowcaseDomain::UnsubscribeRandomDisplayItems(
         Gs2::Core::Domain::CallbackID CallbackID
     )
     {
         Gs2->Cache->ListUnsubscribe(
             Gs2::Showcase::Model::FRandomDisplayItem::TypeName,
-            Gs2::Showcase::Domain::Model::FRandomShowcaseDomain::CreateCacheParentKey(
+            Gs2::Showcase::Model::Cache::FRandomDisplayItemCache::CreateCacheParentKey(
                 NamespaceName,
                 UserId,
                 ShowcaseName,
-                "RandomDisplayItem"
+                TOptional<int32>()
             ),
             CallbackID
         );
+    }
+    class FRandomShowcaseDomain::FCollectRandomDisplayItemsTask : public Gs2::Core::Util::TGs2Future<TArray<Gs2::Showcase::Model::FRandomDisplayItemPtr>>, public TSharedFromThis<FCollectRandomDisplayItemsTask>
+    {
+        const TSharedPtr<FRandomShowcaseDomain> Self;
+        const TFunction<void(TArray<Gs2::Showcase::Model::FRandomDisplayItemPtr>)> OnCollected;
+    const TOptional<FString> QueryTimeOffsetToken;
+    public:
+        explicit FCollectRandomDisplayItemsTask(const TSharedPtr<FRandomShowcaseDomain>& Self, TFunction<void(TArray<Gs2::Showcase::Model::FRandomDisplayItemPtr>)> OnCollected,const TOptional<FString> TimeOffsetToken) : Self(Self), OnCollected(OnCollected), QueryTimeOffsetToken(TimeOffsetToken) {}
+        FCollectRandomDisplayItemsTask(const FCollectRandomDisplayItemsTask& From) : TGs2Future(From), Self(From.Self), OnCollected(From.OnCollected), QueryTimeOffsetToken(From.QueryTimeOffsetToken) {}
+        virtual Gs2::Core::Model::FGs2ErrorPtr Action(TSharedPtr<TSharedPtr<TArray<Gs2::Showcase::Model::FRandomDisplayItemPtr>>> Result) override
+        {
+            TArray<Gs2::Showcase::Model::FRandomDisplayItemPtr> Items;
+            auto Iterator = Self->RandomDisplayItems(QueryTimeOffsetToken)->begin();
+            while (Iterator.HasNext())
+            {
+                if (Iterator.IsError()) return Iterator.Error();
+                if (Iterator.IsCurrentValid()) Items.Add(Iterator.Current());
+                ++Iterator;
+            }
+            if (Iterator.IsError()) return Iterator.Error();
+            *Result = MakeShared<TArray<Gs2::Showcase::Model::FRandomDisplayItemPtr>>(Items);
+            if (OnCollected) OnCollected(Items);
+            return nullptr;
+        }
+    };
+
+    Gs2::Core::Domain::CallbackID FRandomShowcaseDomain::SubscribeRandomDisplayItems(
+        TFunction<void(TArray<Gs2::Showcase::Model::FRandomDisplayItemPtr>)> Callback,const TOptional<FString> TimeOffsetToken
+    )
+    {
+        const TWeakPtr<Gs2::Core::Domain::FGs2> WeakGs2 = this->Gs2;
+        const TWeakPtr<Showcase::Domain::FGs2ShowcaseDomain> WeakService = this->Service;
+        const auto QueryNamespaceName = NamespaceName;
+        const auto QueryUserId = UserId;
+        const auto QueryShowcaseName = ShowcaseName;
+        const auto QueryTimeOffsetToken = TimeOffsetToken;
+        const auto Parent = Gs2::Showcase::Model::Cache::FRandomDisplayItemCache::CreateCacheParentKey(
+        NamespaceName,
+        UserId,
+        ShowcaseName,
+        TOptional<int32>()
+    );
+        return Gs2->Cache->ListSubscribeTyped(
+            Gs2::Showcase::Model::FRandomDisplayItem::TypeName,
+            Parent,
+            [Callback, WeakGs2](const TArray<FGs2ObjectPtr>& Values)
+            {
+                if (!WeakGs2.Pin().IsValid()) return;
+                TArray<Gs2::Showcase::Model::FRandomDisplayItemPtr> TypedValues;
+                for (const auto& Value : Values) if (Value.IsValid()) TypedValues.Add(StaticCastSharedPtr<Gs2::Showcase::Model::FRandomDisplayItem>(Value));
+                Callback(TypedValues);
+            },
+            [WeakGs2, WeakService, Callback, QueryNamespaceName, QueryUserId, QueryShowcaseName, QueryTimeOffsetToken]()
+            {
+                const auto Owner = WeakGs2.Pin();
+                if (!Owner.IsValid()) return;
+                const auto Domain = MakeShared<FRandomShowcaseDomain>(Owner, WeakService.Pin(), QueryNamespaceName, QueryUserId, QueryShowcaseName);
+                const auto Task = Gs2::Core::Util::New<FAsyncTask<FCollectRandomDisplayItemsTask>>(Domain, Callback, QueryTimeOffsetToken);
+                Task->StartBackgroundTask();
+            }
+        );
+    }
+
+    void FRandomShowcaseDomain::InvalidateRandomDisplayItems(const TOptional<FString> TimeOffsetToken)
+    {
+        Gs2->Cache->ClearListCache(
+            Gs2::Showcase::Model::FRandomDisplayItem::TypeName,
+            Gs2::Showcase::Model::Cache::FRandomDisplayItemCache::CreateCacheParentKey(
+        NamespaceName,
+        UserId,
+        ShowcaseName,
+        TOptional<int32>()
+    )
+        );
+    }
+
+    FRandomShowcaseDomain::FSubscribeRandomDisplayItemsWithInitialCallTask::FSubscribeRandomDisplayItemsWithInitialCallTask(const TSharedPtr<FRandomShowcaseDomain>& Self, TFunction<void(TArray<Gs2::Showcase::Model::FRandomDisplayItemPtr>)> Callback,const TOptional<FString> TimeOffsetToken) : Self(Self), Callback(Callback), QueryTimeOffsetToken(TimeOffsetToken) {}
+    FRandomShowcaseDomain::FSubscribeRandomDisplayItemsWithInitialCallTask::FSubscribeRandomDisplayItemsWithInitialCallTask(const FSubscribeRandomDisplayItemsWithInitialCallTask& From) : TGs2Future(From), Self(From.Self), Callback(From.Callback), QueryTimeOffsetToken(From.QueryTimeOffsetToken) {}
+    Gs2::Core::Model::FGs2ErrorPtr FRandomShowcaseDomain::FSubscribeRandomDisplayItemsWithInitialCallTask::Action(TSharedPtr<TSharedPtr<Gs2::Core::Domain::CallbackID>> Result)
+    {
+        const auto Task = Gs2::Core::Util::New<FAsyncTask<FCollectRandomDisplayItemsTask>>(Self, TFunction<void(TArray<Gs2::Showcase::Model::FRandomDisplayItemPtr>)>(), QueryTimeOffsetToken);
+        Task->StartSynchronousTask(); Task->EnsureCompletion();
+        if (Task->GetTask().IsError()) return Task->GetTask().Error();
+        const auto Values = Task->GetTask().Result();
+        const auto CallbackId = Self->SubscribeRandomDisplayItems(Callback, QueryTimeOffsetToken);
+        Callback(*Values); *Result = MakeShared<Gs2::Core::Domain::CallbackID>(CallbackId);
+        return nullptr;
+    }
+    TSharedPtr<FAsyncTask<FRandomShowcaseDomain::FSubscribeRandomDisplayItemsWithInitialCallTask>> FRandomShowcaseDomain::SubscribeRandomDisplayItemsWithInitialCall(TFunction<void(TArray<Gs2::Showcase::Model::FRandomDisplayItemPtr>)> Callback,const TOptional<FString> TimeOffsetToken)
+    {
+        return Gs2::Core::Util::New<FAsyncTask<FSubscribeRandomDisplayItemsWithInitialCallTask>>(this->AsShared(), Callback, TimeOffsetToken);
     }
 
     TSharedPtr<Gs2::Showcase::Domain::Model::FRandomDisplayItemDomain> FRandomShowcaseDomain::RandomDisplayItem(
@@ -186,37 +280,144 @@ namespace Gs2::Showcase::Domain::Model
         TSharedPtr<TSharedPtr<Gs2::Showcase::Model::FRandomShowcase>> Result
     )
     {
-        // ReSharper disable once CppLocalVariableMayBeConst
-        TSharedPtr<Gs2::Showcase::Model::FRandomShowcase> Value;
-        auto bCacheHit = Self->Gs2->Cache->TryGet<Gs2::Showcase::Model::FRandomShowcase>(
-            Self->ParentKey,
-            Gs2::Showcase::Domain::Model::FRandomShowcaseDomain::CreateCacheKey(
-                Self->ShowcaseName
-            ),
-            &Value
-        );
-        *Result = Value;
+        const auto CacheParentKey = Gs2::Showcase::Model::Cache::FRandomShowcaseCache::CreateCacheParentKey(
 
-        return nullptr;
+            Self->NamespaceName,
+            Self->UserId,
+            TOptional<int32>()
+        );
+        const auto CacheKey = Gs2::Showcase::Model::Cache::FRandomShowcaseCache::CreateCacheKey(
+
+            Self->ShowcaseName
+        );
+        return Self->Gs2->Cache->ExecuteWithKeyLock(
+            Gs2::Showcase::Model::FRandomShowcase::TypeName,
+            CacheParentKey,
+            CacheKey,
+            [Self = Self, Result]() -> Gs2::Core::Model::FGs2ErrorPtr
+            {
+                Gs2::Showcase::Model::FRandomShowcasePtr Value;
+                const auto CacheHit = Gs2::Showcase::Model::Cache::FRandomShowcaseCache::TryGet(
+                    Self->Gs2->Cache,
+
+                    Self->NamespaceName,
+                    Self->UserId,
+                    Self->ShowcaseName,
+                    TOptional<int32>(),
+                    &Value
+                );
+                if (CacheHit)
+                {
+                    *Result = Value;
+                    return nullptr;
+                }
+                *Result = Value;
+                return nullptr;
+            }
+        );
     }
 
     TSharedPtr<FAsyncTask<FRandomShowcaseDomain::FModelTask>> FRandomShowcaseDomain::Model() {
         return Gs2::Core::Util::New<FAsyncTask<FRandomShowcaseDomain::FModelTask>>(this->AsShared());
     }
 
+    void FRandomShowcaseDomain::Invalidate()
+    {
+        Gs2::Showcase::Model::Cache::FRandomShowcaseCache::Delete(
+            Gs2->Cache,
+
+            NamespaceName,
+            UserId,
+            ShowcaseName,
+            TOptional<int32>()
+        );
+    }
+
+    FRandomShowcaseDomain::FSubscribeWithInitialCallTask::FSubscribeWithInitialCallTask(
+        const TSharedPtr<FRandomShowcaseDomain>& Self,
+        TFunction<void(Gs2::Showcase::Model::FRandomShowcasePtr)> Callback
+    ):
+        Self(Self),
+        Callback(Callback)
+    {
+    }
+
+    FRandomShowcaseDomain::FSubscribeWithInitialCallTask::FSubscribeWithInitialCallTask(
+        const FSubscribeWithInitialCallTask& From
+    ):
+        TGs2Future(From),
+        Self(From.Self),
+        Callback(From.Callback)
+    {
+    }
+
+    Gs2::Core::Model::FGs2ErrorPtr FRandomShowcaseDomain::FSubscribeWithInitialCallTask::Action(
+        TSharedPtr<TSharedPtr<Gs2::Core::Domain::CallbackID>> Result
+    )
+    {
+        const auto Task = Self->Model();
+        Task->StartSynchronousTask();
+        Task->EnsureCompletion();
+        if (Task->GetTask().IsError()) return Task->GetTask().Error();
+        const auto Item = Task->GetTask().Result();
+        const auto CallbackId = Self->Subscribe(Callback);
+        Callback(Item);
+        *Result = MakeShared<Gs2::Core::Domain::CallbackID>(CallbackId);
+        return nullptr;
+    }
+
+    TSharedPtr<FAsyncTask<FRandomShowcaseDomain::FSubscribeWithInitialCallTask>> FRandomShowcaseDomain::SubscribeWithInitialCall(
+        TFunction<void(Gs2::Showcase::Model::FRandomShowcasePtr)> Callback
+    )
+    {
+        return Gs2::Core::Util::New<FAsyncTask<FSubscribeWithInitialCallTask>>(this->AsShared(), Callback);
+    }
+
     Gs2::Core::Domain::CallbackID FRandomShowcaseDomain::Subscribe(
         TFunction<void(Gs2::Showcase::Model::FRandomShowcasePtr)> Callback
     )
     {
+        const auto SubscriptionParentKey = Gs2::Showcase::Model::Cache::FRandomShowcaseCache::CreateCacheParentKey(
+
+            NamespaceName,
+            UserId,
+            TOptional<int32>()
+        );
+        const auto SubscriptionCacheKey = Gs2::Showcase::Model::Cache::FRandomShowcaseCache::CreateCacheKey(
+
+            ShowcaseName
+        );
+        const TWeakPtr<Gs2::Core::Domain::FGs2> WeakGs2 = Gs2;
+        const TWeakPtr<Showcase::Domain::FGs2ShowcaseDomain> WeakService = Service;
+        const FString RegisteredParentKey = SubscriptionParentKey;
+        const TOptional<FString> QueryNamespaceName = NamespaceName;
+        const TOptional<FString> QueryUserId = UserId;
+        const TOptional<FString> QueryShowcaseName = ShowcaseName;
         return Gs2->Cache->Subscribe(
             Gs2::Showcase::Model::FRandomShowcase::TypeName,
-            ParentKey,
-            Gs2::Showcase::Domain::Model::FRandomShowcaseDomain::CreateCacheKey(
-                ShowcaseName
-            ),
+            SubscriptionParentKey,
+            SubscriptionCacheKey,
             [Callback](TSharedPtr<FGs2Object> obj)
             {
                 Callback(StaticCastSharedPtr<Gs2::Showcase::Model::FRandomShowcase>(obj));
+            },
+            [WeakGs2, WeakService, RegisteredParentKey, QueryNamespaceName, QueryUserId, QueryShowcaseName]()
+            {
+                const auto Owner = WeakGs2.Pin();
+                if (!Owner.IsValid())
+                {
+                    return;
+                }
+                const auto Domain = MakeShared<FRandomShowcaseDomain>(
+                    Owner,
+                    WeakService.Pin(),
+                    QueryNamespaceName,
+                    QueryUserId,
+                    QueryShowcaseName
+                );
+                Domain->ParentKey = RegisteredParentKey;
+                const auto Task = Domain->Model();
+                Task->StartBackgroundTask();
             }
         );
     }
@@ -225,12 +426,20 @@ namespace Gs2::Showcase::Domain::Model
         Gs2::Core::Domain::CallbackID CallbackID
     )
     {
+        const auto SubscriptionParentKey = Gs2::Showcase::Model::Cache::FRandomShowcaseCache::CreateCacheParentKey(
+
+            NamespaceName,
+            UserId,
+            TOptional<int32>()
+        );
+        const auto SubscriptionCacheKey = Gs2::Showcase::Model::Cache::FRandomShowcaseCache::CreateCacheKey(
+
+            ShowcaseName
+        );
         Gs2->Cache->Unsubscribe(
             Gs2::Showcase::Model::FRandomShowcase::TypeName,
-            ParentKey,
-            Gs2::Showcase::Domain::Model::FRandomShowcaseDomain::CreateCacheKey(
-                ShowcaseName
-            ),
+            SubscriptionParentKey,
+            SubscriptionCacheKey,
             CallbackID
         );
     }
@@ -241,4 +450,3 @@ namespace Gs2::Showcase::Domain::Model
 #elif defined(__clang__)
 #pragma clang diagnostic pop
 #endif
-

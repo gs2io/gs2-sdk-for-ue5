@@ -82,7 +82,7 @@ namespace Gs2::UE5::Enchant::Domain::Model
     Gs2::Core::Domain::CallbackID FEzBalanceParameterModelDomain::Subscribe(TFunction<void(Gs2::UE5::Enchant::Model::FEzBalanceParameterModelPtr)> Callback)
     {
         return Domain->Subscribe(
-            [&](Gs2::Enchant::Model::FBalanceParameterModelPtr Item)
+            [Callback](Gs2::Enchant::Model::FBalanceParameterModelPtr Item)
             {
                 Callback(Gs2::UE5::Enchant::Model::FEzBalanceParameterModel::FromModel(Item));
             }

@@ -81,7 +81,8 @@ namespace Gs2::UE5::Friend::Domain::Model
 
         Gs2::Core::Domain::CallbackID SubscribeFollows(TFunction<void()> Callback);
 
-        void UnsubscribeFollows(Gs2::Core::Domain::CallbackID CallbackId);
+        void UnsubscribeFollows(
+                Gs2::Core::Domain::CallbackID CallbackId);
 
         Gs2::UE5::Friend::Domain::Model::FEzFollowUserGameSessionDomainPtr FollowUser(
             const FString TargetUserId

@@ -131,3 +131,174 @@ namespace Gs2::Formation::Model
 
     FString FCurrentFormMaster::TypeName = "CurrentFormMaster";
 }
+#include "Formation/Model/Cache/CurrentFormMaster.h"
+
+namespace Gs2::Formation::Model::Cache
+{
+    FString FCurrentFormMasterCache::CreateCacheParentKey(
+        TOptional<FString> CacheOwnerArgumentNamespaceName,
+        TOptional<int32> CacheOwnerArgumentTimeOffset
+    )
+    {
+        return FString("formation:")
+            + CacheOwnerArgumentNamespaceName.Get(FString()) + FString(":")
+            + FString::FromInt(CacheOwnerArgumentTimeOffset.Get(0)) + FString(":CurrentFormMaster");
+    }
+
+    FString FCurrentFormMasterCache::CreateCacheKey(
+    )
+    {
+        return FString("Singleton");
+    }
+
+    bool FCurrentFormMasterCache::TryGet(
+        const Gs2::Core::Domain::FCacheDatabasePtr& CacheOwnerArgumentCache,
+        TOptional<FString> CacheOwnerArgumentNamespaceName,
+        TOptional<int32> CacheOwnerArgumentTimeOffset,
+        Gs2::Formation::Model::FCurrentFormMasterPtr* CacheOwnerArgumentOutItem
+    )
+    {
+        const auto CacheSnapshot = CacheOwnerArgumentCache;
+        if (!CacheSnapshot.IsValid())
+        {
+            if (CacheOwnerArgumentOutItem) *CacheOwnerArgumentOutItem = nullptr;
+            return false;
+        }
+        if (CacheOwnerArgumentOutItem) *CacheOwnerArgumentOutItem = nullptr;
+        Gs2::Formation::Model::FCurrentFormMasterPtr CacheOwnerValue;
+        const bool CacheOwnerFound = CacheSnapshot->TryGet<Gs2::Formation::Model::FCurrentFormMaster>(
+            CreateCacheParentKey(
+                CacheOwnerArgumentNamespaceName,
+                CacheOwnerArgumentTimeOffset
+            ),
+            CreateCacheKey(
+            ),
+            &CacheOwnerValue
+        );
+        if (CacheOwnerArgumentOutItem) *CacheOwnerArgumentOutItem = CacheOwnerFound ? CacheOwnerValue : nullptr;
+        return CacheOwnerFound;
+    }
+
+    void FCurrentFormMasterCache::Put(
+        const Gs2::Core::Domain::FCacheDatabasePtr& CacheOwnerArgumentCache,
+        TOptional<FString> CacheOwnerArgumentNamespaceName,
+        TOptional<int32> CacheOwnerArgumentTimeOffset,
+        const Gs2::Formation::Model::FCurrentFormMasterPtr& CacheOwnerArgumentItem
+    )
+    {
+        const auto CacheSnapshot = CacheOwnerArgumentCache;
+        if (!CacheSnapshot.IsValid()) return;
+        const auto CacheOwnerParentKey = CreateCacheParentKey(
+            CacheOwnerArgumentNamespaceName,
+            CacheOwnerArgumentTimeOffset
+        );
+        const auto CacheOwnerKey = CreateCacheKey(
+        );
+        auto CacheOwnerValue = CacheOwnerArgumentItem;
+        CacheSnapshot->Put(Gs2::Formation::Model::FCurrentFormMaster::TypeName, CacheOwnerParentKey, CacheOwnerKey, CacheOwnerValue,
+            FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
+        );
+    }
+
+    void FCurrentFormMasterCache::Delete(
+        const Gs2::Core::Domain::FCacheDatabasePtr& CacheOwnerArgumentCache,
+        TOptional<FString> CacheOwnerArgumentNamespaceName,
+        TOptional<int32> CacheOwnerArgumentTimeOffset
+    )
+    {
+        const auto CacheSnapshot = CacheOwnerArgumentCache;
+        if (!CacheSnapshot.IsValid()) return;
+        CacheSnapshot->Delete(Gs2::Formation::Model::FCurrentFormMaster::TypeName, CreateCacheParentKey(
+            CacheOwnerArgumentNamespaceName,
+            CacheOwnerArgumentTimeOffset
+        ), CreateCacheKey(
+        ));
+    }
+
+    Gs2::Core::Model::FGs2ErrorPtr FCurrentFormMasterCache::Fetch(
+        const Gs2::Core::Domain::FCacheDatabasePtr& CacheOwnerArgumentCache,
+        TOptional<FString> CacheOwnerArgumentNamespaceName,
+        TOptional<int32> CacheOwnerArgumentTimeOffset,
+        const TFunction<Gs2::Core::Model::FGs2ErrorPtr(Gs2::Formation::Model::FCurrentFormMasterPtr*)>& CacheOwnerArgumentFetchImpl,
+        Gs2::Formation::Model::FCurrentFormMasterPtr* CacheOwnerArgumentOutItem
+    )
+    {
+        const auto CacheSnapshot = CacheOwnerArgumentCache;
+        const auto FetchImplSnapshot = CacheOwnerArgumentFetchImpl;
+        if (CacheOwnerArgumentOutItem) *CacheOwnerArgumentOutItem = nullptr;
+        if (!FetchImplSnapshot)
+        {
+            if (CacheOwnerArgumentOutItem) *CacheOwnerArgumentOutItem = nullptr;
+            const auto Details = MakeShared<TArray<TSharedPtr<Gs2::Core::Model::FGs2ErrorDetail>>>();
+            Details->Add(MakeShared<Gs2::Core::Model::FGs2ErrorDetail>(TEXT("fetchImpl"), TEXT("fetchImpl is required."), TEXT("required")));
+            return MakeShared<Gs2::Core::Model::FBadRequestError>(Details);
+        }
+        Gs2::Formation::Model::FCurrentFormMasterPtr CacheOwnerFetchedItem;
+        const auto CacheOwnerError = FetchImplSnapshot(&CacheOwnerFetchedItem);
+        if (!CacheOwnerError)
+        {
+            Put(
+                CacheSnapshot,
+                CacheOwnerArgumentNamespaceName,
+                CacheOwnerArgumentTimeOffset,
+                CacheOwnerFetchedItem
+            );
+            if (CacheOwnerArgumentOutItem) *CacheOwnerArgumentOutItem = CacheOwnerFetchedItem;
+            return nullptr;
+        }
+        if (!CacheOwnerError->IsChildOf(Gs2::Core::Model::FNotFoundError::Class))
+        {
+            if (CacheOwnerArgumentOutItem) *CacheOwnerArgumentOutItem = nullptr;
+            return CacheOwnerError;
+        }
+        Put(
+            CacheSnapshot,
+            CacheOwnerArgumentNamespaceName,
+            CacheOwnerArgumentTimeOffset,
+            nullptr
+        );
+        if (CacheOwnerArgumentOutItem) *CacheOwnerArgumentOutItem = nullptr;
+        const auto CacheOwnerDetails = CacheOwnerError->GetErrors();
+        if (CacheOwnerDetails.IsValid() && CacheOwnerDetails->Num() > 0 && (*CacheOwnerDetails)[0].IsValid() && (*CacheOwnerDetails)[0]->GetComponent() == TEXT("currentFormMaster"))
+        {
+            return nullptr;
+        }
+        if (CacheOwnerArgumentOutItem) *CacheOwnerArgumentOutItem = nullptr;
+        return CacheOwnerError;
+    }
+
+    Gs2::Core::Domain::CallbackID FCurrentFormMasterCache::ListSubscribe(
+        const Gs2::Core::Domain::FCacheDatabasePtr& CacheOwnerArgumentCache,
+        TOptional<FString> CacheOwnerArgumentNamespaceName,
+        TOptional<int32> CacheOwnerArgumentTimeOffset,
+        TFunction<void(TArray<Gs2::Formation::Model::FCurrentFormMasterPtr>)> CacheOwnerArgumentCallback
+    )
+    {
+        const auto CacheSnapshot = CacheOwnerArgumentCache;
+        if (!CacheSnapshot.IsValid()) return 0;
+        return CacheSnapshot->ListSubscribeTyped(Gs2::Formation::Model::FCurrentFormMaster::TypeName, CreateCacheParentKey(
+            CacheOwnerArgumentNamespaceName,
+            CacheOwnerArgumentTimeOffset
+        ), [CacheOwnerArgumentCallback](const TArray<FGs2ObjectPtr>& CacheOwnerValues)
+        {
+            TArray<Gs2::Formation::Model::FCurrentFormMasterPtr> CacheOwnerTypedValues;
+            for (const auto& CacheOwnerValue : CacheOwnerValues) if (CacheOwnerValue) CacheOwnerTypedValues.Add(StaticCastSharedPtr<Gs2::Formation::Model::FCurrentFormMaster>(CacheOwnerValue));
+            if (CacheOwnerArgumentCallback) CacheOwnerArgumentCallback(CacheOwnerTypedValues);
+        });
+    }
+
+    void FCurrentFormMasterCache::ListUnsubscribe(
+        const Gs2::Core::Domain::FCacheDatabasePtr& CacheOwnerArgumentCache,
+        TOptional<FString> CacheOwnerArgumentNamespaceName,
+        TOptional<int32> CacheOwnerArgumentTimeOffset,
+        Gs2::Core::Domain::CallbackID CacheOwnerArgumentCallbackID
+    )
+    {
+        const auto CacheSnapshot = CacheOwnerArgumentCache;
+        if (!CacheSnapshot.IsValid()) return;
+        CacheSnapshot->ListUnsubscribe(Gs2::Formation::Model::FCurrentFormMaster::TypeName, CreateCacheParentKey(
+            CacheOwnerArgumentNamespaceName,
+            CacheOwnerArgumentTimeOffset
+        ), CacheOwnerArgumentCallbackID);
+    }
+}

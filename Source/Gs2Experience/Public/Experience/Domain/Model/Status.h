@@ -93,6 +93,8 @@ namespace Gs2::Experience::Domain::Model
             const FStatusDomain& From
         );
 
+
+
         class GS2EXPERIENCE_API FGetTask final :
             public Gs2::Core::Util::TGs2Future<Gs2::Experience::Model::FStatus>,
             public TSharedFromThis<FGetTask>
@@ -118,6 +120,8 @@ namespace Gs2::Experience::Domain::Model
         TSharedPtr<FAsyncTask<FGetTask>> Get(
             Request::FGetStatusByUserIdRequestPtr Request
         );
+
+
 
         class GS2EXPERIENCE_API FGetWithSignatureTask final :
             public Gs2::Core::Util::TGs2Future<Gs2::Experience::Domain::Model::FStatusDomain>,
@@ -145,6 +149,8 @@ namespace Gs2::Experience::Domain::Model
             Request::FGetStatusWithSignatureByUserIdRequestPtr Request
         );
 
+
+
         class GS2EXPERIENCE_API FAddExperienceTask final :
             public Gs2::Core::Util::TGs2Future<Gs2::Experience::Domain::Model::FStatusDomain>,
             public TSharedFromThis<FAddExperienceTask>
@@ -170,6 +176,8 @@ namespace Gs2::Experience::Domain::Model
         TSharedPtr<FAsyncTask<FAddExperienceTask>> AddExperience(
             Request::FAddExperienceByUserIdRequestPtr Request
         );
+
+
 
         class GS2EXPERIENCE_API FSubExperienceTask final :
             public Gs2::Core::Util::TGs2Future<Gs2::Experience::Domain::Model::FStatusDomain>,
@@ -197,6 +205,8 @@ namespace Gs2::Experience::Domain::Model
             Request::FSubExperienceByUserIdRequestPtr Request
         );
 
+
+
         class GS2EXPERIENCE_API FSetExperienceTask final :
             public Gs2::Core::Util::TGs2Future<Gs2::Experience::Domain::Model::FStatusDomain>,
             public TSharedFromThis<FSetExperienceTask>
@@ -222,6 +232,8 @@ namespace Gs2::Experience::Domain::Model
         TSharedPtr<FAsyncTask<FSetExperienceTask>> SetExperience(
             Request::FSetExperienceByUserIdRequestPtr Request
         );
+
+
 
         class GS2EXPERIENCE_API FAddRankCapTask final :
             public Gs2::Core::Util::TGs2Future<Gs2::Experience::Domain::Model::FStatusDomain>,
@@ -249,6 +261,8 @@ namespace Gs2::Experience::Domain::Model
             Request::FAddRankCapByUserIdRequestPtr Request
         );
 
+
+
         class GS2EXPERIENCE_API FSubRankCapTask final :
             public Gs2::Core::Util::TGs2Future<Gs2::Experience::Domain::Model::FStatusDomain>,
             public TSharedFromThis<FSubRankCapTask>
@@ -274,6 +288,8 @@ namespace Gs2::Experience::Domain::Model
         TSharedPtr<FAsyncTask<FSubRankCapTask>> SubRankCap(
             Request::FSubRankCapByUserIdRequestPtr Request
         );
+
+
 
         class GS2EXPERIENCE_API FSetRankCapTask final :
             public Gs2::Core::Util::TGs2Future<Gs2::Experience::Domain::Model::FStatusDomain>,
@@ -301,6 +317,8 @@ namespace Gs2::Experience::Domain::Model
             Request::FSetRankCapByUserIdRequestPtr Request
         );
 
+
+
         class GS2EXPERIENCE_API FDeleteTask final :
             public Gs2::Core::Util::TGs2Future<Gs2::Experience::Domain::Model::FStatusDomain>,
             public TSharedFromThis<FDeleteTask>
@@ -326,6 +344,8 @@ namespace Gs2::Experience::Domain::Model
         TSharedPtr<FAsyncTask<FDeleteTask>> Delete(
             Request::FDeleteStatusByUserIdRequestPtr Request
         );
+
+
 
         class GS2EXPERIENCE_API FVerifyRankTask final :
             public Gs2::Core::Util::TGs2Future<Gs2::Experience::Domain::Model::FStatusDomain>,
@@ -353,6 +373,8 @@ namespace Gs2::Experience::Domain::Model
             Request::FVerifyRankByUserIdRequestPtr Request
         );
 
+
+
         class GS2EXPERIENCE_API FVerifyRankCapTask final :
             public Gs2::Core::Util::TGs2Future<Gs2::Experience::Domain::Model::FStatusDomain>,
             public TSharedFromThis<FVerifyRankCapTask>
@@ -378,6 +400,8 @@ namespace Gs2::Experience::Domain::Model
         TSharedPtr<FAsyncTask<FVerifyRankCapTask>> VerifyRankCap(
             Request::FVerifyRankCapByUserIdRequestPtr Request
         );
+
+
 
         class GS2EXPERIENCE_API FMultiplyAcquireActionsTask final :
             public Gs2::Core::Util::TGs2Future<Gs2::Core::Domain::FTransactionDomain>,
@@ -440,7 +464,34 @@ namespace Gs2::Experience::Domain::Model
 
         TSharedPtr<FAsyncTask<FModelTask>> Model();
 
+        void Invalidate();
+
         Gs2::Core::Domain::CallbackID Subscribe(
+            TFunction<void(Gs2::Experience::Model::FStatusPtr)> Callback
+        );
+
+        class GS2EXPERIENCE_API FSubscribeWithInitialCallTask final :
+            public Gs2::Core::Util::TGs2Future<Gs2::Core::Domain::CallbackID>,
+            public TSharedFromThis<FSubscribeWithInitialCallTask>
+        {
+            const TSharedPtr<FStatusDomain> Self;
+            const TFunction<void(Gs2::Experience::Model::FStatusPtr)> Callback;
+        public:
+            FSubscribeWithInitialCallTask(
+                const TSharedPtr<FStatusDomain>& Self,
+                TFunction<void(Gs2::Experience::Model::FStatusPtr)> Callback
+            );
+
+            FSubscribeWithInitialCallTask(
+                const FSubscribeWithInitialCallTask& From
+            );
+
+            virtual Gs2::Core::Model::FGs2ErrorPtr Action(
+                TSharedPtr<TSharedPtr<Gs2::Core::Domain::CallbackID>> Result
+            ) override;
+        };
+
+        TSharedPtr<FAsyncTask<FSubscribeWithInitialCallTask>> SubscribeWithInitialCall(
             TFunction<void(Gs2::Experience::Model::FStatusPtr)> Callback
         );
 

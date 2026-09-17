@@ -12,8 +12,6 @@
  * on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either
  * express or implied. See the License for the specific language governing
  * permissions and limitations under the License.
- *
- * deny overwrite
  */
 
 #pragma once
@@ -37,7 +35,7 @@ class BPGS2_API UGs2ExchangeExchangeAsyncFunction : public UBlueprintAsyncAction
 {
     GENERATED_BODY()
 
-    UPARAM(DisplayName="Exchange") FGs2ExchangeOwnExchange ExchangeValue;
+    FGs2ExchangeOwnExchange ExchangeValue;
     FString RateName;
     int32 Count;
     TArray<FGs2ExchangeConfig> Config;

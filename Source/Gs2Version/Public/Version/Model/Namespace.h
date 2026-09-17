@@ -19,6 +19,7 @@
 #include "CoreMinimal.h"
 #include "Core/Gs2Object.h"
 #include "TransactionSetting.h"
+#include "TransactionSettingV2.h"
 #include "ScriptSetting.h"
 #include "LogSetting.h"
 
@@ -30,6 +31,7 @@ namespace Gs2::Version::Model
         TOptional<FString> NameValue;
         TOptional<FString> DescriptionValue;
         TSharedPtr<FTransactionSetting> TransactionSettingValue;
+        TSharedPtr<FTransactionSettingV2> TransactionSettingV2Value;
         TOptional<FString> AssumeUserIdValue;
         TSharedPtr<FScriptSetting> AcceptVersionScriptValue;
         TOptional<FString> CheckVersionTriggerScriptIdValue;
@@ -49,6 +51,7 @@ namespace Gs2::Version::Model
         TSharedPtr<FNamespace> WithName(const TOptional<FString> Name);
         TSharedPtr<FNamespace> WithDescription(const TOptional<FString> Description);
         TSharedPtr<FNamespace> WithTransactionSetting(const TSharedPtr<FTransactionSetting> TransactionSetting);
+        TSharedPtr<FNamespace> WithTransactionSettingV2(const TSharedPtr<FTransactionSettingV2> TransactionSettingV2);
         TSharedPtr<FNamespace> WithAssumeUserId(const TOptional<FString> AssumeUserId);
         TSharedPtr<FNamespace> WithAcceptVersionScript(const TSharedPtr<FScriptSetting> AcceptVersionScript);
         TSharedPtr<FNamespace> WithCheckVersionTriggerScriptId(const TOptional<FString> CheckVersionTriggerScriptId);
@@ -61,6 +64,7 @@ namespace Gs2::Version::Model
         TOptional<FString> GetName() const;
         TOptional<FString> GetDescription() const;
         TSharedPtr<FTransactionSetting> GetTransactionSetting() const;
+        TSharedPtr<FTransactionSettingV2> GetTransactionSettingV2() const;
         TOptional<FString> GetAssumeUserId() const;
         TSharedPtr<FScriptSetting> GetAcceptVersionScript() const;
         TOptional<FString> GetCheckVersionTriggerScriptId() const;

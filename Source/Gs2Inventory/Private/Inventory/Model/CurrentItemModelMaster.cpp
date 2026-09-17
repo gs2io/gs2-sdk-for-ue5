@@ -131,3 +131,174 @@ namespace Gs2::Inventory::Model
 
     FString FCurrentItemModelMaster::TypeName = "CurrentItemModelMaster";
 }
+#include "Inventory/Model/Cache/CurrentItemModelMaster.h"
+
+namespace Gs2::Inventory::Model::Cache
+{
+    FString FCurrentItemModelMasterCache::CreateCacheParentKey(
+        TOptional<FString> CacheOwnerArgumentNamespaceName,
+        TOptional<int32> CacheOwnerArgumentTimeOffset
+    )
+    {
+        return FString("inventory:")
+            + CacheOwnerArgumentNamespaceName.Get(FString()) + FString(":")
+            + FString::FromInt(CacheOwnerArgumentTimeOffset.Get(0)) + FString(":CurrentItemModelMaster");
+    }
+
+    FString FCurrentItemModelMasterCache::CreateCacheKey(
+    )
+    {
+        return FString("Singleton");
+    }
+
+    bool FCurrentItemModelMasterCache::TryGet(
+        const Gs2::Core::Domain::FCacheDatabasePtr& CacheOwnerArgumentCache,
+        TOptional<FString> CacheOwnerArgumentNamespaceName,
+        TOptional<int32> CacheOwnerArgumentTimeOffset,
+        Gs2::Inventory::Model::FCurrentItemModelMasterPtr* CacheOwnerArgumentOutItem
+    )
+    {
+        const auto CacheSnapshot = CacheOwnerArgumentCache;
+        if (!CacheSnapshot.IsValid())
+        {
+            if (CacheOwnerArgumentOutItem) *CacheOwnerArgumentOutItem = nullptr;
+            return false;
+        }
+        if (CacheOwnerArgumentOutItem) *CacheOwnerArgumentOutItem = nullptr;
+        Gs2::Inventory::Model::FCurrentItemModelMasterPtr CacheOwnerValue;
+        const bool CacheOwnerFound = CacheSnapshot->TryGet<Gs2::Inventory::Model::FCurrentItemModelMaster>(
+            CreateCacheParentKey(
+                CacheOwnerArgumentNamespaceName,
+                CacheOwnerArgumentTimeOffset
+            ),
+            CreateCacheKey(
+            ),
+            &CacheOwnerValue
+        );
+        if (CacheOwnerArgumentOutItem) *CacheOwnerArgumentOutItem = CacheOwnerFound ? CacheOwnerValue : nullptr;
+        return CacheOwnerFound;
+    }
+
+    void FCurrentItemModelMasterCache::Put(
+        const Gs2::Core::Domain::FCacheDatabasePtr& CacheOwnerArgumentCache,
+        TOptional<FString> CacheOwnerArgumentNamespaceName,
+        TOptional<int32> CacheOwnerArgumentTimeOffset,
+        const Gs2::Inventory::Model::FCurrentItemModelMasterPtr& CacheOwnerArgumentItem
+    )
+    {
+        const auto CacheSnapshot = CacheOwnerArgumentCache;
+        if (!CacheSnapshot.IsValid()) return;
+        const auto CacheOwnerParentKey = CreateCacheParentKey(
+            CacheOwnerArgumentNamespaceName,
+            CacheOwnerArgumentTimeOffset
+        );
+        const auto CacheOwnerKey = CreateCacheKey(
+        );
+        auto CacheOwnerValue = CacheOwnerArgumentItem;
+        CacheSnapshot->Put(Gs2::Inventory::Model::FCurrentItemModelMaster::TypeName, CacheOwnerParentKey, CacheOwnerKey, CacheOwnerValue,
+            FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
+        );
+    }
+
+    void FCurrentItemModelMasterCache::Delete(
+        const Gs2::Core::Domain::FCacheDatabasePtr& CacheOwnerArgumentCache,
+        TOptional<FString> CacheOwnerArgumentNamespaceName,
+        TOptional<int32> CacheOwnerArgumentTimeOffset
+    )
+    {
+        const auto CacheSnapshot = CacheOwnerArgumentCache;
+        if (!CacheSnapshot.IsValid()) return;
+        CacheSnapshot->Delete(Gs2::Inventory::Model::FCurrentItemModelMaster::TypeName, CreateCacheParentKey(
+            CacheOwnerArgumentNamespaceName,
+            CacheOwnerArgumentTimeOffset
+        ), CreateCacheKey(
+        ));
+    }
+
+    Gs2::Core::Model::FGs2ErrorPtr FCurrentItemModelMasterCache::Fetch(
+        const Gs2::Core::Domain::FCacheDatabasePtr& CacheOwnerArgumentCache,
+        TOptional<FString> CacheOwnerArgumentNamespaceName,
+        TOptional<int32> CacheOwnerArgumentTimeOffset,
+        const TFunction<Gs2::Core::Model::FGs2ErrorPtr(Gs2::Inventory::Model::FCurrentItemModelMasterPtr*)>& CacheOwnerArgumentFetchImpl,
+        Gs2::Inventory::Model::FCurrentItemModelMasterPtr* CacheOwnerArgumentOutItem
+    )
+    {
+        const auto CacheSnapshot = CacheOwnerArgumentCache;
+        const auto FetchImplSnapshot = CacheOwnerArgumentFetchImpl;
+        if (CacheOwnerArgumentOutItem) *CacheOwnerArgumentOutItem = nullptr;
+        if (!FetchImplSnapshot)
+        {
+            if (CacheOwnerArgumentOutItem) *CacheOwnerArgumentOutItem = nullptr;
+            const auto Details = MakeShared<TArray<TSharedPtr<Gs2::Core::Model::FGs2ErrorDetail>>>();
+            Details->Add(MakeShared<Gs2::Core::Model::FGs2ErrorDetail>(TEXT("fetchImpl"), TEXT("fetchImpl is required."), TEXT("required")));
+            return MakeShared<Gs2::Core::Model::FBadRequestError>(Details);
+        }
+        Gs2::Inventory::Model::FCurrentItemModelMasterPtr CacheOwnerFetchedItem;
+        const auto CacheOwnerError = FetchImplSnapshot(&CacheOwnerFetchedItem);
+        if (!CacheOwnerError)
+        {
+            Put(
+                CacheSnapshot,
+                CacheOwnerArgumentNamespaceName,
+                CacheOwnerArgumentTimeOffset,
+                CacheOwnerFetchedItem
+            );
+            if (CacheOwnerArgumentOutItem) *CacheOwnerArgumentOutItem = CacheOwnerFetchedItem;
+            return nullptr;
+        }
+        if (!CacheOwnerError->IsChildOf(Gs2::Core::Model::FNotFoundError::Class))
+        {
+            if (CacheOwnerArgumentOutItem) *CacheOwnerArgumentOutItem = nullptr;
+            return CacheOwnerError;
+        }
+        Put(
+            CacheSnapshot,
+            CacheOwnerArgumentNamespaceName,
+            CacheOwnerArgumentTimeOffset,
+            nullptr
+        );
+        if (CacheOwnerArgumentOutItem) *CacheOwnerArgumentOutItem = nullptr;
+        const auto CacheOwnerDetails = CacheOwnerError->GetErrors();
+        if (CacheOwnerDetails.IsValid() && CacheOwnerDetails->Num() > 0 && (*CacheOwnerDetails)[0].IsValid() && (*CacheOwnerDetails)[0]->GetComponent() == TEXT("currentItemModelMaster"))
+        {
+            return nullptr;
+        }
+        if (CacheOwnerArgumentOutItem) *CacheOwnerArgumentOutItem = nullptr;
+        return CacheOwnerError;
+    }
+
+    Gs2::Core::Domain::CallbackID FCurrentItemModelMasterCache::ListSubscribe(
+        const Gs2::Core::Domain::FCacheDatabasePtr& CacheOwnerArgumentCache,
+        TOptional<FString> CacheOwnerArgumentNamespaceName,
+        TOptional<int32> CacheOwnerArgumentTimeOffset,
+        TFunction<void(TArray<Gs2::Inventory::Model::FCurrentItemModelMasterPtr>)> CacheOwnerArgumentCallback
+    )
+    {
+        const auto CacheSnapshot = CacheOwnerArgumentCache;
+        if (!CacheSnapshot.IsValid()) return 0;
+        return CacheSnapshot->ListSubscribeTyped(Gs2::Inventory::Model::FCurrentItemModelMaster::TypeName, CreateCacheParentKey(
+            CacheOwnerArgumentNamespaceName,
+            CacheOwnerArgumentTimeOffset
+        ), [CacheOwnerArgumentCallback](const TArray<FGs2ObjectPtr>& CacheOwnerValues)
+        {
+            TArray<Gs2::Inventory::Model::FCurrentItemModelMasterPtr> CacheOwnerTypedValues;
+            for (const auto& CacheOwnerValue : CacheOwnerValues) if (CacheOwnerValue) CacheOwnerTypedValues.Add(StaticCastSharedPtr<Gs2::Inventory::Model::FCurrentItemModelMaster>(CacheOwnerValue));
+            if (CacheOwnerArgumentCallback) CacheOwnerArgumentCallback(CacheOwnerTypedValues);
+        });
+    }
+
+    void FCurrentItemModelMasterCache::ListUnsubscribe(
+        const Gs2::Core::Domain::FCacheDatabasePtr& CacheOwnerArgumentCache,
+        TOptional<FString> CacheOwnerArgumentNamespaceName,
+        TOptional<int32> CacheOwnerArgumentTimeOffset,
+        Gs2::Core::Domain::CallbackID CacheOwnerArgumentCallbackID
+    )
+    {
+        const auto CacheSnapshot = CacheOwnerArgumentCache;
+        if (!CacheSnapshot.IsValid()) return;
+        CacheSnapshot->ListUnsubscribe(Gs2::Inventory::Model::FCurrentItemModelMaster::TypeName, CreateCacheParentKey(
+            CacheOwnerArgumentNamespaceName,
+            CacheOwnerArgumentTimeOffset
+        ), CacheOwnerArgumentCallbackID);
+    }
+}

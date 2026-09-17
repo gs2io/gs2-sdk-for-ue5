@@ -102,27 +102,89 @@ namespace Gs2::Log::Domain::Model
         TSharedPtr<TSharedPtr<Gs2::Log::Model::FTimeseriesPoint>> Result
     )
     {
-        // ReSharper disable once CppLocalVariableMayBeConst
-        TSharedPtr<Gs2::Log::Model::FTimeseriesPoint> Value;
-        auto bCacheHit = Self->Gs2->Cache->TryGet<Gs2::Log::Model::FTimeseriesPoint>(
-            Self->ParentKey,
-            Gs2::Log::Domain::Model::FTimeseriesPointDomain::CreateCacheKey(
-            ),
-            &Value
+        const FString CacheKey = Gs2::Log::Domain::Model::FTimeseriesPointDomain::CreateCacheKey(
         );
-        *Result = Value;
+        return Self->Gs2->Cache->ExecuteWithKeyLock(
+            Gs2::Log::Model::FTimeseriesPoint::TypeName,
+            Self->ParentKey,
+            CacheKey,
+            [this, Result, CacheKey]() -> Gs2::Core::Model::FGs2ErrorPtr
+            {
+                // ReSharper disable once CppLocalVariableMayBeConst
+                TSharedPtr<Gs2::Log::Model::FTimeseriesPoint> Value;
+                auto bCacheHit = Self->Gs2->Cache->TryGet<Gs2::Log::Model::FTimeseriesPoint>(
+                    Self->ParentKey,
+                    CacheKey,
+                    &Value
+                );
+                *Result = Value;
 
-        return nullptr;
+                return nullptr;
+            }
+        );
     }
 
     TSharedPtr<FAsyncTask<FTimeseriesPointDomain::FModelTask>> FTimeseriesPointDomain::Model() {
         return Gs2::Core::Util::New<FAsyncTask<FTimeseriesPointDomain::FModelTask>>(this->AsShared());
     }
 
+    void FTimeseriesPointDomain::Invalidate()
+    {
+        Gs2->Cache->Delete(
+            Gs2::Log::Model::FTimeseriesPoint::TypeName,
+            ParentKey,
+            Gs2::Log::Domain::Model::FTimeseriesPointDomain::CreateCacheKey(
+            )
+        );
+    }
+
+    FTimeseriesPointDomain::FSubscribeWithInitialCallTask::FSubscribeWithInitialCallTask(
+        const TSharedPtr<FTimeseriesPointDomain>& Self,
+        TFunction<void(Gs2::Log::Model::FTimeseriesPointPtr)> Callback
+    ):
+        Self(Self),
+        Callback(Callback)
+    {
+    }
+
+    FTimeseriesPointDomain::FSubscribeWithInitialCallTask::FSubscribeWithInitialCallTask(
+        const FSubscribeWithInitialCallTask& From
+    ):
+        TGs2Future(From),
+        Self(From.Self),
+        Callback(From.Callback)
+    {
+    }
+
+    Gs2::Core::Model::FGs2ErrorPtr FTimeseriesPointDomain::FSubscribeWithInitialCallTask::Action(
+        TSharedPtr<TSharedPtr<Gs2::Core::Domain::CallbackID>> Result
+    )
+    {
+        const auto Task = Self->Model();
+        Task->StartSynchronousTask();
+        Task->EnsureCompletion();
+        if (Task->GetTask().IsError()) return Task->GetTask().Error();
+        const auto Item = Task->GetTask().Result();
+        const auto CallbackId = Self->Subscribe(Callback);
+        Callback(Item);
+        *Result = MakeShared<Gs2::Core::Domain::CallbackID>(CallbackId);
+        return nullptr;
+    }
+
+    TSharedPtr<FAsyncTask<FTimeseriesPointDomain::FSubscribeWithInitialCallTask>> FTimeseriesPointDomain::SubscribeWithInitialCall(
+        TFunction<void(Gs2::Log::Model::FTimeseriesPointPtr)> Callback
+    )
+    {
+        return Gs2::Core::Util::New<FAsyncTask<FSubscribeWithInitialCallTask>>(this->AsShared(), Callback);
+    }
+
     Gs2::Core::Domain::CallbackID FTimeseriesPointDomain::Subscribe(
         TFunction<void(Gs2::Log::Model::FTimeseriesPointPtr)> Callback
     )
     {
+        const TWeakPtr<Gs2::Core::Domain::FGs2> WeakGs2 = Gs2;
+        const TWeakPtr<Log::Domain::FGs2LogDomain> WeakService = Service;
+        const FString RegisteredParentKey = ParentKey;
         return Gs2->Cache->Subscribe(
             Gs2::Log::Model::FTimeseriesPoint::TypeName,
             ParentKey,
@@ -131,6 +193,21 @@ namespace Gs2::Log::Domain::Model
             [Callback](TSharedPtr<FGs2Object> obj)
             {
                 Callback(StaticCastSharedPtr<Gs2::Log::Model::FTimeseriesPoint>(obj));
+            },
+            [WeakGs2, WeakService, RegisteredParentKey]()
+            {
+                const auto Owner = WeakGs2.Pin();
+                if (!Owner.IsValid())
+                {
+                    return;
+                }
+                const auto Domain = MakeShared<FTimeseriesPointDomain>(
+                    Owner,
+                    WeakService.Pin()
+                );
+                Domain->ParentKey = RegisteredParentKey;
+                const auto Task = Domain->Model();
+                Task->StartBackgroundTask();
             }
         );
     }
@@ -154,4 +231,3 @@ namespace Gs2::Log::Domain::Model
 #elif defined(__clang__)
 #pragma clang diagnostic pop
 #endif
-

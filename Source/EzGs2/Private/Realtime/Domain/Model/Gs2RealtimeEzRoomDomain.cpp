@@ -82,7 +82,7 @@ namespace Gs2::UE5::Realtime::Domain::Model
     Gs2::Core::Domain::CallbackID FEzRoomDomain::Subscribe(TFunction<void(Gs2::UE5::Realtime::Model::FEzRoomPtr)> Callback)
     {
         return Domain->Subscribe(
-            [&](Gs2::Realtime::Model::FRoomPtr Item)
+            [Callback](Gs2::Realtime::Model::FRoomPtr Item)
             {
                 Callback(Gs2::UE5::Realtime::Model::FEzRoom::FromModel(Item));
             }

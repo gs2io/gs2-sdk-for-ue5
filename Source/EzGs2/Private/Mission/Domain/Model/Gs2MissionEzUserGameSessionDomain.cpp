@@ -78,7 +78,8 @@ namespace Gs2::UE5::Mission::Domain::Model
         );
     }
 
-    void FEzUserGameSessionDomain::UnsubscribeCompletes(Gs2::Core::Domain::CallbackID CallbackId)
+    void FEzUserGameSessionDomain::UnsubscribeCompletes(
+            Gs2::Core::Domain::CallbackID CallbackId)
     {
         Domain->UnsubscribeCompletes(
             CallbackId
@@ -102,7 +103,8 @@ namespace Gs2::UE5::Mission::Domain::Model
         );
     }
 
-    void FEzUserGameSessionDomain::UnsubscribeCounters(Gs2::Core::Domain::CallbackID CallbackId)
+    void FEzUserGameSessionDomain::UnsubscribeCounters(
+            Gs2::Core::Domain::CallbackID CallbackId)
     {
         Domain->UnsubscribeCounters(
             CallbackId

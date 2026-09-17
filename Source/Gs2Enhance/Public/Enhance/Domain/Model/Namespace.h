@@ -104,6 +104,8 @@ namespace Gs2::Enhance::Domain::Model
             const FNamespaceDomain& From
         );
 
+
+
         class GS2ENHANCE_API FGetStatusTask final :
             public Gs2::Core::Util::TGs2Future<Gs2::Enhance::Domain::Model::FNamespaceDomain>,
             public TSharedFromThis<FGetStatusTask>
@@ -129,6 +131,8 @@ namespace Gs2::Enhance::Domain::Model
         TSharedPtr<FAsyncTask<FGetStatusTask>> GetStatus(
             Request::FGetNamespaceStatusRequestPtr Request
         );
+
+
 
         class GS2ENHANCE_API FGetTask final :
             public Gs2::Core::Util::TGs2Future<Gs2::Enhance::Model::FNamespace>,
@@ -156,6 +160,8 @@ namespace Gs2::Enhance::Domain::Model
             Request::FGetNamespaceRequestPtr Request
         );
 
+
+
         class GS2ENHANCE_API FUpdateTask final :
             public Gs2::Core::Util::TGs2Future<Gs2::Enhance::Domain::Model::FNamespaceDomain>,
             public TSharedFromThis<FUpdateTask>
@@ -181,6 +187,8 @@ namespace Gs2::Enhance::Domain::Model
         TSharedPtr<FAsyncTask<FUpdateTask>> Update(
             Request::FUpdateNamespaceRequestPtr Request
         );
+
+
 
         class GS2ENHANCE_API FDeleteTask final :
             public Gs2::Core::Util::TGs2Future<Gs2::Enhance::Domain::Model::FNamespaceDomain>,
@@ -208,6 +216,8 @@ namespace Gs2::Enhance::Domain::Model
             Request::FDeleteNamespaceRequestPtr Request
         );
 
+
+
         class GS2ENHANCE_API FCreateUnleashRateModelMasterTask final :
             public Gs2::Core::Util::TGs2Future<Gs2::Enhance::Domain::Model::FUnleashRateModelMasterDomain>,
             public TSharedFromThis<FCreateUnleashRateModelMasterTask>
@@ -233,6 +243,8 @@ namespace Gs2::Enhance::Domain::Model
         TSharedPtr<FAsyncTask<FCreateUnleashRateModelMasterTask>> CreateUnleashRateModelMaster(
             Request::FCreateUnleashRateModelMasterRequestPtr Request
         );
+
+
 
         class GS2ENHANCE_API FCreateRateModelMasterTask final :
             public Gs2::Core::Util::TGs2Future<Gs2::Enhance::Domain::Model::FRateModelMasterDomain>,
@@ -268,8 +280,33 @@ namespace Gs2::Enhance::Domain::Model
 
         Gs2::Core::Domain::CallbackID SubscribeUnleashRateModels(
             TFunction<void()> Callback
+
         );
 
+        class FCollectUnleashRateModelsTask;
+
+        Gs2::Core::Domain::CallbackID SubscribeUnleashRateModels(
+            TFunction<void(TArray<Gs2::Enhance::Model::FUnleashRateModelPtr>)> Callback
+        );
+
+        void InvalidateUnleashRateModels();
+
+        class GS2ENHANCE_API FSubscribeUnleashRateModelsWithInitialCallTask final :
+            public Gs2::Core::Util::TGs2Future<Gs2::Core::Domain::CallbackID>,
+            public TSharedFromThis<FSubscribeUnleashRateModelsWithInitialCallTask>
+        {
+            const TSharedPtr<FNamespaceDomain> Self;
+            const TFunction<void(TArray<Gs2::Enhance::Model::FUnleashRateModelPtr>)> Callback;
+
+        public:
+            FSubscribeUnleashRateModelsWithInitialCallTask(const TSharedPtr<FNamespaceDomain>& Self, TFunction<void(TArray<Gs2::Enhance::Model::FUnleashRateModelPtr>)> Callback);
+            FSubscribeUnleashRateModelsWithInitialCallTask(const FSubscribeUnleashRateModelsWithInitialCallTask& From);
+            virtual Gs2::Core::Model::FGs2ErrorPtr Action(TSharedPtr<TSharedPtr<Gs2::Core::Domain::CallbackID>> Result) override;
+        };
+
+        TSharedPtr<FAsyncTask<FSubscribeUnleashRateModelsWithInitialCallTask>> SubscribeUnleashRateModelsWithInitialCall(
+            TFunction<void(TArray<Gs2::Enhance::Model::FUnleashRateModelPtr>)> Callback
+        );
         void UnsubscribeUnleashRateModels(
             Gs2::Core::Domain::CallbackID CallbackID
         );
@@ -284,8 +321,33 @@ namespace Gs2::Enhance::Domain::Model
 
         Gs2::Core::Domain::CallbackID SubscribeUnleashRateModelMasters(
             TFunction<void()> Callback
+
         );
 
+        class FCollectUnleashRateModelMastersTask;
+
+        Gs2::Core::Domain::CallbackID SubscribeUnleashRateModelMasters(
+            TFunction<void(TArray<Gs2::Enhance::Model::FUnleashRateModelMasterPtr>)> Callback,const TOptional<FString> NamePrefix = TOptional<FString>()
+        );
+
+        void InvalidateUnleashRateModelMasters(const TOptional<FString> NamePrefix = TOptional<FString>());
+
+        class GS2ENHANCE_API FSubscribeUnleashRateModelMastersWithInitialCallTask final :
+            public Gs2::Core::Util::TGs2Future<Gs2::Core::Domain::CallbackID>,
+            public TSharedFromThis<FSubscribeUnleashRateModelMastersWithInitialCallTask>
+        {
+            const TSharedPtr<FNamespaceDomain> Self;
+            const TFunction<void(TArray<Gs2::Enhance::Model::FUnleashRateModelMasterPtr>)> Callback;
+        const TOptional<FString> QueryNamePrefix;
+        public:
+            FSubscribeUnleashRateModelMastersWithInitialCallTask(const TSharedPtr<FNamespaceDomain>& Self, TFunction<void(TArray<Gs2::Enhance::Model::FUnleashRateModelMasterPtr>)> Callback,const TOptional<FString> NamePrefix);
+            FSubscribeUnleashRateModelMastersWithInitialCallTask(const FSubscribeUnleashRateModelMastersWithInitialCallTask& From);
+            virtual Gs2::Core::Model::FGs2ErrorPtr Action(TSharedPtr<TSharedPtr<Gs2::Core::Domain::CallbackID>> Result) override;
+        };
+
+        TSharedPtr<FAsyncTask<FSubscribeUnleashRateModelMastersWithInitialCallTask>> SubscribeUnleashRateModelMastersWithInitialCall(
+            TFunction<void(TArray<Gs2::Enhance::Model::FUnleashRateModelMasterPtr>)> Callback,const TOptional<FString> NamePrefix = TOptional<FString>()
+        );
         void UnsubscribeUnleashRateModelMasters(
             Gs2::Core::Domain::CallbackID CallbackID
         );
@@ -299,8 +361,33 @@ namespace Gs2::Enhance::Domain::Model
 
         Gs2::Core::Domain::CallbackID SubscribeRateModels(
             TFunction<void()> Callback
+
         );
 
+        class FCollectRateModelsTask;
+
+        Gs2::Core::Domain::CallbackID SubscribeRateModels(
+            TFunction<void(TArray<Gs2::Enhance::Model::FRateModelPtr>)> Callback
+        );
+
+        void InvalidateRateModels();
+
+        class GS2ENHANCE_API FSubscribeRateModelsWithInitialCallTask final :
+            public Gs2::Core::Util::TGs2Future<Gs2::Core::Domain::CallbackID>,
+            public TSharedFromThis<FSubscribeRateModelsWithInitialCallTask>
+        {
+            const TSharedPtr<FNamespaceDomain> Self;
+            const TFunction<void(TArray<Gs2::Enhance::Model::FRateModelPtr>)> Callback;
+
+        public:
+            FSubscribeRateModelsWithInitialCallTask(const TSharedPtr<FNamespaceDomain>& Self, TFunction<void(TArray<Gs2::Enhance::Model::FRateModelPtr>)> Callback);
+            FSubscribeRateModelsWithInitialCallTask(const FSubscribeRateModelsWithInitialCallTask& From);
+            virtual Gs2::Core::Model::FGs2ErrorPtr Action(TSharedPtr<TSharedPtr<Gs2::Core::Domain::CallbackID>> Result) override;
+        };
+
+        TSharedPtr<FAsyncTask<FSubscribeRateModelsWithInitialCallTask>> SubscribeRateModelsWithInitialCall(
+            TFunction<void(TArray<Gs2::Enhance::Model::FRateModelPtr>)> Callback
+        );
         void UnsubscribeRateModels(
             Gs2::Core::Domain::CallbackID CallbackID
         );
@@ -323,8 +410,33 @@ namespace Gs2::Enhance::Domain::Model
 
         Gs2::Core::Domain::CallbackID SubscribeRateModelMasters(
             TFunction<void()> Callback
+
         );
 
+        class FCollectRateModelMastersTask;
+
+        Gs2::Core::Domain::CallbackID SubscribeRateModelMasters(
+            TFunction<void(TArray<Gs2::Enhance::Model::FRateModelMasterPtr>)> Callback,const TOptional<FString> NamePrefix = TOptional<FString>()
+        );
+
+        void InvalidateRateModelMasters(const TOptional<FString> NamePrefix = TOptional<FString>());
+
+        class GS2ENHANCE_API FSubscribeRateModelMastersWithInitialCallTask final :
+            public Gs2::Core::Util::TGs2Future<Gs2::Core::Domain::CallbackID>,
+            public TSharedFromThis<FSubscribeRateModelMastersWithInitialCallTask>
+        {
+            const TSharedPtr<FNamespaceDomain> Self;
+            const TFunction<void(TArray<Gs2::Enhance::Model::FRateModelMasterPtr>)> Callback;
+        const TOptional<FString> QueryNamePrefix;
+        public:
+            FSubscribeRateModelMastersWithInitialCallTask(const TSharedPtr<FNamespaceDomain>& Self, TFunction<void(TArray<Gs2::Enhance::Model::FRateModelMasterPtr>)> Callback,const TOptional<FString> NamePrefix);
+            FSubscribeRateModelMastersWithInitialCallTask(const FSubscribeRateModelMastersWithInitialCallTask& From);
+            virtual Gs2::Core::Model::FGs2ErrorPtr Action(TSharedPtr<TSharedPtr<Gs2::Core::Domain::CallbackID>> Result) override;
+        };
+
+        TSharedPtr<FAsyncTask<FSubscribeRateModelMastersWithInitialCallTask>> SubscribeRateModelMastersWithInitialCall(
+            TFunction<void(TArray<Gs2::Enhance::Model::FRateModelMasterPtr>)> Callback,const TOptional<FString> NamePrefix = TOptional<FString>()
+        );
         void UnsubscribeRateModelMasters(
             Gs2::Core::Domain::CallbackID CallbackID
         );
@@ -364,7 +476,34 @@ namespace Gs2::Enhance::Domain::Model
 
         TSharedPtr<FAsyncTask<FModelTask>> Model();
 
+        void Invalidate();
+
         Gs2::Core::Domain::CallbackID Subscribe(
+            TFunction<void(Gs2::Enhance::Model::FNamespacePtr)> Callback
+        );
+
+        class GS2ENHANCE_API FSubscribeWithInitialCallTask final :
+            public Gs2::Core::Util::TGs2Future<Gs2::Core::Domain::CallbackID>,
+            public TSharedFromThis<FSubscribeWithInitialCallTask>
+        {
+            const TSharedPtr<FNamespaceDomain> Self;
+            const TFunction<void(Gs2::Enhance::Model::FNamespacePtr)> Callback;
+        public:
+            FSubscribeWithInitialCallTask(
+                const TSharedPtr<FNamespaceDomain>& Self,
+                TFunction<void(Gs2::Enhance::Model::FNamespacePtr)> Callback
+            );
+
+            FSubscribeWithInitialCallTask(
+                const FSubscribeWithInitialCallTask& From
+            );
+
+            virtual Gs2::Core::Model::FGs2ErrorPtr Action(
+                TSharedPtr<TSharedPtr<Gs2::Core::Domain::CallbackID>> Result
+            ) override;
+        };
+
+        TSharedPtr<FAsyncTask<FSubscribeWithInitialCallTask>> SubscribeWithInitialCall(
             TFunction<void(Gs2::Enhance::Model::FNamespacePtr)> Callback
         );
 

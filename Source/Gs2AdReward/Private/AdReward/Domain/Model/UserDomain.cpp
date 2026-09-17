@@ -28,6 +28,7 @@
 #include "AdReward/Domain/Model/UserAccessToken.h"
 #include "AdReward/Domain/Model/Point.h"
 #include "AdReward/Domain/Model/PointAccessToken.h"
+#include "AdReward/Model/Cache/Point.h"
 
 #include "Core/Domain/Gs2.h"
 #include "Core/Domain/Transaction/JobQueueJobDomainFactory.h"
@@ -106,4 +107,3 @@ namespace Gs2::AdReward::Domain::Model
 #elif defined(__clang__)
 #pragma clang diagnostic pop
 #endif
-

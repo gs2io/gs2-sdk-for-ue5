@@ -19,6 +19,7 @@
 #include "CoreMinimal.h"
 #include "Dom/JsonObject.h"
 #include "../Model/TransactionSetting.h"
+#include "../Model/TransactionSettingV2.h"
 #include "../Model/ScriptSetting.h"
 #include "../Model/NotificationSetting.h"
 #include "../Model/LogSetting.h"
@@ -33,6 +34,7 @@ namespace Gs2::Matchmaking::Request
         TOptional<FString> NamespaceNameValue;
         TOptional<FString> DescriptionValue;
         TSharedPtr<Model::FTransactionSetting> TransactionSettingValue;
+        TSharedPtr<Model::FTransactionSettingV2> TransactionSettingV2Value;
         TOptional<bool> EnableRatingValue;
         TOptional<FString> EnableDisconnectDetectionValue;
         TOptional<int32> DisconnectDetectionTimeoutSecondsValue;
@@ -64,6 +66,7 @@ namespace Gs2::Matchmaking::Request
         TSharedPtr<FUpdateNamespaceRequest> WithNamespaceName(const TOptional<FString> NamespaceName);
         TSharedPtr<FUpdateNamespaceRequest> WithDescription(const TOptional<FString> Description);
         TSharedPtr<FUpdateNamespaceRequest> WithTransactionSetting(const TSharedPtr<Model::FTransactionSetting> TransactionSetting);
+        TSharedPtr<FUpdateNamespaceRequest> WithTransactionSettingV2(const TSharedPtr<Model::FTransactionSettingV2> TransactionSettingV2);
         TSharedPtr<FUpdateNamespaceRequest> WithEnableRating(const TOptional<bool> EnableRating);
         TSharedPtr<FUpdateNamespaceRequest> WithEnableDisconnectDetection(const TOptional<FString> EnableDisconnectDetection);
         TSharedPtr<FUpdateNamespaceRequest> WithDisconnectDetectionTimeoutSeconds(const TOptional<int32> DisconnectDetectionTimeoutSeconds);
@@ -87,6 +90,7 @@ namespace Gs2::Matchmaking::Request
         TOptional<FString> GetNamespaceName() const;
         TOptional<FString> GetDescription() const;
         TSharedPtr<Model::FTransactionSetting> GetTransactionSetting() const;
+        TSharedPtr<Model::FTransactionSettingV2> GetTransactionSettingV2() const;
         TOptional<bool> GetEnableRating() const;
         FString GetEnableRatingString() const;
         TOptional<FString> GetEnableDisconnectDetection() const;

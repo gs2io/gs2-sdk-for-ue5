@@ -87,7 +87,7 @@ namespace Gs2::UE5::Distributor::Domain::Model
     Gs2::Core::Domain::CallbackID FEzStampSheetResultDomain::Subscribe(TFunction<void(Gs2::UE5::Distributor::Model::FEzStampSheetResultPtr)> Callback)
     {
         return Domain->Subscribe(
-            [&](Gs2::Distributor::Model::FStampSheetResultPtr Item)
+            [Callback](Gs2::Distributor::Model::FStampSheetResultPtr Item)
             {
                 Callback(Gs2::UE5::Distributor::Model::FEzStampSheetResult::FromModel(Item));
             }

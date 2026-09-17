@@ -25,11 +25,41 @@
 #endif
 
 #include "Schedule/Domain/SpeculativeExecutor/Consume/DeleteTriggerByUserIdSpeculativeExecutor.h"
+#include "Schedule/Model/Cache/Trigger.h"
 
+#include "Auth/Model/AccessToken.h"
 #include "Core/Domain/Gs2.h"
+#include "Core/Domain/SpeculativeExecutor/PreparedSpeculativeCommit.h"
+#include "Serialization/JsonSerializer.h"
+#include "Serialization/JsonWriter.h"
 
 namespace Gs2::Schedule::Domain::SpeculativeExecutor
 {
+
+    namespace
+    {
+        using FTriggerPtr = Gs2::Schedule::Model::FTriggerPtr;
+        using FTriggerCache = Gs2::Schedule::Model::Cache::FTriggerCache;
+
+        static FString DeleteTriggerExpectedId(const Gs2::Core::Domain::FGs2Ptr& Domain, const FString& NamespaceName, const FString& UserId, const FString& TriggerName)
+        {
+            return FString::Printf(TEXT("grn:gs2:%s:%s:schedule:%s:user:%s:trigger:%s"), *Domain->RestSession->RegionName(), *Domain->RestSession->OwnerId(), *NamespaceName, *UserId, *TriggerName);
+        }
+
+        static FString DeleteTriggerSnapshot(const TSharedPtr<FJsonObject>& Json)
+        {
+            FString Result;
+            const auto Writer = TJsonWriterFactory<>::Create(&Result);
+            FJsonSerializer::Serialize(Json.ToSharedRef(), Writer);
+            return Result;
+        }
+
+        static bool DeleteTriggerIsExpected(const FTriggerPtr& Item, const FString& ExpectedId, const FString& UserId, const FString& TriggerName)
+        {
+            return Item.IsValid() && Item->GetTriggerId().IsSet() && *Item->GetTriggerId() == ExpectedId && Item->GetUserId().IsSet() && *Item->GetUserId() == UserId && Item->GetName().IsSet() && *Item->GetName() == TriggerName;
+        }
+
+    }
 
     FString FDeleteTriggerByUserIdSpeculativeExecutor::Action()
     {
@@ -43,7 +73,6 @@ namespace Gs2::Schedule::Domain::SpeculativeExecutor
         Gs2::Schedule::Model::FTriggerPtr Item
     )
     {
-        UE_LOG(Gs2Log, Warning, TEXT("Speculative execution not supported on this action: %s"), ToCStr(Action()))
         return nullptr;
     }
 
@@ -73,19 +102,28 @@ namespace Gs2::Schedule::Domain::SpeculativeExecutor
     }
 
     Gs2::Core::Model::FGs2ErrorPtr FDeleteTriggerByUserIdSpeculativeExecutor::FCommitTask::Action(
-        TSharedPtr<TSharedPtr<TFunction<void()>>> Result
+        TSharedPtr<TSharedPtr<Gs2::Core::Domain::SpeculativeExecutor::FPreparedSpeculativeCommit>> Result
     )
     {
-        auto Err = Transform(Domain, AccessToken, Request, nullptr);
-        if (Err != nullptr)
+        *Result = nullptr;
+        if (!AccessToken.IsValid() || !AccessToken->GetUserId().IsSet() || AccessToken->GetUserId()->IsEmpty() || !Request.IsValid()) return nullptr;
+        const auto Prepared = Gs2::Schedule::Request::FDeleteTriggerByUserIdRequest::FromJson(Request->ToJson());
+        if (!Prepared.IsValid()) return nullptr;
+        if (Prepared->GetUserId().IsSet() && *Prepared->GetUserId() == TEXT("#{userId}")) Prepared->WithUserId(AccessToken->GetUserId());
+        if (!Domain.IsValid() || !Domain->RestSession.IsValid() || Prepared->GetUserId() != AccessToken->GetUserId() || !Prepared->GetNamespaceName().IsSet() || !Prepared->GetTriggerName().IsSet()) return nullptr;
+        const auto UserId = *AccessToken->GetUserId();
+        const auto TimeOffset = AccessToken->GetTimeOffset();
+        const auto ExpectedId = DeleteTriggerExpectedId(Domain, *Prepared->GetNamespaceName(), UserId, *Prepared->GetTriggerName());
+        FTriggerPtr PreparedItem;
+        if (!FTriggerCache::TryGet(Domain->Cache, Prepared->GetNamespaceName(), UserId, Prepared->GetTriggerName(), TimeOffset, &PreparedItem) || !DeleteTriggerIsExpected(PreparedItem, ExpectedId, UserId, *Prepared->GetTriggerName())) return nullptr;
+        const FString PreparedSnapshot = DeleteTriggerSnapshot(PreparedItem->ToJson());
+        *Result = Gs2::Core::Domain::SpeculativeExecutor::FPreparedSpeculativeCommit::WrapLegacy(MakeShared<TFunction<void()>>([DomainCopy = Domain, Prepared, UserId, TimeOffset, ExpectedId, PreparedSnapshot]()
         {
-            return Err;
-        }
-
-        *Result = MakeShared<TFunction<void()>>([&]()
-        {
-            return nullptr;
-        });
+            FTriggerPtr Live;
+            if (FTriggerCache::TryGet(DomainCopy->Cache, Prepared->GetNamespaceName(), UserId, Prepared->GetTriggerName(), TimeOffset, &Live) && DeleteTriggerIsExpected(Live, ExpectedId, UserId, *Prepared->GetTriggerName()) && DeleteTriggerSnapshot(Live->ToJson()) == PreparedSnapshot) {
+                FTriggerCache::Put(DomainCopy->Cache, Prepared->GetNamespaceName(), UserId, Prepared->GetTriggerName(), TimeOffset, nullptr);
+            }
+        }));
         return nullptr;
     }
 

@@ -19,6 +19,7 @@
 #include "CoreMinimal.h"
 #include "Dom/JsonObject.h"
 #include "../Model/TransactionSetting.h"
+#include "../Model/TransactionSettingV2.h"
 #include "../Model/NotificationSetting.h"
 #include "../Model/ScriptSetting.h"
 #include "../Model/LogSetting.h"
@@ -33,6 +34,7 @@ namespace Gs2::Guild::Request
         TOptional<FString> NamespaceNameValue;
         TOptional<FString> DescriptionValue;
         TSharedPtr<Model::FTransactionSetting> TransactionSettingValue;
+        TSharedPtr<Model::FTransactionSettingV2> TransactionSettingV2Value;
         TSharedPtr<Model::FNotificationSetting> ChangeNotificationValue;
         TSharedPtr<Model::FNotificationSetting> JoinNotificationValue;
         TSharedPtr<Model::FNotificationSetting> LeaveNotificationValue;
@@ -61,6 +63,7 @@ namespace Gs2::Guild::Request
         TSharedPtr<FUpdateNamespaceRequest> WithNamespaceName(const TOptional<FString> NamespaceName);
         TSharedPtr<FUpdateNamespaceRequest> WithDescription(const TOptional<FString> Description);
         TSharedPtr<FUpdateNamespaceRequest> WithTransactionSetting(const TSharedPtr<Model::FTransactionSetting> TransactionSetting);
+        TSharedPtr<FUpdateNamespaceRequest> WithTransactionSettingV2(const TSharedPtr<Model::FTransactionSettingV2> TransactionSettingV2);
         TSharedPtr<FUpdateNamespaceRequest> WithChangeNotification(const TSharedPtr<Model::FNotificationSetting> ChangeNotification);
         TSharedPtr<FUpdateNamespaceRequest> WithJoinNotification(const TSharedPtr<Model::FNotificationSetting> JoinNotification);
         TSharedPtr<FUpdateNamespaceRequest> WithLeaveNotification(const TSharedPtr<Model::FNotificationSetting> LeaveNotification);
@@ -81,6 +84,7 @@ namespace Gs2::Guild::Request
         TOptional<FString> GetNamespaceName() const;
         TOptional<FString> GetDescription() const;
         TSharedPtr<Model::FTransactionSetting> GetTransactionSetting() const;
+        TSharedPtr<Model::FTransactionSettingV2> GetTransactionSettingV2() const;
         TSharedPtr<Model::FNotificationSetting> GetChangeNotification() const;
         TSharedPtr<Model::FNotificationSetting> GetJoinNotification() const;
         TSharedPtr<Model::FNotificationSetting> GetLeaveNotification() const;

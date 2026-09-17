@@ -1,3 +1,4 @@
+
 /*
  * Copyright 2016 Game Server Services, Inc. or its affiliates. All Rights
  * Reserved.
@@ -31,6 +32,8 @@
 #include "Account/Domain/Model/Account.h"
 
 #include "Core/Domain/Gs2.h"
+#include "Account/Model/Cache/PlatformId.h"
+#include "Account/Model/Cache/Account.h"
 
 namespace Gs2::Account::Domain::Iterator
 {
@@ -94,12 +97,11 @@ namespace Gs2::Account::Domain::Iterator
 
         if (!RangeIteratorOpt || (!*RangeIteratorOpt && !bLast))
         {
-            const auto ListParentKey = Gs2::Account::Domain::Model::FAccountDomain::CreateCacheParentKey(
+            const auto ListParentKey = Gs2::Account::Model::Cache::FPlatformIdCache::CreateCacheParentKey(
                 Self->NamespaceName,
-                Self->UserId(),
-                "PlatformId"
+                Self->AccessToken.IsValid() ? Self->AccessToken->GetUserId() : TOptional<FString>(),
+                Self->AccessToken.IsValid() ? Self->AccessToken->GetTimeOffset() : TOptional<int32>()
             );
-
             if (!RangeIteratorOpt)
             {
                 Range = Self->Gs2->Cache->TryGetList<Gs2::Account::Model::FPlatformId>(ListParentKey);
@@ -114,14 +116,15 @@ namespace Gs2::Account::Domain::Iterator
                 }
             }
 
-            const auto Future = Self->Client->DescribePlatformIds(
+            const auto Request =
                 MakeShared<Gs2::Account::Request::FDescribePlatformIdsRequest>()
                     ->WithContextStack(Self->Gs2->DefaultContextStack)
                     ->WithNamespaceName(Self->NamespaceName)
                     ->WithAccessToken(Self->AccessToken == nullptr ? TOptional<FString>() : Self->AccessToken->GetToken())
                     ->WithPageToken(PageToken)
                     ->WithLimit(FetchSize)
-            );
+            ;
+            const auto Future = Self->Client->DescribePlatformIds(Request);
             Future->StartSynchronousTask();
             if (Future->GetTask().IsError())
             {
@@ -135,18 +138,23 @@ namespace Gs2::Account::Domain::Iterator
             }
             const auto R = Future->GetTask().Result();
             Future->EnsureCompletion();
-            Range = R->GetItems();
-            for (auto Item : *R->GetItems())
+            Range = R->GetItems().IsValid() ? R->GetItems() : MakeShared<TArray<Gs2::Account::Model::FPlatformIdPtr>>();
+            const auto CacheOwnerSnapshotUserId = Self->AccessToken.IsValid() ? Self->UserId() : TOptional<FString>();
+            const auto CacheOwnerSnapshotTimeOffset = Self->AccessToken.IsValid() ? Self->AccessToken->GetTimeOffset() : TOptional<int32>();
+            const auto ResultModel = R;
+
+
+            if (Range.IsValid())
             {
-                Self->Gs2->Cache->Put(
-                    Gs2::Account::Model::FPlatformId::TypeName,
-                    ListParentKey,
-                    Gs2::Account::Domain::Model::FPlatformIdDomain::CreateCacheKey(
-                        *Item->GetType()
-                    ),
-                    Item,
-                    FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
-                );
+                for (const auto& Item : *Range)
+                {
+                    if (!Item.IsValid()) continue;
+                    Gs2::Account::Model::Cache::FPlatformIdCache::Put(
+                        Self->Gs2->Cache,
+                        Request->GetNamespaceName(), CacheOwnerSnapshotUserId, Item->GetType(),
+                        CacheOwnerSnapshotTimeOffset, Item
+                    );
+                }
             }
             if (Range)
             {

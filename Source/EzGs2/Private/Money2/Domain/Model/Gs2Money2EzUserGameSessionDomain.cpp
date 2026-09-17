@@ -186,7 +186,8 @@ namespace Gs2::UE5::Money2::Domain::Model
         );
     }
 
-    void FEzUserGameSessionDomain::UnsubscribeWallets(Gs2::Core::Domain::CallbackID CallbackId)
+    void FEzUserGameSessionDomain::UnsubscribeWallets(
+            Gs2::Core::Domain::CallbackID CallbackId)
     {
         Domain->UnsubscribeWallets(
             CallbackId
@@ -210,7 +211,8 @@ namespace Gs2::UE5::Money2::Domain::Model
         );
     }
 
-    void FEzUserGameSessionDomain::UnsubscribeSubscriptionStatuses(Gs2::Core::Domain::CallbackID CallbackId)
+    void FEzUserGameSessionDomain::UnsubscribeSubscriptionStatuses(
+            Gs2::Core::Domain::CallbackID CallbackId)
     {
         Domain->UnsubscribeSubscriptionStatuses(
             CallbackId

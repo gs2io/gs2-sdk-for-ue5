@@ -19,6 +19,7 @@
 #include "CoreMinimal.h"
 #include "Core/Gs2Object.h"
 #include "TransactionSetting.h"
+#include "TransactionSettingV2.h"
 #include "ScriptSetting.h"
 #include "NotificationSetting.h"
 #include "LogSetting.h"
@@ -32,6 +33,7 @@ namespace Gs2::Inbox::Model
         TOptional<FString> DescriptionValue;
         TOptional<bool> IsAutomaticDeletingEnabledValue;
         TSharedPtr<FTransactionSetting> TransactionSettingValue;
+        TSharedPtr<FTransactionSettingV2> TransactionSettingV2Value;
         TSharedPtr<FScriptSetting> ReceiveMessageScriptValue;
         TSharedPtr<FScriptSetting> ReadMessageScriptValue;
         TSharedPtr<FScriptSetting> DeleteMessageScriptValue;
@@ -55,6 +57,7 @@ namespace Gs2::Inbox::Model
         TSharedPtr<FNamespace> WithDescription(const TOptional<FString> Description);
         TSharedPtr<FNamespace> WithIsAutomaticDeletingEnabled(const TOptional<bool> IsAutomaticDeletingEnabled);
         TSharedPtr<FNamespace> WithTransactionSetting(const TSharedPtr<FTransactionSetting> TransactionSetting);
+        TSharedPtr<FNamespace> WithTransactionSettingV2(const TSharedPtr<FTransactionSettingV2> TransactionSettingV2);
         TSharedPtr<FNamespace> WithReceiveMessageScript(const TSharedPtr<FScriptSetting> ReceiveMessageScript);
         TSharedPtr<FNamespace> WithReadMessageScript(const TSharedPtr<FScriptSetting> ReadMessageScript);
         TSharedPtr<FNamespace> WithDeleteMessageScript(const TSharedPtr<FScriptSetting> DeleteMessageScript);
@@ -72,6 +75,7 @@ namespace Gs2::Inbox::Model
         TOptional<bool> GetIsAutomaticDeletingEnabled() const;
         FString GetIsAutomaticDeletingEnabledString() const;
         TSharedPtr<FTransactionSetting> GetTransactionSetting() const;
+        TSharedPtr<FTransactionSettingV2> GetTransactionSettingV2() const;
         TSharedPtr<FScriptSetting> GetReceiveMessageScript() const;
         TSharedPtr<FScriptSetting> GetReadMessageScript() const;
         TSharedPtr<FScriptSetting> GetDeleteMessageScript() const;

@@ -66,7 +66,8 @@ namespace Gs2::UE5::Lottery::Domain::Model
 
         Gs2::Core::Domain::CallbackID SubscribeLotteryModels(TFunction<void()> Callback);
 
-        void UnsubscribeLotteryModels(Gs2::Core::Domain::CallbackID CallbackId);
+        void UnsubscribeLotteryModels(
+                Gs2::Core::Domain::CallbackID CallbackId);
 
         Gs2::UE5::Lottery::Domain::Model::FEzLotteryModelDomainPtr LotteryModel(
             const FString LotteryName

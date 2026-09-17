@@ -125,21 +125,24 @@ namespace Gs2::UE5::Ranking2::Domain::Model
 
         Gs2::Core::Domain::CallbackID SubscribeClusterRankings(TFunction<void()> Callback);
 
-        void UnsubscribeClusterRankings(Gs2::Core::Domain::CallbackID CallbackId);
+        void UnsubscribeClusterRankings(
+                Gs2::Core::Domain::CallbackID CallbackId);
 
         Gs2::UE5::Ranking2::Domain::Iterator::FEzDescribeClusterRankingReceivedRewardsIteratorPtr ClusterRankingReceivedRewards(
         ) const;
 
         Gs2::Core::Domain::CallbackID SubscribeClusterRankingReceivedRewards(TFunction<void()> Callback);
 
-        void UnsubscribeClusterRankingReceivedRewards(Gs2::Core::Domain::CallbackID CallbackId);
+        void UnsubscribeClusterRankingReceivedRewards(
+                Gs2::Core::Domain::CallbackID CallbackId);
 
         Gs2::UE5::Ranking2::Domain::Iterator::FEzDescribeClusterRankingScoresIteratorPtr ClusterRankingScores(
         ) const;
 
         Gs2::Core::Domain::CallbackID SubscribeClusterRankingScores(TFunction<void()> Callback);
 
-        void UnsubscribeClusterRankingScores(Gs2::Core::Domain::CallbackID CallbackId);
+        void UnsubscribeClusterRankingScores(
+                Gs2::Core::Domain::CallbackID CallbackId);
 
         Gs2::UE5::Ranking2::Domain::Model::FEzClusterRankingDataGameSessionDomainPtr ClusterRankingData(
             const FString ScorerUserId

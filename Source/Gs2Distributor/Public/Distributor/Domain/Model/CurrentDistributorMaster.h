@@ -87,6 +87,8 @@ namespace Gs2::Distributor::Domain::Model
             const FCurrentDistributorMasterDomain& From
         );
 
+
+
         class GS2DISTRIBUTOR_API FExportMasterTask final :
             public Gs2::Core::Util::TGs2Future<Gs2::Distributor::Domain::Model::FCurrentDistributorMasterDomain>,
             public TSharedFromThis<FExportMasterTask>
@@ -112,6 +114,8 @@ namespace Gs2::Distributor::Domain::Model
         TSharedPtr<FAsyncTask<FExportMasterTask>> ExportMaster(
             Request::FExportMasterRequestPtr Request
         );
+
+
 
         class GS2DISTRIBUTOR_API FGetTask final :
             public Gs2::Core::Util::TGs2Future<Gs2::Distributor::Model::FCurrentDistributorMaster>,
@@ -139,6 +143,8 @@ namespace Gs2::Distributor::Domain::Model
             Request::FGetCurrentDistributorMasterRequestPtr Request
         );
 
+
+
         class GS2DISTRIBUTOR_API FPreUpdateTask final :
             public Gs2::Core::Util::TGs2Future<Gs2::Distributor::Domain::Model::FCurrentDistributorMasterDomain>,
             public TSharedFromThis<FPreUpdateTask>
@@ -165,6 +171,8 @@ namespace Gs2::Distributor::Domain::Model
             Request::FPreUpdateCurrentDistributorMasterRequestPtr Request
         );
 
+
+
         class GS2DISTRIBUTOR_API FUpdateTask final :
             public Gs2::Core::Util::TGs2Future<Gs2::Distributor::Domain::Model::FCurrentDistributorMasterDomain>,
             public TSharedFromThis<FUpdateTask>
@@ -190,6 +198,8 @@ namespace Gs2::Distributor::Domain::Model
         TSharedPtr<FAsyncTask<FUpdateTask>> Update(
             Request::FUpdateCurrentDistributorMasterRequestPtr Request
         );
+
+
 
         class GS2DISTRIBUTOR_API FUpdateFromGitHubTask final :
             public Gs2::Core::Util::TGs2Future<Gs2::Distributor::Domain::Model::FCurrentDistributorMasterDomain>,
@@ -247,7 +257,34 @@ namespace Gs2::Distributor::Domain::Model
 
         TSharedPtr<FAsyncTask<FModelTask>> Model();
 
+        void Invalidate();
+
         Gs2::Core::Domain::CallbackID Subscribe(
+            TFunction<void(Gs2::Distributor::Model::FCurrentDistributorMasterPtr)> Callback
+        );
+
+        class GS2DISTRIBUTOR_API FSubscribeWithInitialCallTask final :
+            public Gs2::Core::Util::TGs2Future<Gs2::Core::Domain::CallbackID>,
+            public TSharedFromThis<FSubscribeWithInitialCallTask>
+        {
+            const TSharedPtr<FCurrentDistributorMasterDomain> Self;
+            const TFunction<void(Gs2::Distributor::Model::FCurrentDistributorMasterPtr)> Callback;
+        public:
+            FSubscribeWithInitialCallTask(
+                const TSharedPtr<FCurrentDistributorMasterDomain>& Self,
+                TFunction<void(Gs2::Distributor::Model::FCurrentDistributorMasterPtr)> Callback
+            );
+
+            FSubscribeWithInitialCallTask(
+                const FSubscribeWithInitialCallTask& From
+            );
+
+            virtual Gs2::Core::Model::FGs2ErrorPtr Action(
+                TSharedPtr<TSharedPtr<Gs2::Core::Domain::CallbackID>> Result
+            ) override;
+        };
+
+        TSharedPtr<FAsyncTask<FSubscribeWithInitialCallTask>> SubscribeWithInitialCall(
             TFunction<void(Gs2::Distributor::Model::FCurrentDistributorMasterPtr)> Callback
         );
 

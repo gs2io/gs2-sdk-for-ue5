@@ -60,7 +60,8 @@ namespace Gs2::UE5::Version::Domain::Model
 
         Gs2::Core::Domain::CallbackID SubscribeVersionModels(TFunction<void()> Callback);
 
-        void UnsubscribeVersionModels(Gs2::Core::Domain::CallbackID CallbackId);
+        void UnsubscribeVersionModels(
+                Gs2::Core::Domain::CallbackID CallbackId);
 
         Gs2::UE5::Version::Domain::Model::FEzVersionModelDomainPtr VersionModel(
             const FString VersionName

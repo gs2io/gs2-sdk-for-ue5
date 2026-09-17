@@ -57,7 +57,8 @@ namespace Gs2::UE5::Limit::Domain::Model
 
         Gs2::Core::Domain::CallbackID SubscribeLimitModels(TFunction<void()> Callback);
 
-        void UnsubscribeLimitModels(Gs2::Core::Domain::CallbackID CallbackId);
+        void UnsubscribeLimitModels(
+                Gs2::Core::Domain::CallbackID CallbackId);
 
         Gs2::UE5::Limit::Domain::Model::FEzLimitModelDomainPtr LimitModel(
             const FString LimitName

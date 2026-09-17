@@ -45,6 +45,7 @@
 #include "Matchmaking/Domain/Model/Ballot.h"
 #include "Matchmaking/Domain/Model/BallotAccessToken.h"
 #include "Matchmaking/Domain/Model/Vote.h"
+#include "Matchmaking/Model/Cache/Rating.h"
 
 #include "Core/Domain/Gs2.h"
 #include "Core/Domain/Transaction/JobQueueJobDomainFactory.h"
@@ -113,6 +114,8 @@ namespace Gs2::Matchmaking::Domain::Model
             ->WithNamespaceName(Self->NamespaceName)
             ->WithAccessToken(Self->AccessToken->GetToken())
             ->WithRatingName(Self->RatingName);
+        const auto CacheOwnerSnapshotUserId = Self->AccessToken.IsValid() ? Self->UserId() : TOptional<FString>();
+        const auto CacheOwnerSnapshotTimeOffset = Self->AccessToken.IsValid() ? Self->AccessToken->GetTimeOffset() : TOptional<int32>();
         const auto Future = Self->Client->GetRating(
             Request
         );
@@ -123,6 +126,26 @@ namespace Gs2::Matchmaking::Domain::Model
         }
         const auto ResultModel = Future->GetTask().Result();
         Future->EnsureCompletion();
+
+            if (ResultModel.IsValid() && ResultModel->GetItem() != nullptr)
+            {
+
+        if (!((CacheOwnerSnapshotUserId)).IsSet())
+            {
+              const auto Details = MakeShared<TArray<TSharedPtr<Gs2::Core::Model::FGs2ErrorDetail>>>();
+                Details->Add(MakeShared<Gs2::Core::Model::FGs2ErrorDetail>(TEXT("userId"), TEXT("userId is invalid."), TEXT("invalid_response")));
+                return MakeShared<Gs2::Core::Model::FUnknownError>(Details);
+              }
+        Gs2::Matchmaking::Model::Cache::FRatingCache::Put(
+            Self->Gs2->Cache,
+
+            Request->GetNamespaceName(),
+            (CacheOwnerSnapshotUserId),
+            Request->GetRatingName(),
+            CacheOwnerSnapshotTimeOffset,
+            ResultModel->GetItem()
+        );
+            }
         *Result = ResultModel->GetItem();
         return nullptr;
     }
@@ -173,71 +196,174 @@ namespace Gs2::Matchmaking::Domain::Model
         TSharedPtr<TSharedPtr<Gs2::Matchmaking::Model::FRating>> Result
     )
     {
-        // ReSharper disable once CppLocalVariableMayBeConst
-        TSharedPtr<Gs2::Matchmaking::Model::FRating> Value;
-        auto bCacheHit = Self->Gs2->Cache->TryGet<Gs2::Matchmaking::Model::FRating>(
-            Self->ParentKey,
-            Gs2::Matchmaking::Domain::Model::FRatingDomain::CreateCacheKey(
-                Self->RatingName
-            ),
-            &Value
+        const auto CacheParentKey = Gs2::Matchmaking::Model::Cache::FRatingCache::CreateCacheParentKey(
+
+            Self->NamespaceName,
+            Self->AccessToken.IsValid() ? Self->UserId() : TOptional<FString>(),
+            Self->AccessToken.IsValid() ? Self->AccessToken->GetTimeOffset() : TOptional<int32>()
         );
-        if (!bCacheHit) {
-            const auto Future = Self->Get(
-                MakeShared<Gs2::Matchmaking::Request::FGetRatingRequest>()
-            );
-            Future->StartSynchronousTask();
-            if (Future->GetTask().IsError())
+        const auto CacheKey = Gs2::Matchmaking::Model::Cache::FRatingCache::CreateCacheKey(
+
+            Self->RatingName
+        );
+        return Self->Gs2->Cache->ExecuteWithKeyLock(
+            Gs2::Matchmaking::Model::FRating::TypeName,
+            CacheParentKey,
+            CacheKey,
+            [Self = Self, Result]() -> Gs2::Core::Model::FGs2ErrorPtr
             {
-                if (Future->GetTask().Error()->Type() != Gs2::Core::Model::FNotFoundError::TypeString)
-                {
-                    return Future->GetTask().Error();
-                }
+                Gs2::Matchmaking::Model::FRatingPtr Value;
+                const auto CacheHit = Gs2::Matchmaking::Model::Cache::FRatingCache::TryGet(
+                    Self->Gs2->Cache,
 
-                const auto Key = Gs2::Matchmaking::Domain::Model::FRatingDomain::CreateCacheKey(
-                    Self->RatingName
+                    Self->NamespaceName,
+                    Self->AccessToken.IsValid() ? Self->UserId() : TOptional<FString>(),
+                    Self->RatingName,
+                    Self->AccessToken.IsValid() ? Self->AccessToken->GetTimeOffset() : TOptional<int32>(),
+                    &Value
                 );
-                Self->Gs2->Cache->Put(
-                    Gs2::Matchmaking::Model::FRating::TypeName,
-                    Self->ParentKey,
-                    Key,
-                    nullptr,
-                    FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
-                );
-
-                if (Future->GetTask().Error()->Detail(0)->GetComponent() != "rating")
+                if (CacheHit)
                 {
-                    return Future->GetTask().Error();
+                    *Result = Value;
+                    return nullptr;
                 }
-            }
-            else
-            {
-                Value = Future->GetTask().Result();
-            }
-            Future->EnsureCompletion();
-        }
-        *Result = Value;
+                const auto Error = Gs2::Matchmaking::Model::Cache::FRatingCache::Fetch(
+                    Self->Gs2->Cache,
 
-        return nullptr;
+                    Self->NamespaceName,
+                    Self->AccessToken.IsValid() ? Self->UserId() : TOptional<FString>(),
+                    Self->RatingName,
+                    Self->AccessToken.IsValid() ? Self->AccessToken->GetTimeOffset() : TOptional<int32>(),
+                    [Self](Gs2::Matchmaking::Model::FRatingPtr* OutItem) -> Gs2::Core::Model::FGs2ErrorPtr
+                    {
+                        const auto Future = Self->Get(
+                            MakeShared<Gs2::Matchmaking::Request::FGetRatingRequest>()
+                        );
+                        Future->StartSynchronousTask();
+                        if (Future->GetTask().IsError()) return Future->GetTask().Error();
+                        *OutItem = Future->GetTask().Result();
+                        Future->EnsureCompletion();
+                        return nullptr;
+                    },
+                    &Value
+                );
+                if (Error.IsValid()) return Error;
+                *Result = Value;
+                return nullptr;
+            }
+        );
     }
 
     TSharedPtr<FAsyncTask<FRatingAccessTokenDomain::FModelTask>> FRatingAccessTokenDomain::Model() {
         return Gs2::Core::Util::New<FAsyncTask<FRatingAccessTokenDomain::FModelTask>>(this->AsShared());
     }
 
+    void FRatingAccessTokenDomain::Invalidate()
+    {
+        Gs2::Matchmaking::Model::Cache::FRatingCache::Delete(
+            Gs2->Cache,
+
+            NamespaceName,
+            AccessToken.IsValid() ? UserId() : TOptional<FString>(),
+            RatingName,
+            AccessToken.IsValid() ? AccessToken->GetTimeOffset() : TOptional<int32>()
+        );
+    }
+
+    FRatingAccessTokenDomain::FSubscribeWithInitialCallTask::FSubscribeWithInitialCallTask(
+        const TSharedPtr<FRatingAccessTokenDomain>& Self,
+        TFunction<void(Gs2::Matchmaking::Model::FRatingPtr)> Callback
+    ):
+        Self(Self),
+        Callback(Callback)
+    {
+    }
+
+    FRatingAccessTokenDomain::FSubscribeWithInitialCallTask::FSubscribeWithInitialCallTask(
+        const FSubscribeWithInitialCallTask& From
+    ):
+        TGs2Future(From),
+        Self(From.Self),
+        Callback(From.Callback)
+    {
+    }
+
+    Gs2::Core::Model::FGs2ErrorPtr FRatingAccessTokenDomain::FSubscribeWithInitialCallTask::Action(
+        TSharedPtr<TSharedPtr<Gs2::Core::Domain::CallbackID>> Result
+    )
+    {
+        const auto Task = Self->Model();
+        Task->StartSynchronousTask();
+        Task->EnsureCompletion();
+        if (Task->GetTask().IsError()) return Task->GetTask().Error();
+        const auto Item = Task->GetTask().Result();
+        const auto CallbackId = Self->Subscribe(Callback);
+        Callback(Item);
+        *Result = MakeShared<Gs2::Core::Domain::CallbackID>(CallbackId);
+        return nullptr;
+    }
+
+    TSharedPtr<FAsyncTask<FRatingAccessTokenDomain::FSubscribeWithInitialCallTask>> FRatingAccessTokenDomain::SubscribeWithInitialCall(
+        TFunction<void(Gs2::Matchmaking::Model::FRatingPtr)> Callback
+    )
+    {
+        return Gs2::Core::Util::New<FAsyncTask<FSubscribeWithInitialCallTask>>(this->AsShared(), Callback);
+    }
+
     Gs2::Core::Domain::CallbackID FRatingAccessTokenDomain::Subscribe(
         TFunction<void(Gs2::Matchmaking::Model::FRatingPtr)> Callback
     )
     {
+        const auto SubscriptionParentKey = Gs2::Matchmaking::Model::Cache::FRatingCache::CreateCacheParentKey(
+
+            NamespaceName,
+            AccessToken.IsValid() ? UserId() : TOptional<FString>(),
+            AccessToken.IsValid() ? AccessToken->GetTimeOffset() : TOptional<int32>()
+        );
+        const auto SubscriptionCacheKey = Gs2::Matchmaking::Model::Cache::FRatingCache::CreateCacheKey(
+
+            RatingName
+        );
+        const TWeakPtr<Gs2::Core::Domain::FGs2> WeakGs2 = Gs2;
+        const TWeakPtr<Matchmaking::Domain::FGs2MatchmakingDomain> WeakService = Service;
+        const FString RegisteredParentKey = SubscriptionParentKey;
+        const TOptional<FString> QueryNamespaceName = NamespaceName;
+        const TOptional<FString> QueryRatingName = RatingName;
+        const auto SourceToken = AccessToken;
+        const TOptional<FString> RegisteredUserId = SourceToken.IsValid()
+            ? TOptional<FString>(SourceToken->GetUserId())
+            : TOptional<FString>();
+        const int32 RegisteredTimeOffset = SourceToken.IsValid() ? SourceToken->GetTimeOffset().Get(0) : 0;
         return Gs2->Cache->Subscribe(
             Gs2::Matchmaking::Model::FRating::TypeName,
-            ParentKey,
-            Gs2::Matchmaking::Domain::Model::FRatingDomain::CreateCacheKey(
-                RatingName
-            ),
+            SubscriptionParentKey,
+            SubscriptionCacheKey,
             [Callback](TSharedPtr<FGs2Object> obj)
             {
                 Callback(StaticCastSharedPtr<Gs2::Matchmaking::Model::FRating>(obj));
+            },
+            [WeakGs2, WeakService, RegisteredParentKey, QueryNamespaceName, QueryRatingName, SourceToken, RegisteredUserId, RegisteredTimeOffset]()
+            {
+                const auto Owner = WeakGs2.Pin();
+                if (!Owner.IsValid() || !SourceToken.IsValid() || !RegisteredUserId.IsSet())
+                {
+                    return;
+                }
+                const auto TokenSnapshot = MakeShared<Gs2::Auth::Model::FAccessToken>(*SourceToken);
+                if (TokenSnapshot->GetUserId() != RegisteredUserId || TokenSnapshot->GetTimeOffset().Get(0) != RegisteredTimeOffset)
+                {
+                    return;
+                }
+                const auto Domain = MakeShared<FRatingAccessTokenDomain>(
+                    Owner,
+                    WeakService.Pin(),
+                    QueryNamespaceName,
+                    TokenSnapshot,
+                    QueryRatingName
+                );
+                Domain->ParentKey = RegisteredParentKey;
+                const auto Task = Domain->Model();
+                Task->StartBackgroundTask();
             }
         );
     }
@@ -246,12 +372,20 @@ namespace Gs2::Matchmaking::Domain::Model
         Gs2::Core::Domain::CallbackID CallbackID
     )
     {
+        const auto SubscriptionParentKey = Gs2::Matchmaking::Model::Cache::FRatingCache::CreateCacheParentKey(
+
+            NamespaceName,
+            AccessToken.IsValid() ? UserId() : TOptional<FString>(),
+            AccessToken.IsValid() ? AccessToken->GetTimeOffset() : TOptional<int32>()
+        );
+        const auto SubscriptionCacheKey = Gs2::Matchmaking::Model::Cache::FRatingCache::CreateCacheKey(
+
+            RatingName
+        );
         Gs2->Cache->Unsubscribe(
             Gs2::Matchmaking::Model::FRating::TypeName,
-            ParentKey,
-            Gs2::Matchmaking::Domain::Model::FRatingDomain::CreateCacheKey(
-                RatingName
-            ),
+            SubscriptionParentKey,
+            SubscriptionCacheKey,
             CallbackID
         );
     }
@@ -262,4 +396,3 @@ namespace Gs2::Matchmaking::Domain::Model
 #elif defined(__clang__)
 #pragma clang diagnostic pop
 #endif
-

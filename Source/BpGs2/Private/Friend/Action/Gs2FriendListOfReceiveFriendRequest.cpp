@@ -12,12 +12,10 @@
  * on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either
  * express or implied. See the License for the specific language governing
  * permissions and limitations under the License.
- *
- * deny overwrite
  */
 
 #include "Friend/Action/Gs2FriendListOfReceiveFriendRequest.h"
-#include "Friend/Model/Gs2FriendFriendRequest.h"
+#include "Friend/Model/Gs2FriendReceiveFriendRequest.h"
 #include "Core/BpGs2Constant.h"
 
 UGs2FriendListOfReceiveFriendRequestAsyncFunction::UGs2FriendListOfReceiveFriendRequestAsyncFunction(
@@ -55,7 +53,11 @@ void UGs2FriendListOfReceiveFriendRequestAsyncFunction::Activate()
     );
     for (auto v : *It)
     {
-        ReturnReceiveFriendRequests.Add(EzFriendRequestToFGs2FriendFriendRequest(v->Current()));
+        FGs2FriendFriendRequest Value;
+        Value.UserId = v->Current()->GetUserId().Get(FString());
+        Value.TargetUserId = v->Current()->GetTargetUserId().Get(FString());
+        Value.PublicProfile = v->Current()->GetPublicProfile().Get(FString());
+        ReturnReceiveFriendRequests.Add(Value);
     }
     OnSuccess.Broadcast(ReturnReceiveFriendRequests, ReturnError);
 }

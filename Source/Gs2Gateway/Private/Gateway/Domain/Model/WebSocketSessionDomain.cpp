@@ -32,6 +32,7 @@
 #include "Gateway/Domain/Model/FirebaseTokenAccessToken.h"
 #include "Gateway/Domain/Model/User.h"
 #include "Gateway/Domain/Model/UserAccessToken.h"
+#include "Gateway/Model/Cache/WebSocketSession.h"
 
 #include "Core/Domain/Gs2.h"
 #include "Core/Domain/Transaction/JobQueueJobDomainFactory.h"
@@ -95,10 +96,10 @@ namespace Gs2::Gateway::Domain::Model
     )
     {
         Request
-            ->WithContextStack(Self->Gs2->DefaultContextStack)
+            ->WithContextStack((!Request->GetContextStack().IsSet() || Request->GetContextStack()->IsEmpty()) ? Self->Gs2->DefaultContextStack : Request->GetContextStack())
             ->WithNamespaceName(Self->NamespaceName)
             ->WithUserId(Self->UserId);
-        const auto Future = Self->Wsclient->SetUserIdByUserId(
+        const auto Future = Self->Client->SetUserIdByUserId(
             Request
         );
         Future->StartSynchronousTask();
@@ -106,29 +107,32 @@ namespace Gs2::Gateway::Domain::Model
         {
             return Future->GetTask().Error();
         }
-        const auto RequestModel = Request;
         const auto ResultModel = Future->GetTask().Result();
         Future->EnsureCompletion();
-        if (ResultModel != nullptr) {
-            
-            if (ResultModel->GetItem() != nullptr)
+
+            if (ResultModel.IsValid() && ResultModel->GetItem() != nullptr)
             {
-                const auto ParentKey = Gs2::Gateway::Domain::Model::FUserDomain::CreateCacheParentKey(
-                    Self->NamespaceName,
-                    Self->UserId,
-                    "WebSocketSession"
-                );
-                const auto Key = Gs2::Gateway::Domain::Model::FWebSocketSessionDomain::CreateCacheKey(
-                );
-                Self->Gs2->Cache->Put(
-                    Gs2::Gateway::Model::FWebSocketSession::TypeName,
-                    ParentKey,
-                    Key,
-                    ResultModel->GetItem(),
-                    FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
-                );
+
+        if (!ResultModel.IsValid() || !ResultModel->GetItem().IsValid())
+            {
+              const auto Details = MakeShared<TArray<TSharedPtr<Gs2::Core::Model::FGs2ErrorDetail>>>();
+                Details->Add(MakeShared<Gs2::Core::Model::FGs2ErrorDetail>(TEXT("result.item"), TEXT("result.item is invalid."), TEXT("invalid_response")));
+                return MakeShared<Gs2::Core::Model::FUnknownError>(Details);
+              }if (!ResultModel.IsValid() || !((ResultModel.IsValid() && ResultModel->GetItem().IsValid() ? ResultModel->GetItem()->GetUserId() : TOptional<FString>())).IsSet())
+            {
+              const auto Details = MakeShared<TArray<TSharedPtr<Gs2::Core::Model::FGs2ErrorDetail>>>();
+                Details->Add(MakeShared<Gs2::Core::Model::FGs2ErrorDetail>(TEXT("userId"), TEXT("userId is invalid."), TEXT("invalid_response")));
+                return MakeShared<Gs2::Core::Model::FUnknownError>(Details);
+              }
+        Gs2::Gateway::Model::Cache::FWebSocketSessionCache::Put(
+            Self->Gs2->Cache,
+
+            ResultModel->GetItem()->GetNamespaceName(),
+            (ResultModel.IsValid() && ResultModel->GetItem().IsValid() ? ResultModel->GetItem()->GetUserId() : TOptional<FString>()),
+            TOptional<int32>(),
+            ResultModel->GetItem()
+        );
             }
-        }
         auto Domain = Self;
 
         *Result = Domain;
@@ -177,35 +181,138 @@ namespace Gs2::Gateway::Domain::Model
         TSharedPtr<TSharedPtr<Gs2::Gateway::Model::FWebSocketSession>> Result
     )
     {
-        // ReSharper disable once CppLocalVariableMayBeConst
-        TSharedPtr<Gs2::Gateway::Model::FWebSocketSession> Value;
-        auto bCacheHit = Self->Gs2->Cache->TryGet<Gs2::Gateway::Model::FWebSocketSession>(
-            Self->ParentKey,
-            Gs2::Gateway::Domain::Model::FWebSocketSessionDomain::CreateCacheKey(
-            ),
-            &Value
-        );
-        *Result = Value;
+        const auto CacheParentKey = Gs2::Gateway::Model::Cache::FWebSocketSessionCache::CreateCacheParentKey(
 
-        return nullptr;
+            Self->NamespaceName,
+            Self->UserId,
+            TOptional<int32>()
+        );
+        const auto CacheKey = Gs2::Gateway::Model::Cache::FWebSocketSessionCache::CreateCacheKey(
+
+        );
+        return Self->Gs2->Cache->ExecuteWithKeyLock(
+            Gs2::Gateway::Model::FWebSocketSession::TypeName,
+            CacheParentKey,
+            CacheKey,
+            [Self = Self, Result]() -> Gs2::Core::Model::FGs2ErrorPtr
+            {
+                Gs2::Gateway::Model::FWebSocketSessionPtr Value;
+                const auto CacheHit = Gs2::Gateway::Model::Cache::FWebSocketSessionCache::TryGet(
+                    Self->Gs2->Cache,
+
+                    Self->NamespaceName,
+                    Self->UserId,
+                    TOptional<int32>(),
+                    &Value
+                );
+                if (CacheHit)
+                {
+                    *Result = Value;
+                    return nullptr;
+                }
+                *Result = Value;
+                return nullptr;
+            }
+        );
     }
 
     TSharedPtr<FAsyncTask<FWebSocketSessionDomain::FModelTask>> FWebSocketSessionDomain::Model() {
         return Gs2::Core::Util::New<FAsyncTask<FWebSocketSessionDomain::FModelTask>>(this->AsShared());
     }
 
+    void FWebSocketSessionDomain::Invalidate()
+    {
+        Gs2::Gateway::Model::Cache::FWebSocketSessionCache::Delete(
+            Gs2->Cache,
+
+            NamespaceName,
+            UserId,
+            TOptional<int32>()
+        );
+    }
+
+    FWebSocketSessionDomain::FSubscribeWithInitialCallTask::FSubscribeWithInitialCallTask(
+        const TSharedPtr<FWebSocketSessionDomain>& Self,
+        TFunction<void(Gs2::Gateway::Model::FWebSocketSessionPtr)> Callback
+    ):
+        Self(Self),
+        Callback(Callback)
+    {
+    }
+
+    FWebSocketSessionDomain::FSubscribeWithInitialCallTask::FSubscribeWithInitialCallTask(
+        const FSubscribeWithInitialCallTask& From
+    ):
+        TGs2Future(From),
+        Self(From.Self),
+        Callback(From.Callback)
+    {
+    }
+
+    Gs2::Core::Model::FGs2ErrorPtr FWebSocketSessionDomain::FSubscribeWithInitialCallTask::Action(
+        TSharedPtr<TSharedPtr<Gs2::Core::Domain::CallbackID>> Result
+    )
+    {
+        const auto Task = Self->Model();
+        Task->StartSynchronousTask();
+        Task->EnsureCompletion();
+        if (Task->GetTask().IsError()) return Task->GetTask().Error();
+        const auto Item = Task->GetTask().Result();
+        const auto CallbackId = Self->Subscribe(Callback);
+        Callback(Item);
+        *Result = MakeShared<Gs2::Core::Domain::CallbackID>(CallbackId);
+        return nullptr;
+    }
+
+    TSharedPtr<FAsyncTask<FWebSocketSessionDomain::FSubscribeWithInitialCallTask>> FWebSocketSessionDomain::SubscribeWithInitialCall(
+        TFunction<void(Gs2::Gateway::Model::FWebSocketSessionPtr)> Callback
+    )
+    {
+        return Gs2::Core::Util::New<FAsyncTask<FSubscribeWithInitialCallTask>>(this->AsShared(), Callback);
+    }
+
     Gs2::Core::Domain::CallbackID FWebSocketSessionDomain::Subscribe(
         TFunction<void(Gs2::Gateway::Model::FWebSocketSessionPtr)> Callback
     )
     {
+        const auto SubscriptionParentKey = Gs2::Gateway::Model::Cache::FWebSocketSessionCache::CreateCacheParentKey(
+
+            NamespaceName,
+            UserId,
+            TOptional<int32>()
+        );
+        const auto SubscriptionCacheKey = Gs2::Gateway::Model::Cache::FWebSocketSessionCache::CreateCacheKey(
+
+        );
+        const TWeakPtr<Gs2::Core::Domain::FGs2> WeakGs2 = Gs2;
+        const TWeakPtr<Gateway::Domain::FGs2GatewayDomain> WeakService = Service;
+        const FString RegisteredParentKey = SubscriptionParentKey;
+        const TOptional<FString> QueryNamespaceName = NamespaceName;
+        const TOptional<FString> QueryUserId = UserId;
         return Gs2->Cache->Subscribe(
             Gs2::Gateway::Model::FWebSocketSession::TypeName,
-            ParentKey,
-            Gs2::Gateway::Domain::Model::FWebSocketSessionDomain::CreateCacheKey(
-            ),
+            SubscriptionParentKey,
+            SubscriptionCacheKey,
             [Callback](TSharedPtr<FGs2Object> obj)
             {
                 Callback(StaticCastSharedPtr<Gs2::Gateway::Model::FWebSocketSession>(obj));
+            },
+            [WeakGs2, WeakService, RegisteredParentKey, QueryNamespaceName, QueryUserId]()
+            {
+                const auto Owner = WeakGs2.Pin();
+                if (!Owner.IsValid())
+                {
+                    return;
+                }
+                const auto Domain = MakeShared<FWebSocketSessionDomain>(
+                    Owner,
+                    WeakService.Pin(),
+                    QueryNamespaceName,
+                    QueryUserId
+                );
+                Domain->ParentKey = RegisteredParentKey;
+                const auto Task = Domain->Model();
+                Task->StartBackgroundTask();
             }
         );
     }
@@ -214,11 +321,19 @@ namespace Gs2::Gateway::Domain::Model
         Gs2::Core::Domain::CallbackID CallbackID
     )
     {
+        const auto SubscriptionParentKey = Gs2::Gateway::Model::Cache::FWebSocketSessionCache::CreateCacheParentKey(
+
+            NamespaceName,
+            UserId,
+            TOptional<int32>()
+        );
+        const auto SubscriptionCacheKey = Gs2::Gateway::Model::Cache::FWebSocketSessionCache::CreateCacheKey(
+
+        );
         Gs2->Cache->Unsubscribe(
             Gs2::Gateway::Model::FWebSocketSession::TypeName,
-            ParentKey,
-            Gs2::Gateway::Domain::Model::FWebSocketSessionDomain::CreateCacheKey(
-            ),
+            SubscriptionParentKey,
+            SubscriptionCacheKey,
             CallbackID
         );
     }
@@ -229,4 +344,3 @@ namespace Gs2::Gateway::Domain::Model
 #elif defined(__clang__)
 #pragma clang diagnostic pop
 #endif
-

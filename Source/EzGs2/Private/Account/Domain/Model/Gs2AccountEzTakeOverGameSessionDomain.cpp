@@ -321,7 +321,7 @@ namespace Gs2::UE5::Account::Domain::Model
     Gs2::Core::Domain::CallbackID FEzTakeOverGameSessionDomain::Subscribe(TFunction<void(Gs2::UE5::Account::Model::FEzTakeOverPtr)> Callback)
     {
         return Domain->Subscribe(
-            [&](Gs2::Account::Model::FTakeOverPtr Item)
+            [Callback](Gs2::Account::Model::FTakeOverPtr Item)
             {
                 Callback(Gs2::UE5::Account::Model::FEzTakeOver::FromModel(Item));
             }

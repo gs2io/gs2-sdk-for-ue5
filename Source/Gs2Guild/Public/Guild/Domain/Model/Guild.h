@@ -97,6 +97,8 @@ namespace Gs2::Guild::Domain::Model
             const FGuildDomain& From
         );
 
+
+
         class GS2GUILD_API FGetTask final :
             public Gs2::Core::Util::TGs2Future<Gs2::Guild::Model::FGuild>,
             public TSharedFromThis<FGetTask>
@@ -122,6 +124,8 @@ namespace Gs2::Guild::Domain::Model
         TSharedPtr<FAsyncTask<FGetTask>> Get(
             Request::FGetGuildRequestPtr Request
         );
+
+
 
         class GS2GUILD_API FUpdateTask final :
             public Gs2::Core::Util::TGs2Future<Gs2::Guild::Domain::Model::FGuildDomain>,
@@ -149,6 +153,8 @@ namespace Gs2::Guild::Domain::Model
             Request::FUpdateGuildByGuildNameRequestPtr Request
         );
 
+
+
         class GS2GUILD_API FDeleteMemberTask final :
             public Gs2::Core::Util::TGs2Future<Gs2::Guild::Domain::Model::FGuildDomain>,
             public TSharedFromThis<FDeleteMemberTask>
@@ -174,6 +180,8 @@ namespace Gs2::Guild::Domain::Model
         TSharedPtr<FAsyncTask<FDeleteMemberTask>> DeleteMember(
             Request::FDeleteMemberByGuildNameRequestPtr Request
         );
+
+
 
         class GS2GUILD_API FUpdateMemberRoleTask final :
             public Gs2::Core::Util::TGs2Future<Gs2::Guild::Domain::Model::FGuildDomain>,
@@ -201,6 +209,8 @@ namespace Gs2::Guild::Domain::Model
             Request::FUpdateMemberRoleByGuildNameRequestPtr Request
         );
 
+
+
         class GS2GUILD_API FBatchUpdateMemberRoleTask final :
             public Gs2::Core::Util::TGs2Future<Gs2::Guild::Domain::Model::FGuildDomain>,
             public TSharedFromThis<FBatchUpdateMemberRoleTask>
@@ -226,6 +236,8 @@ namespace Gs2::Guild::Domain::Model
         TSharedPtr<FAsyncTask<FBatchUpdateMemberRoleTask>> BatchUpdateMemberRole(
             Request::FBatchUpdateMemberRoleByGuildNameRequestPtr Request
         );
+
+
 
         class GS2GUILD_API FDeleteTask final :
             public Gs2::Core::Util::TGs2Future<Gs2::Guild::Domain::Model::FGuildDomain>,
@@ -253,6 +265,8 @@ namespace Gs2::Guild::Domain::Model
             Request::FDeleteGuildByGuildNameRequestPtr Request
         );
 
+
+
         class GS2GUILD_API FIncreaseMaximumCurrentMaximumMemberCountTask final :
             public Gs2::Core::Util::TGs2Future<Gs2::Guild::Domain::Model::FGuildDomain>,
             public TSharedFromThis<FIncreaseMaximumCurrentMaximumMemberCountTask>
@@ -278,6 +292,8 @@ namespace Gs2::Guild::Domain::Model
         TSharedPtr<FAsyncTask<FIncreaseMaximumCurrentMaximumMemberCountTask>> IncreaseMaximumCurrentMaximumMemberCount(
             Request::FIncreaseMaximumCurrentMaximumMemberCountByGuildNameRequestPtr Request
         );
+
+
 
         class GS2GUILD_API FDecreaseMaximumCurrentMaximumMemberCountTask final :
             public Gs2::Core::Util::TGs2Future<Gs2::Guild::Domain::Model::FGuildDomain>,
@@ -305,6 +321,8 @@ namespace Gs2::Guild::Domain::Model
             Request::FDecreaseMaximumCurrentMaximumMemberCountByGuildNameRequestPtr Request
         );
 
+
+
         class GS2GUILD_API FVerifyCurrentMaximumMemberCountTask final :
             public Gs2::Core::Util::TGs2Future<Gs2::Guild::Domain::Model::FGuildDomain>,
             public TSharedFromThis<FVerifyCurrentMaximumMemberCountTask>
@@ -331,6 +349,8 @@ namespace Gs2::Guild::Domain::Model
             Request::FVerifyCurrentMaximumMemberCountByGuildNameRequestPtr Request
         );
 
+
+
         class GS2GUILD_API FVerifyIncludeMemberTask final :
             public Gs2::Core::Util::TGs2Future<Gs2::Guild::Domain::Model::FGuildDomain>,
             public TSharedFromThis<FVerifyIncludeMemberTask>
@@ -356,6 +376,8 @@ namespace Gs2::Guild::Domain::Model
         TSharedPtr<FAsyncTask<FVerifyIncludeMemberTask>> VerifyIncludeMember(
             Request::FVerifyIncludeMemberByUserIdRequestPtr Request
         );
+
+
 
         class GS2GUILD_API FSetMaximumCurrentMaximumMemberCountTask final :
             public Gs2::Core::Util::TGs2Future<Gs2::Guild::Domain::Model::FGuildDomain>,
@@ -390,6 +412,30 @@ namespace Gs2::Guild::Domain::Model
             TFunction<void()> Callback
         );
 
+        class FCollectReceiveRequestsByGuildNameTask;
+
+        Gs2::Core::Domain::CallbackID SubscribeReceiveRequestsByGuildName(
+            TFunction<void(TArray<Gs2::Guild::Model::FReceiveMemberRequestPtr>)> Callback
+        );
+
+        void InvalidateReceiveRequestsByGuildName();
+
+        class GS2GUILD_API FSubscribeReceiveRequestsByGuildNameWithInitialCallTask final :
+            public Gs2::Core::Util::TGs2Future<Gs2::Core::Domain::CallbackID>,
+            public TSharedFromThis<FSubscribeReceiveRequestsByGuildNameWithInitialCallTask>
+        {
+            const TSharedPtr<FGuildDomain> Self;
+            const TFunction<void(TArray<Gs2::Guild::Model::FReceiveMemberRequestPtr>)> Callback;
+
+        public:
+            FSubscribeReceiveRequestsByGuildNameWithInitialCallTask(const TSharedPtr<FGuildDomain>& Self, TFunction<void(TArray<Gs2::Guild::Model::FReceiveMemberRequestPtr>)> Callback);
+            FSubscribeReceiveRequestsByGuildNameWithInitialCallTask(const FSubscribeReceiveRequestsByGuildNameWithInitialCallTask& From);
+            virtual Gs2::Core::Model::FGs2ErrorPtr Action(TSharedPtr<TSharedPtr<Gs2::Core::Domain::CallbackID>> Result) override;
+        };
+
+        TSharedPtr<FAsyncTask<FSubscribeReceiveRequestsByGuildNameWithInitialCallTask>> SubscribeReceiveRequestsByGuildNameWithInitialCall(
+            TFunction<void(TArray<Gs2::Guild::Model::FReceiveMemberRequestPtr>)> Callback
+        );
         void UnsubscribeReceiveRequestsByGuildName(
             Gs2::Core::Domain::CallbackID CallbackID
         );
@@ -405,6 +451,30 @@ namespace Gs2::Guild::Domain::Model
             TFunction<void()> Callback
         );
 
+        class FCollectIgnoreUsersByGuildNameTask;
+
+        Gs2::Core::Domain::CallbackID SubscribeIgnoreUsersByGuildName(
+            TFunction<void(TArray<Gs2::Guild::Model::FIgnoreUserPtr>)> Callback
+        );
+
+        void InvalidateIgnoreUsersByGuildName();
+
+        class GS2GUILD_API FSubscribeIgnoreUsersByGuildNameWithInitialCallTask final :
+            public Gs2::Core::Util::TGs2Future<Gs2::Core::Domain::CallbackID>,
+            public TSharedFromThis<FSubscribeIgnoreUsersByGuildNameWithInitialCallTask>
+        {
+            const TSharedPtr<FGuildDomain> Self;
+            const TFunction<void(TArray<Gs2::Guild::Model::FIgnoreUserPtr>)> Callback;
+
+        public:
+            FSubscribeIgnoreUsersByGuildNameWithInitialCallTask(const TSharedPtr<FGuildDomain>& Self, TFunction<void(TArray<Gs2::Guild::Model::FIgnoreUserPtr>)> Callback);
+            FSubscribeIgnoreUsersByGuildNameWithInitialCallTask(const FSubscribeIgnoreUsersByGuildNameWithInitialCallTask& From);
+            virtual Gs2::Core::Model::FGs2ErrorPtr Action(TSharedPtr<TSharedPtr<Gs2::Core::Domain::CallbackID>> Result) override;
+        };
+
+        TSharedPtr<FAsyncTask<FSubscribeIgnoreUsersByGuildNameWithInitialCallTask>> SubscribeIgnoreUsersByGuildNameWithInitialCall(
+            TFunction<void(TArray<Gs2::Guild::Model::FIgnoreUserPtr>)> Callback
+        );
         void UnsubscribeIgnoreUsersByGuildName(
             Gs2::Core::Domain::CallbackID CallbackID
         );

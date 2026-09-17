@@ -89,7 +89,7 @@ namespace Gs2::UE5::Money2::Domain::Model
     Gs2::Core::Domain::CallbackID FEzSubscriptionStatusGameSessionDomain::Subscribe(TFunction<void(Gs2::UE5::Money2::Model::FEzSubscriptionStatusPtr)> Callback)
     {
         return Domain->Subscribe(
-            [&](Gs2::Money2::Model::FSubscriptionStatusPtr Item)
+            [Callback](Gs2::Money2::Model::FSubscriptionStatusPtr Item)
             {
                 Callback(Gs2::UE5::Money2::Model::FEzSubscriptionStatus::FromModel(Item));
             }

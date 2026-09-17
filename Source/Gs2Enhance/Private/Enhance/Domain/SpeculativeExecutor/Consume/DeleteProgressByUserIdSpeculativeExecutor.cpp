@@ -27,10 +27,26 @@
 #include "Enhance/Domain/SpeculativeExecutor/Consume/DeleteProgressByUserIdSpeculativeExecutor.h"
 #include "Enhance/Domain/Gs2Enhance.h"
 
+#include "Auth/Model/AccessToken.h"
 #include "Core/Domain/Gs2.h"
+#include "Core/Domain/SpeculativeExecutor/PreparedSpeculativeCommit.h"
+#include "Enhance/Model/Cache/Progress.h"
+#include "Serialization/JsonSerializer.h"
+#include "Serialization/JsonWriter.h"
 
 namespace Gs2::Enhance::Domain::SpeculativeExecutor
 {
+
+    namespace
+    {
+        FString SerializeDeleteProgressSnapshot(const TSharedPtr<FJsonObject>& Object)
+        {
+            FString Body;
+            const TSharedRef<TJsonWriter<TCHAR>> Writer = TJsonWriterFactory<TCHAR>::Create(&Body);
+            FJsonSerializer::Serialize(Object.ToSharedRef(), Writer);
+            return Body;
+        }
+    }
 
     FString FDeleteProgressByUserIdSpeculativeExecutor::Action()
     {
@@ -73,34 +89,65 @@ namespace Gs2::Enhance::Domain::SpeculativeExecutor
     }
 
     Gs2::Core::Model::FGs2ErrorPtr FDeleteProgressByUserIdSpeculativeExecutor::FCommitTask::Action(
-        TSharedPtr<TSharedPtr<TFunction<void()>>> Result
+        TSharedPtr<TSharedPtr<Gs2::Core::Domain::SpeculativeExecutor::FPreparedSpeculativeCommit>> Result
     )
     {
-        auto Err = Transform(Domain, AccessToken, Request, nullptr);
-        if (Err != nullptr)
+        if (!Domain.IsValid() || !Domain->RestSession.IsValid() ||
+            !AccessToken.IsValid() || !Request.IsValid())
         {
-            return Err;
-        }
-
-        const auto ParentKey = Model::FUserDomain::CreateCacheParentKey(
-            Request->GetNamespaceName(),
-            AccessToken->GetUserId(),
-            FString("Progress")
-        );
-        const auto Key = Model::FProgressDomain::CreateCacheKey(
-        );
-
-        *Result = MakeShared<TFunction<void()>>([&]()
-        {
-            Domain->Cache->Put(
-                Enhance::Model::FProgress::TypeName,
-                ParentKey,
-                Key,
-                nullptr,
-                FDateTime::Now() + FTimespan::FromSeconds(10)
-            );
+            *Result = nullptr;
             return nullptr;
-        });
+        }
+        const auto PreparedRequest = MakeShared<Gs2::Enhance::Request::FDeleteProgressByUserIdRequest>(*Request);
+        const auto PreparedAccessToken = MakeShared<Gs2::Auth::Model::FAccessToken>(*AccessToken);
+        if (PreparedRequest->GetUserId().IsSet() && *PreparedRequest->GetUserId() == TEXT("#{userId}"))
+        {
+            PreparedRequest->WithUserId(PreparedAccessToken->GetUserId());
+        }
+        if (!PreparedAccessToken->GetUserId().IsSet() || PreparedAccessToken->GetUserId()->IsEmpty() ||
+            !PreparedRequest->GetUserId().IsSet() || *PreparedRequest->GetUserId() != *PreparedAccessToken->GetUserId() ||
+            !PreparedRequest->GetNamespaceName().IsSet() || PreparedRequest->GetNamespaceName()->IsEmpty())
+        {
+            *Result = nullptr;
+            return nullptr;
+        }
+        const auto NamespaceName = PreparedRequest->GetNamespaceName();
+        const auto UserId = PreparedAccessToken->GetUserId();
+        const auto TimeOffset = PreparedAccessToken->GetTimeOffset();
+        const FString ExpectedId = FString::Printf(
+            TEXT("grn:gs2:%s:%s:enhance:%s:user:%s:progress"),
+            *Domain->RestSession->RegionName(), *Domain->RestSession->OwnerId(),
+            **NamespaceName, **UserId);
+        Gs2::Enhance::Model::FProgressPtr Item;
+        const bool Found = Gs2::Enhance::Model::Cache::FProgressCache::TryGet(
+            Domain->Cache, NamespaceName, UserId, TimeOffset, &Item);
+        if (!Found || !Item.IsValid() || !Item->GetProgressId().IsSet() ||
+            *Item->GetProgressId() != ExpectedId || !Item->GetUserId().IsSet() ||
+            *Item->GetUserId() != *UserId)
+        {
+            *Result = nullptr;
+            return nullptr;
+        }
+        const FString Snapshot = SerializeDeleteProgressSnapshot(Item->ToJson());
+        *Result = Gs2::Core::Domain::SpeculativeExecutor::FPreparedSpeculativeCommit::WrapLegacy(
+            MakeShared<TFunction<void()>>([DomainCopy = Domain, PreparedRequest,
+                                           PreparedAccessToken, ExpectedId, Snapshot]()
+        {
+            Gs2::Enhance::Model::FProgressPtr Current;
+            const bool FoundCurrent = Gs2::Enhance::Model::Cache::FProgressCache::TryGet(
+                DomainCopy->Cache, PreparedRequest->GetNamespaceName(),
+                PreparedAccessToken->GetUserId(), PreparedAccessToken->GetTimeOffset(), &Current);
+            if (!FoundCurrent || !Current.IsValid() || !Current->GetProgressId().IsSet() ||
+                *Current->GetProgressId() != ExpectedId || !Current->GetUserId().IsSet() ||
+                *Current->GetUserId() != *PreparedAccessToken->GetUserId() ||
+                SerializeDeleteProgressSnapshot(Current->ToJson()) != Snapshot)
+            {
+                return;
+            }
+            Gs2::Enhance::Model::Cache::FProgressCache::Put(
+                DomainCopy->Cache, PreparedRequest->GetNamespaceName(),
+                PreparedAccessToken->GetUserId(), PreparedAccessToken->GetTimeOffset(), nullptr);
+        }));
         return nullptr;
     }
 

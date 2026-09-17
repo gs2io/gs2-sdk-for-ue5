@@ -393,3 +393,219 @@ namespace Gs2::Distributor::Model
 
     FString FTransactionResult::TypeName = "TransactionResult";
 }
+#include "Distributor/Model/Cache/TransactionResult.h"
+
+namespace Gs2::Distributor::Model::Cache
+{
+    FString FTransactionResultCache::CreateCacheParentKey(
+        TOptional<FString> CacheOwnerArgumentNamespaceName,
+        TOptional<FString> CacheOwnerArgumentUserId,
+        TOptional<int32> CacheOwnerArgumentTimeOffset
+    )
+    {
+        return FString("distributor:")
+            + CacheOwnerArgumentNamespaceName.Get(FString()) + FString(":")
+            + CacheOwnerArgumentUserId.Get(FString()) + FString(":")
+            + FString::FromInt(CacheOwnerArgumentTimeOffset.Get(0)) + FString(":TransactionResult");
+    }
+
+    FString FTransactionResultCache::CreateCacheKey(
+        TOptional<FString> CacheOwnerArgumentTransactionId
+    )
+    {
+        return
+            FString()
+            + CacheOwnerArgumentTransactionId.Get(FString())
+            ;
+    }
+
+    bool FTransactionResultCache::TryGet(
+        const Gs2::Core::Domain::FCacheDatabasePtr& CacheOwnerArgumentCache,
+        TOptional<FString> CacheOwnerArgumentNamespaceName,
+        TOptional<FString> CacheOwnerArgumentUserId,
+        TOptional<FString> CacheOwnerArgumentTransactionId,
+        TOptional<int32> CacheOwnerArgumentTimeOffset,
+        Gs2::Distributor::Model::FTransactionResultPtr* CacheOwnerArgumentOutItem
+    )
+    {
+        const auto CacheSnapshot = CacheOwnerArgumentCache;
+        if (!CacheSnapshot.IsValid())
+        {
+            if (CacheOwnerArgumentOutItem) *CacheOwnerArgumentOutItem = nullptr;
+            return false;
+        }
+        if (CacheOwnerArgumentOutItem) *CacheOwnerArgumentOutItem = nullptr;
+        if (!CacheOwnerArgumentUserId.IsSet()) return false;
+        Gs2::Distributor::Model::FTransactionResultPtr CacheOwnerValue;
+        const bool CacheOwnerFound = CacheSnapshot->TryGet<Gs2::Distributor::Model::FTransactionResult>(
+            CreateCacheParentKey(
+                CacheOwnerArgumentNamespaceName,
+                CacheOwnerArgumentUserId,
+                CacheOwnerArgumentTimeOffset
+            ),
+            CreateCacheKey(
+                CacheOwnerArgumentTransactionId
+            ),
+            &CacheOwnerValue
+        );
+        if (CacheOwnerArgumentOutItem) *CacheOwnerArgumentOutItem = CacheOwnerFound ? CacheOwnerValue : nullptr;
+        return CacheOwnerFound;
+    }
+
+    void FTransactionResultCache::Put(
+        const Gs2::Core::Domain::FCacheDatabasePtr& CacheOwnerArgumentCache,
+        TOptional<FString> CacheOwnerArgumentNamespaceName,
+        TOptional<FString> CacheOwnerArgumentUserId,
+        TOptional<FString> CacheOwnerArgumentTransactionId,
+        TOptional<int32> CacheOwnerArgumentTimeOffset,
+        const Gs2::Distributor::Model::FTransactionResultPtr& CacheOwnerArgumentItem
+    )
+    {
+        const auto CacheSnapshot = CacheOwnerArgumentCache;
+        if (!CacheSnapshot.IsValid()) return;
+        if (!CacheOwnerArgumentUserId.IsSet()) return;
+        const auto CacheOwnerParentKey = CreateCacheParentKey(
+            CacheOwnerArgumentNamespaceName,
+            CacheOwnerArgumentUserId,
+            CacheOwnerArgumentTimeOffset
+        );
+        const auto CacheOwnerKey = CreateCacheKey(
+            CacheOwnerArgumentTransactionId
+        );
+        auto CacheOwnerValue = CacheOwnerArgumentItem;
+        Gs2::Distributor::Model::FTransactionResultPtr CacheOwnerExisting;
+        if (CacheSnapshot->TryGet<Gs2::Distributor::Model::FTransactionResult>(CacheOwnerParentKey, CacheOwnerKey, &CacheOwnerExisting))
+        {
+            const int64 CacheOwnerOldRevision = CacheOwnerExisting.IsValid() ? CacheOwnerExisting->GetRevision().Get(-1) : -1;
+            const int64 CacheOwnerNewRevision = CacheOwnerValue.IsValid() ? CacheOwnerValue->GetRevision().Get(-1) : -1;
+            if (CacheOwnerOldRevision > CacheOwnerNewRevision && CacheOwnerNewRevision > 1) return;
+        }
+        CacheSnapshot->Put(Gs2::Distributor::Model::FTransactionResult::TypeName, CacheOwnerParentKey, CacheOwnerKey, CacheOwnerValue,
+            FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
+        );
+    }
+
+    void FTransactionResultCache::Delete(
+        const Gs2::Core::Domain::FCacheDatabasePtr& CacheOwnerArgumentCache,
+        TOptional<FString> CacheOwnerArgumentNamespaceName,
+        TOptional<FString> CacheOwnerArgumentUserId,
+        TOptional<FString> CacheOwnerArgumentTransactionId,
+        TOptional<int32> CacheOwnerArgumentTimeOffset
+    )
+    {
+        const auto CacheSnapshot = CacheOwnerArgumentCache;
+        if (!CacheSnapshot.IsValid()) return;
+        if (!CacheOwnerArgumentUserId.IsSet()) return;
+        CacheSnapshot->Delete(Gs2::Distributor::Model::FTransactionResult::TypeName, CreateCacheParentKey(
+            CacheOwnerArgumentNamespaceName,
+            CacheOwnerArgumentUserId,
+            CacheOwnerArgumentTimeOffset
+        ), CreateCacheKey(
+            CacheOwnerArgumentTransactionId
+        ));
+    }
+
+    Gs2::Core::Model::FGs2ErrorPtr FTransactionResultCache::Fetch(
+        const Gs2::Core::Domain::FCacheDatabasePtr& CacheOwnerArgumentCache,
+        TOptional<FString> CacheOwnerArgumentNamespaceName,
+        TOptional<FString> CacheOwnerArgumentUserId,
+        TOptional<FString> CacheOwnerArgumentTransactionId,
+        TOptional<int32> CacheOwnerArgumentTimeOffset,
+        const TFunction<Gs2::Core::Model::FGs2ErrorPtr(Gs2::Distributor::Model::FTransactionResultPtr*)>& CacheOwnerArgumentFetchImpl,
+        Gs2::Distributor::Model::FTransactionResultPtr* CacheOwnerArgumentOutItem
+    )
+    {
+        const auto CacheSnapshot = CacheOwnerArgumentCache;
+        const auto FetchImplSnapshot = CacheOwnerArgumentFetchImpl;
+        if (CacheOwnerArgumentOutItem) *CacheOwnerArgumentOutItem = nullptr;
+        if (!FetchImplSnapshot)
+        {
+            if (CacheOwnerArgumentOutItem) *CacheOwnerArgumentOutItem = nullptr;
+            const auto Details = MakeShared<TArray<TSharedPtr<Gs2::Core::Model::FGs2ErrorDetail>>>();
+            Details->Add(MakeShared<Gs2::Core::Model::FGs2ErrorDetail>(TEXT("fetchImpl"), TEXT("fetchImpl is required."), TEXT("required")));
+            return MakeShared<Gs2::Core::Model::FBadRequestError>(Details);
+        }
+        Gs2::Distributor::Model::FTransactionResultPtr CacheOwnerFetchedItem;
+        const auto CacheOwnerError = FetchImplSnapshot(&CacheOwnerFetchedItem);
+        if ((!CacheOwnerError || CacheOwnerError->IsChildOf(Gs2::Core::Model::FNotFoundError::Class)) && !CacheOwnerArgumentUserId.IsSet())
+        {
+            if (CacheOwnerArgumentOutItem) *CacheOwnerArgumentOutItem = nullptr;
+            const auto Details = MakeShared<TArray<TSharedPtr<Gs2::Core::Model::FGs2ErrorDetail>>>();
+            Details->Add(MakeShared<Gs2::Core::Model::FGs2ErrorDetail>(TEXT("userId"), TEXT("userId is required."), TEXT("required")));
+            return MakeShared<Gs2::Core::Model::FBadRequestError>(Details);
+        }
+        if (!CacheOwnerError)
+        {
+            Put(
+                CacheSnapshot,
+                CacheOwnerArgumentNamespaceName,
+                CacheOwnerArgumentUserId,
+                CacheOwnerArgumentTransactionId,
+                CacheOwnerArgumentTimeOffset,
+                CacheOwnerFetchedItem
+            );
+            if (CacheOwnerArgumentOutItem) *CacheOwnerArgumentOutItem = CacheOwnerFetchedItem;
+            return nullptr;
+        }
+        if (!CacheOwnerError->IsChildOf(Gs2::Core::Model::FNotFoundError::Class))
+        {
+            if (CacheOwnerArgumentOutItem) *CacheOwnerArgumentOutItem = nullptr;
+            return CacheOwnerError;
+        }
+        Put(
+            CacheSnapshot,
+            CacheOwnerArgumentNamespaceName,
+            CacheOwnerArgumentUserId,
+            CacheOwnerArgumentTransactionId,
+            CacheOwnerArgumentTimeOffset,
+            nullptr
+        );
+        if (CacheOwnerArgumentOutItem) *CacheOwnerArgumentOutItem = nullptr;
+        const auto CacheOwnerDetails = CacheOwnerError->GetErrors();
+        if (CacheOwnerDetails.IsValid() && CacheOwnerDetails->Num() > 0 && (*CacheOwnerDetails)[0].IsValid() && (*CacheOwnerDetails)[0]->GetComponent() == TEXT("transactionResult"))
+        {
+            return nullptr;
+        }
+        if (CacheOwnerArgumentOutItem) *CacheOwnerArgumentOutItem = nullptr;
+        return CacheOwnerError;
+    }
+
+    Gs2::Core::Domain::CallbackID FTransactionResultCache::ListSubscribe(
+        const Gs2::Core::Domain::FCacheDatabasePtr& CacheOwnerArgumentCache,
+        TOptional<FString> CacheOwnerArgumentNamespaceName,
+        TOptional<FString> CacheOwnerArgumentUserId,
+        TOptional<int32> CacheOwnerArgumentTimeOffset,
+        TFunction<void(TArray<Gs2::Distributor::Model::FTransactionResultPtr>)> CacheOwnerArgumentCallback
+    )
+    {
+        const auto CacheSnapshot = CacheOwnerArgumentCache;
+        if (!CacheSnapshot.IsValid()) return 0;
+        return CacheSnapshot->ListSubscribeTyped(Gs2::Distributor::Model::FTransactionResult::TypeName, CreateCacheParentKey(
+            CacheOwnerArgumentNamespaceName,
+            CacheOwnerArgumentUserId,
+            CacheOwnerArgumentTimeOffset
+        ), [CacheOwnerArgumentCallback](const TArray<FGs2ObjectPtr>& CacheOwnerValues)
+        {
+            TArray<Gs2::Distributor::Model::FTransactionResultPtr> CacheOwnerTypedValues;
+            for (const auto& CacheOwnerValue : CacheOwnerValues) if (CacheOwnerValue) CacheOwnerTypedValues.Add(StaticCastSharedPtr<Gs2::Distributor::Model::FTransactionResult>(CacheOwnerValue));
+            if (CacheOwnerArgumentCallback) CacheOwnerArgumentCallback(CacheOwnerTypedValues);
+        });
+    }
+
+    void FTransactionResultCache::ListUnsubscribe(
+        const Gs2::Core::Domain::FCacheDatabasePtr& CacheOwnerArgumentCache,
+        TOptional<FString> CacheOwnerArgumentNamespaceName,
+        TOptional<FString> CacheOwnerArgumentUserId,
+        TOptional<int32> CacheOwnerArgumentTimeOffset,
+        Gs2::Core::Domain::CallbackID CacheOwnerArgumentCallbackID
+    )
+    {
+        const auto CacheSnapshot = CacheOwnerArgumentCache;
+        if (!CacheSnapshot.IsValid()) return;
+        CacheSnapshot->ListUnsubscribe(Gs2::Distributor::Model::FTransactionResult::TypeName, CreateCacheParentKey(
+            CacheOwnerArgumentNamespaceName,
+            CacheOwnerArgumentUserId,
+            CacheOwnerArgumentTimeOffset
+        ), CacheOwnerArgumentCallbackID);
+    }
+}

@@ -22,6 +22,7 @@ namespace Gs2::Enhance::Request
         NamespaceNameValue(TOptional<FString>()),
         DescriptionValue(TOptional<FString>()),
         TransactionSettingValue(nullptr),
+        TransactionSettingV2Value(nullptr),
         EnhanceScriptValue(nullptr),
         LogSettingValue(nullptr),
         EnableDirectEnhanceValue(TOptional<bool>()),
@@ -36,6 +37,7 @@ namespace Gs2::Enhance::Request
         NamespaceNameValue(From.NamespaceNameValue),
         DescriptionValue(From.DescriptionValue),
         TransactionSettingValue(From.TransactionSettingValue),
+        TransactionSettingV2Value(From.TransactionSettingV2Value),
         EnhanceScriptValue(From.EnhanceScriptValue),
         LogSettingValue(From.LogSettingValue),
         EnableDirectEnhanceValue(From.EnableDirectEnhanceValue),
@@ -73,6 +75,14 @@ namespace Gs2::Enhance::Request
     )
     {
         this->TransactionSettingValue = TransactionSetting;
+        return SharedThis(this);
+    }
+
+    TSharedPtr<FUpdateNamespaceRequest> FUpdateNamespaceRequest::WithTransactionSettingV2(
+        const TSharedPtr<Model::FTransactionSettingV2> TransactionSettingV2
+    )
+    {
+        this->TransactionSettingV2Value = TransactionSettingV2;
         return SharedThis(this);
     }
 
@@ -138,6 +148,15 @@ namespace Gs2::Enhance::Request
             return nullptr;
         }
         return TransactionSettingValue;
+    }
+
+    TSharedPtr<Model::FTransactionSettingV2> FUpdateNamespaceRequest::GetTransactionSettingV2() const
+    {
+        if (!TransactionSettingV2Value.IsValid())
+        {
+            return nullptr;
+        }
+        return TransactionSettingV2Value;
     }
 
     TSharedPtr<Model::FScriptSetting> FUpdateNamespaceRequest::GetEnhanceScript() const
@@ -215,6 +234,14 @@ namespace Gs2::Enhance::Request
                   }
                   return Model::FTransactionSetting::FromJson(Data->GetObjectField(ANSI_TO_TCHAR("transactionSetting")));
               }() : nullptr)
+          ->WithTransactionSettingV2(Data->HasField(ANSI_TO_TCHAR("transactionSettingV2")) ? [Data]() -> Model::FTransactionSettingV2Ptr
+              {
+                  if (Data->HasTypedField<EJson::Null>(ANSI_TO_TCHAR("transactionSettingV2")))
+                  {
+                      return nullptr;
+                  }
+                  return Model::FTransactionSettingV2::FromJson(Data->GetObjectField(ANSI_TO_TCHAR("transactionSettingV2")));
+              }() : nullptr)
           ->WithEnhanceScript(Data->HasField(ANSI_TO_TCHAR("enhanceScript")) ? [Data]() -> Model::FScriptSettingPtr
               {
                   if (Data->HasTypedField<EJson::Null>(ANSI_TO_TCHAR("enhanceScript")))
@@ -278,6 +305,10 @@ namespace Gs2::Enhance::Request
         if (TransactionSettingValue != nullptr && TransactionSettingValue.IsValid())
         {
             JsonRootObject->SetObjectField(TEXT("transactionSetting"), TransactionSettingValue->ToJson());
+        }
+        if (TransactionSettingV2Value != nullptr && TransactionSettingV2Value.IsValid())
+        {
+            JsonRootObject->SetObjectField(TEXT("transactionSettingV2"), TransactionSettingV2Value->ToJson());
         }
         if (EnhanceScriptValue != nullptr && EnhanceScriptValue.IsValid())
         {

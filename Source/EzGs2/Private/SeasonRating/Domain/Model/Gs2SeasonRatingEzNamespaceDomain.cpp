@@ -228,7 +228,8 @@ namespace Gs2::UE5::SeasonRating::Domain::Model
         );
     }
 
-    void FEzNamespaceDomain::UnsubscribeSeasonModels(Gs2::Core::Domain::CallbackID CallbackId)
+    void FEzNamespaceDomain::UnsubscribeSeasonModels(
+            Gs2::Core::Domain::CallbackID CallbackId)
     {
         Domain->UnsubscribeSeasonModels(
             CallbackId

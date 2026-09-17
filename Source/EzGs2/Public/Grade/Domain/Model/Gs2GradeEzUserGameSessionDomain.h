@@ -60,9 +60,11 @@ namespace Gs2::UE5::Grade::Domain::Model
             const TOptional<FString> GradeName = TOptional<FString>()
         ) const;
 
-        Gs2::Core::Domain::CallbackID SubscribeStatuses(TFunction<void()> Callback);
+        Gs2::Core::Domain::CallbackID SubscribeStatuses(TFunction<void()> Callback, const TOptional<FString> GradeName = TOptional<FString>());
 
-        void UnsubscribeStatuses(Gs2::Core::Domain::CallbackID CallbackId);
+        void UnsubscribeStatuses(
+                Gs2::Core::Domain::CallbackID CallbackId
+                , const TOptional<FString> GradeName = TOptional<FString>());
 
         Gs2::UE5::Grade::Domain::Model::FEzStatusGameSessionDomainPtr Status(
             const FString GradeName,

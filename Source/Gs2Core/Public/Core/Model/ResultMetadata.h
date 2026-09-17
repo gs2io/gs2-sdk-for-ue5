@@ -20,12 +20,15 @@
 
 #include "CoreMinimal.h"
 #include "Core/Gs2Object.h"
+#include "ScriptTransactionResult.h"
 
 namespace Gs2::Core::Model
 {
     class GS2CORE_API FResultMetadata final : public FGs2Object, public TSharedFromThis<FResultMetadata>
     {
-        FString UncommittedValue;
+        TOptional<FString> RequestIdValue;
+        TOptional<FString> UncommittedValue;
+        TSharedPtr<TArray<TSharedPtr<FScriptTransactionResult>>> ScriptTransactionResultsValue;
 
     public:
         FResultMetadata();
@@ -34,9 +37,14 @@ namespace Gs2::Core::Model
         );
         virtual ~FResultMetadata() override = default;
 
+        TSharedPtr<FResultMetadata> WithRequestId(const TOptional<FString> RequestId);
         TSharedPtr<FResultMetadata> WithUncommitted(const FString Uncommitted);
+        TSharedPtr<FResultMetadata> WithUncommitted(const TOptional<FString> Uncommitted);
+        TSharedPtr<FResultMetadata> WithScriptTransactionResults(const TSharedPtr<TArray<TSharedPtr<FScriptTransactionResult>>> ScriptTransactionResults);
 
+        TOptional<FString> GetRequestId() const;
         FString GetUncommitted() const;
+        TSharedPtr<TArray<TSharedPtr<FScriptTransactionResult>>> GetScriptTransactionResults() const;
 
 
         static TSharedPtr<FResultMetadata> FromJson(const TSharedPtr<FJsonObject> Data);

@@ -81,6 +81,8 @@ namespace Gs2::Buff::Domain::Model
             const FBuffAccessTokenDomain& From
         );
 
+
+
         class GS2BUFF_API FApplyTask final :
             public Gs2::Core::Util::TGs2Future<TArray<TSharedPtr<Gs2::Buff::Domain::Model::FBuffEntryModelDomain>>>,
             public TSharedFromThis<FApplyTask>

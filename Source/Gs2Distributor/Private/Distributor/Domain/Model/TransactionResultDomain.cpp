@@ -37,6 +37,7 @@
 #include "Distributor/Domain/Model/StampSheetResultAccessToken.h"
 #include "Distributor/Domain/Model/TransactionResult.h"
 #include "Distributor/Domain/Model/TransactionResultAccessToken.h"
+#include "Distributor/Model/Cache/TransactionResult.h"
 
 #include "Core/Domain/Gs2.h"
 #include "Core/Domain/Transaction/JobQueueJobDomainFactory.h"
@@ -101,7 +102,7 @@ namespace Gs2::Distributor::Domain::Model
     )
     {
         Request
-            ->WithContextStack(Self->Gs2->DefaultContextStack)
+            ->WithContextStack((!Request->GetContextStack().IsSet() || Request->GetContextStack()->IsEmpty()) ? Self->Gs2->DefaultContextStack : Request->GetContextStack())
             ->WithNamespaceName(Self->NamespaceName)
             ->WithUserId(Self->UserId)
             ->WithTransactionId(Self->TransactionId);
@@ -115,6 +116,31 @@ namespace Gs2::Distributor::Domain::Model
         }
         const auto ResultModel = Future->GetTask().Result();
         Future->EnsureCompletion();
+
+            if (ResultModel.IsValid() && ResultModel->GetItem() != nullptr)
+            {
+
+        if (!ResultModel.IsValid() || !ResultModel->GetItem().IsValid())
+            {
+              const auto Details = MakeShared<TArray<TSharedPtr<Gs2::Core::Model::FGs2ErrorDetail>>>();
+                Details->Add(MakeShared<Gs2::Core::Model::FGs2ErrorDetail>(TEXT("result.item"), TEXT("result.item is invalid."), TEXT("invalid_response")));
+                return MakeShared<Gs2::Core::Model::FUnknownError>(Details);
+              }if (!ResultModel.IsValid() || !((ResultModel.IsValid() && ResultModel->GetItem().IsValid() ? ResultModel->GetItem()->GetUserId() : TOptional<FString>())).IsSet())
+            {
+              const auto Details = MakeShared<TArray<TSharedPtr<Gs2::Core::Model::FGs2ErrorDetail>>>();
+                Details->Add(MakeShared<Gs2::Core::Model::FGs2ErrorDetail>(TEXT("userId"), TEXT("userId is invalid."), TEXT("invalid_response")));
+                return MakeShared<Gs2::Core::Model::FUnknownError>(Details);
+              }
+        Gs2::Distributor::Model::Cache::FTransactionResultCache::Put(
+            Self->Gs2->Cache,
+
+            Request->GetNamespaceName(),
+            (ResultModel.IsValid() && ResultModel->GetItem().IsValid() ? ResultModel->GetItem()->GetUserId() : TOptional<FString>()),
+            ResultModel->GetItem()->GetTransactionId(),
+            TOptional<int32>(),
+            ResultModel->GetItem()
+        );
+            }
         *Result = ResultModel->GetItem();
         return nullptr;
     }
@@ -165,64 +191,80 @@ namespace Gs2::Distributor::Domain::Model
         TSharedPtr<TSharedPtr<Gs2::Distributor::Model::FTransactionResult>> Result
     )
     {
-        // ReSharper disable once CppLocalVariableMayBeConst
-        TSharedPtr<Gs2::Distributor::Model::FTransactionResult> Value;
-        auto bCacheHit = Self->Gs2->Cache->TryGet<Gs2::Distributor::Model::FTransactionResult>(
-            Self->ParentKey,
-            Gs2::Distributor::Domain::Model::FTransactionResultDomain::CreateCacheKey(
-                Self->TransactionId
-            ),
-            &Value
+        const FString CacheKey = Gs2::Distributor::Domain::Model::FTransactionResultDomain::CreateCacheKey(
+            Self->TransactionId
         );
-        if (!bCacheHit) {
-            const auto Future = Self->Get(
-                MakeShared<Gs2::Distributor::Request::FGetTransactionResultByUserIdRequest>()
-            );
-            Future->StartSynchronousTask();
-            if (Future->GetTask().IsError())
+        return Self->Gs2->Cache->ExecuteWithKeyLock(
+            Gs2::Distributor::Model::FTransactionResult::TypeName,
+            Self->ParentKey,
+            CacheKey,
+            [this, Result, CacheKey]() -> Gs2::Core::Model::FGs2ErrorPtr
             {
-                if (Future->GetTask().Error()->Type() != Gs2::Core::Model::FNotFoundError::TypeString)
-                {
-                    return Future->GetTask().Error();
-                }
-
-                const auto Key = Gs2::Distributor::Domain::Model::FTransactionResultDomain::CreateCacheKey(
-                    Self->TransactionId
-                );
-                Self->Gs2->Cache->Put(
-                    Gs2::Distributor::Model::FTransactionResult::TypeName,
+                // ReSharper disable once CppLocalVariableMayBeConst
+                TSharedPtr<Gs2::Distributor::Model::FTransactionResult> Value;
+                auto bCacheHit = Self->Gs2->Cache->TryGet<Gs2::Distributor::Model::FTransactionResult>(
                     Self->ParentKey,
-                    Key,
-                    nullptr,
-                    FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
+                    CacheKey,
+                    &Value
                 );
+                if (!bCacheHit) {
+                    const auto Future = Self->Get(
+                        MakeShared<Gs2::Distributor::Request::FGetTransactionResultByUserIdRequest>()
+                    );
+                    Future->StartSynchronousTask();
+                    if (Future->GetTask().IsError())
+                    {
+                        const auto Error = Future->GetTask().Error();
+                        if (!Error.IsValid() || Error->Type() != Gs2::Core::Model::FNotFoundError::TypeString)
+                        {
+                            return Error;
+                        }
 
-                if (Future->GetTask().Error()->Detail(0)->GetComponent() != "transactionResult")
-                {
-                    return Future->GetTask().Error();
+                        Self->Gs2->Cache->Put(
+                            Gs2::Distributor::Model::FTransactionResult::TypeName,
+                            Self->ParentKey,
+                            CacheKey,
+                            nullptr,
+                            FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
+                        );
+
+                        if (!Error->GetErrors().IsValid() || Error->Count() == 0 || !Error->Detail(0).IsValid() || Error->Detail(0)->GetComponent() != "transactionResult")
+                        {
+                            return Error;
+                        }
+                    }
+                    else
+                    {
+                        Value = Future->GetTask().Result();
+                    }
+                    Future->EnsureCompletion();
                 }
-            }
-            else
-            {
-                Value = Future->GetTask().Result();
-                if (Value.IsValid())
+
+                if (!bCacheHit)
                 {
-                    Self->Gs2->Cache->Put(
+                    FGs2ObjectPtr ExistingObject;
+                    const bool Existing = Self->Gs2->Cache->TryGet(
                         Gs2::Distributor::Model::FTransactionResult::TypeName,
                         Self->ParentKey,
-                        FTransactionResultDomain::CreateCacheKey(
-                            Self->TransactionId
-                        ),
-                        Value,
-                        FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
+                        CacheKey,
+                        &ExistingObject
                     );
+                    if (!Existing || ExistingObject != Value)
+                    {
+                        Self->Gs2->Cache->Put(
+                            Gs2::Distributor::Model::FTransactionResult::TypeName,
+                            Self->ParentKey,
+                            CacheKey,
+                            Value,
+                            FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
+                        );
+                    }
                 }
-            }
-            Future->EnsureCompletion();
-        }
-        *Result = Value;
+                *Result = Value;
 
-        return nullptr;
+                return nullptr;
+            }
+        );
     }
 
     TSharedPtr<FAsyncTask<FTransactionResultDomain::FModelTask>> FTransactionResultDomain::Model() {
@@ -233,15 +275,47 @@ namespace Gs2::Distributor::Domain::Model
         TFunction<void(Gs2::Distributor::Model::FTransactionResultPtr)> Callback
     )
     {
+        const auto SubscriptionParentKey = Gs2::Distributor::Model::Cache::FTransactionResultCache::CreateCacheParentKey(
+
+            NamespaceName,
+            UserId,
+            TOptional<int32>()
+        );
+        const auto SubscriptionCacheKey = Gs2::Distributor::Model::Cache::FTransactionResultCache::CreateCacheKey(
+
+            TransactionId
+        );
+        const TWeakPtr<Gs2::Core::Domain::FGs2> WeakGs2 = Gs2;
+        const TWeakPtr<Distributor::Domain::FGs2DistributorDomain> WeakService = Service;
+        const FString RegisteredParentKey = SubscriptionParentKey;
+        const TOptional<FString> QueryNamespaceName = NamespaceName;
+        const TOptional<FString> QueryUserId = UserId;
+        const TOptional<FString> QueryTransactionId = TransactionId;
         return Gs2->Cache->Subscribe(
             Gs2::Distributor::Model::FTransactionResult::TypeName,
-            ParentKey,
-            Gs2::Distributor::Domain::Model::FTransactionResultDomain::CreateCacheKey(
-                TransactionId
-            ),
+            SubscriptionParentKey,
+            SubscriptionCacheKey,
             [Callback](TSharedPtr<FGs2Object> obj)
             {
                 Callback(StaticCastSharedPtr<Gs2::Distributor::Model::FTransactionResult>(obj));
+            },
+            [WeakGs2, WeakService, RegisteredParentKey, QueryNamespaceName, QueryUserId, QueryTransactionId]()
+            {
+                const auto Owner = WeakGs2.Pin();
+                if (!Owner.IsValid())
+                {
+                    return;
+                }
+                const auto Domain = MakeShared<FTransactionResultDomain>(
+                    Owner,
+                    WeakService.Pin(),
+                    QueryNamespaceName,
+                    QueryUserId,
+                    QueryTransactionId
+                );
+                Domain->ParentKey = RegisteredParentKey;
+                const auto Task = Domain->Model();
+                Task->StartBackgroundTask();
             }
         );
     }
@@ -332,12 +406,20 @@ namespace Gs2::Distributor::Domain::Model
         Gs2::Core::Domain::CallbackID CallbackID
     )
     {
+        const auto SubscriptionParentKey = Gs2::Distributor::Model::Cache::FTransactionResultCache::CreateCacheParentKey(
+
+            NamespaceName,
+            UserId,
+            TOptional<int32>()
+        );
+        const auto SubscriptionCacheKey = Gs2::Distributor::Model::Cache::FTransactionResultCache::CreateCacheKey(
+
+            TransactionId
+        );
         Gs2->Cache->Unsubscribe(
             Gs2::Distributor::Model::FTransactionResult::TypeName,
-            ParentKey,
-            Gs2::Distributor::Domain::Model::FTransactionResultDomain::CreateCacheKey(
-                TransactionId
-            ),
+            SubscriptionParentKey,
+            SubscriptionCacheKey,
             CallbackID
         );
     }
@@ -348,4 +430,3 @@ namespace Gs2::Distributor::Domain::Model
 #elif defined(__clang__)
 #pragma clang diagnostic pop
 #endif
-

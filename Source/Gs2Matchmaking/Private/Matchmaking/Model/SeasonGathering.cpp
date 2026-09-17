@@ -381,3 +381,250 @@ namespace Gs2::Matchmaking::Model
 
     FString FSeasonGathering::TypeName = "SeasonGathering";
 }
+#include "Matchmaking/Model/Cache/SeasonGathering.h"
+
+namespace Gs2::Matchmaking::Model::Cache
+{
+    FString FSeasonGatheringCache::CreateCacheParentKey(
+        TOptional<FString> CacheOwnerArgumentNamespaceName,
+        TOptional<FString> CacheOwnerArgumentUserId,
+        TOptional<FString> CacheOwnerArgumentSeasonName,
+        TOptional<int64> CacheOwnerArgumentSeason,
+        TOptional<int32> CacheOwnerArgumentTimeOffset
+    )
+    {
+        return FString("matchmaking:")
+            + CacheOwnerArgumentNamespaceName.Get(FString()) + FString(":")
+            + FString("Singleton") + FString(":")
+            + CacheOwnerArgumentSeasonName.Get(FString()) + FString(":")
+            + (CacheOwnerArgumentSeason.IsSet() ? FString::Printf(TEXT("%lld"), CacheOwnerArgumentSeason.Get(0)) : FString()) + FString(":")
+            + FString::FromInt(CacheOwnerArgumentTimeOffset.Get(0)) + FString(":SeasonGathering");
+    }
+
+    FString FSeasonGatheringCache::CreateCacheKey(
+        TOptional<int64> CacheOwnerArgumentTier,
+        TOptional<FString> CacheOwnerArgumentSeasonGatheringName
+    )
+    {
+        return
+            FString()
+            + (CacheOwnerArgumentTier.IsSet() ? FString::Printf(TEXT("%lld"), CacheOwnerArgumentTier.Get(0)) : FString()) + FString(":")
+            + CacheOwnerArgumentSeasonGatheringName.Get(FString())
+            ;
+    }
+
+    bool FSeasonGatheringCache::TryGet(
+        const Gs2::Core::Domain::FCacheDatabasePtr& CacheOwnerArgumentCache,
+        TOptional<FString> CacheOwnerArgumentNamespaceName,
+        TOptional<FString> CacheOwnerArgumentUserId,
+        TOptional<FString> CacheOwnerArgumentSeasonName,
+        TOptional<int64> CacheOwnerArgumentSeason,
+        TOptional<int64> CacheOwnerArgumentTier,
+        TOptional<FString> CacheOwnerArgumentSeasonGatheringName,
+        TOptional<int32> CacheOwnerArgumentTimeOffset,
+        Gs2::Matchmaking::Model::FSeasonGatheringPtr* CacheOwnerArgumentOutItem
+    )
+    {
+        const auto CacheSnapshot = CacheOwnerArgumentCache;
+        if (!CacheSnapshot.IsValid())
+        {
+            if (CacheOwnerArgumentOutItem) *CacheOwnerArgumentOutItem = nullptr;
+            return false;
+        }
+        if (CacheOwnerArgumentOutItem) *CacheOwnerArgumentOutItem = nullptr;
+        Gs2::Matchmaking::Model::FSeasonGatheringPtr CacheOwnerValue;
+        const bool CacheOwnerFound = CacheSnapshot->TryGet<Gs2::Matchmaking::Model::FSeasonGathering>(
+            CreateCacheParentKey(
+                CacheOwnerArgumentNamespaceName,
+                CacheOwnerArgumentUserId,
+                CacheOwnerArgumentSeasonName,
+                CacheOwnerArgumentSeason,
+                CacheOwnerArgumentTimeOffset
+            ),
+            CreateCacheKey(
+                CacheOwnerArgumentTier,
+                CacheOwnerArgumentSeasonGatheringName
+            ),
+            &CacheOwnerValue
+        );
+        if (CacheOwnerArgumentOutItem) *CacheOwnerArgumentOutItem = CacheOwnerFound ? CacheOwnerValue : nullptr;
+        return CacheOwnerFound;
+    }
+
+    void FSeasonGatheringCache::Put(
+        const Gs2::Core::Domain::FCacheDatabasePtr& CacheOwnerArgumentCache,
+        TOptional<FString> CacheOwnerArgumentNamespaceName,
+        TOptional<FString> CacheOwnerArgumentUserId,
+        TOptional<FString> CacheOwnerArgumentSeasonName,
+        TOptional<int64> CacheOwnerArgumentSeason,
+        TOptional<int64> CacheOwnerArgumentTier,
+        TOptional<FString> CacheOwnerArgumentSeasonGatheringName,
+        TOptional<int32> CacheOwnerArgumentTimeOffset,
+        const Gs2::Matchmaking::Model::FSeasonGatheringPtr& CacheOwnerArgumentItem
+    )
+    {
+        const auto CacheSnapshot = CacheOwnerArgumentCache;
+        if (!CacheSnapshot.IsValid()) return;
+        const auto CacheOwnerParentKey = CreateCacheParentKey(
+            CacheOwnerArgumentNamespaceName,
+            CacheOwnerArgumentUserId,
+            CacheOwnerArgumentSeasonName,
+            CacheOwnerArgumentSeason,
+            CacheOwnerArgumentTimeOffset
+        );
+        const auto CacheOwnerKey = CreateCacheKey(
+            CacheOwnerArgumentTier,
+            CacheOwnerArgumentSeasonGatheringName
+        );
+        auto CacheOwnerValue = CacheOwnerArgumentItem;
+        Gs2::Matchmaking::Model::FSeasonGatheringPtr CacheOwnerExisting;
+        if (CacheSnapshot->TryGet<Gs2::Matchmaking::Model::FSeasonGathering>(CacheOwnerParentKey, CacheOwnerKey, &CacheOwnerExisting))
+        {
+            const int64 CacheOwnerOldRevision = CacheOwnerExisting.IsValid() ? CacheOwnerExisting->GetRevision().Get(-1) : -1;
+            const int64 CacheOwnerNewRevision = CacheOwnerValue.IsValid() ? CacheOwnerValue->GetRevision().Get(-1) : -1;
+            if (CacheOwnerOldRevision > CacheOwnerNewRevision && CacheOwnerNewRevision > 1) return;
+        }
+        CacheSnapshot->Put(Gs2::Matchmaking::Model::FSeasonGathering::TypeName, CacheOwnerParentKey, CacheOwnerKey, CacheOwnerValue,
+            FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
+        );
+    }
+
+    void FSeasonGatheringCache::Delete(
+        const Gs2::Core::Domain::FCacheDatabasePtr& CacheOwnerArgumentCache,
+        TOptional<FString> CacheOwnerArgumentNamespaceName,
+        TOptional<FString> CacheOwnerArgumentUserId,
+        TOptional<FString> CacheOwnerArgumentSeasonName,
+        TOptional<int64> CacheOwnerArgumentSeason,
+        TOptional<int64> CacheOwnerArgumentTier,
+        TOptional<FString> CacheOwnerArgumentSeasonGatheringName,
+        TOptional<int32> CacheOwnerArgumentTimeOffset
+    )
+    {
+        const auto CacheSnapshot = CacheOwnerArgumentCache;
+        if (!CacheSnapshot.IsValid()) return;
+        CacheSnapshot->Delete(Gs2::Matchmaking::Model::FSeasonGathering::TypeName, CreateCacheParentKey(
+            CacheOwnerArgumentNamespaceName,
+            CacheOwnerArgumentUserId,
+            CacheOwnerArgumentSeasonName,
+            CacheOwnerArgumentSeason,
+            CacheOwnerArgumentTimeOffset
+        ), CreateCacheKey(
+            CacheOwnerArgumentTier,
+            CacheOwnerArgumentSeasonGatheringName
+        ));
+    }
+
+    Gs2::Core::Model::FGs2ErrorPtr FSeasonGatheringCache::Fetch(
+        const Gs2::Core::Domain::FCacheDatabasePtr& CacheOwnerArgumentCache,
+        TOptional<FString> CacheOwnerArgumentNamespaceName,
+        TOptional<FString> CacheOwnerArgumentUserId,
+        TOptional<FString> CacheOwnerArgumentSeasonName,
+        TOptional<int64> CacheOwnerArgumentSeason,
+        TOptional<int64> CacheOwnerArgumentTier,
+        TOptional<FString> CacheOwnerArgumentSeasonGatheringName,
+        TOptional<int32> CacheOwnerArgumentTimeOffset,
+        const TFunction<Gs2::Core::Model::FGs2ErrorPtr(Gs2::Matchmaking::Model::FSeasonGatheringPtr*)>& CacheOwnerArgumentFetchImpl,
+        Gs2::Matchmaking::Model::FSeasonGatheringPtr* CacheOwnerArgumentOutItem
+    )
+    {
+        const auto CacheSnapshot = CacheOwnerArgumentCache;
+        const auto FetchImplSnapshot = CacheOwnerArgumentFetchImpl;
+        if (CacheOwnerArgumentOutItem) *CacheOwnerArgumentOutItem = nullptr;
+        if (!FetchImplSnapshot)
+        {
+            if (CacheOwnerArgumentOutItem) *CacheOwnerArgumentOutItem = nullptr;
+            const auto Details = MakeShared<TArray<TSharedPtr<Gs2::Core::Model::FGs2ErrorDetail>>>();
+            Details->Add(MakeShared<Gs2::Core::Model::FGs2ErrorDetail>(TEXT("fetchImpl"), TEXT("fetchImpl is required."), TEXT("required")));
+            return MakeShared<Gs2::Core::Model::FBadRequestError>(Details);
+        }
+        Gs2::Matchmaking::Model::FSeasonGatheringPtr CacheOwnerFetchedItem;
+        const auto CacheOwnerError = FetchImplSnapshot(&CacheOwnerFetchedItem);
+        if (!CacheOwnerError)
+        {
+            Put(
+                CacheSnapshot,
+                CacheOwnerArgumentNamespaceName,
+                CacheOwnerArgumentUserId,
+                CacheOwnerArgumentSeasonName,
+                CacheOwnerArgumentSeason,
+                CacheOwnerArgumentTier,
+                CacheOwnerArgumentSeasonGatheringName,
+                CacheOwnerArgumentTimeOffset,
+                CacheOwnerFetchedItem
+            );
+            if (CacheOwnerArgumentOutItem) *CacheOwnerArgumentOutItem = CacheOwnerFetchedItem;
+            return nullptr;
+        }
+        if (!CacheOwnerError->IsChildOf(Gs2::Core::Model::FNotFoundError::Class))
+        {
+            if (CacheOwnerArgumentOutItem) *CacheOwnerArgumentOutItem = nullptr;
+            return CacheOwnerError;
+        }
+        Put(
+            CacheSnapshot,
+            CacheOwnerArgumentNamespaceName,
+            CacheOwnerArgumentUserId,
+            CacheOwnerArgumentSeasonName,
+            CacheOwnerArgumentSeason,
+            CacheOwnerArgumentTier,
+            CacheOwnerArgumentSeasonGatheringName,
+            CacheOwnerArgumentTimeOffset,
+            nullptr
+        );
+        if (CacheOwnerArgumentOutItem) *CacheOwnerArgumentOutItem = nullptr;
+        const auto CacheOwnerDetails = CacheOwnerError->GetErrors();
+        if (CacheOwnerDetails.IsValid() && CacheOwnerDetails->Num() > 0 && (*CacheOwnerDetails)[0].IsValid() && (*CacheOwnerDetails)[0]->GetComponent() == TEXT("seasonGathering"))
+        {
+            return nullptr;
+        }
+        if (CacheOwnerArgumentOutItem) *CacheOwnerArgumentOutItem = nullptr;
+        return CacheOwnerError;
+    }
+
+    Gs2::Core::Domain::CallbackID FSeasonGatheringCache::ListSubscribe(
+        const Gs2::Core::Domain::FCacheDatabasePtr& CacheOwnerArgumentCache,
+        TOptional<FString> CacheOwnerArgumentNamespaceName,
+        TOptional<FString> CacheOwnerArgumentUserId,
+        TOptional<FString> CacheOwnerArgumentSeasonName,
+        TOptional<int64> CacheOwnerArgumentSeason,
+        TOptional<int32> CacheOwnerArgumentTimeOffset,
+        TFunction<void(TArray<Gs2::Matchmaking::Model::FSeasonGatheringPtr>)> CacheOwnerArgumentCallback
+    )
+    {
+        const auto CacheSnapshot = CacheOwnerArgumentCache;
+        if (!CacheSnapshot.IsValid()) return 0;
+        return CacheSnapshot->ListSubscribeTyped(Gs2::Matchmaking::Model::FSeasonGathering::TypeName, CreateCacheParentKey(
+            CacheOwnerArgumentNamespaceName,
+            CacheOwnerArgumentUserId,
+            CacheOwnerArgumentSeasonName,
+            CacheOwnerArgumentSeason,
+            CacheOwnerArgumentTimeOffset
+        ), [CacheOwnerArgumentCallback](const TArray<FGs2ObjectPtr>& CacheOwnerValues)
+        {
+            TArray<Gs2::Matchmaking::Model::FSeasonGatheringPtr> CacheOwnerTypedValues;
+            for (const auto& CacheOwnerValue : CacheOwnerValues) if (CacheOwnerValue) CacheOwnerTypedValues.Add(StaticCastSharedPtr<Gs2::Matchmaking::Model::FSeasonGathering>(CacheOwnerValue));
+            if (CacheOwnerArgumentCallback) CacheOwnerArgumentCallback(CacheOwnerTypedValues);
+        });
+    }
+
+    void FSeasonGatheringCache::ListUnsubscribe(
+        const Gs2::Core::Domain::FCacheDatabasePtr& CacheOwnerArgumentCache,
+        TOptional<FString> CacheOwnerArgumentNamespaceName,
+        TOptional<FString> CacheOwnerArgumentUserId,
+        TOptional<FString> CacheOwnerArgumentSeasonName,
+        TOptional<int64> CacheOwnerArgumentSeason,
+        TOptional<int32> CacheOwnerArgumentTimeOffset,
+        Gs2::Core::Domain::CallbackID CacheOwnerArgumentCallbackID
+    )
+    {
+        const auto CacheSnapshot = CacheOwnerArgumentCache;
+        if (!CacheSnapshot.IsValid()) return;
+        CacheSnapshot->ListUnsubscribe(Gs2::Matchmaking::Model::FSeasonGathering::TypeName, CreateCacheParentKey(
+            CacheOwnerArgumentNamespaceName,
+            CacheOwnerArgumentUserId,
+            CacheOwnerArgumentSeasonName,
+            CacheOwnerArgumentSeason,
+            CacheOwnerArgumentTimeOffset
+        ), CacheOwnerArgumentCallbackID);
+    }
+}

@@ -34,8 +34,10 @@
 #include "Experience/Domain/Gs2Experience.h"
 #include "Formation/Domain/Gs2Formation.h"
 #include "Friend/Domain/Gs2Friend.h"
+#include "Freeze/Domain/Gs2Freeze.h"
 #include "Gateway/Domain/Gs2Gateway.h"
 #include "Grade/Domain/Gs2Grade.h"
+#include "Guard/Domain/Gs2Guard.h"
 #include "Guild/Domain/Gs2Guild.h"
 #include "Identifier/Domain/Gs2Identifier.h"
 #include "Idle/Domain/Gs2Idle.h"
@@ -73,6 +75,53 @@
 
 namespace Gs2::Core::Domain
 {
+    bool FGs2::TryParseJobResultScriptName(
+        const FString& ScriptName,
+        FString& Service,
+        FString& Method
+    )
+    {
+        Service.Reset();
+        Method.Reset();
+
+        const FString Prefix = TEXT("execute_");
+        if (!ScriptName.StartsWith(Prefix, ESearchCase::CaseSensitive))
+        {
+            return false;
+        }
+
+        const FString ActionName = ScriptName.Mid(Prefix.Len());
+        static const TCHAR* MultiWordServices[] = {
+            TEXT("state_machine"), TEXT("season_rating"), TEXT("login_reward"),
+            TEXT("skill_tree"), TEXT("serial_key"), TEXT("mega_field"),
+            TEXT("job_queue"), TEXT("ad_reward")
+        };
+        for (const TCHAR* Candidate : MultiWordServices)
+        {
+            const FString ServicePrefix = FString(Candidate) + TEXT("_");
+            if (ActionName.StartsWith(ServicePrefix, ESearchCase::CaseSensitive))
+            {
+                const FString ParsedMethod = ActionName.Mid(ServicePrefix.Len());
+                if (ParsedMethod.IsEmpty())
+                {
+                    return false;
+                }
+                Service = Candidate;
+                Method = ParsedMethod;
+                return true;
+            }
+        }
+
+        const int32 SeparatorIndex = ActionName.Find(TEXT("_"), ESearchCase::CaseSensitive, ESearchDir::FromStart);
+        if (SeparatorIndex <= 0 || SeparatorIndex == ActionName.Len() - 1)
+        {
+            return false;
+        }
+        Service = ActionName.Left(SeparatorIndex);
+        Method = ActionName.Mid(SeparatorIndex + 1);
+        return true;
+    }
+
     FGs2::FGs2(
         Gs2::Core::Net::Rest::FGs2RestSessionPtr RestSession,
         Gs2::Core::Net::WebSocket::FGs2WebSocketSessionPtr _WebSocketSession,
@@ -82,29 +131,46 @@ namespace Gs2::Core::Domain
         JobQueueDomain(MakeShared<Core::Domain::Model::FJobQueueDomain>(
             [&](
                 const Gs2::JobQueue::Model::FJobPtr& Job,
-                const Gs2::JobQueue::Model::FJobResultBodyPtr& Result
+                const Gs2::JobQueue::Model::FJobResultBodyPtr& Result,
+                const TOptional<int32> TimeOffset
             )
             {
                 UE_LOG(Gs2Log, Verbose, TEXT("JobQueueResult [%s] %s"), ToCStr(*Job->GetName()), ToCStr(*Result->GetResult()));
-                UpdateCacheFromJobResult(Job, Result);
+                UpdateCacheFromJobResult(Job, Result, TimeOffset);
             }
         )),
         TransactionConfiguration(MakeShared<Core::Domain::Model::FTransactionConfiguration>(
             DistributorNamespaceName,
-            [&](const FString Action, const FString Request, const FString Result)
+            [&](const Gs2::Core::Domain::FCacheDatabasePtr, const FString, const TOptional<int32> TimeOffset, const FString Action, const FString Request, const FString Result)
             {
                 UE_LOG(Gs2Log, Verbose, TEXT("StampTaskResult [%s][%s] %s"), ToCStr(Action), ToCStr(Request), ToCStr(Result));
-                UpdateCacheFromStampTask(Action, Request, Result);
+                UpdateCacheFromStampTask(Action, Request, Result, TimeOffset);
             },
-            [&](const FString Action, const FString Request, const FString Result)
+            [&](const Gs2::Core::Domain::FCacheDatabasePtr, const FString, const TOptional<int32> TimeOffset, const FString Action, const FString Request, const FString Result)
             {
-                UE_LOG(Gs2Log, Verbose, TEXT("StampSheetResult [%s][%s] %s"), ToCStr(Action), ToCStr(Request), ToCStr(Result));
-                UpdateCacheFromStampSheet(Action, Request, Result);
+                UE_LOG(Gs2Log, Verbose, TEXT("ConsumeActionResult [%s][%s] %s"), ToCStr(Action), ToCStr(Request), ToCStr(Result));
+                UpdateCacheFromStampTask(Action, Request, Result, TimeOffset);
+            },
+            [&](const Gs2::Core::Domain::FCacheDatabasePtr, const FString, const TOptional<int32> TimeOffset, const FString Action, const FString Request, const FString Result)
+            {
+                UE_LOG(Gs2Log, Verbose, TEXT("AcquireActionResult [%s][%s] %s"), ToCStr(Action), ToCStr(Request), ToCStr(Result));
+                UpdateCacheFromStampSheet(Action, Request, Result, TimeOffset);
             }
         )),
         RestSession(RestSession),
         WebSocketSession(_WebSocketSession),
         DistributorNamespaceName(DistributorNamespaceName),
+        DispatchAccessToken([this](const Gs2::Auth::Model::FAccessTokenPtr& AccessToken) -> Gs2::Core::Model::FGs2ErrorPtr
+        {
+            const auto Future = Dispatch(AccessToken);
+            Future->StartSynchronousTask();
+            if (Future->GetTask().IsError())
+            {
+                return Future->GetTask().Error();
+            }
+            Future->EnsureCompletion();
+            return nullptr;
+        }),
         Account(nullptr),
         AdReward(nullptr),
         Auth(nullptr),
@@ -120,6 +186,8 @@ namespace Gs2::Core::Domain
         Experience(nullptr),
         Formation(nullptr),
         Friend(nullptr),
+        Freeze(nullptr),
+        Guard(nullptr),
         Gateway(nullptr),
         Grade(nullptr),
         Guild(nullptr),
@@ -157,7 +225,7 @@ namespace Gs2::Core::Domain
     {
         if (WebSocketSession.IsValid())
         {
-            WebSocketSession->OnNotification().AddLambda([&](Core::Domain::Model::FNotificationMessagePtr Message)
+            NotificationHandle = WebSocketSession->OnNotification().AddLambda([this](Core::Domain::Model::FNotificationMessagePtr Message)
             {
                 if (Disposed)
                 {
@@ -376,6 +444,17 @@ namespace Gs2::Core::Domain
         RestSession(From.RestSession),
         WebSocketSession(From.WebSocketSession),
         DistributorNamespaceName(From.DistributorNamespaceName),
+        DispatchAccessToken([this](const Gs2::Auth::Model::FAccessTokenPtr& AccessToken) -> Gs2::Core::Model::FGs2ErrorPtr
+        {
+            const auto Future = Dispatch(AccessToken);
+            Future->StartSynchronousTask();
+            if (Future->GetTask().IsError())
+            {
+                return Future->GetTask().Error();
+            }
+            Future->EnsureCompletion();
+            return nullptr;
+        }),
         Account(From.Account),
         AdReward(From.AdReward),
         Auth(From.Auth),
@@ -390,6 +469,8 @@ namespace Gs2::Core::Domain
         Experience(From.Experience),
         Formation(From.Formation),
         Friend(From.Friend),
+        Freeze(From.Freeze),
+        Guard(From.Guard),
         Gateway(From.Gateway),
         Grade(From.Grade),
         Guild(From.Guild),
@@ -423,13 +504,18 @@ namespace Gs2::Core::Domain
         Stamina(From.Stamina),
         StateMachine(From.StateMachine),
         Version(From.Version),
-        Disposed(From.Disposed)
+        Disposed(From.Disposed),
+        NotificationHandle()
     {
     }
 
     FGs2::~FGs2()
     {
         Disposed = true;
+        if (WebSocketSession.IsValid() && NotificationHandle.IsValid())
+        {
+            WebSocketSession->OnNotification().Remove(NotificationHandle);
+        }
     }
 
     void FGs2::Initialize()
@@ -449,6 +535,8 @@ namespace Gs2::Core::Domain
         Experience = MakeShared<Experience::Domain::FGs2ExperienceDomain>(SharedThis(this));
         Formation = MakeShared<Formation::Domain::FGs2FormationDomain>(SharedThis(this));
         Friend = MakeShared<Friend::Domain::FGs2FriendDomain>(SharedThis(this));
+        Freeze = MakeShared<Freeze::Domain::FGs2FreezeDomain>(SharedThis(this));
+        Guard = MakeShared<Guard::Domain::FGs2GuardDomain>(SharedThis(this));
         Gateway = MakeShared<Gateway::Domain::FGs2GatewayDomain>(SharedThis(this));
         Grade = MakeShared<Grade::Domain::FGs2GradeDomain>(SharedThis(this));
         Guild = MakeShared<Guild::Domain::FGs2GuildDomain>(SharedThis(this));
@@ -485,12 +573,40 @@ namespace Gs2::Core::Domain
         
         const auto IssueTransactionAction = [this](Gs2::Core::Domain::Model::FIssueTransactionEventPtr e)
         {
-            TransactionExecute(
-                e->GetAccessToken(),
+            if (e->GetVerifyAction().IsValid())
+            {
+                SpeculativeExecutor::FSpeculativeExecutor::FPreparedCommitPtr PreparedCommit;
+                const auto Error = SpeculativeExecutor::FSpeculativeExecutor::ExecuteVerifyAction(
+                    AsShared(),
+                    e->GetAccessToken(),
+                    e->GetVerifyAction(),
+                    e->GetRate(),
+                    e->IsInverseVerify(),
+                    &PreparedCommit
+                );
+                if (Error.IsValid())
+                {
+                    e->SetError(Error);
+                    return;
+                }
+                e->SetPreparedCommit(PreparedCommit);
+                return;
+            }
+            const auto Future = MakeShared<SpeculativeExecutor::FSpeculativeExecutor>(
                 e->GetConsumeActions(),
                 e->GetAcquireActions(),
                 e->GetRate()
+            )->Execute(
+                AsShared(),
+                e->GetAccessToken()
             );
+            Future->StartSynchronousTask();
+            if (Future->GetTask().IsError())
+            {
+                e->SetError(Future->GetTask().Error());
+                return;
+            }
+            e->SetCommit(Future->GetTask().Result());
         };
         Account->OnIssueTransaction.AddLambda(IssueTransactionAction);
         AdReward->OnIssueTransaction.AddLambda(IssueTransactionAction);
@@ -542,7 +658,7 @@ namespace Gs2::Core::Domain
         
     }
 
-    void FGs2::UpdateCacheFromStampSheet(const FString Action, const FString Request, const FString Result) const
+    void FGs2::UpdateCacheFromStampSheet(const FString Action, const FString Request, const FString Result, const TOptional<int32> TimeOffset) const
     {
         if (Disposed)
         {
@@ -562,196 +678,196 @@ namespace Gs2::Core::Domain
             
             if (Service == "Gs2Account")
             {
-                Account->UpdateCacheFromStampSheet(Method, Request, Result);
+                Account->UpdateCacheFromStampSheet(Method, Request, Result, TimeOffset);
             }
             if (Service == "Gs2AdReward")
             {
-                AdReward->UpdateCacheFromStampSheet(Method, Request, Result);
+                AdReward->UpdateCacheFromStampSheet(Method, Request, Result, TimeOffset);
             }
             if (Service == "Gs2Auth")
             {
-                Auth->UpdateCacheFromStampSheet(Method, Request, Result);
+                Auth->UpdateCacheFromStampSheet(Method, Request, Result, TimeOffset);
             }
             if (Service == "Gs2Buff")
             {
-                Buff->UpdateCacheFromStampSheet(Method, Request, Result);
+                Buff->UpdateCacheFromStampSheet(Method, Request, Result, TimeOffset);
             }
             if (Service == "Gs2Chat")
             {
-                Chat->UpdateCacheFromStampSheet(Method, Request, Result);
+                Chat->UpdateCacheFromStampSheet(Method, Request, Result, TimeOffset);
             }
             if (Service == "Gs2Datastore")
             {
-                Datastore->UpdateCacheFromStampSheet(Method, Request, Result);
+                Datastore->UpdateCacheFromStampSheet(Method, Request, Result, TimeOffset);
             }
             if (Service == "Gs2Dictionary")
             {
-                Dictionary->UpdateCacheFromStampSheet(Method, Request, Result);
+                Dictionary->UpdateCacheFromStampSheet(Method, Request, Result, TimeOffset);
             }
             if (Service == "Gs2Distributor")
             {
-                Distributor->UpdateCacheFromStampSheet(Method, Request, Result);
+                Distributor->UpdateCacheFromStampSheet(Method, Request, Result, TimeOffset);
             }
             if (Service == "Gs2Enchant")
             {
-                Enchant->UpdateCacheFromStampSheet(Method, Request, Result);
+                Enchant->UpdateCacheFromStampSheet(Method, Request, Result, TimeOffset);
             }
             if (Service == "Gs2Enhance")
             {
-                Enhance->UpdateCacheFromStampSheet(Method, Request, Result);
+                Enhance->UpdateCacheFromStampSheet(Method, Request, Result, TimeOffset);
             }
             if (Service == "Gs2Exchange")
             {
-                Exchange->UpdateCacheFromStampSheet(Method, Request, Result);
+                Exchange->UpdateCacheFromStampSheet(Method, Request, Result, TimeOffset);
             }
             if (Service == "Gs2Experience")
             {
-                Experience->UpdateCacheFromStampSheet(Method, Request, Result);
+                Experience->UpdateCacheFromStampSheet(Method, Request, Result, TimeOffset);
             }
             if (Service == "Gs2Formation")
             {
-                Formation->UpdateCacheFromStampSheet(Method, Request, Result);
+                Formation->UpdateCacheFromStampSheet(Method, Request, Result, TimeOffset);
             }
             if (Service == "Gs2Friend")
             {
-                Friend->UpdateCacheFromStampSheet(Method, Request, Result);
+                Friend->UpdateCacheFromStampSheet(Method, Request, Result, TimeOffset);
             }
             if (Service == "Gs2Gateway")
             {
-                Gateway->UpdateCacheFromStampSheet(Method, Request, Result);
+                Gateway->UpdateCacheFromStampSheet(Method, Request, Result, TimeOffset);
             }
             if (Service == "Gs2Grade")
             {
-                Grade->UpdateCacheFromStampSheet(Method, Request, Result);
+                Grade->UpdateCacheFromStampSheet(Method, Request, Result, TimeOffset);
             }
             if (Service == "Gs2Guild")
             {
-                Guild->UpdateCacheFromStampSheet(Method, Request, Result);
+                Guild->UpdateCacheFromStampSheet(Method, Request, Result, TimeOffset);
             }
             if (Service == "Gs2Identifier")
             {
-                Identifier->UpdateCacheFromStampSheet(Method, Request, Result);
+                Identifier->UpdateCacheFromStampSheet(Method, Request, Result, TimeOffset);
             }
             if (Service == "Gs2Idle")
             {
-                Idle->UpdateCacheFromStampSheet(Method, Request, Result);
+                Idle->UpdateCacheFromStampSheet(Method, Request, Result, TimeOffset);
             }
             if (Service == "Gs2Inbox")
             {
-                Inbox->UpdateCacheFromStampSheet(Method, Request, Result);
+                Inbox->UpdateCacheFromStampSheet(Method, Request, Result, TimeOffset);
             }
             if (Service == "Gs2Inventory")
             {
-                Inventory->UpdateCacheFromStampSheet(Method, Request, Result);
+                Inventory->UpdateCacheFromStampSheet(Method, Request, Result, TimeOffset);
             }
             if (Service == "Gs2JobQueue")
             {
-                JobQueue->UpdateCacheFromStampSheet(Method, Request, Result);
+                JobQueue->UpdateCacheFromStampSheet(Method, Request, Result, TimeOffset);
             }
             if (Service == "Gs2Key")
             {
-                Key->UpdateCacheFromStampSheet(Method, Request, Result);
+                Key->UpdateCacheFromStampSheet(Method, Request, Result, TimeOffset);
             }
             if (Service == "Gs2Limit")
             {
-                Limit->UpdateCacheFromStampSheet(Method, Request, Result);
+                Limit->UpdateCacheFromStampSheet(Method, Request, Result, TimeOffset);
             }
             if (Service == "Gs2Log")
             {
-                Log->UpdateCacheFromStampSheet(Method, Request, Result);
+                Log->UpdateCacheFromStampSheet(Method, Request, Result, TimeOffset);
             }
             if (Service == "Gs2LoginReward")
             {
-                LoginReward->UpdateCacheFromStampSheet(Method, Request, Result);
+                LoginReward->UpdateCacheFromStampSheet(Method, Request, Result, TimeOffset);
             }
             if (Service == "Gs2Lock")
             {
-                Lock->UpdateCacheFromStampSheet(Method, Request, Result);
+                Lock->UpdateCacheFromStampSheet(Method, Request, Result, TimeOffset);
             }
             if (Service == "Gs2Lottery")
             {
-                Lottery->UpdateCacheFromStampSheet(Method, Request, Result);
+                Lottery->UpdateCacheFromStampSheet(Method, Request, Result, TimeOffset);
             }
             if (Service == "Gs2Matchmaking")
             {
-                Matchmaking->UpdateCacheFromStampSheet(Method, Request, Result);
+                Matchmaking->UpdateCacheFromStampSheet(Method, Request, Result, TimeOffset);
             }
             if (Service == "Gs2MegaField")
             {
-                MegaField->UpdateCacheFromStampSheet(Method, Request, Result);
+                MegaField->UpdateCacheFromStampSheet(Method, Request, Result, TimeOffset);
             }
             if (Service == "Gs2Mission")
             {
-                Mission->UpdateCacheFromStampSheet(Method, Request, Result);
+                Mission->UpdateCacheFromStampSheet(Method, Request, Result, TimeOffset);
             }
             if (Service == "Gs2Money")
             {
-                Money->UpdateCacheFromStampSheet(Method, Request, Result);
+                Money->UpdateCacheFromStampSheet(Method, Request, Result, TimeOffset);
             }
             if (Service == "Gs2Money2")
             {
-                Money2->UpdateCacheFromStampSheet(Method, Request, Result);
+                Money2->UpdateCacheFromStampSheet(Method, Request, Result, TimeOffset);
             }
             if (Service == "Gs2News")
             {
-                News->UpdateCacheFromStampSheet(Method, Request, Result);
+                News->UpdateCacheFromStampSheet(Method, Request, Result, TimeOffset);
             }
             if (Service == "Gs2Quest")
             {
-                Quest->UpdateCacheFromStampSheet(Method, Request, Result);
+                Quest->UpdateCacheFromStampSheet(Method, Request, Result, TimeOffset);
             }
             if (Service == "Gs2Ranking")
             {
-                Ranking->UpdateCacheFromStampSheet(Method, Request, Result);
+                Ranking->UpdateCacheFromStampSheet(Method, Request, Result, TimeOffset);
             }
             if (Service == "Gs2Ranking2")
             {
-                Ranking2->UpdateCacheFromStampSheet(Method, Request, Result);
+                Ranking2->UpdateCacheFromStampSheet(Method, Request, Result, TimeOffset);
             }
             if (Service == "Gs2Realtime")
             {
-                Realtime->UpdateCacheFromStampSheet(Method, Request, Result);
+                Realtime->UpdateCacheFromStampSheet(Method, Request, Result, TimeOffset);
             }
             if (Service == "Gs2Schedule")
             {
-                Schedule->UpdateCacheFromStampSheet(Method, Request, Result);
+                Schedule->UpdateCacheFromStampSheet(Method, Request, Result, TimeOffset);
             }
             if (Service == "Gs2Script")
             {
-                Script->UpdateCacheFromStampSheet(Method, Request, Result);
+                Script->UpdateCacheFromStampSheet(Method, Request, Result, TimeOffset);
             }
             if (Service == "Gs2SeasonRating")
             {
-                SeasonRating->UpdateCacheFromStampSheet(Method, Request, Result);
+                SeasonRating->UpdateCacheFromStampSheet(Method, Request, Result, TimeOffset);
             }
             if (Service == "Gs2SerialKey")
             {
-                SerialKey->UpdateCacheFromStampSheet(Method, Request, Result);
+                SerialKey->UpdateCacheFromStampSheet(Method, Request, Result, TimeOffset);
             }
             if (Service == "Gs2Showcase")
             {
-                Showcase->UpdateCacheFromStampSheet(Method, Request, Result);
+                Showcase->UpdateCacheFromStampSheet(Method, Request, Result, TimeOffset);
             }
             if (Service == "Gs2SkillTree")
             {
-                SkillTree->UpdateCacheFromStampSheet(Method, Request, Result);
+                SkillTree->UpdateCacheFromStampSheet(Method, Request, Result, TimeOffset);
             }
             if (Service == "Gs2Stamina")
             {
-                Stamina->UpdateCacheFromStampSheet(Method, Request, Result);
+                Stamina->UpdateCacheFromStampSheet(Method, Request, Result, TimeOffset);
             }
             if (Service == "Gs2StateMachine")
             {
-                StateMachine->UpdateCacheFromStampSheet(Method, Request, Result);
+                StateMachine->UpdateCacheFromStampSheet(Method, Request, Result, TimeOffset);
             }
             if (Service == "Gs2Version")
             {
-                Version->UpdateCacheFromStampSheet(Method, Request, Result);
+                Version->UpdateCacheFromStampSheet(Method, Request, Result, TimeOffset);
             }
         }
     }
 
-    void FGs2::UpdateCacheFromStampTask(const FString Action, const FString Request, const FString Result) const
+    void FGs2::UpdateCacheFromStampTask(const FString Action, const FString Request, const FString Result, const TOptional<int32> TimeOffset) const
     {
         if (Disposed)
         {
@@ -771,191 +887,191 @@ namespace Gs2::Core::Domain
             
             if (Service == "Gs2Account")
             {
-                Account->UpdateCacheFromStampTask(Method, Request, Result);
+                Account->UpdateCacheFromStampTask(Method, Request, Result, TimeOffset);
             }
             if (Service == "Gs2AdReward")
             {
-                AdReward->UpdateCacheFromStampTask(Method, Request, Result);
+                AdReward->UpdateCacheFromStampTask(Method, Request, Result, TimeOffset);
             }
             if (Service == "Gs2Auth")
             {
-                Auth->UpdateCacheFromStampTask(Method, Request, Result);
+                Auth->UpdateCacheFromStampTask(Method, Request, Result, TimeOffset);
             }
             if (Service == "Gs2Buff")
             {
-                Buff->UpdateCacheFromStampTask(Method, Request, Result);
+                Buff->UpdateCacheFromStampTask(Method, Request, Result, TimeOffset);
             }
             if (Service == "Gs2Chat")
             {
-                Chat->UpdateCacheFromStampTask(Method, Request, Result);
+                Chat->UpdateCacheFromStampTask(Method, Request, Result, TimeOffset);
             }
             if (Service == "Gs2Datastore")
             {
-                Datastore->UpdateCacheFromStampTask(Method, Request, Result);
+                Datastore->UpdateCacheFromStampTask(Method, Request, Result, TimeOffset);
             }
             if (Service == "Gs2Dictionary")
             {
-                Dictionary->UpdateCacheFromStampTask(Method, Request, Result);
+                Dictionary->UpdateCacheFromStampTask(Method, Request, Result, TimeOffset);
             }
             if (Service == "Gs2Distributor")
             {
-                Distributor->UpdateCacheFromStampTask(Method, Request, Result);
+                Distributor->UpdateCacheFromStampTask(Method, Request, Result, TimeOffset);
             }
             if (Service == "Gs2Enchant")
             {
-                Enchant->UpdateCacheFromStampTask(Method, Request, Result);
+                Enchant->UpdateCacheFromStampTask(Method, Request, Result, TimeOffset);
             }
             if (Service == "Gs2Enhance")
             {
-                Enhance->UpdateCacheFromStampTask(Method, Request, Result);
+                Enhance->UpdateCacheFromStampTask(Method, Request, Result, TimeOffset);
             }
             if (Service == "Gs2Exchange")
             {
-                Exchange->UpdateCacheFromStampTask(Method, Request, Result);
+                Exchange->UpdateCacheFromStampTask(Method, Request, Result, TimeOffset);
             }
             if (Service == "Gs2Experience")
             {
-                Experience->UpdateCacheFromStampTask(Method, Request, Result);
+                Experience->UpdateCacheFromStampTask(Method, Request, Result, TimeOffset);
             }
             if (Service == "Gs2Formation")
             {
-                Formation->UpdateCacheFromStampTask(Method, Request, Result);
+                Formation->UpdateCacheFromStampTask(Method, Request, Result, TimeOffset);
             }
             if (Service == "Gs2Friend")
             {
-                Friend->UpdateCacheFromStampTask(Method, Request, Result);
+                Friend->UpdateCacheFromStampTask(Method, Request, Result, TimeOffset);
             }
             if (Service == "Gs2Gateway")
             {
-                Gateway->UpdateCacheFromStampTask(Method, Request, Result);
+                Gateway->UpdateCacheFromStampTask(Method, Request, Result, TimeOffset);
             }
             if (Service == "Gs2Grade")
             {
-                Grade->UpdateCacheFromStampTask(Method, Request, Result);
+                Grade->UpdateCacheFromStampTask(Method, Request, Result, TimeOffset);
             }
             if (Service == "Gs2Guild")
             {
-                Guild->UpdateCacheFromStampTask(Method, Request, Result);
+                Guild->UpdateCacheFromStampTask(Method, Request, Result, TimeOffset);
             }
             if (Service == "Gs2Identifier")
             {
-                Identifier->UpdateCacheFromStampTask(Method, Request, Result);
+                Identifier->UpdateCacheFromStampTask(Method, Request, Result, TimeOffset);
             }
             if (Service == "Gs2Idle")
             {
-                Idle->UpdateCacheFromStampTask(Method, Request, Result);
+                Idle->UpdateCacheFromStampTask(Method, Request, Result, TimeOffset);
             }
             if (Service == "Gs2Inbox")
             {
-                Inbox->UpdateCacheFromStampTask(Method, Request, Result);
+                Inbox->UpdateCacheFromStampTask(Method, Request, Result, TimeOffset);
             }
             if (Service == "Gs2Inventory")
             {
-                Inventory->UpdateCacheFromStampTask(Method, Request, Result);
+                Inventory->UpdateCacheFromStampTask(Method, Request, Result, TimeOffset);
             }
             if (Service == "Gs2JobQueue")
             {
-                JobQueue->UpdateCacheFromStampTask(Method, Request, Result);
+                JobQueue->UpdateCacheFromStampTask(Method, Request, Result, TimeOffset);
             }
             if (Service == "Gs2Key")
             {
-                Key->UpdateCacheFromStampTask(Method, Request, Result);
+                Key->UpdateCacheFromStampTask(Method, Request, Result, TimeOffset);
             }
             if (Service == "Gs2Limit")
             {
-                Limit->UpdateCacheFromStampTask(Method, Request, Result);
+                Limit->UpdateCacheFromStampTask(Method, Request, Result, TimeOffset);
             }
             if (Service == "Gs2Log")
             {
-                Log->UpdateCacheFromStampTask(Method, Request, Result);
+                Log->UpdateCacheFromStampTask(Method, Request, Result, TimeOffset);
             }
             if (Service == "Gs2LoginReward")
             {
-                LoginReward->UpdateCacheFromStampTask(Method, Request, Result);
+                LoginReward->UpdateCacheFromStampTask(Method, Request, Result, TimeOffset);
             }
             if (Service == "Gs2Lock")
             {
-                Lock->UpdateCacheFromStampTask(Method, Request, Result);
+                Lock->UpdateCacheFromStampTask(Method, Request, Result, TimeOffset);
             }
             if (Service == "Gs2Lottery")
             {
-                Lottery->UpdateCacheFromStampTask(Method, Request, Result);
+                Lottery->UpdateCacheFromStampTask(Method, Request, Result, TimeOffset);
             }
             if (Service == "Gs2Matchmaking")
             {
-                Matchmaking->UpdateCacheFromStampTask(Method, Request, Result);
+                Matchmaking->UpdateCacheFromStampTask(Method, Request, Result, TimeOffset);
             }
             if (Service == "Gs2MegaField")
             {
-                MegaField->UpdateCacheFromStampTask(Method, Request, Result);
+                MegaField->UpdateCacheFromStampTask(Method, Request, Result, TimeOffset);
             }
             if (Service == "Gs2Mission")
             {
-                Mission->UpdateCacheFromStampTask(Method, Request, Result);
+                Mission->UpdateCacheFromStampTask(Method, Request, Result, TimeOffset);
             }
             if (Service == "Gs2Money")
             {
-                Money->UpdateCacheFromStampTask(Method, Request, Result);
+                Money->UpdateCacheFromStampTask(Method, Request, Result, TimeOffset);
             }
             if (Service == "Gs2Money2")
             {
-                Money2->UpdateCacheFromStampTask(Method, Request, Result);
+                Money2->UpdateCacheFromStampTask(Method, Request, Result, TimeOffset);
             }
             if (Service == "Gs2News")
             {
-                News->UpdateCacheFromStampTask(Method, Request, Result);
+                News->UpdateCacheFromStampTask(Method, Request, Result, TimeOffset);
             }
             if (Service == "Gs2Quest")
             {
-                Quest->UpdateCacheFromStampTask(Method, Request, Result);
+                Quest->UpdateCacheFromStampTask(Method, Request, Result, TimeOffset);
             }
             if (Service == "Gs2Ranking")
             {
-                Ranking->UpdateCacheFromStampTask(Method, Request, Result);
+                Ranking->UpdateCacheFromStampTask(Method, Request, Result, TimeOffset);
             }
             if (Service == "Gs2Ranking2")
             {
-                Ranking2->UpdateCacheFromStampTask(Method, Request, Result);
+                Ranking2->UpdateCacheFromStampTask(Method, Request, Result, TimeOffset);
             }
             if (Service == "Gs2Realtime")
             {
-                Realtime->UpdateCacheFromStampTask(Method, Request, Result);
+                Realtime->UpdateCacheFromStampTask(Method, Request, Result, TimeOffset);
             }
             if (Service == "Gs2Schedule")
             {
-                Schedule->UpdateCacheFromStampTask(Method, Request, Result);
+                Schedule->UpdateCacheFromStampTask(Method, Request, Result, TimeOffset);
             }
             if (Service == "Gs2Script")
             {
-                Script->UpdateCacheFromStampTask(Method, Request, Result);
+                Script->UpdateCacheFromStampTask(Method, Request, Result, TimeOffset);
             }
             if (Service == "Gs2SeasonRating")
             {
-                SeasonRating->UpdateCacheFromStampTask(Method, Request, Result);
+                SeasonRating->UpdateCacheFromStampTask(Method, Request, Result, TimeOffset);
             }
             if (Service == "Gs2SerialKey")
             {
-                SerialKey->UpdateCacheFromStampTask(Method, Request, Result);
+                SerialKey->UpdateCacheFromStampTask(Method, Request, Result, TimeOffset);
             }
             if (Service == "Gs2Showcase")
             {
-                Showcase->UpdateCacheFromStampTask(Method, Request, Result);
+                Showcase->UpdateCacheFromStampTask(Method, Request, Result, TimeOffset);
             }
             if (Service == "Gs2SkillTree")
             {
-                SkillTree->UpdateCacheFromStampTask(Method, Request, Result);
+                SkillTree->UpdateCacheFromStampTask(Method, Request, Result, TimeOffset);
             }
             if (Service == "Gs2Stamina")
             {
-                Stamina->UpdateCacheFromStampTask(Method, Request, Result);
+                Stamina->UpdateCacheFromStampTask(Method, Request, Result, TimeOffset);
             }
             if (Service == "Gs2StateMachine")
             {
-                StateMachine->UpdateCacheFromStampTask(Method, Request, Result);
+                StateMachine->UpdateCacheFromStampTask(Method, Request, Result, TimeOffset);
             }
             if (Service == "Gs2Version")
             {
-                Version->UpdateCacheFromStampTask(Method, Request, Result);
+                Version->UpdateCacheFromStampTask(Method, Request, Result, TimeOffset);
             }
         }
     }
@@ -968,7 +1084,7 @@ namespace Gs2::Core::Domain
         }
     }
 
-    void FGs2::UpdateCacheFromJobResult(Gs2::JobQueue::Model::FJobPtr Job, Gs2::JobQueue::Model::FJobResultBodyPtr Result)
+    void FGs2::UpdateCacheFromJobResult(Gs2::JobQueue::Model::FJobPtr Job, Gs2::JobQueue::Model::FJobResultBodyPtr Result, const TOptional<int32> TimeOffset)
     {
         if (Disposed)
         {
@@ -991,11 +1107,12 @@ namespace Gs2::Core::Domain
             {
                 return;
             }
-            ScriptName = ScriptName->Replace(TEXT("execute_"), TEXT(""));
-
             auto Service = FString("");
             auto Method = FString("");
-            ScriptName->Split(FString("_"), &Service, &Method);
+            if (!TryParseJobResultScriptName(*ScriptName, Service, Method))
+            {
+                return;
+            }
 
             if (!Result)
             {
@@ -1004,191 +1121,191 @@ namespace Gs2::Core::Domain
 
             if (Service == "account")
             {
-                Account->UpdateCacheFromJobResult(Method, Job, Result);
+                Account->UpdateCacheFromJobResult(Method, Job, Result, TimeOffset);
             }
             if (Service == "ad_reward")
             {
-                AdReward->UpdateCacheFromJobResult(Method, Job, Result);
+                AdReward->UpdateCacheFromJobResult(Method, Job, Result, TimeOffset);
             }
             if (Service == "auth")
             {
-                Auth->UpdateCacheFromJobResult(Method, Job, Result);
+                Auth->UpdateCacheFromJobResult(Method, Job, Result, TimeOffset);
             }
             if (Service == "buff")
             {
-                Buff->UpdateCacheFromJobResult(Method, Job, Result);
+                Buff->UpdateCacheFromJobResult(Method, Job, Result, TimeOffset);
             }
             if (Service == "chat")
             {
-                Chat->UpdateCacheFromJobResult(Method, Job, Result);
+                Chat->UpdateCacheFromJobResult(Method, Job, Result, TimeOffset);
             }
             if (Service == "datastore")
             {
-                Datastore->UpdateCacheFromJobResult(Method, Job, Result);
+                Datastore->UpdateCacheFromJobResult(Method, Job, Result, TimeOffset);
             }
             if (Service == "dictionary")
             {
-                Dictionary->UpdateCacheFromJobResult(Method, Job, Result);
+                Dictionary->UpdateCacheFromJobResult(Method, Job, Result, TimeOffset);
             }
             if (Service == "distributor")
             {
-                Distributor->UpdateCacheFromJobResult(Method, Job, Result);
+                Distributor->UpdateCacheFromJobResult(Method, Job, Result, TimeOffset);
             }
             if (Service == "enchant")
             {
-                Enchant->UpdateCacheFromJobResult(Method, Job, Result);
+                Enchant->UpdateCacheFromJobResult(Method, Job, Result, TimeOffset);
             }
             if (Service == "enhance")
             {
-                Enhance->UpdateCacheFromJobResult(Method, Job, Result);
+                Enhance->UpdateCacheFromJobResult(Method, Job, Result, TimeOffset);
             }
             if (Service == "exchange")
             {
-                Exchange->UpdateCacheFromJobResult(Method, Job, Result);
+                Exchange->UpdateCacheFromJobResult(Method, Job, Result, TimeOffset);
             }
             if (Service == "experience")
             {
-                Experience->UpdateCacheFromJobResult(Method, Job, Result);
+                Experience->UpdateCacheFromJobResult(Method, Job, Result, TimeOffset);
             }
             if (Service == "formation")
             {
-                Formation->UpdateCacheFromJobResult(Method, Job, Result);
+                Formation->UpdateCacheFromJobResult(Method, Job, Result, TimeOffset);
             }
             if (Service == "friend")
             {
-                Friend->UpdateCacheFromJobResult(Method, Job, Result);
+                Friend->UpdateCacheFromJobResult(Method, Job, Result, TimeOffset);
             }
             if (Service == "gateway")
             {
-                Gateway->UpdateCacheFromJobResult(Method, Job, Result);
+                Gateway->UpdateCacheFromJobResult(Method, Job, Result, TimeOffset);
             }
             if (Service == "grade")
             {
-                Grade->UpdateCacheFromJobResult(Method, Job, Result);
+                Grade->UpdateCacheFromJobResult(Method, Job, Result, TimeOffset);
             }
             if (Service == "guild")
             {
-                Guild->UpdateCacheFromJobResult(Method, Job, Result);
+                Guild->UpdateCacheFromJobResult(Method, Job, Result, TimeOffset);
             }
             if (Service == "identifier")
             {
-                Identifier->UpdateCacheFromJobResult(Method, Job, Result);
+                Identifier->UpdateCacheFromJobResult(Method, Job, Result, TimeOffset);
             }
             if (Service == "idle")
             {
-                Idle->UpdateCacheFromJobResult(Method, Job, Result);
+                Idle->UpdateCacheFromJobResult(Method, Job, Result, TimeOffset);
             }
             if (Service == "inbox")
             {
-                Inbox->UpdateCacheFromJobResult(Method, Job, Result);
+                Inbox->UpdateCacheFromJobResult(Method, Job, Result, TimeOffset);
             }
             if (Service == "inventory")
             {
-                Inventory->UpdateCacheFromJobResult(Method, Job, Result);
+                Inventory->UpdateCacheFromJobResult(Method, Job, Result, TimeOffset);
             }
             if (Service == "job_queue")
             {
-                JobQueue->UpdateCacheFromJobResult(Method, Job, Result);
+                JobQueue->UpdateCacheFromJobResult(Method, Job, Result, TimeOffset);
             }
             if (Service == "key")
             {
-                Key->UpdateCacheFromJobResult(Method, Job, Result);
+                Key->UpdateCacheFromJobResult(Method, Job, Result, TimeOffset);
             }
             if (Service == "limit")
             {
-                Limit->UpdateCacheFromJobResult(Method, Job, Result);
+                Limit->UpdateCacheFromJobResult(Method, Job, Result, TimeOffset);
             }
             if (Service == "log")
             {
-                Log->UpdateCacheFromJobResult(Method, Job, Result);
+                Log->UpdateCacheFromJobResult(Method, Job, Result, TimeOffset);
             }
             if (Service == "login_reward")
             {
-                LoginReward->UpdateCacheFromJobResult(Method, Job, Result);
+                LoginReward->UpdateCacheFromJobResult(Method, Job, Result, TimeOffset);
             }
             if (Service == "lock")
             {
-                Lock->UpdateCacheFromJobResult(Method, Job, Result);
+                Lock->UpdateCacheFromJobResult(Method, Job, Result, TimeOffset);
             }
             if (Service == "lottery")
             {
-                Lottery->UpdateCacheFromJobResult(Method, Job, Result);
+                Lottery->UpdateCacheFromJobResult(Method, Job, Result, TimeOffset);
             }
             if (Service == "matchmaking")
             {
-                Matchmaking->UpdateCacheFromJobResult(Method, Job, Result);
+                Matchmaking->UpdateCacheFromJobResult(Method, Job, Result, TimeOffset);
             }
             if (Service == "megaField")
             {
-                MegaField->UpdateCacheFromJobResult(Method, Job, Result);
+                MegaField->UpdateCacheFromJobResult(Method, Job, Result, TimeOffset);
             }
             if (Service == "mission")
             {
-                Mission->UpdateCacheFromJobResult(Method, Job, Result);
+                Mission->UpdateCacheFromJobResult(Method, Job, Result, TimeOffset);
             }
             if (Service == "money")
             {
-                Money->UpdateCacheFromJobResult(Method, Job, Result);
+                Money->UpdateCacheFromJobResult(Method, Job, Result, TimeOffset);
             }
             if (Service == "money2")
             {
-                Money2->UpdateCacheFromJobResult(Method, Job, Result);
+                Money2->UpdateCacheFromJobResult(Method, Job, Result, TimeOffset);
             }
             if (Service == "news")
             {
-                News->UpdateCacheFromJobResult(Method, Job, Result);
+                News->UpdateCacheFromJobResult(Method, Job, Result, TimeOffset);
             }
             if (Service == "quest")
             {
-                Quest->UpdateCacheFromJobResult(Method, Job, Result);
+                Quest->UpdateCacheFromJobResult(Method, Job, Result, TimeOffset);
             }
             if (Service == "ranking")
             {
-                Ranking->UpdateCacheFromJobResult(Method, Job, Result);
+                Ranking->UpdateCacheFromJobResult(Method, Job, Result, TimeOffset);
             }
             if (Service == "ranking2")
             {
-                Ranking2->UpdateCacheFromJobResult(Method, Job, Result);
+                Ranking2->UpdateCacheFromJobResult(Method, Job, Result, TimeOffset);
             }
             if (Service == "realtime")
             {
-                Realtime->UpdateCacheFromJobResult(Method, Job, Result);
+                Realtime->UpdateCacheFromJobResult(Method, Job, Result, TimeOffset);
             }
             if (Service == "schedule")
             {
-                Schedule->UpdateCacheFromJobResult(Method, Job, Result);
+                Schedule->UpdateCacheFromJobResult(Method, Job, Result, TimeOffset);
             }
             if (Service == "script")
             {
-                Script->UpdateCacheFromJobResult(Method, Job, Result);
+                Script->UpdateCacheFromJobResult(Method, Job, Result, TimeOffset);
             }
             if (Service == "season_rating")
             {
-                SeasonRating->UpdateCacheFromJobResult(Method, Job, Result);
+                SeasonRating->UpdateCacheFromJobResult(Method, Job, Result, TimeOffset);
             }
             if (Service == "serial_key")
             {
-                SerialKey->UpdateCacheFromJobResult(Method, Job, Result);
+                SerialKey->UpdateCacheFromJobResult(Method, Job, Result, TimeOffset);
             }
             if (Service == "showcase")
             {
-                Showcase->UpdateCacheFromJobResult(Method, Job, Result);
+                Showcase->UpdateCacheFromJobResult(Method, Job, Result, TimeOffset);
             }
             if (Service == "skill_tree")
             {
-                SkillTree->UpdateCacheFromJobResult(Method, Job, Result);
+                SkillTree->UpdateCacheFromJobResult(Method, Job, Result, TimeOffset);
             }
             if (Service == "stamina")
             {
-                Stamina->UpdateCacheFromJobResult(Method, Job, Result);
+                Stamina->UpdateCacheFromJobResult(Method, Job, Result, TimeOffset);
             }
             if (Service == "state_machine")
             {
-                StateMachine->UpdateCacheFromJobResult(Method, Job, Result);
+                StateMachine->UpdateCacheFromJobResult(Method, Job, Result, TimeOffset);
             }
             if (Service == "version")
             {
-                Version->UpdateCacheFromJobResult(Method, Job, Result);
+                Version->UpdateCacheFromJobResult(Method, Job, Result, TimeOffset);
             }
         }
     }
@@ -1291,13 +1408,16 @@ namespace Gs2::Core::Domain
         }
         RestCloseFuture->EnsureCompletion();
         
-        const auto WebSocketCloseFuture = Self->WebSocketSession->Close();
-        WebSocketCloseFuture->StartSynchronousTask();
-        if (WebSocketCloseFuture->GetTask().IsError())
+        if (Self->WebSocketSession.IsValid())
         {
-            return WebSocketCloseFuture->GetTask().Error();
+            const auto WebSocketCloseFuture = Self->WebSocketSession->Close();
+            WebSocketCloseFuture->StartSynchronousTask();
+            if (WebSocketCloseFuture->GetTask().IsError())
+            {
+                return WebSocketCloseFuture->GetTask().Error();
+            }
+            WebSocketCloseFuture->EnsureCompletion();
         }
-        WebSocketCloseFuture->EnsureCompletion();
         
         return nullptr;
     }

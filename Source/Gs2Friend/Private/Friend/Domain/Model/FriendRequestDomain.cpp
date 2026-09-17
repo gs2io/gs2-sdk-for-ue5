@@ -45,6 +45,7 @@
 #include "Friend/Domain/Model/PublicProfile.h"
 #include "Friend/Domain/Model/PublicProfileAccessToken.h"
 #include "Friend/Domain/Model/FriendRequest.h"
+#include "Friend/Model/Cache/FriendRequest.h"
 
 #include "Core/Domain/Gs2.h"
 #include "Core/Domain/Transaction/JobQueueJobDomainFactory.h"
@@ -130,37 +131,144 @@ namespace Gs2::Friend::Domain::Model
         TSharedPtr<TSharedPtr<Gs2::Friend::Model::FFriendRequest>> Result
     )
     {
-        // ReSharper disable once CppLocalVariableMayBeConst
-        TSharedPtr<Gs2::Friend::Model::FFriendRequest> Value;
-        auto bCacheHit = Self->Gs2->Cache->TryGet<Gs2::Friend::Model::FFriendRequest>(
-            Self->ParentKey,
-            Gs2::Friend::Domain::Model::FFriendRequestDomain::CreateCacheKey(
-                Self->TargetUserId
-            ),
-            &Value
-        );
-        *Result = Value;
+        const auto CacheParentKey = Gs2::Friend::Model::Cache::FFriendRequestCache::CreateCacheParentKey(
 
-        return nullptr;
+            Self->NamespaceName,
+            Self->UserId,
+            TOptional<int32>()
+        );
+        const auto CacheKey = Gs2::Friend::Model::Cache::FFriendRequestCache::CreateCacheKey(
+
+            Self->TargetUserId
+        );
+        return Self->Gs2->Cache->ExecuteWithKeyLock(
+            Gs2::Friend::Model::FFriendRequest::TypeName,
+            CacheParentKey,
+            CacheKey,
+            [Self = Self, Result]() -> Gs2::Core::Model::FGs2ErrorPtr
+            {
+                Gs2::Friend::Model::FFriendRequestPtr Value;
+                const auto CacheHit = Gs2::Friend::Model::Cache::FFriendRequestCache::TryGet(
+                    Self->Gs2->Cache,
+
+                    Self->NamespaceName,
+                    Self->UserId,
+                    Self->TargetUserId,
+                    TOptional<int32>(),
+                    &Value
+                );
+                if (CacheHit)
+                {
+                    *Result = Value;
+                    return nullptr;
+                }
+                *Result = Value;
+                return nullptr;
+            }
+        );
     }
 
     TSharedPtr<FAsyncTask<FFriendRequestDomain::FModelTask>> FFriendRequestDomain::Model() {
         return Gs2::Core::Util::New<FAsyncTask<FFriendRequestDomain::FModelTask>>(this->AsShared());
     }
 
+    void FFriendRequestDomain::Invalidate()
+    {
+        Gs2::Friend::Model::Cache::FFriendRequestCache::Delete(
+            Gs2->Cache,
+
+            NamespaceName,
+            UserId,
+            TargetUserId,
+            TOptional<int32>()
+        );
+    }
+
+    FFriendRequestDomain::FSubscribeWithInitialCallTask::FSubscribeWithInitialCallTask(
+        const TSharedPtr<FFriendRequestDomain>& Self,
+        TFunction<void(Gs2::Friend::Model::FFriendRequestPtr)> Callback
+    ):
+        Self(Self),
+        Callback(Callback)
+    {
+    }
+
+    FFriendRequestDomain::FSubscribeWithInitialCallTask::FSubscribeWithInitialCallTask(
+        const FSubscribeWithInitialCallTask& From
+    ):
+        TGs2Future(From),
+        Self(From.Self),
+        Callback(From.Callback)
+    {
+    }
+
+    Gs2::Core::Model::FGs2ErrorPtr FFriendRequestDomain::FSubscribeWithInitialCallTask::Action(
+        TSharedPtr<TSharedPtr<Gs2::Core::Domain::CallbackID>> Result
+    )
+    {
+        const auto Task = Self->Model();
+        Task->StartSynchronousTask();
+        Task->EnsureCompletion();
+        if (Task->GetTask().IsError()) return Task->GetTask().Error();
+        const auto Item = Task->GetTask().Result();
+        const auto CallbackId = Self->Subscribe(Callback);
+        Callback(Item);
+        *Result = MakeShared<Gs2::Core::Domain::CallbackID>(CallbackId);
+        return nullptr;
+    }
+
+    TSharedPtr<FAsyncTask<FFriendRequestDomain::FSubscribeWithInitialCallTask>> FFriendRequestDomain::SubscribeWithInitialCall(
+        TFunction<void(Gs2::Friend::Model::FFriendRequestPtr)> Callback
+    )
+    {
+        return Gs2::Core::Util::New<FAsyncTask<FSubscribeWithInitialCallTask>>(this->AsShared(), Callback);
+    }
+
     Gs2::Core::Domain::CallbackID FFriendRequestDomain::Subscribe(
         TFunction<void(Gs2::Friend::Model::FFriendRequestPtr)> Callback
     )
     {
+        const auto SubscriptionParentKey = Gs2::Friend::Model::Cache::FFriendRequestCache::CreateCacheParentKey(
+
+            NamespaceName,
+            UserId,
+            TOptional<int32>()
+        );
+        const auto SubscriptionCacheKey = Gs2::Friend::Model::Cache::FFriendRequestCache::CreateCacheKey(
+
+            TargetUserId
+        );
+        const TWeakPtr<Gs2::Core::Domain::FGs2> WeakGs2 = Gs2;
+        const TWeakPtr<Friend::Domain::FGs2FriendDomain> WeakService = Service;
+        const FString RegisteredParentKey = SubscriptionParentKey;
+        const TOptional<FString> QueryNamespaceName = NamespaceName;
+        const TOptional<FString> QueryUserId = UserId;
+        const TOptional<FString> QueryTargetUserId = TargetUserId;
         return Gs2->Cache->Subscribe(
             Gs2::Friend::Model::FFriendRequest::TypeName,
-            ParentKey,
-            Gs2::Friend::Domain::Model::FFriendRequestDomain::CreateCacheKey(
-                TargetUserId
-            ),
+            SubscriptionParentKey,
+            SubscriptionCacheKey,
             [Callback](TSharedPtr<FGs2Object> obj)
             {
                 Callback(StaticCastSharedPtr<Gs2::Friend::Model::FFriendRequest>(obj));
+            },
+            [WeakGs2, WeakService, RegisteredParentKey, QueryNamespaceName, QueryUserId, QueryTargetUserId]()
+            {
+                const auto Owner = WeakGs2.Pin();
+                if (!Owner.IsValid())
+                {
+                    return;
+                }
+                const auto Domain = MakeShared<FFriendRequestDomain>(
+                    Owner,
+                    WeakService.Pin(),
+                    QueryNamespaceName,
+                    QueryUserId,
+                    QueryTargetUserId
+                );
+                Domain->ParentKey = RegisteredParentKey;
+                const auto Task = Domain->Model();
+                Task->StartBackgroundTask();
             }
         );
     }
@@ -169,12 +277,20 @@ namespace Gs2::Friend::Domain::Model
         Gs2::Core::Domain::CallbackID CallbackID
     )
     {
+        const auto SubscriptionParentKey = Gs2::Friend::Model::Cache::FFriendRequestCache::CreateCacheParentKey(
+
+            NamespaceName,
+            UserId,
+            TOptional<int32>()
+        );
+        const auto SubscriptionCacheKey = Gs2::Friend::Model::Cache::FFriendRequestCache::CreateCacheKey(
+
+            TargetUserId
+        );
         Gs2->Cache->Unsubscribe(
             Gs2::Friend::Model::FFriendRequest::TypeName,
-            ParentKey,
-            Gs2::Friend::Domain::Model::FFriendRequestDomain::CreateCacheKey(
-                TargetUserId
-            ),
+            SubscriptionParentKey,
+            SubscriptionCacheKey,
             CallbackID
         );
     }
@@ -185,4 +301,3 @@ namespace Gs2::Friend::Domain::Model
 #elif defined(__clang__)
 #pragma clang diagnostic pop
 #endif
-

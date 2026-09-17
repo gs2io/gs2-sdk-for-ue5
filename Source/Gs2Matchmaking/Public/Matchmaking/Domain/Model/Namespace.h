@@ -125,6 +125,8 @@ namespace Gs2::Matchmaking::Domain::Model
             const FNamespaceDomain& From
         );
 
+
+
         class GS2MATCHMAKING_API FGetStatusTask final :
             public Gs2::Core::Util::TGs2Future<Gs2::Matchmaking::Domain::Model::FNamespaceDomain>,
             public TSharedFromThis<FGetStatusTask>
@@ -150,6 +152,8 @@ namespace Gs2::Matchmaking::Domain::Model
         TSharedPtr<FAsyncTask<FGetStatusTask>> GetStatus(
             Request::FGetNamespaceStatusRequestPtr Request
         );
+
+
 
         class GS2MATCHMAKING_API FGetTask final :
             public Gs2::Core::Util::TGs2Future<Gs2::Matchmaking::Model::FNamespace>,
@@ -177,6 +181,8 @@ namespace Gs2::Matchmaking::Domain::Model
             Request::FGetNamespaceRequestPtr Request
         );
 
+
+
         class GS2MATCHMAKING_API FUpdateTask final :
             public Gs2::Core::Util::TGs2Future<Gs2::Matchmaking::Domain::Model::FNamespaceDomain>,
             public TSharedFromThis<FUpdateTask>
@@ -202,6 +208,8 @@ namespace Gs2::Matchmaking::Domain::Model
         TSharedPtr<FAsyncTask<FUpdateTask>> Update(
             Request::FUpdateNamespaceRequestPtr Request
         );
+
+
 
         class GS2MATCHMAKING_API FDeleteTask final :
             public Gs2::Core::Util::TGs2Future<Gs2::Matchmaking::Domain::Model::FNamespaceDomain>,
@@ -229,6 +237,8 @@ namespace Gs2::Matchmaking::Domain::Model
             Request::FDeleteNamespaceRequestPtr Request
         );
 
+
+
         class GS2MATCHMAKING_API FCreateRatingModelMasterTask final :
             public Gs2::Core::Util::TGs2Future<Gs2::Matchmaking::Domain::Model::FRatingModelMasterDomain>,
             public TSharedFromThis<FCreateRatingModelMasterTask>
@@ -254,6 +264,8 @@ namespace Gs2::Matchmaking::Domain::Model
         TSharedPtr<FAsyncTask<FCreateRatingModelMasterTask>> CreateRatingModelMaster(
             Request::FCreateRatingModelMasterRequestPtr Request
         );
+
+
 
         class GS2MATCHMAKING_API FVoteTask final :
             public Gs2::Core::Util::TGs2Future<Gs2::Matchmaking::Domain::Model::FBallotDomain>,
@@ -281,6 +293,8 @@ namespace Gs2::Matchmaking::Domain::Model
             Request::FVoteRequestPtr Request
         );
 
+
+
         class GS2MATCHMAKING_API FVoteMultipleTask final :
             public Gs2::Core::Util::TGs2Future<Gs2::Matchmaking::Domain::Model::FBallotDomain>,
             public TSharedFromThis<FVoteMultipleTask>
@@ -306,6 +320,8 @@ namespace Gs2::Matchmaking::Domain::Model
         TSharedPtr<FAsyncTask<FVoteMultipleTask>> VoteMultiple(
             Request::FVoteMultipleRequestPtr Request
         );
+
+
 
         class GS2MATCHMAKING_API FCreateSeasonModelMasterTask final :
             public Gs2::Core::Util::TGs2Future<Gs2::Matchmaking::Domain::Model::FSeasonModelMasterDomain>,
@@ -349,8 +365,33 @@ namespace Gs2::Matchmaking::Domain::Model
 
         Gs2::Core::Domain::CallbackID SubscribeRatingModels(
             TFunction<void()> Callback
+
         );
 
+        class FCollectRatingModelsTask;
+
+        Gs2::Core::Domain::CallbackID SubscribeRatingModels(
+            TFunction<void(TArray<Gs2::Matchmaking::Model::FRatingModelPtr>)> Callback
+        );
+
+        void InvalidateRatingModels();
+
+        class GS2MATCHMAKING_API FSubscribeRatingModelsWithInitialCallTask final :
+            public Gs2::Core::Util::TGs2Future<Gs2::Core::Domain::CallbackID>,
+            public TSharedFromThis<FSubscribeRatingModelsWithInitialCallTask>
+        {
+            const TSharedPtr<FNamespaceDomain> Self;
+            const TFunction<void(TArray<Gs2::Matchmaking::Model::FRatingModelPtr>)> Callback;
+
+        public:
+            FSubscribeRatingModelsWithInitialCallTask(const TSharedPtr<FNamespaceDomain>& Self, TFunction<void(TArray<Gs2::Matchmaking::Model::FRatingModelPtr>)> Callback);
+            FSubscribeRatingModelsWithInitialCallTask(const FSubscribeRatingModelsWithInitialCallTask& From);
+            virtual Gs2::Core::Model::FGs2ErrorPtr Action(TSharedPtr<TSharedPtr<Gs2::Core::Domain::CallbackID>> Result) override;
+        };
+
+        TSharedPtr<FAsyncTask<FSubscribeRatingModelsWithInitialCallTask>> SubscribeRatingModelsWithInitialCall(
+            TFunction<void(TArray<Gs2::Matchmaking::Model::FRatingModelPtr>)> Callback
+        );
         void UnsubscribeRatingModels(
             Gs2::Core::Domain::CallbackID CallbackID
         );
@@ -365,8 +406,33 @@ namespace Gs2::Matchmaking::Domain::Model
 
         Gs2::Core::Domain::CallbackID SubscribeRatingModelMasters(
             TFunction<void()> Callback
+
         );
 
+        class FCollectRatingModelMastersTask;
+
+        Gs2::Core::Domain::CallbackID SubscribeRatingModelMasters(
+            TFunction<void(TArray<Gs2::Matchmaking::Model::FRatingModelMasterPtr>)> Callback,const TOptional<FString> NamePrefix = TOptional<FString>()
+        );
+
+        void InvalidateRatingModelMasters(const TOptional<FString> NamePrefix = TOptional<FString>());
+
+        class GS2MATCHMAKING_API FSubscribeRatingModelMastersWithInitialCallTask final :
+            public Gs2::Core::Util::TGs2Future<Gs2::Core::Domain::CallbackID>,
+            public TSharedFromThis<FSubscribeRatingModelMastersWithInitialCallTask>
+        {
+            const TSharedPtr<FNamespaceDomain> Self;
+            const TFunction<void(TArray<Gs2::Matchmaking::Model::FRatingModelMasterPtr>)> Callback;
+        const TOptional<FString> QueryNamePrefix;
+        public:
+            FSubscribeRatingModelMastersWithInitialCallTask(const TSharedPtr<FNamespaceDomain>& Self, TFunction<void(TArray<Gs2::Matchmaking::Model::FRatingModelMasterPtr>)> Callback,const TOptional<FString> NamePrefix);
+            FSubscribeRatingModelMastersWithInitialCallTask(const FSubscribeRatingModelMastersWithInitialCallTask& From);
+            virtual Gs2::Core::Model::FGs2ErrorPtr Action(TSharedPtr<TSharedPtr<Gs2::Core::Domain::CallbackID>> Result) override;
+        };
+
+        TSharedPtr<FAsyncTask<FSubscribeRatingModelMastersWithInitialCallTask>> SubscribeRatingModelMastersWithInitialCall(
+            TFunction<void(TArray<Gs2::Matchmaking::Model::FRatingModelMasterPtr>)> Callback,const TOptional<FString> NamePrefix = TOptional<FString>()
+        );
         void UnsubscribeRatingModelMasters(
             Gs2::Core::Domain::CallbackID CallbackID
         );
@@ -385,8 +451,33 @@ namespace Gs2::Matchmaking::Domain::Model
 
         Gs2::Core::Domain::CallbackID SubscribeSeasonModels(
             TFunction<void()> Callback
+
         );
 
+        class FCollectSeasonModelsTask;
+
+        Gs2::Core::Domain::CallbackID SubscribeSeasonModels(
+            TFunction<void(TArray<Gs2::Matchmaking::Model::FSeasonModelPtr>)> Callback
+        );
+
+        void InvalidateSeasonModels();
+
+        class GS2MATCHMAKING_API FSubscribeSeasonModelsWithInitialCallTask final :
+            public Gs2::Core::Util::TGs2Future<Gs2::Core::Domain::CallbackID>,
+            public TSharedFromThis<FSubscribeSeasonModelsWithInitialCallTask>
+        {
+            const TSharedPtr<FNamespaceDomain> Self;
+            const TFunction<void(TArray<Gs2::Matchmaking::Model::FSeasonModelPtr>)> Callback;
+
+        public:
+            FSubscribeSeasonModelsWithInitialCallTask(const TSharedPtr<FNamespaceDomain>& Self, TFunction<void(TArray<Gs2::Matchmaking::Model::FSeasonModelPtr>)> Callback);
+            FSubscribeSeasonModelsWithInitialCallTask(const FSubscribeSeasonModelsWithInitialCallTask& From);
+            virtual Gs2::Core::Model::FGs2ErrorPtr Action(TSharedPtr<TSharedPtr<Gs2::Core::Domain::CallbackID>> Result) override;
+        };
+
+        TSharedPtr<FAsyncTask<FSubscribeSeasonModelsWithInitialCallTask>> SubscribeSeasonModelsWithInitialCall(
+            TFunction<void(TArray<Gs2::Matchmaking::Model::FSeasonModelPtr>)> Callback
+        );
         void UnsubscribeSeasonModels(
             Gs2::Core::Domain::CallbackID CallbackID
         );
@@ -401,8 +492,33 @@ namespace Gs2::Matchmaking::Domain::Model
 
         Gs2::Core::Domain::CallbackID SubscribeSeasonModelMasters(
             TFunction<void()> Callback
+
         );
 
+        class FCollectSeasonModelMastersTask;
+
+        Gs2::Core::Domain::CallbackID SubscribeSeasonModelMasters(
+            TFunction<void(TArray<Gs2::Matchmaking::Model::FSeasonModelMasterPtr>)> Callback,const TOptional<FString> NamePrefix = TOptional<FString>()
+        );
+
+        void InvalidateSeasonModelMasters(const TOptional<FString> NamePrefix = TOptional<FString>());
+
+        class GS2MATCHMAKING_API FSubscribeSeasonModelMastersWithInitialCallTask final :
+            public Gs2::Core::Util::TGs2Future<Gs2::Core::Domain::CallbackID>,
+            public TSharedFromThis<FSubscribeSeasonModelMastersWithInitialCallTask>
+        {
+            const TSharedPtr<FNamespaceDomain> Self;
+            const TFunction<void(TArray<Gs2::Matchmaking::Model::FSeasonModelMasterPtr>)> Callback;
+        const TOptional<FString> QueryNamePrefix;
+        public:
+            FSubscribeSeasonModelMastersWithInitialCallTask(const TSharedPtr<FNamespaceDomain>& Self, TFunction<void(TArray<Gs2::Matchmaking::Model::FSeasonModelMasterPtr>)> Callback,const TOptional<FString> NamePrefix);
+            FSubscribeSeasonModelMastersWithInitialCallTask(const FSubscribeSeasonModelMastersWithInitialCallTask& From);
+            virtual Gs2::Core::Model::FGs2ErrorPtr Action(TSharedPtr<TSharedPtr<Gs2::Core::Domain::CallbackID>> Result) override;
+        };
+
+        TSharedPtr<FAsyncTask<FSubscribeSeasonModelMastersWithInitialCallTask>> SubscribeSeasonModelMastersWithInitialCall(
+            TFunction<void(TArray<Gs2::Matchmaking::Model::FSeasonModelMasterPtr>)> Callback,const TOptional<FString> NamePrefix = TOptional<FString>()
+        );
         void UnsubscribeSeasonModelMasters(
             Gs2::Core::Domain::CallbackID CallbackID
         );
@@ -442,7 +558,34 @@ namespace Gs2::Matchmaking::Domain::Model
 
         TSharedPtr<FAsyncTask<FModelTask>> Model();
 
+        void Invalidate();
+
         Gs2::Core::Domain::CallbackID Subscribe(
+            TFunction<void(Gs2::Matchmaking::Model::FNamespacePtr)> Callback
+        );
+
+        class GS2MATCHMAKING_API FSubscribeWithInitialCallTask final :
+            public Gs2::Core::Util::TGs2Future<Gs2::Core::Domain::CallbackID>,
+            public TSharedFromThis<FSubscribeWithInitialCallTask>
+        {
+            const TSharedPtr<FNamespaceDomain> Self;
+            const TFunction<void(Gs2::Matchmaking::Model::FNamespacePtr)> Callback;
+        public:
+            FSubscribeWithInitialCallTask(
+                const TSharedPtr<FNamespaceDomain>& Self,
+                TFunction<void(Gs2::Matchmaking::Model::FNamespacePtr)> Callback
+            );
+
+            FSubscribeWithInitialCallTask(
+                const FSubscribeWithInitialCallTask& From
+            );
+
+            virtual Gs2::Core::Model::FGs2ErrorPtr Action(
+                TSharedPtr<TSharedPtr<Gs2::Core::Domain::CallbackID>> Result
+            ) override;
+        };
+
+        TSharedPtr<FAsyncTask<FSubscribeWithInitialCallTask>> SubscribeWithInitialCall(
             TFunction<void(Gs2::Matchmaking::Model::FNamespacePtr)> Callback
         );
 

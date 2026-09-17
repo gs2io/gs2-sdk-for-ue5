@@ -93,6 +93,8 @@ namespace Gs2::Enchant::Domain::Model
             const FCurrentParameterMasterDomain& From
         );
 
+
+
         class GS2ENCHANT_API FExportMasterTask final :
             public Gs2::Core::Util::TGs2Future<Gs2::Enchant::Domain::Model::FCurrentParameterMasterDomain>,
             public TSharedFromThis<FExportMasterTask>
@@ -118,6 +120,8 @@ namespace Gs2::Enchant::Domain::Model
         TSharedPtr<FAsyncTask<FExportMasterTask>> ExportMaster(
             Request::FExportMasterRequestPtr Request
         );
+
+
 
         class GS2ENCHANT_API FGetTask final :
             public Gs2::Core::Util::TGs2Future<Gs2::Enchant::Model::FCurrentParameterMaster>,
@@ -145,6 +149,8 @@ namespace Gs2::Enchant::Domain::Model
             Request::FGetCurrentParameterMasterRequestPtr Request
         );
 
+
+
         class GS2ENCHANT_API FPreUpdateTask final :
             public Gs2::Core::Util::TGs2Future<Gs2::Enchant::Domain::Model::FCurrentParameterMasterDomain>,
             public TSharedFromThis<FPreUpdateTask>
@@ -171,6 +177,8 @@ namespace Gs2::Enchant::Domain::Model
             Request::FPreUpdateCurrentParameterMasterRequestPtr Request
         );
 
+
+
         class GS2ENCHANT_API FUpdateTask final :
             public Gs2::Core::Util::TGs2Future<Gs2::Enchant::Domain::Model::FCurrentParameterMasterDomain>,
             public TSharedFromThis<FUpdateTask>
@@ -196,6 +204,8 @@ namespace Gs2::Enchant::Domain::Model
         TSharedPtr<FAsyncTask<FUpdateTask>> Update(
             Request::FUpdateCurrentParameterMasterRequestPtr Request
         );
+
+
 
         class GS2ENCHANT_API FUpdateFromGitHubTask final :
             public Gs2::Core::Util::TGs2Future<Gs2::Enchant::Domain::Model::FCurrentParameterMasterDomain>,
@@ -253,7 +263,34 @@ namespace Gs2::Enchant::Domain::Model
 
         TSharedPtr<FAsyncTask<FModelTask>> Model();
 
+        void Invalidate();
+
         Gs2::Core::Domain::CallbackID Subscribe(
+            TFunction<void(Gs2::Enchant::Model::FCurrentParameterMasterPtr)> Callback
+        );
+
+        class GS2ENCHANT_API FSubscribeWithInitialCallTask final :
+            public Gs2::Core::Util::TGs2Future<Gs2::Core::Domain::CallbackID>,
+            public TSharedFromThis<FSubscribeWithInitialCallTask>
+        {
+            const TSharedPtr<FCurrentParameterMasterDomain> Self;
+            const TFunction<void(Gs2::Enchant::Model::FCurrentParameterMasterPtr)> Callback;
+        public:
+            FSubscribeWithInitialCallTask(
+                const TSharedPtr<FCurrentParameterMasterDomain>& Self,
+                TFunction<void(Gs2::Enchant::Model::FCurrentParameterMasterPtr)> Callback
+            );
+
+            FSubscribeWithInitialCallTask(
+                const FSubscribeWithInitialCallTask& From
+            );
+
+            virtual Gs2::Core::Model::FGs2ErrorPtr Action(
+                TSharedPtr<TSharedPtr<Gs2::Core::Domain::CallbackID>> Result
+            ) override;
+        };
+
+        TSharedPtr<FAsyncTask<FSubscribeWithInitialCallTask>> SubscribeWithInitialCall(
             TFunction<void(Gs2::Enchant::Model::FCurrentParameterMasterPtr)> Callback
         );
 

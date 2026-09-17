@@ -366,3 +366,195 @@ namespace Gs2::Stamina::Model
 
     FString FMaxStaminaTableMaster::TypeName = "MaxStaminaTableMaster";
 }
+#include "Stamina/Model/Cache/MaxStaminaTableMaster.h"
+
+namespace Gs2::Stamina::Model::Cache
+{
+    FString FMaxStaminaTableMasterCache::CreateCacheParentKey(
+        TOptional<FString> CacheOwnerArgumentNamespaceName,
+        TOptional<int32> CacheOwnerArgumentTimeOffset
+    )
+    {
+        return FString("stamina:")
+            + CacheOwnerArgumentNamespaceName.Get(FString()) + FString(":")
+            + FString::FromInt(CacheOwnerArgumentTimeOffset.Get(0)) + FString(":MaxStaminaTableMaster");
+    }
+
+    FString FMaxStaminaTableMasterCache::CreateCacheKey(
+        TOptional<FString> CacheOwnerArgumentMaxStaminaTableName
+    )
+    {
+        return
+            FString()
+            + CacheOwnerArgumentMaxStaminaTableName.Get(FString())
+            ;
+    }
+
+    bool FMaxStaminaTableMasterCache::TryGet(
+        const Gs2::Core::Domain::FCacheDatabasePtr& CacheOwnerArgumentCache,
+        TOptional<FString> CacheOwnerArgumentNamespaceName,
+        TOptional<FString> CacheOwnerArgumentMaxStaminaTableName,
+        TOptional<int32> CacheOwnerArgumentTimeOffset,
+        Gs2::Stamina::Model::FMaxStaminaTableMasterPtr* CacheOwnerArgumentOutItem
+    )
+    {
+        const auto CacheSnapshot = CacheOwnerArgumentCache;
+        if (!CacheSnapshot.IsValid())
+        {
+            if (CacheOwnerArgumentOutItem) *CacheOwnerArgumentOutItem = nullptr;
+            return false;
+        }
+        if (CacheOwnerArgumentOutItem) *CacheOwnerArgumentOutItem = nullptr;
+        Gs2::Stamina::Model::FMaxStaminaTableMasterPtr CacheOwnerValue;
+        const bool CacheOwnerFound = CacheSnapshot->TryGet<Gs2::Stamina::Model::FMaxStaminaTableMaster>(
+            CreateCacheParentKey(
+                CacheOwnerArgumentNamespaceName,
+                CacheOwnerArgumentTimeOffset
+            ),
+            CreateCacheKey(
+                CacheOwnerArgumentMaxStaminaTableName
+            ),
+            &CacheOwnerValue
+        );
+        if (CacheOwnerArgumentOutItem) *CacheOwnerArgumentOutItem = CacheOwnerFound ? CacheOwnerValue : nullptr;
+        return CacheOwnerFound;
+    }
+
+    void FMaxStaminaTableMasterCache::Put(
+        const Gs2::Core::Domain::FCacheDatabasePtr& CacheOwnerArgumentCache,
+        TOptional<FString> CacheOwnerArgumentNamespaceName,
+        TOptional<FString> CacheOwnerArgumentMaxStaminaTableName,
+        TOptional<int32> CacheOwnerArgumentTimeOffset,
+        const Gs2::Stamina::Model::FMaxStaminaTableMasterPtr& CacheOwnerArgumentItem
+    )
+    {
+        const auto CacheSnapshot = CacheOwnerArgumentCache;
+        if (!CacheSnapshot.IsValid()) return;
+        const auto CacheOwnerParentKey = CreateCacheParentKey(
+            CacheOwnerArgumentNamespaceName,
+            CacheOwnerArgumentTimeOffset
+        );
+        const auto CacheOwnerKey = CreateCacheKey(
+            CacheOwnerArgumentMaxStaminaTableName
+        );
+        auto CacheOwnerValue = CacheOwnerArgumentItem;
+        Gs2::Stamina::Model::FMaxStaminaTableMasterPtr CacheOwnerExisting;
+        if (CacheSnapshot->TryGet<Gs2::Stamina::Model::FMaxStaminaTableMaster>(CacheOwnerParentKey, CacheOwnerKey, &CacheOwnerExisting))
+        {
+            const int64 CacheOwnerOldRevision = CacheOwnerExisting.IsValid() ? CacheOwnerExisting->GetRevision().Get(-1) : -1;
+            const int64 CacheOwnerNewRevision = CacheOwnerValue.IsValid() ? CacheOwnerValue->GetRevision().Get(-1) : -1;
+            if (CacheOwnerOldRevision > CacheOwnerNewRevision && CacheOwnerNewRevision > 1) return;
+            if (CacheOwnerOldRevision == CacheOwnerNewRevision) return;
+        }
+        CacheSnapshot->Put(Gs2::Stamina::Model::FMaxStaminaTableMaster::TypeName, CacheOwnerParentKey, CacheOwnerKey, CacheOwnerValue,
+            FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
+        );
+    }
+
+    void FMaxStaminaTableMasterCache::Delete(
+        const Gs2::Core::Domain::FCacheDatabasePtr& CacheOwnerArgumentCache,
+        TOptional<FString> CacheOwnerArgumentNamespaceName,
+        TOptional<FString> CacheOwnerArgumentMaxStaminaTableName,
+        TOptional<int32> CacheOwnerArgumentTimeOffset
+    )
+    {
+        const auto CacheSnapshot = CacheOwnerArgumentCache;
+        if (!CacheSnapshot.IsValid()) return;
+        CacheSnapshot->Delete(Gs2::Stamina::Model::FMaxStaminaTableMaster::TypeName, CreateCacheParentKey(
+            CacheOwnerArgumentNamespaceName,
+            CacheOwnerArgumentTimeOffset
+        ), CreateCacheKey(
+            CacheOwnerArgumentMaxStaminaTableName
+        ));
+    }
+
+    Gs2::Core::Model::FGs2ErrorPtr FMaxStaminaTableMasterCache::Fetch(
+        const Gs2::Core::Domain::FCacheDatabasePtr& CacheOwnerArgumentCache,
+        TOptional<FString> CacheOwnerArgumentNamespaceName,
+        TOptional<FString> CacheOwnerArgumentMaxStaminaTableName,
+        TOptional<int32> CacheOwnerArgumentTimeOffset,
+        const TFunction<Gs2::Core::Model::FGs2ErrorPtr(Gs2::Stamina::Model::FMaxStaminaTableMasterPtr*)>& CacheOwnerArgumentFetchImpl,
+        Gs2::Stamina::Model::FMaxStaminaTableMasterPtr* CacheOwnerArgumentOutItem
+    )
+    {
+        const auto CacheSnapshot = CacheOwnerArgumentCache;
+        const auto FetchImplSnapshot = CacheOwnerArgumentFetchImpl;
+        if (CacheOwnerArgumentOutItem) *CacheOwnerArgumentOutItem = nullptr;
+        if (!FetchImplSnapshot)
+        {
+            if (CacheOwnerArgumentOutItem) *CacheOwnerArgumentOutItem = nullptr;
+            const auto Details = MakeShared<TArray<TSharedPtr<Gs2::Core::Model::FGs2ErrorDetail>>>();
+            Details->Add(MakeShared<Gs2::Core::Model::FGs2ErrorDetail>(TEXT("fetchImpl"), TEXT("fetchImpl is required."), TEXT("required")));
+            return MakeShared<Gs2::Core::Model::FBadRequestError>(Details);
+        }
+        Gs2::Stamina::Model::FMaxStaminaTableMasterPtr CacheOwnerFetchedItem;
+        const auto CacheOwnerError = FetchImplSnapshot(&CacheOwnerFetchedItem);
+        if (!CacheOwnerError)
+        {
+            Put(
+                CacheSnapshot,
+                CacheOwnerArgumentNamespaceName,
+                CacheOwnerArgumentMaxStaminaTableName,
+                CacheOwnerArgumentTimeOffset,
+                CacheOwnerFetchedItem
+            );
+            if (CacheOwnerArgumentOutItem) *CacheOwnerArgumentOutItem = CacheOwnerFetchedItem;
+            return nullptr;
+        }
+        if (!CacheOwnerError->IsChildOf(Gs2::Core::Model::FNotFoundError::Class))
+        {
+            if (CacheOwnerArgumentOutItem) *CacheOwnerArgumentOutItem = nullptr;
+            return CacheOwnerError;
+        }
+        Put(
+            CacheSnapshot,
+            CacheOwnerArgumentNamespaceName,
+            CacheOwnerArgumentMaxStaminaTableName,
+            CacheOwnerArgumentTimeOffset,
+            nullptr
+        );
+        if (CacheOwnerArgumentOutItem) *CacheOwnerArgumentOutItem = nullptr;
+        const auto CacheOwnerDetails = CacheOwnerError->GetErrors();
+        if (CacheOwnerDetails.IsValid() && CacheOwnerDetails->Num() > 0 && (*CacheOwnerDetails)[0].IsValid() && (*CacheOwnerDetails)[0]->GetComponent() == TEXT("maxStaminaTableMaster"))
+        {
+            return nullptr;
+        }
+        if (CacheOwnerArgumentOutItem) *CacheOwnerArgumentOutItem = nullptr;
+        return CacheOwnerError;
+    }
+
+    Gs2::Core::Domain::CallbackID FMaxStaminaTableMasterCache::ListSubscribe(
+        const Gs2::Core::Domain::FCacheDatabasePtr& CacheOwnerArgumentCache,
+        TOptional<FString> CacheOwnerArgumentNamespaceName,
+        TOptional<int32> CacheOwnerArgumentTimeOffset,
+        TFunction<void(TArray<Gs2::Stamina::Model::FMaxStaminaTableMasterPtr>)> CacheOwnerArgumentCallback
+    )
+    {
+        const auto CacheSnapshot = CacheOwnerArgumentCache;
+        if (!CacheSnapshot.IsValid()) return 0;
+        return CacheSnapshot->ListSubscribeTyped(Gs2::Stamina::Model::FMaxStaminaTableMaster::TypeName, CreateCacheParentKey(
+            CacheOwnerArgumentNamespaceName,
+            CacheOwnerArgumentTimeOffset
+        ), [CacheOwnerArgumentCallback](const TArray<FGs2ObjectPtr>& CacheOwnerValues)
+        {
+            TArray<Gs2::Stamina::Model::FMaxStaminaTableMasterPtr> CacheOwnerTypedValues;
+            for (const auto& CacheOwnerValue : CacheOwnerValues) if (CacheOwnerValue) CacheOwnerTypedValues.Add(StaticCastSharedPtr<Gs2::Stamina::Model::FMaxStaminaTableMaster>(CacheOwnerValue));
+            if (CacheOwnerArgumentCallback) CacheOwnerArgumentCallback(CacheOwnerTypedValues);
+        });
+    }
+
+    void FMaxStaminaTableMasterCache::ListUnsubscribe(
+        const Gs2::Core::Domain::FCacheDatabasePtr& CacheOwnerArgumentCache,
+        TOptional<FString> CacheOwnerArgumentNamespaceName,
+        TOptional<int32> CacheOwnerArgumentTimeOffset,
+        Gs2::Core::Domain::CallbackID CacheOwnerArgumentCallbackID
+    )
+    {
+        const auto CacheSnapshot = CacheOwnerArgumentCache;
+        if (!CacheSnapshot.IsValid()) return;
+        CacheSnapshot->ListUnsubscribe(Gs2::Stamina::Model::FMaxStaminaTableMaster::TypeName, CreateCacheParentKey(
+            CacheOwnerArgumentNamespaceName,
+            CacheOwnerArgumentTimeOffset
+        ), CacheOwnerArgumentCallbackID);
+    }
+}

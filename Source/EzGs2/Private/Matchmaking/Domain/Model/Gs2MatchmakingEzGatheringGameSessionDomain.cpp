@@ -302,7 +302,7 @@ namespace Gs2::UE5::Matchmaking::Domain::Model
     Gs2::Core::Domain::CallbackID FEzGatheringGameSessionDomain::Subscribe(TFunction<void(Gs2::UE5::Matchmaking::Model::FEzGatheringPtr)> Callback)
     {
         return Domain->Subscribe(
-            [&](Gs2::Matchmaking::Model::FGatheringPtr Item)
+            [Callback](Gs2::Matchmaking::Model::FGatheringPtr Item)
             {
                 Callback(Gs2::UE5::Matchmaking::Model::FEzGathering::FromModel(Item));
             }

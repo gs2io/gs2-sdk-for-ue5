@@ -12,6 +12,8 @@
  * on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either
  * express or implied. See the License for the specific language governing
  * permissions and limitations under the License.
+ *
+ * deny overwrite
  */
 
 #if defined(_MSC_VER)
@@ -26,9 +28,26 @@
 #include "Exchange/Domain/Gs2Exchange.h"
 
 #include "Core/Domain/Gs2.h"
+#include "Core/Domain/SpeculativeExecutor/PreparedSpeculativeCommit.h"
+#include "Auth/Model/AccessToken.h"
+#include "Exchange/Model/Cache/Await.h"
+#include "Exchange/Model/Cache/RateModel.h"
+#include "Serialization/JsonSerializer.h"
+#include "Serialization/JsonWriter.h"
 
 namespace Gs2::Exchange::Domain::SpeculativeExecutor
 {
+
+    namespace
+    {
+        FString SerializeSnapshot(const TSharedPtr<FJsonObject>& Object)
+        {
+            FString Body;
+            const TSharedRef<TJsonWriter<TCHAR>> Writer = TJsonWriterFactory<TCHAR>::Create(&Body);
+            FJsonSerializer::Serialize(Object.ToSharedRef(), Writer);
+            return Body;
+        }
+    }
 
     FString FSkipByUserIdSpeculativeExecutor::Action()
     {
@@ -73,57 +92,131 @@ namespace Gs2::Exchange::Domain::SpeculativeExecutor
     }
 
     Gs2::Core::Model::FGs2ErrorPtr FSkipByUserIdSpeculativeExecutor::FCommitTask::Action(
-        TSharedPtr<TSharedPtr<TFunction<void()>>> Result
+        TSharedPtr<TSharedPtr<Gs2::Core::Domain::SpeculativeExecutor::FPreparedSpeculativeCommit>> Result
     )
     {
-        const auto Future = Domain->Exchange->Namespace(
-                Request->GetNamespaceName().IsSet() ? *Request->GetNamespaceName() : FString("")
-            )->AccessToken(
-                AccessToken
-            )->Await(
-                Request->GetAwaitName().IsSet() ? *Request->GetAwaitName() : FString("")
-            )->Model();
-        Future->StartSynchronousTask();
-        if (Future->GetTask().IsError())
+        if (!Domain.IsValid() || !Domain->RestSession.IsValid() ||
+            !AccessToken.IsValid() || !Request.IsValid())
         {
-            return Future->GetTask().Error();
+            *Result = nullptr;
+            return nullptr;
         }
-        auto Item = Future->GetTask().Result();
-
-        if (!Item.IsValid())
+        const auto PreparedRequest = MakeShared<Gs2::Exchange::Request::FSkipByUserIdRequest>(*Request);
+        const auto PreparedAccessToken = MakeShared<Gs2::Auth::Model::FAccessToken>(*AccessToken);
+        if (PreparedRequest->GetUserId().IsSet() && *PreparedRequest->GetUserId() == TEXT("#{userId}"))
         {
-            *Result = MakeShared<TFunction<void()>>([&]()
+            PreparedRequest->WithUserId(PreparedAccessToken->GetUserId());
+        }
+        if (!PreparedAccessToken->GetUserId().IsSet() || PreparedAccessToken->GetUserId()->IsEmpty() ||
+            !PreparedRequest->GetUserId().IsSet() || *PreparedRequest->GetUserId() != *PreparedAccessToken->GetUserId() ||
+            !PreparedRequest->GetNamespaceName().IsSet() || !PreparedRequest->GetAwaitName().IsSet())
+        {
+            *Result = nullptr;
+            return nullptr;
+        }
+        const auto NamespaceName = PreparedRequest->GetNamespaceName();
+        const auto UserId = PreparedAccessToken->GetUserId();
+        const auto AwaitName = PreparedRequest->GetAwaitName();
+        const auto TimeOffset = PreparedAccessToken->GetTimeOffset();
+        const auto Region = Domain->RestSession->RegionName();
+        const auto OwnerId = Domain->RestSession->OwnerId();
+
+        Gs2::Exchange::Model::FAwaitPtr Item;
+        const bool AwaitFound = Gs2::Exchange::Model::Cache::FAwaitCache::TryGet(
+            Domain->Cache, NamespaceName, UserId, AwaitName, TimeOffset, &Item);
+        const FString ExpectedAwaitId = FString::Printf(
+            TEXT("grn:gs2:%s:%s:exchange:%s:user:%s:await:%s"),
+            *Region, *OwnerId, **NamespaceName, **UserId, **AwaitName);
+        if (!AwaitFound || !Item.IsValid() || !Item->GetAwaitId().IsSet() ||
+            *Item->GetAwaitId() != ExpectedAwaitId || !Item->GetUserId().IsSet() ||
+            *Item->GetUserId() != *UserId || !Item->GetName().IsSet() || *Item->GetName() != *AwaitName ||
+            !Item->GetRateName().IsSet() || !Item->GetSkipSeconds().IsSet() || !Item->GetExchangedAt().IsSet())
+        {
+            *Result = nullptr;
+            return nullptr;
+        }
+        const auto RateName = Item->GetRateName();
+        Gs2::Exchange::Model::FRateModelPtr RateModel;
+        const bool RateFound = Gs2::Exchange::Model::Cache::FRateModelCache::TryGet(
+            Domain->Cache, NamespaceName, RateName, TOptional<int32>(), &RateModel);
+        const FString ExpectedRateId = FString::Printf(
+            TEXT("grn:gs2:%s:%s:exchange:%s:model:%s"),
+            *Region, *OwnerId, **NamespaceName, **RateName);
+        if (!RateFound || !RateModel.IsValid() || !RateModel->GetRateModelId().IsSet() ||
+            *RateModel->GetRateModelId() != ExpectedRateId || !RateModel->GetName().IsSet() ||
+            *RateModel->GetName() != *RateName || !RateModel->GetLockTime().IsSet())
+        {
+            *Result = nullptr;
+            return nullptr;
+        }
+
+        const int64 TotalLockSeconds = static_cast<int64>(*RateModel->GetLockTime()) * 60;
+        const int32 NormalizedLockSeconds = static_cast<int32>(static_cast<int64>(*RateModel->GetLockTime()) * 60);
+        const int64 NormalizedAcquirableAt = *Item->GetExchangedAt() +
+            (static_cast<int64>(NormalizedLockSeconds) - *Item->GetSkipSeconds()) * 1000;
+        int64 SkipSeconds = 0;
+        if (PreparedRequest->GetSkipType().IsSet() && *PreparedRequest->GetSkipType() == TEXT("complete"))
+        {
+            SkipSeconds = TotalLockSeconds;
+        }
+        else if (PreparedRequest->GetSkipType().IsSet() && *PreparedRequest->GetSkipType() == TEXT("minutes") &&
+                 PreparedRequest->GetMinutes().IsSet())
+        {
+            SkipSeconds = *Item->GetSkipSeconds() + static_cast<int64>(*PreparedRequest->GetMinutes()) * 60;
+        }
+        else if (PreparedRequest->GetSkipType().IsSet() && *PreparedRequest->GetSkipType() == TEXT("totalRate") &&
+                 PreparedRequest->GetRate().IsSet())
+        {
+            SkipSeconds = *Item->GetSkipSeconds() + static_cast<int64>(static_cast<float>(TotalLockSeconds) * *PreparedRequest->GetRate());
+        }
+        else if (PreparedRequest->GetSkipType().IsSet() && *PreparedRequest->GetSkipType() == TEXT("remainRate") &&
+                 PreparedRequest->GetRate().IsSet())
+        {
+            const int64 RemainMillis = static_cast<int64>(static_cast<float>(NormalizedAcquirableAt - *Item->GetExchangedAt()) * *PreparedRequest->GetRate());
+            SkipSeconds = *Item->GetSkipSeconds() + static_cast<int32>(RemainMillis / 1000);
+        }
+        else
+        {
+            *Result = nullptr;
+            return nullptr;
+        }
+        if (SkipSeconds > TotalLockSeconds) SkipSeconds = TotalLockSeconds;
+        if (SkipSeconds < 0) SkipSeconds = 0;
+        if (SkipSeconds > MAX_int32) SkipSeconds = MAX_int32;
+        const auto Changed = MakeShared<Gs2::Exchange::Model::FAwait>(*Item)
+            ->WithSkipSeconds(static_cast<int32>(SkipSeconds))
+            ->WithAcquirableAt(*Item->GetExchangedAt() - SkipSeconds * 1000 +
+                               static_cast<int64>(NormalizedLockSeconds) * 1000)
+            ->WithRevision(0);
+        const FString AwaitSnapshot = SerializeSnapshot(Item->ToJson());
+        const FString RateSnapshot = SerializeSnapshot(RateModel->ToJson());
+
+        *Result = Gs2::Core::Domain::SpeculativeExecutor::FPreparedSpeculativeCommit::WrapLegacy(
+            MakeShared<TFunction<void()>>([Domain = Domain, PreparedRequest, UserId, TimeOffset,
+                                           RateName, Changed, AwaitSnapshot, RateSnapshot]()
+        {
+            Gs2::Exchange::Model::FAwaitPtr LiveAwait;
+            Gs2::Exchange::Model::FRateModelPtr LiveRate;
+            const bool AwaitFound = Gs2::Exchange::Model::Cache::FAwaitCache::TryGet(
+                Domain->Cache, PreparedRequest->GetNamespaceName(), UserId,
+                PreparedRequest->GetAwaitName(), TimeOffset, &LiveAwait);
+            const bool RateFound = Gs2::Exchange::Model::Cache::FRateModelCache::TryGet(
+                Domain->Cache, PreparedRequest->GetNamespaceName(), RateName,
+                TOptional<int32>(), &LiveRate);
+            if (!AwaitFound || !LiveAwait.IsValid() || SerializeSnapshot(LiveAwait->ToJson()) != AwaitSnapshot ||
+                !RateFound || !LiveRate.IsValid() || SerializeSnapshot(LiveRate->ToJson()) != RateSnapshot)
             {
-                return nullptr;
-            });
-            return nullptr;
-        }
-        auto Err = Transform(Domain, AccessToken, Request, Item);
-        if (Err != nullptr)
-        {
-            return Err;
-        }
-
-        const auto ParentKey = Model::FUserDomain::CreateCacheParentKey(
-            Request->GetNamespaceName(),
-            AccessToken->GetUserId(),
-            FString("Await")
-        );
-        const auto Key = Model::FAwaitDomain::CreateCacheKey(
-            Request->GetAwaitName()
-        );
-
-        *Result = MakeShared<TFunction<void()>>([&]()
-        {
+                return;
+            }
             Domain->Cache->Put(
-                Exchange::Model::FAwait::TypeName,
-                ParentKey,
-                Key,
-                Item,
-                FDateTime::Now() + FTimespan::FromSeconds(10)
-            );
-            return nullptr;
-        });
+                Gs2::Exchange::Model::FAwait::TypeName,
+                Gs2::Exchange::Model::Cache::FAwaitCache::CreateCacheParentKey(
+                    PreparedRequest->GetNamespaceName(), UserId, TimeOffset),
+                Gs2::Exchange::Model::Cache::FAwaitCache::CreateCacheKey(
+                    PreparedRequest->GetAwaitName()),
+                Changed,
+                FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes));
+        }));
         return nullptr;
     }
 

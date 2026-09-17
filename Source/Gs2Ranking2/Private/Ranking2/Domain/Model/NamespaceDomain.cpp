@@ -59,6 +59,24 @@
 #include "Ranking2/Domain/Model/SubscribeUserAccessToken.h"
 #include "Ranking2/Domain/Model/User.h"
 #include "Ranking2/Domain/Model/UserAccessToken.h"
+#include "Ranking2/Model/Cache/Namespace.h"
+#include "Ranking2/Model/Cache/GlobalRankingModelMaster.h"
+#include "Ranking2/Model/Cache/SubscribeRankingModelMaster.h"
+#include "Ranking2/Model/Cache/ClusterRankingModelMaster.h"
+#include "Ranking2/Model/Cache/CurrentRankingMaster.h"
+#include "Ranking2/Model/Cache/GlobalRankingModel.h"
+#include "Ranking2/Model/Cache/GlobalRankingScore.h"
+#include "Ranking2/Model/Cache/GlobalRankingData.h"
+#include "Ranking2/Model/Cache/GlobalRankingReceivedReward.h"
+#include "Ranking2/Model/Cache/Subscribe.h"
+#include "Ranking2/Model/Cache/SubscribeUser.h"
+#include "Ranking2/Model/Cache/SubscribeRankingModel.h"
+#include "Ranking2/Model/Cache/SubscribeRankingScore.h"
+#include "Ranking2/Model/Cache/SubscribeRankingData.h"
+#include "Ranking2/Model/Cache/ClusterRankingModel.h"
+#include "Ranking2/Model/Cache/ClusterRankingData.h"
+#include "Ranking2/Model/Cache/ClusterRankingReceivedReward.h"
+#include "Ranking2/Model/Cache/ClusterRankingScore.h"
 
 #include "Core/Domain/Gs2.h"
 #include "Core/Domain/Transaction/JobQueueJobDomainFactory.h"
@@ -125,6 +143,7 @@ namespace Gs2::Ranking2::Domain::Model
         }
         const auto ResultModel = Future->GetTask().Result();
         Future->EnsureCompletion();
+
         const auto Domain = Self;
         if (ResultModel != nullptr)
         {
@@ -174,6 +193,19 @@ namespace Gs2::Ranking2::Domain::Model
         }
         const auto ResultModel = Future->GetTask().Result();
         Future->EnsureCompletion();
+
+            if (ResultModel.IsValid() && ResultModel->GetItem() != nullptr)
+            {
+
+
+        Gs2::Ranking2::Model::Cache::FNamespaceCache::Put(
+            Self->Gs2->Cache,
+
+            Request->GetNamespaceName(),
+            TOptional<int32>(),
+            ResultModel->GetItem()
+        );
+            }
         *Result = ResultModel->GetItem();
         return nullptr;
     }
@@ -215,19 +247,19 @@ namespace Gs2::Ranking2::Domain::Model
         }
         const auto ResultModel = Future->GetTask().Result();
         Future->EnsureCompletion();
-        if (ResultModel->GetItem() != nullptr)
-        {
-            const auto Key = Gs2::Ranking2::Domain::Model::FNamespaceDomain::CreateCacheKey(
-                ResultModel->GetItem()->GetName()
-            );
-            Self->Gs2->Cache->Put(
-                Gs2::Ranking2::Model::FNamespace::TypeName,
-                Self->ParentKey,
-                Key,
-                ResultModel->GetItem(),
-                FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
-            );
-        }
+
+            if (ResultModel.IsValid() && ResultModel->GetItem() != nullptr)
+            {
+
+
+        Gs2::Ranking2::Model::Cache::FNamespaceCache::Put(
+            Self->Gs2->Cache,
+
+            Request->GetNamespaceName(),
+            TOptional<int32>(),
+            ResultModel->GetItem()
+        );
+            }
         auto Domain = Self;
 
         *Result = Domain;
@@ -267,21 +299,24 @@ namespace Gs2::Ranking2::Domain::Model
         Future->StartSynchronousTask();
         if (Future->GetTask().IsError())
         {
-            return Future->GetTask().Error();
+            const auto Error = Future->GetTask().Error();
+            if (Error.IsValid() && Error->IsChildOf(Gs2::Core::Model::FNotFoundError::Class))
+            {
+                *Result = Self;
+                return nullptr;
+            }
+            return Error;
         }
         const auto ResultModel = Future->GetTask().Result();
         Future->EnsureCompletion();
-        if (ResultModel->GetItem() != nullptr)
-        {
-            const auto Key = Gs2::Ranking2::Domain::Model::FNamespaceDomain::CreateCacheKey(
-                ResultModel->GetItem()->GetName()
-            );
-            Self->Gs2->Cache->Delete(
-                Gs2::Ranking2::Model::FNamespace::TypeName,
-                Self->ParentKey,
-                Key
-            );
-        }
+
+
+              Gs2::Ranking2::Model::Cache::FNamespaceCache::Delete(
+            Self->Gs2->Cache,
+
+            Request->GetNamespaceName(),
+            TOptional<int32>()
+        );
         auto Domain = Self;
 
         *Result = Domain;
@@ -325,19 +360,20 @@ namespace Gs2::Ranking2::Domain::Model
         }
         const auto ResultModel = Future->GetTask().Result();
         Future->EnsureCompletion();
-        if (ResultModel->GetItem() != nullptr)
-        {
-            const auto Key = Gs2::Ranking2::Domain::Model::FGlobalRankingModelMasterDomain::CreateCacheKey(
-                ResultModel->GetItem()->GetName()
-            );
-            Self->Gs2->Cache->Put(
-                Gs2::Ranking2::Model::FGlobalRankingModelMaster::TypeName,
-                Self->ParentKey,
-                Key,
-                ResultModel->GetItem(),
-                FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
-            );
-        }
+
+            if (ResultModel.IsValid() && ResultModel->GetItem() != nullptr)
+            {
+
+
+        Gs2::Ranking2::Model::Cache::FGlobalRankingModelMasterCache::Put(
+            Self->Gs2->Cache,
+
+            Request->GetNamespaceName(),
+            ResultModel->GetItem()->GetName(),
+            TOptional<int32>(),
+            ResultModel->GetItem()
+        );
+            }
         auto Domain = MakeShared<Gs2::Ranking2::Domain::Model::FGlobalRankingModelMasterDomain>(
             Self->Gs2,
             Self->Service,
@@ -386,19 +422,20 @@ namespace Gs2::Ranking2::Domain::Model
         }
         const auto ResultModel = Future->GetTask().Result();
         Future->EnsureCompletion();
-        if (ResultModel->GetItem() != nullptr)
-        {
-            const auto Key = Gs2::Ranking2::Domain::Model::FSubscribeRankingModelMasterDomain::CreateCacheKey(
-                ResultModel->GetItem()->GetName()
-            );
-            Self->Gs2->Cache->Put(
-                Gs2::Ranking2::Model::FSubscribeRankingModelMaster::TypeName,
-                Self->ParentKey,
-                Key,
-                ResultModel->GetItem(),
-                FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
-            );
-        }
+
+            if (ResultModel.IsValid() && ResultModel->GetItem() != nullptr)
+            {
+
+
+        Gs2::Ranking2::Model::Cache::FSubscribeRankingModelMasterCache::Put(
+            Self->Gs2->Cache,
+
+            Request->GetNamespaceName(),
+            ResultModel->GetItem()->GetName(),
+            TOptional<int32>(),
+            ResultModel->GetItem()
+        );
+            }
         auto Domain = MakeShared<Gs2::Ranking2::Domain::Model::FSubscribeRankingModelMasterDomain>(
             Self->Gs2,
             Self->Service,
@@ -447,19 +484,20 @@ namespace Gs2::Ranking2::Domain::Model
         }
         const auto ResultModel = Future->GetTask().Result();
         Future->EnsureCompletion();
-        if (ResultModel->GetItem() != nullptr)
-        {
-            const auto Key = Gs2::Ranking2::Domain::Model::FClusterRankingModelMasterDomain::CreateCacheKey(
-                ResultModel->GetItem()->GetName()
-            );
-            Self->Gs2->Cache->Put(
-                Gs2::Ranking2::Model::FClusterRankingModelMaster::TypeName,
-                Self->ParentKey,
-                Key,
-                ResultModel->GetItem(),
-                FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
-            );
-        }
+
+            if (ResultModel.IsValid() && ResultModel->GetItem() != nullptr)
+            {
+
+
+        Gs2::Ranking2::Model::Cache::FClusterRankingModelMasterCache::Put(
+            Self->Gs2->Cache,
+
+            Request->GetNamespaceName(),
+            ResultModel->GetItem()->GetName(),
+            TOptional<int32>(),
+            ResultModel->GetItem()
+        );
+            }
         auto Domain = MakeShared<Gs2::Ranking2::Domain::Model::FClusterRankingModelMasterDomain>(
             Self->Gs2,
             Self->Service,
@@ -499,30 +537,115 @@ namespace Gs2::Ranking2::Domain::Model
 
     Gs2::Core::Domain::CallbackID FNamespaceDomain::SubscribeGlobalRankingModels(
     TFunction<void()> Callback
+
     )
     {
         return Gs2->Cache->ListSubscribe(
             Gs2::Ranking2::Model::FGlobalRankingModel::TypeName,
-            Gs2::Ranking2::Domain::Model::FNamespaceDomain::CreateCacheParentKey(
+            Gs2::Ranking2::Model::Cache::FGlobalRankingModelCache::CreateCacheParentKey(
                 NamespaceName,
-                "GlobalRankingModel"
+                TOptional<int32>()
             ),
+            Callback,
             Callback
         );
     }
-
     void FNamespaceDomain::UnsubscribeGlobalRankingModels(
         Gs2::Core::Domain::CallbackID CallbackID
     )
     {
         Gs2->Cache->ListUnsubscribe(
             Gs2::Ranking2::Model::FGlobalRankingModel::TypeName,
-            Gs2::Ranking2::Domain::Model::FNamespaceDomain::CreateCacheParentKey(
+            Gs2::Ranking2::Model::Cache::FGlobalRankingModelCache::CreateCacheParentKey(
                 NamespaceName,
-                "GlobalRankingModel"
+                TOptional<int32>()
             ),
             CallbackID
         );
+    }
+    class FNamespaceDomain::FCollectGlobalRankingModelsTask : public Gs2::Core::Util::TGs2Future<TArray<Gs2::Ranking2::Model::FGlobalRankingModelPtr>>, public TSharedFromThis<FCollectGlobalRankingModelsTask>
+    {
+        const TSharedPtr<FNamespaceDomain> Self;
+        const TFunction<void(TArray<Gs2::Ranking2::Model::FGlobalRankingModelPtr>)> OnCollected;
+
+    public:
+        explicit FCollectGlobalRankingModelsTask(const TSharedPtr<FNamespaceDomain>& Self, TFunction<void(TArray<Gs2::Ranking2::Model::FGlobalRankingModelPtr>)> OnCollected) : Self(Self), OnCollected(OnCollected) {}
+        FCollectGlobalRankingModelsTask(const FCollectGlobalRankingModelsTask& From) : TGs2Future(From), Self(From.Self), OnCollected(From.OnCollected) {}
+        virtual Gs2::Core::Model::FGs2ErrorPtr Action(TSharedPtr<TSharedPtr<TArray<Gs2::Ranking2::Model::FGlobalRankingModelPtr>>> Result) override
+        {
+            TArray<Gs2::Ranking2::Model::FGlobalRankingModelPtr> Items;
+            auto Iterator = Self->GlobalRankingModels()->begin();
+            while (Iterator.HasNext())
+            {
+                if (Iterator.IsError()) return Iterator.Error();
+                if (Iterator.IsCurrentValid()) Items.Add(Iterator.Current());
+                ++Iterator;
+            }
+            if (Iterator.IsError()) return Iterator.Error();
+            *Result = MakeShared<TArray<Gs2::Ranking2::Model::FGlobalRankingModelPtr>>(Items);
+            if (OnCollected) OnCollected(Items);
+            return nullptr;
+        }
+    };
+
+    Gs2::Core::Domain::CallbackID FNamespaceDomain::SubscribeGlobalRankingModels(
+        TFunction<void(TArray<Gs2::Ranking2::Model::FGlobalRankingModelPtr>)> Callback
+    )
+    {
+        const TWeakPtr<Gs2::Core::Domain::FGs2> WeakGs2 = this->Gs2;
+        const TWeakPtr<Ranking2::Domain::FGs2Ranking2Domain> WeakService = this->Service;
+        const auto QueryNamespaceName = NamespaceName;
+        const auto Parent = Gs2::Ranking2::Model::Cache::FGlobalRankingModelCache::CreateCacheParentKey(
+        NamespaceName,
+        TOptional<int32>()
+    );
+        return Gs2->Cache->ListSubscribeTyped(
+            Gs2::Ranking2::Model::FGlobalRankingModel::TypeName,
+            Parent,
+            [Callback, WeakGs2](const TArray<FGs2ObjectPtr>& Values)
+            {
+                if (!WeakGs2.Pin().IsValid()) return;
+                TArray<Gs2::Ranking2::Model::FGlobalRankingModelPtr> TypedValues;
+                for (const auto& Value : Values) if (Value.IsValid()) TypedValues.Add(StaticCastSharedPtr<Gs2::Ranking2::Model::FGlobalRankingModel>(Value));
+                Callback(TypedValues);
+            },
+            [WeakGs2, WeakService, Callback, QueryNamespaceName]()
+            {
+                const auto Owner = WeakGs2.Pin();
+                if (!Owner.IsValid()) return;
+                const auto Domain = MakeShared<FNamespaceDomain>(Owner, WeakService.Pin(), QueryNamespaceName);
+                const auto Task = Gs2::Core::Util::New<FAsyncTask<FCollectGlobalRankingModelsTask>>(Domain, Callback);
+                Task->StartBackgroundTask();
+            }
+        );
+    }
+
+    void FNamespaceDomain::InvalidateGlobalRankingModels()
+    {
+        Gs2->Cache->ClearListCache(
+            Gs2::Ranking2::Model::FGlobalRankingModel::TypeName,
+            Gs2::Ranking2::Model::Cache::FGlobalRankingModelCache::CreateCacheParentKey(
+        NamespaceName,
+        TOptional<int32>()
+    )
+        );
+    }
+
+    FNamespaceDomain::FSubscribeGlobalRankingModelsWithInitialCallTask::FSubscribeGlobalRankingModelsWithInitialCallTask(const TSharedPtr<FNamespaceDomain>& Self, TFunction<void(TArray<Gs2::Ranking2::Model::FGlobalRankingModelPtr>)> Callback) : Self(Self), Callback(Callback) {}
+    FNamespaceDomain::FSubscribeGlobalRankingModelsWithInitialCallTask::FSubscribeGlobalRankingModelsWithInitialCallTask(const FSubscribeGlobalRankingModelsWithInitialCallTask& From) : TGs2Future(From), Self(From.Self), Callback(From.Callback) {}
+    Gs2::Core::Model::FGs2ErrorPtr FNamespaceDomain::FSubscribeGlobalRankingModelsWithInitialCallTask::Action(TSharedPtr<TSharedPtr<Gs2::Core::Domain::CallbackID>> Result)
+    {
+        const auto Task = Gs2::Core::Util::New<FAsyncTask<FCollectGlobalRankingModelsTask>>(Self, TFunction<void(TArray<Gs2::Ranking2::Model::FGlobalRankingModelPtr>)>());
+        Task->StartSynchronousTask(); Task->EnsureCompletion();
+        if (Task->GetTask().IsError()) return Task->GetTask().Error();
+        const auto Values = Task->GetTask().Result();
+        const auto CallbackId = Self->SubscribeGlobalRankingModels(Callback);
+        Callback(*Values); *Result = MakeShared<Gs2::Core::Domain::CallbackID>(CallbackId);
+        return nullptr;
+    }
+    TSharedPtr<FAsyncTask<FNamespaceDomain::FSubscribeGlobalRankingModelsWithInitialCallTask>> FNamespaceDomain::SubscribeGlobalRankingModelsWithInitialCall(TFunction<void(TArray<Gs2::Ranking2::Model::FGlobalRankingModelPtr>)> Callback)
+    {
+        return Gs2::Core::Util::New<FAsyncTask<FSubscribeGlobalRankingModelsWithInitialCallTask>>(this->AsShared(), Callback);
     }
 
     TSharedPtr<Gs2::Ranking2::Domain::Model::FGlobalRankingModelDomain> FNamespaceDomain::GlobalRankingModel(
@@ -551,30 +674,116 @@ namespace Gs2::Ranking2::Domain::Model
 
     Gs2::Core::Domain::CallbackID FNamespaceDomain::SubscribeGlobalRankingModelMasters(
     TFunction<void()> Callback
+
     )
     {
         return Gs2->Cache->ListSubscribe(
             Gs2::Ranking2::Model::FGlobalRankingModelMaster::TypeName,
-            Gs2::Ranking2::Domain::Model::FNamespaceDomain::CreateCacheParentKey(
+            Gs2::Ranking2::Model::Cache::FGlobalRankingModelMasterCache::CreateCacheParentKey(
                 NamespaceName,
-                "GlobalRankingModelMaster"
+                TOptional<int32>()
             ),
+            Callback,
             Callback
         );
     }
-
     void FNamespaceDomain::UnsubscribeGlobalRankingModelMasters(
         Gs2::Core::Domain::CallbackID CallbackID
     )
     {
         Gs2->Cache->ListUnsubscribe(
             Gs2::Ranking2::Model::FGlobalRankingModelMaster::TypeName,
-            Gs2::Ranking2::Domain::Model::FNamespaceDomain::CreateCacheParentKey(
+            Gs2::Ranking2::Model::Cache::FGlobalRankingModelMasterCache::CreateCacheParentKey(
                 NamespaceName,
-                "GlobalRankingModelMaster"
+                TOptional<int32>()
             ),
             CallbackID
         );
+    }
+    class FNamespaceDomain::FCollectGlobalRankingModelMastersTask : public Gs2::Core::Util::TGs2Future<TArray<Gs2::Ranking2::Model::FGlobalRankingModelMasterPtr>>, public TSharedFromThis<FCollectGlobalRankingModelMastersTask>
+    {
+        const TSharedPtr<FNamespaceDomain> Self;
+        const TFunction<void(TArray<Gs2::Ranking2::Model::FGlobalRankingModelMasterPtr>)> OnCollected;
+    const TOptional<FString> QueryNamePrefix;
+    public:
+        explicit FCollectGlobalRankingModelMastersTask(const TSharedPtr<FNamespaceDomain>& Self, TFunction<void(TArray<Gs2::Ranking2::Model::FGlobalRankingModelMasterPtr>)> OnCollected,const TOptional<FString> NamePrefix) : Self(Self), OnCollected(OnCollected), QueryNamePrefix(NamePrefix) {}
+        FCollectGlobalRankingModelMastersTask(const FCollectGlobalRankingModelMastersTask& From) : TGs2Future(From), Self(From.Self), OnCollected(From.OnCollected), QueryNamePrefix(From.QueryNamePrefix) {}
+        virtual Gs2::Core::Model::FGs2ErrorPtr Action(TSharedPtr<TSharedPtr<TArray<Gs2::Ranking2::Model::FGlobalRankingModelMasterPtr>>> Result) override
+        {
+            TArray<Gs2::Ranking2::Model::FGlobalRankingModelMasterPtr> Items;
+            auto Iterator = Self->GlobalRankingModelMasters(QueryNamePrefix)->begin();
+            while (Iterator.HasNext())
+            {
+                if (Iterator.IsError()) return Iterator.Error();
+                if (Iterator.IsCurrentValid()) Items.Add(Iterator.Current());
+                ++Iterator;
+            }
+            if (Iterator.IsError()) return Iterator.Error();
+            *Result = MakeShared<TArray<Gs2::Ranking2::Model::FGlobalRankingModelMasterPtr>>(Items);
+            if (OnCollected) OnCollected(Items);
+            return nullptr;
+        }
+    };
+
+    Gs2::Core::Domain::CallbackID FNamespaceDomain::SubscribeGlobalRankingModelMasters(
+        TFunction<void(TArray<Gs2::Ranking2::Model::FGlobalRankingModelMasterPtr>)> Callback,const TOptional<FString> NamePrefix
+    )
+    {
+        const TWeakPtr<Gs2::Core::Domain::FGs2> WeakGs2 = this->Gs2;
+        const TWeakPtr<Ranking2::Domain::FGs2Ranking2Domain> WeakService = this->Service;
+        const auto QueryNamespaceName = NamespaceName;
+        const auto QueryNamePrefix = NamePrefix;
+        const auto Parent = Gs2::Ranking2::Model::Cache::FGlobalRankingModelMasterCache::CreateCacheParentKey(
+        NamespaceName,
+        TOptional<int32>()
+    );
+        return Gs2->Cache->ListSubscribeTyped(
+            Gs2::Ranking2::Model::FGlobalRankingModelMaster::TypeName,
+            Parent,
+            [Callback, WeakGs2](const TArray<FGs2ObjectPtr>& Values)
+            {
+                if (!WeakGs2.Pin().IsValid()) return;
+                TArray<Gs2::Ranking2::Model::FGlobalRankingModelMasterPtr> TypedValues;
+                for (const auto& Value : Values) if (Value.IsValid()) TypedValues.Add(StaticCastSharedPtr<Gs2::Ranking2::Model::FGlobalRankingModelMaster>(Value));
+                Callback(TypedValues);
+            },
+            [WeakGs2, WeakService, Callback, QueryNamespaceName, QueryNamePrefix]()
+            {
+                const auto Owner = WeakGs2.Pin();
+                if (!Owner.IsValid()) return;
+                const auto Domain = MakeShared<FNamespaceDomain>(Owner, WeakService.Pin(), QueryNamespaceName);
+                const auto Task = Gs2::Core::Util::New<FAsyncTask<FCollectGlobalRankingModelMastersTask>>(Domain, Callback, QueryNamePrefix);
+                Task->StartBackgroundTask();
+            }
+        );
+    }
+
+    void FNamespaceDomain::InvalidateGlobalRankingModelMasters(const TOptional<FString> NamePrefix)
+    {
+        Gs2->Cache->ClearListCache(
+            Gs2::Ranking2::Model::FGlobalRankingModelMaster::TypeName,
+            Gs2::Ranking2::Model::Cache::FGlobalRankingModelMasterCache::CreateCacheParentKey(
+        NamespaceName,
+        TOptional<int32>()
+    )
+        );
+    }
+
+    FNamespaceDomain::FSubscribeGlobalRankingModelMastersWithInitialCallTask::FSubscribeGlobalRankingModelMastersWithInitialCallTask(const TSharedPtr<FNamespaceDomain>& Self, TFunction<void(TArray<Gs2::Ranking2::Model::FGlobalRankingModelMasterPtr>)> Callback,const TOptional<FString> NamePrefix) : Self(Self), Callback(Callback), QueryNamePrefix(NamePrefix) {}
+    FNamespaceDomain::FSubscribeGlobalRankingModelMastersWithInitialCallTask::FSubscribeGlobalRankingModelMastersWithInitialCallTask(const FSubscribeGlobalRankingModelMastersWithInitialCallTask& From) : TGs2Future(From), Self(From.Self), Callback(From.Callback), QueryNamePrefix(From.QueryNamePrefix) {}
+    Gs2::Core::Model::FGs2ErrorPtr FNamespaceDomain::FSubscribeGlobalRankingModelMastersWithInitialCallTask::Action(TSharedPtr<TSharedPtr<Gs2::Core::Domain::CallbackID>> Result)
+    {
+        const auto Task = Gs2::Core::Util::New<FAsyncTask<FCollectGlobalRankingModelMastersTask>>(Self, TFunction<void(TArray<Gs2::Ranking2::Model::FGlobalRankingModelMasterPtr>)>(), QueryNamePrefix);
+        Task->StartSynchronousTask(); Task->EnsureCompletion();
+        if (Task->GetTask().IsError()) return Task->GetTask().Error();
+        const auto Values = Task->GetTask().Result();
+        const auto CallbackId = Self->SubscribeGlobalRankingModelMasters(Callback, QueryNamePrefix);
+        Callback(*Values); *Result = MakeShared<Gs2::Core::Domain::CallbackID>(CallbackId);
+        return nullptr;
+    }
+    TSharedPtr<FAsyncTask<FNamespaceDomain::FSubscribeGlobalRankingModelMastersWithInitialCallTask>> FNamespaceDomain::SubscribeGlobalRankingModelMastersWithInitialCall(TFunction<void(TArray<Gs2::Ranking2::Model::FGlobalRankingModelMasterPtr>)> Callback,const TOptional<FString> NamePrefix)
+    {
+        return Gs2::Core::Util::New<FAsyncTask<FSubscribeGlobalRankingModelMastersWithInitialCallTask>>(this->AsShared(), Callback, NamePrefix);
     }
 
     TSharedPtr<Gs2::Ranking2::Domain::Model::FGlobalRankingModelMasterDomain> FNamespaceDomain::GlobalRankingModelMaster(
@@ -625,30 +834,115 @@ namespace Gs2::Ranking2::Domain::Model
 
     Gs2::Core::Domain::CallbackID FNamespaceDomain::SubscribeSubscribeRankingModels(
     TFunction<void()> Callback
+
     )
     {
         return Gs2->Cache->ListSubscribe(
             Gs2::Ranking2::Model::FSubscribeRankingModel::TypeName,
-            Gs2::Ranking2::Domain::Model::FNamespaceDomain::CreateCacheParentKey(
+            Gs2::Ranking2::Model::Cache::FSubscribeRankingModelCache::CreateCacheParentKey(
                 NamespaceName,
-                "SubscribeRankingModel"
+                TOptional<int32>()
             ),
+            Callback,
             Callback
         );
     }
-
     void FNamespaceDomain::UnsubscribeSubscribeRankingModels(
         Gs2::Core::Domain::CallbackID CallbackID
     )
     {
         Gs2->Cache->ListUnsubscribe(
             Gs2::Ranking2::Model::FSubscribeRankingModel::TypeName,
-            Gs2::Ranking2::Domain::Model::FNamespaceDomain::CreateCacheParentKey(
+            Gs2::Ranking2::Model::Cache::FSubscribeRankingModelCache::CreateCacheParentKey(
                 NamespaceName,
-                "SubscribeRankingModel"
+                TOptional<int32>()
             ),
             CallbackID
         );
+    }
+    class FNamespaceDomain::FCollectSubscribeRankingModelsTask : public Gs2::Core::Util::TGs2Future<TArray<Gs2::Ranking2::Model::FSubscribeRankingModelPtr>>, public TSharedFromThis<FCollectSubscribeRankingModelsTask>
+    {
+        const TSharedPtr<FNamespaceDomain> Self;
+        const TFunction<void(TArray<Gs2::Ranking2::Model::FSubscribeRankingModelPtr>)> OnCollected;
+
+    public:
+        explicit FCollectSubscribeRankingModelsTask(const TSharedPtr<FNamespaceDomain>& Self, TFunction<void(TArray<Gs2::Ranking2::Model::FSubscribeRankingModelPtr>)> OnCollected) : Self(Self), OnCollected(OnCollected) {}
+        FCollectSubscribeRankingModelsTask(const FCollectSubscribeRankingModelsTask& From) : TGs2Future(From), Self(From.Self), OnCollected(From.OnCollected) {}
+        virtual Gs2::Core::Model::FGs2ErrorPtr Action(TSharedPtr<TSharedPtr<TArray<Gs2::Ranking2::Model::FSubscribeRankingModelPtr>>> Result) override
+        {
+            TArray<Gs2::Ranking2::Model::FSubscribeRankingModelPtr> Items;
+            auto Iterator = Self->SubscribeRankingModels()->begin();
+            while (Iterator.HasNext())
+            {
+                if (Iterator.IsError()) return Iterator.Error();
+                if (Iterator.IsCurrentValid()) Items.Add(Iterator.Current());
+                ++Iterator;
+            }
+            if (Iterator.IsError()) return Iterator.Error();
+            *Result = MakeShared<TArray<Gs2::Ranking2::Model::FSubscribeRankingModelPtr>>(Items);
+            if (OnCollected) OnCollected(Items);
+            return nullptr;
+        }
+    };
+
+    Gs2::Core::Domain::CallbackID FNamespaceDomain::SubscribeSubscribeRankingModels(
+        TFunction<void(TArray<Gs2::Ranking2::Model::FSubscribeRankingModelPtr>)> Callback
+    )
+    {
+        const TWeakPtr<Gs2::Core::Domain::FGs2> WeakGs2 = this->Gs2;
+        const TWeakPtr<Ranking2::Domain::FGs2Ranking2Domain> WeakService = this->Service;
+        const auto QueryNamespaceName = NamespaceName;
+        const auto Parent = Gs2::Ranking2::Model::Cache::FSubscribeRankingModelCache::CreateCacheParentKey(
+        NamespaceName,
+        TOptional<int32>()
+    );
+        return Gs2->Cache->ListSubscribeTyped(
+            Gs2::Ranking2::Model::FSubscribeRankingModel::TypeName,
+            Parent,
+            [Callback, WeakGs2](const TArray<FGs2ObjectPtr>& Values)
+            {
+                if (!WeakGs2.Pin().IsValid()) return;
+                TArray<Gs2::Ranking2::Model::FSubscribeRankingModelPtr> TypedValues;
+                for (const auto& Value : Values) if (Value.IsValid()) TypedValues.Add(StaticCastSharedPtr<Gs2::Ranking2::Model::FSubscribeRankingModel>(Value));
+                Callback(TypedValues);
+            },
+            [WeakGs2, WeakService, Callback, QueryNamespaceName]()
+            {
+                const auto Owner = WeakGs2.Pin();
+                if (!Owner.IsValid()) return;
+                const auto Domain = MakeShared<FNamespaceDomain>(Owner, WeakService.Pin(), QueryNamespaceName);
+                const auto Task = Gs2::Core::Util::New<FAsyncTask<FCollectSubscribeRankingModelsTask>>(Domain, Callback);
+                Task->StartBackgroundTask();
+            }
+        );
+    }
+
+    void FNamespaceDomain::InvalidateSubscribeRankingModels()
+    {
+        Gs2->Cache->ClearListCache(
+            Gs2::Ranking2::Model::FSubscribeRankingModel::TypeName,
+            Gs2::Ranking2::Model::Cache::FSubscribeRankingModelCache::CreateCacheParentKey(
+        NamespaceName,
+        TOptional<int32>()
+    )
+        );
+    }
+
+    FNamespaceDomain::FSubscribeSubscribeRankingModelsWithInitialCallTask::FSubscribeSubscribeRankingModelsWithInitialCallTask(const TSharedPtr<FNamespaceDomain>& Self, TFunction<void(TArray<Gs2::Ranking2::Model::FSubscribeRankingModelPtr>)> Callback) : Self(Self), Callback(Callback) {}
+    FNamespaceDomain::FSubscribeSubscribeRankingModelsWithInitialCallTask::FSubscribeSubscribeRankingModelsWithInitialCallTask(const FSubscribeSubscribeRankingModelsWithInitialCallTask& From) : TGs2Future(From), Self(From.Self), Callback(From.Callback) {}
+    Gs2::Core::Model::FGs2ErrorPtr FNamespaceDomain::FSubscribeSubscribeRankingModelsWithInitialCallTask::Action(TSharedPtr<TSharedPtr<Gs2::Core::Domain::CallbackID>> Result)
+    {
+        const auto Task = Gs2::Core::Util::New<FAsyncTask<FCollectSubscribeRankingModelsTask>>(Self, TFunction<void(TArray<Gs2::Ranking2::Model::FSubscribeRankingModelPtr>)>());
+        Task->StartSynchronousTask(); Task->EnsureCompletion();
+        if (Task->GetTask().IsError()) return Task->GetTask().Error();
+        const auto Values = Task->GetTask().Result();
+        const auto CallbackId = Self->SubscribeSubscribeRankingModels(Callback);
+        Callback(*Values); *Result = MakeShared<Gs2::Core::Domain::CallbackID>(CallbackId);
+        return nullptr;
+    }
+    TSharedPtr<FAsyncTask<FNamespaceDomain::FSubscribeSubscribeRankingModelsWithInitialCallTask>> FNamespaceDomain::SubscribeSubscribeRankingModelsWithInitialCall(TFunction<void(TArray<Gs2::Ranking2::Model::FSubscribeRankingModelPtr>)> Callback)
+    {
+        return Gs2::Core::Util::New<FAsyncTask<FSubscribeSubscribeRankingModelsWithInitialCallTask>>(this->AsShared(), Callback);
     }
 
     TSharedPtr<Gs2::Ranking2::Domain::Model::FSubscribeRankingModelDomain> FNamespaceDomain::SubscribeRankingModel(
@@ -677,30 +971,116 @@ namespace Gs2::Ranking2::Domain::Model
 
     Gs2::Core::Domain::CallbackID FNamespaceDomain::SubscribeSubscribeRankingModelMasters(
     TFunction<void()> Callback
+
     )
     {
         return Gs2->Cache->ListSubscribe(
             Gs2::Ranking2::Model::FSubscribeRankingModelMaster::TypeName,
-            Gs2::Ranking2::Domain::Model::FNamespaceDomain::CreateCacheParentKey(
+            Gs2::Ranking2::Model::Cache::FSubscribeRankingModelMasterCache::CreateCacheParentKey(
                 NamespaceName,
-                "SubscribeRankingModelMaster"
+                TOptional<int32>()
             ),
+            Callback,
             Callback
         );
     }
-
     void FNamespaceDomain::UnsubscribeSubscribeRankingModelMasters(
         Gs2::Core::Domain::CallbackID CallbackID
     )
     {
         Gs2->Cache->ListUnsubscribe(
             Gs2::Ranking2::Model::FSubscribeRankingModelMaster::TypeName,
-            Gs2::Ranking2::Domain::Model::FNamespaceDomain::CreateCacheParentKey(
+            Gs2::Ranking2::Model::Cache::FSubscribeRankingModelMasterCache::CreateCacheParentKey(
                 NamespaceName,
-                "SubscribeRankingModelMaster"
+                TOptional<int32>()
             ),
             CallbackID
         );
+    }
+    class FNamespaceDomain::FCollectSubscribeRankingModelMastersTask : public Gs2::Core::Util::TGs2Future<TArray<Gs2::Ranking2::Model::FSubscribeRankingModelMasterPtr>>, public TSharedFromThis<FCollectSubscribeRankingModelMastersTask>
+    {
+        const TSharedPtr<FNamespaceDomain> Self;
+        const TFunction<void(TArray<Gs2::Ranking2::Model::FSubscribeRankingModelMasterPtr>)> OnCollected;
+    const TOptional<FString> QueryNamePrefix;
+    public:
+        explicit FCollectSubscribeRankingModelMastersTask(const TSharedPtr<FNamespaceDomain>& Self, TFunction<void(TArray<Gs2::Ranking2::Model::FSubscribeRankingModelMasterPtr>)> OnCollected,const TOptional<FString> NamePrefix) : Self(Self), OnCollected(OnCollected), QueryNamePrefix(NamePrefix) {}
+        FCollectSubscribeRankingModelMastersTask(const FCollectSubscribeRankingModelMastersTask& From) : TGs2Future(From), Self(From.Self), OnCollected(From.OnCollected), QueryNamePrefix(From.QueryNamePrefix) {}
+        virtual Gs2::Core::Model::FGs2ErrorPtr Action(TSharedPtr<TSharedPtr<TArray<Gs2::Ranking2::Model::FSubscribeRankingModelMasterPtr>>> Result) override
+        {
+            TArray<Gs2::Ranking2::Model::FSubscribeRankingModelMasterPtr> Items;
+            auto Iterator = Self->SubscribeRankingModelMasters(QueryNamePrefix)->begin();
+            while (Iterator.HasNext())
+            {
+                if (Iterator.IsError()) return Iterator.Error();
+                if (Iterator.IsCurrentValid()) Items.Add(Iterator.Current());
+                ++Iterator;
+            }
+            if (Iterator.IsError()) return Iterator.Error();
+            *Result = MakeShared<TArray<Gs2::Ranking2::Model::FSubscribeRankingModelMasterPtr>>(Items);
+            if (OnCollected) OnCollected(Items);
+            return nullptr;
+        }
+    };
+
+    Gs2::Core::Domain::CallbackID FNamespaceDomain::SubscribeSubscribeRankingModelMasters(
+        TFunction<void(TArray<Gs2::Ranking2::Model::FSubscribeRankingModelMasterPtr>)> Callback,const TOptional<FString> NamePrefix
+    )
+    {
+        const TWeakPtr<Gs2::Core::Domain::FGs2> WeakGs2 = this->Gs2;
+        const TWeakPtr<Ranking2::Domain::FGs2Ranking2Domain> WeakService = this->Service;
+        const auto QueryNamespaceName = NamespaceName;
+        const auto QueryNamePrefix = NamePrefix;
+        const auto Parent = Gs2::Ranking2::Model::Cache::FSubscribeRankingModelMasterCache::CreateCacheParentKey(
+        NamespaceName,
+        TOptional<int32>()
+    );
+        return Gs2->Cache->ListSubscribeTyped(
+            Gs2::Ranking2::Model::FSubscribeRankingModelMaster::TypeName,
+            Parent,
+            [Callback, WeakGs2](const TArray<FGs2ObjectPtr>& Values)
+            {
+                if (!WeakGs2.Pin().IsValid()) return;
+                TArray<Gs2::Ranking2::Model::FSubscribeRankingModelMasterPtr> TypedValues;
+                for (const auto& Value : Values) if (Value.IsValid()) TypedValues.Add(StaticCastSharedPtr<Gs2::Ranking2::Model::FSubscribeRankingModelMaster>(Value));
+                Callback(TypedValues);
+            },
+            [WeakGs2, WeakService, Callback, QueryNamespaceName, QueryNamePrefix]()
+            {
+                const auto Owner = WeakGs2.Pin();
+                if (!Owner.IsValid()) return;
+                const auto Domain = MakeShared<FNamespaceDomain>(Owner, WeakService.Pin(), QueryNamespaceName);
+                const auto Task = Gs2::Core::Util::New<FAsyncTask<FCollectSubscribeRankingModelMastersTask>>(Domain, Callback, QueryNamePrefix);
+                Task->StartBackgroundTask();
+            }
+        );
+    }
+
+    void FNamespaceDomain::InvalidateSubscribeRankingModelMasters(const TOptional<FString> NamePrefix)
+    {
+        Gs2->Cache->ClearListCache(
+            Gs2::Ranking2::Model::FSubscribeRankingModelMaster::TypeName,
+            Gs2::Ranking2::Model::Cache::FSubscribeRankingModelMasterCache::CreateCacheParentKey(
+        NamespaceName,
+        TOptional<int32>()
+    )
+        );
+    }
+
+    FNamespaceDomain::FSubscribeSubscribeRankingModelMastersWithInitialCallTask::FSubscribeSubscribeRankingModelMastersWithInitialCallTask(const TSharedPtr<FNamespaceDomain>& Self, TFunction<void(TArray<Gs2::Ranking2::Model::FSubscribeRankingModelMasterPtr>)> Callback,const TOptional<FString> NamePrefix) : Self(Self), Callback(Callback), QueryNamePrefix(NamePrefix) {}
+    FNamespaceDomain::FSubscribeSubscribeRankingModelMastersWithInitialCallTask::FSubscribeSubscribeRankingModelMastersWithInitialCallTask(const FSubscribeSubscribeRankingModelMastersWithInitialCallTask& From) : TGs2Future(From), Self(From.Self), Callback(From.Callback), QueryNamePrefix(From.QueryNamePrefix) {}
+    Gs2::Core::Model::FGs2ErrorPtr FNamespaceDomain::FSubscribeSubscribeRankingModelMastersWithInitialCallTask::Action(TSharedPtr<TSharedPtr<Gs2::Core::Domain::CallbackID>> Result)
+    {
+        const auto Task = Gs2::Core::Util::New<FAsyncTask<FCollectSubscribeRankingModelMastersTask>>(Self, TFunction<void(TArray<Gs2::Ranking2::Model::FSubscribeRankingModelMasterPtr>)>(), QueryNamePrefix);
+        Task->StartSynchronousTask(); Task->EnsureCompletion();
+        if (Task->GetTask().IsError()) return Task->GetTask().Error();
+        const auto Values = Task->GetTask().Result();
+        const auto CallbackId = Self->SubscribeSubscribeRankingModelMasters(Callback, QueryNamePrefix);
+        Callback(*Values); *Result = MakeShared<Gs2::Core::Domain::CallbackID>(CallbackId);
+        return nullptr;
+    }
+    TSharedPtr<FAsyncTask<FNamespaceDomain::FSubscribeSubscribeRankingModelMastersWithInitialCallTask>> FNamespaceDomain::SubscribeSubscribeRankingModelMastersWithInitialCall(TFunction<void(TArray<Gs2::Ranking2::Model::FSubscribeRankingModelMasterPtr>)> Callback,const TOptional<FString> NamePrefix)
+    {
+        return Gs2::Core::Util::New<FAsyncTask<FSubscribeSubscribeRankingModelMastersWithInitialCallTask>>(this->AsShared(), Callback, NamePrefix);
     }
 
     TSharedPtr<Gs2::Ranking2::Domain::Model::FSubscribeRankingModelMasterDomain> FNamespaceDomain::SubscribeRankingModelMaster(
@@ -727,30 +1107,115 @@ namespace Gs2::Ranking2::Domain::Model
 
     Gs2::Core::Domain::CallbackID FNamespaceDomain::SubscribeClusterRankingModels(
     TFunction<void()> Callback
+
     )
     {
         return Gs2->Cache->ListSubscribe(
             Gs2::Ranking2::Model::FClusterRankingModel::TypeName,
-            Gs2::Ranking2::Domain::Model::FNamespaceDomain::CreateCacheParentKey(
+            Gs2::Ranking2::Model::Cache::FClusterRankingModelCache::CreateCacheParentKey(
                 NamespaceName,
-                "ClusterRankingModel"
+                TOptional<int32>()
             ),
+            Callback,
             Callback
         );
     }
-
     void FNamespaceDomain::UnsubscribeClusterRankingModels(
         Gs2::Core::Domain::CallbackID CallbackID
     )
     {
         Gs2->Cache->ListUnsubscribe(
             Gs2::Ranking2::Model::FClusterRankingModel::TypeName,
-            Gs2::Ranking2::Domain::Model::FNamespaceDomain::CreateCacheParentKey(
+            Gs2::Ranking2::Model::Cache::FClusterRankingModelCache::CreateCacheParentKey(
                 NamespaceName,
-                "ClusterRankingModel"
+                TOptional<int32>()
             ),
             CallbackID
         );
+    }
+    class FNamespaceDomain::FCollectClusterRankingModelsTask : public Gs2::Core::Util::TGs2Future<TArray<Gs2::Ranking2::Model::FClusterRankingModelPtr>>, public TSharedFromThis<FCollectClusterRankingModelsTask>
+    {
+        const TSharedPtr<FNamespaceDomain> Self;
+        const TFunction<void(TArray<Gs2::Ranking2::Model::FClusterRankingModelPtr>)> OnCollected;
+
+    public:
+        explicit FCollectClusterRankingModelsTask(const TSharedPtr<FNamespaceDomain>& Self, TFunction<void(TArray<Gs2::Ranking2::Model::FClusterRankingModelPtr>)> OnCollected) : Self(Self), OnCollected(OnCollected) {}
+        FCollectClusterRankingModelsTask(const FCollectClusterRankingModelsTask& From) : TGs2Future(From), Self(From.Self), OnCollected(From.OnCollected) {}
+        virtual Gs2::Core::Model::FGs2ErrorPtr Action(TSharedPtr<TSharedPtr<TArray<Gs2::Ranking2::Model::FClusterRankingModelPtr>>> Result) override
+        {
+            TArray<Gs2::Ranking2::Model::FClusterRankingModelPtr> Items;
+            auto Iterator = Self->ClusterRankingModels()->begin();
+            while (Iterator.HasNext())
+            {
+                if (Iterator.IsError()) return Iterator.Error();
+                if (Iterator.IsCurrentValid()) Items.Add(Iterator.Current());
+                ++Iterator;
+            }
+            if (Iterator.IsError()) return Iterator.Error();
+            *Result = MakeShared<TArray<Gs2::Ranking2::Model::FClusterRankingModelPtr>>(Items);
+            if (OnCollected) OnCollected(Items);
+            return nullptr;
+        }
+    };
+
+    Gs2::Core::Domain::CallbackID FNamespaceDomain::SubscribeClusterRankingModels(
+        TFunction<void(TArray<Gs2::Ranking2::Model::FClusterRankingModelPtr>)> Callback
+    )
+    {
+        const TWeakPtr<Gs2::Core::Domain::FGs2> WeakGs2 = this->Gs2;
+        const TWeakPtr<Ranking2::Domain::FGs2Ranking2Domain> WeakService = this->Service;
+        const auto QueryNamespaceName = NamespaceName;
+        const auto Parent = Gs2::Ranking2::Model::Cache::FClusterRankingModelCache::CreateCacheParentKey(
+        NamespaceName,
+        TOptional<int32>()
+    );
+        return Gs2->Cache->ListSubscribeTyped(
+            Gs2::Ranking2::Model::FClusterRankingModel::TypeName,
+            Parent,
+            [Callback, WeakGs2](const TArray<FGs2ObjectPtr>& Values)
+            {
+                if (!WeakGs2.Pin().IsValid()) return;
+                TArray<Gs2::Ranking2::Model::FClusterRankingModelPtr> TypedValues;
+                for (const auto& Value : Values) if (Value.IsValid()) TypedValues.Add(StaticCastSharedPtr<Gs2::Ranking2::Model::FClusterRankingModel>(Value));
+                Callback(TypedValues);
+            },
+            [WeakGs2, WeakService, Callback, QueryNamespaceName]()
+            {
+                const auto Owner = WeakGs2.Pin();
+                if (!Owner.IsValid()) return;
+                const auto Domain = MakeShared<FNamespaceDomain>(Owner, WeakService.Pin(), QueryNamespaceName);
+                const auto Task = Gs2::Core::Util::New<FAsyncTask<FCollectClusterRankingModelsTask>>(Domain, Callback);
+                Task->StartBackgroundTask();
+            }
+        );
+    }
+
+    void FNamespaceDomain::InvalidateClusterRankingModels()
+    {
+        Gs2->Cache->ClearListCache(
+            Gs2::Ranking2::Model::FClusterRankingModel::TypeName,
+            Gs2::Ranking2::Model::Cache::FClusterRankingModelCache::CreateCacheParentKey(
+        NamespaceName,
+        TOptional<int32>()
+    )
+        );
+    }
+
+    FNamespaceDomain::FSubscribeClusterRankingModelsWithInitialCallTask::FSubscribeClusterRankingModelsWithInitialCallTask(const TSharedPtr<FNamespaceDomain>& Self, TFunction<void(TArray<Gs2::Ranking2::Model::FClusterRankingModelPtr>)> Callback) : Self(Self), Callback(Callback) {}
+    FNamespaceDomain::FSubscribeClusterRankingModelsWithInitialCallTask::FSubscribeClusterRankingModelsWithInitialCallTask(const FSubscribeClusterRankingModelsWithInitialCallTask& From) : TGs2Future(From), Self(From.Self), Callback(From.Callback) {}
+    Gs2::Core::Model::FGs2ErrorPtr FNamespaceDomain::FSubscribeClusterRankingModelsWithInitialCallTask::Action(TSharedPtr<TSharedPtr<Gs2::Core::Domain::CallbackID>> Result)
+    {
+        const auto Task = Gs2::Core::Util::New<FAsyncTask<FCollectClusterRankingModelsTask>>(Self, TFunction<void(TArray<Gs2::Ranking2::Model::FClusterRankingModelPtr>)>());
+        Task->StartSynchronousTask(); Task->EnsureCompletion();
+        if (Task->GetTask().IsError()) return Task->GetTask().Error();
+        const auto Values = Task->GetTask().Result();
+        const auto CallbackId = Self->SubscribeClusterRankingModels(Callback);
+        Callback(*Values); *Result = MakeShared<Gs2::Core::Domain::CallbackID>(CallbackId);
+        return nullptr;
+    }
+    TSharedPtr<FAsyncTask<FNamespaceDomain::FSubscribeClusterRankingModelsWithInitialCallTask>> FNamespaceDomain::SubscribeClusterRankingModelsWithInitialCall(TFunction<void(TArray<Gs2::Ranking2::Model::FClusterRankingModelPtr>)> Callback)
+    {
+        return Gs2::Core::Util::New<FAsyncTask<FSubscribeClusterRankingModelsWithInitialCallTask>>(this->AsShared(), Callback);
     }
 
     TSharedPtr<Gs2::Ranking2::Domain::Model::FClusterRankingModelDomain> FNamespaceDomain::ClusterRankingModel(
@@ -779,30 +1244,116 @@ namespace Gs2::Ranking2::Domain::Model
 
     Gs2::Core::Domain::CallbackID FNamespaceDomain::SubscribeClusterRankingModelMasters(
     TFunction<void()> Callback
+
     )
     {
         return Gs2->Cache->ListSubscribe(
             Gs2::Ranking2::Model::FClusterRankingModelMaster::TypeName,
-            Gs2::Ranking2::Domain::Model::FNamespaceDomain::CreateCacheParentKey(
+            Gs2::Ranking2::Model::Cache::FClusterRankingModelMasterCache::CreateCacheParentKey(
                 NamespaceName,
-                "ClusterRankingModelMaster"
+                TOptional<int32>()
             ),
+            Callback,
             Callback
         );
     }
-
     void FNamespaceDomain::UnsubscribeClusterRankingModelMasters(
         Gs2::Core::Domain::CallbackID CallbackID
     )
     {
         Gs2->Cache->ListUnsubscribe(
             Gs2::Ranking2::Model::FClusterRankingModelMaster::TypeName,
-            Gs2::Ranking2::Domain::Model::FNamespaceDomain::CreateCacheParentKey(
+            Gs2::Ranking2::Model::Cache::FClusterRankingModelMasterCache::CreateCacheParentKey(
                 NamespaceName,
-                "ClusterRankingModelMaster"
+                TOptional<int32>()
             ),
             CallbackID
         );
+    }
+    class FNamespaceDomain::FCollectClusterRankingModelMastersTask : public Gs2::Core::Util::TGs2Future<TArray<Gs2::Ranking2::Model::FClusterRankingModelMasterPtr>>, public TSharedFromThis<FCollectClusterRankingModelMastersTask>
+    {
+        const TSharedPtr<FNamespaceDomain> Self;
+        const TFunction<void(TArray<Gs2::Ranking2::Model::FClusterRankingModelMasterPtr>)> OnCollected;
+    const TOptional<FString> QueryNamePrefix;
+    public:
+        explicit FCollectClusterRankingModelMastersTask(const TSharedPtr<FNamespaceDomain>& Self, TFunction<void(TArray<Gs2::Ranking2::Model::FClusterRankingModelMasterPtr>)> OnCollected,const TOptional<FString> NamePrefix) : Self(Self), OnCollected(OnCollected), QueryNamePrefix(NamePrefix) {}
+        FCollectClusterRankingModelMastersTask(const FCollectClusterRankingModelMastersTask& From) : TGs2Future(From), Self(From.Self), OnCollected(From.OnCollected), QueryNamePrefix(From.QueryNamePrefix) {}
+        virtual Gs2::Core::Model::FGs2ErrorPtr Action(TSharedPtr<TSharedPtr<TArray<Gs2::Ranking2::Model::FClusterRankingModelMasterPtr>>> Result) override
+        {
+            TArray<Gs2::Ranking2::Model::FClusterRankingModelMasterPtr> Items;
+            auto Iterator = Self->ClusterRankingModelMasters(QueryNamePrefix)->begin();
+            while (Iterator.HasNext())
+            {
+                if (Iterator.IsError()) return Iterator.Error();
+                if (Iterator.IsCurrentValid()) Items.Add(Iterator.Current());
+                ++Iterator;
+            }
+            if (Iterator.IsError()) return Iterator.Error();
+            *Result = MakeShared<TArray<Gs2::Ranking2::Model::FClusterRankingModelMasterPtr>>(Items);
+            if (OnCollected) OnCollected(Items);
+            return nullptr;
+        }
+    };
+
+    Gs2::Core::Domain::CallbackID FNamespaceDomain::SubscribeClusterRankingModelMasters(
+        TFunction<void(TArray<Gs2::Ranking2::Model::FClusterRankingModelMasterPtr>)> Callback,const TOptional<FString> NamePrefix
+    )
+    {
+        const TWeakPtr<Gs2::Core::Domain::FGs2> WeakGs2 = this->Gs2;
+        const TWeakPtr<Ranking2::Domain::FGs2Ranking2Domain> WeakService = this->Service;
+        const auto QueryNamespaceName = NamespaceName;
+        const auto QueryNamePrefix = NamePrefix;
+        const auto Parent = Gs2::Ranking2::Model::Cache::FClusterRankingModelMasterCache::CreateCacheParentKey(
+        NamespaceName,
+        TOptional<int32>()
+    );
+        return Gs2->Cache->ListSubscribeTyped(
+            Gs2::Ranking2::Model::FClusterRankingModelMaster::TypeName,
+            Parent,
+            [Callback, WeakGs2](const TArray<FGs2ObjectPtr>& Values)
+            {
+                if (!WeakGs2.Pin().IsValid()) return;
+                TArray<Gs2::Ranking2::Model::FClusterRankingModelMasterPtr> TypedValues;
+                for (const auto& Value : Values) if (Value.IsValid()) TypedValues.Add(StaticCastSharedPtr<Gs2::Ranking2::Model::FClusterRankingModelMaster>(Value));
+                Callback(TypedValues);
+            },
+            [WeakGs2, WeakService, Callback, QueryNamespaceName, QueryNamePrefix]()
+            {
+                const auto Owner = WeakGs2.Pin();
+                if (!Owner.IsValid()) return;
+                const auto Domain = MakeShared<FNamespaceDomain>(Owner, WeakService.Pin(), QueryNamespaceName);
+                const auto Task = Gs2::Core::Util::New<FAsyncTask<FCollectClusterRankingModelMastersTask>>(Domain, Callback, QueryNamePrefix);
+                Task->StartBackgroundTask();
+            }
+        );
+    }
+
+    void FNamespaceDomain::InvalidateClusterRankingModelMasters(const TOptional<FString> NamePrefix)
+    {
+        Gs2->Cache->ClearListCache(
+            Gs2::Ranking2::Model::FClusterRankingModelMaster::TypeName,
+            Gs2::Ranking2::Model::Cache::FClusterRankingModelMasterCache::CreateCacheParentKey(
+        NamespaceName,
+        TOptional<int32>()
+    )
+        );
+    }
+
+    FNamespaceDomain::FSubscribeClusterRankingModelMastersWithInitialCallTask::FSubscribeClusterRankingModelMastersWithInitialCallTask(const TSharedPtr<FNamespaceDomain>& Self, TFunction<void(TArray<Gs2::Ranking2::Model::FClusterRankingModelMasterPtr>)> Callback,const TOptional<FString> NamePrefix) : Self(Self), Callback(Callback), QueryNamePrefix(NamePrefix) {}
+    FNamespaceDomain::FSubscribeClusterRankingModelMastersWithInitialCallTask::FSubscribeClusterRankingModelMastersWithInitialCallTask(const FSubscribeClusterRankingModelMastersWithInitialCallTask& From) : TGs2Future(From), Self(From.Self), Callback(From.Callback), QueryNamePrefix(From.QueryNamePrefix) {}
+    Gs2::Core::Model::FGs2ErrorPtr FNamespaceDomain::FSubscribeClusterRankingModelMastersWithInitialCallTask::Action(TSharedPtr<TSharedPtr<Gs2::Core::Domain::CallbackID>> Result)
+    {
+        const auto Task = Gs2::Core::Util::New<FAsyncTask<FCollectClusterRankingModelMastersTask>>(Self, TFunction<void(TArray<Gs2::Ranking2::Model::FClusterRankingModelMasterPtr>)>(), QueryNamePrefix);
+        Task->StartSynchronousTask(); Task->EnsureCompletion();
+        if (Task->GetTask().IsError()) return Task->GetTask().Error();
+        const auto Values = Task->GetTask().Result();
+        const auto CallbackId = Self->SubscribeClusterRankingModelMasters(Callback, QueryNamePrefix);
+        Callback(*Values); *Result = MakeShared<Gs2::Core::Domain::CallbackID>(CallbackId);
+        return nullptr;
+    }
+    TSharedPtr<FAsyncTask<FNamespaceDomain::FSubscribeClusterRankingModelMastersWithInitialCallTask>> FNamespaceDomain::SubscribeClusterRankingModelMastersWithInitialCall(TFunction<void(TArray<Gs2::Ranking2::Model::FClusterRankingModelMasterPtr>)> Callback,const TOptional<FString> NamePrefix)
+    {
+        return Gs2::Core::Util::New<FAsyncTask<FSubscribeClusterRankingModelMastersWithInitialCallTask>>(this->AsShared(), Callback, NamePrefix);
     }
 
     TSharedPtr<Gs2::Ranking2::Domain::Model::FClusterRankingModelMasterDomain> FNamespaceDomain::ClusterRankingModelMaster(
@@ -853,72 +1404,151 @@ namespace Gs2::Ranking2::Domain::Model
         TSharedPtr<TSharedPtr<Gs2::Ranking2::Model::FNamespace>> Result
     )
     {
-        const auto ParentKey = FString("ranking2:Namespace");
-        // ReSharper disable once CppLocalVariableMayBeConst
-        TSharedPtr<Gs2::Ranking2::Model::FNamespace> Value;
-        auto bCacheHit = Self->Gs2->Cache->TryGet<Gs2::Ranking2::Model::FNamespace>(
-            ParentKey,
-            Gs2::Ranking2::Domain::Model::FNamespaceDomain::CreateCacheKey(
-                Self->NamespaceName
-            ),
-            &Value
+        const auto CacheParentKey = Gs2::Ranking2::Model::Cache::FNamespaceCache::CreateCacheParentKey(
+
+            TOptional<int32>()
         );
-        if (!bCacheHit) {
-            const auto Future = Self->Get(
-                MakeShared<Gs2::Ranking2::Request::FGetNamespaceRequest>()
-            );
-            Future->StartSynchronousTask();
-            if (Future->GetTask().IsError())
+        const auto CacheKey = Gs2::Ranking2::Model::Cache::FNamespaceCache::CreateCacheKey(
+
+            Self->NamespaceName
+        );
+        return Self->Gs2->Cache->ExecuteWithKeyLock(
+            Gs2::Ranking2::Model::FNamespace::TypeName,
+            CacheParentKey,
+            CacheKey,
+            [Self = Self, Result]() -> Gs2::Core::Model::FGs2ErrorPtr
             {
-                if (Future->GetTask().Error()->Type() != Gs2::Core::Model::FNotFoundError::TypeString)
-                {
-                    return Future->GetTask().Error();
-                }
+                Gs2::Ranking2::Model::FNamespacePtr Value;
+                const auto CacheHit = Gs2::Ranking2::Model::Cache::FNamespaceCache::TryGet(
+                    Self->Gs2->Cache,
 
-                const auto Key = Gs2::Ranking2::Domain::Model::FNamespaceDomain::CreateCacheKey(
-                    Self->NamespaceName
+                    Self->NamespaceName,
+                    TOptional<int32>(),
+                    &Value
                 );
-                Self->Gs2->Cache->Put(
-                    Gs2::Ranking2::Model::FNamespace::TypeName,
-                    ParentKey,
-                    Key,
-                    nullptr,
-                    FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
-                );
-
-                if (Future->GetTask().Error()->Detail(0)->GetComponent() != "namespace")
+                if (CacheHit)
                 {
-                    return Future->GetTask().Error();
+                    *Result = Value;
+                    return nullptr;
                 }
-            }
-            else
-            {
-                Value = Future->GetTask().Result();
-            }
-            Future->EnsureCompletion();
-        }
-        *Result = Value;
+                const auto Error = Gs2::Ranking2::Model::Cache::FNamespaceCache::Fetch(
+                    Self->Gs2->Cache,
 
-        return nullptr;
+                    Self->NamespaceName,
+                    TOptional<int32>(),
+                    [Self](Gs2::Ranking2::Model::FNamespacePtr* OutItem) -> Gs2::Core::Model::FGs2ErrorPtr
+                    {
+                        const auto Future = Self->Get(
+                            MakeShared<Gs2::Ranking2::Request::FGetNamespaceRequest>()
+                        );
+                        Future->StartSynchronousTask();
+                        if (Future->GetTask().IsError()) return Future->GetTask().Error();
+                        *OutItem = Future->GetTask().Result();
+                        Future->EnsureCompletion();
+                        return nullptr;
+                    },
+                    &Value
+                );
+                if (Error.IsValid()) return Error;
+                *Result = Value;
+                return nullptr;
+            }
+        );
     }
 
     TSharedPtr<FAsyncTask<FNamespaceDomain::FModelTask>> FNamespaceDomain::Model() {
         return Gs2::Core::Util::New<FAsyncTask<FNamespaceDomain::FModelTask>>(this->AsShared());
     }
 
+    void FNamespaceDomain::Invalidate()
+    {
+        Gs2::Ranking2::Model::Cache::FNamespaceCache::Delete(
+            Gs2->Cache,
+
+            NamespaceName,
+            TOptional<int32>()
+        );
+    }
+
+    FNamespaceDomain::FSubscribeWithInitialCallTask::FSubscribeWithInitialCallTask(
+        const TSharedPtr<FNamespaceDomain>& Self,
+        TFunction<void(Gs2::Ranking2::Model::FNamespacePtr)> Callback
+    ):
+        Self(Self),
+        Callback(Callback)
+    {
+    }
+
+    FNamespaceDomain::FSubscribeWithInitialCallTask::FSubscribeWithInitialCallTask(
+        const FSubscribeWithInitialCallTask& From
+    ):
+        TGs2Future(From),
+        Self(From.Self),
+        Callback(From.Callback)
+    {
+    }
+
+    Gs2::Core::Model::FGs2ErrorPtr FNamespaceDomain::FSubscribeWithInitialCallTask::Action(
+        TSharedPtr<TSharedPtr<Gs2::Core::Domain::CallbackID>> Result
+    )
+    {
+        const auto Task = Self->Model();
+        Task->StartSynchronousTask();
+        Task->EnsureCompletion();
+        if (Task->GetTask().IsError()) return Task->GetTask().Error();
+        const auto Item = Task->GetTask().Result();
+        const auto CallbackId = Self->Subscribe(Callback);
+        Callback(Item);
+        *Result = MakeShared<Gs2::Core::Domain::CallbackID>(CallbackId);
+        return nullptr;
+    }
+
+    TSharedPtr<FAsyncTask<FNamespaceDomain::FSubscribeWithInitialCallTask>> FNamespaceDomain::SubscribeWithInitialCall(
+        TFunction<void(Gs2::Ranking2::Model::FNamespacePtr)> Callback
+    )
+    {
+        return Gs2::Core::Util::New<FAsyncTask<FSubscribeWithInitialCallTask>>(this->AsShared(), Callback);
+    }
+
     Gs2::Core::Domain::CallbackID FNamespaceDomain::Subscribe(
         TFunction<void(Gs2::Ranking2::Model::FNamespacePtr)> Callback
     )
     {
+        const auto SubscriptionParentKey = Gs2::Ranking2::Model::Cache::FNamespaceCache::CreateCacheParentKey(
+
+            TOptional<int32>()
+        );
+        const auto SubscriptionCacheKey = Gs2::Ranking2::Model::Cache::FNamespaceCache::CreateCacheKey(
+
+            NamespaceName
+        );
+        const TWeakPtr<Gs2::Core::Domain::FGs2> WeakGs2 = Gs2;
+        const TWeakPtr<Ranking2::Domain::FGs2Ranking2Domain> WeakService = Service;
+        const FString RegisteredParentKey = SubscriptionParentKey;
+        const TOptional<FString> QueryNamespaceName = NamespaceName;
         return Gs2->Cache->Subscribe(
             Gs2::Ranking2::Model::FNamespace::TypeName,
-            ParentKey,
-            Gs2::Ranking2::Domain::Model::FNamespaceDomain::CreateCacheKey(
-                NamespaceName
-            ),
+            SubscriptionParentKey,
+            SubscriptionCacheKey,
             [Callback](TSharedPtr<FGs2Object> obj)
             {
                 Callback(StaticCastSharedPtr<Gs2::Ranking2::Model::FNamespace>(obj));
+            },
+            [WeakGs2, WeakService, RegisteredParentKey, QueryNamespaceName]()
+            {
+                const auto Owner = WeakGs2.Pin();
+                if (!Owner.IsValid())
+                {
+                    return;
+                }
+                const auto Domain = MakeShared<FNamespaceDomain>(
+                    Owner,
+                    WeakService.Pin(),
+                    QueryNamespaceName
+                );
+                Domain->ParentKey = RegisteredParentKey;
+                const auto Task = Domain->Model();
+                Task->StartBackgroundTask();
             }
         );
     }
@@ -927,12 +1557,18 @@ namespace Gs2::Ranking2::Domain::Model
         Gs2::Core::Domain::CallbackID CallbackID
     )
     {
+        const auto SubscriptionParentKey = Gs2::Ranking2::Model::Cache::FNamespaceCache::CreateCacheParentKey(
+
+            TOptional<int32>()
+        );
+        const auto SubscriptionCacheKey = Gs2::Ranking2::Model::Cache::FNamespaceCache::CreateCacheKey(
+
+            NamespaceName
+        );
         Gs2->Cache->Unsubscribe(
             Gs2::Ranking2::Model::FNamespace::TypeName,
-            ParentKey,
-            Gs2::Ranking2::Domain::Model::FNamespaceDomain::CreateCacheKey(
-                NamespaceName
-            ),
+            SubscriptionParentKey,
+            SubscriptionCacheKey,
             CallbackID
         );
     }
@@ -943,4 +1579,3 @@ namespace Gs2::Ranking2::Domain::Model
 #elif defined(__clang__)
 #pragma clang diagnostic pop
 #endif
-

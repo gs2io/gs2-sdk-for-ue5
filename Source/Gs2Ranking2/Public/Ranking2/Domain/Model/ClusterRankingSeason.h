@@ -138,6 +138,8 @@ namespace Gs2::Ranking2::Domain::Model
             const FClusterRankingSeasonDomain& From
         );
 
+
+
         class GS2RANKING2_API FGetClusterRankingTask final :
             public Gs2::Core::Util::TGs2Future<Gs2::Ranking2::Domain::Model::FClusterRankingDataDomain>,
             public TSharedFromThis<FGetClusterRankingTask>
@@ -163,6 +165,8 @@ namespace Gs2::Ranking2::Domain::Model
         TSharedPtr<FAsyncTask<FGetClusterRankingTask>> GetClusterRanking(
             Request::FGetClusterRankingByUserIdRequestPtr Request
         );
+
+
 
         class GS2RANKING2_API FPutClusterRankingScoreTask final :
             public Gs2::Core::Util::TGs2Future<Gs2::Ranking2::Domain::Model::FClusterRankingScoreDomain>,
@@ -198,6 +202,30 @@ namespace Gs2::Ranking2::Domain::Model
             TFunction<void()> Callback
         );
 
+        class FCollectClusterRankingsTask;
+
+        Gs2::Core::Domain::CallbackID SubscribeClusterRankings(
+            TFunction<void(TArray<Gs2::Ranking2::Model::FClusterRankingDataPtr>)> Callback,const TOptional<FString> TimeOffsetToken = TOptional<FString>()
+        );
+
+        void InvalidateClusterRankings(const TOptional<FString> TimeOffsetToken = TOptional<FString>());
+
+        class GS2RANKING2_API FSubscribeClusterRankingsWithInitialCallTask final :
+            public Gs2::Core::Util::TGs2Future<Gs2::Core::Domain::CallbackID>,
+            public TSharedFromThis<FSubscribeClusterRankingsWithInitialCallTask>
+        {
+            const TSharedPtr<FClusterRankingSeasonDomain> Self;
+            const TFunction<void(TArray<Gs2::Ranking2::Model::FClusterRankingDataPtr>)> Callback;
+        const TOptional<FString> QueryTimeOffsetToken;
+        public:
+            FSubscribeClusterRankingsWithInitialCallTask(const TSharedPtr<FClusterRankingSeasonDomain>& Self, TFunction<void(TArray<Gs2::Ranking2::Model::FClusterRankingDataPtr>)> Callback,const TOptional<FString> TimeOffsetToken);
+            FSubscribeClusterRankingsWithInitialCallTask(const FSubscribeClusterRankingsWithInitialCallTask& From);
+            virtual Gs2::Core::Model::FGs2ErrorPtr Action(TSharedPtr<TSharedPtr<Gs2::Core::Domain::CallbackID>> Result) override;
+        };
+
+        TSharedPtr<FAsyncTask<FSubscribeClusterRankingsWithInitialCallTask>> SubscribeClusterRankingsWithInitialCall(
+            TFunction<void(TArray<Gs2::Ranking2::Model::FClusterRankingDataPtr>)> Callback,const TOptional<FString> TimeOffsetToken = TOptional<FString>()
+        );
         void UnsubscribeClusterRankings(
             Gs2::Core::Domain::CallbackID CallbackID
         );
@@ -214,6 +242,30 @@ namespace Gs2::Ranking2::Domain::Model
             TFunction<void()> Callback
         );
 
+        class FCollectClusterRankingReceivedRewardsTask;
+
+        Gs2::Core::Domain::CallbackID SubscribeClusterRankingReceivedRewards(
+            TFunction<void(TArray<Gs2::Ranking2::Model::FClusterRankingReceivedRewardPtr>)> Callback,const TOptional<FString> TimeOffsetToken = TOptional<FString>()
+        );
+
+        void InvalidateClusterRankingReceivedRewards(const TOptional<FString> TimeOffsetToken = TOptional<FString>());
+
+        class GS2RANKING2_API FSubscribeClusterRankingReceivedRewardsWithInitialCallTask final :
+            public Gs2::Core::Util::TGs2Future<Gs2::Core::Domain::CallbackID>,
+            public TSharedFromThis<FSubscribeClusterRankingReceivedRewardsWithInitialCallTask>
+        {
+            const TSharedPtr<FClusterRankingSeasonDomain> Self;
+            const TFunction<void(TArray<Gs2::Ranking2::Model::FClusterRankingReceivedRewardPtr>)> Callback;
+        const TOptional<FString> QueryTimeOffsetToken;
+        public:
+            FSubscribeClusterRankingReceivedRewardsWithInitialCallTask(const TSharedPtr<FClusterRankingSeasonDomain>& Self, TFunction<void(TArray<Gs2::Ranking2::Model::FClusterRankingReceivedRewardPtr>)> Callback,const TOptional<FString> TimeOffsetToken);
+            FSubscribeClusterRankingReceivedRewardsWithInitialCallTask(const FSubscribeClusterRankingReceivedRewardsWithInitialCallTask& From);
+            virtual Gs2::Core::Model::FGs2ErrorPtr Action(TSharedPtr<TSharedPtr<Gs2::Core::Domain::CallbackID>> Result) override;
+        };
+
+        TSharedPtr<FAsyncTask<FSubscribeClusterRankingReceivedRewardsWithInitialCallTask>> SubscribeClusterRankingReceivedRewardsWithInitialCall(
+            TFunction<void(TArray<Gs2::Ranking2::Model::FClusterRankingReceivedRewardPtr>)> Callback,const TOptional<FString> TimeOffsetToken = TOptional<FString>()
+        );
         void UnsubscribeClusterRankingReceivedRewards(
             Gs2::Core::Domain::CallbackID CallbackID
         );
@@ -229,6 +281,30 @@ namespace Gs2::Ranking2::Domain::Model
             TFunction<void()> Callback
         );
 
+        class FCollectClusterRankingScoresTask;
+
+        Gs2::Core::Domain::CallbackID SubscribeClusterRankingScores(
+            TFunction<void(TArray<Gs2::Ranking2::Model::FClusterRankingScorePtr>)> Callback,const TOptional<FString> TimeOffsetToken = TOptional<FString>()
+        );
+
+        void InvalidateClusterRankingScores(const TOptional<FString> TimeOffsetToken = TOptional<FString>());
+
+        class GS2RANKING2_API FSubscribeClusterRankingScoresWithInitialCallTask final :
+            public Gs2::Core::Util::TGs2Future<Gs2::Core::Domain::CallbackID>,
+            public TSharedFromThis<FSubscribeClusterRankingScoresWithInitialCallTask>
+        {
+            const TSharedPtr<FClusterRankingSeasonDomain> Self;
+            const TFunction<void(TArray<Gs2::Ranking2::Model::FClusterRankingScorePtr>)> Callback;
+        const TOptional<FString> QueryTimeOffsetToken;
+        public:
+            FSubscribeClusterRankingScoresWithInitialCallTask(const TSharedPtr<FClusterRankingSeasonDomain>& Self, TFunction<void(TArray<Gs2::Ranking2::Model::FClusterRankingScorePtr>)> Callback,const TOptional<FString> TimeOffsetToken);
+            FSubscribeClusterRankingScoresWithInitialCallTask(const FSubscribeClusterRankingScoresWithInitialCallTask& From);
+            virtual Gs2::Core::Model::FGs2ErrorPtr Action(TSharedPtr<TSharedPtr<Gs2::Core::Domain::CallbackID>> Result) override;
+        };
+
+        TSharedPtr<FAsyncTask<FSubscribeClusterRankingScoresWithInitialCallTask>> SubscribeClusterRankingScoresWithInitialCall(
+            TFunction<void(TArray<Gs2::Ranking2::Model::FClusterRankingScorePtr>)> Callback,const TOptional<FString> TimeOffsetToken = TOptional<FString>()
+        );
         void UnsubscribeClusterRankingScores(
             Gs2::Core::Domain::CallbackID CallbackID
         );

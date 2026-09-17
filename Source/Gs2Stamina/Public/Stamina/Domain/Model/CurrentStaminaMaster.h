@@ -91,6 +91,8 @@ namespace Gs2::Stamina::Domain::Model
             const FCurrentStaminaMasterDomain& From
         );
 
+
+
         class GS2STAMINA_API FExportMasterTask final :
             public Gs2::Core::Util::TGs2Future<Gs2::Stamina::Domain::Model::FCurrentStaminaMasterDomain>,
             public TSharedFromThis<FExportMasterTask>
@@ -116,6 +118,8 @@ namespace Gs2::Stamina::Domain::Model
         TSharedPtr<FAsyncTask<FExportMasterTask>> ExportMaster(
             Request::FExportMasterRequestPtr Request
         );
+
+
 
         class GS2STAMINA_API FGetTask final :
             public Gs2::Core::Util::TGs2Future<Gs2::Stamina::Model::FCurrentStaminaMaster>,
@@ -143,6 +147,8 @@ namespace Gs2::Stamina::Domain::Model
             Request::FGetCurrentStaminaMasterRequestPtr Request
         );
 
+
+
         class GS2STAMINA_API FPreUpdateTask final :
             public Gs2::Core::Util::TGs2Future<Gs2::Stamina::Domain::Model::FCurrentStaminaMasterDomain>,
             public TSharedFromThis<FPreUpdateTask>
@@ -169,6 +175,8 @@ namespace Gs2::Stamina::Domain::Model
             Request::FPreUpdateCurrentStaminaMasterRequestPtr Request
         );
 
+
+
         class GS2STAMINA_API FUpdateTask final :
             public Gs2::Core::Util::TGs2Future<Gs2::Stamina::Domain::Model::FCurrentStaminaMasterDomain>,
             public TSharedFromThis<FUpdateTask>
@@ -194,6 +202,8 @@ namespace Gs2::Stamina::Domain::Model
         TSharedPtr<FAsyncTask<FUpdateTask>> Update(
             Request::FUpdateCurrentStaminaMasterRequestPtr Request
         );
+
+
 
         class GS2STAMINA_API FUpdateFromGitHubTask final :
             public Gs2::Core::Util::TGs2Future<Gs2::Stamina::Domain::Model::FCurrentStaminaMasterDomain>,
@@ -251,7 +261,34 @@ namespace Gs2::Stamina::Domain::Model
 
         TSharedPtr<FAsyncTask<FModelTask>> Model();
 
+        void Invalidate();
+
         Gs2::Core::Domain::CallbackID Subscribe(
+            TFunction<void(Gs2::Stamina::Model::FCurrentStaminaMasterPtr)> Callback
+        );
+
+        class GS2STAMINA_API FSubscribeWithInitialCallTask final :
+            public Gs2::Core::Util::TGs2Future<Gs2::Core::Domain::CallbackID>,
+            public TSharedFromThis<FSubscribeWithInitialCallTask>
+        {
+            const TSharedPtr<FCurrentStaminaMasterDomain> Self;
+            const TFunction<void(Gs2::Stamina::Model::FCurrentStaminaMasterPtr)> Callback;
+        public:
+            FSubscribeWithInitialCallTask(
+                const TSharedPtr<FCurrentStaminaMasterDomain>& Self,
+                TFunction<void(Gs2::Stamina::Model::FCurrentStaminaMasterPtr)> Callback
+            );
+
+            FSubscribeWithInitialCallTask(
+                const FSubscribeWithInitialCallTask& From
+            );
+
+            virtual Gs2::Core::Model::FGs2ErrorPtr Action(
+                TSharedPtr<TSharedPtr<Gs2::Core::Domain::CallbackID>> Result
+            ) override;
+        };
+
+        TSharedPtr<FAsyncTask<FSubscribeWithInitialCallTask>> SubscribeWithInitialCall(
             TFunction<void(Gs2::Stamina::Model::FCurrentStaminaMasterPtr)> Callback
         );
 

@@ -22,23 +22,9 @@
 #pragma clang diagnostic ignored "-Wshadow" // declaration shadows a field of
 #endif
 
-#include "SeasonRating/Domain/Model/BallotAccessToken.h"
-#include "SeasonRating/Domain/Model/Ballot.h"
-#include "SeasonRating/Domain/Model/Namespace.h"
-#include "SeasonRating/Domain/Model/MatchSession.h"
-#include "SeasonRating/Domain/Model/SeasonModelMaster.h"
-#include "SeasonRating/Domain/Model/SeasonModel.h"
-#include "SeasonRating/Domain/Model/CurrentSeasonModelMaster.h"
 #include "SeasonRating/Domain/Model/Ballot.h"
 #include "SeasonRating/Domain/Model/BallotAccessToken.h"
-#include "SeasonRating/Domain/Model/Vote.h"
-#include "SeasonRating/Domain/Model/User.h"
-#include "SeasonRating/Domain/Model/UserAccessToken.h"
-
 #include "Core/Domain/Gs2.h"
-#include "Core/Domain/Transaction/JobQueueJobDomainFactory.h"
-#include "Core/Domain/Transaction/InternalTransactionDomainFactory.h"
-#include "Core/Domain/Transaction/ManualTransactionAccessTokenDomain.h"
 
 namespace Gs2::SeasonRating::Domain::Model
 {
@@ -63,11 +49,7 @@ namespace Gs2::SeasonRating::Domain::Model
         SessionName(SessionName),
         NumberOfPlayer(NumberOfPlayer),
         KeyId(KeyId),
-        ParentKey(Gs2::SeasonRating::Domain::Model::FUserDomain::CreateCacheParentKey(
-            NamespaceName,
-            UserId(),
-            "Ballot"
-        ))
+        ParentKey(Gs2::SeasonRating::Domain::Model::FBallotDomain::CreateSignedCacheParentKey(NamespaceName, UserId(), AccessToken.IsValid() ? AccessToken->GetTimeOffset() : TOptional<int32>()))
     {
     }
 
@@ -103,7 +85,7 @@ namespace Gs2::SeasonRating::Domain::Model
     }
 
     Gs2::Core::Model::FGs2ErrorPtr FBallotAccessTokenDomain::FGetTask::Action(
-        TSharedPtr<TSharedPtr<Gs2::SeasonRating::Model::FBallot>> Result
+        TSharedPtr<TSharedPtr<Gs2::SeasonRating::Model::FSignedBallot>> Result
     )
     {
         Request
@@ -111,20 +93,43 @@ namespace Gs2::SeasonRating::Domain::Model
             ->WithNamespaceName(Self->NamespaceName)
             ->WithSeasonName(Self->SeasonName)
             ->WithSessionName(Self->SessionName)
-            ->WithAccessToken(Self->AccessToken->GetToken())
+            ->WithAccessToken(Self->AccessToken.IsValid() ? Self->AccessToken->GetToken() : TOptional<FString>())
             ->WithNumberOfPlayer(Self->NumberOfPlayer)
             ->WithKeyId(Self->KeyId);
-        const auto Future = Self->Client->GetBallot(
-            Request
-        );
+        const auto Future = Self->Client->GetBallot(Request);
         Future->StartSynchronousTask();
+        Future->EnsureCompletion();
         if (Future->GetTask().IsError())
         {
             return Future->GetTask().Error();
         }
-        const auto ResultModel = Future->GetTask().Result();
-        Future->EnsureCompletion();
-        *Result = ResultModel->GetItem();
+        const auto Response = Future->GetTask().Result();
+        Gs2::SeasonRating::Model::FSignedBallotPtr Value;
+        if (Response.IsValid())
+        {
+            Value = MakeShared<Gs2::SeasonRating::Model::FSignedBallot>()
+                ->WithBody(Response->GetBody())
+                ->WithSignature(Response->GetSignature());
+            Self->Gs2->Cache->Put(
+                Gs2::SeasonRating::Model::FSignedBallot::TypeName,
+                Gs2::SeasonRating::Domain::Model::FBallotDomain::CreateSignedCacheParentKey(
+                    Request->GetNamespaceName(),
+                    Self->UserId(),
+                    Self->AccessToken.IsValid() ? Self->AccessToken->GetTimeOffset() : TOptional<int32>()
+                ),
+                Gs2::SeasonRating::Domain::Model::FBallotDomain::CreateCacheKey(
+                    Request->GetSeasonName(),
+                    Request->GetSessionName(),
+                    TOptional<int32>(),
+                    TOptional<FString>()
+                ),
+                Value,
+                FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
+            );
+        }
+        Self->Body = Value.IsValid() ? Value->GetBody() : TOptional<FString>();
+        Self->Signature = Value.IsValid() ? Value->GetSignature() : TOptional<FString>();
+        *Result = Value;
         return nullptr;
     }
 
@@ -161,11 +166,7 @@ namespace Gs2::SeasonRating::Domain::Model
         TOptional<FString> KeyId
     )
     {
-        return FString("") +
-            (SeasonName.IsSet() ? *SeasonName : "null") + ":" + 
-            (SessionName.IsSet() ? *SessionName : "null") + ":" + 
-            (NumberOfPlayer.IsSet() ? FString::FromInt(*NumberOfPlayer) : "null") + ":" + 
-            (KeyId.IsSet() ? *KeyId : "null");
+        return SeasonName.Get(FString()) + ":" + SessionName.Get(FString());
     }
 
     FBallotAccessTokenDomain::FModelTask::FModelTask(
@@ -183,61 +184,52 @@ namespace Gs2::SeasonRating::Domain::Model
     }
 
     Gs2::Core::Model::FGs2ErrorPtr FBallotAccessTokenDomain::FModelTask::Action(
-        TSharedPtr<TSharedPtr<Gs2::SeasonRating::Model::FBallot>> Result
+        TSharedPtr<TSharedPtr<Gs2::SeasonRating::Model::FSignedBallot>> Result
     )
     {
-        // ReSharper disable once CppLocalVariableMayBeConst
-        TSharedPtr<Gs2::SeasonRating::Model::FBallot> Value;
-        auto bCacheHit = Self->Gs2->Cache->TryGet<Gs2::SeasonRating::Model::FBallot>(
-            Self->ParentKey,
-            Gs2::SeasonRating::Domain::Model::FBallotDomain::CreateCacheKey(
-                Self->SeasonName,
-                Self->SessionName,
-                Self->NumberOfPlayer,
-                Self->KeyId
-            ),
-            &Value
+        const FString CacheKey = Gs2::SeasonRating::Domain::Model::FBallotDomain::CreateCacheKey(Self->SeasonName, Self->SessionName);
+        const FString CacheParentKey = Gs2::SeasonRating::Domain::Model::FBallotDomain::CreateSignedCacheParentKey(Self->NamespaceName, Self->UserId(), Self->AccessToken.IsValid() ? Self->AccessToken->GetTimeOffset() : TOptional<int32>());
+        return Self->Gs2->Cache->ExecuteWithKeyLock(
+            Gs2::SeasonRating::Model::FSignedBallot::TypeName,
+            CacheParentKey,
+            CacheKey,
+            [this, Result, CacheKey, CacheParentKey]() -> Gs2::Core::Model::FGs2ErrorPtr
+            {
+                Gs2::SeasonRating::Model::FSignedBallotPtr Value;
+                if (!Self->Gs2->Cache->TryGet<Gs2::SeasonRating::Model::FSignedBallot>(CacheParentKey, CacheKey, &Value))
+                {
+                    const auto Future = Self->Get(MakeShared<Gs2::SeasonRating::Request::FGetBallotRequest>());
+                    Future->StartSynchronousTask();
+                    Future->EnsureCompletion();
+                    if (Future->GetTask().IsError())
+                    {
+                        const auto Error = Future->GetTask().Error();
+                        if (!Error.IsValid() || Error->Type() != Gs2::Core::Model::FNotFoundError::TypeString)
+                        {
+                            return Error;
+                        }
+                        Self->Gs2->Cache->Put(
+                            Gs2::SeasonRating::Model::FSignedBallot::TypeName, CacheParentKey, CacheKey, nullptr,
+                            FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes));
+                        if (!Error->GetErrors().IsValid() || Error->Count() == 0 || !Error->Detail(0).IsValid() || Error->Detail(0)->GetComponent() != "ballot")
+                        {
+                            return Error;
+                        }
+                    }
+                    else
+                    {
+                        Value = Future->GetTask().Result();
+                        Self->Gs2->Cache->Put(
+                            Gs2::SeasonRating::Model::FSignedBallot::TypeName, CacheParentKey, CacheKey, Value,
+                            FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes));
+                    }
+                }
+                Self->Body = Value.IsValid() ? Value->GetBody() : TOptional<FString>();
+                Self->Signature = Value.IsValid() ? Value->GetSignature() : TOptional<FString>();
+                *Result = Value;
+                return nullptr;
+            }
         );
-        if (!bCacheHit) {
-            const auto Future = Self->Get(
-                MakeShared<Gs2::SeasonRating::Request::FGetBallotRequest>()
-            );
-            Future->StartSynchronousTask();
-            if (Future->GetTask().IsError())
-            {
-                if (Future->GetTask().Error()->Type() != Gs2::Core::Model::FNotFoundError::TypeString)
-                {
-                    return Future->GetTask().Error();
-                }
-
-                const auto Key = Gs2::SeasonRating::Domain::Model::FBallotDomain::CreateCacheKey(
-                    Self->SeasonName,
-                    Self->SessionName,
-                    Self->NumberOfPlayer,
-                    Self->KeyId
-                );
-                Self->Gs2->Cache->Put(
-                    Gs2::SeasonRating::Model::FBallot::TypeName,
-                    Self->ParentKey,
-                    Key,
-                    nullptr,
-                    FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
-                );
-
-                if (Future->GetTask().Error()->Detail(0)->GetComponent() != "ballot")
-                {
-                    return Future->GetTask().Error();
-                }
-            }
-            else
-            {
-                Value = Future->GetTask().Result();
-            }
-            Future->EnsureCompletion();
-        }
-        *Result = Value;
-
-        return nullptr;
     }
 
     TSharedPtr<FAsyncTask<FBallotAccessTokenDomain::FModelTask>> FBallotAccessTokenDomain::Model() {
@@ -245,21 +237,61 @@ namespace Gs2::SeasonRating::Domain::Model
     }
 
     Gs2::Core::Domain::CallbackID FBallotAccessTokenDomain::Subscribe(
-        TFunction<void(Gs2::SeasonRating::Model::FBallotPtr)> Callback
+        TFunction<void(Gs2::SeasonRating::Model::FSignedBallotPtr)> Callback
     )
     {
+        const TWeakPtr<Gs2::Core::Domain::FGs2> WeakGs2 = Gs2;
+        const TWeakPtr<SeasonRating::Domain::FGs2SeasonRatingDomain> WeakService = Service;
+        const TOptional<FString> QueryNamespaceName = NamespaceName;
+        const TOptional<FString> QuerySeasonName = SeasonName;
+        const TOptional<FString> QuerySessionName = SessionName;
+        const TOptional<int32> QueryNumberOfPlayer = NumberOfPlayer;
+        const TOptional<FString> QueryKeyId = KeyId;
+        const auto SourceToken = AccessToken;
+        const TOptional<FString> RegisteredUserId = SourceToken.IsValid()
+            ? TOptional<FString>(SourceToken->GetUserId())
+            : TOptional<FString>();
+        const int32 RegisteredTimeOffset = SourceToken.IsValid()
+            ? SourceToken->GetTimeOffset().Get(0)
+            : 0;
+        const FString RegisteredParentKey = FBallotDomain::CreateSignedCacheParentKey(
+            QueryNamespaceName, RegisteredUserId, RegisteredTimeOffset
+        );
+        const FString RegisteredCacheKey = FBallotDomain::CreateCacheKey(QuerySeasonName, QuerySessionName);
+
         return Gs2->Cache->Subscribe(
-            Gs2::SeasonRating::Model::FBallot::TypeName,
-            ParentKey,
-            Gs2::SeasonRating::Domain::Model::FBallotDomain::CreateCacheKey(
-                SeasonName,
-                SessionName,
-                NumberOfPlayer,
-                KeyId
-            ),
-            [Callback](TSharedPtr<FGs2Object> obj)
+            Gs2::SeasonRating::Model::FSignedBallot::TypeName,
+            RegisteredParentKey,
+            RegisteredCacheKey,
+            [Callback](TSharedPtr<FGs2Object> Obj)
             {
-                Callback(StaticCastSharedPtr<Gs2::SeasonRating::Model::FBallot>(obj));
+                Callback(StaticCastSharedPtr<Gs2::SeasonRating::Model::FSignedBallot>(Obj));
+            },
+            [WeakGs2, WeakService, QueryNamespaceName, QuerySeasonName, QuerySessionName, QueryNumberOfPlayer, QueryKeyId, SourceToken, RegisteredUserId, RegisteredTimeOffset]()
+            {
+                const auto Owner = WeakGs2.Pin();
+                if (!Owner.IsValid() || !SourceToken.IsValid())
+                {
+                    return;
+                }
+                const auto TokenSnapshot = MakeShared<Gs2::Auth::Model::FAccessToken>(*SourceToken);
+                if (TokenSnapshot->GetUserId() != RegisteredUserId ||
+                    TokenSnapshot->GetTimeOffset().Get(0) != RegisteredTimeOffset)
+                {
+                    return;
+                }
+                const auto Domain = MakeShared<FBallotAccessTokenDomain>(
+                    Owner,
+                    WeakService.Pin(),
+                    QueryNamespaceName,
+                    TokenSnapshot,
+                    QuerySeasonName,
+                    QuerySessionName,
+                    QueryNumberOfPlayer,
+                    QueryKeyId
+                );
+                const auto Task = Domain->Model();
+                Task->StartBackgroundTask();
             }
         );
     }
@@ -269,14 +301,9 @@ namespace Gs2::SeasonRating::Domain::Model
     )
     {
         Gs2->Cache->Unsubscribe(
-            Gs2::SeasonRating::Model::FBallot::TypeName,
-            ParentKey,
-            Gs2::SeasonRating::Domain::Model::FBallotDomain::CreateCacheKey(
-                SeasonName,
-                SessionName,
-                NumberOfPlayer,
-                KeyId
-            ),
+            Gs2::SeasonRating::Model::FSignedBallot::TypeName,
+            Gs2::SeasonRating::Domain::Model::FBallotDomain::CreateSignedCacheParentKey(NamespaceName, UserId(), AccessToken.IsValid() ? AccessToken->GetTimeOffset() : TOptional<int32>()),
+            Gs2::SeasonRating::Domain::Model::FBallotDomain::CreateCacheKey(SeasonName, SessionName),
             CallbackID
         );
     }
@@ -287,4 +314,3 @@ namespace Gs2::SeasonRating::Domain::Model
 #elif defined(__clang__)
 #pragma clang diagnostic pop
 #endif
-

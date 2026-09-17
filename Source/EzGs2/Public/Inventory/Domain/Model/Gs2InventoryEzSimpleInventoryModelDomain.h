@@ -61,7 +61,8 @@ namespace Gs2::UE5::Inventory::Domain::Model
 
         Gs2::Core::Domain::CallbackID SubscribeSimpleItemModels(TFunction<void()> Callback);
 
-        void UnsubscribeSimpleItemModels(Gs2::Core::Domain::CallbackID CallbackId);
+        void UnsubscribeSimpleItemModels(
+                Gs2::Core::Domain::CallbackID CallbackId);
 
         Gs2::UE5::Inventory::Domain::Model::FEzSimpleItemModelDomainPtr SimpleItemModel(
             const FString ItemName

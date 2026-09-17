@@ -12,8 +12,6 @@
  * on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either
  * express or implied. See the License for the specific language governing
  * permissions and limitations under the License.
- *
- * deny overwrite
  */
 
 #pragma once
@@ -38,7 +36,7 @@ class BPGS2_API UGs2EnhanceEnhanceAsyncFunction : public UBlueprintAsyncActionBa
 {
     GENERATED_BODY()
 
-    UPARAM(DisplayName="Enhance") FGs2EnhanceOwnEnhance EnhanceValue;
+    FGs2EnhanceOwnEnhance EnhanceValue;
     FString RateName;
     FString TargetItemSetId;
     TArray<FGs2EnhanceMaterial> Materials;
@@ -57,7 +55,7 @@ public:
 	UFUNCTION(BlueprintCallable, DisplayName="Gs2::Enhance::Enhance::Action::Enhance", Category="Game Server Services|GS2-Enhance|Namespace|User|Enhance|Action", meta=(WorldContext="WorldContextObject", BlueprintInternalUseOnly="true"))
     static UGs2EnhanceEnhanceAsyncFunction* Enhance(
         UObject* WorldContextObject,
-        FGs2EnhanceOwnEnhance Enhance,
+        FGs2EnhanceOwnEnhance EnhanceValue,
         FString RateName,
         FString TargetItemSetId,
         TArray<FGs2EnhanceMaterial> Materials,

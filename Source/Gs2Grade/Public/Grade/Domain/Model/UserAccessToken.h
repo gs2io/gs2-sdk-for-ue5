@@ -95,10 +95,36 @@ namespace Gs2::Grade::Domain::Model
 
         Gs2::Core::Domain::CallbackID SubscribeStatuses(
             TFunction<void()> Callback
+            , const TOptional<FString> GradeName = TOptional<FString>()
         );
 
+        class FCollectStatusesTask;
+
+        Gs2::Core::Domain::CallbackID SubscribeStatuses(
+            TFunction<void(TArray<Gs2::Grade::Model::FStatusPtr>)> Callback,const TOptional<FString> GradeName = TOptional<FString>()
+        );
+
+        void InvalidateStatuses(const TOptional<FString> GradeName = TOptional<FString>());
+
+        class GS2GRADE_API FSubscribeStatusesWithInitialCallTask final :
+            public Gs2::Core::Util::TGs2Future<Gs2::Core::Domain::CallbackID>,
+            public TSharedFromThis<FSubscribeStatusesWithInitialCallTask>
+        {
+            const TSharedPtr<FUserAccessTokenDomain> Self;
+            const TFunction<void(TArray<Gs2::Grade::Model::FStatusPtr>)> Callback;
+        const TOptional<FString> QueryGradeName;
+        public:
+            FSubscribeStatusesWithInitialCallTask(const TSharedPtr<FUserAccessTokenDomain>& Self, TFunction<void(TArray<Gs2::Grade::Model::FStatusPtr>)> Callback,const TOptional<FString> GradeName);
+            FSubscribeStatusesWithInitialCallTask(const FSubscribeStatusesWithInitialCallTask& From);
+            virtual Gs2::Core::Model::FGs2ErrorPtr Action(TSharedPtr<TSharedPtr<Gs2::Core::Domain::CallbackID>> Result) override;
+        };
+
+        TSharedPtr<FAsyncTask<FSubscribeStatusesWithInitialCallTask>> SubscribeStatusesWithInitialCall(
+            TFunction<void(TArray<Gs2::Grade::Model::FStatusPtr>)> Callback,const TOptional<FString> GradeName = TOptional<FString>()
+        );
         void UnsubscribeStatuses(
-            Gs2::Core::Domain::CallbackID CallbackID
+
+            Gs2::Core::Domain::CallbackID CallbackID, const TOptional<FString> GradeName = TOptional<FString>()
         );
 
         TSharedPtr<Gs2::Grade::Domain::Model::FStatusAccessTokenDomain> Status(

@@ -42,7 +42,7 @@ namespace Gs2::Log::Domain::Iterator
         const TOptional<int64> Begin,
         const TOptional<int64> End,
         const TOptional<FString> Query,
-        const TOptional<TArray<FString>> GroupBy,
+        const TSharedPtr<TArray<FString>> GroupBy,
         const TOptional<int32> Interval,
         const TOptional<int32> SeriesLimit
         // ReSharper disable once CppMemberInitializersOrder

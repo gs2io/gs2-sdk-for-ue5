@@ -29,6 +29,7 @@
 #include "StateMachine/Domain/Model/StatusAccessToken.h"
 #include "StateMachine/Domain/Model/User.h"
 #include "StateMachine/Domain/Model/UserAccessToken.h"
+#include "StateMachine/Model/Cache/Status.h"
 
 #include "Core/Domain/Gs2.h"
 #include "Core/Domain/Transaction/JobQueueJobDomainFactory.h"
@@ -102,19 +103,26 @@ namespace Gs2::StateMachine::Domain::Model
         }
         const auto ResultModel = Future->GetTask().Result();
         Future->EnsureCompletion();
-        if (ResultModel->GetItem() != nullptr)
-        {
-            const auto Key = Gs2::StateMachine::Domain::Model::FStatusDomain::CreateCacheKey(
-                ResultModel->GetItem()->GetName()
-            );
-            Self->Gs2->Cache->Put(
-                Gs2::StateMachine::Model::FStatus::TypeName,
-                Self->ParentKey,
-                Key,
-                ResultModel->GetItem(),
-                FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
-            );
-        }
+
+            if (ResultModel.IsValid() && ResultModel->GetItem() != nullptr)
+            {
+
+        if (!ResultModel.IsValid() || !((ResultModel.IsValid() && ResultModel->GetItem().IsValid() ? ResultModel->GetItem()->GetUserId() : TOptional<FString>())).IsSet())
+            {
+              const auto Details = MakeShared<TArray<TSharedPtr<Gs2::Core::Model::FGs2ErrorDetail>>>();
+                Details->Add(MakeShared<Gs2::Core::Model::FGs2ErrorDetail>(TEXT("userId"), TEXT("userId is invalid."), TEXT("invalid_response")));
+                return MakeShared<Gs2::Core::Model::FUnknownError>(Details);
+              }
+        Gs2::StateMachine::Model::Cache::FStatusCache::Put(
+            Self->Gs2->Cache,
+
+            Request->GetNamespaceName(),
+            (ResultModel.IsValid() && ResultModel->GetItem().IsValid() ? ResultModel->GetItem()->GetUserId() : TOptional<FString>()),
+            ResultModel->GetItem()->GetName(),
+            TOptional<int32>(),
+            ResultModel->GetItem()
+        );
+            }
         auto Domain = MakeShared<Gs2::StateMachine::Domain::Model::FStatusDomain>(
             Self->Gs2,
             Self->Service,
@@ -150,32 +158,122 @@ namespace Gs2::StateMachine::Domain::Model
 
     Gs2::Core::Domain::CallbackID FUserDomain::SubscribeStatuses(
     TFunction<void()> Callback
+
     )
     {
         return Gs2->Cache->ListSubscribe(
             Gs2::StateMachine::Model::FStatus::TypeName,
-            Gs2::StateMachine::Domain::Model::FUserDomain::CreateCacheParentKey(
+            Gs2::StateMachine::Model::Cache::FStatusCache::CreateCacheParentKey(
                 NamespaceName,
                 UserId,
-                "Status"
+                TOptional<int32>()
             ),
+            Callback,
             Callback
         );
     }
-
     void FUserDomain::UnsubscribeStatuses(
         Gs2::Core::Domain::CallbackID CallbackID
     )
     {
         Gs2->Cache->ListUnsubscribe(
             Gs2::StateMachine::Model::FStatus::TypeName,
-            Gs2::StateMachine::Domain::Model::FUserDomain::CreateCacheParentKey(
+            Gs2::StateMachine::Model::Cache::FStatusCache::CreateCacheParentKey(
                 NamespaceName,
                 UserId,
-                "Status"
+                TOptional<int32>()
             ),
             CallbackID
         );
+    }
+    class FUserDomain::FCollectStatusesTask : public Gs2::Core::Util::TGs2Future<TArray<Gs2::StateMachine::Model::FStatusPtr>>, public TSharedFromThis<FCollectStatusesTask>
+    {
+        const TSharedPtr<FUserDomain> Self;
+        const TFunction<void(TArray<Gs2::StateMachine::Model::FStatusPtr>)> OnCollected;
+    const TOptional<FString> QueryStatus;const TOptional<FString> QueryTimeOffsetToken;
+    public:
+        explicit FCollectStatusesTask(const TSharedPtr<FUserDomain>& Self, TFunction<void(TArray<Gs2::StateMachine::Model::FStatusPtr>)> OnCollected,const TOptional<FString> Status,const TOptional<FString> TimeOffsetToken) : Self(Self), OnCollected(OnCollected), QueryStatus(Status), QueryTimeOffsetToken(TimeOffsetToken) {}
+        FCollectStatusesTask(const FCollectStatusesTask& From) : TGs2Future(From), Self(From.Self), OnCollected(From.OnCollected), QueryStatus(From.QueryStatus), QueryTimeOffsetToken(From.QueryTimeOffsetToken) {}
+        virtual Gs2::Core::Model::FGs2ErrorPtr Action(TSharedPtr<TSharedPtr<TArray<Gs2::StateMachine::Model::FStatusPtr>>> Result) override
+        {
+            TArray<Gs2::StateMachine::Model::FStatusPtr> Items;
+            auto Iterator = Self->Statuses(QueryStatus, QueryTimeOffsetToken)->begin();
+            while (Iterator.HasNext())
+            {
+                if (Iterator.IsError()) return Iterator.Error();
+                if (Iterator.IsCurrentValid()) Items.Add(Iterator.Current());
+                ++Iterator;
+            }
+            if (Iterator.IsError()) return Iterator.Error();
+            *Result = MakeShared<TArray<Gs2::StateMachine::Model::FStatusPtr>>(Items);
+            if (OnCollected) OnCollected(Items);
+            return nullptr;
+        }
+    };
+
+    Gs2::Core::Domain::CallbackID FUserDomain::SubscribeStatuses(
+        TFunction<void(TArray<Gs2::StateMachine::Model::FStatusPtr>)> Callback,const TOptional<FString> Status,const TOptional<FString> TimeOffsetToken
+    )
+    {
+        const TWeakPtr<Gs2::Core::Domain::FGs2> WeakGs2 = this->Gs2;
+        const TWeakPtr<StateMachine::Domain::FGs2StateMachineDomain> WeakService = this->Service;
+        const auto QueryNamespaceName = NamespaceName;
+        const auto QueryUserId = UserId;
+        const auto QueryStatus = Status;
+        const auto QueryTimeOffsetToken = TimeOffsetToken;
+        const auto Parent = Gs2::StateMachine::Model::Cache::FStatusCache::CreateCacheParentKey(
+        NamespaceName,
+        UserId,
+        TOptional<int32>()
+    );
+        return Gs2->Cache->ListSubscribeTyped(
+            Gs2::StateMachine::Model::FStatus::TypeName,
+            Parent,
+            [Callback, WeakGs2](const TArray<FGs2ObjectPtr>& Values)
+            {
+                if (!WeakGs2.Pin().IsValid()) return;
+                TArray<Gs2::StateMachine::Model::FStatusPtr> TypedValues;
+                for (const auto& Value : Values) if (Value.IsValid()) TypedValues.Add(StaticCastSharedPtr<Gs2::StateMachine::Model::FStatus>(Value));
+                Callback(TypedValues);
+            },
+            [WeakGs2, WeakService, Callback, QueryNamespaceName, QueryUserId, QueryStatus, QueryTimeOffsetToken]()
+            {
+                const auto Owner = WeakGs2.Pin();
+                if (!Owner.IsValid()) return;
+                const auto Domain = MakeShared<FUserDomain>(Owner, WeakService.Pin(), QueryNamespaceName, QueryUserId);
+                const auto Task = Gs2::Core::Util::New<FAsyncTask<FCollectStatusesTask>>(Domain, Callback, QueryStatus, QueryTimeOffsetToken);
+                Task->StartBackgroundTask();
+            }
+        );
+    }
+
+    void FUserDomain::InvalidateStatuses(const TOptional<FString> Status,const TOptional<FString> TimeOffsetToken)
+    {
+        Gs2->Cache->ClearListCache(
+            Gs2::StateMachine::Model::FStatus::TypeName,
+            Gs2::StateMachine::Model::Cache::FStatusCache::CreateCacheParentKey(
+        NamespaceName,
+        UserId,
+        TOptional<int32>()
+    )
+        );
+    }
+
+    FUserDomain::FSubscribeStatusesWithInitialCallTask::FSubscribeStatusesWithInitialCallTask(const TSharedPtr<FUserDomain>& Self, TFunction<void(TArray<Gs2::StateMachine::Model::FStatusPtr>)> Callback,const TOptional<FString> Status,const TOptional<FString> TimeOffsetToken) : Self(Self), Callback(Callback), QueryStatus(Status), QueryTimeOffsetToken(TimeOffsetToken) {}
+    FUserDomain::FSubscribeStatusesWithInitialCallTask::FSubscribeStatusesWithInitialCallTask(const FSubscribeStatusesWithInitialCallTask& From) : TGs2Future(From), Self(From.Self), Callback(From.Callback), QueryStatus(From.QueryStatus), QueryTimeOffsetToken(From.QueryTimeOffsetToken) {}
+    Gs2::Core::Model::FGs2ErrorPtr FUserDomain::FSubscribeStatusesWithInitialCallTask::Action(TSharedPtr<TSharedPtr<Gs2::Core::Domain::CallbackID>> Result)
+    {
+        const auto Task = Gs2::Core::Util::New<FAsyncTask<FCollectStatusesTask>>(Self, TFunction<void(TArray<Gs2::StateMachine::Model::FStatusPtr>)>(), QueryStatus, QueryTimeOffsetToken);
+        Task->StartSynchronousTask(); Task->EnsureCompletion();
+        if (Task->GetTask().IsError()) return Task->GetTask().Error();
+        const auto Values = Task->GetTask().Result();
+        const auto CallbackId = Self->SubscribeStatuses(Callback, QueryStatus, QueryTimeOffsetToken);
+        Callback(*Values); *Result = MakeShared<Gs2::Core::Domain::CallbackID>(CallbackId);
+        return nullptr;
+    }
+    TSharedPtr<FAsyncTask<FUserDomain::FSubscribeStatusesWithInitialCallTask>> FUserDomain::SubscribeStatusesWithInitialCall(TFunction<void(TArray<Gs2::StateMachine::Model::FStatusPtr>)> Callback,const TOptional<FString> Status,const TOptional<FString> TimeOffsetToken)
+    {
+        return Gs2::Core::Util::New<FAsyncTask<FSubscribeStatusesWithInitialCallTask>>(this->AsShared(), Callback, Status, TimeOffsetToken);
     }
 
     TSharedPtr<Gs2::StateMachine::Domain::Model::FStatusDomain> FUserDomain::Status(
@@ -217,4 +315,3 @@ namespace Gs2::StateMachine::Domain::Model
 #elif defined(__clang__)
 #pragma clang diagnostic pop
 #endif
-

@@ -149,6 +149,8 @@ namespace Gs2::Distributor::Domain::Model
             const FNamespaceDomain& From
         );
 
+
+
         class GS2DISTRIBUTOR_API FGetStatusTask final :
             public Gs2::Core::Util::TGs2Future<Gs2::Distributor::Domain::Model::FNamespaceDomain>,
             public TSharedFromThis<FGetStatusTask>
@@ -174,6 +176,8 @@ namespace Gs2::Distributor::Domain::Model
         TSharedPtr<FAsyncTask<FGetStatusTask>> GetStatus(
             Request::FGetNamespaceStatusRequestPtr Request
         );
+
+
 
         class GS2DISTRIBUTOR_API FGetTask final :
             public Gs2::Core::Util::TGs2Future<Gs2::Distributor::Model::FNamespace>,
@@ -201,6 +205,8 @@ namespace Gs2::Distributor::Domain::Model
             Request::FGetNamespaceRequestPtr Request
         );
 
+
+
         class GS2DISTRIBUTOR_API FUpdateTask final :
             public Gs2::Core::Util::TGs2Future<Gs2::Distributor::Domain::Model::FNamespaceDomain>,
             public TSharedFromThis<FUpdateTask>
@@ -226,6 +232,8 @@ namespace Gs2::Distributor::Domain::Model
         TSharedPtr<FAsyncTask<FUpdateTask>> Update(
             Request::FUpdateNamespaceRequestPtr Request
         );
+
+
 
         class GS2DISTRIBUTOR_API FDeleteTask final :
             public Gs2::Core::Util::TGs2Future<Gs2::Distributor::Domain::Model::FNamespaceDomain>,
@@ -253,6 +261,8 @@ namespace Gs2::Distributor::Domain::Model
             Request::FDeleteNamespaceRequestPtr Request
         );
 
+
+
         class GS2DISTRIBUTOR_API FSetTransactionDefaultConfigTask final :
             public Gs2::Core::Util::TGs2Future<Gs2::Distributor::Domain::Model::FNamespaceDomain>,
             public TSharedFromThis<FSetTransactionDefaultConfigTask>
@@ -279,6 +289,8 @@ namespace Gs2::Distributor::Domain::Model
             Request::FSetTransactionDefaultConfigRequestPtr Request
         );
 
+
+
         class GS2DISTRIBUTOR_API FBatchExecuteApiTask final :
             public Gs2::Core::Util::TGs2Future<Gs2::Distributor::Domain::Model::FNamespaceDomain>,
             public TSharedFromThis<FBatchExecuteApiTask>
@@ -304,6 +316,8 @@ namespace Gs2::Distributor::Domain::Model
         TSharedPtr<FAsyncTask<FBatchExecuteApiTask>> BatchExecuteApi(
             Request::FBatchExecuteApiRequestPtr Request
         );
+
+
 
         class GS2DISTRIBUTOR_API FCreateDistributorModelMasterTask final :
             public Gs2::Core::Util::TGs2Future<Gs2::Distributor::Domain::Model::FDistributorModelMasterDomain>,
@@ -341,6 +355,30 @@ namespace Gs2::Distributor::Domain::Model
             TFunction<void()> Callback
         );
 
+        class FCollectDistributorModelsTask;
+
+        Gs2::Core::Domain::CallbackID SubscribeDistributorModels(
+            TFunction<void(TArray<Gs2::Distributor::Model::FDistributorModelPtr>)> Callback
+        );
+
+        void InvalidateDistributorModels();
+
+        class GS2DISTRIBUTOR_API FSubscribeDistributorModelsWithInitialCallTask final :
+            public Gs2::Core::Util::TGs2Future<Gs2::Core::Domain::CallbackID>,
+            public TSharedFromThis<FSubscribeDistributorModelsWithInitialCallTask>
+        {
+            const TSharedPtr<FNamespaceDomain> Self;
+            const TFunction<void(TArray<Gs2::Distributor::Model::FDistributorModelPtr>)> Callback;
+
+        public:
+            FSubscribeDistributorModelsWithInitialCallTask(const TSharedPtr<FNamespaceDomain>& Self, TFunction<void(TArray<Gs2::Distributor::Model::FDistributorModelPtr>)> Callback);
+            FSubscribeDistributorModelsWithInitialCallTask(const FSubscribeDistributorModelsWithInitialCallTask& From);
+            virtual Gs2::Core::Model::FGs2ErrorPtr Action(TSharedPtr<TSharedPtr<Gs2::Core::Domain::CallbackID>> Result) override;
+        };
+
+        TSharedPtr<FAsyncTask<FSubscribeDistributorModelsWithInitialCallTask>> SubscribeDistributorModelsWithInitialCall(
+            TFunction<void(TArray<Gs2::Distributor::Model::FDistributorModelPtr>)> Callback
+        );
         void UnsubscribeDistributorModels(
             Gs2::Core::Domain::CallbackID CallbackID
         );
@@ -360,6 +398,30 @@ namespace Gs2::Distributor::Domain::Model
             TFunction<void()> Callback
         );
 
+        class FCollectDistributorModelMastersTask;
+
+        Gs2::Core::Domain::CallbackID SubscribeDistributorModelMasters(
+            TFunction<void(TArray<Gs2::Distributor::Model::FDistributorModelMasterPtr>)> Callback,const TOptional<FString> NamePrefix = TOptional<FString>()
+        );
+
+        void InvalidateDistributorModelMasters(const TOptional<FString> NamePrefix = TOptional<FString>());
+
+        class GS2DISTRIBUTOR_API FSubscribeDistributorModelMastersWithInitialCallTask final :
+            public Gs2::Core::Util::TGs2Future<Gs2::Core::Domain::CallbackID>,
+            public TSharedFromThis<FSubscribeDistributorModelMastersWithInitialCallTask>
+        {
+            const TSharedPtr<FNamespaceDomain> Self;
+            const TFunction<void(TArray<Gs2::Distributor::Model::FDistributorModelMasterPtr>)> Callback;
+        const TOptional<FString> QueryNamePrefix;
+        public:
+            FSubscribeDistributorModelMastersWithInitialCallTask(const TSharedPtr<FNamespaceDomain>& Self, TFunction<void(TArray<Gs2::Distributor::Model::FDistributorModelMasterPtr>)> Callback,const TOptional<FString> NamePrefix);
+            FSubscribeDistributorModelMastersWithInitialCallTask(const FSubscribeDistributorModelMastersWithInitialCallTask& From);
+            virtual Gs2::Core::Model::FGs2ErrorPtr Action(TSharedPtr<TSharedPtr<Gs2::Core::Domain::CallbackID>> Result) override;
+        };
+
+        TSharedPtr<FAsyncTask<FSubscribeDistributorModelMastersWithInitialCallTask>> SubscribeDistributorModelMastersWithInitialCall(
+            TFunction<void(TArray<Gs2::Distributor::Model::FDistributorModelMasterPtr>)> Callback,const TOptional<FString> NamePrefix = TOptional<FString>()
+        );
         void UnsubscribeDistributorModelMasters(
             Gs2::Core::Domain::CallbackID CallbackID
         );

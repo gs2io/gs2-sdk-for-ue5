@@ -27,7 +27,11 @@
 #include "Limit/Domain/SpeculativeExecutor/Acquire/CountDownByUserIdSpeculativeExecutor.h"
 
 #include "Core/Domain/Gs2.h"
+#include "Core/Domain/SpeculativeExecutor/PreparedSpeculativeCommit.h"
+#include "Core/Util/ServerRate.h"
+#include "Auth/Model/AccessToken.h"
 #include "Limit/Domain/Gs2Limit.h"
+#include "Limit/Model/Cache/Counter.h"
 
 namespace Gs2::Limit::Domain::SpeculativeExecutor
 {
@@ -83,59 +87,37 @@ namespace Gs2::Limit::Domain::SpeculativeExecutor
     }
 
     Gs2::Core::Model::FGs2ErrorPtr FCountDownByUserIdSpeculativeExecutor::FCommitTask::Action(
-        TSharedPtr<TSharedPtr<TFunction<void()>>> Result
+        TSharedPtr<TSharedPtr<Gs2::Core::Domain::SpeculativeExecutor::FPreparedSpeculativeCommit>> Result
     )
     {
-        const auto Future = Domain->Limit->Namespace(
-                Request->GetNamespaceName().IsSet() ? *Request->GetNamespaceName() : FString("")
-            )->AccessToken(
-                AccessToken
-            )->Counter(
-                Request->GetLimitName().IsSet() ? *Request->GetLimitName() : FString(""),
-                Request->GetCounterName().IsSet() ? *Request->GetCounterName() : FString("")
-            )->Model();
-        Future->StartSynchronousTask();
-        if (Future->GetTask().IsError())
+        *Result = nullptr;
+        Gs2::Auth::Model::FAccessTokenPtr Token = nullptr;
+        if (AccessToken.IsValid()) Token = MakeShared<Gs2::Auth::Model::FAccessToken>(*AccessToken);
+        Gs2::Limit::Request::FCountDownByUserIdRequestPtr Prepared = nullptr;
+        if (Request.IsValid()) Prepared = MakeShared<Gs2::Limit::Request::FCountDownByUserIdRequest>(*Request);
+        if (!Domain.IsValid() || !Domain->RestSession.IsValid() || !Token.IsValid() || !Token->GetUserId().IsSet() || Token->GetUserId().Get(FString()).IsEmpty() || !Prepared.IsValid()) return nullptr;
+        if (Prepared->GetUserId().IsSet() && Prepared->GetUserId().Get(FString()) == TEXT("#{userId}")) Prepared->WithUserId(Token->GetUserId());
+        if (!Prepared->GetUserId().IsSet() || Prepared->GetUserId().Get(FString()) != Token->GetUserId().Get(FString()) || !Prepared->GetNamespaceName().IsSet() || Prepared->GetNamespaceName().Get(FString()).IsEmpty() || !Prepared->GetLimitName().IsSet() || Prepared->GetLimitName().Get(FString()).IsEmpty() || !Prepared->GetCounterName().IsSet() || Prepared->GetCounterName().Get(FString()).IsEmpty() || !Prepared->GetCountDownValue().IsSet()) return nullptr;
+        const auto NamespaceName = Prepared->GetNamespaceName();
+        const auto LimitName = Prepared->GetLimitName();
+        const auto CounterName = Prepared->GetCounterName();
+        const auto UserId = Token->GetUserId();
+        const auto TimeOffset = Token->GetTimeOffset();
+        const auto ExpectedId = FString::Printf(TEXT("grn:gs2:%s:%s:limit:%s:user:%s:limit:%s:counter:%s"), *Domain->RestSession->RegionName(), *Domain->RestSession->OwnerId(), *NamespaceName.Get(FString()), *UserId.Get(FString()), *LimitName.Get(FString()), *CounterName.Get(FString()));
+        Gs2::Limit::Model::FCounterPtr Item;
+        if (!Gs2::Limit::Model::Cache::FCounterCache::TryGet(Domain->Cache, NamespaceName, UserId, LimitName, CounterName, TimeOffset, &Item) || !Item.IsValid() || Item->GetCounterId().Get(FString()) != ExpectedId || Item->GetUserId().Get(FString()) != UserId.Get(FString()) || Item->GetLimitName().Get(FString()) != LimitName.Get(FString()) || Item->GetName().Get(FString()) != CounterName.Get(FString())) return nullptr;
+        const int32 CountDown = Prepared->GetCountDownValue().Get(0);
+        *Result = Gs2::Core::Domain::SpeculativeExecutor::FPreparedSpeculativeCommit::WrapLegacy(MakeShared<TFunction<void()>>(
+            [DomainCopy = Domain, NamespaceName, LimitName, CounterName, UserId = UserId.Get(FString()), TimeOffset, ExpectedId, CountDown]()
         {
-            return Future->GetTask().Error();
-        }
-        auto Item = Future->GetTask().Result();
-
-        if (!Item.IsValid())
-        {
-            *Result = MakeShared<TFunction<void()>>([&]()
-            {
-                return nullptr;
-            });
-            return nullptr;
-        }
-        auto Err = Transform(Domain, AccessToken, Request, Item);
-        if (Err != nullptr)
-        {
-            return Err;
-        }
-
-        const auto ParentKey = Model::FUserDomain::CreateCacheParentKey(
-            Request->GetNamespaceName(),
-            AccessToken->GetUserId(),
-            FString("Counter")
-        );
-        const auto Key = Model::FCounterDomain::CreateCacheKey(
-            Request->GetLimitName(),
-            Request->GetCounterName()
-        );
-
-        *Result = MakeShared<TFunction<void()>>([&]()
-        {
-            Domain->Cache->Put(
-                Limit::Model::FCounter::TypeName,
-                ParentKey,
-                Key,
-                Item,
-                FDateTime::Now() + FTimespan::FromSeconds(10)
-            );
-            return nullptr;
-        });
+            Gs2::Limit::Model::FCounterPtr Live;
+            if (!Gs2::Limit::Model::Cache::FCounterCache::TryGet(DomainCopy->Cache, NamespaceName, UserId, LimitName, CounterName, TimeOffset, &Live) || !Live.IsValid() || Live->GetCounterId().Get(FString()) != ExpectedId || Live->GetUserId().Get(FString()) != UserId || Live->GetLimitName().Get(FString()) != LimitName.Get(FString()) || Live->GetName().Get(FString()) != CounterName.Get(FString()) || !Live->GetCount().IsSet()) return;
+            const int64 ChangedCount = static_cast<int64>(Live->GetCount().Get(0)) - CountDown;
+            if (ChangedCount < TNumericLimits<int32>::Min() || ChangedCount > TNumericLimits<int32>::Max()) return;
+            auto Changed = MakeShared<Gs2::Limit::Model::FCounter>(*Live);
+            Changed->WithCount(static_cast<int32>(ChangedCount))->WithRevision(0);
+            Gs2::Limit::Model::Cache::FCounterCache::Put(DomainCopy->Cache, NamespaceName, UserId, LimitName, CounterName, TimeOffset, Changed);
+        }));
         return nullptr;
     }
 
@@ -154,10 +136,16 @@ namespace Gs2::Limit::Domain::SpeculativeExecutor
         const double Rate
     )
     {
-        if (Request->GetCountDownValue().IsSet())
+        if (!Request.IsValid())
         {
-            Request->WithCountDownValue(*Request->GetCountDownValue() * Rate);
+            return Request;
         }
+        int32 Value = 0;
+        if (!Gs2::Core::Util::TryApplyServerRate(Request->GetCountDownValue().Get(1), Rate, Value))
+        {
+            return Request;
+        }
+        Request->WithCountDownValue(Value);
         return Request;
     }
 
@@ -166,11 +154,16 @@ namespace Gs2::Limit::Domain::SpeculativeExecutor
         TBigInt<1024, false> Rate
     )
     {
-        if (Request->GetCountDownValue().IsSet())
+        if (!Request.IsValid())
         {
-            Rate.Multiply(*Request->GetCountDownValue());
-            Request->WithCountDownValue(Rate.ToInt());
+            return Request;
         }
+        int32 Value = 0;
+        if (!Gs2::Core::Util::TryApplyServerRate(Request->GetCountDownValue().Get(1), Rate, Value))
+        {
+            return Request;
+        }
+        Request->WithCountDownValue(Value);
         return Request;
     }
 }

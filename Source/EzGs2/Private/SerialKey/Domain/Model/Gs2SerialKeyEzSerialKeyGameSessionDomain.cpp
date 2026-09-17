@@ -148,7 +148,7 @@ namespace Gs2::UE5::SerialKey::Domain::Model
     Gs2::Core::Domain::CallbackID FEzSerialKeyGameSessionDomain::Subscribe(TFunction<void(Gs2::UE5::SerialKey::Model::FEzSerialKeyPtr)> Callback)
     {
         return Domain->Subscribe(
-            [&](Gs2::SerialKey::Model::FSerialKeyPtr Item)
+            [Callback](Gs2::SerialKey::Model::FSerialKeyPtr Item)
             {
                 Callback(Gs2::UE5::SerialKey::Model::FEzSerialKey::FromModel(Item));
             }

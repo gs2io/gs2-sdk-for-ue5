@@ -119,6 +119,8 @@ namespace Gs2::Money2::Domain::Model
             const FNamespaceDomain& From
         );
 
+
+
         class GS2MONEY2_API FGetStatusTask final :
             public Gs2::Core::Util::TGs2Future<Gs2::Money2::Domain::Model::FNamespaceDomain>,
             public TSharedFromThis<FGetStatusTask>
@@ -144,6 +146,8 @@ namespace Gs2::Money2::Domain::Model
         TSharedPtr<FAsyncTask<FGetStatusTask>> GetStatus(
             Request::FGetNamespaceStatusRequestPtr Request
         );
+
+
 
         class GS2MONEY2_API FGetTask final :
             public Gs2::Core::Util::TGs2Future<Gs2::Money2::Model::FNamespace>,
@@ -171,6 +175,8 @@ namespace Gs2::Money2::Domain::Model
             Request::FGetNamespaceRequestPtr Request
         );
 
+
+
         class GS2MONEY2_API FUpdateTask final :
             public Gs2::Core::Util::TGs2Future<Gs2::Money2::Domain::Model::FNamespaceDomain>,
             public TSharedFromThis<FUpdateTask>
@@ -196,6 +202,8 @@ namespace Gs2::Money2::Domain::Model
         TSharedPtr<FAsyncTask<FUpdateTask>> Update(
             Request::FUpdateNamespaceRequestPtr Request
         );
+
+
 
         class GS2MONEY2_API FDeleteTask final :
             public Gs2::Core::Util::TGs2Future<Gs2::Money2::Domain::Model::FNamespaceDomain>,
@@ -223,6 +231,8 @@ namespace Gs2::Money2::Domain::Model
             Request::FDeleteNamespaceRequestPtr Request
         );
 
+
+
         class GS2MONEY2_API FCreateStoreContentModelMasterTask final :
             public Gs2::Core::Util::TGs2Future<Gs2::Money2::Domain::Model::FStoreContentModelMasterDomain>,
             public TSharedFromThis<FCreateStoreContentModelMasterTask>
@@ -248,6 +258,8 @@ namespace Gs2::Money2::Domain::Model
         TSharedPtr<FAsyncTask<FCreateStoreContentModelMasterTask>> CreateStoreContentModelMaster(
             Request::FCreateStoreContentModelMasterRequestPtr Request
         );
+
+
 
         class GS2MONEY2_API FCreateStoreSubscriptionContentModelMasterTask final :
             public Gs2::Core::Util::TGs2Future<Gs2::Money2::Domain::Model::FStoreSubscriptionContentModelMasterDomain>,
@@ -283,10 +295,36 @@ namespace Gs2::Money2::Domain::Model
 
         Gs2::Core::Domain::CallbackID SubscribeDailyTransactionHistoriesByCurrency(
             TFunction<void()> Callback
+            , const int32 Year, const TOptional<int32> Month = TOptional<int32>()
         );
 
+        class FCollectDailyTransactionHistoriesByCurrencyTask;
+
+        Gs2::Core::Domain::CallbackID SubscribeDailyTransactionHistoriesByCurrency(
+            TFunction<void(TArray<Gs2::Money2::Model::FDailyTransactionHistoryPtr>)> Callback,const FString Currency,const int32 Year,const TOptional<int32> Month = TOptional<int32>()
+        );
+
+        void InvalidateDailyTransactionHistoriesByCurrency(const FString Currency,const int32 Year,const TOptional<int32> Month = TOptional<int32>());
+
+        class GS2MONEY2_API FSubscribeDailyTransactionHistoriesByCurrencyWithInitialCallTask final :
+            public Gs2::Core::Util::TGs2Future<Gs2::Core::Domain::CallbackID>,
+            public TSharedFromThis<FSubscribeDailyTransactionHistoriesByCurrencyWithInitialCallTask>
+        {
+            const TSharedPtr<FNamespaceDomain> Self;
+            const TFunction<void(TArray<Gs2::Money2::Model::FDailyTransactionHistoryPtr>)> Callback;
+        const FString QueryCurrency;const int32 QueryYear;const TOptional<int32> QueryMonth;
+        public:
+            FSubscribeDailyTransactionHistoriesByCurrencyWithInitialCallTask(const TSharedPtr<FNamespaceDomain>& Self, TFunction<void(TArray<Gs2::Money2::Model::FDailyTransactionHistoryPtr>)> Callback,const FString Currency,const int32 Year,const TOptional<int32> Month);
+            FSubscribeDailyTransactionHistoriesByCurrencyWithInitialCallTask(const FSubscribeDailyTransactionHistoriesByCurrencyWithInitialCallTask& From);
+            virtual Gs2::Core::Model::FGs2ErrorPtr Action(TSharedPtr<TSharedPtr<Gs2::Core::Domain::CallbackID>> Result) override;
+        };
+
+        TSharedPtr<FAsyncTask<FSubscribeDailyTransactionHistoriesByCurrencyWithInitialCallTask>> SubscribeDailyTransactionHistoriesByCurrencyWithInitialCall(
+            TFunction<void(TArray<Gs2::Money2::Model::FDailyTransactionHistoryPtr>)> Callback,const FString Currency,const int32 Year,const TOptional<int32> Month = TOptional<int32>()
+        );
         void UnsubscribeDailyTransactionHistoriesByCurrency(
-            Gs2::Core::Domain::CallbackID CallbackID
+            const int32 Year
+            , Gs2::Core::Domain::CallbackID CallbackID, const FString Currency = FString(), const TOptional<int32> Month = TOptional<int32>()
         );
 
         Gs2::Money2::Domain::Iterator::FDescribeDailyTransactionHistoriesIteratorPtr DailyTransactionHistories(
@@ -297,10 +335,36 @@ namespace Gs2::Money2::Domain::Model
 
         Gs2::Core::Domain::CallbackID SubscribeDailyTransactionHistories(
             TFunction<void()> Callback
+            , const int32 Year, const TOptional<int32> Month = TOptional<int32>(), const TOptional<int32> Day = TOptional<int32>()
         );
 
+        class FCollectDailyTransactionHistoriesTask;
+
+        Gs2::Core::Domain::CallbackID SubscribeDailyTransactionHistories(
+            TFunction<void(TArray<Gs2::Money2::Model::FDailyTransactionHistoryPtr>)> Callback,const int32 Year,const TOptional<int32> Month = TOptional<int32>(),const TOptional<int32> Day = TOptional<int32>()
+        );
+
+        void InvalidateDailyTransactionHistories(const int32 Year,const TOptional<int32> Month = TOptional<int32>(),const TOptional<int32> Day = TOptional<int32>());
+
+        class GS2MONEY2_API FSubscribeDailyTransactionHistoriesWithInitialCallTask final :
+            public Gs2::Core::Util::TGs2Future<Gs2::Core::Domain::CallbackID>,
+            public TSharedFromThis<FSubscribeDailyTransactionHistoriesWithInitialCallTask>
+        {
+            const TSharedPtr<FNamespaceDomain> Self;
+            const TFunction<void(TArray<Gs2::Money2::Model::FDailyTransactionHistoryPtr>)> Callback;
+        const int32 QueryYear;const TOptional<int32> QueryMonth;const TOptional<int32> QueryDay;
+        public:
+            FSubscribeDailyTransactionHistoriesWithInitialCallTask(const TSharedPtr<FNamespaceDomain>& Self, TFunction<void(TArray<Gs2::Money2::Model::FDailyTransactionHistoryPtr>)> Callback,const int32 Year,const TOptional<int32> Month,const TOptional<int32> Day);
+            FSubscribeDailyTransactionHistoriesWithInitialCallTask(const FSubscribeDailyTransactionHistoriesWithInitialCallTask& From);
+            virtual Gs2::Core::Model::FGs2ErrorPtr Action(TSharedPtr<TSharedPtr<Gs2::Core::Domain::CallbackID>> Result) override;
+        };
+
+        TSharedPtr<FAsyncTask<FSubscribeDailyTransactionHistoriesWithInitialCallTask>> SubscribeDailyTransactionHistoriesWithInitialCall(
+            TFunction<void(TArray<Gs2::Money2::Model::FDailyTransactionHistoryPtr>)> Callback,const int32 Year,const TOptional<int32> Month = TOptional<int32>(),const TOptional<int32> Day = TOptional<int32>()
+        );
         void UnsubscribeDailyTransactionHistories(
-            Gs2::Core::Domain::CallbackID CallbackID
+            const int32 Year
+            , Gs2::Core::Domain::CallbackID CallbackID, const TOptional<int32> Month = TOptional<int32>(), const TOptional<int32> Day = TOptional<int32>()
         );
 
         TSharedPtr<Gs2::Money2::Domain::Model::FDailyTransactionHistoryDomain> DailyTransactionHistory(
@@ -326,8 +390,33 @@ namespace Gs2::Money2::Domain::Model
 
         Gs2::Core::Domain::CallbackID SubscribeStoreContentModels(
             TFunction<void()> Callback
+
         );
 
+        class FCollectStoreContentModelsTask;
+
+        Gs2::Core::Domain::CallbackID SubscribeStoreContentModels(
+            TFunction<void(TArray<Gs2::Money2::Model::FStoreContentModelPtr>)> Callback
+        );
+
+        void InvalidateStoreContentModels();
+
+        class GS2MONEY2_API FSubscribeStoreContentModelsWithInitialCallTask final :
+            public Gs2::Core::Util::TGs2Future<Gs2::Core::Domain::CallbackID>,
+            public TSharedFromThis<FSubscribeStoreContentModelsWithInitialCallTask>
+        {
+            const TSharedPtr<FNamespaceDomain> Self;
+            const TFunction<void(TArray<Gs2::Money2::Model::FStoreContentModelPtr>)> Callback;
+
+        public:
+            FSubscribeStoreContentModelsWithInitialCallTask(const TSharedPtr<FNamespaceDomain>& Self, TFunction<void(TArray<Gs2::Money2::Model::FStoreContentModelPtr>)> Callback);
+            FSubscribeStoreContentModelsWithInitialCallTask(const FSubscribeStoreContentModelsWithInitialCallTask& From);
+            virtual Gs2::Core::Model::FGs2ErrorPtr Action(TSharedPtr<TSharedPtr<Gs2::Core::Domain::CallbackID>> Result) override;
+        };
+
+        TSharedPtr<FAsyncTask<FSubscribeStoreContentModelsWithInitialCallTask>> SubscribeStoreContentModelsWithInitialCall(
+            TFunction<void(TArray<Gs2::Money2::Model::FStoreContentModelPtr>)> Callback
+        );
         void UnsubscribeStoreContentModels(
             Gs2::Core::Domain::CallbackID CallbackID
         );
@@ -341,8 +430,33 @@ namespace Gs2::Money2::Domain::Model
 
         Gs2::Core::Domain::CallbackID SubscribeUnusedBalances(
             TFunction<void()> Callback
+
         );
 
+        class FCollectUnusedBalancesTask;
+
+        Gs2::Core::Domain::CallbackID SubscribeUnusedBalances(
+            TFunction<void(TArray<Gs2::Money2::Model::FUnusedBalancePtr>)> Callback
+        );
+
+        void InvalidateUnusedBalances();
+
+        class GS2MONEY2_API FSubscribeUnusedBalancesWithInitialCallTask final :
+            public Gs2::Core::Util::TGs2Future<Gs2::Core::Domain::CallbackID>,
+            public TSharedFromThis<FSubscribeUnusedBalancesWithInitialCallTask>
+        {
+            const TSharedPtr<FNamespaceDomain> Self;
+            const TFunction<void(TArray<Gs2::Money2::Model::FUnusedBalancePtr>)> Callback;
+
+        public:
+            FSubscribeUnusedBalancesWithInitialCallTask(const TSharedPtr<FNamespaceDomain>& Self, TFunction<void(TArray<Gs2::Money2::Model::FUnusedBalancePtr>)> Callback);
+            FSubscribeUnusedBalancesWithInitialCallTask(const FSubscribeUnusedBalancesWithInitialCallTask& From);
+            virtual Gs2::Core::Model::FGs2ErrorPtr Action(TSharedPtr<TSharedPtr<Gs2::Core::Domain::CallbackID>> Result) override;
+        };
+
+        TSharedPtr<FAsyncTask<FSubscribeUnusedBalancesWithInitialCallTask>> SubscribeUnusedBalancesWithInitialCall(
+            TFunction<void(TArray<Gs2::Money2::Model::FUnusedBalancePtr>)> Callback
+        );
         void UnsubscribeUnusedBalances(
             Gs2::Core::Domain::CallbackID CallbackID
         );
@@ -357,8 +471,33 @@ namespace Gs2::Money2::Domain::Model
 
         Gs2::Core::Domain::CallbackID SubscribeStoreContentModelMasters(
             TFunction<void()> Callback
+
         );
 
+        class FCollectStoreContentModelMastersTask;
+
+        Gs2::Core::Domain::CallbackID SubscribeStoreContentModelMasters(
+            TFunction<void(TArray<Gs2::Money2::Model::FStoreContentModelMasterPtr>)> Callback,const TOptional<FString> NamePrefix = TOptional<FString>()
+        );
+
+        void InvalidateStoreContentModelMasters(const TOptional<FString> NamePrefix = TOptional<FString>());
+
+        class GS2MONEY2_API FSubscribeStoreContentModelMastersWithInitialCallTask final :
+            public Gs2::Core::Util::TGs2Future<Gs2::Core::Domain::CallbackID>,
+            public TSharedFromThis<FSubscribeStoreContentModelMastersWithInitialCallTask>
+        {
+            const TSharedPtr<FNamespaceDomain> Self;
+            const TFunction<void(TArray<Gs2::Money2::Model::FStoreContentModelMasterPtr>)> Callback;
+        const TOptional<FString> QueryNamePrefix;
+        public:
+            FSubscribeStoreContentModelMastersWithInitialCallTask(const TSharedPtr<FNamespaceDomain>& Self, TFunction<void(TArray<Gs2::Money2::Model::FStoreContentModelMasterPtr>)> Callback,const TOptional<FString> NamePrefix);
+            FSubscribeStoreContentModelMastersWithInitialCallTask(const FSubscribeStoreContentModelMastersWithInitialCallTask& From);
+            virtual Gs2::Core::Model::FGs2ErrorPtr Action(TSharedPtr<TSharedPtr<Gs2::Core::Domain::CallbackID>> Result) override;
+        };
+
+        TSharedPtr<FAsyncTask<FSubscribeStoreContentModelMastersWithInitialCallTask>> SubscribeStoreContentModelMastersWithInitialCall(
+            TFunction<void(TArray<Gs2::Money2::Model::FStoreContentModelMasterPtr>)> Callback,const TOptional<FString> NamePrefix = TOptional<FString>()
+        );
         void UnsubscribeStoreContentModelMasters(
             Gs2::Core::Domain::CallbackID CallbackID
         );
@@ -372,8 +511,33 @@ namespace Gs2::Money2::Domain::Model
 
         Gs2::Core::Domain::CallbackID SubscribeStoreSubscriptionContentModels(
             TFunction<void()> Callback
+
         );
 
+        class FCollectStoreSubscriptionContentModelsTask;
+
+        Gs2::Core::Domain::CallbackID SubscribeStoreSubscriptionContentModels(
+            TFunction<void(TArray<Gs2::Money2::Model::FStoreSubscriptionContentModelPtr>)> Callback
+        );
+
+        void InvalidateStoreSubscriptionContentModels();
+
+        class GS2MONEY2_API FSubscribeStoreSubscriptionContentModelsWithInitialCallTask final :
+            public Gs2::Core::Util::TGs2Future<Gs2::Core::Domain::CallbackID>,
+            public TSharedFromThis<FSubscribeStoreSubscriptionContentModelsWithInitialCallTask>
+        {
+            const TSharedPtr<FNamespaceDomain> Self;
+            const TFunction<void(TArray<Gs2::Money2::Model::FStoreSubscriptionContentModelPtr>)> Callback;
+
+        public:
+            FSubscribeStoreSubscriptionContentModelsWithInitialCallTask(const TSharedPtr<FNamespaceDomain>& Self, TFunction<void(TArray<Gs2::Money2::Model::FStoreSubscriptionContentModelPtr>)> Callback);
+            FSubscribeStoreSubscriptionContentModelsWithInitialCallTask(const FSubscribeStoreSubscriptionContentModelsWithInitialCallTask& From);
+            virtual Gs2::Core::Model::FGs2ErrorPtr Action(TSharedPtr<TSharedPtr<Gs2::Core::Domain::CallbackID>> Result) override;
+        };
+
+        TSharedPtr<FAsyncTask<FSubscribeStoreSubscriptionContentModelsWithInitialCallTask>> SubscribeStoreSubscriptionContentModelsWithInitialCall(
+            TFunction<void(TArray<Gs2::Money2::Model::FStoreSubscriptionContentModelPtr>)> Callback
+        );
         void UnsubscribeStoreSubscriptionContentModels(
             Gs2::Core::Domain::CallbackID CallbackID
         );
@@ -388,8 +552,33 @@ namespace Gs2::Money2::Domain::Model
 
         Gs2::Core::Domain::CallbackID SubscribeStoreSubscriptionContentModelMasters(
             TFunction<void()> Callback
+
         );
 
+        class FCollectStoreSubscriptionContentModelMastersTask;
+
+        Gs2::Core::Domain::CallbackID SubscribeStoreSubscriptionContentModelMasters(
+            TFunction<void(TArray<Gs2::Money2::Model::FStoreSubscriptionContentModelMasterPtr>)> Callback,const TOptional<FString> NamePrefix = TOptional<FString>()
+        );
+
+        void InvalidateStoreSubscriptionContentModelMasters(const TOptional<FString> NamePrefix = TOptional<FString>());
+
+        class GS2MONEY2_API FSubscribeStoreSubscriptionContentModelMastersWithInitialCallTask final :
+            public Gs2::Core::Util::TGs2Future<Gs2::Core::Domain::CallbackID>,
+            public TSharedFromThis<FSubscribeStoreSubscriptionContentModelMastersWithInitialCallTask>
+        {
+            const TSharedPtr<FNamespaceDomain> Self;
+            const TFunction<void(TArray<Gs2::Money2::Model::FStoreSubscriptionContentModelMasterPtr>)> Callback;
+        const TOptional<FString> QueryNamePrefix;
+        public:
+            FSubscribeStoreSubscriptionContentModelMastersWithInitialCallTask(const TSharedPtr<FNamespaceDomain>& Self, TFunction<void(TArray<Gs2::Money2::Model::FStoreSubscriptionContentModelMasterPtr>)> Callback,const TOptional<FString> NamePrefix);
+            FSubscribeStoreSubscriptionContentModelMastersWithInitialCallTask(const FSubscribeStoreSubscriptionContentModelMastersWithInitialCallTask& From);
+            virtual Gs2::Core::Model::FGs2ErrorPtr Action(TSharedPtr<TSharedPtr<Gs2::Core::Domain::CallbackID>> Result) override;
+        };
+
+        TSharedPtr<FAsyncTask<FSubscribeStoreSubscriptionContentModelMastersWithInitialCallTask>> SubscribeStoreSubscriptionContentModelMastersWithInitialCall(
+            TFunction<void(TArray<Gs2::Money2::Model::FStoreSubscriptionContentModelMasterPtr>)> Callback,const TOptional<FString> NamePrefix = TOptional<FString>()
+        );
         void UnsubscribeStoreSubscriptionContentModelMasters(
             Gs2::Core::Domain::CallbackID CallbackID
         );
@@ -429,7 +618,34 @@ namespace Gs2::Money2::Domain::Model
 
         TSharedPtr<FAsyncTask<FModelTask>> Model();
 
+        void Invalidate();
+
         Gs2::Core::Domain::CallbackID Subscribe(
+            TFunction<void(Gs2::Money2::Model::FNamespacePtr)> Callback
+        );
+
+        class GS2MONEY2_API FSubscribeWithInitialCallTask final :
+            public Gs2::Core::Util::TGs2Future<Gs2::Core::Domain::CallbackID>,
+            public TSharedFromThis<FSubscribeWithInitialCallTask>
+        {
+            const TSharedPtr<FNamespaceDomain> Self;
+            const TFunction<void(Gs2::Money2::Model::FNamespacePtr)> Callback;
+        public:
+            FSubscribeWithInitialCallTask(
+                const TSharedPtr<FNamespaceDomain>& Self,
+                TFunction<void(Gs2::Money2::Model::FNamespacePtr)> Callback
+            );
+
+            FSubscribeWithInitialCallTask(
+                const FSubscribeWithInitialCallTask& From
+            );
+
+            virtual Gs2::Core::Model::FGs2ErrorPtr Action(
+                TSharedPtr<TSharedPtr<Gs2::Core::Domain::CallbackID>> Result
+            ) override;
+        };
+
+        TSharedPtr<FAsyncTask<FSubscribeWithInitialCallTask>> SubscribeWithInitialCall(
             TFunction<void(Gs2::Money2::Model::FNamespacePtr)> Callback
         );
 

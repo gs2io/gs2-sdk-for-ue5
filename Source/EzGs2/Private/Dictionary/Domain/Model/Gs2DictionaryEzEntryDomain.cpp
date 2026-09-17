@@ -97,7 +97,7 @@ namespace Gs2::UE5::Dictionary::Domain::Model
     Gs2::Core::Domain::CallbackID FEzEntryDomain::Subscribe(TFunction<void(Gs2::UE5::Dictionary::Model::FEzEntryPtr)> Callback)
     {
         return Domain->Subscribe(
-            [&](Gs2::Dictionary::Model::FEntryPtr Item)
+            [Callback](Gs2::Dictionary::Model::FEntryPtr Item)
             {
                 Callback(Gs2::UE5::Dictionary::Model::FEzEntry::FromModel(Item));
             }

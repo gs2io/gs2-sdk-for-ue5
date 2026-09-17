@@ -106,6 +106,8 @@ namespace Gs2::Log::Domain::Model
             const FLogEntryDomain& From
         );
 
+
+
         class GS2LOG_API FGetLogTask final :
             public Gs2::Core::Util::TGs2Future<Gs2::Log::Domain::Model::FLogEntryDomain>,
             public TSharedFromThis<FGetLogTask>
@@ -132,6 +134,8 @@ namespace Gs2::Log::Domain::Model
             Request::FGetLogRequestPtr Request
         );
 
+
+
         class GS2LOG_API FFacetsTask final :
             public Gs2::Core::Util::TGs2Future<TArray<TSharedPtr<Gs2::Log::Domain::Model::FFacetDomain>>>,
             public TSharedFromThis<FFacetsTask>
@@ -157,6 +161,8 @@ namespace Gs2::Log::Domain::Model
         TSharedPtr<FAsyncTask<FFacetsTask>> Facets(
             Request::FQueryFacetsRequestPtr Request
         );
+
+
 
         class GS2LOG_API FGetTraceTask final :
             public Gs2::Core::Util::TGs2Future<Gs2::Log::Domain::Model::FLogEntryDomain>,

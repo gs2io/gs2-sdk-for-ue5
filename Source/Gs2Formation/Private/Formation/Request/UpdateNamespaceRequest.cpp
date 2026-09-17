@@ -22,6 +22,7 @@ namespace Gs2::Formation::Request
         NamespaceNameValue(TOptional<FString>()),
         DescriptionValue(TOptional<FString>()),
         TransactionSettingValue(nullptr),
+        TransactionSettingV2Value(nullptr),
         UpdateMoldScriptValue(nullptr),
         UpdateFormScriptValue(nullptr),
         UpdatePropertyFormScriptValue(nullptr),
@@ -35,6 +36,7 @@ namespace Gs2::Formation::Request
         NamespaceNameValue(From.NamespaceNameValue),
         DescriptionValue(From.DescriptionValue),
         TransactionSettingValue(From.TransactionSettingValue),
+        TransactionSettingV2Value(From.TransactionSettingV2Value),
         UpdateMoldScriptValue(From.UpdateMoldScriptValue),
         UpdateFormScriptValue(From.UpdateFormScriptValue),
         UpdatePropertyFormScriptValue(From.UpdatePropertyFormScriptValue),
@@ -71,6 +73,14 @@ namespace Gs2::Formation::Request
     )
     {
         this->TransactionSettingValue = TransactionSetting;
+        return SharedThis(this);
+    }
+
+    TSharedPtr<FUpdateNamespaceRequest> FUpdateNamespaceRequest::WithTransactionSettingV2(
+        const TSharedPtr<Model::FTransactionSettingV2> TransactionSettingV2
+    )
+    {
+        this->TransactionSettingV2Value = TransactionSettingV2;
         return SharedThis(this);
     }
 
@@ -128,6 +138,15 @@ namespace Gs2::Formation::Request
             return nullptr;
         }
         return TransactionSettingValue;
+    }
+
+    TSharedPtr<Model::FTransactionSettingV2> FUpdateNamespaceRequest::GetTransactionSettingV2() const
+    {
+        if (!TransactionSettingV2Value.IsValid())
+        {
+            return nullptr;
+        }
+        return TransactionSettingV2Value;
     }
 
     TSharedPtr<Model::FScriptSetting> FUpdateNamespaceRequest::GetUpdateMoldScript() const
@@ -199,6 +218,14 @@ namespace Gs2::Formation::Request
                   }
                   return Model::FTransactionSetting::FromJson(Data->GetObjectField(ANSI_TO_TCHAR("transactionSetting")));
               }() : nullptr)
+          ->WithTransactionSettingV2(Data->HasField(ANSI_TO_TCHAR("transactionSettingV2")) ? [Data]() -> Model::FTransactionSettingV2Ptr
+              {
+                  if (Data->HasTypedField<EJson::Null>(ANSI_TO_TCHAR("transactionSettingV2")))
+                  {
+                      return nullptr;
+                  }
+                  return Model::FTransactionSettingV2::FromJson(Data->GetObjectField(ANSI_TO_TCHAR("transactionSettingV2")));
+              }() : nullptr)
           ->WithUpdateMoldScript(Data->HasField(ANSI_TO_TCHAR("updateMoldScript")) ? [Data]() -> Model::FScriptSettingPtr
               {
                   if (Data->HasTypedField<EJson::Null>(ANSI_TO_TCHAR("updateMoldScript")))
@@ -251,6 +278,10 @@ namespace Gs2::Formation::Request
         if (TransactionSettingValue != nullptr && TransactionSettingValue.IsValid())
         {
             JsonRootObject->SetObjectField(TEXT("transactionSetting"), TransactionSettingValue->ToJson());
+        }
+        if (TransactionSettingV2Value != nullptr && TransactionSettingV2Value.IsValid())
+        {
+            JsonRootObject->SetObjectField(TEXT("transactionSettingV2"), TransactionSettingV2Value->ToJson());
         }
         if (UpdateMoldScriptValue != nullptr && UpdateMoldScriptValue.IsValid())
         {

@@ -99,7 +99,7 @@ namespace Gs2::UE5::Ranking2::Domain::Model
     Gs2::Core::Domain::CallbackID FEzGlobalRankingDataGameSessionDomain::Subscribe(TFunction<void(Gs2::UE5::Ranking2::Model::FEzGlobalRankingDataPtr)> Callback)
     {
         return Domain->Subscribe(
-            [&](Gs2::Ranking2::Model::FGlobalRankingDataPtr Item)
+            [Callback](Gs2::Ranking2::Model::FGlobalRankingDataPtr Item)
             {
                 Callback(Gs2::UE5::Ranking2::Model::FEzGlobalRankingData::FromModel(Item));
             }

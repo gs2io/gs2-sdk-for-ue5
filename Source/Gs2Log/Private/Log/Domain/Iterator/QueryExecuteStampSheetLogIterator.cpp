@@ -31,6 +31,8 @@
 #include "Log/Domain/Model/Namespace.h"
 
 #include "Core/Domain/Gs2.h"
+#include "Log/Model/Cache/ExecuteStampSheetLog.h"
+#include "Log/Model/Cache/Namespace.h"
 
 namespace Gs2::Log::Domain::Iterator
 {
@@ -115,9 +117,9 @@ namespace Gs2::Log::Domain::Iterator
 
         if (!RangeIteratorOpt || (!*RangeIteratorOpt && !bLast))
         {
-            const auto ListParentKey = Gs2::Log::Domain::Model::FNamespaceDomain::CreateCacheParentKey(
+            const auto ListParentKey = Gs2::Log::Model::Cache::FExecuteStampSheetLogCache::CreateCacheParentKey(
                 Self->NamespaceName,
-                "ExecuteStampSheetLog"
+                TOptional<int32>()
             );
 
             if (!RangeIteratorOpt)

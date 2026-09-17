@@ -87,6 +87,8 @@ namespace Gs2::Inbox::Domain::Model
             const FCurrentMessageMasterDomain& From
         );
 
+
+
         class GS2INBOX_API FExportMasterTask final :
             public Gs2::Core::Util::TGs2Future<Gs2::Inbox::Domain::Model::FCurrentMessageMasterDomain>,
             public TSharedFromThis<FExportMasterTask>
@@ -112,6 +114,8 @@ namespace Gs2::Inbox::Domain::Model
         TSharedPtr<FAsyncTask<FExportMasterTask>> ExportMaster(
             Request::FExportMasterRequestPtr Request
         );
+
+
 
         class GS2INBOX_API FGetTask final :
             public Gs2::Core::Util::TGs2Future<Gs2::Inbox::Model::FCurrentMessageMaster>,
@@ -139,6 +143,8 @@ namespace Gs2::Inbox::Domain::Model
             Request::FGetCurrentMessageMasterRequestPtr Request
         );
 
+
+
         class GS2INBOX_API FPreUpdateTask final :
             public Gs2::Core::Util::TGs2Future<Gs2::Inbox::Domain::Model::FCurrentMessageMasterDomain>,
             public TSharedFromThis<FPreUpdateTask>
@@ -165,6 +171,8 @@ namespace Gs2::Inbox::Domain::Model
             Request::FPreUpdateCurrentMessageMasterRequestPtr Request
         );
 
+
+
         class GS2INBOX_API FUpdateTask final :
             public Gs2::Core::Util::TGs2Future<Gs2::Inbox::Domain::Model::FCurrentMessageMasterDomain>,
             public TSharedFromThis<FUpdateTask>
@@ -190,6 +198,8 @@ namespace Gs2::Inbox::Domain::Model
         TSharedPtr<FAsyncTask<FUpdateTask>> Update(
             Request::FUpdateCurrentMessageMasterRequestPtr Request
         );
+
+
 
         class GS2INBOX_API FUpdateFromGitHubTask final :
             public Gs2::Core::Util::TGs2Future<Gs2::Inbox::Domain::Model::FCurrentMessageMasterDomain>,
@@ -247,7 +257,34 @@ namespace Gs2::Inbox::Domain::Model
 
         TSharedPtr<FAsyncTask<FModelTask>> Model();
 
+        void Invalidate();
+
         Gs2::Core::Domain::CallbackID Subscribe(
+            TFunction<void(Gs2::Inbox::Model::FCurrentMessageMasterPtr)> Callback
+        );
+
+        class GS2INBOX_API FSubscribeWithInitialCallTask final :
+            public Gs2::Core::Util::TGs2Future<Gs2::Core::Domain::CallbackID>,
+            public TSharedFromThis<FSubscribeWithInitialCallTask>
+        {
+            const TSharedPtr<FCurrentMessageMasterDomain> Self;
+            const TFunction<void(Gs2::Inbox::Model::FCurrentMessageMasterPtr)> Callback;
+        public:
+            FSubscribeWithInitialCallTask(
+                const TSharedPtr<FCurrentMessageMasterDomain>& Self,
+                TFunction<void(Gs2::Inbox::Model::FCurrentMessageMasterPtr)> Callback
+            );
+
+            FSubscribeWithInitialCallTask(
+                const FSubscribeWithInitialCallTask& From
+            );
+
+            virtual Gs2::Core::Model::FGs2ErrorPtr Action(
+                TSharedPtr<TSharedPtr<Gs2::Core::Domain::CallbackID>> Result
+            ) override;
+        };
+
+        TSharedPtr<FAsyncTask<FSubscribeWithInitialCallTask>> SubscribeWithInitialCall(
             TFunction<void(Gs2::Inbox::Model::FCurrentMessageMasterPtr)> Callback
         );
 

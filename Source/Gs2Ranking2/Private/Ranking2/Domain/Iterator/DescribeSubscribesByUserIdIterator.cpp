@@ -1,3 +1,4 @@
+
 /*
  * Copyright 2016 Game Server Services, Inc. or its affiliates. All Rights
  * Reserved.
@@ -29,6 +30,9 @@
 #include "Ranking2/Domain/Model/User.h"
 
 #include "Core/Domain/Gs2.h"
+
+#include "Ranking2/Model/Cache/Subscribe.h"
+#include "Ranking2/Model/Cache/SubscribeUser.h"
 
 namespace Gs2::Ranking2::Domain::Iterator
 {
@@ -84,7 +88,7 @@ namespace Gs2::Ranking2::Domain::Iterator
 
     FDescribeSubscribesByUserIdIterator::FIterator& FDescribeSubscribesByUserIdIterator::FIterator::operator++()
     {
-        
+
 
         if (bEnd) return *this;
 
@@ -94,17 +98,18 @@ namespace Gs2::Ranking2::Domain::Iterator
             return *this;
         }
 
-        if (RangeIteratorOpt) ++*RangeIteratorOpt;
+        if (RangeIteratorOpt && *RangeIteratorOpt) ++*RangeIteratorOpt;
 
+        // Keep the previous page alive until its iterator has been replaced.
+        const auto PreviousRange = Range;
         if (!RangeIteratorOpt || (!*RangeIteratorOpt && !bLast))
         {
-            const auto ListParentKey = Gs2::Ranking2::Domain::Model::FSubscribeDomain::CreateCacheParentKey(
+            const auto ListParentKey = Gs2::Ranking2::Model::Cache::FSubscribeUserCache::CreateCacheParentKey(
                 Self->NamespaceName,
                 Self->UserId,
                 Self->RankingName,
-                "SubscribeUser"
+                TOptional<int32>()
             );
-
             if (!RangeIteratorOpt)
             {
                 Range = Self->Gs2->Cache->TryGetList<Gs2::Ranking2::Model::FSubscribeUser>(ListParentKey);
@@ -119,8 +124,7 @@ namespace Gs2::Ranking2::Domain::Iterator
                     return *this;
                 }
             }
-
-            const auto Future = Self->Client->DescribeSubscribesByUserId(
+            const auto Request =
                 MakeShared<Gs2::Ranking2::Request::FDescribeSubscribesByUserIdRequest>()
                     ->WithContextStack(Self->Gs2->DefaultContextStack)
                     ->WithNamespaceName(Self->NamespaceName)
@@ -128,7 +132,8 @@ namespace Gs2::Ranking2::Domain::Iterator
                     ->WithRankingName(Self->RankingName)
                     ->WithPageToken(PageToken)
                     ->WithLimit(FetchSize)
-            );
+            ;
+            const auto Future = Self->Client->DescribeSubscribesByUserId(Request);
             Future->StartSynchronousTask();
             if (Future->GetTask().IsError())
             {
@@ -142,18 +147,21 @@ namespace Gs2::Ranking2::Domain::Iterator
             }
             const auto R = Future->GetTask().Result();
             Future->EnsureCompletion();
-            Range = R->GetItems();
-            for (auto Item : *R->GetItems())
+            Range = R->GetItems().IsValid() ? R->GetItems() : MakeShared<TArray<Gs2::Ranking2::Model::FSubscribeUserPtr>>();
+            const auto ResultModel = R;
+
+
+            if (Range.IsValid())
             {
-                Self->Gs2->Cache->Put(
-                    Gs2::Ranking2::Model::FSubscribeUser::TypeName,
-                    ListParentKey,
-                    Gs2::Ranking2::Domain::Model::FSubscribeDomain::CreateCacheKey(
-                        Item->GetTargetUserId()
-                    ),
-                    Item,
-                    FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
-                );
+                for (const auto& Item : *Range)
+                {
+                    if (!Item.IsValid()) continue;
+                    Gs2::Ranking2::Model::Cache::FSubscribeUserCache::Put(
+                        Self->Gs2->Cache,
+                        Request->GetNamespaceName(), Request->GetUserId(), Request->GetRankingName(), Item->GetTargetUserId(),
+                        TOptional<int32>(), Item
+                    );
+                }
             }
             if (Range)
             {

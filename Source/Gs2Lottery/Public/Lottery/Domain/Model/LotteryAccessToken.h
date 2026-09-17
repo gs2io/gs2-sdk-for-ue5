@@ -105,6 +105,8 @@ namespace Gs2::Lottery::Domain::Model
             const FLotteryAccessTokenDomain& From
         );
 
+
+
         class GS2LOTTERY_API FPredictionTask final :
             public Gs2::Core::Util::TGs2Future<TArray<TSharedPtr<Gs2::Lottery::Model::FDrawnPrize>>>,
             public TSharedFromThis<FPredictionTask>
@@ -138,6 +140,30 @@ namespace Gs2::Lottery::Domain::Model
             TFunction<void()> Callback
         );
 
+        class FCollectProbabilitiesTask;
+
+        Gs2::Core::Domain::CallbackID SubscribeProbabilities(
+            TFunction<void(TArray<Gs2::Lottery::Model::FProbabilityPtr>)> Callback
+        );
+
+        void InvalidateProbabilities();
+
+        class GS2LOTTERY_API FSubscribeProbabilitiesWithInitialCallTask final :
+            public Gs2::Core::Util::TGs2Future<Gs2::Core::Domain::CallbackID>,
+            public TSharedFromThis<FSubscribeProbabilitiesWithInitialCallTask>
+        {
+            const TSharedPtr<FLotteryAccessTokenDomain> Self;
+            const TFunction<void(TArray<Gs2::Lottery::Model::FProbabilityPtr>)> Callback;
+
+        public:
+            FSubscribeProbabilitiesWithInitialCallTask(const TSharedPtr<FLotteryAccessTokenDomain>& Self, TFunction<void(TArray<Gs2::Lottery::Model::FProbabilityPtr>)> Callback);
+            FSubscribeProbabilitiesWithInitialCallTask(const FSubscribeProbabilitiesWithInitialCallTask& From);
+            virtual Gs2::Core::Model::FGs2ErrorPtr Action(TSharedPtr<TSharedPtr<Gs2::Core::Domain::CallbackID>> Result) override;
+        };
+
+        TSharedPtr<FAsyncTask<FSubscribeProbabilitiesWithInitialCallTask>> SubscribeProbabilitiesWithInitialCall(
+            TFunction<void(TArray<Gs2::Lottery::Model::FProbabilityPtr>)> Callback
+        );
         void UnsubscribeProbabilities(
             Gs2::Core::Domain::CallbackID CallbackID
         );

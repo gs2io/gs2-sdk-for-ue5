@@ -92,8 +92,33 @@ namespace Gs2::Money::Domain::Model
 
         Gs2::Core::Domain::CallbackID SubscribeWallets(
             TFunction<void()> Callback
+
         );
 
+        class FCollectWalletsTask;
+
+        Gs2::Core::Domain::CallbackID SubscribeWallets(
+            TFunction<void(TArray<Gs2::Money::Model::FWalletPtr>)> Callback
+        );
+
+        void InvalidateWallets();
+
+        class GS2MONEY_API FSubscribeWalletsWithInitialCallTask final :
+            public Gs2::Core::Util::TGs2Future<Gs2::Core::Domain::CallbackID>,
+            public TSharedFromThis<FSubscribeWalletsWithInitialCallTask>
+        {
+            const TSharedPtr<FUserAccessTokenDomain> Self;
+            const TFunction<void(TArray<Gs2::Money::Model::FWalletPtr>)> Callback;
+
+        public:
+            FSubscribeWalletsWithInitialCallTask(const TSharedPtr<FUserAccessTokenDomain>& Self, TFunction<void(TArray<Gs2::Money::Model::FWalletPtr>)> Callback);
+            FSubscribeWalletsWithInitialCallTask(const FSubscribeWalletsWithInitialCallTask& From);
+            virtual Gs2::Core::Model::FGs2ErrorPtr Action(TSharedPtr<TSharedPtr<Gs2::Core::Domain::CallbackID>> Result) override;
+        };
+
+        TSharedPtr<FAsyncTask<FSubscribeWalletsWithInitialCallTask>> SubscribeWalletsWithInitialCall(
+            TFunction<void(TArray<Gs2::Money::Model::FWalletPtr>)> Callback
+        );
         void UnsubscribeWallets(
             Gs2::Core::Domain::CallbackID CallbackID
         );

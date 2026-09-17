@@ -114,7 +114,8 @@ namespace Gs2::UE5::Matchmaking::Domain::Model
 
         Gs2::Core::Domain::CallbackID SubscribeRatings(TFunction<void()> Callback);
 
-        void UnsubscribeRatings(Gs2::Core::Domain::CallbackID CallbackId);
+        void UnsubscribeRatings(
+                Gs2::Core::Domain::CallbackID CallbackId);
 
         Gs2::UE5::Matchmaking::Domain::Model::FEzGatheringGameSessionDomainPtr Gathering(
             const FString GatheringName

@@ -17,10 +17,34 @@
 
 #include "Gs2Constant.h"
 
+#include "Core/Net/Steady.h"
+
 DEFINE_LOG_CATEGORY(Gs2Log);
 
 namespace Gs2::Core
 {
-    FString FGs2Constant::EndpointHost = "https://{service}.{region}.gen2.gs2io.com";
-    FString FGs2Constant::WebSocketEndpointHost = "wss://gateway-ws.{region}.gen2.gs2io.com/v2";
+    const FString FGs2Constant::DefaultEndpointHost = "https://{service}.{region}.gen2.gs2io.com";
+    const FString FGs2Constant::DefaultWebSocketEndpointHost = "wss://gateway-ws.{region}.gen2.gs2io.com/v2";
+
+    FString FGs2Constant::EndpointHost = FGs2Constant::DefaultEndpointHost;
+    FString FGs2Constant::WebSocketEndpointHost = FGs2Constant::DefaultWebSocketEndpointHost;
+
+    FString FGs2Constant::SteadyAppliedEndpointHost = FString();
+
+    bool FGs2Constant::IsEndpointHostOverridden()
+    {
+        return EndpointHost != DefaultEndpointHost && EndpointHost != SteadyAppliedEndpointHost;
+    }
+
+    void FGs2Constant::ApplySteadyEndpointHost(const FString& SteadyEndpoint)
+    {
+        if (IsEndpointHostOverridden())
+        {
+            // アプリが自分で template を入れている。静的な上書きは Steady より強い。
+            return;
+        }
+        const auto Template = Net::FGs2Steady::RestTemplate(SteadyEndpoint);
+        EndpointHost = Template.IsEmpty() ? DefaultEndpointHost : Template;
+        SteadyAppliedEndpointHost = Template;
+    }
 }

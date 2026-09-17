@@ -60,6 +60,7 @@ namespace Gs2::Core::Domain
 	) const
 	{
 		if (Actions->Num() == 0) {
+			*Result = nullptr;
 			return nullptr;
 		}
 		const auto NextActions = MakeShared<TArray<TSharedPtr<FTransactionDomain>>>();
@@ -82,12 +83,18 @@ namespace Gs2::Core::Domain
 			UserId,
 			NextActions
 		);
+		if (!All)
+		{
+			*Result = Next;
+			return nullptr;
+		}
 		const auto NextFuture = Next->Wait(true);
 		NextFuture->StartSynchronousTask();
 		if (NextFuture->GetTask().IsError())
 		{
 			return NextFuture->GetTask().Error();
 		}
+		*Result = nullptr;
 		return nullptr;
 	}
 

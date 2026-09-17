@@ -23,6 +23,7 @@
 #include "GenericPlatform/GenericPlatformHttp.h"
 #include "Core/Gs2Constant.h"
 #include "Core/Net/Rest/Gs2RestSession.h"
+#include "Core/Net/Rest/RestResponseState.h"
 #include "Interfaces/IHttpResponse.h"
 
 namespace Gs2::Identifier::Task::Rest
@@ -51,18 +52,19 @@ namespace Gs2::Identifier::Task::Rest
             return MakeShared<Core::Model::FSessionNotOpenError>(Details);
         }
 
-        int32 ResponseCode;
-        FString ResponseBody;
+        const auto Completion = MakeShared<Core::Net::Rest::FRestResponseState, ESPMode::ThreadSafe>();
         {
             const auto request = FHttpModule::Get().CreateRequest();
             request->OnProcessRequestComplete().BindLambda(
-                [&ResponseCode, &ResponseBody](FHttpRequestPtr _, FHttpResponsePtr Response, bool Successful)
+                [Completion](FHttpRequestPtr _, FHttpResponsePtr Response, bool Successful)
                 {
-                    if (Successful) {
-                        ResponseCode = Response->GetResponseCode();
-                        ResponseBody = Response->GetContentAsString();
-                    } else {
-                        ResponseCode = 999;
+                    if (Successful && Response.IsValid())
+                    {
+                        Completion->Complete(Response->GetResponseCode(), Response->GetContentAsString());
+                    }
+                    else
+                    {
+                        Completion->Complete(999, FString());
                     }
                 }
             );
@@ -97,7 +99,25 @@ namespace Gs2::Identifier::Task::Rest
             UE_LOG(Gs2Log, VeryVerbose, TEXT("[%s] %s %s"), TEXT("POST"), ToCStr(Url), ToCStr(Body));
         }
 
-        FHttpModule::Get().GetHttpManager().Flush(EHttpFlushReason::FullFlush);
+        if (FPlatformTLS::GetCurrentThreadId() == GGameThreadId)
+        {
+            FHttpModule::Get().GetHttpManager().Flush(EHttpFlushReason::FullFlush);
+        }
+        else
+        {
+            while (!Completion->IsComplete())
+            {
+                FPlatformProcess::Sleep(0.01f);
+            }
+        }
+
+        int32 ResponseCode = 999;
+        FString ResponseBody;
+        if (!Completion->TryGetResponse(ResponseCode, ResponseBody))
+        {
+            const auto Details = MakeShared<TArray<TSharedPtr<Core::Model::FGs2ErrorDetail>>>();
+            return MakeShared<Core::Model::FUnknownError>(Details);
+        }
 
         if (ResponseCode / 100 == 2)
         {

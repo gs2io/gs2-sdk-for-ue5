@@ -94,7 +94,7 @@ namespace Gs2::UE5::JobQueue::Domain::Model
     Gs2::Core::Domain::CallbackID FEzJobResultGameSessionDomain::Subscribe(TFunction<void(Gs2::UE5::JobQueue::Model::FEzJobResultPtr)> Callback)
     {
         return Domain->Subscribe(
-            [&](Gs2::JobQueue::Model::FJobResultPtr Item)
+            [Callback](Gs2::JobQueue::Model::FJobResultPtr Item)
             {
                 Callback(Gs2::UE5::JobQueue::Model::FEzJobResult::FromModel(Item));
             }

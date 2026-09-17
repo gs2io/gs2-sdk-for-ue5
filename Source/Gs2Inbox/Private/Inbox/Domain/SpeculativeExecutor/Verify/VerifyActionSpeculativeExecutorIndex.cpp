@@ -25,6 +25,7 @@
 #include "Inbox/Domain/SpeculativeExecutor/Verify/VerifyActionSpeculativeExecutorIndex.h"
 
 #include "Core/Domain/Gs2.h"
+#include "Core/Domain/SpeculativeExecutor/PreparedSpeculativeCommit.h"
 
 namespace Gs2::Inbox::Domain::SpeculativeExecutor
 {
@@ -57,7 +58,7 @@ namespace Gs2::Inbox::Domain::SpeculativeExecutor
     }
 
     Gs2::Core::Model::FGs2ErrorPtr FVerifyActionSpeculativeExecutorIndex::FCommitTask::Action(
-        TSharedPtr<TSharedPtr<TFunction<void()>>> Result
+        TSharedPtr<TSharedPtr<Gs2::Core::Domain::SpeculativeExecutor::FPreparedSpeculativeCommit>> Result
     )
     {
         auto NewVerifyAction = VerifyAction->WithAction(VerifyAction->GetAction()->Replace(TEXT("{region}"), ToCStr(Domain->RestSession->RegionName())));

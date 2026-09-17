@@ -188,7 +188,7 @@ namespace Gs2::UE5::Inbox::Domain::Model
     Gs2::Core::Domain::CallbackID FEzMessageGameSessionDomain::Subscribe(TFunction<void(Gs2::UE5::Inbox::Model::FEzMessagePtr)> Callback)
     {
         return Domain->Subscribe(
-            [&](Gs2::Inbox::Model::FMessagePtr Item)
+            [Callback](Gs2::Inbox::Model::FMessagePtr Item)
             {
                 Callback(Gs2::UE5::Inbox::Model::FEzMessage::FromModel(Item));
             }

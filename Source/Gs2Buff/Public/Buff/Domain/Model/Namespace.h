@@ -98,6 +98,8 @@ namespace Gs2::Buff::Domain::Model
             const FNamespaceDomain& From
         );
 
+
+
         class GS2BUFF_API FGetStatusTask final :
             public Gs2::Core::Util::TGs2Future<Gs2::Buff::Domain::Model::FNamespaceDomain>,
             public TSharedFromThis<FGetStatusTask>
@@ -123,6 +125,8 @@ namespace Gs2::Buff::Domain::Model
         TSharedPtr<FAsyncTask<FGetStatusTask>> GetStatus(
             Request::FGetNamespaceStatusRequestPtr Request
         );
+
+
 
         class GS2BUFF_API FGetTask final :
             public Gs2::Core::Util::TGs2Future<Gs2::Buff::Model::FNamespace>,
@@ -150,6 +154,8 @@ namespace Gs2::Buff::Domain::Model
             Request::FGetNamespaceRequestPtr Request
         );
 
+
+
         class GS2BUFF_API FUpdateTask final :
             public Gs2::Core::Util::TGs2Future<Gs2::Buff::Domain::Model::FNamespaceDomain>,
             public TSharedFromThis<FUpdateTask>
@@ -176,6 +182,8 @@ namespace Gs2::Buff::Domain::Model
             Request::FUpdateNamespaceRequestPtr Request
         );
 
+
+
         class GS2BUFF_API FDeleteTask final :
             public Gs2::Core::Util::TGs2Future<Gs2::Buff::Domain::Model::FNamespaceDomain>,
             public TSharedFromThis<FDeleteTask>
@@ -201,6 +209,8 @@ namespace Gs2::Buff::Domain::Model
         TSharedPtr<FAsyncTask<FDeleteTask>> Delete(
             Request::FDeleteNamespaceRequestPtr Request
         );
+
+
 
         class GS2BUFF_API FCreateBuffEntryModelMasterTask final :
             public Gs2::Core::Util::TGs2Future<Gs2::Buff::Domain::Model::FBuffEntryModelMasterDomain>,
@@ -237,8 +247,33 @@ namespace Gs2::Buff::Domain::Model
 
         Gs2::Core::Domain::CallbackID SubscribeBuffEntryModelMasters(
             TFunction<void()> Callback
+
         );
 
+        class FCollectBuffEntryModelMastersTask;
+
+        Gs2::Core::Domain::CallbackID SubscribeBuffEntryModelMasters(
+            TFunction<void(TArray<Gs2::Buff::Model::FBuffEntryModelMasterPtr>)> Callback,const TOptional<FString> NamePrefix = TOptional<FString>()
+        );
+
+        void InvalidateBuffEntryModelMasters(const TOptional<FString> NamePrefix = TOptional<FString>());
+
+        class GS2BUFF_API FSubscribeBuffEntryModelMastersWithInitialCallTask final :
+            public Gs2::Core::Util::TGs2Future<Gs2::Core::Domain::CallbackID>,
+            public TSharedFromThis<FSubscribeBuffEntryModelMastersWithInitialCallTask>
+        {
+            const TSharedPtr<FNamespaceDomain> Self;
+            const TFunction<void(TArray<Gs2::Buff::Model::FBuffEntryModelMasterPtr>)> Callback;
+        const TOptional<FString> QueryNamePrefix;
+        public:
+            FSubscribeBuffEntryModelMastersWithInitialCallTask(const TSharedPtr<FNamespaceDomain>& Self, TFunction<void(TArray<Gs2::Buff::Model::FBuffEntryModelMasterPtr>)> Callback,const TOptional<FString> NamePrefix);
+            FSubscribeBuffEntryModelMastersWithInitialCallTask(const FSubscribeBuffEntryModelMastersWithInitialCallTask& From);
+            virtual Gs2::Core::Model::FGs2ErrorPtr Action(TSharedPtr<TSharedPtr<Gs2::Core::Domain::CallbackID>> Result) override;
+        };
+
+        TSharedPtr<FAsyncTask<FSubscribeBuffEntryModelMastersWithInitialCallTask>> SubscribeBuffEntryModelMastersWithInitialCall(
+            TFunction<void(TArray<Gs2::Buff::Model::FBuffEntryModelMasterPtr>)> Callback,const TOptional<FString> NamePrefix = TOptional<FString>()
+        );
         void UnsubscribeBuffEntryModelMasters(
             Gs2::Core::Domain::CallbackID CallbackID
         );
@@ -252,8 +287,33 @@ namespace Gs2::Buff::Domain::Model
 
         Gs2::Core::Domain::CallbackID SubscribeBuffEntryModels(
             TFunction<void()> Callback
+
         );
 
+        class FCollectBuffEntryModelsTask;
+
+        Gs2::Core::Domain::CallbackID SubscribeBuffEntryModels(
+            TFunction<void(TArray<Gs2::Buff::Model::FBuffEntryModelPtr>)> Callback
+        );
+
+        void InvalidateBuffEntryModels();
+
+        class GS2BUFF_API FSubscribeBuffEntryModelsWithInitialCallTask final :
+            public Gs2::Core::Util::TGs2Future<Gs2::Core::Domain::CallbackID>,
+            public TSharedFromThis<FSubscribeBuffEntryModelsWithInitialCallTask>
+        {
+            const TSharedPtr<FNamespaceDomain> Self;
+            const TFunction<void(TArray<Gs2::Buff::Model::FBuffEntryModelPtr>)> Callback;
+
+        public:
+            FSubscribeBuffEntryModelsWithInitialCallTask(const TSharedPtr<FNamespaceDomain>& Self, TFunction<void(TArray<Gs2::Buff::Model::FBuffEntryModelPtr>)> Callback);
+            FSubscribeBuffEntryModelsWithInitialCallTask(const FSubscribeBuffEntryModelsWithInitialCallTask& From);
+            virtual Gs2::Core::Model::FGs2ErrorPtr Action(TSharedPtr<TSharedPtr<Gs2::Core::Domain::CallbackID>> Result) override;
+        };
+
+        TSharedPtr<FAsyncTask<FSubscribeBuffEntryModelsWithInitialCallTask>> SubscribeBuffEntryModelsWithInitialCall(
+            TFunction<void(TArray<Gs2::Buff::Model::FBuffEntryModelPtr>)> Callback
+        );
         void UnsubscribeBuffEntryModels(
             Gs2::Core::Domain::CallbackID CallbackID
         );
@@ -301,7 +361,34 @@ namespace Gs2::Buff::Domain::Model
 
         TSharedPtr<FAsyncTask<FModelTask>> Model();
 
+        void Invalidate();
+
         Gs2::Core::Domain::CallbackID Subscribe(
+            TFunction<void(Gs2::Buff::Model::FNamespacePtr)> Callback
+        );
+
+        class GS2BUFF_API FSubscribeWithInitialCallTask final :
+            public Gs2::Core::Util::TGs2Future<Gs2::Core::Domain::CallbackID>,
+            public TSharedFromThis<FSubscribeWithInitialCallTask>
+        {
+            const TSharedPtr<FNamespaceDomain> Self;
+            const TFunction<void(Gs2::Buff::Model::FNamespacePtr)> Callback;
+        public:
+            FSubscribeWithInitialCallTask(
+                const TSharedPtr<FNamespaceDomain>& Self,
+                TFunction<void(Gs2::Buff::Model::FNamespacePtr)> Callback
+            );
+
+            FSubscribeWithInitialCallTask(
+                const FSubscribeWithInitialCallTask& From
+            );
+
+            virtual Gs2::Core::Model::FGs2ErrorPtr Action(
+                TSharedPtr<TSharedPtr<Gs2::Core::Domain::CallbackID>> Result
+            ) override;
+        };
+
+        TSharedPtr<FAsyncTask<FSubscribeWithInitialCallTask>> SubscribeWithInitialCall(
             TFunction<void(Gs2::Buff::Model::FNamespacePtr)> Callback
         );
 

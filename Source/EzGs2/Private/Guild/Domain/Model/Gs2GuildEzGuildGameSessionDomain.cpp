@@ -490,7 +490,8 @@ namespace Gs2::UE5::Guild::Domain::Model
         );
     }
 
-    void FEzGuildGameSessionDomain::UnsubscribeReceiveRequests(Gs2::Core::Domain::CallbackID CallbackId)
+    void FEzGuildGameSessionDomain::UnsubscribeReceiveRequests(
+            Gs2::Core::Domain::CallbackID CallbackId)
     {
         Domain->UnsubscribeReceiveRequests(
             CallbackId
@@ -514,7 +515,8 @@ namespace Gs2::UE5::Guild::Domain::Model
         );
     }
 
-    void FEzGuildGameSessionDomain::UnsubscribeIgnoreUsers(Gs2::Core::Domain::CallbackID CallbackId)
+    void FEzGuildGameSessionDomain::UnsubscribeIgnoreUsers(
+            Gs2::Core::Domain::CallbackID CallbackId)
     {
         Domain->UnsubscribeIgnoreUsers(
             CallbackId
@@ -599,7 +601,7 @@ namespace Gs2::UE5::Guild::Domain::Model
     Gs2::Core::Domain::CallbackID FEzGuildGameSessionDomain::Subscribe(TFunction<void(Gs2::UE5::Guild::Model::FEzGuildPtr)> Callback)
     {
         return Domain->Subscribe(
-            [&](Gs2::Guild::Model::FGuildPtr Item)
+            [Callback](Gs2::Guild::Model::FGuildPtr Item)
             {
                 Callback(Gs2::UE5::Guild::Model::FEzGuild::FromModel(Item));
             }

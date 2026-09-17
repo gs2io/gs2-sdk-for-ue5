@@ -29,6 +29,7 @@
 #include "Matchmaking/Domain/Iterator/DoMatchmakingByPlayerIterator.h"
 #include "Matchmaking/Domain/Model/Gathering.h"
 #include "Matchmaking/Domain/Model/User.h"
+#include "Matchmaking/Model/Cache/Gathering.h"
 
 #include "Core/Domain/Gs2.h"
 
@@ -113,10 +114,10 @@ namespace Gs2::Matchmaking::Domain::Iterator
             bLast = R->GetItem() != nullptr || !MatchmakingContextToken.IsSet();
             Self->Gs2->Cache->ClearListCache(
                 Gs2::Matchmaking::Model::FGathering::TypeName,
-                Gs2::Matchmaking::Domain::Model::FUserDomain::CreateCacheParentKey(
+                Gs2::Matchmaking::Model::Cache::FGatheringCache::CreateCacheParentKey(
                 Self->NamespaceName,
-                TOptional<FString>("Singleton"),
-                "Gathering"
+                TOptional<FString>(),
+                TOptional<int32>()
             )
             );
         }
@@ -146,4 +147,3 @@ namespace Gs2::Matchmaking::Domain::Iterator
 #elif defined(__clang__)
 #pragma clang diagnostic pop
 #endif
-

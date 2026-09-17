@@ -62,6 +62,7 @@
 #include "Ranking2/Domain/Model/User.h"
 #include "Ranking2/Domain/Model/UserAccessToken.h"
 
+#include "Ranking2/Model/Cache/SubscribeUser.h"
 #include "Core/Domain/Gs2.h"
 #include "Core/Domain/Transaction/JobQueueJobDomainFactory.h"
 #include "Core/Domain/Transaction/InternalTransactionDomainFactory.h"
@@ -278,6 +279,7 @@ namespace Gs2::Ranking2::Domain::Model
                 UserId,
                 "GlobalRankingScore"
             ),
+            Callback,
             Callback
         );
     }
@@ -343,37 +345,127 @@ namespace Gs2::Ranking2::Domain::Model
     }
 
     Gs2::Core::Domain::CallbackID FUserDomain::SubscribeSubscribes(
-        const FString RankingName,
-        TFunction<void()> Callback
+     const FString RankingName, TFunction<void()> Callback
     )
     {
         return Gs2->Cache->ListSubscribe(
             Gs2::Ranking2::Model::FSubscribeUser::TypeName,
-            Gs2::Ranking2::Domain::Model::FSubscribeDomain::CreateCacheParentKey(
+            Gs2::Ranking2::Model::Cache::FSubscribeUserCache::CreateCacheParentKey(
                 NamespaceName,
                 UserId,
                 RankingName,
-                "SubscribeUser"
+                TOptional<int32>()
             ),
+            Callback,
             Callback
         );
     }
-
     void FUserDomain::UnsubscribeSubscribes(
-        const FString RankingName,
-        Gs2::Core::Domain::CallbackID CallbackID
+        const FString RankingName
+        , Gs2::Core::Domain::CallbackID CallbackID, const TOptional<FString> TimeOffsetToken
     )
     {
         Gs2->Cache->ListUnsubscribe(
             Gs2::Ranking2::Model::FSubscribeUser::TypeName,
-            Gs2::Ranking2::Domain::Model::FSubscribeDomain::CreateCacheParentKey(
+            Gs2::Ranking2::Model::Cache::FSubscribeUserCache::CreateCacheParentKey(
                 NamespaceName,
                 UserId,
                 RankingName,
-                "SubscribeUser"
+                TOptional<int32>()
             ),
             CallbackID
         );
+    }
+    class FUserDomain::FCollectSubscribesTask : public Gs2::Core::Util::TGs2Future<TArray<Gs2::Ranking2::Model::FSubscribeUserPtr>>, public TSharedFromThis<FCollectSubscribesTask>
+    {
+        const TSharedPtr<FUserDomain> Self;
+        const TFunction<void(TArray<Gs2::Ranking2::Model::FSubscribeUserPtr>)> OnCollected;
+    const FString QueryRankingName;const TOptional<FString> QueryTimeOffsetToken;
+    public:
+        explicit FCollectSubscribesTask(const TSharedPtr<FUserDomain>& Self, TFunction<void(TArray<Gs2::Ranking2::Model::FSubscribeUserPtr>)> OnCollected,const FString RankingName,const TOptional<FString> TimeOffsetToken) : Self(Self), OnCollected(OnCollected), QueryRankingName(RankingName), QueryTimeOffsetToken(TimeOffsetToken) {}
+        FCollectSubscribesTask(const FCollectSubscribesTask& From) : TGs2Future(From), Self(From.Self), OnCollected(From.OnCollected), QueryRankingName(From.QueryRankingName), QueryTimeOffsetToken(From.QueryTimeOffsetToken) {}
+        virtual Gs2::Core::Model::FGs2ErrorPtr Action(TSharedPtr<TSharedPtr<TArray<Gs2::Ranking2::Model::FSubscribeUserPtr>>> Result) override
+        {
+            TArray<Gs2::Ranking2::Model::FSubscribeUserPtr> Items;
+            auto Iterator = Self->Subscribes(QueryRankingName, QueryTimeOffsetToken)->begin();
+            while (Iterator.HasNext())
+            {
+                if (Iterator.IsError()) return Iterator.Error();
+                if (Iterator.IsCurrentValid()) Items.Add(Iterator.Current());
+                ++Iterator;
+            }
+            if (Iterator.IsError()) return Iterator.Error();
+            *Result = MakeShared<TArray<Gs2::Ranking2::Model::FSubscribeUserPtr>>(Items);
+            if (OnCollected) OnCollected(Items);
+            return nullptr;
+        }
+    };
+
+    Gs2::Core::Domain::CallbackID FUserDomain::SubscribeSubscribes(
+        TFunction<void(TArray<Gs2::Ranking2::Model::FSubscribeUserPtr>)> Callback,const FString RankingName,const TOptional<FString> TimeOffsetToken
+    )
+    {
+        const TWeakPtr<Gs2::Core::Domain::FGs2> WeakGs2 = this->Gs2;
+        const TWeakPtr<Ranking2::Domain::FGs2Ranking2Domain> WeakService = this->Service;
+        const auto QueryNamespaceName = NamespaceName;
+        const auto QueryUserId = UserId;
+        const auto QueryRankingName = RankingName;
+        const auto QueryTimeOffsetToken = TimeOffsetToken;
+        const auto Parent = Gs2::Ranking2::Model::Cache::FSubscribeUserCache::CreateCacheParentKey(
+        NamespaceName,
+        UserId,
+        RankingName,
+        TOptional<int32>()
+    );
+        return Gs2->Cache->ListSubscribeTyped(
+            Gs2::Ranking2::Model::FSubscribeUser::TypeName,
+            Parent,
+            [Callback, WeakGs2](const TArray<FGs2ObjectPtr>& Values)
+            {
+                if (!WeakGs2.Pin().IsValid()) return;
+                TArray<Gs2::Ranking2::Model::FSubscribeUserPtr> TypedValues;
+                for (const auto& Value : Values) if (Value.IsValid()) TypedValues.Add(StaticCastSharedPtr<Gs2::Ranking2::Model::FSubscribeUser>(Value));
+                Callback(TypedValues);
+            },
+            [WeakGs2, WeakService, Callback, QueryNamespaceName, QueryUserId, QueryRankingName, QueryTimeOffsetToken]()
+            {
+                const auto Owner = WeakGs2.Pin();
+                if (!Owner.IsValid()) return;
+                const auto Domain = MakeShared<FUserDomain>(Owner, WeakService.Pin(), QueryNamespaceName, QueryUserId);
+                const auto Task = Gs2::Core::Util::New<FAsyncTask<FCollectSubscribesTask>>(Domain, Callback, QueryRankingName, QueryTimeOffsetToken);
+                Task->StartBackgroundTask();
+            }
+        );
+    }
+
+    void FUserDomain::InvalidateSubscribes(const FString RankingName,const TOptional<FString> TimeOffsetToken)
+    {
+        Gs2->Cache->ClearListCache(
+            Gs2::Ranking2::Model::FSubscribeUser::TypeName,
+            Gs2::Ranking2::Model::Cache::FSubscribeUserCache::CreateCacheParentKey(
+        NamespaceName,
+        UserId,
+        RankingName,
+        TOptional<int32>()
+    )
+        );
+    }
+
+    FUserDomain::FSubscribeSubscribesWithInitialCallTask::FSubscribeSubscribesWithInitialCallTask(const TSharedPtr<FUserDomain>& Self, TFunction<void(TArray<Gs2::Ranking2::Model::FSubscribeUserPtr>)> Callback,const FString RankingName,const TOptional<FString> TimeOffsetToken) : Self(Self), Callback(Callback), QueryRankingName(RankingName), QueryTimeOffsetToken(TimeOffsetToken) {}
+    FUserDomain::FSubscribeSubscribesWithInitialCallTask::FSubscribeSubscribesWithInitialCallTask(const FSubscribeSubscribesWithInitialCallTask& From) : TGs2Future(From), Self(From.Self), Callback(From.Callback), QueryRankingName(From.QueryRankingName), QueryTimeOffsetToken(From.QueryTimeOffsetToken) {}
+    Gs2::Core::Model::FGs2ErrorPtr FUserDomain::FSubscribeSubscribesWithInitialCallTask::Action(TSharedPtr<TSharedPtr<Gs2::Core::Domain::CallbackID>> Result)
+    {
+        const auto Task = Gs2::Core::Util::New<FAsyncTask<FCollectSubscribesTask>>(Self, TFunction<void(TArray<Gs2::Ranking2::Model::FSubscribeUserPtr>)>(), QueryRankingName, QueryTimeOffsetToken);
+        Task->StartSynchronousTask(); Task->EnsureCompletion();
+        if (Task->GetTask().IsError()) return Task->GetTask().Error();
+        const auto Values = Task->GetTask().Result();
+        const auto CallbackId = Self->SubscribeSubscribes(Callback, QueryRankingName, QueryTimeOffsetToken);
+        Callback(*Values); *Result = MakeShared<Gs2::Core::Domain::CallbackID>(CallbackId);
+        return nullptr;
+    }
+    TSharedPtr<FAsyncTask<FUserDomain::FSubscribeSubscribesWithInitialCallTask>> FUserDomain::SubscribeSubscribesWithInitialCall(TFunction<void(TArray<Gs2::Ranking2::Model::FSubscribeUserPtr>)> Callback,const FString RankingName,const TOptional<FString> TimeOffsetToken)
+    {
+        return Gs2::Core::Util::New<FAsyncTask<FSubscribeSubscribesWithInitialCallTask>>(this->AsShared(), Callback, RankingName, TimeOffsetToken);
     }
 
     TSharedPtr<Gs2::Ranking2::Domain::Model::FSubscribeDomain> FUserDomain::Subscribe(
@@ -417,6 +509,7 @@ namespace Gs2::Ranking2::Domain::Model
                 UserId,
                 "GlobalRankingReceivedReward"
             ),
+            Callback,
             Callback
         );
     }
@@ -481,6 +574,7 @@ namespace Gs2::Ranking2::Domain::Model
                 UserId,
                 "ClusterRankingReceivedReward"
             ),
+            Callback,
             Callback
         );
     }
@@ -547,6 +641,7 @@ namespace Gs2::Ranking2::Domain::Model
                 UserId,
                 "ClusterRankingScore"
             ),
+            Callback,
             Callback
         );
     }

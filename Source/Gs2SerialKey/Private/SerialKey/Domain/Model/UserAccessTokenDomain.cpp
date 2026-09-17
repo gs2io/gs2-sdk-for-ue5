@@ -33,6 +33,8 @@
 #include "SerialKey/Domain/Model/CampaignModel.h"
 #include "SerialKey/Domain/Model/CampaignModelMaster.h"
 #include "SerialKey/Domain/Model/CurrentCampaignMaster.h"
+#include "SerialKey/Model/Cache/SerialKey.h"
+#include "SerialKey/Model/Cache/CampaignModel.h"
 
 #include "Core/Domain/Gs2.h"
 #include "Core/Domain/Transaction/JobQueueJobDomainFactory.h"
@@ -96,6 +98,8 @@ namespace Gs2::SerialKey::Domain::Model
             ->WithContextStack((!Request->GetContextStack().IsSet() || Request->GetContextStack()->IsEmpty()) ? Self->Gs2->DefaultContextStack : Request->GetContextStack())
             ->WithNamespaceName(Self->NamespaceName)
             ->WithAccessToken(Self->AccessToken->GetToken());
+        const auto CacheOwnerSnapshotUserId = Self->AccessToken.IsValid() ? Self->UserId() : TOptional<FString>();
+        const auto CacheOwnerSnapshotTimeOffset = Self->AccessToken.IsValid() ? Self->AccessToken->GetTimeOffset() : TOptional<int32>();
         const auto Future = Self->Client->VerifyCode(
             Request
         );
@@ -106,19 +110,44 @@ namespace Gs2::SerialKey::Domain::Model
         }
         const auto ResultModel = Future->GetTask().Result();
         Future->EnsureCompletion();
-        if (ResultModel->GetItem() != nullptr)
-        {
-            const auto Key = Gs2::SerialKey::Domain::Model::FSerialKeyDomain::CreateCacheKey(
-                ResultModel->GetItem()->GetCode()
-            );
-            Self->Gs2->Cache->Put(
-                Gs2::SerialKey::Model::FSerialKey::TypeName,
-                Self->ParentKey,
-                Key,
-                ResultModel->GetItem(),
-                FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
-            );
-        }
+
+            if (ResultModel.IsValid() && ResultModel->GetItem() != nullptr)
+            {
+
+        if (!((CacheOwnerSnapshotUserId)).IsSet())
+            {
+              const auto Details = MakeShared<TArray<TSharedPtr<Gs2::Core::Model::FGs2ErrorDetail>>>();
+                Details->Add(MakeShared<Gs2::Core::Model::FGs2ErrorDetail>(TEXT("userId"), TEXT("userId is invalid."), TEXT("invalid_response")));
+                return MakeShared<Gs2::Core::Model::FUnknownError>(Details);
+              }
+        Gs2::SerialKey::Model::Cache::FSerialKeyCache::Put(
+            Self->Gs2->Cache,
+
+            Request->GetNamespaceName(),
+            (CacheOwnerSnapshotUserId),
+            ResultModel->GetItem()->GetCode(),
+            CacheOwnerSnapshotTimeOffset,
+            ResultModel->GetItem()
+        );
+            }
+            if (ResultModel.IsValid() && ResultModel->GetCampaignModel() != nullptr)
+            {
+
+        if (!ResultModel.IsValid() || !ResultModel->GetItem().IsValid())
+            {
+              const auto Details = MakeShared<TArray<TSharedPtr<Gs2::Core::Model::FGs2ErrorDetail>>>();
+                Details->Add(MakeShared<Gs2::Core::Model::FGs2ErrorDetail>(TEXT("result.item"), TEXT("result.item is invalid."), TEXT("invalid_response")));
+                return MakeShared<Gs2::Core::Model::FUnknownError>(Details);
+              }
+        Gs2::SerialKey::Model::Cache::FCampaignModelCache::Put(
+            Self->Gs2->Cache,
+
+            Request->GetNamespaceName(),
+            ResultModel->GetItem()->GetCampaignModelName(),
+            CacheOwnerSnapshotTimeOffset,
+            ResultModel->GetCampaignModel()
+        );
+            }
         auto Domain = MakeShared<Gs2::SerialKey::Domain::Model::FSerialKeyAccessTokenDomain>(
             Self->Gs2,
             Self->Service,
@@ -176,4 +205,3 @@ namespace Gs2::SerialKey::Domain::Model
 #elif defined(__clang__)
 #pragma clang diagnostic pop
 #endif
-

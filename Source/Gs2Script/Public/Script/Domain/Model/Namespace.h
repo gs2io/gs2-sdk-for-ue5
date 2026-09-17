@@ -101,6 +101,8 @@ namespace Gs2::Script::Domain::Model
             const FNamespaceDomain& From
         );
 
+
+
         class GS2SCRIPT_API FGetStatusTask final :
             public Gs2::Core::Util::TGs2Future<Gs2::Script::Domain::Model::FNamespaceDomain>,
             public TSharedFromThis<FGetStatusTask>
@@ -126,6 +128,8 @@ namespace Gs2::Script::Domain::Model
         TSharedPtr<FAsyncTask<FGetStatusTask>> GetStatus(
             Request::FGetNamespaceStatusRequestPtr Request
         );
+
+
 
         class GS2SCRIPT_API FGetTask final :
             public Gs2::Core::Util::TGs2Future<Gs2::Script::Model::FNamespace>,
@@ -153,6 +157,8 @@ namespace Gs2::Script::Domain::Model
             Request::FGetNamespaceRequestPtr Request
         );
 
+
+
         class GS2SCRIPT_API FUpdateTask final :
             public Gs2::Core::Util::TGs2Future<Gs2::Script::Domain::Model::FNamespaceDomain>,
             public TSharedFromThis<FUpdateTask>
@@ -178,6 +184,8 @@ namespace Gs2::Script::Domain::Model
         TSharedPtr<FAsyncTask<FUpdateTask>> Update(
             Request::FUpdateNamespaceRequestPtr Request
         );
+
+
 
         class GS2SCRIPT_API FDeleteTask final :
             public Gs2::Core::Util::TGs2Future<Gs2::Script::Domain::Model::FNamespaceDomain>,
@@ -205,6 +213,8 @@ namespace Gs2::Script::Domain::Model
             Request::FDeleteNamespaceRequestPtr Request
         );
 
+
+
         class GS2SCRIPT_API FCreateScriptTask final :
             public Gs2::Core::Util::TGs2Future<Gs2::Script::Domain::Model::FScriptDomain>,
             public TSharedFromThis<FCreateScriptTask>
@@ -230,6 +240,8 @@ namespace Gs2::Script::Domain::Model
         TSharedPtr<FAsyncTask<FCreateScriptTask>> CreateScript(
             Request::FCreateScriptRequestPtr Request
         );
+
+
 
         class GS2SCRIPT_API FCreateScriptFromGitHubTask final :
             public Gs2::Core::Util::TGs2Future<Gs2::Script::Domain::Model::FScriptDomain>,
@@ -257,6 +269,8 @@ namespace Gs2::Script::Domain::Model
             Request::FCreateScriptFromGitHubRequestPtr Request
         );
 
+
+
         class GS2SCRIPT_API FInvokeScriptTask final :
             public Gs2::Core::Util::TGs2Future<Gs2::Script::Domain::Model::FNamespaceDomain>,
             public TSharedFromThis<FInvokeScriptTask>
@@ -282,6 +296,8 @@ namespace Gs2::Script::Domain::Model
         TSharedPtr<FAsyncTask<FInvokeScriptTask>> InvokeScript(
             Request::FInvokeScriptRequestPtr Request
         );
+
+
 
         class GS2SCRIPT_API FDebugInvokeTask final :
             public Gs2::Core::Util::TGs2Future<Gs2::Script::Domain::Model::FNamespaceDomain>,
@@ -315,8 +331,33 @@ namespace Gs2::Script::Domain::Model
 
         Gs2::Core::Domain::CallbackID SubscribeScripts(
             TFunction<void()> Callback
+
         );
 
+        class FCollectScriptsTask;
+
+        Gs2::Core::Domain::CallbackID SubscribeScripts(
+            TFunction<void(TArray<Gs2::Script::Model::FScriptPtr>)> Callback,const TOptional<FString> NamePrefix = TOptional<FString>()
+        );
+
+        void InvalidateScripts(const TOptional<FString> NamePrefix = TOptional<FString>());
+
+        class GS2SCRIPT_API FSubscribeScriptsWithInitialCallTask final :
+            public Gs2::Core::Util::TGs2Future<Gs2::Core::Domain::CallbackID>,
+            public TSharedFromThis<FSubscribeScriptsWithInitialCallTask>
+        {
+            const TSharedPtr<FNamespaceDomain> Self;
+            const TFunction<void(TArray<Gs2::Script::Model::FScriptPtr>)> Callback;
+        const TOptional<FString> QueryNamePrefix;
+        public:
+            FSubscribeScriptsWithInitialCallTask(const TSharedPtr<FNamespaceDomain>& Self, TFunction<void(TArray<Gs2::Script::Model::FScriptPtr>)> Callback,const TOptional<FString> NamePrefix);
+            FSubscribeScriptsWithInitialCallTask(const FSubscribeScriptsWithInitialCallTask& From);
+            virtual Gs2::Core::Model::FGs2ErrorPtr Action(TSharedPtr<TSharedPtr<Gs2::Core::Domain::CallbackID>> Result) override;
+        };
+
+        TSharedPtr<FAsyncTask<FSubscribeScriptsWithInitialCallTask>> SubscribeScriptsWithInitialCall(
+            TFunction<void(TArray<Gs2::Script::Model::FScriptPtr>)> Callback,const TOptional<FString> NamePrefix = TOptional<FString>()
+        );
         void UnsubscribeScripts(
             Gs2::Core::Domain::CallbackID CallbackID
         );

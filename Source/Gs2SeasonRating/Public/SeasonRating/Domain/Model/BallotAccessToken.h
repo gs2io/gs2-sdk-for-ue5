@@ -20,11 +20,8 @@
 
 #include "Core/Domain/Gs2Core.h"
 #include "Auth/Gs2Auth.h"
-#include "SeasonRating/Gs2SeasonRating.h"
-#include "SeasonRating/Domain/Iterator/DescribeNamespacesIterator.h"
-#include "SeasonRating/Domain/Iterator/DescribeMatchSessionsIterator.h"
-#include "SeasonRating/Domain/Iterator/DescribeSeasonModelMastersIterator.h"
-#include "SeasonRating/Domain/Iterator/DescribeSeasonModelsIterator.h"
+#include "SeasonRating/Gs2SeasonRatingRestClient.h"
+#include "SeasonRating/Model/SignedBallot.h"
 
 namespace Gs2::Core::Domain
 {
@@ -40,17 +37,6 @@ namespace Gs2::SeasonRating::Domain
 
 namespace Gs2::SeasonRating::Domain::Model
 {
-    class FNamespaceDomain;
-    class FMatchSessionDomain;
-    class FSeasonModelMasterDomain;
-    class FSeasonModelDomain;
-    class FCurrentSeasonModelMasterDomain;
-    class FBallotDomain;
-    class FBallotAccessTokenDomain;
-    class FVoteDomain;
-    class FUserDomain;
-    class FUserAccessTokenDomain;
-
     class GS2SEASONRATING_API FBallotAccessTokenDomain:
         public TSharedFromThis<FBallotAccessTokenDomain>
     {
@@ -99,7 +85,7 @@ namespace Gs2::SeasonRating::Domain::Model
         );
 
         class GS2SEASONRATING_API FGetTask final :
-            public Gs2::Core::Util::TGs2Future<Gs2::SeasonRating::Model::FBallot>,
+            public Gs2::Core::Util::TGs2Future<Gs2::SeasonRating::Model::FSignedBallot>,
             public TSharedFromThis<FGetTask>
         {
             const TSharedPtr<FBallotAccessTokenDomain> Self;
@@ -115,7 +101,7 @@ namespace Gs2::SeasonRating::Domain::Model
             );
 
             virtual Gs2::Core::Model::FGs2ErrorPtr Action(
-                TSharedPtr<TSharedPtr<Gs2::SeasonRating::Model::FBallot>> Result
+                TSharedPtr<TSharedPtr<Gs2::SeasonRating::Model::FSignedBallot>> Result
             ) override;
         };
         friend FGetTask;
@@ -137,12 +123,12 @@ namespace Gs2::SeasonRating::Domain::Model
         static FString CreateCacheKey(
             TOptional<FString> SeasonName,
             TOptional<FString> SessionName,
-            TOptional<int32> NumberOfPlayer,
-            TOptional<FString> KeyId
+            TOptional<int32> NumberOfPlayer = TOptional<int32>(),
+            TOptional<FString> KeyId = TOptional<FString>()
         );
 
         class GS2SEASONRATING_API FModelTask final :
-            public Gs2::Core::Util::TGs2Future<Gs2::SeasonRating::Model::FBallot>,
+            public Gs2::Core::Util::TGs2Future<Gs2::SeasonRating::Model::FSignedBallot>,
             public TSharedFromThis<FModelTask>
         {
             const TSharedPtr<FBallotAccessTokenDomain> Self;
@@ -156,7 +142,7 @@ namespace Gs2::SeasonRating::Domain::Model
             );
 
             virtual Gs2::Core::Model::FGs2ErrorPtr Action(
-                TSharedPtr<TSharedPtr<Gs2::SeasonRating::Model::FBallot>> Result
+                TSharedPtr<TSharedPtr<Gs2::SeasonRating::Model::FSignedBallot>> Result
             ) override;
         };
         friend FModelTask;
@@ -164,7 +150,7 @@ namespace Gs2::SeasonRating::Domain::Model
         TSharedPtr<FAsyncTask<FModelTask>> Model();
 
         Gs2::Core::Domain::CallbackID Subscribe(
-            TFunction<void(Gs2::SeasonRating::Model::FBallotPtr)> Callback
+            TFunction<void(Gs2::SeasonRating::Model::FSignedBallotPtr)> Callback
         );
 
         void Unsubscribe(

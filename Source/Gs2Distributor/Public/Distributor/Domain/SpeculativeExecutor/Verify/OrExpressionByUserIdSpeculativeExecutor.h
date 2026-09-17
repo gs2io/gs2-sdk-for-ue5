@@ -33,6 +33,11 @@ namespace Gs2::Core::Domain
     typedef TSharedPtr<FGs2> FGs2Ptr;
 }
 
+namespace Gs2::Core::Domain::SpeculativeExecutor
+{
+    class FPreparedSpeculativeCommit;
+}
+
 namespace Gs2::Distributor::Domain
 {
     class FGs2DistributorDomain;
@@ -49,20 +54,24 @@ namespace Gs2::Distributor::Domain::SpeculativeExecutor
         static FString Action();
 
         class FCommitTask final :
-            public Gs2::Core::Util::TGs2Future<TFunction<void()>>,
+            public Gs2::Core::Util::TGs2Future<Gs2::Core::Domain::SpeculativeExecutor::FPreparedSpeculativeCommit>,
             public TSharedFromThis<FCommitTask>
         {
             const Gs2::Core::Domain::FGs2Ptr Domain;
             const Gs2::Distributor::Domain::FGs2DistributorDomainPtr Service;
             const Gs2::Auth::Model::FAccessTokenPtr AccessToken;
             const Gs2::Distributor::Request::FOrExpressionByUserIdRequestPtr Request;
+            const TBigInt<1024, false> Rate;
+            const bool Inverse;
 
         public:
             explicit FCommitTask(
                 const Gs2::Core::Domain::FGs2Ptr& Domain,
                 const Gs2::Distributor::Domain::FGs2DistributorDomainPtr& Service,
                 const Gs2::Auth::Model::FAccessTokenPtr& AccessToken,
-                const Gs2::Distributor::Request::FOrExpressionByUserIdRequestPtr& Request
+                const Gs2::Distributor::Request::FOrExpressionByUserIdRequestPtr& Request,
+                const TBigInt<1024, false>& Rate = TBigInt<1024, false>(1),
+                bool Inverse = false
             );
 
             FCommitTask(
@@ -70,7 +79,7 @@ namespace Gs2::Distributor::Domain::SpeculativeExecutor
             );
 
             virtual Gs2::Core::Model::FGs2ErrorPtr Action(
-                TSharedPtr<TSharedPtr<TFunction<void()>>> Result
+                TSharedPtr<TSharedPtr<Gs2::Core::Domain::SpeculativeExecutor::FPreparedSpeculativeCommit>> Result
             ) override;
         };
         friend FCommitTask;
@@ -80,6 +89,22 @@ namespace Gs2::Distributor::Domain::SpeculativeExecutor
             const Gs2::Distributor::Domain::FGs2DistributorDomainPtr& Service,
             const Gs2::Auth::Model::FAccessTokenPtr& AccessToken,
             const Gs2::Distributor::Request::FOrExpressionByUserIdRequestPtr& Request
+        );
+
+        static TSharedPtr<FAsyncTask<FCommitTask>> ExecuteRated(
+            const Gs2::Core::Domain::FGs2Ptr& Domain,
+            const Gs2::Distributor::Domain::FGs2DistributorDomainPtr& Service,
+            const Gs2::Auth::Model::FAccessTokenPtr& AccessToken,
+            const Gs2::Distributor::Request::FOrExpressionByUserIdRequestPtr& Request,
+            TBigInt<1024, false> Rate
+        );
+
+        static TSharedPtr<FAsyncTask<FCommitTask>> ExecuteInverseRated(
+            const Gs2::Core::Domain::FGs2Ptr& Domain,
+            const Gs2::Distributor::Domain::FGs2DistributorDomainPtr& Service,
+            const Gs2::Auth::Model::FAccessTokenPtr& AccessToken,
+            const Gs2::Distributor::Request::FOrExpressionByUserIdRequestPtr& Request,
+            TBigInt<1024, false> Rate
         );
 
         static Gs2::Distributor::Request::FOrExpressionByUserIdRequestPtr Rate(

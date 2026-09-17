@@ -75,7 +75,8 @@ namespace Gs2::UE5::Limit::Domain::Model
         );
     }
 
-    void FEzNamespaceDomain::UnsubscribeLimitModels(Gs2::Core::Domain::CallbackID CallbackId)
+    void FEzNamespaceDomain::UnsubscribeLimitModels(
+            Gs2::Core::Domain::CallbackID CallbackId)
     {
         Domain->UnsubscribeLimitModels(
             CallbackId

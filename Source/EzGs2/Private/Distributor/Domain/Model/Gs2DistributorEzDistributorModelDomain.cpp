@@ -82,7 +82,7 @@ namespace Gs2::UE5::Distributor::Domain::Model
     Gs2::Core::Domain::CallbackID FEzDistributorModelDomain::Subscribe(TFunction<void(Gs2::UE5::Distributor::Model::FEzDistributorModelPtr)> Callback)
     {
         return Domain->Subscribe(
-            [&](Gs2::Distributor::Model::FDistributorModelPtr Item)
+            [Callback](Gs2::Distributor::Model::FDistributorModelPtr Item)
             {
                 Callback(Gs2::UE5::Distributor::Model::FEzDistributorModel::FromModel(Item));
             }

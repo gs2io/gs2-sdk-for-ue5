@@ -92,6 +92,8 @@ namespace Gs2::Guild::Domain::Model
             const FUserDomain& From
         );
 
+
+
         class GS2GUILD_API FCreateGuildTask final :
             public Gs2::Core::Util::TGs2Future<Gs2::Guild::Domain::Model::FGuildDomain>,
             public TSharedFromThis<FCreateGuildTask>
@@ -117,6 +119,8 @@ namespace Gs2::Guild::Domain::Model
         TSharedPtr<FAsyncTask<FCreateGuildTask>> CreateGuild(
             Request::FCreateGuildByUserIdRequestPtr Request
         );
+
+
 
         class GS2GUILD_API FAssumeTask final :
             public Gs2::Core::Util::TGs2Future<Gs2::Auth::Domain::Model::FAccessTokenDomain>,
@@ -144,6 +148,8 @@ namespace Gs2::Guild::Domain::Model
             Request::FAssumeByUserIdRequestPtr Request
         );
 
+
+
         class GS2GUILD_API FSendRequestTask final :
             public Gs2::Core::Util::TGs2Future<Gs2::Guild::Domain::Model::FGuildDomain>,
             public TSharedFromThis<FSendRequestTask>
@@ -169,6 +175,8 @@ namespace Gs2::Guild::Domain::Model
         TSharedPtr<FAsyncTask<FSendRequestTask>> SendRequest(
             Request::FSendRequestByUserIdRequestPtr Request
         );
+
+
 
         class GS2GUILD_API FDeleteTask final :
             public Gs2::Core::Util::TGs2Future<Gs2::Guild::Domain::Model::FSendMemberRequestDomain>,
@@ -202,13 +210,84 @@ namespace Gs2::Guild::Domain::Model
         ) const;
 
         Gs2::Core::Domain::CallbackID SubscribeSendRequests(
+
+            TFunction<void()> Callback,
+
+            const FString GuildModelName
+
+        );
+
+        Gs2::Core::Domain::CallbackID SubscribeSendRequests(
             const FString GuildModelName,
             TFunction<void()> Callback
         );
 
+        class FCollectSendRequestsTask;
+
+        Gs2::Core::Domain::CallbackID SubscribeSendRequests(
+
+            TFunction<void(TArray<Gs2::Guild::Model::FSendMemberRequestPtr>)> Callback,
+
+            const FString GuildModelName,
+
+            const TOptional<FString> TimeOffsetToken = TOptional<FString>()
+
+        );
+
+        void InvalidateSendRequests(
+
+            const FString GuildModelName,
+
+            const TOptional<FString> TimeOffsetToken = TOptional<FString>()
+
+        );
+
+
+
+        class GS2GUILD_API FSubscribeSendRequestsWithInitialCallTask final :
+
+            public Gs2::Core::Util::TGs2Future<Gs2::Core::Domain::CallbackID>,
+
+            public TSharedFromThis<FSubscribeSendRequestsWithInitialCallTask>
+
+        {
+
+            const TSharedPtr<FUserDomain> Self;
+
+            const TFunction<void(TArray<Gs2::Guild::Model::FSendMemberRequestPtr>)> Callback;
+
+            const FString QueryGuildModelName;
+
+            const TOptional<FString> QueryTimeOffsetToken;
+
+        public:
+
+            FSubscribeSendRequestsWithInitialCallTask(const TSharedPtr<FUserDomain>& Self, TFunction<void(TArray<Gs2::Guild::Model::FSendMemberRequestPtr>)> Callback, const FString GuildModelName, const TOptional<FString> TimeOffsetToken);
+
+            FSubscribeSendRequestsWithInitialCallTask(const FSubscribeSendRequestsWithInitialCallTask& From);
+
+            virtual Gs2::Core::Model::FGs2ErrorPtr Action(TSharedPtr<TSharedPtr<Gs2::Core::Domain::CallbackID>> Result) override;
+
+        };
+
+        TSharedPtr<FAsyncTask<FSubscribeSendRequestsWithInitialCallTask>> SubscribeSendRequestsWithInitialCall(
+
+            TFunction<void(TArray<Gs2::Guild::Model::FSendMemberRequestPtr>)> Callback,
+
+            const FString GuildModelName,
+
+            const TOptional<FString> TimeOffsetToken = TOptional<FString>()
+
+        );
+
+
+
         void UnsubscribeSendRequests(
             const FString GuildModelName,
-            Gs2::Core::Domain::CallbackID CallbackID
+            Gs2::Core::Domain::CallbackID CallbackID,
+
+            const TOptional<FString> TimeOffsetToken = TOptional<FString>()
+
         );
 
         TSharedPtr<Gs2::Guild::Domain::Model::FSendMemberRequestDomain> SendMemberRequest(
@@ -236,10 +315,36 @@ namespace Gs2::Guild::Domain::Model
 
         Gs2::Core::Domain::CallbackID SubscribeJoinedGuilds(
             TFunction<void()> Callback
+            , const TOptional<FString> GuildModelName = TOptional<FString>()
         );
 
+        class FCollectJoinedGuildsTask;
+
+        Gs2::Core::Domain::CallbackID SubscribeJoinedGuilds(
+            TFunction<void(TArray<Gs2::Guild::Model::FJoinedGuildPtr>)> Callback,const TOptional<FString> GuildModelName = TOptional<FString>(),const TOptional<FString> TimeOffsetToken = TOptional<FString>()
+        );
+
+        void InvalidateJoinedGuilds(const TOptional<FString> GuildModelName = TOptional<FString>(),const TOptional<FString> TimeOffsetToken = TOptional<FString>());
+
+        class GS2GUILD_API FSubscribeJoinedGuildsWithInitialCallTask final :
+            public Gs2::Core::Util::TGs2Future<Gs2::Core::Domain::CallbackID>,
+            public TSharedFromThis<FSubscribeJoinedGuildsWithInitialCallTask>
+        {
+            const TSharedPtr<FUserDomain> Self;
+            const TFunction<void(TArray<Gs2::Guild::Model::FJoinedGuildPtr>)> Callback;
+        const TOptional<FString> QueryGuildModelName;const TOptional<FString> QueryTimeOffsetToken;
+        public:
+            FSubscribeJoinedGuildsWithInitialCallTask(const TSharedPtr<FUserDomain>& Self, TFunction<void(TArray<Gs2::Guild::Model::FJoinedGuildPtr>)> Callback,const TOptional<FString> GuildModelName,const TOptional<FString> TimeOffsetToken);
+            FSubscribeJoinedGuildsWithInitialCallTask(const FSubscribeJoinedGuildsWithInitialCallTask& From);
+            virtual Gs2::Core::Model::FGs2ErrorPtr Action(TSharedPtr<TSharedPtr<Gs2::Core::Domain::CallbackID>> Result) override;
+        };
+
+        TSharedPtr<FAsyncTask<FSubscribeJoinedGuildsWithInitialCallTask>> SubscribeJoinedGuildsWithInitialCall(
+            TFunction<void(TArray<Gs2::Guild::Model::FJoinedGuildPtr>)> Callback,const TOptional<FString> GuildModelName = TOptional<FString>(),const TOptional<FString> TimeOffsetToken = TOptional<FString>()
+        );
         void UnsubscribeJoinedGuilds(
-            Gs2::Core::Domain::CallbackID CallbackID
+
+            Gs2::Core::Domain::CallbackID CallbackID, const TOptional<FString> GuildModelName = TOptional<FString>(), const TOptional<FString> TimeOffsetToken = TOptional<FString>()
         );
 
         TSharedPtr<Gs2::Guild::Domain::Model::FJoinedGuildDomain> JoinedGuild(

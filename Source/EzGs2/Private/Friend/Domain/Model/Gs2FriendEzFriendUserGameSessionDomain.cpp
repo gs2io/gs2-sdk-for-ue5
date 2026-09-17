@@ -12,8 +12,6 @@
  * on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either
  * express or implied. See the License for the specific language governing
  * permissions and limitations under the License.
- *
- * deny overwrite
  */
 
 #include "Friend/Domain/Model/Gs2FriendEzFriendUserGameSessionDomain.h"
@@ -146,7 +144,7 @@ namespace Gs2::UE5::Friend::Domain::Model
     Gs2::Core::Domain::CallbackID FEzFriendUserGameSessionDomain::Subscribe(TFunction<void(Gs2::UE5::Friend::Model::FEzFriendUserPtr)> Callback)
     {
         return Domain->Subscribe(
-            [&](Gs2::Friend::Model::FFriendUserPtr Item)
+            [Callback](Gs2::Friend::Model::FFriendUserPtr Item)
             {
                 Callback(Gs2::UE5::Friend::Model::FEzFriendUser::FromModel(Item));
             }

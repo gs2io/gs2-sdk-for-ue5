@@ -117,7 +117,34 @@ namespace Gs2::News::Domain::Model
 
         TSharedPtr<FAsyncTask<FModelTask>> Model();
 
+        void Invalidate();
+
         Gs2::Core::Domain::CallbackID Subscribe(
+            TFunction<void(Gs2::News::Model::FSetCookieRequestEntryPtr)> Callback
+        );
+
+        class GS2NEWS_API FSubscribeWithInitialCallTask final :
+            public Gs2::Core::Util::TGs2Future<Gs2::Core::Domain::CallbackID>,
+            public TSharedFromThis<FSubscribeWithInitialCallTask>
+        {
+            const TSharedPtr<FSetCookieRequestEntryDomain> Self;
+            const TFunction<void(Gs2::News::Model::FSetCookieRequestEntryPtr)> Callback;
+        public:
+            FSubscribeWithInitialCallTask(
+                const TSharedPtr<FSetCookieRequestEntryDomain>& Self,
+                TFunction<void(Gs2::News::Model::FSetCookieRequestEntryPtr)> Callback
+            );
+
+            FSubscribeWithInitialCallTask(
+                const FSubscribeWithInitialCallTask& From
+            );
+
+            virtual Gs2::Core::Model::FGs2ErrorPtr Action(
+                TSharedPtr<TSharedPtr<Gs2::Core::Domain::CallbackID>> Result
+            ) override;
+        };
+
+        TSharedPtr<FAsyncTask<FSubscribeWithInitialCallTask>> SubscribeWithInitialCall(
             TFunction<void(Gs2::News::Model::FSetCookieRequestEntryPtr)> Callback
         );
 

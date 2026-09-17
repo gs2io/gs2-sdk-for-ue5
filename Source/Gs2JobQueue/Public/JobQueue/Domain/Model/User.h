@@ -88,6 +88,8 @@ namespace Gs2::JobQueue::Domain::Model
             const FUserDomain& From
         );
 
+
+
         class GS2JOBQUEUE_API FPushTask final :
             public Gs2::Core::Util::TGs2Future<TArray<TSharedPtr<Gs2::JobQueue::Domain::Model::FJobDomain>>>,
             public TSharedFromThis<FPushTask>
@@ -113,6 +115,8 @@ namespace Gs2::JobQueue::Domain::Model
         TSharedPtr<FAsyncTask<FPushTask>> Push(
             Request::FPushByUserIdRequestPtr Request
         );
+
+
 
         class GS2JOBQUEUE_API FRunTask final :
             public Gs2::Core::Util::TGs2Future<Gs2::JobQueue::Domain::Model::FJobDomain>,
@@ -146,8 +150,33 @@ namespace Gs2::JobQueue::Domain::Model
 
         Gs2::Core::Domain::CallbackID SubscribeJobs(
             TFunction<void()> Callback
+
         );
 
+        class FCollectJobsTask;
+
+        Gs2::Core::Domain::CallbackID SubscribeJobs(
+            TFunction<void(TArray<Gs2::JobQueue::Model::FJobPtr>)> Callback,const TOptional<FString> TimeOffsetToken = TOptional<FString>()
+        );
+
+        void InvalidateJobs(const TOptional<FString> TimeOffsetToken = TOptional<FString>());
+
+        class GS2JOBQUEUE_API FSubscribeJobsWithInitialCallTask final :
+            public Gs2::Core::Util::TGs2Future<Gs2::Core::Domain::CallbackID>,
+            public TSharedFromThis<FSubscribeJobsWithInitialCallTask>
+        {
+            const TSharedPtr<FUserDomain> Self;
+            const TFunction<void(TArray<Gs2::JobQueue::Model::FJobPtr>)> Callback;
+        const TOptional<FString> QueryTimeOffsetToken;
+        public:
+            FSubscribeJobsWithInitialCallTask(const TSharedPtr<FUserDomain>& Self, TFunction<void(TArray<Gs2::JobQueue::Model::FJobPtr>)> Callback,const TOptional<FString> TimeOffsetToken);
+            FSubscribeJobsWithInitialCallTask(const FSubscribeJobsWithInitialCallTask& From);
+            virtual Gs2::Core::Model::FGs2ErrorPtr Action(TSharedPtr<TSharedPtr<Gs2::Core::Domain::CallbackID>> Result) override;
+        };
+
+        TSharedPtr<FAsyncTask<FSubscribeJobsWithInitialCallTask>> SubscribeJobsWithInitialCall(
+            TFunction<void(TArray<Gs2::JobQueue::Model::FJobPtr>)> Callback,const TOptional<FString> TimeOffsetToken = TOptional<FString>()
+        );
         void UnsubscribeJobs(
             Gs2::Core::Domain::CallbackID CallbackID
         );

@@ -75,10 +75,6 @@ namespace Gs2::Lottery::Domain::Model
         TOptional<FString> UserId() const { return AccessToken->GetUserId(); }
         TOptional<FString> LotteryName;
         TOptional<FString> PrizeId;
-    private:
-
-        FString ParentKey;
-
     public:
 
         FProbabilityAccessTokenDomain(
@@ -128,6 +124,24 @@ namespace Gs2::Lottery::Domain::Model
         friend FModelTask;
 
         TSharedPtr<FAsyncTask<FModelTask>> Model();
+
+        class GS2LOTTERY_API FSubscribeWithInitialCallTask final :
+            public Gs2::Core::Util::TGs2Future<Gs2::Core::Domain::CallbackID>,
+            public TSharedFromThis<FSubscribeWithInitialCallTask>
+        {
+            const TSharedPtr<FProbabilityAccessTokenDomain> Self;
+            const TFunction<void(Gs2::Lottery::Model::FProbabilityPtr)> Callback;
+        public:
+            explicit FSubscribeWithInitialCallTask(const TSharedPtr<FProbabilityAccessTokenDomain> Self, const TFunction<void(Gs2::Lottery::Model::FProbabilityPtr)>& Callback);
+            FSubscribeWithInitialCallTask(const FSubscribeWithInitialCallTask& From);
+            virtual Gs2::Core::Model::FGs2ErrorPtr Action(TSharedPtr<TSharedPtr<Gs2::Core::Domain::CallbackID>> Result) override;
+        };
+        friend FSubscribeWithInitialCallTask;
+
+        TSharedPtr<FAsyncTask<FProbabilityAccessTokenDomain::FSubscribeWithInitialCallTask>> SubscribeWithInitialCall(
+            TFunction<void(Gs2::Lottery::Model::FProbabilityPtr)> Callback
+        );
+        void Invalidate();
 
         Gs2::Core::Domain::CallbackID Subscribe(
             TFunction<void(Gs2::Lottery::Model::FProbabilityPtr)> Callback

@@ -83,6 +83,8 @@ namespace Gs2::Exchange::Domain::Model
             const FIncrementalRateModelDomain& From
         );
 
+
+
         class GS2EXCHANGE_API FGetTask final :
             public Gs2::Core::Util::TGs2Future<Gs2::Exchange::Model::FIncrementalRateModel>,
             public TSharedFromThis<FGetTask>
@@ -141,7 +143,34 @@ namespace Gs2::Exchange::Domain::Model
 
         TSharedPtr<FAsyncTask<FModelTask>> Model();
 
+        void Invalidate();
+
         Gs2::Core::Domain::CallbackID Subscribe(
+            TFunction<void(Gs2::Exchange::Model::FIncrementalRateModelPtr)> Callback
+        );
+
+        class GS2EXCHANGE_API FSubscribeWithInitialCallTask final :
+            public Gs2::Core::Util::TGs2Future<Gs2::Core::Domain::CallbackID>,
+            public TSharedFromThis<FSubscribeWithInitialCallTask>
+        {
+            const TSharedPtr<FIncrementalRateModelDomain> Self;
+            const TFunction<void(Gs2::Exchange::Model::FIncrementalRateModelPtr)> Callback;
+        public:
+            FSubscribeWithInitialCallTask(
+                const TSharedPtr<FIncrementalRateModelDomain>& Self,
+                TFunction<void(Gs2::Exchange::Model::FIncrementalRateModelPtr)> Callback
+            );
+
+            FSubscribeWithInitialCallTask(
+                const FSubscribeWithInitialCallTask& From
+            );
+
+            virtual Gs2::Core::Model::FGs2ErrorPtr Action(
+                TSharedPtr<TSharedPtr<Gs2::Core::Domain::CallbackID>> Result
+            ) override;
+        };
+
+        TSharedPtr<FAsyncTask<FSubscribeWithInitialCallTask>> SubscribeWithInitialCall(
             TFunction<void(Gs2::Exchange::Model::FIncrementalRateModelPtr)> Callback
         );
 

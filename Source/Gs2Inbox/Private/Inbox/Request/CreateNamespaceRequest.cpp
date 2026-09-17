@@ -23,6 +23,7 @@ namespace Gs2::Inbox::Request
         DescriptionValue(TOptional<FString>()),
         IsAutomaticDeletingEnabledValue(TOptional<bool>()),
         TransactionSettingValue(nullptr),
+        TransactionSettingV2Value(nullptr),
         ReceiveMessageScriptValue(nullptr),
         ReadMessageScriptValue(nullptr),
         DeleteMessageScriptValue(nullptr),
@@ -40,6 +41,7 @@ namespace Gs2::Inbox::Request
         DescriptionValue(From.DescriptionValue),
         IsAutomaticDeletingEnabledValue(From.IsAutomaticDeletingEnabledValue),
         TransactionSettingValue(From.TransactionSettingValue),
+        TransactionSettingV2Value(From.TransactionSettingV2Value),
         ReceiveMessageScriptValue(From.ReceiveMessageScriptValue),
         ReadMessageScriptValue(From.ReadMessageScriptValue),
         DeleteMessageScriptValue(From.DeleteMessageScriptValue),
@@ -87,6 +89,14 @@ namespace Gs2::Inbox::Request
     )
     {
         this->TransactionSettingValue = TransactionSetting;
+        return SharedThis(this);
+    }
+
+    TSharedPtr<FCreateNamespaceRequest> FCreateNamespaceRequest::WithTransactionSettingV2(
+        const TSharedPtr<Model::FTransactionSettingV2> TransactionSettingV2
+    )
+    {
+        this->TransactionSettingV2Value = TransactionSettingV2;
         return SharedThis(this);
     }
 
@@ -182,6 +192,15 @@ namespace Gs2::Inbox::Request
             return nullptr;
         }
         return TransactionSettingValue;
+    }
+
+    TSharedPtr<Model::FTransactionSettingV2> FCreateNamespaceRequest::GetTransactionSettingV2() const
+    {
+        if (!TransactionSettingV2Value.IsValid())
+        {
+            return nullptr;
+        }
+        return TransactionSettingV2Value;
     }
 
     TSharedPtr<Model::FScriptSetting> FCreateNamespaceRequest::GetReceiveMessageScript() const
@@ -281,6 +300,14 @@ namespace Gs2::Inbox::Request
                   }
                   return Model::FTransactionSetting::FromJson(Data->GetObjectField(ANSI_TO_TCHAR("transactionSetting")));
               }() : nullptr)
+          ->WithTransactionSettingV2(Data->HasField(ANSI_TO_TCHAR("transactionSettingV2")) ? [Data]() -> Model::FTransactionSettingV2Ptr
+              {
+                  if (Data->HasTypedField<EJson::Null>(ANSI_TO_TCHAR("transactionSettingV2")))
+                  {
+                      return nullptr;
+                  }
+                  return Model::FTransactionSettingV2::FromJson(Data->GetObjectField(ANSI_TO_TCHAR("transactionSettingV2")));
+              }() : nullptr)
           ->WithReceiveMessageScript(Data->HasField(ANSI_TO_TCHAR("receiveMessageScript")) ? [Data]() -> Model::FScriptSettingPtr
               {
                   if (Data->HasTypedField<EJson::Null>(ANSI_TO_TCHAR("receiveMessageScript")))
@@ -363,6 +390,10 @@ namespace Gs2::Inbox::Request
         if (TransactionSettingValue != nullptr && TransactionSettingValue.IsValid())
         {
             JsonRootObject->SetObjectField(TEXT("transactionSetting"), TransactionSettingValue->ToJson());
+        }
+        if (TransactionSettingV2Value != nullptr && TransactionSettingV2Value.IsValid())
+        {
+            JsonRootObject->SetObjectField(TEXT("transactionSettingV2"), TransactionSettingV2Value->ToJson());
         }
         if (ReceiveMessageScriptValue != nullptr && ReceiveMessageScriptValue.IsValid())
         {

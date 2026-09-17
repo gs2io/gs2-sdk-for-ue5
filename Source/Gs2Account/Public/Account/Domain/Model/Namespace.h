@@ -355,6 +355,30 @@ namespace Gs2::Account::Domain::Model
             TFunction<void()> Callback
         );
 
+        class FCollectAccountsTask;
+
+        Gs2::Core::Domain::CallbackID SubscribeAccounts(
+            TFunction<void(TArray<Gs2::Account::Model::FAccountPtr>)> Callback
+        );
+
+        void InvalidateAccounts();
+
+        class GS2ACCOUNT_API FSubscribeAccountsWithInitialCallTask final :
+            public Gs2::Core::Util::TGs2Future<Gs2::Core::Domain::CallbackID>,
+            public TSharedFromThis<FSubscribeAccountsWithInitialCallTask>
+        {
+            const TSharedPtr<FNamespaceDomain> Self;
+            const TFunction<void(TArray<Gs2::Account::Model::FAccountPtr>)> Callback;
+
+        public:
+            FSubscribeAccountsWithInitialCallTask(const TSharedPtr<FNamespaceDomain>& Self, TFunction<void(TArray<Gs2::Account::Model::FAccountPtr>)> Callback);
+            FSubscribeAccountsWithInitialCallTask(const FSubscribeAccountsWithInitialCallTask& From);
+            virtual Gs2::Core::Model::FGs2ErrorPtr Action(TSharedPtr<TSharedPtr<Gs2::Core::Domain::CallbackID>> Result) override;
+        };
+
+        TSharedPtr<FAsyncTask<FSubscribeAccountsWithInitialCallTask>> SubscribeAccountsWithInitialCall(
+            TFunction<void(TArray<Gs2::Account::Model::FAccountPtr>)> Callback
+        );
         void UnsubscribeAccounts(
             Gs2::Core::Domain::CallbackID CallbackID
         );
@@ -377,6 +401,30 @@ namespace Gs2::Account::Domain::Model
             TFunction<void()> Callback
         );
 
+        class FCollectTakeOverTypeModelsTask;
+
+        Gs2::Core::Domain::CallbackID SubscribeTakeOverTypeModels(
+            TFunction<void(TArray<Gs2::Account::Model::FTakeOverTypeModelPtr>)> Callback
+        );
+
+        void InvalidateTakeOverTypeModels();
+
+        class GS2ACCOUNT_API FSubscribeTakeOverTypeModelsWithInitialCallTask final :
+            public Gs2::Core::Util::TGs2Future<Gs2::Core::Domain::CallbackID>,
+            public TSharedFromThis<FSubscribeTakeOverTypeModelsWithInitialCallTask>
+        {
+            const TSharedPtr<FNamespaceDomain> Self;
+            const TFunction<void(TArray<Gs2::Account::Model::FTakeOverTypeModelPtr>)> Callback;
+
+        public:
+            FSubscribeTakeOverTypeModelsWithInitialCallTask(const TSharedPtr<FNamespaceDomain>& Self, TFunction<void(TArray<Gs2::Account::Model::FTakeOverTypeModelPtr>)> Callback);
+            FSubscribeTakeOverTypeModelsWithInitialCallTask(const FSubscribeTakeOverTypeModelsWithInitialCallTask& From);
+            virtual Gs2::Core::Model::FGs2ErrorPtr Action(TSharedPtr<TSharedPtr<Gs2::Core::Domain::CallbackID>> Result) override;
+        };
+
+        TSharedPtr<FAsyncTask<FSubscribeTakeOverTypeModelsWithInitialCallTask>> SubscribeTakeOverTypeModelsWithInitialCall(
+            TFunction<void(TArray<Gs2::Account::Model::FTakeOverTypeModelPtr>)> Callback
+        );
         void UnsubscribeTakeOverTypeModels(
             Gs2::Core::Domain::CallbackID CallbackID
         );
@@ -392,6 +440,30 @@ namespace Gs2::Account::Domain::Model
             TFunction<void()> Callback
         );
 
+        class FCollectTakeOverTypeModelMastersTask;
+
+        Gs2::Core::Domain::CallbackID SubscribeTakeOverTypeModelMasters(
+            TFunction<void(TArray<Gs2::Account::Model::FTakeOverTypeModelMasterPtr>)> Callback
+        );
+
+        void InvalidateTakeOverTypeModelMasters();
+
+        class GS2ACCOUNT_API FSubscribeTakeOverTypeModelMastersWithInitialCallTask final :
+            public Gs2::Core::Util::TGs2Future<Gs2::Core::Domain::CallbackID>,
+            public TSharedFromThis<FSubscribeTakeOverTypeModelMastersWithInitialCallTask>
+        {
+            const TSharedPtr<FNamespaceDomain> Self;
+            const TFunction<void(TArray<Gs2::Account::Model::FTakeOverTypeModelMasterPtr>)> Callback;
+
+        public:
+            FSubscribeTakeOverTypeModelMastersWithInitialCallTask(const TSharedPtr<FNamespaceDomain>& Self, TFunction<void(TArray<Gs2::Account::Model::FTakeOverTypeModelMasterPtr>)> Callback);
+            FSubscribeTakeOverTypeModelMastersWithInitialCallTask(const FSubscribeTakeOverTypeModelMastersWithInitialCallTask& From);
+            virtual Gs2::Core::Model::FGs2ErrorPtr Action(TSharedPtr<TSharedPtr<Gs2::Core::Domain::CallbackID>> Result) override;
+        };
+
+        TSharedPtr<FAsyncTask<FSubscribeTakeOverTypeModelMastersWithInitialCallTask>> SubscribeTakeOverTypeModelMastersWithInitialCall(
+            TFunction<void(TArray<Gs2::Account::Model::FTakeOverTypeModelMasterPtr>)> Callback
+        );
         void UnsubscribeTakeOverTypeModelMasters(
             Gs2::Core::Domain::CallbackID CallbackID
         );

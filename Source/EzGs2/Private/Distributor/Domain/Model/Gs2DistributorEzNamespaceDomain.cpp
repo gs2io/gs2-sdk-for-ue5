@@ -184,7 +184,8 @@ namespace Gs2::UE5::Distributor::Domain::Model
         );
     }
 
-    void FEzNamespaceDomain::UnsubscribeDistributorModels(Gs2::Core::Domain::CallbackID CallbackId)
+    void FEzNamespaceDomain::UnsubscribeDistributorModels(
+            Gs2::Core::Domain::CallbackID CallbackId)
     {
         Domain->UnsubscribeDistributorModels(
             CallbackId

@@ -67,14 +67,16 @@ namespace Gs2::UE5::Enhance::Domain::Model
 
         Gs2::Core::Domain::CallbackID SubscribeRateModels(TFunction<void()> Callback);
 
-        void UnsubscribeRateModels(Gs2::Core::Domain::CallbackID CallbackId);
+        void UnsubscribeRateModels(
+                Gs2::Core::Domain::CallbackID CallbackId);
 
         Gs2::UE5::Enhance::Domain::Iterator::FEzDescribeUnleashRateModelsIteratorPtr UnleashRateModels(
         ) const;
 
         Gs2::Core::Domain::CallbackID SubscribeUnleashRateModels(TFunction<void()> Callback);
 
-        void UnsubscribeUnleashRateModels(Gs2::Core::Domain::CallbackID CallbackId);
+        void UnsubscribeUnleashRateModels(
+                Gs2::Core::Domain::CallbackID CallbackId);
 
         Gs2::UE5::Enhance::Domain::Model::FEzUnleashRateModelDomainPtr UnleashRateModel(
             const FString RateName

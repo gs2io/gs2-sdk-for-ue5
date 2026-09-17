@@ -12,6 +12,8 @@
  * on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either
  * express or implied. See the License for the specific language governing
  * permissions and limitations under the License.
+ *
+ * deny overwrite
  */
 
 #if defined(_MSC_VER)
@@ -27,6 +29,7 @@
 #include "Grade/Domain/SpeculativeExecutor/Verify/VerifyGradeUpMaterialByUserIdSpeculativeExecutor.h"
 
 #include "Core/Domain/Gs2.h"
+#include "Core/Domain/SpeculativeExecutor/PreparedSpeculativeCommit.h"
 
 namespace Gs2::Grade::Domain::SpeculativeExecutor
 {
@@ -35,13 +38,15 @@ namespace Gs2::Grade::Domain::SpeculativeExecutor
         const Gs2::Grade::Domain::FGs2GradeDomainPtr& Service,
         const Gs2::Auth::Model::FAccessTokenPtr& AccessToken,
         const Gs2::Core::Model::FVerifyActionPtr& VerifyAction,
-        TBigInt<1024, false> Rate
+        TBigInt<1024, false> Rate,
+        bool Inverse
     ):
         Domain(Domain),
         Service(Service),
         AccessToken(AccessToken),
         VerifyAction(VerifyAction),
-        Rate(Rate)
+        Rate(Rate),
+        Inverse(Inverse)
     {
 
     }
@@ -53,13 +58,14 @@ namespace Gs2::Grade::Domain::SpeculativeExecutor
         Service(From.Service),
         AccessToken(From.AccessToken),
         VerifyAction(From.VerifyAction),
-        Rate(From.Rate)
+        Rate(From.Rate),
+        Inverse(From.Inverse)
     {
 
     }
 
     Gs2::Core::Model::FGs2ErrorPtr FVerifyActionSpeculativeExecutorIndex::FCommitTask::Action(
-        TSharedPtr<TSharedPtr<TFunction<void()>>> Result
+        TSharedPtr<TSharedPtr<Gs2::Core::Domain::SpeculativeExecutor::FPreparedSpeculativeCommit>> Result
     )
     {
         auto NewVerifyAction = VerifyAction->WithAction(VerifyAction->GetAction()->Replace(TEXT("{region}"), ToCStr(Domain->RestSession->RegionName())));
@@ -74,12 +80,19 @@ namespace Gs2::Grade::Domain::SpeculativeExecutor
             }
             auto Request = Request::FVerifyGradeByUserIdRequest::FromJson(RequestModelJson);
             Request = FVerifyGradeByUserIdSpeculativeExecutor::Rate(Request, Rate);
-            auto Future = FVerifyGradeByUserIdSpeculativeExecutor::Execute(
+            auto Future = Inverse
+                ? FVerifyGradeByUserIdSpeculativeExecutor::ExecuteInverse(
+                    Domain,
+                    Service,
+                    AccessToken,
+                    Request)
+                : FVerifyGradeByUserIdSpeculativeExecutor::Execute(
                 Domain,
                 Service,
                 AccessToken,
                 Request
             );
+            if (!Future.IsValid()) return nullptr;
             Future->StartSynchronousTask();
             if (Future->GetTask().IsError())
             {
@@ -96,12 +109,19 @@ namespace Gs2::Grade::Domain::SpeculativeExecutor
             }
             auto Request = Request::FVerifyGradeUpMaterialByUserIdRequest::FromJson(RequestModelJson);
             Request = FVerifyGradeUpMaterialByUserIdSpeculativeExecutor::Rate(Request, Rate);
-            auto Future = FVerifyGradeUpMaterialByUserIdSpeculativeExecutor::Execute(
+            auto Future = Inverse
+                ? FVerifyGradeUpMaterialByUserIdSpeculativeExecutor::ExecuteInverse(
+                    Domain,
+                    Service,
+                    AccessToken,
+                    Request)
+                : FVerifyGradeUpMaterialByUserIdSpeculativeExecutor::Execute(
                 Domain,
                 Service,
                 AccessToken,
                 Request
             );
+            if (!Future.IsValid()) return nullptr;
             Future->StartSynchronousTask();
             if (Future->GetTask().IsError())
             {
@@ -120,6 +140,17 @@ namespace Gs2::Grade::Domain::SpeculativeExecutor
         TBigInt<1024, false> Rate
     )
     {
-        return Gs2::Core::Util::New<FAsyncTask<FCommitTask>>(Domain, Service, AccessToken, VerifyAction, Rate);
+        return Gs2::Core::Util::New<FAsyncTask<FCommitTask>>(Domain, Service, AccessToken, VerifyAction, Rate, false);
+    }
+
+    TSharedPtr<FAsyncTask<FVerifyActionSpeculativeExecutorIndex::FCommitTask>> FVerifyActionSpeculativeExecutorIndex::ExecuteInverse(
+        const Gs2::Core::Domain::FGs2Ptr& Domain,
+        const Gs2::Grade::Domain::FGs2GradeDomainPtr& Service,
+        const Gs2::Auth::Model::FAccessTokenPtr& AccessToken,
+        const Gs2::Core::Model::FVerifyActionPtr& VerifyAction,
+        TBigInt<1024, false> Rate
+    )
+    {
+        return Gs2::Core::Util::New<FAsyncTask<FCommitTask>>(Domain, Service, AccessToken, VerifyAction, Rate, true);
     }
 }

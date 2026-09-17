@@ -54,6 +54,16 @@ namespace Gs2::UE5::Gateway::Domain::Model
 
     }
 
+    Gs2::UE5::Gateway::Domain::Model::FEzFirebaseTokenDomainPtr FEzUserDomain::FirebaseToken(
+    ) const
+    {
+        return MakeShared<Gs2::UE5::Gateway::Domain::Model::FEzFirebaseTokenDomain>(
+            Domain->FirebaseToken(
+            ),
+            ConnectionValue
+        );
+    }
+
     Gs2::UE5::Gateway::Domain::Model::FEzWebSocketSessionDomainPtr FEzUserDomain::WebSocketSession(
     ) const
     {

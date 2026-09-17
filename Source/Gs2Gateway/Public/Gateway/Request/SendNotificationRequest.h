@@ -18,6 +18,7 @@
 
 #include "CoreMinimal.h"
 #include "Dom/JsonObject.h"
+#include "../Model/MobileNotificationMessage.h"
 
 namespace Gs2::Gateway::Request
 {
@@ -32,6 +33,7 @@ namespace Gs2::Gateway::Request
         TOptional<FString> PayloadValue;
         TOptional<bool> EnableTransferMobileNotificationValue;
         TOptional<FString> SoundValue;
+        TSharedPtr<TArray<TSharedPtr<Model::FMobileNotificationMessage>>> MobileNotificationMessagesValue;
         TOptional<FString> TimeOffsetTokenValue;
         TOptional<FString> DuplicationAvoiderValue;
         
@@ -50,6 +52,7 @@ namespace Gs2::Gateway::Request
         TSharedPtr<FSendNotificationRequest> WithPayload(const TOptional<FString> Payload);
         TSharedPtr<FSendNotificationRequest> WithEnableTransferMobileNotification(const TOptional<bool> EnableTransferMobileNotification);
         TSharedPtr<FSendNotificationRequest> WithSound(const TOptional<FString> Sound);
+        TSharedPtr<FSendNotificationRequest> WithMobileNotificationMessages(const TSharedPtr<TArray<TSharedPtr<Model::FMobileNotificationMessage>>> MobileNotificationMessages);
         TSharedPtr<FSendNotificationRequest> WithTimeOffsetToken(const TOptional<FString> TimeOffsetToken);
         TSharedPtr<FSendNotificationRequest> WithDuplicationAvoider(const TOptional<FString> DuplicationAvoider);
 
@@ -60,7 +63,7 @@ namespace Gs2::Gateway::Request
         TOptional<FString> GetPayload() const;
         TOptional<bool> GetEnableTransferMobileNotification() const;
         FString GetEnableTransferMobileNotificationString() const;
-        TOptional<FString> GetSound() const;
+        TOptional<FString> GetSound() const;TSharedPtr<TArray<TSharedPtr<Model::FMobileNotificationMessage>>> GetMobileNotificationMessages() const;
         TOptional<FString> GetTimeOffsetToken() const;
         TOptional<FString> GetDuplicationAvoider() const;
 

@@ -19,6 +19,8 @@
 #include "CoreMinimal.h"
 #include "Gateway/Domain/Model/User.h"
 #include "Gateway/Model/Gs2GatewayEzWebSocketSession.h"
+#include "Gateway/Model/Gs2GatewayEzFirebaseToken.h"
+#include "Gs2GatewayEzFirebaseTokenDomain.h"
 #include "Gs2GatewayEzWebSocketSessionDomain.h"
 #include "Gs2GatewayEzUserDomain.h"
 #include "Gs2GatewayEzUserDomain.h"
@@ -47,6 +49,9 @@ namespace Gs2::UE5::Gateway::Domain::Model
             Gs2::Gateway::Domain::Model::FUserDomainPtr Domain,
             Gs2::UE5::Util::FGs2ConnectionPtr Connection
         );
+
+        Gs2::UE5::Gateway::Domain::Model::FEzFirebaseTokenDomainPtr FirebaseToken(
+        ) const;
 
         Gs2::UE5::Gateway::Domain::Model::FEzWebSocketSessionDomainPtr WebSocketSession(
         ) const;

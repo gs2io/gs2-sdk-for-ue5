@@ -73,7 +73,8 @@ namespace Gs2::UE5::Inventory::Domain::Model
         );
     }
 
-    void FEzInventoryGameSessionDomain::UnsubscribeItemSets(Gs2::Core::Domain::CallbackID CallbackId)
+    void FEzInventoryGameSessionDomain::UnsubscribeItemSets(
+            Gs2::Core::Domain::CallbackID CallbackId)
     {
         Domain->UnsubscribeItemSets(
             CallbackId
@@ -138,7 +139,7 @@ namespace Gs2::UE5::Inventory::Domain::Model
     Gs2::Core::Domain::CallbackID FEzInventoryGameSessionDomain::Subscribe(TFunction<void(Gs2::UE5::Inventory::Model::FEzInventoryPtr)> Callback)
     {
         return Domain->Subscribe(
-            [&](Gs2::Inventory::Model::FInventoryPtr Item)
+            [Callback](Gs2::Inventory::Model::FInventoryPtr Item)
             {
                 Callback(Gs2::UE5::Inventory::Model::FEzInventory::FromModel(Item));
             }

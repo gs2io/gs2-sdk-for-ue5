@@ -35,9 +35,7 @@ namespace Gs2::Core::Domain
 				));
 			}
 
-			const auto HasTransactionId = ResultJson->HasField(ANSI_TO_TCHAR("transactionId")) && !ResultJson->GetStringField(ANSI_TO_TCHAR("transactionId")).IsEmpty();
-			const auto HasStampSheet = ResultJson->HasField(ANSI_TO_TCHAR("stampSheet")) && !ResultJson->GetStringField(ANSI_TO_TCHAR("stampSheet")).IsEmpty();
-			if (ResultJson->HasField(ANSI_TO_TCHAR("autoRunStampSheet")) && (HasTransactionId || HasStampSheet)) {
+			if (ResultJson->HasField(ANSI_TO_TCHAR("autoRunStampSheet"))) {
 				NextTransactions->Add(NewTransactionDomain(
 					ResultJson->HasField(ANSI_TO_TCHAR("autoRunStampSheet")) && ResultJson->GetBoolField(ANSI_TO_TCHAR("autoRunStampSheet")),
 					ResultJson->HasField(ANSI_TO_TCHAR("transactionId")) ? ResultJson->GetStringField(ANSI_TO_TCHAR("transactionId")) : FString(""),
@@ -163,6 +161,14 @@ namespace Gs2::Core::Domain
             	}
             	const auto FutureResult = Future->GetTask().Result();
                 contextStack = FutureResult->GetContextStack();
+                Gs2->TransactionConfiguration->VerifyActionEventHandler(
+                    Gs2->Cache,
+                    TransactionId + FString::Printf(TEXT("[%d]"), i),
+                    TOptional<int32>(),
+                    stampTaskPayloadJson->GetStringField(ANSI_TO_TCHAR("action")),
+                    stampTaskPayloadJson->GetStringField(ANSI_TO_TCHAR("args")),
+                    *FutureResult->GetResult()
+                );
             }
             else
             {
@@ -194,6 +200,14 @@ namespace Gs2::Core::Domain
             	}
                 auto FutureResult = Future->GetTask().Result();
                 contextStack = FutureResult->GetContextStack();
+                Gs2->TransactionConfiguration->VerifyActionEventHandler(
+                    Gs2->Cache,
+                    TransactionId + FString::Printf(TEXT("[%d]"), i),
+                    TOptional<int32>(),
+                    stampTaskPayloadJson->GetStringField(ANSI_TO_TCHAR("action")),
+                    stampTaskPayloadJson->GetStringField(ANSI_TO_TCHAR("args")),
+                    *FutureResult->GetResult()
+                );
             }
         }
         for (auto i = 0; i < StampTasks.Num(); i++)
@@ -227,7 +241,10 @@ namespace Gs2::Core::Domain
             	}
             	const auto FutureResult = Future->GetTask().Result();
                 contextStack = FutureResult->GetContextStack();
-                Gs2->TransactionConfiguration->StampTaskEventHandler(
+                Gs2->TransactionConfiguration->ConsumeActionEventHandler(
+                    Gs2->Cache,
+                    TransactionId + FString::Printf(TEXT("[%d]"), i),
+                    TOptional<int32>(),
                     stampTaskPayloadJson->GetStringField(ANSI_TO_TCHAR("action")),
                     stampTaskPayloadJson->GetStringField(ANSI_TO_TCHAR("args")),
                     *FutureResult->GetResult()
@@ -263,7 +280,10 @@ namespace Gs2::Core::Domain
             	}
                 auto FutureResult = Future->GetTask().Result();
                 contextStack = FutureResult->GetContextStack();
-                Gs2->TransactionConfiguration->StampTaskEventHandler(
+                Gs2->TransactionConfiguration->ConsumeActionEventHandler(
+                    Gs2->Cache,
+                    TransactionId + FString::Printf(TEXT("[%d]"), i),
+                    TOptional<int32>(),
                     stampTaskPayloadJson->GetStringField(ANSI_TO_TCHAR("action")),
                     stampTaskPayloadJson->GetStringField(ANSI_TO_TCHAR("args")),
                     *FutureResult->GetResult()
@@ -287,7 +307,10 @@ namespace Gs2::Core::Domain
         		return Future->GetTask().Error();
         	}
         	const auto FutureResult = Future->GetTask().Result();
-            Gs2->TransactionConfiguration->StampSheetEventHandler(
+            Gs2->TransactionConfiguration->AcquireActionEventHandler(
+                Gs2->Cache,
+                TransactionId,
+                TOptional<int32>(),
                 StampSheetPayloadJson->GetStringField(ANSI_TO_TCHAR("action")),
                 StampSheetPayloadJson->GetStringField(ANSI_TO_TCHAR("args")),
                 *FutureResult->GetResult()
@@ -328,7 +351,10 @@ namespace Gs2::Core::Domain
         		return Future->GetTask().Error();
         	}
             auto FutureResult = Future->GetTask().Result();
-            Gs2->TransactionConfiguration->StampSheetEventHandler(
+            Gs2->TransactionConfiguration->AcquireActionEventHandler(
+                Gs2->Cache,
+                TransactionId,
+                TOptional<int32>(),
                 StampSheetPayloadJson->GetStringField(ANSI_TO_TCHAR("action")),
                 StampSheetPayloadJson->GetStringField(ANSI_TO_TCHAR("args")),
                 *FutureResult->GetResult()

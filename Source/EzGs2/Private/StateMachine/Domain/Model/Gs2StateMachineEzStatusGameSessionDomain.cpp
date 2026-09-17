@@ -260,7 +260,7 @@ namespace Gs2::UE5::StateMachine::Domain::Model
     Gs2::Core::Domain::CallbackID FEzStatusGameSessionDomain::Subscribe(TFunction<void(Gs2::UE5::StateMachine::Model::FEzStatusPtr)> Callback)
     {
         return Domain->Subscribe(
-            [&](Gs2::StateMachine::Model::FStatusPtr Item)
+            [Callback](Gs2::StateMachine::Model::FStatusPtr Item)
             {
                 Callback(Gs2::UE5::StateMachine::Model::FEzStatus::FromModel(Item));
             }

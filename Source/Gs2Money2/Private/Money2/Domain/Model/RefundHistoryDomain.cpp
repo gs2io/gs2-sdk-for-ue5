@@ -40,6 +40,7 @@
 #include "Money2/Domain/Model/CurrentModelMaster.h"
 #include "Money2/Domain/Model/DailyTransactionHistory.h"
 #include "Money2/Domain/Model/UnusedBalance.h"
+#include "Money2/Model/Cache/RefundHistory.h"
 
 #include "Core/Domain/Gs2.h"
 #include "Core/Domain/Transaction/JobQueueJobDomainFactory.h"
@@ -113,6 +114,25 @@ namespace Gs2::Money2::Domain::Model
         }
         const auto ResultModel = Future->GetTask().Result();
         Future->EnsureCompletion();
+
+            if (ResultModel.IsValid() && ResultModel->GetItem() != nullptr)
+            {
+
+        if (!ResultModel.IsValid() || !ResultModel->GetItem().IsValid())
+            {
+              const auto Details = MakeShared<TArray<TSharedPtr<Gs2::Core::Model::FGs2ErrorDetail>>>();
+                Details->Add(MakeShared<Gs2::Core::Model::FGs2ErrorDetail>(TEXT("result.item"), TEXT("result.item is invalid."), TEXT("invalid_response")));
+                return MakeShared<Gs2::Core::Model::FUnknownError>(Details);
+              }
+        Gs2::Money2::Model::Cache::FRefundHistoryCache::Put(
+            Self->Gs2->Cache,
+
+            Request->GetNamespaceName(),
+            ResultModel->GetItem()->GetTransactionId(),
+            TOptional<int32>(),
+            ResultModel->GetItem()
+        );
+            }
         *Result = ResultModel->GetItem();
         return nullptr;
     }
@@ -161,71 +181,158 @@ namespace Gs2::Money2::Domain::Model
         TSharedPtr<TSharedPtr<Gs2::Money2::Model::FRefundHistory>> Result
     )
     {
-        // ReSharper disable once CppLocalVariableMayBeConst
-        TSharedPtr<Gs2::Money2::Model::FRefundHistory> Value;
-        auto bCacheHit = Self->Gs2->Cache->TryGet<Gs2::Money2::Model::FRefundHistory>(
-            Self->ParentKey,
-            Gs2::Money2::Domain::Model::FRefundHistoryDomain::CreateCacheKey(
-                Self->TransactionId
-            ),
-            &Value
+        const auto CacheParentKey = Gs2::Money2::Model::Cache::FRefundHistoryCache::CreateCacheParentKey(
+
+            Self->NamespaceName,
+            TOptional<int32>()
         );
-        if (!bCacheHit) {
-            const auto Future = Self->Get(
-                MakeShared<Gs2::Money2::Request::FGetRefundHistoryRequest>()
-            );
-            Future->StartSynchronousTask();
-            if (Future->GetTask().IsError())
+        const auto CacheKey = Gs2::Money2::Model::Cache::FRefundHistoryCache::CreateCacheKey(
+
+            Self->TransactionId
+        );
+        return Self->Gs2->Cache->ExecuteWithKeyLock(
+            Gs2::Money2::Model::FRefundHistory::TypeName,
+            CacheParentKey,
+            CacheKey,
+            [Self = Self, Result]() -> Gs2::Core::Model::FGs2ErrorPtr
             {
-                if (Future->GetTask().Error()->Type() != Gs2::Core::Model::FNotFoundError::TypeString)
-                {
-                    return Future->GetTask().Error();
-                }
+                Gs2::Money2::Model::FRefundHistoryPtr Value;
+                const auto CacheHit = Gs2::Money2::Model::Cache::FRefundHistoryCache::TryGet(
+                    Self->Gs2->Cache,
 
-                const auto Key = Gs2::Money2::Domain::Model::FRefundHistoryDomain::CreateCacheKey(
-                    Self->TransactionId
+                    Self->NamespaceName,
+                    Self->TransactionId,
+                    TOptional<int32>(),
+                    &Value
                 );
-                Self->Gs2->Cache->Put(
-                    Gs2::Money2::Model::FRefundHistory::TypeName,
-                    Self->ParentKey,
-                    Key,
-                    nullptr,
-                    FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
-                );
-
-                if (Future->GetTask().Error()->Detail(0)->GetComponent() != "refundHistory")
+                if (CacheHit)
                 {
-                    return Future->GetTask().Error();
+                    *Result = Value;
+                    return nullptr;
                 }
-            }
-            else
-            {
-                Value = Future->GetTask().Result();
-            }
-            Future->EnsureCompletion();
-        }
-        *Result = Value;
+                const auto Error = Gs2::Money2::Model::Cache::FRefundHistoryCache::Fetch(
+                    Self->Gs2->Cache,
 
-        return nullptr;
+                    Self->NamespaceName,
+                    Self->TransactionId,
+                    TOptional<int32>(),
+                    [Self](Gs2::Money2::Model::FRefundHistoryPtr* OutItem) -> Gs2::Core::Model::FGs2ErrorPtr
+                    {
+                        const auto Future = Self->Get(
+                            MakeShared<Gs2::Money2::Request::FGetRefundHistoryRequest>()
+                        );
+                        Future->StartSynchronousTask();
+                        if (Future->GetTask().IsError()) return Future->GetTask().Error();
+                        *OutItem = Future->GetTask().Result();
+                        Future->EnsureCompletion();
+                        return nullptr;
+                    },
+                    &Value
+                );
+                if (Error.IsValid()) return Error;
+                *Result = Value;
+                return nullptr;
+            }
+        );
     }
 
     TSharedPtr<FAsyncTask<FRefundHistoryDomain::FModelTask>> FRefundHistoryDomain::Model() {
         return Gs2::Core::Util::New<FAsyncTask<FRefundHistoryDomain::FModelTask>>(this->AsShared());
     }
 
+    void FRefundHistoryDomain::Invalidate()
+    {
+        Gs2::Money2::Model::Cache::FRefundHistoryCache::Delete(
+            Gs2->Cache,
+
+            NamespaceName,
+            TransactionId,
+            TOptional<int32>()
+        );
+    }
+
+    FRefundHistoryDomain::FSubscribeWithInitialCallTask::FSubscribeWithInitialCallTask(
+        const TSharedPtr<FRefundHistoryDomain>& Self,
+        TFunction<void(Gs2::Money2::Model::FRefundHistoryPtr)> Callback
+    ):
+        Self(Self),
+        Callback(Callback)
+    {
+    }
+
+    FRefundHistoryDomain::FSubscribeWithInitialCallTask::FSubscribeWithInitialCallTask(
+        const FSubscribeWithInitialCallTask& From
+    ):
+        TGs2Future(From),
+        Self(From.Self),
+        Callback(From.Callback)
+    {
+    }
+
+    Gs2::Core::Model::FGs2ErrorPtr FRefundHistoryDomain::FSubscribeWithInitialCallTask::Action(
+        TSharedPtr<TSharedPtr<Gs2::Core::Domain::CallbackID>> Result
+    )
+    {
+        const auto Task = Self->Model();
+        Task->StartSynchronousTask();
+        Task->EnsureCompletion();
+        if (Task->GetTask().IsError()) return Task->GetTask().Error();
+        const auto Item = Task->GetTask().Result();
+        const auto CallbackId = Self->Subscribe(Callback);
+        Callback(Item);
+        *Result = MakeShared<Gs2::Core::Domain::CallbackID>(CallbackId);
+        return nullptr;
+    }
+
+    TSharedPtr<FAsyncTask<FRefundHistoryDomain::FSubscribeWithInitialCallTask>> FRefundHistoryDomain::SubscribeWithInitialCall(
+        TFunction<void(Gs2::Money2::Model::FRefundHistoryPtr)> Callback
+    )
+    {
+        return Gs2::Core::Util::New<FAsyncTask<FSubscribeWithInitialCallTask>>(this->AsShared(), Callback);
+    }
+
     Gs2::Core::Domain::CallbackID FRefundHistoryDomain::Subscribe(
         TFunction<void(Gs2::Money2::Model::FRefundHistoryPtr)> Callback
     )
     {
+        const auto SubscriptionParentKey = Gs2::Money2::Model::Cache::FRefundHistoryCache::CreateCacheParentKey(
+
+            NamespaceName,
+            TOptional<int32>()
+        );
+        const auto SubscriptionCacheKey = Gs2::Money2::Model::Cache::FRefundHistoryCache::CreateCacheKey(
+
+            TransactionId
+        );
+        const TWeakPtr<Gs2::Core::Domain::FGs2> WeakGs2 = Gs2;
+        const TWeakPtr<Money2::Domain::FGs2Money2Domain> WeakService = Service;
+        const FString RegisteredParentKey = SubscriptionParentKey;
+        const TOptional<FString> QueryNamespaceName = NamespaceName;
+        const TOptional<FString> QueryTransactionId = TransactionId;
         return Gs2->Cache->Subscribe(
             Gs2::Money2::Model::FRefundHistory::TypeName,
-            ParentKey,
-            Gs2::Money2::Domain::Model::FRefundHistoryDomain::CreateCacheKey(
-                TransactionId
-            ),
+            SubscriptionParentKey,
+            SubscriptionCacheKey,
             [Callback](TSharedPtr<FGs2Object> obj)
             {
                 Callback(StaticCastSharedPtr<Gs2::Money2::Model::FRefundHistory>(obj));
+            },
+            [WeakGs2, WeakService, RegisteredParentKey, QueryNamespaceName, QueryTransactionId]()
+            {
+                const auto Owner = WeakGs2.Pin();
+                if (!Owner.IsValid())
+                {
+                    return;
+                }
+                const auto Domain = MakeShared<FRefundHistoryDomain>(
+                    Owner,
+                    WeakService.Pin(),
+                    QueryNamespaceName,
+                    QueryTransactionId
+                );
+                Domain->ParentKey = RegisteredParentKey;
+                const auto Task = Domain->Model();
+                Task->StartBackgroundTask();
             }
         );
     }
@@ -234,12 +341,19 @@ namespace Gs2::Money2::Domain::Model
         Gs2::Core::Domain::CallbackID CallbackID
     )
     {
+        const auto SubscriptionParentKey = Gs2::Money2::Model::Cache::FRefundHistoryCache::CreateCacheParentKey(
+
+            NamespaceName,
+            TOptional<int32>()
+        );
+        const auto SubscriptionCacheKey = Gs2::Money2::Model::Cache::FRefundHistoryCache::CreateCacheKey(
+
+            TransactionId
+        );
         Gs2->Cache->Unsubscribe(
             Gs2::Money2::Model::FRefundHistory::TypeName,
-            ParentKey,
-            Gs2::Money2::Domain::Model::FRefundHistoryDomain::CreateCacheKey(
-                TransactionId
-            ),
+            SubscriptionParentKey,
+            SubscriptionCacheKey,
             CallbackID
         );
     }
@@ -250,4 +364,3 @@ namespace Gs2::Money2::Domain::Model
 #elif defined(__clang__)
 #pragma clang diagnostic pop
 #endif
-

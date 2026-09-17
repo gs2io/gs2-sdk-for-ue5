@@ -109,7 +109,7 @@ namespace Gs2::UE5::Schedule::Domain::Model
     Gs2::Core::Domain::CallbackID FEzEventGameSessionDomain::Subscribe(TFunction<void(Gs2::UE5::Schedule::Model::FEzEventPtr)> Callback)
     {
         return Domain->Subscribe(
-            [&](Gs2::Schedule::Model::FEventPtr Item)
+            [Callback](Gs2::Schedule::Model::FEventPtr Item)
             {
                 Callback(Gs2::UE5::Schedule::Model::FEzEvent::FromModel(Item));
             }

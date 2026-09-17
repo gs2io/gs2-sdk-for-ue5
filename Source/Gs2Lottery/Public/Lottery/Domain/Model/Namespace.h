@@ -112,6 +112,8 @@ namespace Gs2::Lottery::Domain::Model
             const FNamespaceDomain& From
         );
 
+
+
         class GS2LOTTERY_API FGetStatusTask final :
             public Gs2::Core::Util::TGs2Future<Gs2::Lottery::Domain::Model::FNamespaceDomain>,
             public TSharedFromThis<FGetStatusTask>
@@ -137,6 +139,8 @@ namespace Gs2::Lottery::Domain::Model
         TSharedPtr<FAsyncTask<FGetStatusTask>> GetStatus(
             Request::FGetNamespaceStatusRequestPtr Request
         );
+
+
 
         class GS2LOTTERY_API FGetTask final :
             public Gs2::Core::Util::TGs2Future<Gs2::Lottery::Model::FNamespace>,
@@ -164,6 +168,8 @@ namespace Gs2::Lottery::Domain::Model
             Request::FGetNamespaceRequestPtr Request
         );
 
+
+
         class GS2LOTTERY_API FUpdateTask final :
             public Gs2::Core::Util::TGs2Future<Gs2::Lottery::Domain::Model::FNamespaceDomain>,
             public TSharedFromThis<FUpdateTask>
@@ -189,6 +195,8 @@ namespace Gs2::Lottery::Domain::Model
         TSharedPtr<FAsyncTask<FUpdateTask>> Update(
             Request::FUpdateNamespaceRequestPtr Request
         );
+
+
 
         class GS2LOTTERY_API FDeleteTask final :
             public Gs2::Core::Util::TGs2Future<Gs2::Lottery::Domain::Model::FNamespaceDomain>,
@@ -216,6 +224,8 @@ namespace Gs2::Lottery::Domain::Model
             Request::FDeleteNamespaceRequestPtr Request
         );
 
+
+
         class GS2LOTTERY_API FCreatePrizeTableMasterTask final :
             public Gs2::Core::Util::TGs2Future<Gs2::Lottery::Domain::Model::FPrizeTableMasterDomain>,
             public TSharedFromThis<FCreatePrizeTableMasterTask>
@@ -241,6 +251,8 @@ namespace Gs2::Lottery::Domain::Model
         TSharedPtr<FAsyncTask<FCreatePrizeTableMasterTask>> CreatePrizeTableMaster(
             Request::FCreatePrizeTableMasterRequestPtr Request
         );
+
+
 
         class GS2LOTTERY_API FCreateLotteryModelMasterTask final :
             public Gs2::Core::Util::TGs2Future<Gs2::Lottery::Domain::Model::FLotteryModelMasterDomain>,
@@ -276,8 +288,33 @@ namespace Gs2::Lottery::Domain::Model
 
         Gs2::Core::Domain::CallbackID SubscribePrizeTables(
             TFunction<void()> Callback
+
         );
 
+        class FCollectPrizeTablesTask;
+
+        Gs2::Core::Domain::CallbackID SubscribePrizeTables(
+            TFunction<void(TArray<Gs2::Lottery::Model::FPrizeTablePtr>)> Callback
+        );
+
+        void InvalidatePrizeTables();
+
+        class GS2LOTTERY_API FSubscribePrizeTablesWithInitialCallTask final :
+            public Gs2::Core::Util::TGs2Future<Gs2::Core::Domain::CallbackID>,
+            public TSharedFromThis<FSubscribePrizeTablesWithInitialCallTask>
+        {
+            const TSharedPtr<FNamespaceDomain> Self;
+            const TFunction<void(TArray<Gs2::Lottery::Model::FPrizeTablePtr>)> Callback;
+
+        public:
+            FSubscribePrizeTablesWithInitialCallTask(const TSharedPtr<FNamespaceDomain>& Self, TFunction<void(TArray<Gs2::Lottery::Model::FPrizeTablePtr>)> Callback);
+            FSubscribePrizeTablesWithInitialCallTask(const FSubscribePrizeTablesWithInitialCallTask& From);
+            virtual Gs2::Core::Model::FGs2ErrorPtr Action(TSharedPtr<TSharedPtr<Gs2::Core::Domain::CallbackID>> Result) override;
+        };
+
+        TSharedPtr<FAsyncTask<FSubscribePrizeTablesWithInitialCallTask>> SubscribePrizeTablesWithInitialCall(
+            TFunction<void(TArray<Gs2::Lottery::Model::FPrizeTablePtr>)> Callback
+        );
         void UnsubscribePrizeTables(
             Gs2::Core::Domain::CallbackID CallbackID
         );
@@ -291,8 +328,33 @@ namespace Gs2::Lottery::Domain::Model
 
         Gs2::Core::Domain::CallbackID SubscribeLotteryModels(
             TFunction<void()> Callback
+
         );
 
+        class FCollectLotteryModelsTask;
+
+        Gs2::Core::Domain::CallbackID SubscribeLotteryModels(
+            TFunction<void(TArray<Gs2::Lottery::Model::FLotteryModelPtr>)> Callback
+        );
+
+        void InvalidateLotteryModels();
+
+        class GS2LOTTERY_API FSubscribeLotteryModelsWithInitialCallTask final :
+            public Gs2::Core::Util::TGs2Future<Gs2::Core::Domain::CallbackID>,
+            public TSharedFromThis<FSubscribeLotteryModelsWithInitialCallTask>
+        {
+            const TSharedPtr<FNamespaceDomain> Self;
+            const TFunction<void(TArray<Gs2::Lottery::Model::FLotteryModelPtr>)> Callback;
+
+        public:
+            FSubscribeLotteryModelsWithInitialCallTask(const TSharedPtr<FNamespaceDomain>& Self, TFunction<void(TArray<Gs2::Lottery::Model::FLotteryModelPtr>)> Callback);
+            FSubscribeLotteryModelsWithInitialCallTask(const FSubscribeLotteryModelsWithInitialCallTask& From);
+            virtual Gs2::Core::Model::FGs2ErrorPtr Action(TSharedPtr<TSharedPtr<Gs2::Core::Domain::CallbackID>> Result) override;
+        };
+
+        TSharedPtr<FAsyncTask<FSubscribeLotteryModelsWithInitialCallTask>> SubscribeLotteryModelsWithInitialCall(
+            TFunction<void(TArray<Gs2::Lottery::Model::FLotteryModelPtr>)> Callback
+        );
         void UnsubscribeLotteryModels(
             Gs2::Core::Domain::CallbackID CallbackID
         );
@@ -315,8 +377,33 @@ namespace Gs2::Lottery::Domain::Model
 
         Gs2::Core::Domain::CallbackID SubscribePrizeTableMasters(
             TFunction<void()> Callback
+
         );
 
+        class FCollectPrizeTableMastersTask;
+
+        Gs2::Core::Domain::CallbackID SubscribePrizeTableMasters(
+            TFunction<void(TArray<Gs2::Lottery::Model::FPrizeTableMasterPtr>)> Callback,const TOptional<FString> NamePrefix = TOptional<FString>()
+        );
+
+        void InvalidatePrizeTableMasters(const TOptional<FString> NamePrefix = TOptional<FString>());
+
+        class GS2LOTTERY_API FSubscribePrizeTableMastersWithInitialCallTask final :
+            public Gs2::Core::Util::TGs2Future<Gs2::Core::Domain::CallbackID>,
+            public TSharedFromThis<FSubscribePrizeTableMastersWithInitialCallTask>
+        {
+            const TSharedPtr<FNamespaceDomain> Self;
+            const TFunction<void(TArray<Gs2::Lottery::Model::FPrizeTableMasterPtr>)> Callback;
+        const TOptional<FString> QueryNamePrefix;
+        public:
+            FSubscribePrizeTableMastersWithInitialCallTask(const TSharedPtr<FNamespaceDomain>& Self, TFunction<void(TArray<Gs2::Lottery::Model::FPrizeTableMasterPtr>)> Callback,const TOptional<FString> NamePrefix);
+            FSubscribePrizeTableMastersWithInitialCallTask(const FSubscribePrizeTableMastersWithInitialCallTask& From);
+            virtual Gs2::Core::Model::FGs2ErrorPtr Action(TSharedPtr<TSharedPtr<Gs2::Core::Domain::CallbackID>> Result) override;
+        };
+
+        TSharedPtr<FAsyncTask<FSubscribePrizeTableMastersWithInitialCallTask>> SubscribePrizeTableMastersWithInitialCall(
+            TFunction<void(TArray<Gs2::Lottery::Model::FPrizeTableMasterPtr>)> Callback,const TOptional<FString> NamePrefix = TOptional<FString>()
+        );
         void UnsubscribePrizeTableMasters(
             Gs2::Core::Domain::CallbackID CallbackID
         );
@@ -331,8 +418,33 @@ namespace Gs2::Lottery::Domain::Model
 
         Gs2::Core::Domain::CallbackID SubscribeLotteryModelMasters(
             TFunction<void()> Callback
+
         );
 
+        class FCollectLotteryModelMastersTask;
+
+        Gs2::Core::Domain::CallbackID SubscribeLotteryModelMasters(
+            TFunction<void(TArray<Gs2::Lottery::Model::FLotteryModelMasterPtr>)> Callback,const TOptional<FString> NamePrefix = TOptional<FString>()
+        );
+
+        void InvalidateLotteryModelMasters(const TOptional<FString> NamePrefix = TOptional<FString>());
+
+        class GS2LOTTERY_API FSubscribeLotteryModelMastersWithInitialCallTask final :
+            public Gs2::Core::Util::TGs2Future<Gs2::Core::Domain::CallbackID>,
+            public TSharedFromThis<FSubscribeLotteryModelMastersWithInitialCallTask>
+        {
+            const TSharedPtr<FNamespaceDomain> Self;
+            const TFunction<void(TArray<Gs2::Lottery::Model::FLotteryModelMasterPtr>)> Callback;
+        const TOptional<FString> QueryNamePrefix;
+        public:
+            FSubscribeLotteryModelMastersWithInitialCallTask(const TSharedPtr<FNamespaceDomain>& Self, TFunction<void(TArray<Gs2::Lottery::Model::FLotteryModelMasterPtr>)> Callback,const TOptional<FString> NamePrefix);
+            FSubscribeLotteryModelMastersWithInitialCallTask(const FSubscribeLotteryModelMastersWithInitialCallTask& From);
+            virtual Gs2::Core::Model::FGs2ErrorPtr Action(TSharedPtr<TSharedPtr<Gs2::Core::Domain::CallbackID>> Result) override;
+        };
+
+        TSharedPtr<FAsyncTask<FSubscribeLotteryModelMastersWithInitialCallTask>> SubscribeLotteryModelMastersWithInitialCall(
+            TFunction<void(TArray<Gs2::Lottery::Model::FLotteryModelMasterPtr>)> Callback,const TOptional<FString> NamePrefix = TOptional<FString>()
+        );
         void UnsubscribeLotteryModelMasters(
             Gs2::Core::Domain::CallbackID CallbackID
         );
@@ -372,7 +484,34 @@ namespace Gs2::Lottery::Domain::Model
 
         TSharedPtr<FAsyncTask<FModelTask>> Model();
 
+        void Invalidate();
+
         Gs2::Core::Domain::CallbackID Subscribe(
+            TFunction<void(Gs2::Lottery::Model::FNamespacePtr)> Callback
+        );
+
+        class GS2LOTTERY_API FSubscribeWithInitialCallTask final :
+            public Gs2::Core::Util::TGs2Future<Gs2::Core::Domain::CallbackID>,
+            public TSharedFromThis<FSubscribeWithInitialCallTask>
+        {
+            const TSharedPtr<FNamespaceDomain> Self;
+            const TFunction<void(Gs2::Lottery::Model::FNamespacePtr)> Callback;
+        public:
+            FSubscribeWithInitialCallTask(
+                const TSharedPtr<FNamespaceDomain>& Self,
+                TFunction<void(Gs2::Lottery::Model::FNamespacePtr)> Callback
+            );
+
+            FSubscribeWithInitialCallTask(
+                const FSubscribeWithInitialCallTask& From
+            );
+
+            virtual Gs2::Core::Model::FGs2ErrorPtr Action(
+                TSharedPtr<TSharedPtr<Gs2::Core::Domain::CallbackID>> Result
+            ) override;
+        };
+
+        TSharedPtr<FAsyncTask<FSubscribeWithInitialCallTask>> SubscribeWithInitialCall(
             TFunction<void(Gs2::Lottery::Model::FNamespacePtr)> Callback
         );
 

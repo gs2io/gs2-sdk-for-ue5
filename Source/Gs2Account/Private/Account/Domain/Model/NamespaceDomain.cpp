@@ -38,6 +38,9 @@
 #include "Account/Domain/Model/TakeOverTypeModelMaster.h"
 #include "Account/Domain/Model/CurrentModelMaster.h"
 
+#include "Account/Model/Cache/Account.h"
+#include "Account/Model/Cache/TakeOverTypeModelMaster.h"
+#include "Account/Model/Cache/TakeOverTypeModel.h"
 #include "Core/Domain/Gs2.h"
 #include "Core/Domain/Transaction/JobQueueJobDomainFactory.h"
 #include "Core/Domain/Transaction/InternalTransactionDomainFactory.h"
@@ -584,26 +587,110 @@ namespace Gs2::Account::Domain::Model
     {
         return Gs2->Cache->ListSubscribe(
             Gs2::Account::Model::FAccount::TypeName,
-            Gs2::Account::Domain::Model::FNamespaceDomain::CreateCacheParentKey(
+            Gs2::Account::Model::Cache::FAccountCache::CreateCacheParentKey(
                 NamespaceName,
-                "Account"
+                TOptional<int32>()
             ),
+            Callback,
             Callback
         );
     }
-
     void FNamespaceDomain::UnsubscribeAccounts(
         Gs2::Core::Domain::CallbackID CallbackID
     )
     {
         Gs2->Cache->ListUnsubscribe(
             Gs2::Account::Model::FAccount::TypeName,
-            Gs2::Account::Domain::Model::FNamespaceDomain::CreateCacheParentKey(
+            Gs2::Account::Model::Cache::FAccountCache::CreateCacheParentKey(
                 NamespaceName,
-                "Account"
+                TOptional<int32>()
             ),
             CallbackID
         );
+    }
+    class FNamespaceDomain::FCollectAccountsTask : public Gs2::Core::Util::TGs2Future<TArray<Gs2::Account::Model::FAccountPtr>>, public TSharedFromThis<FCollectAccountsTask>
+    {
+        const TSharedPtr<FNamespaceDomain> Self;
+        const TFunction<void(TArray<Gs2::Account::Model::FAccountPtr>)> OnCollected;
+
+    public:
+        explicit FCollectAccountsTask(const TSharedPtr<FNamespaceDomain>& Self, TFunction<void(TArray<Gs2::Account::Model::FAccountPtr>)> OnCollected) : Self(Self), OnCollected(OnCollected) {}
+        FCollectAccountsTask(const FCollectAccountsTask& From) : TGs2Future(From), Self(From.Self), OnCollected(From.OnCollected) {}
+        virtual Gs2::Core::Model::FGs2ErrorPtr Action(TSharedPtr<TSharedPtr<TArray<Gs2::Account::Model::FAccountPtr>>> Result) override
+        {
+            TArray<Gs2::Account::Model::FAccountPtr> Items;
+            auto Iterator = Self->Accounts()->begin();
+            while (Iterator.HasNext())
+            {
+                if (Iterator.IsError()) return Iterator.Error();
+                if (Iterator.IsCurrentValid()) Items.Add(Iterator.Current());
+                ++Iterator;
+            }
+            if (Iterator.IsError()) return Iterator.Error();
+            *Result = MakeShared<TArray<Gs2::Account::Model::FAccountPtr>>(Items);
+            if (OnCollected) OnCollected(Items);
+            return nullptr;
+        }
+    };
+
+    Gs2::Core::Domain::CallbackID FNamespaceDomain::SubscribeAccounts(
+        TFunction<void(TArray<Gs2::Account::Model::FAccountPtr>)> Callback
+    )
+    {
+        const TWeakPtr<Gs2::Core::Domain::FGs2> WeakGs2 = this->Gs2;
+        const TWeakPtr<Account::Domain::FGs2AccountDomain> WeakService = this->Service;
+        const auto QueryNamespaceName = NamespaceName;
+        const auto Parent = Gs2::Account::Model::Cache::FAccountCache::CreateCacheParentKey(
+        NamespaceName,
+        TOptional<int32>()
+    );
+        return Gs2->Cache->ListSubscribeTyped(
+            Gs2::Account::Model::FAccount::TypeName,
+            Parent,
+            [Callback, WeakGs2](const TArray<FGs2ObjectPtr>& Values)
+            {
+                if (!WeakGs2.Pin().IsValid()) return;
+                TArray<Gs2::Account::Model::FAccountPtr> TypedValues;
+                for (const auto& Value : Values) if (Value.IsValid()) TypedValues.Add(StaticCastSharedPtr<Gs2::Account::Model::FAccount>(Value));
+                Callback(TypedValues);
+            },
+            [WeakGs2, WeakService, Callback, QueryNamespaceName]()
+            {
+                const auto Owner = WeakGs2.Pin();
+                if (!Owner.IsValid()) return;
+                const auto Domain = MakeShared<FNamespaceDomain>(Owner, WeakService.Pin(), QueryNamespaceName);
+                const auto Task = Gs2::Core::Util::New<FAsyncTask<FCollectAccountsTask>>(Domain, Callback);
+                Task->StartBackgroundTask();
+            }
+        );
+    }
+
+    void FNamespaceDomain::InvalidateAccounts()
+    {
+        Gs2->Cache->ClearListCache(
+            Gs2::Account::Model::FAccount::TypeName,
+            Gs2::Account::Model::Cache::FAccountCache::CreateCacheParentKey(
+        NamespaceName,
+        TOptional<int32>()
+    )
+        );
+    }
+
+    FNamespaceDomain::FSubscribeAccountsWithInitialCallTask::FSubscribeAccountsWithInitialCallTask(const TSharedPtr<FNamespaceDomain>& Self, TFunction<void(TArray<Gs2::Account::Model::FAccountPtr>)> Callback) : Self(Self), Callback(Callback) {}
+    FNamespaceDomain::FSubscribeAccountsWithInitialCallTask::FSubscribeAccountsWithInitialCallTask(const FSubscribeAccountsWithInitialCallTask& From) : TGs2Future(From), Self(From.Self), Callback(From.Callback) {}
+    Gs2::Core::Model::FGs2ErrorPtr FNamespaceDomain::FSubscribeAccountsWithInitialCallTask::Action(TSharedPtr<TSharedPtr<Gs2::Core::Domain::CallbackID>> Result)
+    {
+        const auto Task = Gs2::Core::Util::New<FAsyncTask<FCollectAccountsTask>>(Self, TFunction<void(TArray<Gs2::Account::Model::FAccountPtr>)>());
+        Task->StartSynchronousTask(); Task->EnsureCompletion();
+        if (Task->GetTask().IsError()) return Task->GetTask().Error();
+        const auto Values = Task->GetTask().Result();
+        const auto CallbackId = Self->SubscribeAccounts(Callback);
+        Callback(*Values); *Result = MakeShared<Gs2::Core::Domain::CallbackID>(CallbackId);
+        return nullptr;
+    }
+    TSharedPtr<FAsyncTask<FNamespaceDomain::FSubscribeAccountsWithInitialCallTask>> FNamespaceDomain::SubscribeAccountsWithInitialCall(TFunction<void(TArray<Gs2::Account::Model::FAccountPtr>)> Callback)
+    {
+        return Gs2::Core::Util::New<FAsyncTask<FSubscribeAccountsWithInitialCallTask>>(this->AsShared(), Callback);
     }
 
     TSharedPtr<Gs2::Account::Domain::Model::FAccountDomain> FNamespaceDomain::Account(
@@ -656,26 +743,110 @@ namespace Gs2::Account::Domain::Model
     {
         return Gs2->Cache->ListSubscribe(
             Gs2::Account::Model::FTakeOverTypeModel::TypeName,
-            Gs2::Account::Domain::Model::FNamespaceDomain::CreateCacheParentKey(
+            Gs2::Account::Model::Cache::FTakeOverTypeModelCache::CreateCacheParentKey(
                 NamespaceName,
-                "TakeOverTypeModel"
+                TOptional<int32>()
             ),
+            Callback,
             Callback
         );
     }
-
     void FNamespaceDomain::UnsubscribeTakeOverTypeModels(
         Gs2::Core::Domain::CallbackID CallbackID
     )
     {
         Gs2->Cache->ListUnsubscribe(
             Gs2::Account::Model::FTakeOverTypeModel::TypeName,
-            Gs2::Account::Domain::Model::FNamespaceDomain::CreateCacheParentKey(
+            Gs2::Account::Model::Cache::FTakeOverTypeModelCache::CreateCacheParentKey(
                 NamespaceName,
-                "TakeOverTypeModel"
+                TOptional<int32>()
             ),
             CallbackID
         );
+    }
+    class FNamespaceDomain::FCollectTakeOverTypeModelsTask : public Gs2::Core::Util::TGs2Future<TArray<Gs2::Account::Model::FTakeOverTypeModelPtr>>, public TSharedFromThis<FCollectTakeOverTypeModelsTask>
+    {
+        const TSharedPtr<FNamespaceDomain> Self;
+        const TFunction<void(TArray<Gs2::Account::Model::FTakeOverTypeModelPtr>)> OnCollected;
+
+    public:
+        explicit FCollectTakeOverTypeModelsTask(const TSharedPtr<FNamespaceDomain>& Self, TFunction<void(TArray<Gs2::Account::Model::FTakeOverTypeModelPtr>)> OnCollected) : Self(Self), OnCollected(OnCollected) {}
+        FCollectTakeOverTypeModelsTask(const FCollectTakeOverTypeModelsTask& From) : TGs2Future(From), Self(From.Self), OnCollected(From.OnCollected) {}
+        virtual Gs2::Core::Model::FGs2ErrorPtr Action(TSharedPtr<TSharedPtr<TArray<Gs2::Account::Model::FTakeOverTypeModelPtr>>> Result) override
+        {
+            TArray<Gs2::Account::Model::FTakeOverTypeModelPtr> Items;
+            auto Iterator = Self->TakeOverTypeModels()->begin();
+            while (Iterator.HasNext())
+            {
+                if (Iterator.IsError()) return Iterator.Error();
+                if (Iterator.IsCurrentValid()) Items.Add(Iterator.Current());
+                ++Iterator;
+            }
+            if (Iterator.IsError()) return Iterator.Error();
+            *Result = MakeShared<TArray<Gs2::Account::Model::FTakeOverTypeModelPtr>>(Items);
+            if (OnCollected) OnCollected(Items);
+            return nullptr;
+        }
+    };
+
+    Gs2::Core::Domain::CallbackID FNamespaceDomain::SubscribeTakeOverTypeModels(
+        TFunction<void(TArray<Gs2::Account::Model::FTakeOverTypeModelPtr>)> Callback
+    )
+    {
+        const TWeakPtr<Gs2::Core::Domain::FGs2> WeakGs2 = this->Gs2;
+        const TWeakPtr<Account::Domain::FGs2AccountDomain> WeakService = this->Service;
+        const auto QueryNamespaceName = NamespaceName;
+        const auto Parent = Gs2::Account::Model::Cache::FTakeOverTypeModelCache::CreateCacheParentKey(
+        NamespaceName,
+        TOptional<int32>()
+    );
+        return Gs2->Cache->ListSubscribeTyped(
+            Gs2::Account::Model::FTakeOverTypeModel::TypeName,
+            Parent,
+            [Callback, WeakGs2](const TArray<FGs2ObjectPtr>& Values)
+            {
+                if (!WeakGs2.Pin().IsValid()) return;
+                TArray<Gs2::Account::Model::FTakeOverTypeModelPtr> TypedValues;
+                for (const auto& Value : Values) if (Value.IsValid()) TypedValues.Add(StaticCastSharedPtr<Gs2::Account::Model::FTakeOverTypeModel>(Value));
+                Callback(TypedValues);
+            },
+            [WeakGs2, WeakService, Callback, QueryNamespaceName]()
+            {
+                const auto Owner = WeakGs2.Pin();
+                if (!Owner.IsValid()) return;
+                const auto Domain = MakeShared<FNamespaceDomain>(Owner, WeakService.Pin(), QueryNamespaceName);
+                const auto Task = Gs2::Core::Util::New<FAsyncTask<FCollectTakeOverTypeModelsTask>>(Domain, Callback);
+                Task->StartBackgroundTask();
+            }
+        );
+    }
+
+    void FNamespaceDomain::InvalidateTakeOverTypeModels()
+    {
+        Gs2->Cache->ClearListCache(
+            Gs2::Account::Model::FTakeOverTypeModel::TypeName,
+            Gs2::Account::Model::Cache::FTakeOverTypeModelCache::CreateCacheParentKey(
+        NamespaceName,
+        TOptional<int32>()
+    )
+        );
+    }
+
+    FNamespaceDomain::FSubscribeTakeOverTypeModelsWithInitialCallTask::FSubscribeTakeOverTypeModelsWithInitialCallTask(const TSharedPtr<FNamespaceDomain>& Self, TFunction<void(TArray<Gs2::Account::Model::FTakeOverTypeModelPtr>)> Callback) : Self(Self), Callback(Callback) {}
+    FNamespaceDomain::FSubscribeTakeOverTypeModelsWithInitialCallTask::FSubscribeTakeOverTypeModelsWithInitialCallTask(const FSubscribeTakeOverTypeModelsWithInitialCallTask& From) : TGs2Future(From), Self(From.Self), Callback(From.Callback) {}
+    Gs2::Core::Model::FGs2ErrorPtr FNamespaceDomain::FSubscribeTakeOverTypeModelsWithInitialCallTask::Action(TSharedPtr<TSharedPtr<Gs2::Core::Domain::CallbackID>> Result)
+    {
+        const auto Task = Gs2::Core::Util::New<FAsyncTask<FCollectTakeOverTypeModelsTask>>(Self, TFunction<void(TArray<Gs2::Account::Model::FTakeOverTypeModelPtr>)>());
+        Task->StartSynchronousTask(); Task->EnsureCompletion();
+        if (Task->GetTask().IsError()) return Task->GetTask().Error();
+        const auto Values = Task->GetTask().Result();
+        const auto CallbackId = Self->SubscribeTakeOverTypeModels(Callback);
+        Callback(*Values); *Result = MakeShared<Gs2::Core::Domain::CallbackID>(CallbackId);
+        return nullptr;
+    }
+    TSharedPtr<FAsyncTask<FNamespaceDomain::FSubscribeTakeOverTypeModelsWithInitialCallTask>> FNamespaceDomain::SubscribeTakeOverTypeModelsWithInitialCall(TFunction<void(TArray<Gs2::Account::Model::FTakeOverTypeModelPtr>)> Callback)
+    {
+        return Gs2::Core::Util::New<FAsyncTask<FSubscribeTakeOverTypeModelsWithInitialCallTask>>(this->AsShared(), Callback);
     }
 
     TSharedPtr<Gs2::Account::Domain::Model::FTakeOverTypeModelDomain> FNamespaceDomain::TakeOverTypeModel(
@@ -706,26 +877,110 @@ namespace Gs2::Account::Domain::Model
     {
         return Gs2->Cache->ListSubscribe(
             Gs2::Account::Model::FTakeOverTypeModelMaster::TypeName,
-            Gs2::Account::Domain::Model::FNamespaceDomain::CreateCacheParentKey(
+            Gs2::Account::Model::Cache::FTakeOverTypeModelMasterCache::CreateCacheParentKey(
                 NamespaceName,
-                "TakeOverTypeModelMaster"
+                TOptional<int32>()
             ),
+            Callback,
             Callback
         );
     }
-
     void FNamespaceDomain::UnsubscribeTakeOverTypeModelMasters(
         Gs2::Core::Domain::CallbackID CallbackID
     )
     {
         Gs2->Cache->ListUnsubscribe(
             Gs2::Account::Model::FTakeOverTypeModelMaster::TypeName,
-            Gs2::Account::Domain::Model::FNamespaceDomain::CreateCacheParentKey(
+            Gs2::Account::Model::Cache::FTakeOverTypeModelMasterCache::CreateCacheParentKey(
                 NamespaceName,
-                "TakeOverTypeModelMaster"
+                TOptional<int32>()
             ),
             CallbackID
         );
+    }
+    class FNamespaceDomain::FCollectTakeOverTypeModelMastersTask : public Gs2::Core::Util::TGs2Future<TArray<Gs2::Account::Model::FTakeOverTypeModelMasterPtr>>, public TSharedFromThis<FCollectTakeOverTypeModelMastersTask>
+    {
+        const TSharedPtr<FNamespaceDomain> Self;
+        const TFunction<void(TArray<Gs2::Account::Model::FTakeOverTypeModelMasterPtr>)> OnCollected;
+
+    public:
+        explicit FCollectTakeOverTypeModelMastersTask(const TSharedPtr<FNamespaceDomain>& Self, TFunction<void(TArray<Gs2::Account::Model::FTakeOverTypeModelMasterPtr>)> OnCollected) : Self(Self), OnCollected(OnCollected) {}
+        FCollectTakeOverTypeModelMastersTask(const FCollectTakeOverTypeModelMastersTask& From) : TGs2Future(From), Self(From.Self), OnCollected(From.OnCollected) {}
+        virtual Gs2::Core::Model::FGs2ErrorPtr Action(TSharedPtr<TSharedPtr<TArray<Gs2::Account::Model::FTakeOverTypeModelMasterPtr>>> Result) override
+        {
+            TArray<Gs2::Account::Model::FTakeOverTypeModelMasterPtr> Items;
+            auto Iterator = Self->TakeOverTypeModelMasters()->begin();
+            while (Iterator.HasNext())
+            {
+                if (Iterator.IsError()) return Iterator.Error();
+                if (Iterator.IsCurrentValid()) Items.Add(Iterator.Current());
+                ++Iterator;
+            }
+            if (Iterator.IsError()) return Iterator.Error();
+            *Result = MakeShared<TArray<Gs2::Account::Model::FTakeOverTypeModelMasterPtr>>(Items);
+            if (OnCollected) OnCollected(Items);
+            return nullptr;
+        }
+    };
+
+    Gs2::Core::Domain::CallbackID FNamespaceDomain::SubscribeTakeOverTypeModelMasters(
+        TFunction<void(TArray<Gs2::Account::Model::FTakeOverTypeModelMasterPtr>)> Callback
+    )
+    {
+        const TWeakPtr<Gs2::Core::Domain::FGs2> WeakGs2 = this->Gs2;
+        const TWeakPtr<Account::Domain::FGs2AccountDomain> WeakService = this->Service;
+        const auto QueryNamespaceName = NamespaceName;
+        const auto Parent = Gs2::Account::Model::Cache::FTakeOverTypeModelMasterCache::CreateCacheParentKey(
+        NamespaceName,
+        TOptional<int32>()
+    );
+        return Gs2->Cache->ListSubscribeTyped(
+            Gs2::Account::Model::FTakeOverTypeModelMaster::TypeName,
+            Parent,
+            [Callback, WeakGs2](const TArray<FGs2ObjectPtr>& Values)
+            {
+                if (!WeakGs2.Pin().IsValid()) return;
+                TArray<Gs2::Account::Model::FTakeOverTypeModelMasterPtr> TypedValues;
+                for (const auto& Value : Values) if (Value.IsValid()) TypedValues.Add(StaticCastSharedPtr<Gs2::Account::Model::FTakeOverTypeModelMaster>(Value));
+                Callback(TypedValues);
+            },
+            [WeakGs2, WeakService, Callback, QueryNamespaceName]()
+            {
+                const auto Owner = WeakGs2.Pin();
+                if (!Owner.IsValid()) return;
+                const auto Domain = MakeShared<FNamespaceDomain>(Owner, WeakService.Pin(), QueryNamespaceName);
+                const auto Task = Gs2::Core::Util::New<FAsyncTask<FCollectTakeOverTypeModelMastersTask>>(Domain, Callback);
+                Task->StartBackgroundTask();
+            }
+        );
+    }
+
+    void FNamespaceDomain::InvalidateTakeOverTypeModelMasters()
+    {
+        Gs2->Cache->ClearListCache(
+            Gs2::Account::Model::FTakeOverTypeModelMaster::TypeName,
+            Gs2::Account::Model::Cache::FTakeOverTypeModelMasterCache::CreateCacheParentKey(
+        NamespaceName,
+        TOptional<int32>()
+    )
+        );
+    }
+
+    FNamespaceDomain::FSubscribeTakeOverTypeModelMastersWithInitialCallTask::FSubscribeTakeOverTypeModelMastersWithInitialCallTask(const TSharedPtr<FNamespaceDomain>& Self, TFunction<void(TArray<Gs2::Account::Model::FTakeOverTypeModelMasterPtr>)> Callback) : Self(Self), Callback(Callback) {}
+    FNamespaceDomain::FSubscribeTakeOverTypeModelMastersWithInitialCallTask::FSubscribeTakeOverTypeModelMastersWithInitialCallTask(const FSubscribeTakeOverTypeModelMastersWithInitialCallTask& From) : TGs2Future(From), Self(From.Self), Callback(From.Callback) {}
+    Gs2::Core::Model::FGs2ErrorPtr FNamespaceDomain::FSubscribeTakeOverTypeModelMastersWithInitialCallTask::Action(TSharedPtr<TSharedPtr<Gs2::Core::Domain::CallbackID>> Result)
+    {
+        const auto Task = Gs2::Core::Util::New<FAsyncTask<FCollectTakeOverTypeModelMastersTask>>(Self, TFunction<void(TArray<Gs2::Account::Model::FTakeOverTypeModelMasterPtr>)>());
+        Task->StartSynchronousTask(); Task->EnsureCompletion();
+        if (Task->GetTask().IsError()) return Task->GetTask().Error();
+        const auto Values = Task->GetTask().Result();
+        const auto CallbackId = Self->SubscribeTakeOverTypeModelMasters(Callback);
+        Callback(*Values); *Result = MakeShared<Gs2::Core::Domain::CallbackID>(CallbackId);
+        return nullptr;
+    }
+    TSharedPtr<FAsyncTask<FNamespaceDomain::FSubscribeTakeOverTypeModelMastersWithInitialCallTask>> FNamespaceDomain::SubscribeTakeOverTypeModelMastersWithInitialCall(TFunction<void(TArray<Gs2::Account::Model::FTakeOverTypeModelMasterPtr>)> Callback)
+    {
+        return Gs2::Core::Util::New<FAsyncTask<FSubscribeTakeOverTypeModelMastersWithInitialCallTask>>(this->AsShared(), Callback);
     }
 
     TSharedPtr<Gs2::Account::Domain::Model::FTakeOverTypeModelMasterDomain> FNamespaceDomain::TakeOverTypeModelMaster(
@@ -777,52 +1032,79 @@ namespace Gs2::Account::Domain::Model
     )
     {
         const auto ParentKey = FString("account:Namespace");
-        // ReSharper disable once CppLocalVariableMayBeConst
-        TSharedPtr<Gs2::Account::Model::FNamespace> Value;
-        auto bCacheHit = Self->Gs2->Cache->TryGet<Gs2::Account::Model::FNamespace>(
-            ParentKey,
-            Gs2::Account::Domain::Model::FNamespaceDomain::CreateCacheKey(
-                Self->NamespaceName
-            ),
-            &Value
+        const FString CacheKey = Gs2::Account::Domain::Model::FNamespaceDomain::CreateCacheKey(
+            Self->NamespaceName
         );
-        if (!bCacheHit) {
-            const auto Future = Self->Get(
-                MakeShared<Gs2::Account::Request::FGetNamespaceRequest>()
-            );
-            Future->StartSynchronousTask();
-            if (Future->GetTask().IsError())
+        return Self->Gs2->Cache->ExecuteWithKeyLock(
+            Gs2::Account::Model::FNamespace::TypeName,
+            ParentKey,
+            CacheKey,
+            [this, Result, CacheKey, ParentKey]() -> Gs2::Core::Model::FGs2ErrorPtr
             {
-                if (Future->GetTask().Error()->Type() != Gs2::Core::Model::FNotFoundError::TypeString)
-                {
-                    return Future->GetTask().Error();
-                }
-
-                const auto Key = Gs2::Account::Domain::Model::FNamespaceDomain::CreateCacheKey(
-                    Self->NamespaceName
-                );
-                Self->Gs2->Cache->Put(
-                    Gs2::Account::Model::FNamespace::TypeName,
+                // ReSharper disable once CppLocalVariableMayBeConst
+                TSharedPtr<Gs2::Account::Model::FNamespace> Value;
+                auto bCacheHit = Self->Gs2->Cache->TryGet<Gs2::Account::Model::FNamespace>(
                     ParentKey,
-                    Key,
-                    nullptr,
-                    FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
+                    CacheKey,
+                    &Value
                 );
+                if (!bCacheHit) {
+                    const auto Future = Self->Get(
+                        MakeShared<Gs2::Account::Request::FGetNamespaceRequest>()
+                    );
+                    Future->StartSynchronousTask();
+                    if (Future->GetTask().IsError())
+                    {
+                        const auto Error = Future->GetTask().Error();
+                        if (!Error.IsValid() || Error->Type() != Gs2::Core::Model::FNotFoundError::TypeString)
+                        {
+                            return Error;
+                        }
+                        Self->Gs2->Cache->Put(
+                            Gs2::Account::Model::FNamespace::TypeName,
+                            ParentKey,
+                            CacheKey,
+                            nullptr,
+                            FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
+                        );
 
-                if (Future->GetTask().Error()->Detail(0)->GetComponent() != "namespace")
-                {
-                    return Future->GetTask().Error();
+                        if (!Error->GetErrors().IsValid() || Error->Count() == 0 || !Error->Detail(0).IsValid() || Error->Detail(0)->GetComponent() != "namespace")
+                        {
+                            return Error;
+                        }
+                    }
+                    else
+                    {
+                        Value = Future->GetTask().Result();
+                    }
+                    Future->EnsureCompletion();
                 }
-            }
-            else
-            {
-                Value = Future->GetTask().Result();
-            }
-            Future->EnsureCompletion();
-        }
-        *Result = Value;
+                if (!bCacheHit)
+                {
+                    FGs2ObjectPtr ExistingObject;
+                    const bool Existing = Self->Gs2->Cache->TryGet(
+                        Gs2::Account::Model::FNamespace::TypeName,
+                        ParentKey,
+                        CacheKey,
+                        &ExistingObject
+                    );
+                    if (!Existing || ExistingObject != Value)
+                    {
+                        Self->Gs2->Cache->Put(
+                            Gs2::Account::Model::FNamespace::TypeName,
+                            ParentKey,
+                            CacheKey,
+                            Value,
+                            FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
+                        );
+                    }
+                }
 
-        return nullptr;
+                *Result = Value;
+
+                return nullptr;
+            }
+        );
     }
 
     TSharedPtr<FAsyncTask<FNamespaceDomain::FModelTask>> FNamespaceDomain::Model() {
@@ -833,6 +1115,11 @@ namespace Gs2::Account::Domain::Model
         TFunction<void(Gs2::Account::Model::FNamespacePtr)> Callback
     )
     {
+        const TWeakPtr<Gs2::Core::Domain::FGs2> WeakGs2 = Gs2;
+        const TWeakPtr<Account::Domain::FGs2AccountDomain> WeakService = Service;
+        const FString RegisteredParentKey = ParentKey;
+        const TOptional<FString> QueryNamespaceName = NamespaceName;
+
         return Gs2->Cache->Subscribe(
             Gs2::Account::Model::FNamespace::TypeName,
             ParentKey,
@@ -842,6 +1129,22 @@ namespace Gs2::Account::Domain::Model
             [Callback](TSharedPtr<FGs2Object> obj)
             {
                 Callback(StaticCastSharedPtr<Gs2::Account::Model::FNamespace>(obj));
+            },
+            [WeakGs2, WeakService, RegisteredParentKey, QueryNamespaceName]()
+            {
+                const auto Owner = WeakGs2.Pin();
+                if (!Owner.IsValid())
+                {
+                    return;
+                }
+                const auto Domain = MakeShared<FNamespaceDomain>(
+                    Owner,
+                    WeakService.Pin(),
+                    QueryNamespaceName
+                );
+                Domain->ParentKey = RegisteredParentKey;
+                const auto Task = Domain->Model();
+                Task->StartBackgroundTask();
             }
         );
     }

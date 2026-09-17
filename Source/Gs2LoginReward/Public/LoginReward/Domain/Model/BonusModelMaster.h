@@ -79,6 +79,8 @@ namespace Gs2::LoginReward::Domain::Model
             const FBonusModelMasterDomain& From
         );
 
+
+
         class GS2LOGINREWARD_API FGetTask final :
             public Gs2::Core::Util::TGs2Future<Gs2::LoginReward::Model::FBonusModelMaster>,
             public TSharedFromThis<FGetTask>
@@ -105,6 +107,8 @@ namespace Gs2::LoginReward::Domain::Model
             Request::FGetBonusModelMasterRequestPtr Request
         );
 
+
+
         class GS2LOGINREWARD_API FUpdateTask final :
             public Gs2::Core::Util::TGs2Future<Gs2::LoginReward::Domain::Model::FBonusModelMasterDomain>,
             public TSharedFromThis<FUpdateTask>
@@ -130,6 +134,8 @@ namespace Gs2::LoginReward::Domain::Model
         TSharedPtr<FAsyncTask<FUpdateTask>> Update(
             Request::FUpdateBonusModelMasterRequestPtr Request
         );
+
+
 
         class GS2LOGINREWARD_API FDeleteTask final :
             public Gs2::Core::Util::TGs2Future<Gs2::LoginReward::Domain::Model::FBonusModelMasterDomain>,
@@ -189,7 +195,34 @@ namespace Gs2::LoginReward::Domain::Model
 
         TSharedPtr<FAsyncTask<FModelTask>> Model();
 
+        void Invalidate();
+
         Gs2::Core::Domain::CallbackID Subscribe(
+            TFunction<void(Gs2::LoginReward::Model::FBonusModelMasterPtr)> Callback
+        );
+
+        class GS2LOGINREWARD_API FSubscribeWithInitialCallTask final :
+            public Gs2::Core::Util::TGs2Future<Gs2::Core::Domain::CallbackID>,
+            public TSharedFromThis<FSubscribeWithInitialCallTask>
+        {
+            const TSharedPtr<FBonusModelMasterDomain> Self;
+            const TFunction<void(Gs2::LoginReward::Model::FBonusModelMasterPtr)> Callback;
+        public:
+            FSubscribeWithInitialCallTask(
+                const TSharedPtr<FBonusModelMasterDomain>& Self,
+                TFunction<void(Gs2::LoginReward::Model::FBonusModelMasterPtr)> Callback
+            );
+
+            FSubscribeWithInitialCallTask(
+                const FSubscribeWithInitialCallTask& From
+            );
+
+            virtual Gs2::Core::Model::FGs2ErrorPtr Action(
+                TSharedPtr<TSharedPtr<Gs2::Core::Domain::CallbackID>> Result
+            ) override;
+        };
+
+        TSharedPtr<FAsyncTask<FSubscribeWithInitialCallTask>> SubscribeWithInitialCall(
             TFunction<void(Gs2::LoginReward::Model::FBonusModelMasterPtr)> Callback
         );
 

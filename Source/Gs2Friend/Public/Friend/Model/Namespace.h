@@ -19,6 +19,7 @@
 #include "CoreMinimal.h"
 #include "Core/Gs2Object.h"
 #include "TransactionSetting.h"
+#include "TransactionSettingV2.h"
 #include "ScriptSetting.h"
 #include "NotificationSetting.h"
 #include "LogSetting.h"
@@ -31,6 +32,7 @@ namespace Gs2::Friend::Model
         TOptional<FString> NameValue;
         TOptional<FString> DescriptionValue;
         TSharedPtr<FTransactionSetting> TransactionSettingValue;
+        TSharedPtr<FTransactionSettingV2> TransactionSettingV2Value;
         TSharedPtr<FScriptSetting> FollowScriptValue;
         TSharedPtr<FScriptSetting> UnfollowScriptValue;
         TSharedPtr<FScriptSetting> SendRequestScriptValue;
@@ -61,6 +63,7 @@ namespace Gs2::Friend::Model
         TSharedPtr<FNamespace> WithName(const TOptional<FString> Name);
         TSharedPtr<FNamespace> WithDescription(const TOptional<FString> Description);
         TSharedPtr<FNamespace> WithTransactionSetting(const TSharedPtr<FTransactionSetting> TransactionSetting);
+        TSharedPtr<FNamespace> WithTransactionSettingV2(const TSharedPtr<FTransactionSettingV2> TransactionSettingV2);
         TSharedPtr<FNamespace> WithFollowScript(const TSharedPtr<FScriptSetting> FollowScript);
         TSharedPtr<FNamespace> WithUnfollowScript(const TSharedPtr<FScriptSetting> UnfollowScript);
         TSharedPtr<FNamespace> WithSendRequestScript(const TSharedPtr<FScriptSetting> SendRequestScript);
@@ -84,6 +87,7 @@ namespace Gs2::Friend::Model
         TOptional<FString> GetName() const;
         TOptional<FString> GetDescription() const;
         TSharedPtr<FTransactionSetting> GetTransactionSetting() const;
+        TSharedPtr<FTransactionSettingV2> GetTransactionSettingV2() const;
         TSharedPtr<FScriptSetting> GetFollowScript() const;
         TSharedPtr<FScriptSetting> GetUnfollowScript() const;
         TSharedPtr<FScriptSetting> GetSendRequestScript() const;

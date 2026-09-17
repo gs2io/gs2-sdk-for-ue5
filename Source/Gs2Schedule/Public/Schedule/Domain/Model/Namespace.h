@@ -102,6 +102,8 @@ namespace Gs2::Schedule::Domain::Model
             const FNamespaceDomain& From
         );
 
+
+
         class GS2SCHEDULE_API FGetStatusTask final :
             public Gs2::Core::Util::TGs2Future<Gs2::Schedule::Domain::Model::FNamespaceDomain>,
             public TSharedFromThis<FGetStatusTask>
@@ -127,6 +129,8 @@ namespace Gs2::Schedule::Domain::Model
         TSharedPtr<FAsyncTask<FGetStatusTask>> GetStatus(
             Request::FGetNamespaceStatusRequestPtr Request
         );
+
+
 
         class GS2SCHEDULE_API FGetTask final :
             public Gs2::Core::Util::TGs2Future<Gs2::Schedule::Model::FNamespace>,
@@ -154,6 +158,8 @@ namespace Gs2::Schedule::Domain::Model
             Request::FGetNamespaceRequestPtr Request
         );
 
+
+
         class GS2SCHEDULE_API FUpdateTask final :
             public Gs2::Core::Util::TGs2Future<Gs2::Schedule::Domain::Model::FNamespaceDomain>,
             public TSharedFromThis<FUpdateTask>
@@ -180,6 +186,8 @@ namespace Gs2::Schedule::Domain::Model
             Request::FUpdateNamespaceRequestPtr Request
         );
 
+
+
         class GS2SCHEDULE_API FDeleteTask final :
             public Gs2::Core::Util::TGs2Future<Gs2::Schedule::Domain::Model::FNamespaceDomain>,
             public TSharedFromThis<FDeleteTask>
@@ -205,6 +213,8 @@ namespace Gs2::Schedule::Domain::Model
         TSharedPtr<FAsyncTask<FDeleteTask>> Delete(
             Request::FDeleteNamespaceRequestPtr Request
         );
+
+
 
         class GS2SCHEDULE_API FCreateEventMasterTask final :
             public Gs2::Core::Util::TGs2Future<Gs2::Schedule::Domain::Model::FEventMasterDomain>,
@@ -249,8 +259,33 @@ namespace Gs2::Schedule::Domain::Model
 
         Gs2::Core::Domain::CallbackID SubscribeEventMasters(
             TFunction<void()> Callback
+
         );
 
+        class FCollectEventMastersTask;
+
+        Gs2::Core::Domain::CallbackID SubscribeEventMasters(
+            TFunction<void(TArray<Gs2::Schedule::Model::FEventMasterPtr>)> Callback,const TOptional<FString> NamePrefix = TOptional<FString>()
+        );
+
+        void InvalidateEventMasters(const TOptional<FString> NamePrefix = TOptional<FString>());
+
+        class GS2SCHEDULE_API FSubscribeEventMastersWithInitialCallTask final :
+            public Gs2::Core::Util::TGs2Future<Gs2::Core::Domain::CallbackID>,
+            public TSharedFromThis<FSubscribeEventMastersWithInitialCallTask>
+        {
+            const TSharedPtr<FNamespaceDomain> Self;
+            const TFunction<void(TArray<Gs2::Schedule::Model::FEventMasterPtr>)> Callback;
+        const TOptional<FString> QueryNamePrefix;
+        public:
+            FSubscribeEventMastersWithInitialCallTask(const TSharedPtr<FNamespaceDomain>& Self, TFunction<void(TArray<Gs2::Schedule::Model::FEventMasterPtr>)> Callback,const TOptional<FString> NamePrefix);
+            FSubscribeEventMastersWithInitialCallTask(const FSubscribeEventMastersWithInitialCallTask& From);
+            virtual Gs2::Core::Model::FGs2ErrorPtr Action(TSharedPtr<TSharedPtr<Gs2::Core::Domain::CallbackID>> Result) override;
+        };
+
+        TSharedPtr<FAsyncTask<FSubscribeEventMastersWithInitialCallTask>> SubscribeEventMastersWithInitialCall(
+            TFunction<void(TArray<Gs2::Schedule::Model::FEventMasterPtr>)> Callback,const TOptional<FString> NamePrefix = TOptional<FString>()
+        );
         void UnsubscribeEventMasters(
             Gs2::Core::Domain::CallbackID CallbackID
         );
@@ -290,7 +325,34 @@ namespace Gs2::Schedule::Domain::Model
 
         TSharedPtr<FAsyncTask<FModelTask>> Model();
 
+        void Invalidate();
+
         Gs2::Core::Domain::CallbackID Subscribe(
+            TFunction<void(Gs2::Schedule::Model::FNamespacePtr)> Callback
+        );
+
+        class GS2SCHEDULE_API FSubscribeWithInitialCallTask final :
+            public Gs2::Core::Util::TGs2Future<Gs2::Core::Domain::CallbackID>,
+            public TSharedFromThis<FSubscribeWithInitialCallTask>
+        {
+            const TSharedPtr<FNamespaceDomain> Self;
+            const TFunction<void(Gs2::Schedule::Model::FNamespacePtr)> Callback;
+        public:
+            FSubscribeWithInitialCallTask(
+                const TSharedPtr<FNamespaceDomain>& Self,
+                TFunction<void(Gs2::Schedule::Model::FNamespacePtr)> Callback
+            );
+
+            FSubscribeWithInitialCallTask(
+                const FSubscribeWithInitialCallTask& From
+            );
+
+            virtual Gs2::Core::Model::FGs2ErrorPtr Action(
+                TSharedPtr<TSharedPtr<Gs2::Core::Domain::CallbackID>> Result
+            ) override;
+        };
+
+        TSharedPtr<FAsyncTask<FSubscribeWithInitialCallTask>> SubscribeWithInitialCall(
             TFunction<void(Gs2::Schedule::Model::FNamespacePtr)> Callback
         );
 

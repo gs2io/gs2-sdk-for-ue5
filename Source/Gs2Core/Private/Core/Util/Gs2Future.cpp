@@ -16,12 +16,35 @@
 
 
 #include "Core/Util/Gs2Future.h"
+#include "Misc/ScopeLock.h"
 
 
 namespace Gs2::Core::Util
 {
 
 	TArray<TSharedPtr<FAsyncTaskBase>> RunningTasks;
+
+	namespace
+	{
+		FCriticalSection RunningTasksMutex;
+	}
+
+	void RegisterRunningTask(const TSharedPtr<FAsyncTaskBase>& Task)
+	{
+		TArray<TSharedPtr<FAsyncTaskBase>> Retired;
+		{
+			FScopeLock Lock(&RunningTasksMutex);
+			for (auto Iterator = RunningTasks.CreateIterator(); Iterator; ++Iterator)
+			{
+				if ((*Iterator).IsUnique() && (*Iterator)->IsDone())
+				{
+					Retired.Add(MoveTemp(*Iterator));
+					Iterator.RemoveCurrent();
+				}
+			}
+			RunningTasks.Add(Task);
+		}
+	}
 
 #if PLATFORM_WINDOWS
 	template class TGs2Future<void>;

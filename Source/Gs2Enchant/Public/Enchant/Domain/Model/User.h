@@ -97,10 +97,36 @@ namespace Gs2::Enchant::Domain::Model
 
         Gs2::Core::Domain::CallbackID SubscribeBalanceParameterStatuses(
             TFunction<void()> Callback
+            , const TOptional<FString> ParameterName = TOptional<FString>()
         );
 
+        class FCollectBalanceParameterStatusesTask;
+
+        Gs2::Core::Domain::CallbackID SubscribeBalanceParameterStatuses(
+            TFunction<void(TArray<Gs2::Enchant::Model::FBalanceParameterStatusPtr>)> Callback,const TOptional<FString> ParameterName = TOptional<FString>(),const TOptional<FString> TimeOffsetToken = TOptional<FString>()
+        );
+
+        void InvalidateBalanceParameterStatuses(const TOptional<FString> ParameterName = TOptional<FString>(),const TOptional<FString> TimeOffsetToken = TOptional<FString>());
+
+        class GS2ENCHANT_API FSubscribeBalanceParameterStatusesWithInitialCallTask final :
+            public Gs2::Core::Util::TGs2Future<Gs2::Core::Domain::CallbackID>,
+            public TSharedFromThis<FSubscribeBalanceParameterStatusesWithInitialCallTask>
+        {
+            const TSharedPtr<FUserDomain> Self;
+            const TFunction<void(TArray<Gs2::Enchant::Model::FBalanceParameterStatusPtr>)> Callback;
+        const TOptional<FString> QueryParameterName;const TOptional<FString> QueryTimeOffsetToken;
+        public:
+            FSubscribeBalanceParameterStatusesWithInitialCallTask(const TSharedPtr<FUserDomain>& Self, TFunction<void(TArray<Gs2::Enchant::Model::FBalanceParameterStatusPtr>)> Callback,const TOptional<FString> ParameterName,const TOptional<FString> TimeOffsetToken);
+            FSubscribeBalanceParameterStatusesWithInitialCallTask(const FSubscribeBalanceParameterStatusesWithInitialCallTask& From);
+            virtual Gs2::Core::Model::FGs2ErrorPtr Action(TSharedPtr<TSharedPtr<Gs2::Core::Domain::CallbackID>> Result) override;
+        };
+
+        TSharedPtr<FAsyncTask<FSubscribeBalanceParameterStatusesWithInitialCallTask>> SubscribeBalanceParameterStatusesWithInitialCall(
+            TFunction<void(TArray<Gs2::Enchant::Model::FBalanceParameterStatusPtr>)> Callback,const TOptional<FString> ParameterName = TOptional<FString>(),const TOptional<FString> TimeOffsetToken = TOptional<FString>()
+        );
         void UnsubscribeBalanceParameterStatuses(
-            Gs2::Core::Domain::CallbackID CallbackID
+
+            Gs2::Core::Domain::CallbackID CallbackID, const TOptional<FString> ParameterName = TOptional<FString>(), const TOptional<FString> TimeOffsetToken = TOptional<FString>()
         );
 
         TSharedPtr<Gs2::Enchant::Domain::Model::FBalanceParameterStatusDomain> BalanceParameterStatus(
@@ -115,10 +141,36 @@ namespace Gs2::Enchant::Domain::Model
 
         Gs2::Core::Domain::CallbackID SubscribeRarityParameterStatuses(
             TFunction<void()> Callback
+            , const TOptional<FString> ParameterName = TOptional<FString>()
         );
 
+        class FCollectRarityParameterStatusesTask;
+
+        Gs2::Core::Domain::CallbackID SubscribeRarityParameterStatuses(
+            TFunction<void(TArray<Gs2::Enchant::Model::FRarityParameterStatusPtr>)> Callback,const TOptional<FString> ParameterName = TOptional<FString>(),const TOptional<FString> TimeOffsetToken = TOptional<FString>()
+        );
+
+        void InvalidateRarityParameterStatuses(const TOptional<FString> ParameterName = TOptional<FString>(),const TOptional<FString> TimeOffsetToken = TOptional<FString>());
+
+        class GS2ENCHANT_API FSubscribeRarityParameterStatusesWithInitialCallTask final :
+            public Gs2::Core::Util::TGs2Future<Gs2::Core::Domain::CallbackID>,
+            public TSharedFromThis<FSubscribeRarityParameterStatusesWithInitialCallTask>
+        {
+            const TSharedPtr<FUserDomain> Self;
+            const TFunction<void(TArray<Gs2::Enchant::Model::FRarityParameterStatusPtr>)> Callback;
+        const TOptional<FString> QueryParameterName;const TOptional<FString> QueryTimeOffsetToken;
+        public:
+            FSubscribeRarityParameterStatusesWithInitialCallTask(const TSharedPtr<FUserDomain>& Self, TFunction<void(TArray<Gs2::Enchant::Model::FRarityParameterStatusPtr>)> Callback,const TOptional<FString> ParameterName,const TOptional<FString> TimeOffsetToken);
+            FSubscribeRarityParameterStatusesWithInitialCallTask(const FSubscribeRarityParameterStatusesWithInitialCallTask& From);
+            virtual Gs2::Core::Model::FGs2ErrorPtr Action(TSharedPtr<TSharedPtr<Gs2::Core::Domain::CallbackID>> Result) override;
+        };
+
+        TSharedPtr<FAsyncTask<FSubscribeRarityParameterStatusesWithInitialCallTask>> SubscribeRarityParameterStatusesWithInitialCall(
+            TFunction<void(TArray<Gs2::Enchant::Model::FRarityParameterStatusPtr>)> Callback,const TOptional<FString> ParameterName = TOptional<FString>(),const TOptional<FString> TimeOffsetToken = TOptional<FString>()
+        );
         void UnsubscribeRarityParameterStatuses(
-            Gs2::Core::Domain::CallbackID CallbackID
+
+            Gs2::Core::Domain::CallbackID CallbackID, const TOptional<FString> ParameterName = TOptional<FString>(), const TOptional<FString> TimeOffsetToken = TOptional<FString>()
         );
 
         TSharedPtr<Gs2::Enchant::Domain::Model::FRarityParameterStatusDomain> RarityParameterStatus(

@@ -32,6 +32,11 @@ namespace Gs2::Core::Domain
     typedef TSharedPtr<FGs2> FGs2Ptr;
 }
 
+namespace Gs2::Core::Domain::SpeculativeExecutor
+{
+    class FPreparedSpeculativeCommit;
+}
+
 namespace Gs2::Ranking2::Domain
 {
     class FGs2Ranking2Domain;
@@ -46,7 +51,7 @@ namespace Gs2::Ranking2::Domain::Transaction::SpeculativeExecutor
         static FString Action();
 
         class FCommitTask final :
-            public Gs2::Core::Util::TGs2Future<TFunction<void()>>,
+            public Gs2::Core::Util::TGs2Future<Gs2::Core::Domain::SpeculativeExecutor::FPreparedSpeculativeCommit>,
             public TSharedFromThis<FCommitTask>
         {
             const Gs2::Core::Domain::FGs2Ptr Domain;
@@ -67,7 +72,7 @@ namespace Gs2::Ranking2::Domain::Transaction::SpeculativeExecutor
             );
 
             virtual Gs2::Core::Model::FGs2ErrorPtr Action(
-                TSharedPtr<TSharedPtr<TFunction<void()>>> Result
+                TSharedPtr<TSharedPtr<Gs2::Core::Domain::SpeculativeExecutor::FPreparedSpeculativeCommit>> Result
             ) override;
         };
         friend FCommitTask;

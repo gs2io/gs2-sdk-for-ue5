@@ -89,7 +89,7 @@ namespace Gs2::UE5::Distributor::Domain::Model
     Gs2::Core::Domain::CallbackID FEzTransactionResultGameSessionDomain::Subscribe(TFunction<void(Gs2::UE5::Distributor::Model::FEzTransactionResultPtr)> Callback)
     {
         return Domain->Subscribe(
-            [&](Gs2::Distributor::Model::FTransactionResultPtr Item)
+            [Callback](Gs2::Distributor::Model::FTransactionResultPtr Item)
             {
                 Callback(Gs2::UE5::Distributor::Model::FEzTransactionResult::FromModel(Item));
             }

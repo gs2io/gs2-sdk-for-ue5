@@ -267,55 +267,76 @@ namespace Gs2::Account::Domain::Model
         TSharedPtr<TSharedPtr<Gs2::Account::Model::FPlatformId>> Result
     )
     {
-        // ReSharper disable once CppLocalVariableMayBeConst
-        TSharedPtr<Gs2::Account::Model::FPlatformId> Value;
-        auto bCacheHit = Self->Gs2->Cache->TryGet<Gs2::Account::Model::FPlatformId>(
-            Self->ParentKey,
-            Gs2::Account::Domain::Model::FPlatformIdDomain::CreateCacheKey(
-                Self->Type
-            ),
-            &Value
+        const FString CacheKey = Gs2::Account::Domain::Model::FPlatformIdDomain::CreateCacheKey(
+            Self->Type
         );
-        if (!bCacheHit) {
-            const auto Future = Self->Get(
-                MakeShared<Gs2::Account::Request::FGetPlatformIdByUserIdRequest>()
-            );
-            Future->StartSynchronousTask();
-            if (Future->GetTask().IsError())
+        return Self->Gs2->Cache->ExecuteWithKeyLock(
+            Gs2::Account::Model::FPlatformId::TypeName,
+            Self->ParentKey,
+            CacheKey,
+            [this, Result, CacheKey]() -> Gs2::Core::Model::FGs2ErrorPtr
             {
-                if (Future->GetTask().Error()->Type() != Gs2::Core::Model::FNotFoundError::TypeString)
-                {
-                    return Future->GetTask().Error();
-                }
-
-                const auto Key = Gs2::Account::Domain::Model::FPlatformIdDomain::CreateCacheKey(
-                    Self->Type
-                );
-                Self->Gs2->Cache->Put(
-                    Gs2::Account::Model::FPlatformId::TypeName,
+                // ReSharper disable once CppLocalVariableMayBeConst
+                TSharedPtr<Gs2::Account::Model::FPlatformId> Value;
+                auto bCacheHit = Self->Gs2->Cache->TryGet<Gs2::Account::Model::FPlatformId>(
                     Self->ParentKey,
-                    Key,
-                    nullptr,
-                    FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
+                    CacheKey,
+                    &Value
                 );
-
-                if (Future->GetTask().Error()->Detail(0)->GetComponent() != "platformId")
-                {
-                    return Future->GetTask().Error();
+                if (!bCacheHit) {
+                    const auto Future = Self->Get(
+                        MakeShared<Gs2::Account::Request::FGetPlatformIdByUserIdRequest>()
+                    );
+                    Future->StartSynchronousTask();
+                    if (Future->GetTask().IsError())
+                    {
+                        const auto Error = Future->GetTask().Error();
+                        if (!Error.IsValid() || Error->Type() != Gs2::Core::Model::FNotFoundError::TypeString)
+                        {
+                            return Error;
+                        }
+                        Self->Gs2->Cache->Put(
+                            Gs2::Account::Model::FPlatformId::TypeName,
+                            Self->ParentKey,
+                            CacheKey,
+                            nullptr,
+                            FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
+                        );
+                        if (!Error->GetErrors().IsValid() || Error->Count() == 0 || !Error->Detail(0).IsValid() || Error->Detail(0)->GetComponent() != "platformId")
+                        {
+                            return Error;
+                        }
+                    }
+                    else
+                    {
+                        Value = Future->GetTask().Result();
+                    }
+                    Future->EnsureCompletion();
                 }
+                if (!bCacheHit)
+                {
+                    FGs2ObjectPtr ExistingObject;
+                    const bool Existing = Self->Gs2->Cache->TryGet(
+                        Gs2::Account::Model::FPlatformId::TypeName,
+                        Self->ParentKey,
+                        CacheKey,
+                        &ExistingObject
+                    );
+                    if (!Existing || ExistingObject != Value)
+                    {
+                        Self->Gs2->Cache->Put(
+                            Gs2::Account::Model::FPlatformId::TypeName,
+                            Self->ParentKey,
+                            CacheKey,
+                            Value,
+                            FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
+                        );
+                    }
+                }
+                *Result = Value;
+                return nullptr;
             }
-            Self->Gs2->Cache->TryGet<Gs2::Account::Model::FPlatformId>(
-                Self->ParentKey,
-                Gs2::Account::Domain::Model::FPlatformIdDomain::CreateCacheKey(
-                    Self->Type
-                ),
-                &Value
-            );
-            Future->EnsureCompletion();
-        }
-        *Result = Value;
-
-        return nullptr;
+        );
     }
 
     TSharedPtr<FAsyncTask<FPlatformIdDomain::FModelTask>> FPlatformIdDomain::Model() {
@@ -326,6 +347,12 @@ namespace Gs2::Account::Domain::Model
         TFunction<void(Gs2::Account::Model::FPlatformIdPtr)> Callback
     )
     {
+        const TWeakPtr<Gs2::Core::Domain::FGs2> WeakGs2 = Gs2;
+        const TWeakPtr<Account::Domain::FGs2AccountDomain> WeakService = Service;
+        const FString RegisteredParentKey = ParentKey;
+        const TOptional<FString> QueryNamespaceName = NamespaceName;
+        const TOptional<FString> QueryUserId = UserId;
+        const TOptional<int32> QueryType = Type;
         return Gs2->Cache->Subscribe(
             Gs2::Account::Model::FPlatformId::TypeName,
             ParentKey,
@@ -335,6 +362,24 @@ namespace Gs2::Account::Domain::Model
             [Callback](TSharedPtr<FGs2Object> obj)
             {
                 Callback(StaticCastSharedPtr<Gs2::Account::Model::FPlatformId>(obj));
+            },
+            [WeakGs2, WeakService, RegisteredParentKey, QueryNamespaceName, QueryUserId, QueryType]()
+            {
+                const auto Owner = WeakGs2.Pin();
+                if (!Owner.IsValid())
+                {
+                    return;
+                }
+                const auto Domain = MakeShared<FPlatformIdDomain>(
+                    Owner,
+                    WeakService.Pin(),
+                    QueryNamespaceName,
+                    QueryUserId,
+                    QueryType
+                );
+                Domain->ParentKey = RegisteredParentKey;
+                const auto Task = Domain->Model();
+                Task->StartBackgroundTask();
             }
         );
     }

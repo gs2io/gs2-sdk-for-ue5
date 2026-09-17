@@ -92,7 +92,7 @@ namespace Gs2::UE5::Guild::Domain::Model
     Gs2::Core::Domain::CallbackID FEzJoinedGuildDomain::Subscribe(TFunction<void(Gs2::UE5::Guild::Model::FEzJoinedGuildPtr)> Callback)
     {
         return Domain->Subscribe(
-            [&](Gs2::Guild::Model::FJoinedGuildPtr Item)
+            [Callback](Gs2::Guild::Model::FJoinedGuildPtr Item)
             {
                 Callback(Gs2::UE5::Guild::Model::FEzJoinedGuild::FromModel(Item));
             }

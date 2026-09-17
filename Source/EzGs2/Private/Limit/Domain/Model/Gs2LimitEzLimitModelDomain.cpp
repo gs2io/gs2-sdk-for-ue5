@@ -82,7 +82,7 @@ namespace Gs2::UE5::Limit::Domain::Model
     Gs2::Core::Domain::CallbackID FEzLimitModelDomain::Subscribe(TFunction<void(Gs2::UE5::Limit::Model::FEzLimitModelPtr)> Callback)
     {
         return Domain->Subscribe(
-            [&](Gs2::Limit::Model::FLimitModelPtr Item)
+            [Callback](Gs2::Limit::Model::FLimitModelPtr Item)
             {
                 Callback(Gs2::UE5::Limit::Model::FEzLimitModel::FromModel(Item));
             }

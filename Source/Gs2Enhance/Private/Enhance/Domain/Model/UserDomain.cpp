@@ -35,6 +35,9 @@
 #include "Enhance/Domain/Model/CurrentRateMaster.h"
 #include "Enhance/Domain/Model/User.h"
 #include "Enhance/Domain/Model/UserAccessToken.h"
+#include "Enhance/Model/Cache/Progress.h"
+#include "Enhance/Model/Cache/RateModel.h"
+#include "Enhance/Model/Cache/UnleashRateModel.h"
 
 #include "Core/Domain/Gs2.h"
 #include "Core/Domain/Transaction/JobQueueJobDomainFactory.h"
@@ -124,4 +127,3 @@ namespace Gs2::Enhance::Domain::Model
 #elif defined(__clang__)
 #pragma clang diagnostic pop
 #endif
-

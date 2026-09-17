@@ -87,7 +87,7 @@ namespace Gs2::UE5::SerialKey::Domain::Model
     Gs2::Core::Domain::CallbackID FEzCampaignModelDomain::Subscribe(TFunction<void(Gs2::UE5::SerialKey::Model::FEzCampaignModelPtr)> Callback)
     {
         return Domain->Subscribe(
-            [&](Gs2::SerialKey::Model::FCampaignModelPtr Item)
+            [Callback](Gs2::SerialKey::Model::FCampaignModelPtr Item)
             {
                 Callback(Gs2::UE5::SerialKey::Model::FEzCampaignModel::FromModel(Item));
             }

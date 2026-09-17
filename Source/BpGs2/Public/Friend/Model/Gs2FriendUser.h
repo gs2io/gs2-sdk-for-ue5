@@ -12,8 +12,6 @@
  * on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either
  * express or implied. See the License for the specific language governing
  * permissions and limitations under the License.
- *
- * deny overwrite
  */
 
 #pragma once
@@ -21,6 +19,7 @@
 #include "CoreMinimal.h"
 #include "Friend/Domain/Model/Gs2FriendEzUserGameSessionDomain.h"
 #include "Friend/Domain/Model/Gs2FriendEzUserDomain.h"
+#include "Core/BpGs2Constant.h"
 #include "Gs2FriendUser.generated.h"
 
 USTRUCT(BlueprintType)
@@ -51,8 +50,7 @@ class BPGS2_API UGs2FriendUserFunctionLibrary : public UBlueprintFunctionLibrary
 
     UFUNCTION(BlueprintCallable, DisplayName="Gs2::Friend::PublicProfile", Category="Game Server Services|GS2-Friend|Namespace|User|PublicProfile", meta=(WorldContext="WorldContextObject"))
     static UPARAM(DisplayName="PublicProfile") FGs2FriendPublicProfile PublicProfile(
-        FGs2FriendUser User,
-        FString UserId
+        FGs2FriendUser User
     );
 
     UFUNCTION(BlueprintCallable, DisplayName="Gs2::Friend::OwnBlackList", Category="Game Server Services|GS2-Friend|Namespace|User|BlackList", meta=(WorldContext="WorldContextObject"))
@@ -60,10 +58,9 @@ class BPGS2_API UGs2FriendUserFunctionLibrary : public UBlueprintFunctionLibrary
         FGs2FriendOwnUser User
     );
 
-    UFUNCTION(BlueprintCallable, DisplayName="Gs2::Friend::OwnFollowUser", Category="Game Server Services|GS2-Friend|Namespace|User|FollowUser", meta=(WorldContext="WorldContextObject"))
-    static UPARAM(DisplayName="FollowUser") FGs2FriendOwnFollowUser OwnFollowUser(
+    UFUNCTION(BlueprintCallable, DisplayName="Gs2::Friend::OwnFollow", Category="Game Server Services|GS2-Friend|Namespace|User|Follow", meta=(WorldContext="WorldContextObject"))
+    static UPARAM(DisplayName="Follow") FGs2FriendOwnFollow OwnFollow(
         FGs2FriendOwnUser User,
-        FString TargetUserId,
         bool WithProfile
     );
 

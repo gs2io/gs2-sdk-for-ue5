@@ -101,8 +101,33 @@ namespace Gs2::Version::Domain::Model
 
         Gs2::Core::Domain::CallbackID SubscribeAcceptVersions(
             TFunction<void()> Callback
+
         );
 
+        class FCollectAcceptVersionsTask;
+
+        Gs2::Core::Domain::CallbackID SubscribeAcceptVersions(
+            TFunction<void(TArray<Gs2::Version::Model::FAcceptVersionPtr>)> Callback
+        );
+
+        void InvalidateAcceptVersions();
+
+        class GS2VERSION_API FSubscribeAcceptVersionsWithInitialCallTask final :
+            public Gs2::Core::Util::TGs2Future<Gs2::Core::Domain::CallbackID>,
+            public TSharedFromThis<FSubscribeAcceptVersionsWithInitialCallTask>
+        {
+            const TSharedPtr<FUserAccessTokenDomain> Self;
+            const TFunction<void(TArray<Gs2::Version::Model::FAcceptVersionPtr>)> Callback;
+
+        public:
+            FSubscribeAcceptVersionsWithInitialCallTask(const TSharedPtr<FUserAccessTokenDomain>& Self, TFunction<void(TArray<Gs2::Version::Model::FAcceptVersionPtr>)> Callback);
+            FSubscribeAcceptVersionsWithInitialCallTask(const FSubscribeAcceptVersionsWithInitialCallTask& From);
+            virtual Gs2::Core::Model::FGs2ErrorPtr Action(TSharedPtr<TSharedPtr<Gs2::Core::Domain::CallbackID>> Result) override;
+        };
+
+        TSharedPtr<FAsyncTask<FSubscribeAcceptVersionsWithInitialCallTask>> SubscribeAcceptVersionsWithInitialCall(
+            TFunction<void(TArray<Gs2::Version::Model::FAcceptVersionPtr>)> Callback
+        );
         void UnsubscribeAcceptVersions(
             Gs2::Core::Domain::CallbackID CallbackID
         );

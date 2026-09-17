@@ -92,6 +92,8 @@ namespace Gs2::Stamina::Domain::Model
             const FStaminaAccessTokenDomain& From
         );
 
+
+
         class GS2STAMINA_API FGetTask final :
             public Gs2::Core::Util::TGs2Future<Gs2::Stamina::Model::FStamina>,
             public TSharedFromThis<FGetTask>
@@ -117,6 +119,8 @@ namespace Gs2::Stamina::Domain::Model
         TSharedPtr<FAsyncTask<FGetTask>> Get(
             Request::FGetStaminaRequestPtr Request
         );
+
+
 
         class GS2STAMINA_API FConsumeTask final :
             public Gs2::Core::Util::TGs2Future<Gs2::Stamina::Domain::Model::FStaminaAccessTokenDomain>,
@@ -144,6 +148,8 @@ namespace Gs2::Stamina::Domain::Model
             Request::FConsumeStaminaRequestPtr Request
         );
 
+
+
         class GS2STAMINA_API FApplyTask final :
             public Gs2::Core::Util::TGs2Future<Gs2::Stamina::Domain::Model::FStaminaAccessTokenDomain>,
             public TSharedFromThis<FApplyTask>
@@ -169,6 +175,8 @@ namespace Gs2::Stamina::Domain::Model
         TSharedPtr<FAsyncTask<FApplyTask>> Apply(
             Request::FApplyStaminaRequestPtr Request
         );
+
+
 
         class GS2STAMINA_API FDecreaseMaxValueTask final :
             public Gs2::Core::Util::TGs2Future<Gs2::Stamina::Domain::Model::FStaminaAccessTokenDomain>,
@@ -196,6 +204,8 @@ namespace Gs2::Stamina::Domain::Model
             Request::FDecreaseMaxValueRequestPtr Request
         );
 
+
+
         class GS2STAMINA_API FSetMaxValueByStatusTask final :
             public Gs2::Core::Util::TGs2Future<Gs2::Stamina::Domain::Model::FStaminaAccessTokenDomain>,
             public TSharedFromThis<FSetMaxValueByStatusTask>
@@ -221,6 +231,8 @@ namespace Gs2::Stamina::Domain::Model
         TSharedPtr<FAsyncTask<FSetMaxValueByStatusTask>> SetMaxValueByStatus(
             Request::FSetMaxValueByStatusRequestPtr Request
         );
+
+
 
         class GS2STAMINA_API FSetRecoverIntervalByStatusTask final :
             public Gs2::Core::Util::TGs2Future<Gs2::Stamina::Domain::Model::FStaminaAccessTokenDomain>,
@@ -248,6 +260,8 @@ namespace Gs2::Stamina::Domain::Model
             Request::FSetRecoverIntervalByStatusRequestPtr Request
         );
 
+
+
         class GS2STAMINA_API FSetRecoverValueByStatusTask final :
             public Gs2::Core::Util::TGs2Future<Gs2::Stamina::Domain::Model::FStaminaAccessTokenDomain>,
             public TSharedFromThis<FSetRecoverValueByStatusTask>
@@ -273,6 +287,8 @@ namespace Gs2::Stamina::Domain::Model
         TSharedPtr<FAsyncTask<FSetRecoverValueByStatusTask>> SetRecoverValueByStatus(
             Request::FSetRecoverValueByStatusRequestPtr Request
         );
+
+
 
         class GS2STAMINA_API FVerifyValueTask final :
             public Gs2::Core::Util::TGs2Future<Gs2::Stamina::Domain::Model::FStaminaAccessTokenDomain>,
@@ -300,6 +316,8 @@ namespace Gs2::Stamina::Domain::Model
             Request::FVerifyStaminaValueRequestPtr Request
         );
 
+
+
         class GS2STAMINA_API FVerifyMaxValueTask final :
             public Gs2::Core::Util::TGs2Future<Gs2::Stamina::Domain::Model::FStaminaAccessTokenDomain>,
             public TSharedFromThis<FVerifyMaxValueTask>
@@ -325,6 +343,8 @@ namespace Gs2::Stamina::Domain::Model
         TSharedPtr<FAsyncTask<FVerifyMaxValueTask>> VerifyMaxValue(
             Request::FVerifyStaminaMaxValueRequestPtr Request
         );
+
+
 
         class GS2STAMINA_API FVerifyRecoverIntervalMinutesTask final :
             public Gs2::Core::Util::TGs2Future<Gs2::Stamina::Domain::Model::FStaminaAccessTokenDomain>,
@@ -352,6 +372,8 @@ namespace Gs2::Stamina::Domain::Model
             Request::FVerifyStaminaRecoverIntervalMinutesRequestPtr Request
         );
 
+
+
         class GS2STAMINA_API FVerifyRecoverValueTask final :
             public Gs2::Core::Util::TGs2Future<Gs2::Stamina::Domain::Model::FStaminaAccessTokenDomain>,
             public TSharedFromThis<FVerifyRecoverValueTask>
@@ -377,6 +399,8 @@ namespace Gs2::Stamina::Domain::Model
         TSharedPtr<FAsyncTask<FVerifyRecoverValueTask>> VerifyRecoverValue(
             Request::FVerifyStaminaRecoverValueRequestPtr Request
         );
+
+
 
         class GS2STAMINA_API FVerifyOverflowValueTask final :
             public Gs2::Core::Util::TGs2Future<Gs2::Stamina::Domain::Model::FStaminaAccessTokenDomain>,
@@ -437,7 +461,34 @@ namespace Gs2::Stamina::Domain::Model
 
         TSharedPtr<FAsyncTask<FModelTask>> Model();
 
+        void Invalidate();
+
         Gs2::Core::Domain::CallbackID Subscribe(
+            TFunction<void(Gs2::Stamina::Model::FStaminaPtr)> Callback
+        );
+
+        class GS2STAMINA_API FSubscribeWithInitialCallTask final :
+            public Gs2::Core::Util::TGs2Future<Gs2::Core::Domain::CallbackID>,
+            public TSharedFromThis<FSubscribeWithInitialCallTask>
+        {
+            const TSharedPtr<FStaminaAccessTokenDomain> Self;
+            const TFunction<void(Gs2::Stamina::Model::FStaminaPtr)> Callback;
+        public:
+            FSubscribeWithInitialCallTask(
+                const TSharedPtr<FStaminaAccessTokenDomain>& Self,
+                TFunction<void(Gs2::Stamina::Model::FStaminaPtr)> Callback
+            );
+
+            FSubscribeWithInitialCallTask(
+                const FSubscribeWithInitialCallTask& From
+            );
+
+            virtual Gs2::Core::Model::FGs2ErrorPtr Action(
+                TSharedPtr<TSharedPtr<Gs2::Core::Domain::CallbackID>> Result
+            ) override;
+        };
+
+        TSharedPtr<FAsyncTask<FSubscribeWithInitialCallTask>> SubscribeWithInitialCall(
             TFunction<void(Gs2::Stamina::Model::FStaminaPtr)> Callback
         );
 

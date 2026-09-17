@@ -75,7 +75,8 @@ namespace Gs2::UE5::Enchant::Domain::Model
         );
     }
 
-    void FEzNamespaceDomain::UnsubscribeBalanceParameterModels(Gs2::Core::Domain::CallbackID CallbackId)
+    void FEzNamespaceDomain::UnsubscribeBalanceParameterModels(
+            Gs2::Core::Domain::CallbackID CallbackId)
     {
         Domain->UnsubscribeBalanceParameterModels(
             CallbackId
@@ -98,7 +99,8 @@ namespace Gs2::UE5::Enchant::Domain::Model
         );
     }
 
-    void FEzNamespaceDomain::UnsubscribeRarityParameterModels(Gs2::Core::Domain::CallbackID CallbackId)
+    void FEzNamespaceDomain::UnsubscribeRarityParameterModels(
+            Gs2::Core::Domain::CallbackID CallbackId)
     {
         Domain->UnsubscribeRarityParameterModels(
             CallbackId

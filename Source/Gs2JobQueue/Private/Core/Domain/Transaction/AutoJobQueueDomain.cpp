@@ -39,7 +39,8 @@ namespace Gs2::Core::Domain
 		if (!bSkipCallback) {
 			Gs2->JobQueueDomain->JobQueueExecutedEventHandler(
 				Job,
-				Result
+				Result,
+				TOptional<int32>()
 			);
 		}
             

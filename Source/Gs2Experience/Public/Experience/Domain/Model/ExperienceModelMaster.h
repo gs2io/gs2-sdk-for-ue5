@@ -79,6 +79,8 @@ namespace Gs2::Experience::Domain::Model
             const FExperienceModelMasterDomain& From
         );
 
+
+
         class GS2EXPERIENCE_API FGetTask final :
             public Gs2::Core::Util::TGs2Future<Gs2::Experience::Model::FExperienceModelMaster>,
             public TSharedFromThis<FGetTask>
@@ -105,6 +107,8 @@ namespace Gs2::Experience::Domain::Model
             Request::FGetExperienceModelMasterRequestPtr Request
         );
 
+
+
         class GS2EXPERIENCE_API FUpdateTask final :
             public Gs2::Core::Util::TGs2Future<Gs2::Experience::Domain::Model::FExperienceModelMasterDomain>,
             public TSharedFromThis<FUpdateTask>
@@ -130,6 +134,8 @@ namespace Gs2::Experience::Domain::Model
         TSharedPtr<FAsyncTask<FUpdateTask>> Update(
             Request::FUpdateExperienceModelMasterRequestPtr Request
         );
+
+
 
         class GS2EXPERIENCE_API FDeleteTask final :
             public Gs2::Core::Util::TGs2Future<Gs2::Experience::Domain::Model::FExperienceModelMasterDomain>,
@@ -189,7 +195,34 @@ namespace Gs2::Experience::Domain::Model
 
         TSharedPtr<FAsyncTask<FModelTask>> Model();
 
+        void Invalidate();
+
         Gs2::Core::Domain::CallbackID Subscribe(
+            TFunction<void(Gs2::Experience::Model::FExperienceModelMasterPtr)> Callback
+        );
+
+        class GS2EXPERIENCE_API FSubscribeWithInitialCallTask final :
+            public Gs2::Core::Util::TGs2Future<Gs2::Core::Domain::CallbackID>,
+            public TSharedFromThis<FSubscribeWithInitialCallTask>
+        {
+            const TSharedPtr<FExperienceModelMasterDomain> Self;
+            const TFunction<void(Gs2::Experience::Model::FExperienceModelMasterPtr)> Callback;
+        public:
+            FSubscribeWithInitialCallTask(
+                const TSharedPtr<FExperienceModelMasterDomain>& Self,
+                TFunction<void(Gs2::Experience::Model::FExperienceModelMasterPtr)> Callback
+            );
+
+            FSubscribeWithInitialCallTask(
+                const FSubscribeWithInitialCallTask& From
+            );
+
+            virtual Gs2::Core::Model::FGs2ErrorPtr Action(
+                TSharedPtr<TSharedPtr<Gs2::Core::Domain::CallbackID>> Result
+            ) override;
+        };
+
+        TSharedPtr<FAsyncTask<FSubscribeWithInitialCallTask>> SubscribeWithInitialCall(
             TFunction<void(Gs2::Experience::Model::FExperienceModelMasterPtr)> Callback
         );
 

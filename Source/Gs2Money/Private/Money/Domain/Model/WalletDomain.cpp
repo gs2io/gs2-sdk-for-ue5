@@ -23,6 +23,8 @@
 #endif
 
 #include "Money/Domain/Model/Wallet.h"
+
+#include "Money/Model/Cache/Wallet.h"
 #include "Money/Domain/Model/Namespace.h"
 #include "Money/Domain/Model/User.h"
 #include "Money/Domain/Model/UserAccessToken.h"
@@ -53,10 +55,10 @@ namespace Gs2::Money::Domain::Model
         NamespaceName(NamespaceName),
         UserId(UserId),
         Slot(Slot),
-        ParentKey(Gs2::Money::Domain::Model::FUserDomain::CreateCacheParentKey(
+        ParentKey(Gs2::Money::Model::Cache::FWalletCache::CreateCacheParentKey(
             NamespaceName,
             UserId,
-            "Wallet"
+            TOptional<int32>()
         ))
     {
     }
@@ -108,6 +110,19 @@ namespace Gs2::Money::Domain::Model
         }
         const auto ResultModel = Future->GetTask().Result();
         Future->EnsureCompletion();
+
+            if (ResultModel.IsValid() && ResultModel->GetItem() != nullptr)
+            {
+                Gs2::Money::Model::Cache::FWalletCache::Put(
+            Self->Gs2->Cache,
+
+            Request->GetNamespaceName(),
+            Request->GetUserId(),
+            ResultModel->GetItem()->GetSlot().Get(int32{}),
+            TOptional<int32>(),
+            ResultModel->GetItem()
+        );
+            }
         *Result = ResultModel->GetItem();
         return nullptr;
     }
@@ -151,19 +166,19 @@ namespace Gs2::Money::Domain::Model
         }
         const auto ResultModel = Future->GetTask().Result();
         Future->EnsureCompletion();
-        if (ResultModel->GetItem() != nullptr)
-        {
-            const auto Key = Gs2::Money::Domain::Model::FWalletDomain::CreateCacheKey(
-                ResultModel->GetItem()->GetSlot()
-            );
-            Self->Gs2->Cache->Put(
-                Gs2::Money::Model::FWallet::TypeName,
-                Self->ParentKey,
-                Key,
-                ResultModel->GetItem(),
-                FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
-            );
-        }
+
+            if (ResultModel.IsValid() && ResultModel->GetItem() != nullptr)
+            {
+                Gs2::Money::Model::Cache::FWalletCache::Put(
+            Self->Gs2->Cache,
+
+            Request->GetNamespaceName(),
+            Request->GetUserId(),
+            ResultModel->GetItem()->GetSlot().Get(int32{}),
+            TOptional<int32>(),
+            ResultModel->GetItem()
+        );
+            }
         auto Domain = Self;
 
         *Result = Domain;
@@ -209,19 +224,19 @@ namespace Gs2::Money::Domain::Model
         }
         const auto ResultModel = Future->GetTask().Result();
         Future->EnsureCompletion();
-        if (ResultModel->GetItem() != nullptr)
-        {
-            const auto Key = Gs2::Money::Domain::Model::FWalletDomain::CreateCacheKey(
-                ResultModel->GetItem()->GetSlot()
-            );
-            Self->Gs2->Cache->Put(
-                Gs2::Money::Model::FWallet::TypeName,
-                Self->ParentKey,
-                Key,
-                ResultModel->GetItem(),
-                FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
-            );
-        }
+
+            if (ResultModel.IsValid() && ResultModel->GetItem() != nullptr)
+            {
+                Gs2::Money::Model::Cache::FWalletCache::Put(
+            Self->Gs2->Cache,
+
+            Request->GetNamespaceName(),
+            Request->GetUserId(),
+            ResultModel->GetItem()->GetSlot().Get(int32{}),
+            TOptional<int32>(),
+            ResultModel->GetItem()
+        );
+            }
         auto Domain = Self;
         if (ResultModel != nullptr)
         {
@@ -281,71 +296,170 @@ namespace Gs2::Money::Domain::Model
         TSharedPtr<TSharedPtr<Gs2::Money::Model::FWallet>> Result
     )
     {
-        // ReSharper disable once CppLocalVariableMayBeConst
-        TSharedPtr<Gs2::Money::Model::FWallet> Value;
-        auto bCacheHit = Self->Gs2->Cache->TryGet<Gs2::Money::Model::FWallet>(
-            Self->ParentKey,
-            Gs2::Money::Domain::Model::FWalletDomain::CreateCacheKey(
-                TOptional<int32>()
-            ),
-            &Value
+        const auto CacheParentKey = Gs2::Money::Model::Cache::FWalletCache::CreateCacheParentKey(
+
+            Self->NamespaceName,
+            Self->UserId,
+            TOptional<int32>()
         );
-        if (!bCacheHit) {
-            const auto Future = Self->Get(
-                MakeShared<Gs2::Money::Request::FGetWalletByUserIdRequest>()
-            );
-            Future->StartSynchronousTask();
-            if (Future->GetTask().IsError())
+        const auto CacheKey = Gs2::Money::Model::Cache::FWalletCache::CreateCacheKey(
+
+            Self->Slot
+        );
+        return Self->Gs2->Cache->ExecuteWithKeyLock(
+            Gs2::Money::Model::FWallet::TypeName,
+            CacheParentKey,
+            CacheKey,
+            [this, Result, CacheParentKey, CacheKey]() -> Gs2::Core::Model::FGs2ErrorPtr
             {
-                if (Future->GetTask().Error()->Type() != Gs2::Core::Model::FNotFoundError::TypeString)
+                Gs2::Money::Model::FWalletPtr Value;
+                if (Gs2::Money::Model::Cache::FWalletCache::TryGet(
+                    Self->Gs2->Cache,
+
+                    Self->NamespaceName,
+                    Self->UserId,
+                    Self->Slot,
+                    TOptional<int32>(),
+                    &Value
+                ))
                 {
-                    return Future->GetTask().Error();
+                    *Result = Value;
+                    return nullptr;
                 }
+                const auto Error = Gs2::Money::Model::Cache::FWalletCache::Fetch(
+                    Self->Gs2->Cache,
 
-                const auto Key = Gs2::Money::Domain::Model::FWalletDomain::CreateCacheKey(
-                    TOptional<int32>()
+                    Self->NamespaceName,
+                    Self->UserId,
+                    Self->Slot,
+                    TOptional<int32>(),
+                    [Self = Self](Gs2::Money::Model::FWalletPtr* OutItem) -> Gs2::Core::Model::FGs2ErrorPtr
+                    {
+                        const auto Future = Self->Get(
+                            MakeShared<Gs2::Money::Request::FGetWalletByUserIdRequest>()
+                        );
+                        Future->StartSynchronousTask();
+                        if (Future->GetTask().IsError())
+                        {
+                            return Future->GetTask().Error();
+                        }
+                        *OutItem = Future->GetTask().Result();
+                        Future->EnsureCompletion();
+                        return nullptr;
+                    },
+                    &Value
                 );
-                Self->Gs2->Cache->Put(
-                    Gs2::Money::Model::FWallet::TypeName,
-                    Self->ParentKey,
-                    Key,
-                    nullptr,
-                    FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
-                );
-
-                if (Future->GetTask().Error()->Detail(0)->GetComponent() != "wallet")
+                if (Error.IsValid())
                 {
-                    return Future->GetTask().Error();
+                    return Error;
                 }
+                *Result = Value;
+                return nullptr;
             }
-            else
-            {
-                Value = Future->GetTask().Result();
-            }
-            Future->EnsureCompletion();
-        }
-        *Result = Value;
-
-        return nullptr;
+        );
     }
 
     TSharedPtr<FAsyncTask<FWalletDomain::FModelTask>> FWalletDomain::Model() {
         return Gs2::Core::Util::New<FAsyncTask<FWalletDomain::FModelTask>>(this->AsShared());
     }
 
+    void FWalletDomain::Invalidate()
+    {
+        Gs2::Money::Model::Cache::FWalletCache::Delete(
+            Gs2->Cache,
+
+            NamespaceName,
+            UserId,
+            Slot,
+            TOptional<int32>()
+        );
+    }
+
+    FWalletDomain::FSubscribeWithInitialCallTask::FSubscribeWithInitialCallTask(
+        const TSharedPtr<FWalletDomain>& Self,
+        TFunction<void(Gs2::Money::Model::FWalletPtr)> Callback
+    ):
+        Self(Self),
+        Callback(Callback)
+    {
+    }
+
+    FWalletDomain::FSubscribeWithInitialCallTask::FSubscribeWithInitialCallTask(
+        const FSubscribeWithInitialCallTask& From
+    ):
+        TGs2Future(From),
+        Self(From.Self),
+        Callback(From.Callback)
+    {
+    }
+
+    Gs2::Core::Model::FGs2ErrorPtr FWalletDomain::FSubscribeWithInitialCallTask::Action(
+        TSharedPtr<TSharedPtr<Gs2::Core::Domain::CallbackID>> Result
+    )
+    {
+        const auto Task = Self->Model();
+        Task->StartSynchronousTask();
+        Task->EnsureCompletion();
+        if (Task->GetTask().IsError()) return Task->GetTask().Error();
+        const auto Item = Task->GetTask().Result();
+        const auto CallbackId = Self->Subscribe(Callback);
+        Callback(Item);
+        *Result = MakeShared<Gs2::Core::Domain::CallbackID>(CallbackId);
+        return nullptr;
+    }
+
+    TSharedPtr<FAsyncTask<FWalletDomain::FSubscribeWithInitialCallTask>> FWalletDomain::SubscribeWithInitialCall(
+        TFunction<void(Gs2::Money::Model::FWalletPtr)> Callback
+    )
+    {
+        return Gs2::Core::Util::New<FAsyncTask<FSubscribeWithInitialCallTask>>(this->AsShared(), Callback);
+    }
+
     Gs2::Core::Domain::CallbackID FWalletDomain::Subscribe(
         TFunction<void(Gs2::Money::Model::FWalletPtr)> Callback
     )
     {
+        const TWeakPtr<Gs2::Core::Domain::FGs2> WeakGs2 = Gs2;
+        const TWeakPtr<Money::Domain::FGs2MoneyDomain> WeakService = Service;
+        const FString RegisteredParentKey = ParentKey;
+        const TOptional<FString> QueryNamespaceName = NamespaceName;
+        const TOptional<FString> QueryUserId = UserId;
+        const TOptional<int32> QuerySlot = Slot;
+        const auto OwnerSubscriptionParentKey = Gs2::Money::Model::Cache::FWalletCache::CreateCacheParentKey(
+
+            NamespaceName,
+            UserId,
+            TOptional<int32>()
+        );
+        const auto OwnerSubscriptionKey = Gs2::Money::Model::Cache::FWalletCache::CreateCacheKey(
+
+            Slot
+        );
         return Gs2->Cache->Subscribe(
             Gs2::Money::Model::FWallet::TypeName,
-            ParentKey,
-            Gs2::Money::Domain::Model::FWalletDomain::CreateCacheKey(
-                TOptional<int32>()
-            ),
+            OwnerSubscriptionParentKey,
+            OwnerSubscriptionKey,
             [Callback](TSharedPtr<FGs2Object> obj)
             {
                 Callback(StaticCastSharedPtr<Gs2::Money::Model::FWallet>(obj));
+            },
+            [WeakGs2, WeakService, RegisteredParentKey, QueryNamespaceName, QueryUserId, QuerySlot]()
+            {
+                const auto Owner = WeakGs2.Pin();
+                if (!Owner.IsValid())
+                {
+                    return;
+                }
+                const auto Domain = MakeShared<FWalletDomain>(
+                    Owner,
+                    WeakService.Pin(),
+                    QueryNamespaceName,
+                    QueryUserId,
+                    QuerySlot
+                );
+                Domain->ParentKey = RegisteredParentKey;
+                const auto Task = Domain->Model();
+                Task->StartBackgroundTask();
             }
         );
     }
@@ -354,12 +468,20 @@ namespace Gs2::Money::Domain::Model
         Gs2::Core::Domain::CallbackID CallbackID
     )
     {
+        const auto OwnerSubscriptionParentKey = Gs2::Money::Model::Cache::FWalletCache::CreateCacheParentKey(
+
+            NamespaceName,
+            UserId,
+            TOptional<int32>()
+        );
+        const auto OwnerSubscriptionKey = Gs2::Money::Model::Cache::FWalletCache::CreateCacheKey(
+
+            Slot
+        );
         Gs2->Cache->Unsubscribe(
             Gs2::Money::Model::FWallet::TypeName,
-            ParentKey,
-            Gs2::Money::Domain::Model::FWalletDomain::CreateCacheKey(
-                TOptional<int32>()
-            ),
+            OwnerSubscriptionParentKey,
+            OwnerSubscriptionKey,
             CallbackID
         );
     }
@@ -370,4 +492,3 @@ namespace Gs2::Money::Domain::Model
 #elif defined(__clang__)
 #pragma clang diagnostic pop
 #endif
-

@@ -25,132 +25,121 @@
 #endif
 
 #include "Formation/Domain/SpeculativeExecutor/Acquire/SetMoldCapacityByUserIdSpeculativeExecutor.h"
-
 #include "Core/Domain/Gs2.h"
-#include "Formation/Domain/Gs2Formation.h"
+#include "Core/Domain/SpeculativeExecutor/PreparedSpeculativeCommit.h"
+#include "Formation/Domain/SpeculativeExecutor/MoldCapacityMutationSpeculativeCommit.h"
+#include "Formation/Model/Cache/Mold.h"
+#include "Formation/Model/Cache/MoldModel.h"
 
 namespace Gs2::Formation::Domain::SpeculativeExecutor
 {
+using Private::FMoldCapacityMutationSpeculativeCommit;
 
-    FString FSetMoldCapacityByUserIdSpeculativeExecutor::Action()
-    {
-        return FString("Gs2Formation:SetMoldCapacityByUserId");
-    }
+FString FSetMoldCapacityByUserIdSpeculativeExecutor::Action()
+{
+    return FString("Gs2Formation:SetMoldCapacityByUserId");
+}
 
-    Gs2::Core::Model::FGs2ErrorPtr FSetMoldCapacityByUserIdSpeculativeExecutor::Transform(
-        const Gs2::Core::Domain::FGs2Ptr& Domain,
-        const Gs2::Auth::Model::FAccessTokenPtr& AccessToken,
-        const Gs2::Formation::Request::FSetMoldCapacityByUserIdRequestPtr& Request,
-        Gs2::Formation::Model::FMoldPtr Item
-    )
-    {
-        Item->WithCapacity(Request->GetCapacity());
-        return nullptr;
-    }
+Gs2::Core::Model::FGs2ErrorPtr FSetMoldCapacityByUserIdSpeculativeExecutor::Transform(
+    const Gs2::Core::Domain::FGs2Ptr&, const Gs2::Auth::Model::FAccessTokenPtr&,
+    const Gs2::Formation::Request::FSetMoldCapacityByUserIdRequestPtr&, Gs2::Formation::Model::FMoldPtr
+)
+{
+    return nullptr;
+}
 
-    FSetMoldCapacityByUserIdSpeculativeExecutor::FCommitTask::FCommitTask(
-        const Gs2::Core::Domain::FGs2Ptr& Domain,
-        const Gs2::Formation::Domain::FGs2FormationDomainPtr& Service,
-        const Gs2::Auth::Model::FAccessTokenPtr& AccessToken,
-        const Gs2::Formation::Request::FSetMoldCapacityByUserIdRequestPtr& Request
-    ):
-        Domain(Domain),
-        Service(Service),
-        AccessToken(AccessToken),
-        Request(Request)
-    {
+FSetMoldCapacityByUserIdSpeculativeExecutor::FCommitTask::FCommitTask(
+    const Gs2::Core::Domain::FGs2Ptr& Domain,
+    const Gs2::Formation::Domain::FGs2FormationDomainPtr& Service,
+    const Gs2::Auth::Model::FAccessTokenPtr& AccessToken,
+    const Gs2::Formation::Request::FSetMoldCapacityByUserIdRequestPtr& Request
+): Domain(Domain), Service(Service), AccessToken(AccessToken), Request(Request) {}
 
-    }
+FSetMoldCapacityByUserIdSpeculativeExecutor::FCommitTask::FCommitTask(const FCommitTask& From):
+    Domain(From.Domain), Service(From.Service), AccessToken(From.AccessToken), Request(From.Request) {}
 
-    FSetMoldCapacityByUserIdSpeculativeExecutor::FCommitTask::FCommitTask(
-        const FCommitTask& From
-    ):
-        Domain(From.Domain),
-        Service(From.Service),
-        AccessToken(From.AccessToken),
-        Request(From.Request)
-    {
+Gs2::Core::Model::FGs2ErrorPtr FSetMoldCapacityByUserIdSpeculativeExecutor::FCommitTask::Action(
+    TSharedPtr<TSharedPtr<Gs2::Core::Domain::SpeculativeExecutor::FPreparedSpeculativeCommit>> Result
+)
+{
+    *Result = nullptr;
+    Gs2::Auth::Model::FAccessTokenPtr Token = nullptr;
+    if (AccessToken.IsValid()) Token = MakeShared<Gs2::Auth::Model::FAccessToken>(*AccessToken);
+    Gs2::Formation::Request::FSetMoldCapacityByUserIdRequestPtr Prepared = nullptr;
+    if (Request.IsValid()) Prepared = MakeShared<Gs2::Formation::Request::FSetMoldCapacityByUserIdRequest>(*Request);
+    if (!Domain.IsValid() || !Domain->RestSession.IsValid() || !Token.IsValid() || !Prepared.IsValid() ||
+        !Token->GetUserId().IsSet() || Token->GetUserId().Get(FString()).IsEmpty() ||
+        !Prepared->GetCapacity().IsSet()) return nullptr;
+    if (Prepared->GetUserId().IsSet() && Prepared->GetUserId().Get(FString()) == TEXT("#{userId}"))
+        Prepared->WithUserId(Token->GetUserId());
+    if (!Prepared->GetUserId().IsSet() || Prepared->GetUserId().Get(FString()) != Token->GetUserId().Get(FString())) return nullptr;
 
-    }
-
-    Gs2::Core::Model::FGs2ErrorPtr FSetMoldCapacityByUserIdSpeculativeExecutor::FCommitTask::Action(
-        TSharedPtr<TSharedPtr<TFunction<void()>>> Result
-    )
-    {
-        const auto Future = Domain->Formation->Namespace(
-                Request->GetNamespaceName().IsSet() ? *Request->GetNamespaceName() : FString("")
-            )->AccessToken(
-                AccessToken
-            )->Mold(
-                Request->GetMoldModelName().IsSet() ? *Request->GetMoldModelName() : FString("")
-            )->Model();
-        Future->StartSynchronousTask();
-        if (Future->GetTask().IsError())
+    const auto NamespaceName = Prepared->GetNamespaceName();
+    const auto MoldModelName = Prepared->GetMoldModelName();
+    const auto UserId = Token->GetUserId();
+    const auto TimeOffset = Token->GetTimeOffset();
+    const FString ExpectedMoldId = FString::Printf(
+        TEXT("grn:gs2:%s:%s:formation:%s:user:%s:mold:%s"),
+        *Domain->RestSession->RegionName(), *Domain->RestSession->OwnerId(), *NamespaceName.Get(FString()),
+        *UserId.Get(FString()), *MoldModelName.Get(FString())
+    );
+    const FString ExpectedModelId = FString::Printf(
+        TEXT("grn:gs2:%s:%s:formation:%s:model:mold:%s"),
+        *Domain->RestSession->RegionName(), *Domain->RestSession->OwnerId(), *NamespaceName.Get(FString()),
+        *MoldModelName.Get(FString())
+    );
+    Gs2::Formation::Model::FMoldPtr Mold;
+    if (!Gs2::Formation::Model::Cache::FMoldCache::TryGet(
+        Domain->Cache, NamespaceName, UserId, MoldModelName, TimeOffset, &Mold
+    ) || !Mold.IsValid() || !Mold->GetMoldId().IsSet() || Mold->GetMoldId().Get(FString()) != ExpectedMoldId ||
+        !Mold->GetName().IsSet() || Mold->GetName().Get(FString()) != MoldModelName.Get(FString()) ||
+        !Mold->GetUserId().IsSet() || Mold->GetUserId().Get(FString()) != UserId.Get(FString())) return nullptr;
+    Gs2::Formation::Model::FMoldModelPtr Model;
+    if (!Gs2::Formation::Model::Cache::FMoldModelCache::TryGet(
+        Domain->Cache, NamespaceName, MoldModelName, TOptional<int32>(), &Model
+    ) || !Model.IsValid() || !Model->GetMoldModelId().IsSet() || Model->GetMoldModelId().Get(FString()) != ExpectedModelId ||
+        !Model->GetName().IsSet() || Model->GetName().Get(FString()) != MoldModelName.Get(FString()) ||
+        !Model->GetMaxCapacity().IsSet()) return nullptr;
+    const auto PreparedRevision = Mold->GetRevision();
+    const int32 PreparedMaxCapacity = Model->GetMaxCapacity().Get(0);
+    if (Prepared->GetCapacity().Get(0) > PreparedMaxCapacity) return nullptr;
+    const int32 RequestedCapacity = Prepared->GetCapacity().Get(0);
+    const auto Commit = MakeShared<FMoldCapacityMutationSpeculativeCommit>(
+        Domain->Cache, NamespaceName, UserId.Get(FString()), MoldModelName.Get(FString()), TimeOffset,
+        ExpectedMoldId, ExpectedModelId, PreparedRevision, PreparedMaxCapacity,
+        [RequestedCapacity](const Gs2::Formation::Model::FMoldPtr& Current) -> Gs2::Formation::Model::FMoldPtr
         {
-            return Future->GetTask().Error();
+            if (!Current.IsValid()) return Gs2::Formation::Model::FMoldPtr(nullptr);
+            Gs2::Formation::Model::FMoldPtr Changed = MakeShared<Gs2::Formation::Model::FMold>(*Current);
+            return Changed->WithCapacity(RequestedCapacity);
         }
-        auto Item = Future->GetTask().Result();
+    );
+    *Result = Gs2::Core::Domain::SpeculativeExecutor::FPreparedSpeculativeCommit::CreateComposable(
+        Commit->CompositionKey(),
+        [Commit](const TSharedPtr<void>& Current, const bool HasCurrent, TSharedPtr<void>& Next)
+        { return Commit->TryCompose(Current, HasCurrent, Next); },
+        [Commit](const TSharedPtr<void>& State) { Commit->Commit(State); }
+    );
+    return nullptr;
+}
 
-        if (!Item.IsValid())
-        {
-            *Result = MakeShared<TFunction<void()>>([&]()
-            {
-                return nullptr;
-            });
-            return nullptr;
-        }
-        auto Err = Transform(Domain, AccessToken, Request, Item);
-        if (Err != nullptr)
-        {
-            return Err;
-        }
+TSharedPtr<FAsyncTask<FSetMoldCapacityByUserIdSpeculativeExecutor::FCommitTask>> FSetMoldCapacityByUserIdSpeculativeExecutor::Execute(
+    const Gs2::Core::Domain::FGs2Ptr& Domain,
+    const Gs2::Formation::Domain::FGs2FormationDomainPtr& Service,
+    const Gs2::Auth::Model::FAccessTokenPtr& AccessToken,
+    const Gs2::Formation::Request::FSetMoldCapacityByUserIdRequestPtr& Request
+)
+{
+    return Gs2::Core::Util::New<FAsyncTask<FCommitTask>>(Domain, Service, AccessToken, Request);
+}
 
-        const auto ParentKey = Model::FUserDomain::CreateCacheParentKey(
-            Request->GetNamespaceName(),
-            AccessToken->GetUserId(),
-            FString("Mold")
-        );
-        const auto Key = Model::FMoldDomain::CreateCacheKey(
-            Request->GetMoldModelName()
-        );
+Gs2::Formation::Request::FSetMoldCapacityByUserIdRequestPtr FSetMoldCapacityByUserIdSpeculativeExecutor::Rate(
+    const Gs2::Formation::Request::FSetMoldCapacityByUserIdRequestPtr& Request, const double
+)
+{ return Request; }
 
-        *Result = MakeShared<TFunction<void()>>([&]()
-        {
-            Domain->Cache->Put(
-                Formation::Model::FMold::TypeName,
-                ParentKey,
-                Key,
-                Item,
-                FDateTime::Now() + FTimespan::FromSeconds(10)
-            );
-            return nullptr;
-        });
-        return nullptr;
-    }
-
-    TSharedPtr<FAsyncTask<FSetMoldCapacityByUserIdSpeculativeExecutor::FCommitTask>> FSetMoldCapacityByUserIdSpeculativeExecutor::Execute(
-        const Gs2::Core::Domain::FGs2Ptr& Domain,
-        const Gs2::Formation::Domain::FGs2FormationDomainPtr& Service,
-        const Gs2::Auth::Model::FAccessTokenPtr& AccessToken,
-        const Gs2::Formation::Request::FSetMoldCapacityByUserIdRequestPtr& Request
-    )
-    {
-        return Gs2::Core::Util::New<FAsyncTask<FCommitTask>>(Domain, Service, AccessToken, Request);
-    }
-
-    Gs2::Formation::Request::FSetMoldCapacityByUserIdRequestPtr FSetMoldCapacityByUserIdSpeculativeExecutor::Rate(
-        const Gs2::Formation::Request::FSetMoldCapacityByUserIdRequestPtr& Request,
-        const double Rate
-    )
-    {
-        return Request;
-    }
-
-    Gs2::Formation::Request::FSetMoldCapacityByUserIdRequestPtr FSetMoldCapacityByUserIdSpeculativeExecutor::Rate(
-        const Gs2::Formation::Request::FSetMoldCapacityByUserIdRequestPtr& Request,
-        TBigInt<1024, false> Rate
-    )
-    {
-        return Request;
-    }
+Gs2::Formation::Request::FSetMoldCapacityByUserIdRequestPtr FSetMoldCapacityByUserIdSpeculativeExecutor::Rate(
+    const Gs2::Formation::Request::FSetMoldCapacityByUserIdRequestPtr& Request, TBigInt<1024, false>
+)
+{ return Request; }
 }

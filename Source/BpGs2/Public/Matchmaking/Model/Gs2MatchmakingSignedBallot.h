@@ -37,6 +37,7 @@ inline FGs2MatchmakingSignedBallot EzSignedBallotToFGs2MatchmakingSignedBallot(
 )
 {
     FGs2MatchmakingSignedBallot Value;
+    if (!Model.IsValid()) return Value;
     Value.Body = Model->GetBody() ? *Model->GetBody() : "";
     Value.Signature = Model->GetSignature() ? *Model->GetSignature() : "";
     return Value;

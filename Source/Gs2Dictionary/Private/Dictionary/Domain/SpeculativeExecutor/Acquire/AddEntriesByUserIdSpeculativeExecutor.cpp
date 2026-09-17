@@ -27,7 +27,11 @@
 #include "Dictionary/Domain/SpeculativeExecutor/Acquire/AddEntriesByUserIdSpeculativeExecutor.h"
 
 #include "Core/Domain/Gs2.h"
+#include "Core/Domain/SpeculativeExecutor/PreparedSpeculativeCommit.h"
+#include "Auth/Model/AccessToken.h"
 #include "Dictionary/Domain/Gs2Dictionary.h"
+#include "Dictionary/Model/Cache/Entry.h"
+#include "Dictionary/Model/Cache/EntryModel.h"
 
 namespace Gs2::Dictionary::Domain::SpeculativeExecutor
 {
@@ -87,56 +91,119 @@ namespace Gs2::Dictionary::Domain::SpeculativeExecutor
     }
 
     Gs2::Core::Model::FGs2ErrorPtr FAddEntriesByUserIdSpeculativeExecutor::FCommitTask::Action(
-        TSharedPtr<TSharedPtr<TFunction<void()>>> Result
+        TSharedPtr<TSharedPtr<Gs2::Core::Domain::SpeculativeExecutor::FPreparedSpeculativeCommit>> Result
     )
     {
-        const auto It = Domain->Dictionary->Namespace(
-                Request->GetNamespaceName().IsSet() ? *Request->GetNamespaceName() : FString("")
-            )->AccessToken(
-                AccessToken
-            )->Entries();
-        auto Items = MakeShared<TArray<Gs2::Dictionary::Model::FEntryPtr>>();
-        for (auto Item : *It)
+        if (!Domain.IsValid() || !Domain->RestSession.IsValid() ||
+            !AccessToken.IsValid() || !Request.IsValid())
         {
-            if (Item->IsError())
+            *Result = nullptr;
+            return nullptr;
+        }
+        const auto PreparedRequest = MakeShared<Gs2::Dictionary::Request::FAddEntriesByUserIdRequest>(*Request);
+        const auto PreparedAccessToken = MakeShared<Gs2::Auth::Model::FAccessToken>(*AccessToken);
+        if (PreparedRequest->GetUserId().IsSet() && *PreparedRequest->GetUserId() == TEXT("#{userId}"))
+        {
+            PreparedRequest->WithUserId(PreparedAccessToken->GetUserId());
+        }
+        if (!PreparedAccessToken->GetUserId().IsSet() || PreparedAccessToken->GetUserId()->IsEmpty() ||
+            !PreparedRequest->GetUserId().IsSet() || *PreparedRequest->GetUserId() != *PreparedAccessToken->GetUserId() ||
+            !PreparedRequest->GetNamespaceName().IsSet() || PreparedRequest->GetNamespaceName()->IsEmpty())
+        {
+            *Result = nullptr;
+            return nullptr;
+        }
+
+        const auto NamespaceName = PreparedRequest->GetNamespaceName();
+        const auto UserId = PreparedAccessToken->GetUserId();
+        const auto Region = Domain->RestSession->RegionName();
+        const auto OwnerId = Domain->RestSession->OwnerId();
+        TArray<TPair<FString, Gs2::Dictionary::Model::FEntryPtr>> Additions;
+        TSet<FString> Seen;
+        int32 Handled = 0;
+        if (!PreparedRequest->GetEntryModelNames().IsValid())
+        {
+            *Result = nullptr;
+            return nullptr;
+        }
+        for (const auto& EntryModelName : *PreparedRequest->GetEntryModelNames())
+        {
+            if (EntryModelName.IsEmpty() || Seen.Contains(EntryModelName))
             {
-                return Item->Error();
+                continue;
             }
-            Items->Add(Item->Current());
-        }
-
-        auto Err = Transform(Domain, AccessToken, Request, Items);
-        if (Err != nullptr)
-        {
-            return Err;
-        }
-
-        *Result = MakeShared<TFunction<void()>>([&]()
-        {
-            if (!Items->IsEmpty())
+            Seen.Add(EntryModelName);
+            Gs2::Dictionary::Model::FEntryModelPtr Model;
+            const bool ModelFound = Gs2::Dictionary::Model::Cache::FEntryModelCache::TryGet(
+                Domain->Cache, NamespaceName, EntryModelName, TOptional<int32>(), &Model);
+            const FString ExpectedModelId = FString::Printf(
+                TEXT("grn:gs2:%s:%s:dictionary:%s:model:%s"),
+                *Region, *OwnerId, **NamespaceName, *EntryModelName);
+            if (!ModelFound || !Model.IsValid() || !Model->GetEntryModelId().IsSet() ||
+                *Model->GetEntryModelId() != ExpectedModelId || !Model->GetName().IsSet() ||
+                *Model->GetName() != EntryModelName)
             {
-                for (auto Item : *Items)
-                {
-                    const auto ParentKey = Model::FUserDomain::CreateCacheParentKey(
-                        Request->GetNamespaceName(),
-                        AccessToken->GetUserId(),
-                        FString("Entry")
-                    );
-                    const auto Key = Model::FEntryDomain::CreateCacheKey(
-                        Item->GetName()
-                    );
+                continue;
+            }
+            Gs2::Dictionary::Model::FEntryPtr Entry;
+            const bool EntryFound = Gs2::Dictionary::Model::Cache::FEntryCache::TryGet(
+                Domain->Cache, NamespaceName, UserId, EntryModelName,
+                PreparedAccessToken->GetTimeOffset(), &Entry);
+            if (!EntryFound)
+            {
+                continue;
+            }
+            const FString ExpectedEntryId = FString::Printf(
+                TEXT("grn:gs2:%s:%s:dictionary:%s:user:%s:entry:%s"),
+                *Region, *OwnerId, **NamespaceName, **UserId, *EntryModelName);
+            if (Entry.IsValid() &&
+                (!Entry->GetEntryId().IsSet() || *Entry->GetEntryId() != ExpectedEntryId ||
+                 !Entry->GetUserId().IsSet() || *Entry->GetUserId() != *UserId ||
+                 !Entry->GetName().IsSet() || *Entry->GetName() != EntryModelName))
+            {
+                continue;
+            }
+            ++Handled;
+            Additions.Add(TPair<FString, Gs2::Dictionary::Model::FEntryPtr>(
+                EntryModelName,
+                MakeShared<Gs2::Dictionary::Model::FEntry>()
+                    ->WithEntryId(ExpectedEntryId)
+                    ->WithUserId(UserId)
+                    ->WithName(EntryModelName)
+                    ->WithAcquiredAt(static_cast<int64>(FDateTime::UtcNow().ToUnixTimestampDecimal() * 1000.0) +
+                                     static_cast<int64>(PreparedAccessToken->GetTimeOffset().Get(0)) * 1000)));
+        }
+        if (Handled == 0)
+        {
+            *Result = nullptr;
+            return nullptr;
+        }
 
-                    Domain->Cache->Put(
-                        Dictionary::Model::FEntry::TypeName,
-                        ParentKey,
-                        Key,
-                        Item,
-                        FDateTime::Now() + FTimespan::FromSeconds(10)
-                    );
+        *Result = Gs2::Core::Domain::SpeculativeExecutor::FPreparedSpeculativeCommit::WrapLegacy(
+            MakeShared<TFunction<void()>>([Domain = Domain, Additions = MoveTemp(Additions),
+                                           NamespaceName, UserId,
+                                           TimeOffset = PreparedAccessToken->GetTimeOffset(), Region, OwnerId]()
+        {
+            for (const auto& Addition : Additions)
+            {
+                Gs2::Dictionary::Model::FEntryModelPtr Model;
+                Gs2::Dictionary::Model::FEntryPtr Entry;
+                const bool ModelFound = Gs2::Dictionary::Model::Cache::FEntryModelCache::TryGet(
+                    Domain->Cache, NamespaceName, Addition.Key, TOptional<int32>(), &Model);
+                const bool EntryFound = Gs2::Dictionary::Model::Cache::FEntryCache::TryGet(
+                    Domain->Cache, NamespaceName, UserId, Addition.Key, TimeOffset, &Entry);
+                const FString ExpectedModelId = FString::Printf(
+                    TEXT("grn:gs2:%s:%s:dictionary:%s:model:%s"),
+                    *Region, *OwnerId, **NamespaceName, *Addition.Key);
+                if (ModelFound && Model.IsValid() && Model->GetEntryModelId().IsSet() &&
+                    *Model->GetEntryModelId() == ExpectedModelId && Model->GetName().IsSet() &&
+                    *Model->GetName() == Addition.Key && EntryFound && !Entry.IsValid())
+                {
+                    Gs2::Dictionary::Model::Cache::FEntryCache::Put(
+                        Domain->Cache, NamespaceName, UserId, Addition.Key, TimeOffset, Addition.Value);
                 }
             }
-            return nullptr;
-        });
+        }));
         return nullptr;
     }
 

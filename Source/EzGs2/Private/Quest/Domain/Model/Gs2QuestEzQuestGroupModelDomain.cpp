@@ -55,7 +55,8 @@ namespace Gs2::UE5::Quest::Domain::Model
         );
     }
 
-    void FEzQuestGroupModelDomain::UnsubscribeQuestModels(Gs2::Core::Domain::CallbackID CallbackId)
+    void FEzQuestGroupModelDomain::UnsubscribeQuestModels(
+            Gs2::Core::Domain::CallbackID CallbackId)
     {
         Domain->UnsubscribeQuestModels(
             CallbackId
@@ -117,7 +118,7 @@ namespace Gs2::UE5::Quest::Domain::Model
     Gs2::Core::Domain::CallbackID FEzQuestGroupModelDomain::Subscribe(TFunction<void(Gs2::UE5::Quest::Model::FEzQuestGroupModelPtr)> Callback)
     {
         return Domain->Subscribe(
-            [&](Gs2::Quest::Model::FQuestGroupModelPtr Item)
+            [Callback](Gs2::Quest::Model::FQuestGroupModelPtr Item)
             {
                 Callback(Gs2::UE5::Quest::Model::FEzQuestGroupModel::FromModel(Item));
             }

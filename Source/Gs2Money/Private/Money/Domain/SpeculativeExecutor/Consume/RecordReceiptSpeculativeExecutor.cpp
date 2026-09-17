@@ -27,6 +27,7 @@
 #include "Money/Domain/SpeculativeExecutor/Consume/RecordReceiptSpeculativeExecutor.h"
 
 #include "Core/Domain/Gs2.h"
+#include "Core/Domain/SpeculativeExecutor/PreparedSpeculativeCommit.h"
 
 namespace Gs2::Money::Domain::SpeculativeExecutor
 {
@@ -73,7 +74,7 @@ namespace Gs2::Money::Domain::SpeculativeExecutor
     }
 
     Gs2::Core::Model::FGs2ErrorPtr FRecordReceiptSpeculativeExecutor::FCommitTask::Action(
-        TSharedPtr<TSharedPtr<TFunction<void()>>> Result
+        TSharedPtr<TSharedPtr<Gs2::Core::Domain::SpeculativeExecutor::FPreparedSpeculativeCommit>> Result
     )
     {
         auto Err = Transform(Domain, AccessToken, Request, nullptr);
@@ -82,10 +83,10 @@ namespace Gs2::Money::Domain::SpeculativeExecutor
             return Err;
         }
 
-        *Result = MakeShared<TFunction<void()>>([&]()
+        *Result = Gs2::Core::Domain::SpeculativeExecutor::FPreparedSpeculativeCommit::WrapLegacy(MakeShared<TFunction<void()>>([]()
         {
             return nullptr;
-        });
+        }));
         return nullptr;
     }
 

@@ -44,14 +44,14 @@ void UGs2MatchmakingBallotGetValueAsyncFunction::Activate()
     auto Future = Ballot.Value->Model();
     Future->GetTask().OnSuccessDelegate().BindLambda([&](const auto Result)
     {
-        auto ReturnValue = EzBallotToFGs2MatchmakingBallotValue(Result);
+        auto ReturnValue = EzSignedBallotToFGs2MatchmakingSignedBallot(Result);
         const FGs2Error ReturnError;
         OnSuccess.Broadcast(ReturnValue, ReturnError);
         SetReadyToDestroy();
     });
     Future->GetTask().OnErrorDelegate().BindLambda([&](const auto Error)
     {
-        FGs2MatchmakingBallotValue ReturnBallot;
+        FGs2MatchmakingSignedBallot ReturnBallot;
         FGs2Error ReturnError;
         ReturnError.Value = Error;
         OnError.Broadcast(ReturnBallot, ReturnError);

@@ -92,7 +92,7 @@ namespace Gs2::UE5::News::Domain::Model
     Gs2::Core::Domain::CallbackID FEzSetCookieRequestEntryDomain::Subscribe(TFunction<void(Gs2::UE5::News::Model::FEzSetCookieRequestEntryPtr)> Callback)
     {
         return Domain->Subscribe(
-            [&](Gs2::News::Model::FSetCookieRequestEntryPtr Item)
+            [Callback](Gs2::News::Model::FSetCookieRequestEntryPtr Item)
             {
                 Callback(Gs2::UE5::News::Model::FEzSetCookieRequestEntry::FromModel(Item));
             }

@@ -27,6 +27,7 @@
 #include "Deploy/Domain/Model/Resource.h"
 #include "Deploy/Domain/Model/Event.h"
 #include "Deploy/Domain/Model/Output.h"
+#include "Deploy/Model/Cache/Event.h"
 
 #include "Core/Domain/Gs2.h"
 #include "Core/Domain/Transaction/JobQueueJobDomainFactory.h"
@@ -100,6 +101,20 @@ namespace Gs2::Deploy::Domain::Model
         }
         const auto ResultModel = Future->GetTask().Result();
         Future->EnsureCompletion();
+
+            if (ResultModel.IsValid() && ResultModel->GetItem() != nullptr)
+            {
+
+
+        Gs2::Deploy::Model::Cache::FEventCache::Put(
+            Self->Gs2->Cache,
+
+            Request->GetStackName(),
+            Request->GetEventName(),
+            TOptional<int32>(),
+            ResultModel->GetItem()
+        );
+            }
         *Result = ResultModel->GetItem();
         return nullptr;
     }
@@ -148,71 +163,158 @@ namespace Gs2::Deploy::Domain::Model
         TSharedPtr<TSharedPtr<Gs2::Deploy::Model::FEvent>> Result
     )
     {
-        // ReSharper disable once CppLocalVariableMayBeConst
-        TSharedPtr<Gs2::Deploy::Model::FEvent> Value;
-        auto bCacheHit = Self->Gs2->Cache->TryGet<Gs2::Deploy::Model::FEvent>(
-            Self->ParentKey,
-            Gs2::Deploy::Domain::Model::FEventDomain::CreateCacheKey(
-                Self->EventName
-            ),
-            &Value
+        const auto CacheParentKey = Gs2::Deploy::Model::Cache::FEventCache::CreateCacheParentKey(
+
+            Self->StackName,
+            TOptional<int32>()
         );
-        if (!bCacheHit) {
-            const auto Future = Self->Get(
-                MakeShared<Gs2::Deploy::Request::FGetEventRequest>()
-            );
-            Future->StartSynchronousTask();
-            if (Future->GetTask().IsError())
+        const auto CacheKey = Gs2::Deploy::Model::Cache::FEventCache::CreateCacheKey(
+
+            Self->EventName
+        );
+        return Self->Gs2->Cache->ExecuteWithKeyLock(
+            Gs2::Deploy::Model::FEvent::TypeName,
+            CacheParentKey,
+            CacheKey,
+            [Self = Self, Result]() -> Gs2::Core::Model::FGs2ErrorPtr
             {
-                if (Future->GetTask().Error()->Type() != Gs2::Core::Model::FNotFoundError::TypeString)
-                {
-                    return Future->GetTask().Error();
-                }
+                Gs2::Deploy::Model::FEventPtr Value;
+                const auto CacheHit = Gs2::Deploy::Model::Cache::FEventCache::TryGet(
+                    Self->Gs2->Cache,
 
-                const auto Key = Gs2::Deploy::Domain::Model::FEventDomain::CreateCacheKey(
-                    Self->EventName
+                    Self->StackName,
+                    Self->EventName,
+                    TOptional<int32>(),
+                    &Value
                 );
-                Self->Gs2->Cache->Put(
-                    Gs2::Deploy::Model::FEvent::TypeName,
-                    Self->ParentKey,
-                    Key,
-                    nullptr,
-                    FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
-                );
-
-                if (Future->GetTask().Error()->Detail(0)->GetComponent() != "event")
+                if (CacheHit)
                 {
-                    return Future->GetTask().Error();
+                    *Result = Value;
+                    return nullptr;
                 }
-            }
-            else
-            {
-                Value = Future->GetTask().Result();
-            }
-            Future->EnsureCompletion();
-        }
-        *Result = Value;
+                const auto Error = Gs2::Deploy::Model::Cache::FEventCache::Fetch(
+                    Self->Gs2->Cache,
 
-        return nullptr;
+                    Self->StackName,
+                    Self->EventName,
+                    TOptional<int32>(),
+                    [Self](Gs2::Deploy::Model::FEventPtr* OutItem) -> Gs2::Core::Model::FGs2ErrorPtr
+                    {
+                        const auto Future = Self->Get(
+                            MakeShared<Gs2::Deploy::Request::FGetEventRequest>()
+                        );
+                        Future->StartSynchronousTask();
+                        if (Future->GetTask().IsError()) return Future->GetTask().Error();
+                        *OutItem = Future->GetTask().Result();
+                        Future->EnsureCompletion();
+                        return nullptr;
+                    },
+                    &Value
+                );
+                if (Error.IsValid()) return Error;
+                *Result = Value;
+                return nullptr;
+            }
+        );
     }
 
     TSharedPtr<FAsyncTask<FEventDomain::FModelTask>> FEventDomain::Model() {
         return Gs2::Core::Util::New<FAsyncTask<FEventDomain::FModelTask>>(this->AsShared());
     }
 
+    void FEventDomain::Invalidate()
+    {
+        Gs2::Deploy::Model::Cache::FEventCache::Delete(
+            Gs2->Cache,
+
+            StackName,
+            EventName,
+            TOptional<int32>()
+        );
+    }
+
+    FEventDomain::FSubscribeWithInitialCallTask::FSubscribeWithInitialCallTask(
+        const TSharedPtr<FEventDomain>& Self,
+        TFunction<void(Gs2::Deploy::Model::FEventPtr)> Callback
+    ):
+        Self(Self),
+        Callback(Callback)
+    {
+    }
+
+    FEventDomain::FSubscribeWithInitialCallTask::FSubscribeWithInitialCallTask(
+        const FSubscribeWithInitialCallTask& From
+    ):
+        TGs2Future(From),
+        Self(From.Self),
+        Callback(From.Callback)
+    {
+    }
+
+    Gs2::Core::Model::FGs2ErrorPtr FEventDomain::FSubscribeWithInitialCallTask::Action(
+        TSharedPtr<TSharedPtr<Gs2::Core::Domain::CallbackID>> Result
+    )
+    {
+        const auto Task = Self->Model();
+        Task->StartSynchronousTask();
+        Task->EnsureCompletion();
+        if (Task->GetTask().IsError()) return Task->GetTask().Error();
+        const auto Item = Task->GetTask().Result();
+        const auto CallbackId = Self->Subscribe(Callback);
+        Callback(Item);
+        *Result = MakeShared<Gs2::Core::Domain::CallbackID>(CallbackId);
+        return nullptr;
+    }
+
+    TSharedPtr<FAsyncTask<FEventDomain::FSubscribeWithInitialCallTask>> FEventDomain::SubscribeWithInitialCall(
+        TFunction<void(Gs2::Deploy::Model::FEventPtr)> Callback
+    )
+    {
+        return Gs2::Core::Util::New<FAsyncTask<FSubscribeWithInitialCallTask>>(this->AsShared(), Callback);
+    }
+
     Gs2::Core::Domain::CallbackID FEventDomain::Subscribe(
         TFunction<void(Gs2::Deploy::Model::FEventPtr)> Callback
     )
     {
+        const auto SubscriptionParentKey = Gs2::Deploy::Model::Cache::FEventCache::CreateCacheParentKey(
+
+            StackName,
+            TOptional<int32>()
+        );
+        const auto SubscriptionCacheKey = Gs2::Deploy::Model::Cache::FEventCache::CreateCacheKey(
+
+            EventName
+        );
+        const TWeakPtr<Gs2::Core::Domain::FGs2> WeakGs2 = Gs2;
+        const TWeakPtr<Deploy::Domain::FGs2DeployDomain> WeakService = Service;
+        const FString RegisteredParentKey = SubscriptionParentKey;
+        const TOptional<FString> QueryStackName = StackName;
+        const TOptional<FString> QueryEventName = EventName;
         return Gs2->Cache->Subscribe(
             Gs2::Deploy::Model::FEvent::TypeName,
-            ParentKey,
-            Gs2::Deploy::Domain::Model::FEventDomain::CreateCacheKey(
-                EventName
-            ),
+            SubscriptionParentKey,
+            SubscriptionCacheKey,
             [Callback](TSharedPtr<FGs2Object> obj)
             {
                 Callback(StaticCastSharedPtr<Gs2::Deploy::Model::FEvent>(obj));
+            },
+            [WeakGs2, WeakService, RegisteredParentKey, QueryStackName, QueryEventName]()
+            {
+                const auto Owner = WeakGs2.Pin();
+                if (!Owner.IsValid())
+                {
+                    return;
+                }
+                const auto Domain = MakeShared<FEventDomain>(
+                    Owner,
+                    WeakService.Pin(),
+                    QueryStackName,
+                    QueryEventName
+                );
+                Domain->ParentKey = RegisteredParentKey;
+                const auto Task = Domain->Model();
+                Task->StartBackgroundTask();
             }
         );
     }
@@ -221,12 +323,19 @@ namespace Gs2::Deploy::Domain::Model
         Gs2::Core::Domain::CallbackID CallbackID
     )
     {
+        const auto SubscriptionParentKey = Gs2::Deploy::Model::Cache::FEventCache::CreateCacheParentKey(
+
+            StackName,
+            TOptional<int32>()
+        );
+        const auto SubscriptionCacheKey = Gs2::Deploy::Model::Cache::FEventCache::CreateCacheKey(
+
+            EventName
+        );
         Gs2->Cache->Unsubscribe(
             Gs2::Deploy::Model::FEvent::TypeName,
-            ParentKey,
-            Gs2::Deploy::Domain::Model::FEventDomain::CreateCacheKey(
-                EventName
-            ),
+            SubscriptionParentKey,
+            SubscriptionCacheKey,
             CallbackID
         );
     }
@@ -237,4 +346,3 @@ namespace Gs2::Deploy::Domain::Model
 #elif defined(__clang__)
 #pragma clang diagnostic pop
 #endif
-

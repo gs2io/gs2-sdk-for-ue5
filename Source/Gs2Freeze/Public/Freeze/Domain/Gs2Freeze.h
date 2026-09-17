@@ -69,8 +69,33 @@ namespace Gs2::Freeze::Domain
 
         Gs2::Core::Domain::CallbackID SubscribeStages(
             TFunction<void()> Callback
+
         );
 
+        class FCollectStagesTask;
+
+        Gs2::Core::Domain::CallbackID SubscribeStages(
+            TFunction<void(TArray<Gs2::Freeze::Model::FStagePtr>)> Callback
+        );
+
+        void InvalidateStages();
+
+        class GS2FREEZE_API FSubscribeStagesWithInitialCallTask final :
+            public Gs2::Core::Util::TGs2Future<Gs2::Core::Domain::CallbackID>,
+            public TSharedFromThis<FSubscribeStagesWithInitialCallTask>
+        {
+            const TSharedPtr<FGs2FreezeDomain> Self;
+            const TFunction<void(TArray<Gs2::Freeze::Model::FStagePtr>)> Callback;
+
+        public:
+            FSubscribeStagesWithInitialCallTask(const TSharedPtr<FGs2FreezeDomain>& Self, TFunction<void(TArray<Gs2::Freeze::Model::FStagePtr>)> Callback);
+            FSubscribeStagesWithInitialCallTask(const FSubscribeStagesWithInitialCallTask& From);
+            virtual Gs2::Core::Model::FGs2ErrorPtr Action(TSharedPtr<TSharedPtr<Gs2::Core::Domain::CallbackID>> Result) override;
+        };
+
+        TSharedPtr<FAsyncTask<FSubscribeStagesWithInitialCallTask>> SubscribeStagesWithInitialCall(
+            TFunction<void(TArray<Gs2::Freeze::Model::FStagePtr>)> Callback
+        );
         void UnsubscribeStages(
             Gs2::Core::Domain::CallbackID CallbackID
         );
@@ -82,19 +107,22 @@ namespace Gs2::Freeze::Domain
         void UpdateCacheFromStampSheet(
             const FString Method,
             const FString Request,
-            const FString Result
+            const FString Result,
+            const TOptional<int32> TimeOffset = TOptional<int32>()
         );
 
         void UpdateCacheFromStampTask(
             const FString Method,
             const FString Request,
-            const FString Result
+            const FString Result,
+            const TOptional<int32> TimeOffset = TOptional<int32>()
         );
 
         void UpdateCacheFromJobResult(
             const FString Method,
             const Gs2::JobQueue::Model::FJobPtr Job,
-            const Gs2::JobQueue::Model::FJobResultBodyPtr Result
+            const Gs2::JobQueue::Model::FJobResultBodyPtr Result,
+            const TOptional<int32> TimeOffset = TOptional<int32>()
         );
 
         void HandleNotification(

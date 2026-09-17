@@ -85,6 +85,8 @@ namespace Gs2::Log::Domain
             const FGs2LogDomain& From
         );
 
+
+
         class GS2LOG_API FCreateNamespaceTask final :
             public Gs2::Core::Util::TGs2Future<Gs2::Log::Domain::Model::FNamespaceDomain>,
             public TSharedFromThis<FCreateNamespaceTask>
@@ -116,8 +118,33 @@ namespace Gs2::Log::Domain
 
         Gs2::Core::Domain::CallbackID SubscribeNamespaces(
             TFunction<void()> Callback
+
         );
 
+        class FCollectNamespacesTask;
+
+        Gs2::Core::Domain::CallbackID SubscribeNamespaces(
+            TFunction<void(TArray<Gs2::Log::Model::FNamespacePtr>)> Callback
+        );
+
+        void InvalidateNamespaces();
+
+        class GS2LOG_API FSubscribeNamespacesWithInitialCallTask final :
+            public Gs2::Core::Util::TGs2Future<Gs2::Core::Domain::CallbackID>,
+            public TSharedFromThis<FSubscribeNamespacesWithInitialCallTask>
+        {
+            const TSharedPtr<FGs2LogDomain> Self;
+            const TFunction<void(TArray<Gs2::Log::Model::FNamespacePtr>)> Callback;
+
+        public:
+            FSubscribeNamespacesWithInitialCallTask(const TSharedPtr<FGs2LogDomain>& Self, TFunction<void(TArray<Gs2::Log::Model::FNamespacePtr>)> Callback);
+            FSubscribeNamespacesWithInitialCallTask(const FSubscribeNamespacesWithInitialCallTask& From);
+            virtual Gs2::Core::Model::FGs2ErrorPtr Action(TSharedPtr<TSharedPtr<Gs2::Core::Domain::CallbackID>> Result) override;
+        };
+
+        TSharedPtr<FAsyncTask<FSubscribeNamespacesWithInitialCallTask>> SubscribeNamespacesWithInitialCall(
+            TFunction<void(TArray<Gs2::Log::Model::FNamespacePtr>)> Callback
+        );
         void UnsubscribeNamespaces(
             Gs2::Core::Domain::CallbackID CallbackID
         );
@@ -135,8 +162,33 @@ namespace Gs2::Log::Domain
 
         Gs2::Core::Domain::CallbackID SubscribeLog(
             TFunction<void()> Callback
+
         );
 
+        class FCollectLogTask;
+
+        Gs2::Core::Domain::CallbackID SubscribeLog(
+            TFunction<void(TArray<Gs2::Log::Model::FLogEntryPtr>)> Callback,const FString NamespaceName,const TOptional<int64> Begin = TOptional<int64>(),const TOptional<int64> End = TOptional<int64>(),const TOptional<FString> Query = TOptional<FString>()
+        );
+
+        void InvalidateLog(const FString NamespaceName,const TOptional<int64> Begin = TOptional<int64>(),const TOptional<int64> End = TOptional<int64>(),const TOptional<FString> Query = TOptional<FString>());
+
+        class GS2LOG_API FSubscribeLogWithInitialCallTask final :
+            public Gs2::Core::Util::TGs2Future<Gs2::Core::Domain::CallbackID>,
+            public TSharedFromThis<FSubscribeLogWithInitialCallTask>
+        {
+            const TSharedPtr<FGs2LogDomain> Self;
+            const TFunction<void(TArray<Gs2::Log::Model::FLogEntryPtr>)> Callback;
+        const FString QueryNamespaceName;const TOptional<int64> QueryBegin;const TOptional<int64> QueryEnd;const TOptional<FString> QueryQuery;
+        public:
+            FSubscribeLogWithInitialCallTask(const TSharedPtr<FGs2LogDomain>& Self, TFunction<void(TArray<Gs2::Log::Model::FLogEntryPtr>)> Callback,const FString NamespaceName,const TOptional<int64> Begin,const TOptional<int64> End,const TOptional<FString> Query);
+            FSubscribeLogWithInitialCallTask(const FSubscribeLogWithInitialCallTask& From);
+            virtual Gs2::Core::Model::FGs2ErrorPtr Action(TSharedPtr<TSharedPtr<Gs2::Core::Domain::CallbackID>> Result) override;
+        };
+
+        TSharedPtr<FAsyncTask<FSubscribeLogWithInitialCallTask>> SubscribeLogWithInitialCall(
+            TFunction<void(TArray<Gs2::Log::Model::FLogEntryPtr>)> Callback,const FString NamespaceName,const TOptional<int64> Begin = TOptional<int64>(),const TOptional<int64> End = TOptional<int64>(),const TOptional<FString> Query = TOptional<FString>()
+        );
         void UnsubscribeLog(
             Gs2::Core::Domain::CallbackID CallbackID
         );
@@ -147,15 +199,40 @@ namespace Gs2::Log::Domain
             const TOptional<int64> Begin = TOptional<int64>(),
             const TOptional<int64> End = TOptional<int64>(),
             const TOptional<FString> Query = TOptional<FString>(),
-            const TOptional<TArray<FString>> GroupBy = TOptional<TArray<FString>>(),
+            const TSharedPtr<TArray<FString>> GroupBy = nullptr,
             const TOptional<int32> Interval = TOptional<int32>(),
             const TOptional<int32> SeriesLimit = TOptional<int32>()
         ) const;
 
         Gs2::Core::Domain::CallbackID SubscribeTimeseries(
             TFunction<void()> Callback
+
         );
 
+        class FCollectTimeseriesTask;
+
+        Gs2::Core::Domain::CallbackID SubscribeTimeseries(
+            TFunction<void(TArray<Gs2::Log::Model::FTimeseriesPointPtr>)> Callback,const FString NamespaceName,const TSharedPtr<Gs2::Log::Model::FAggregationConfig> Aggregation,const TOptional<int64> Begin = TOptional<int64>(),const TOptional<int64> End = TOptional<int64>(),const TOptional<FString> Query = TOptional<FString>(),const TSharedPtr<TArray<FString>> GroupBy = nullptr,const TOptional<int32> Interval = TOptional<int32>(),const TOptional<int32> SeriesLimit = TOptional<int32>()
+        );
+
+        void InvalidateTimeseries(const FString NamespaceName,const TSharedPtr<Gs2::Log::Model::FAggregationConfig> Aggregation,const TOptional<int64> Begin = TOptional<int64>(),const TOptional<int64> End = TOptional<int64>(),const TOptional<FString> Query = TOptional<FString>(),const TSharedPtr<TArray<FString>> GroupBy = nullptr,const TOptional<int32> Interval = TOptional<int32>(),const TOptional<int32> SeriesLimit = TOptional<int32>());
+
+        class GS2LOG_API FSubscribeTimeseriesWithInitialCallTask final :
+            public Gs2::Core::Util::TGs2Future<Gs2::Core::Domain::CallbackID>,
+            public TSharedFromThis<FSubscribeTimeseriesWithInitialCallTask>
+        {
+            const TSharedPtr<FGs2LogDomain> Self;
+            const TFunction<void(TArray<Gs2::Log::Model::FTimeseriesPointPtr>)> Callback;
+        const FString QueryNamespaceName;const TSharedPtr<Gs2::Log::Model::FAggregationConfig> QueryAggregation;const TOptional<int64> QueryBegin;const TOptional<int64> QueryEnd;const TOptional<FString> QueryQuery;const TSharedPtr<TArray<FString>> QueryGroupBy;const TOptional<int32> QueryInterval;const TOptional<int32> QuerySeriesLimit;
+        public:
+            FSubscribeTimeseriesWithInitialCallTask(const TSharedPtr<FGs2LogDomain>& Self, TFunction<void(TArray<Gs2::Log::Model::FTimeseriesPointPtr>)> Callback,const FString NamespaceName,const TSharedPtr<Gs2::Log::Model::FAggregationConfig> Aggregation,const TOptional<int64> Begin,const TOptional<int64> End,const TOptional<FString> Query,const TSharedPtr<TArray<FString>> GroupBy,const TOptional<int32> Interval,const TOptional<int32> SeriesLimit);
+            FSubscribeTimeseriesWithInitialCallTask(const FSubscribeTimeseriesWithInitialCallTask& From);
+            virtual Gs2::Core::Model::FGs2ErrorPtr Action(TSharedPtr<TSharedPtr<Gs2::Core::Domain::CallbackID>> Result) override;
+        };
+
+        TSharedPtr<FAsyncTask<FSubscribeTimeseriesWithInitialCallTask>> SubscribeTimeseriesWithInitialCall(
+            TFunction<void(TArray<Gs2::Log::Model::FTimeseriesPointPtr>)> Callback,const FString NamespaceName,const TSharedPtr<Gs2::Log::Model::FAggregationConfig> Aggregation,const TOptional<int64> Begin = TOptional<int64>(),const TOptional<int64> End = TOptional<int64>(),const TOptional<FString> Query = TOptional<FString>(),const TSharedPtr<TArray<FString>> GroupBy = nullptr,const TOptional<int32> Interval = TOptional<int32>(),const TOptional<int32> SeriesLimit = TOptional<int32>()
+        );
         void UnsubscribeTimeseries(
             Gs2::Core::Domain::CallbackID CallbackID
         );
@@ -166,19 +243,22 @@ namespace Gs2::Log::Domain
         void UpdateCacheFromStampSheet(
             const FString Method,
             const FString Request,
-            const FString Result
+            const FString Result,
+            const TOptional<int32> TimeOffset = TOptional<int32>()
         );
 
         void UpdateCacheFromStampTask(
             const FString Method,
             const FString Request,
-            const FString Result
+            const FString Result,
+            const TOptional<int32> TimeOffset = TOptional<int32>()
         );
 
         void UpdateCacheFromJobResult(
             const FString Method,
             const Gs2::JobQueue::Model::FJobPtr Job,
-            const Gs2::JobQueue::Model::FJobResultBodyPtr Result
+            const Gs2::JobQueue::Model::FJobResultBodyPtr Result,
+            const TOptional<int32> TimeOffset = TOptional<int32>()
         );
 
         void HandleNotification(

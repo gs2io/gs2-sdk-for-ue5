@@ -12,8 +12,6 @@
  * on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either
  * express or implied. See the License for the specific language governing
  * permissions and limitations under the License.
- *
- * deny overwrite
  */
 
 #if defined(_MSC_VER)
@@ -48,6 +46,8 @@
 #include "Friend/Domain/Model/PublicProfile.h"
 #include "Friend/Domain/Model/PublicProfileAccessToken.h"
 #include "Friend/Domain/Model/FriendRequestAccessToken.h"
+#include "Friend/Model/Cache/SendFriendRequest.h"
+#include "Friend/Model/Cache/FriendRequest.h"
 
 #include "Core/Domain/Gs2.h"
 #include "Core/Domain/Transaction/JobQueueJobDomainFactory.h"
@@ -112,10 +112,12 @@ namespace Gs2::Friend::Domain::Model
     )
     {
         Request
-            ->WithContextStack(Self->Gs2->DefaultContextStack)
+            ->WithContextStack((!Request->GetContextStack().IsSet() || Request->GetContextStack()->IsEmpty()) ? Self->Gs2->DefaultContextStack : Request->GetContextStack())
             ->WithNamespaceName(Self->NamespaceName)
             ->WithAccessToken(Self->AccessToken->GetToken())
             ->WithTargetUserId(Self->TargetUserId);
+        const auto CacheOwnerSnapshotUserId = Self->AccessToken.IsValid() ? Self->UserId() : TOptional<FString>();
+        const auto CacheOwnerSnapshotTimeOffset = Self->AccessToken.IsValid() ? Self->AccessToken->GetTimeOffset() : TOptional<int32>();
         const auto Future = Self->Client->GetSendRequest(
             Request
         );
@@ -126,6 +128,31 @@ namespace Gs2::Friend::Domain::Model
         }
         const auto ResultModel = Future->GetTask().Result();
         Future->EnsureCompletion();
+
+            if (ResultModel.IsValid() && ResultModel->GetItem() != nullptr)
+            {
+
+        if (!ResultModel.IsValid() || !ResultModel->GetItem().IsValid())
+            {
+              const auto Details = MakeShared<TArray<TSharedPtr<Gs2::Core::Model::FGs2ErrorDetail>>>();
+                Details->Add(MakeShared<Gs2::Core::Model::FGs2ErrorDetail>(TEXT("result.item"), TEXT("result.item is invalid."), TEXT("invalid_response")));
+                return MakeShared<Gs2::Core::Model::FUnknownError>(Details);
+              }if (!((CacheOwnerSnapshotUserId)).IsSet())
+            {
+              const auto Details = MakeShared<TArray<TSharedPtr<Gs2::Core::Model::FGs2ErrorDetail>>>();
+                Details->Add(MakeShared<Gs2::Core::Model::FGs2ErrorDetail>(TEXT("userId"), TEXT("userId is invalid."), TEXT("invalid_response")));
+                return MakeShared<Gs2::Core::Model::FUnknownError>(Details);
+              }
+        Gs2::Friend::Model::Cache::FFriendRequestCache::Put(
+            Self->Gs2->Cache,
+
+            Request->GetNamespaceName(),
+            (CacheOwnerSnapshotUserId),
+            ResultModel->GetItem()->GetTargetUserId(),
+            CacheOwnerSnapshotTimeOffset,
+            ResultModel->GetItem()
+        );
+            }
         *Result = ResultModel->GetItem();
         return nullptr;
     }
@@ -155,10 +182,12 @@ namespace Gs2::Friend::Domain::Model
     )
     {
         Request
-            ->WithContextStack(Self->Gs2->DefaultContextStack)
+            ->WithContextStack((!Request->GetContextStack().IsSet() || Request->GetContextStack()->IsEmpty()) ? Self->Gs2->DefaultContextStack : Request->GetContextStack())
             ->WithNamespaceName(Self->NamespaceName)
             ->WithAccessToken(Self->AccessToken->GetToken())
             ->WithTargetUserId(Self->TargetUserId);
+        const auto CacheOwnerSnapshotUserId = Self->AccessToken.IsValid() ? Self->UserId() : TOptional<FString>();
+        const auto CacheOwnerSnapshotTimeOffset = Self->AccessToken.IsValid() ? Self->AccessToken->GetTimeOffset() : TOptional<int32>();
         const auto Future = Self->Client->DeleteRequest(
             Request
         );
@@ -169,33 +198,26 @@ namespace Gs2::Friend::Domain::Model
         }
         const auto ResultModel = Future->GetTask().Result();
         Future->EnsureCompletion();
-        if (ResultModel->GetItem() != nullptr)
-        {
-            const auto Key = Gs2::Friend::Domain::Model::FSendFriendRequestDomain::CreateCacheKey(
-                ResultModel->GetItem()->GetTargetUserId()
-            );
-            Self->Gs2->Cache->Delete(
-                Gs2::Friend::Model::FFriendRequest::TypeName,
-                Self->ParentKey,
-                Key
-            );
-        }
-        Self->Gs2->Cache->ClearListCache(
-            Gs2::Friend::Model::FFriendRequest::TypeName,
-            Self->ParentKey
+
+              if (!ResultModel.IsValid() || !ResultModel->GetItem().IsValid())
+                  {
+                    const auto Details = MakeShared<TArray<TSharedPtr<Gs2::Core::Model::FGs2ErrorDetail>>>();
+                      Details->Add(MakeShared<Gs2::Core::Model::FGs2ErrorDetail>(TEXT("result.item"), TEXT("result.item is invalid."), TEXT("invalid_response")));
+                      return MakeShared<Gs2::Core::Model::FUnknownError>(Details);
+                    }if (!((CacheOwnerSnapshotUserId)).IsSet())
+                  {
+                    const auto Details = MakeShared<TArray<TSharedPtr<Gs2::Core::Model::FGs2ErrorDetail>>>();
+                      Details->Add(MakeShared<Gs2::Core::Model::FGs2ErrorDetail>(TEXT("userId"), TEXT("userId is invalid."), TEXT("invalid_response")));
+                      return MakeShared<Gs2::Core::Model::FUnknownError>(Details);
+                    }
+              Gs2::Friend::Model::Cache::FSendFriendRequestCache::Delete(
+            Self->Gs2->Cache,
+
+            Request->GetNamespaceName(),
+            (CacheOwnerSnapshotUserId),
+            ResultModel->GetItem()->GetTargetUserId(),
+            CacheOwnerSnapshotTimeOffset
         );
-        for (const FString& Suffix : {FString("True"), FString("False")})
-        {
-            const auto SendParentKey = Gs2::Friend::Domain::Model::FUserDomain::CreateCacheParentKey(
-                Self->NamespaceName,
-                Self->UserId(),
-                FString("SendFriendRequest:") + Suffix
-            );
-            Self->Gs2->Cache->ClearListCache(
-                Gs2::Friend::Model::FSendFriendRequest::TypeName,
-                SendParentKey
-            );
-        }
         auto Domain = MakeShared<Gs2::Friend::Domain::Model::FSendFriendRequestAccessTokenDomain>(
             Self->Gs2,
             Self->Service,
@@ -251,94 +273,199 @@ namespace Gs2::Friend::Domain::Model
     }
 
     Gs2::Core::Model::FGs2ErrorPtr FSendFriendRequestAccessTokenDomain::FModelTask::Action(
-        TSharedPtr<TSharedPtr<Gs2::Friend::Model::FFriendRequest>> Result
+        TSharedPtr<TSharedPtr<Gs2::Friend::Model::FSendFriendRequest>> Result
     )
     {
-        // ReSharper disable once CppLocalVariableMayBeConst
-        TSharedPtr<Gs2::Friend::Model::FFriendRequest> Value;
+        const auto CacheParentKey = Gs2::Friend::Model::Cache::FSendFriendRequestCache::CreateCacheParentKey(
 
-        // First try to find FSendFriendRequest (cached by iterator with WithProfile)
-        const auto CacheKey = Gs2::Friend::Domain::Model::FSendFriendRequestDomain::CreateCacheKey(Self->TargetUserId);
-        for (const FString& Suffix : {FString("True"), FString("False")})
-        {
-            TSharedPtr<Gs2::Friend::Model::FSendFriendRequest> SendValue;
-            const auto SendParentKey = Gs2::Friend::Domain::Model::FUserDomain::CreateCacheParentKey(
-                Self->NamespaceName,
-                Self->UserId(),
-                FString("SendFriendRequest:") + Suffix
-            );
-            if (Self->Gs2->Cache->TryGet<Gs2::Friend::Model::FSendFriendRequest>(SendParentKey, CacheKey, &SendValue) && SendValue != nullptr)
+            Self->NamespaceName,
+            Self->AccessToken.IsValid() ? Self->UserId() : TOptional<FString>(),
+            Self->AccessToken.IsValid() ? Self->AccessToken->GetTimeOffset() : TOptional<int32>()
+        );
+        const auto CacheKey = Gs2::Friend::Model::Cache::FSendFriendRequestCache::CreateCacheKey(
+
+            Self->TargetUserId
+        );
+        return Self->Gs2->Cache->ExecuteWithKeyLock(
+            Gs2::Friend::Model::FSendFriendRequest::TypeName,
+            CacheParentKey,
+            CacheKey,
+            [Self = Self, Result]() -> Gs2::Core::Model::FGs2ErrorPtr
             {
-                Value = MakeShared<Gs2::Friend::Model::FFriendRequest>()
-                    ->WithUserId(SendValue->GetUserId())
-                    ->WithTargetUserId(SendValue->GetTargetUserId())
-                    ->WithPublicProfile(SendValue->GetPublicProfile());
+                Gs2::Friend::Model::FSendFriendRequestPtr Value;
+                const auto CacheHit = Gs2::Friend::Model::Cache::FSendFriendRequestCache::TryGet(
+                    Self->Gs2->Cache,
+
+                    Self->NamespaceName,
+                    Self->AccessToken.IsValid() ? Self->UserId() : TOptional<FString>(),
+                    Self->TargetUserId,
+                    Self->AccessToken.IsValid() ? Self->AccessToken->GetTimeOffset() : TOptional<int32>(),
+                    &Value
+                );
+                if (!CacheHit)
+                {
+                    const auto Future = Self->Get(
+                        MakeShared<Gs2::Friend::Request::FGetSendRequestRequest>()
+                    );
+                    Future->StartSynchronousTask();
+                    if (Future->GetTask().IsError())
+                    {
+                        const auto Error = Future->GetTask().Error();
+                        if (!Error.IsValid() || Error->Type() != Gs2::Core::Model::FNotFoundError::TypeString)
+                        {
+                            return Error;
+                        }
+                        Gs2::Friend::Model::Cache::FSendFriendRequestCache::Put(
+                            Self->Gs2->Cache,
+
+                            Self->NamespaceName,
+                            Self->AccessToken.IsValid() ? Self->UserId() : TOptional<FString>(),
+                            Self->TargetUserId,
+                            Self->AccessToken.IsValid() ? Self->AccessToken->GetTimeOffset() : TOptional<int32>(),
+                            nullptr
+                        );
+                        if (!Error->GetErrors().IsValid() || Error->Count() == 0 || !Error->Detail(0).IsValid() || Error->Detail(0)->GetComponent() != "sendFriendRequest")
+                        {
+                            return Error;
+                        }
+                    }
+                    else
+                    {
+                        const auto RawValue = Future->GetTask().Result();
+                        if (RawValue.IsValid())
+                        {
+                            Value = MakeShared<Gs2::Friend::Model::FSendFriendRequest>()
+                                ->WithUserId(RawValue->GetUserId())
+                                ->WithTargetUserId(RawValue->GetTargetUserId());
+                        }
+                    }
+                    Future->EnsureCompletion();
+                    Gs2::Friend::Model::Cache::FSendFriendRequestCache::Put(
+                        Self->Gs2->Cache,
+
+                        Self->NamespaceName,
+                        Self->AccessToken.IsValid() ? Self->UserId() : TOptional<FString>(),
+                        Self->TargetUserId,
+                        Self->AccessToken.IsValid() ? Self->AccessToken->GetTimeOffset() : TOptional<int32>(),
+                        Value
+                    );
+                }
                 *Result = Value;
                 return nullptr;
             }
-        }
-
-        auto bCacheHit = Self->Gs2->Cache->TryGet<Gs2::Friend::Model::FFriendRequest>(
-            Self->ParentKey,
-            CacheKey,
-            &Value
         );
-        if (!bCacheHit) {
-            const auto Future = Self->Get(
-                MakeShared<Gs2::Friend::Request::FGetSendRequestRequest>()
-            );
-            Future->StartSynchronousTask();
-            if (Future->GetTask().IsError())
-            {
-                if (Future->GetTask().Error()->Type() != Gs2::Core::Model::FNotFoundError::TypeString)
-                {
-                    return Future->GetTask().Error();
-                }
-
-                const auto Key = Gs2::Friend::Domain::Model::FSendFriendRequestDomain::CreateCacheKey(
-                    Self->TargetUserId
-                );
-                Self->Gs2->Cache->Put(
-                    Gs2::Friend::Model::FFriendRequest::TypeName,
-                    Self->ParentKey,
-                    Key,
-                    nullptr,
-                    FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
-                );
-
-                if (Future->GetTask().Error()->Detail(0)->GetComponent() != "friendRequest")
-                {
-                    return Future->GetTask().Error();
-                }
-            }
-            else
-            {
-                Value = Future->GetTask().Result();
-            }
-            Future->EnsureCompletion();
-        }
-        *Result = Value;
-
-        return nullptr;
     }
 
     TSharedPtr<FAsyncTask<FSendFriendRequestAccessTokenDomain::FModelTask>> FSendFriendRequestAccessTokenDomain::Model() {
         return Gs2::Core::Util::New<FAsyncTask<FSendFriendRequestAccessTokenDomain::FModelTask>>(this->AsShared());
     }
 
-    Gs2::Core::Domain::CallbackID FSendFriendRequestAccessTokenDomain::Subscribe(
-        TFunction<void(Gs2::Friend::Model::FFriendRequestPtr)> Callback
+    void FSendFriendRequestAccessTokenDomain::Invalidate()
+    {
+        Gs2::Friend::Model::Cache::FSendFriendRequestCache::Delete(
+            Gs2->Cache,
+
+            NamespaceName,
+            AccessToken.IsValid() ? UserId() : TOptional<FString>(),
+            TargetUserId,
+            AccessToken.IsValid() ? AccessToken->GetTimeOffset() : TOptional<int32>()
+        );
+    }
+
+    FSendFriendRequestAccessTokenDomain::FSubscribeWithInitialCallTask::FSubscribeWithInitialCallTask(
+        const TSharedPtr<FSendFriendRequestAccessTokenDomain>& Self,
+        TFunction<void(Gs2::Friend::Model::FSendFriendRequestPtr)> Callback
+    ):
+        Self(Self),
+        Callback(Callback)
+    {
+    }
+
+    FSendFriendRequestAccessTokenDomain::FSubscribeWithInitialCallTask::FSubscribeWithInitialCallTask(
+        const FSubscribeWithInitialCallTask& From
+    ):
+        TGs2Future(From),
+        Self(From.Self),
+        Callback(From.Callback)
+    {
+    }
+
+    Gs2::Core::Model::FGs2ErrorPtr FSendFriendRequestAccessTokenDomain::FSubscribeWithInitialCallTask::Action(
+        TSharedPtr<TSharedPtr<Gs2::Core::Domain::CallbackID>> Result
     )
     {
+        const auto Task = Self->Model();
+        Task->StartSynchronousTask();
+        Task->EnsureCompletion();
+        if (Task->GetTask().IsError()) return Task->GetTask().Error();
+        const auto Item = Task->GetTask().Result();
+        const auto CallbackId = Self->Subscribe(Callback);
+        Callback(Item);
+        *Result = MakeShared<Gs2::Core::Domain::CallbackID>(CallbackId);
+        return nullptr;
+    }
+
+    TSharedPtr<FAsyncTask<FSendFriendRequestAccessTokenDomain::FSubscribeWithInitialCallTask>> FSendFriendRequestAccessTokenDomain::SubscribeWithInitialCall(
+        TFunction<void(Gs2::Friend::Model::FSendFriendRequestPtr)> Callback
+    )
+    {
+        return Gs2::Core::Util::New<FAsyncTask<FSubscribeWithInitialCallTask>>(this->AsShared(), Callback);
+    }
+
+    Gs2::Core::Domain::CallbackID FSendFriendRequestAccessTokenDomain::Subscribe(
+        TFunction<void(Gs2::Friend::Model::FSendFriendRequestPtr)> Callback
+    )
+    {
+        const auto SubscriptionParentKey = Gs2::Friend::Model::Cache::FSendFriendRequestCache::CreateCacheParentKey(
+
+            NamespaceName,
+            AccessToken.IsValid() ? UserId() : TOptional<FString>(),
+            AccessToken.IsValid() ? AccessToken->GetTimeOffset() : TOptional<int32>()
+        );
+        const auto SubscriptionCacheKey = Gs2::Friend::Model::Cache::FSendFriendRequestCache::CreateCacheKey(
+
+            TargetUserId
+        );
+        const TWeakPtr<Gs2::Core::Domain::FGs2> WeakGs2 = Gs2;
+        const TWeakPtr<Friend::Domain::FGs2FriendDomain> WeakService = Service;
+        const FString RegisteredParentKey = SubscriptionParentKey;
+        const TOptional<FString> QueryNamespaceName = NamespaceName;
+        const TOptional<FString> QueryTargetUserId = TargetUserId;
+        const auto SourceToken = AccessToken;
+        const TOptional<FString> RegisteredUserId = SourceToken.IsValid()
+            ? TOptional<FString>(SourceToken->GetUserId())
+            : TOptional<FString>();
+        const int32 RegisteredTimeOffset = SourceToken.IsValid() ? SourceToken->GetTimeOffset().Get(0) : 0;
         return Gs2->Cache->Subscribe(
-            Gs2::Friend::Model::FFriendRequest::TypeName,
-            ParentKey,
-            Gs2::Friend::Domain::Model::FSendFriendRequestDomain::CreateCacheKey(
-                TargetUserId
-            ),
+            Gs2::Friend::Model::FSendFriendRequest::TypeName,
+            SubscriptionParentKey,
+            SubscriptionCacheKey,
             [Callback](TSharedPtr<FGs2Object> obj)
             {
-                Callback(StaticCastSharedPtr<Gs2::Friend::Model::FFriendRequest>(obj));
+                Callback(StaticCastSharedPtr<Gs2::Friend::Model::FSendFriendRequest>(obj));
+            },
+            [WeakGs2, WeakService, RegisteredParentKey, QueryNamespaceName, QueryTargetUserId, SourceToken, RegisteredUserId, RegisteredTimeOffset]()
+            {
+                const auto Owner = WeakGs2.Pin();
+                if (!Owner.IsValid() || !SourceToken.IsValid() || !RegisteredUserId.IsSet())
+                {
+                    return;
+                }
+                const auto TokenSnapshot = MakeShared<Gs2::Auth::Model::FAccessToken>(*SourceToken);
+                if (TokenSnapshot->GetUserId() != RegisteredUserId || TokenSnapshot->GetTimeOffset().Get(0) != RegisteredTimeOffset)
+                {
+                    return;
+                }
+                const auto Domain = MakeShared<FSendFriendRequestAccessTokenDomain>(
+                    Owner,
+                    WeakService.Pin(),
+                    QueryNamespaceName,
+                    TokenSnapshot,
+                    QueryTargetUserId
+                );
+                Domain->ParentKey = RegisteredParentKey;
+                const auto Task = Domain->Model();
+                Task->StartBackgroundTask();
             }
         );
     }
@@ -347,12 +474,20 @@ namespace Gs2::Friend::Domain::Model
         Gs2::Core::Domain::CallbackID CallbackID
     )
     {
+        const auto SubscriptionParentKey = Gs2::Friend::Model::Cache::FSendFriendRequestCache::CreateCacheParentKey(
+
+            NamespaceName,
+            AccessToken.IsValid() ? UserId() : TOptional<FString>(),
+            AccessToken.IsValid() ? AccessToken->GetTimeOffset() : TOptional<int32>()
+        );
+        const auto SubscriptionCacheKey = Gs2::Friend::Model::Cache::FSendFriendRequestCache::CreateCacheKey(
+
+            TargetUserId
+        );
         Gs2->Cache->Unsubscribe(
-            Gs2::Friend::Model::FFriendRequest::TypeName,
-            ParentKey,
-            Gs2::Friend::Domain::Model::FSendFriendRequestDomain::CreateCacheKey(
-                TargetUserId
-            ),
+            Gs2::Friend::Model::FSendFriendRequest::TypeName,
+            SubscriptionParentKey,
+            SubscriptionCacheKey,
             CallbackID
         );
     }
@@ -363,4 +498,3 @@ namespace Gs2::Friend::Domain::Model
 #elif defined(__clang__)
 #pragma clang diagnostic pop
 #endif
-

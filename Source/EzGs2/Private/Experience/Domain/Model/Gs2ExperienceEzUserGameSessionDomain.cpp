@@ -58,17 +58,19 @@ namespace Gs2::UE5::Experience::Domain::Model
         );
     }
 
-    Gs2::Core::Domain::CallbackID FEzUserGameSessionDomain::SubscribeStatuses(TFunction<void()> Callback)
+    Gs2::Core::Domain::CallbackID FEzUserGameSessionDomain::SubscribeStatuses(TFunction<void()> Callback, const TOptional<FString> ExperienceName)
     {
         return Domain->SubscribeStatuses(
-            Callback
+            Callback, ExperienceName
         );
     }
 
-    void FEzUserGameSessionDomain::UnsubscribeStatuses(Gs2::Core::Domain::CallbackID CallbackId)
+    void FEzUserGameSessionDomain::UnsubscribeStatuses(
+            Gs2::Core::Domain::CallbackID CallbackId
+            , const TOptional<FString> ExperienceName)
     {
         Domain->UnsubscribeStatuses(
-            CallbackId
+            CallbackId, ExperienceName
         );
     }
 

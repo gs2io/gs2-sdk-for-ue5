@@ -35,6 +35,8 @@
 #include "Exchange/Domain/Model/AwaitAccessToken.h"
 #include "Exchange/Domain/Model/User.h"
 #include "Exchange/Domain/Model/UserAccessToken.h"
+#include "Exchange/Model/Cache/RateModel.h"
+#include "Exchange/Model/Cache/IncrementalRateModel.h"
 
 #include "Core/Domain/Gs2.h"
 #include "Core/Domain/Transaction/JobQueueJobDomainFactory.h"
@@ -109,6 +111,20 @@ namespace Gs2::Exchange::Domain::Model
         }
         const auto ResultModel = Future->GetTask().Result();
         Future->EnsureCompletion();
+
+            if (ResultModel.IsValid() && ResultModel->GetItem() != nullptr)
+            {
+
+
+        Gs2::Exchange::Model::Cache::FRateModelCache::Put(
+            Self->Gs2->Cache,
+
+            Request->GetNamespaceName(),
+            Request->GetRateName(),
+            TOptional<int32>(),
+            ResultModel->GetItem()
+        );
+            }
         const auto Transaction = Gs2::Core::Domain::Internal::FTransactionDomainFactory::ToTransaction(
             Self->Gs2,
             *Self->UserId,
@@ -167,6 +183,20 @@ namespace Gs2::Exchange::Domain::Model
         }
         const auto ResultModel = Future->GetTask().Result();
         Future->EnsureCompletion();
+
+            if (ResultModel.IsValid() && ResultModel->GetItem() != nullptr)
+            {
+
+
+        Gs2::Exchange::Model::Cache::FIncrementalRateModelCache::Put(
+            Self->Gs2->Cache,
+
+            Request->GetNamespaceName(),
+            Request->GetRateName(),
+            TOptional<int32>(),
+            ResultModel->GetItem()
+        );
+            }
         const auto Transaction = Gs2::Core::Domain::Internal::FTransactionDomainFactory::ToTransaction(
             Self->Gs2,
             *Self->UserId,
@@ -217,4 +247,3 @@ namespace Gs2::Exchange::Domain::Model
 #elif defined(__clang__)
 #pragma clang diagnostic pop
 #endif
-

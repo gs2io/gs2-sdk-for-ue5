@@ -31,6 +31,7 @@
 #include "SkillTree/Domain/Model/CurrentTreeMaster.h"
 #include "SkillTree/Domain/Model/User.h"
 #include "SkillTree/Domain/Model/UserAccessToken.h"
+#include "SkillTree/Model/Cache/Status.h"
 
 #include "Core/Domain/Gs2.h"
 #include "Core/Domain/Transaction/JobQueueJobDomainFactory.h"
@@ -109,19 +110,31 @@ namespace Gs2::SkillTree::Domain::Model
         }
         const auto ResultModel = Future->GetTask().Result();
         Future->EnsureCompletion();
-        if (ResultModel->GetItem() != nullptr)
-        {
-            const auto Key = Gs2::SkillTree::Domain::Model::FStatusDomain::CreateCacheKey(
-                ResultModel->GetItem()->GetPropertyId()
-            );
-            Self->Gs2->Cache->Put(
-                Gs2::SkillTree::Model::FStatus::TypeName,
-                Self->ParentKey,
-                Key,
-                ResultModel->GetItem(),
-                FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
-            );
-        }
+
+            if (ResultModel.IsValid() && ResultModel->GetItem() != nullptr)
+            {
+
+        if (!ResultModel.IsValid() || !ResultModel->GetItem().IsValid())
+            {
+              const auto Details = MakeShared<TArray<TSharedPtr<Gs2::Core::Model::FGs2ErrorDetail>>>();
+                Details->Add(MakeShared<Gs2::Core::Model::FGs2ErrorDetail>(TEXT("result.item"), TEXT("result.item is invalid."), TEXT("invalid_response")));
+                return MakeShared<Gs2::Core::Model::FUnknownError>(Details);
+              }if (!ResultModel.IsValid() || !((ResultModel.IsValid() && ResultModel->GetItem().IsValid() ? ResultModel->GetItem()->GetUserId() : TOptional<FString>())).IsSet())
+            {
+              const auto Details = MakeShared<TArray<TSharedPtr<Gs2::Core::Model::FGs2ErrorDetail>>>();
+                Details->Add(MakeShared<Gs2::Core::Model::FGs2ErrorDetail>(TEXT("userId"), TEXT("userId is invalid."), TEXT("invalid_response")));
+                return MakeShared<Gs2::Core::Model::FUnknownError>(Details);
+              }
+        Gs2::SkillTree::Model::Cache::FStatusCache::Put(
+            Self->Gs2->Cache,
+
+            Request->GetNamespaceName(),
+            (ResultModel.IsValid() && ResultModel->GetItem().IsValid() ? ResultModel->GetItem()->GetUserId() : TOptional<FString>()),
+            ResultModel->GetItem()->GetPropertyId(),
+            TOptional<int32>(),
+            ResultModel->GetItem()
+        );
+            }
         auto Domain = Self;
 
         *Result = Domain;
@@ -167,6 +180,31 @@ namespace Gs2::SkillTree::Domain::Model
         }
         const auto ResultModel = Future->GetTask().Result();
         Future->EnsureCompletion();
+
+            if (ResultModel.IsValid() && ResultModel->GetItem() != nullptr)
+            {
+
+        if (!ResultModel.IsValid() || !ResultModel->GetItem().IsValid())
+            {
+              const auto Details = MakeShared<TArray<TSharedPtr<Gs2::Core::Model::FGs2ErrorDetail>>>();
+                Details->Add(MakeShared<Gs2::Core::Model::FGs2ErrorDetail>(TEXT("result.item"), TEXT("result.item is invalid."), TEXT("invalid_response")));
+                return MakeShared<Gs2::Core::Model::FUnknownError>(Details);
+              }if (!ResultModel.IsValid() || !((ResultModel.IsValid() && ResultModel->GetItem().IsValid() ? ResultModel->GetItem()->GetUserId() : TOptional<FString>())).IsSet())
+            {
+              const auto Details = MakeShared<TArray<TSharedPtr<Gs2::Core::Model::FGs2ErrorDetail>>>();
+                Details->Add(MakeShared<Gs2::Core::Model::FGs2ErrorDetail>(TEXT("userId"), TEXT("userId is invalid."), TEXT("invalid_response")));
+                return MakeShared<Gs2::Core::Model::FUnknownError>(Details);
+              }
+        Gs2::SkillTree::Model::Cache::FStatusCache::Put(
+            Self->Gs2->Cache,
+
+            Request->GetNamespaceName(),
+            (ResultModel.IsValid() && ResultModel->GetItem().IsValid() ? ResultModel->GetItem()->GetUserId() : TOptional<FString>()),
+            ResultModel->GetItem()->GetPropertyId(),
+            TOptional<int32>(),
+            ResultModel->GetItem()
+        );
+            }
         const auto Transaction = Gs2::Core::Domain::Internal::FTransactionDomainFactory::ToTransaction(
             Self->Gs2,
             *Self->UserId,
@@ -226,19 +264,31 @@ namespace Gs2::SkillTree::Domain::Model
         }
         const auto ResultModel = Future->GetTask().Result();
         Future->EnsureCompletion();
-        if (ResultModel->GetItem() != nullptr)
-        {
-            const auto Key = Gs2::SkillTree::Domain::Model::FStatusDomain::CreateCacheKey(
-                ResultModel->GetItem()->GetPropertyId()
-            );
-            Self->Gs2->Cache->Put(
-                Gs2::SkillTree::Model::FStatus::TypeName,
-                Self->ParentKey,
-                Key,
-                ResultModel->GetItem(),
-                FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
-            );
-        }
+
+            if (ResultModel.IsValid() && ResultModel->GetItem() != nullptr)
+            {
+
+        if (!ResultModel.IsValid() || !ResultModel->GetItem().IsValid())
+            {
+              const auto Details = MakeShared<TArray<TSharedPtr<Gs2::Core::Model::FGs2ErrorDetail>>>();
+                Details->Add(MakeShared<Gs2::Core::Model::FGs2ErrorDetail>(TEXT("result.item"), TEXT("result.item is invalid."), TEXT("invalid_response")));
+                return MakeShared<Gs2::Core::Model::FUnknownError>(Details);
+              }if (!ResultModel.IsValid() || !((ResultModel.IsValid() && ResultModel->GetItem().IsValid() ? ResultModel->GetItem()->GetUserId() : TOptional<FString>())).IsSet())
+            {
+              const auto Details = MakeShared<TArray<TSharedPtr<Gs2::Core::Model::FGs2ErrorDetail>>>();
+                Details->Add(MakeShared<Gs2::Core::Model::FGs2ErrorDetail>(TEXT("userId"), TEXT("userId is invalid."), TEXT("invalid_response")));
+                return MakeShared<Gs2::Core::Model::FUnknownError>(Details);
+              }
+        Gs2::SkillTree::Model::Cache::FStatusCache::Put(
+            Self->Gs2->Cache,
+
+            Request->GetNamespaceName(),
+            (ResultModel.IsValid() && ResultModel->GetItem().IsValid() ? ResultModel->GetItem()->GetUserId() : TOptional<FString>()),
+            ResultModel->GetItem()->GetPropertyId(),
+            TOptional<int32>(),
+            ResultModel->GetItem()
+        );
+            }
         auto Domain = Self;
 
         *Result = Domain;
@@ -284,6 +334,31 @@ namespace Gs2::SkillTree::Domain::Model
         }
         const auto ResultModel = Future->GetTask().Result();
         Future->EnsureCompletion();
+
+            if (ResultModel.IsValid() && ResultModel->GetItem() != nullptr)
+            {
+
+        if (!ResultModel.IsValid() || !ResultModel->GetItem().IsValid())
+            {
+              const auto Details = MakeShared<TArray<TSharedPtr<Gs2::Core::Model::FGs2ErrorDetail>>>();
+                Details->Add(MakeShared<Gs2::Core::Model::FGs2ErrorDetail>(TEXT("result.item"), TEXT("result.item is invalid."), TEXT("invalid_response")));
+                return MakeShared<Gs2::Core::Model::FUnknownError>(Details);
+              }if (!ResultModel.IsValid() || !((ResultModel.IsValid() && ResultModel->GetItem().IsValid() ? ResultModel->GetItem()->GetUserId() : TOptional<FString>())).IsSet())
+            {
+              const auto Details = MakeShared<TArray<TSharedPtr<Gs2::Core::Model::FGs2ErrorDetail>>>();
+                Details->Add(MakeShared<Gs2::Core::Model::FGs2ErrorDetail>(TEXT("userId"), TEXT("userId is invalid."), TEXT("invalid_response")));
+                return MakeShared<Gs2::Core::Model::FUnknownError>(Details);
+              }
+        Gs2::SkillTree::Model::Cache::FStatusCache::Put(
+            Self->Gs2->Cache,
+
+            Request->GetNamespaceName(),
+            (ResultModel.IsValid() && ResultModel->GetItem().IsValid() ? ResultModel->GetItem()->GetUserId() : TOptional<FString>()),
+            ResultModel->GetItem()->GetPropertyId(),
+            TOptional<int32>(),
+            ResultModel->GetItem()
+        );
+            }
         const auto Transaction = Gs2::Core::Domain::Internal::FTransactionDomainFactory::ToTransaction(
             Self->Gs2,
             *Self->UserId,
@@ -343,6 +418,31 @@ namespace Gs2::SkillTree::Domain::Model
         }
         const auto ResultModel = Future->GetTask().Result();
         Future->EnsureCompletion();
+
+            if (ResultModel.IsValid() && ResultModel->GetItem() != nullptr)
+            {
+
+        if (!ResultModel.IsValid() || !ResultModel->GetItem().IsValid())
+            {
+              const auto Details = MakeShared<TArray<TSharedPtr<Gs2::Core::Model::FGs2ErrorDetail>>>();
+                Details->Add(MakeShared<Gs2::Core::Model::FGs2ErrorDetail>(TEXT("result.item"), TEXT("result.item is invalid."), TEXT("invalid_response")));
+                return MakeShared<Gs2::Core::Model::FUnknownError>(Details);
+              }if (!ResultModel.IsValid() || !((ResultModel.IsValid() && ResultModel->GetItem().IsValid() ? ResultModel->GetItem()->GetUserId() : TOptional<FString>())).IsSet())
+            {
+              const auto Details = MakeShared<TArray<TSharedPtr<Gs2::Core::Model::FGs2ErrorDetail>>>();
+                Details->Add(MakeShared<Gs2::Core::Model::FGs2ErrorDetail>(TEXT("userId"), TEXT("userId is invalid."), TEXT("invalid_response")));
+                return MakeShared<Gs2::Core::Model::FUnknownError>(Details);
+              }
+        Gs2::SkillTree::Model::Cache::FStatusCache::Put(
+            Self->Gs2->Cache,
+
+            Request->GetNamespaceName(),
+            (ResultModel.IsValid() && ResultModel->GetItem().IsValid() ? ResultModel->GetItem()->GetUserId() : TOptional<FString>()),
+            ResultModel->GetItem()->GetPropertyId(),
+            TOptional<int32>(),
+            ResultModel->GetItem()
+        );
+            }
         *Result = ResultModel->GetItem();
         return nullptr;
     }
@@ -386,6 +486,31 @@ namespace Gs2::SkillTree::Domain::Model
         }
         const auto ResultModel = Future->GetTask().Result();
         Future->EnsureCompletion();
+
+            if (ResultModel.IsValid() && ResultModel->GetItem() != nullptr)
+            {
+
+        if (!ResultModel.IsValid() || !ResultModel->GetItem().IsValid())
+            {
+              const auto Details = MakeShared<TArray<TSharedPtr<Gs2::Core::Model::FGs2ErrorDetail>>>();
+                Details->Add(MakeShared<Gs2::Core::Model::FGs2ErrorDetail>(TEXT("result.item"), TEXT("result.item is invalid."), TEXT("invalid_response")));
+                return MakeShared<Gs2::Core::Model::FUnknownError>(Details);
+              }if (!ResultModel.IsValid() || !((ResultModel.IsValid() && ResultModel->GetItem().IsValid() ? ResultModel->GetItem()->GetUserId() : TOptional<FString>())).IsSet())
+            {
+              const auto Details = MakeShared<TArray<TSharedPtr<Gs2::Core::Model::FGs2ErrorDetail>>>();
+                Details->Add(MakeShared<Gs2::Core::Model::FGs2ErrorDetail>(TEXT("userId"), TEXT("userId is invalid."), TEXT("invalid_response")));
+                return MakeShared<Gs2::Core::Model::FUnknownError>(Details);
+              }
+        Gs2::SkillTree::Model::Cache::FStatusCache::Put(
+            Self->Gs2->Cache,
+
+            Request->GetNamespaceName(),
+            (ResultModel.IsValid() && ResultModel->GetItem().IsValid() ? ResultModel->GetItem()->GetUserId() : TOptional<FString>()),
+            ResultModel->GetItem()->GetPropertyId(),
+            TOptional<int32>(),
+            ResultModel->GetItem()
+        );
+            }
         const auto Transaction = Gs2::Core::Domain::Internal::FTransactionDomainFactory::ToTransaction(
             Self->Gs2,
             *Self->UserId,
@@ -452,71 +577,165 @@ namespace Gs2::SkillTree::Domain::Model
         TSharedPtr<TSharedPtr<Gs2::SkillTree::Model::FStatus>> Result
     )
     {
-        // ReSharper disable once CppLocalVariableMayBeConst
-        TSharedPtr<Gs2::SkillTree::Model::FStatus> Value;
-        auto bCacheHit = Self->Gs2->Cache->TryGet<Gs2::SkillTree::Model::FStatus>(
-            Self->ParentKey,
-            Gs2::SkillTree::Domain::Model::FStatusDomain::CreateCacheKey(
-                Self->PropertyId
-            ),
-            &Value
+        const auto CacheParentKey = Gs2::SkillTree::Model::Cache::FStatusCache::CreateCacheParentKey(
+
+            Self->NamespaceName,
+            Self->UserId,
+            TOptional<int32>()
         );
-        if (!bCacheHit) {
-            const auto Future = Self->Get(
-                MakeShared<Gs2::SkillTree::Request::FGetStatusByUserIdRequest>()
-            );
-            Future->StartSynchronousTask();
-            if (Future->GetTask().IsError())
+        const auto CacheKey = Gs2::SkillTree::Model::Cache::FStatusCache::CreateCacheKey(
+
+            Self->PropertyId
+        );
+        return Self->Gs2->Cache->ExecuteWithKeyLock(
+            Gs2::SkillTree::Model::FStatus::TypeName,
+            CacheParentKey,
+            CacheKey,
+            [Self = Self, Result]() -> Gs2::Core::Model::FGs2ErrorPtr
             {
-                if (Future->GetTask().Error()->Type() != Gs2::Core::Model::FNotFoundError::TypeString)
-                {
-                    return Future->GetTask().Error();
-                }
+                Gs2::SkillTree::Model::FStatusPtr Value;
+                const auto CacheHit = Gs2::SkillTree::Model::Cache::FStatusCache::TryGet(
+                    Self->Gs2->Cache,
 
-                const auto Key = Gs2::SkillTree::Domain::Model::FStatusDomain::CreateCacheKey(
-                    Self->PropertyId
+                    Self->NamespaceName,
+                    Self->UserId,
+                    Self->PropertyId,
+                    TOptional<int32>(),
+                    &Value
                 );
-                Self->Gs2->Cache->Put(
-                    Gs2::SkillTree::Model::FStatus::TypeName,
-                    Self->ParentKey,
-                    Key,
-                    nullptr,
-                    FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
-                );
-
-                if (Future->GetTask().Error()->Detail(0)->GetComponent() != "status")
+                if (CacheHit)
                 {
-                    return Future->GetTask().Error();
+                    *Result = Value;
+                    return nullptr;
                 }
-            }
-            else
-            {
-                Value = Future->GetTask().Result();
-            }
-            Future->EnsureCompletion();
-        }
-        *Result = Value;
+                const auto Error = Gs2::SkillTree::Model::Cache::FStatusCache::Fetch(
+                    Self->Gs2->Cache,
 
-        return nullptr;
+                    Self->NamespaceName,
+                    Self->UserId,
+                    Self->PropertyId,
+                    TOptional<int32>(),
+                    [Self](Gs2::SkillTree::Model::FStatusPtr* OutItem) -> Gs2::Core::Model::FGs2ErrorPtr
+                    {
+                        const auto Future = Self->Get(
+                            MakeShared<Gs2::SkillTree::Request::FGetStatusByUserIdRequest>()
+                        );
+                        Future->StartSynchronousTask();
+                        if (Future->GetTask().IsError()) return Future->GetTask().Error();
+                        *OutItem = Future->GetTask().Result();
+                        Future->EnsureCompletion();
+                        return nullptr;
+                    },
+                    &Value
+                );
+                if (Error.IsValid()) return Error;
+                *Result = Value;
+                return nullptr;
+            }
+        );
     }
 
     TSharedPtr<FAsyncTask<FStatusDomain::FModelTask>> FStatusDomain::Model() {
         return Gs2::Core::Util::New<FAsyncTask<FStatusDomain::FModelTask>>(this->AsShared());
     }
 
+    void FStatusDomain::Invalidate()
+    {
+        Gs2::SkillTree::Model::Cache::FStatusCache::Delete(
+            Gs2->Cache,
+
+            NamespaceName,
+            UserId,
+            PropertyId,
+            TOptional<int32>()
+        );
+    }
+
+    FStatusDomain::FSubscribeWithInitialCallTask::FSubscribeWithInitialCallTask(
+        const TSharedPtr<FStatusDomain>& Self,
+        TFunction<void(Gs2::SkillTree::Model::FStatusPtr)> Callback
+    ):
+        Self(Self),
+        Callback(Callback)
+    {
+    }
+
+    FStatusDomain::FSubscribeWithInitialCallTask::FSubscribeWithInitialCallTask(
+        const FSubscribeWithInitialCallTask& From
+    ):
+        TGs2Future(From),
+        Self(From.Self),
+        Callback(From.Callback)
+    {
+    }
+
+    Gs2::Core::Model::FGs2ErrorPtr FStatusDomain::FSubscribeWithInitialCallTask::Action(
+        TSharedPtr<TSharedPtr<Gs2::Core::Domain::CallbackID>> Result
+    )
+    {
+        const auto Task = Self->Model();
+        Task->StartSynchronousTask();
+        Task->EnsureCompletion();
+        if (Task->GetTask().IsError()) return Task->GetTask().Error();
+        const auto Item = Task->GetTask().Result();
+        const auto CallbackId = Self->Subscribe(Callback);
+        Callback(Item);
+        *Result = MakeShared<Gs2::Core::Domain::CallbackID>(CallbackId);
+        return nullptr;
+    }
+
+    TSharedPtr<FAsyncTask<FStatusDomain::FSubscribeWithInitialCallTask>> FStatusDomain::SubscribeWithInitialCall(
+        TFunction<void(Gs2::SkillTree::Model::FStatusPtr)> Callback
+    )
+    {
+        return Gs2::Core::Util::New<FAsyncTask<FSubscribeWithInitialCallTask>>(this->AsShared(), Callback);
+    }
+
     Gs2::Core::Domain::CallbackID FStatusDomain::Subscribe(
         TFunction<void(Gs2::SkillTree::Model::FStatusPtr)> Callback
     )
     {
+        const auto SubscriptionParentKey = Gs2::SkillTree::Model::Cache::FStatusCache::CreateCacheParentKey(
+
+            NamespaceName,
+            UserId,
+            TOptional<int32>()
+        );
+        const auto SubscriptionCacheKey = Gs2::SkillTree::Model::Cache::FStatusCache::CreateCacheKey(
+
+            PropertyId
+        );
+        const TWeakPtr<Gs2::Core::Domain::FGs2> WeakGs2 = Gs2;
+        const TWeakPtr<SkillTree::Domain::FGs2SkillTreeDomain> WeakService = Service;
+        const FString RegisteredParentKey = SubscriptionParentKey;
+        const TOptional<FString> QueryNamespaceName = NamespaceName;
+        const TOptional<FString> QueryUserId = UserId;
+        const TOptional<FString> QueryPropertyId = PropertyId;
         return Gs2->Cache->Subscribe(
             Gs2::SkillTree::Model::FStatus::TypeName,
-            ParentKey,
-            Gs2::SkillTree::Domain::Model::FStatusDomain::CreateCacheKey(
-                PropertyId
-            ),
+            SubscriptionParentKey,
+            SubscriptionCacheKey,
             [Callback](TSharedPtr<FGs2Object> obj)
             {
                 Callback(StaticCastSharedPtr<Gs2::SkillTree::Model::FStatus>(obj));
+            },
+            [WeakGs2, WeakService, RegisteredParentKey, QueryNamespaceName, QueryUserId, QueryPropertyId]()
+            {
+                const auto Owner = WeakGs2.Pin();
+                if (!Owner.IsValid())
+                {
+                    return;
+                }
+                const auto Domain = MakeShared<FStatusDomain>(
+                    Owner,
+                    WeakService.Pin(),
+                    QueryNamespaceName,
+                    QueryUserId,
+                    QueryPropertyId
+                );
+                Domain->ParentKey = RegisteredParentKey;
+                const auto Task = Domain->Model();
+                Task->StartBackgroundTask();
             }
         );
     }
@@ -525,12 +744,20 @@ namespace Gs2::SkillTree::Domain::Model
         Gs2::Core::Domain::CallbackID CallbackID
     )
     {
+        const auto SubscriptionParentKey = Gs2::SkillTree::Model::Cache::FStatusCache::CreateCacheParentKey(
+
+            NamespaceName,
+            UserId,
+            TOptional<int32>()
+        );
+        const auto SubscriptionCacheKey = Gs2::SkillTree::Model::Cache::FStatusCache::CreateCacheKey(
+
+            PropertyId
+        );
         Gs2->Cache->Unsubscribe(
             Gs2::SkillTree::Model::FStatus::TypeName,
-            ParentKey,
-            Gs2::SkillTree::Domain::Model::FStatusDomain::CreateCacheKey(
-                PropertyId
-            ),
+            SubscriptionParentKey,
+            SubscriptionCacheKey,
             CallbackID
         );
     }
@@ -541,4 +768,3 @@ namespace Gs2::SkillTree::Domain::Model
 #elif defined(__clang__)
 #pragma clang diagnostic pop
 #endif
-

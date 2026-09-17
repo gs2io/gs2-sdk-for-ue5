@@ -38,6 +38,8 @@
 #include "Exchange/Domain/Model/UserAccessToken.h"
 #include "Exchange/Domain/SpeculativeExecutor/Transaction/ExchangeByUserIdSpeculativeExecutor.h"
 #include "Exchange/Domain/SpeculativeExecutor/Transaction/IncrementalExchangeByUserIdSpeculativeExecutor.h"
+#include "Exchange/Model/Cache/RateModel.h"
+#include "Exchange/Model/Cache/IncrementalRateModel.h"
 
 #include "Core/Domain/Gs2.h"
 #include "Core/Domain/Transaction/JobQueueJobDomainFactory.h"
@@ -103,6 +105,7 @@ namespace Gs2::Exchange::Domain::Model
             ->WithContextStack((!Request->GetContextStack().IsSet() || Request->GetContextStack()->IsEmpty()) ? Self->Gs2->DefaultContextStack : Request->GetContextStack())
             ->WithNamespaceName(Self->NamespaceName)
             ->WithAccessToken(Self->AccessToken->GetToken());
+        const auto CacheOwnerSnapshotTimeOffset = Self->AccessToken.IsValid() ? Self->AccessToken->GetTimeOffset() : TOptional<int32>();
         const auto Future = Self->Client->Exchange(
             Request
         );
@@ -113,6 +116,20 @@ namespace Gs2::Exchange::Domain::Model
         }
         const auto ResultModel = Future->GetTask().Result();
         Future->EnsureCompletion();
+
+            if (ResultModel.IsValid() && ResultModel->GetItem() != nullptr)
+            {
+
+
+        Gs2::Exchange::Model::Cache::FRateModelCache::Put(
+            Self->Gs2->Cache,
+
+            Request->GetNamespaceName(),
+            Request->GetRateName(),
+            CacheOwnerSnapshotTimeOffset,
+            ResultModel->GetItem()
+        );
+            }
         const auto Transaction = Gs2::Core::Domain::Internal::FTransactionDomainFactory::ToTransaction(
             Self->Gs2,
             Self->AccessToken,
@@ -163,6 +180,7 @@ namespace Gs2::Exchange::Domain::Model
             ->WithContextStack((!Request->GetContextStack().IsSet() || Request->GetContextStack()->IsEmpty()) ? Self->Gs2->DefaultContextStack : Request->GetContextStack())
             ->WithNamespaceName(Self->NamespaceName)
             ->WithAccessToken(Self->AccessToken->GetToken());
+        const auto CacheOwnerSnapshotTimeOffset = Self->AccessToken.IsValid() ? Self->AccessToken->GetTimeOffset() : TOptional<int32>();
         const auto Future = Self->Client->IncrementalExchange(
             Request
         );
@@ -173,6 +191,20 @@ namespace Gs2::Exchange::Domain::Model
         }
         const auto ResultModel = Future->GetTask().Result();
         Future->EnsureCompletion();
+
+            if (ResultModel.IsValid() && ResultModel->GetItem() != nullptr)
+            {
+
+
+        Gs2::Exchange::Model::Cache::FIncrementalRateModelCache::Put(
+            Self->Gs2->Cache,
+
+            Request->GetNamespaceName(),
+            Request->GetRateName(),
+            CacheOwnerSnapshotTimeOffset,
+            ResultModel->GetItem()
+        );
+            }
         const auto Transaction = Gs2::Core::Domain::Internal::FTransactionDomainFactory::ToTransaction(
             Self->Gs2,
             Self->AccessToken,
@@ -224,4 +256,3 @@ namespace Gs2::Exchange::Domain::Model
 #elif defined(__clang__)
 #pragma clang diagnostic pop
 #endif
-

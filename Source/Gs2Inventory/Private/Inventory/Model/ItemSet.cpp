@@ -471,3 +471,448 @@ namespace Gs2::Inventory::Model
 
     FString FItemSet::TypeName = "ItemSet";
 }
+#include "Inventory/Model/Cache/ItemSet.h"
+
+namespace Gs2::Inventory::Model::Cache
+{
+    namespace
+    {
+        class FItemSetAggregateCacheValue final : public FGs2Object
+        {
+        public:
+            TArray<Gs2::Inventory::Model::FItemSetPtr> Value;
+
+            explicit FItemSetAggregateCacheValue(
+                const TArray<Gs2::Inventory::Model::FItemSetPtr>& InValue
+            ):
+                Value(InValue)
+            {
+            }
+
+            static FString TypeName;
+        };
+
+        FString FItemSetAggregateCacheValue::TypeName = "ItemSetAggregate";
+
+        FDateTime AggregateCacheTtl(
+            const TArray<Gs2::Inventory::Model::FItemSetPtr>& Items
+        )
+        {
+            bool HasExpiry = false;
+            int64 MinimumExpiry = 0;
+            for (const auto& Item : Items)
+            {
+                if (!Item.IsValid() || !Item->GetExpiresAt().IsSet() || Item->GetExpiresAt().Get(0) == 0) continue;
+                if (!HasExpiry || Item->GetExpiresAt().Get(0) < MinimumExpiry)
+                {
+                    HasExpiry = true;
+                    MinimumExpiry = Item->GetExpiresAt().Get(0);
+                }
+            }
+            return HasExpiry
+                ? FDateTime::FromUnixTimestamp(0) + FTimespan::FromMilliseconds(MinimumExpiry)
+                : FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes);
+        }
+
+        TArray<Gs2::Inventory::Model::FItemSetPtr> AggregateCacheValue(
+            const TSharedPtr<TArray<Gs2::Inventory::Model::FItemSetPtr>>& Items
+        )
+        {
+            TArray<Gs2::Inventory::Model::FItemSetPtr> Result;
+            if (!Items.IsValid()) return Result;
+            for (const auto& Item : *Items)
+            {
+                if (!Item.IsValid() || !Item->GetCount().IsSet() || Item->GetCount().Get(0) <= 0) continue;
+                Result.Add(Item);
+            }
+            // Match LINQ OrderByDescending: stable ordering preserves equal-count input order.
+            for (int32 i = 1; i < Result.Num(); ++i)
+            {
+                const auto Value = Result[i];
+                int32 Position = i;
+                while (Position > 0 && Result[Position - 1]->GetCount().Get(0) < Value->GetCount().Get(0))
+                {
+                    Result[Position] = Result[Position - 1];
+                    --Position;
+                }
+                Result[Position] = Value;
+            }
+            return Result;
+        }
+    }
+
+    FString FItemSetCache::CreateCacheParentKey(
+        TOptional<FString> CacheOwnerArgumentNamespaceName,
+        TOptional<FString> CacheOwnerArgumentUserId,
+        TOptional<FString> CacheOwnerArgumentInventoryName,
+        TOptional<int32> CacheOwnerArgumentTimeOffset
+    )
+    {
+        return FString("inventory:")
+            + CacheOwnerArgumentNamespaceName.Get(FString()) + FString(":")
+            + CacheOwnerArgumentUserId.Get(FString()) + FString(":")
+            + CacheOwnerArgumentInventoryName.Get(FString()) + FString(":")
+            + FString::FromInt(CacheOwnerArgumentTimeOffset.Get(0)) + FString(":ItemSet");
+    }
+
+    FString FItemSetCache::CreateCacheKey(
+        TOptional<FString> CacheOwnerArgumentItemName,
+        TOptional<FString> CacheOwnerArgumentItemSetName
+    )
+    {
+        return
+            FString()
+            + CacheOwnerArgumentItemName.Get(FString()) + FString(":")
+            + CacheOwnerArgumentItemSetName.Get(FString())
+            ;
+    }
+
+    FString FItemSetCache::CreateCacheKey(
+        TOptional<FString> CacheOwnerArgumentItemName
+    )
+    {
+        return CacheOwnerArgumentItemName.Get(FString()) + FString(":any");
+    }
+
+    bool FItemSetCache::TryGet(
+        const Gs2::Core::Domain::FCacheDatabasePtr& CacheOwnerArgumentCache,
+        TOptional<FString> CacheOwnerArgumentNamespaceName,
+        TOptional<FString> CacheOwnerArgumentUserId,
+        TOptional<FString> CacheOwnerArgumentInventoryName,
+        TOptional<FString> CacheOwnerArgumentItemName,
+        TOptional<FString> CacheOwnerArgumentItemSetName,
+        TOptional<int32> CacheOwnerArgumentTimeOffset,
+        Gs2::Inventory::Model::FItemSetPtr* CacheOwnerArgumentOutItem
+    )
+    {
+        const auto CacheSnapshot = CacheOwnerArgumentCache;
+        if (!CacheSnapshot.IsValid())
+        {
+            if (CacheOwnerArgumentOutItem) *CacheOwnerArgumentOutItem = nullptr;
+            return false;
+        }
+        if (CacheOwnerArgumentOutItem) *CacheOwnerArgumentOutItem = nullptr;
+        if (!CacheOwnerArgumentUserId.IsSet()) return false;
+        Gs2::Inventory::Model::FItemSetPtr CacheOwnerValue;
+        const bool CacheOwnerFound = CacheSnapshot->TryGet<Gs2::Inventory::Model::FItemSet>(
+            CreateCacheParentKey(
+                CacheOwnerArgumentNamespaceName,
+                CacheOwnerArgumentUserId,
+                CacheOwnerArgumentInventoryName,
+                CacheOwnerArgumentTimeOffset
+            ),
+            CreateCacheKey(
+                CacheOwnerArgumentItemName,
+                CacheOwnerArgumentItemSetName
+            ),
+            &CacheOwnerValue
+        );
+        if (CacheOwnerArgumentOutItem) *CacheOwnerArgumentOutItem = CacheOwnerFound ? CacheOwnerValue : nullptr;
+        return CacheOwnerFound;
+    }
+
+    bool FItemSetCache::TryGet(
+        const Gs2::Core::Domain::FCacheDatabasePtr& CacheOwnerArgumentCache,
+        TOptional<FString> CacheOwnerArgumentNamespaceName,
+        TOptional<FString> CacheOwnerArgumentUserId,
+        TOptional<FString> CacheOwnerArgumentInventoryName,
+        TOptional<FString> CacheOwnerArgumentItemName,
+        TOptional<int32> CacheOwnerArgumentTimeOffset,
+        TSharedPtr<TArray<Gs2::Inventory::Model::FItemSetPtr>>* CacheOwnerArgumentOutItems
+    )
+    {
+        const auto CacheSnapshot = CacheOwnerArgumentCache;
+        if (CacheOwnerArgumentOutItems) *CacheOwnerArgumentOutItems = nullptr;
+        if (!CacheSnapshot.IsValid() || !CacheOwnerArgumentUserId.IsSet()) return false;
+        FGs2ObjectPtr CacheOwnerObject;
+        const bool CacheOwnerFound = CacheSnapshot->TryGet(
+            FItemSetAggregateCacheValue::TypeName,
+            CreateCacheParentKey(
+                CacheOwnerArgumentNamespaceName,
+                CacheOwnerArgumentUserId,
+                CacheOwnerArgumentInventoryName,
+                CacheOwnerArgumentTimeOffset
+            ),
+            CreateCacheKey(CacheOwnerArgumentItemName),
+            &CacheOwnerObject
+        );
+        const auto CacheOwnerValue = StaticCastSharedPtr<FItemSetAggregateCacheValue>(CacheOwnerObject);
+        if (CacheOwnerArgumentOutItems && CacheOwnerFound && CacheOwnerValue.IsValid())
+        {
+            *CacheOwnerArgumentOutItems = MakeShared<TArray<Gs2::Inventory::Model::FItemSetPtr>>(CacheOwnerValue->Value);
+        }
+        return CacheOwnerFound && CacheOwnerValue.IsValid();
+    }
+
+    void FItemSetCache::Put(
+        const Gs2::Core::Domain::FCacheDatabasePtr& CacheOwnerArgumentCache,
+        TOptional<FString> CacheOwnerArgumentNamespaceName,
+        TOptional<FString> CacheOwnerArgumentUserId,
+        TOptional<FString> CacheOwnerArgumentInventoryName,
+        TOptional<FString> CacheOwnerArgumentItemName,
+        TOptional<FString> CacheOwnerArgumentItemSetName,
+        TOptional<int32> CacheOwnerArgumentTimeOffset,
+        const Gs2::Inventory::Model::FItemSetPtr& CacheOwnerArgumentItem
+    )
+    {
+        const auto CacheSnapshot = CacheOwnerArgumentCache;
+        if (!CacheSnapshot.IsValid()) return;
+        if (!CacheOwnerArgumentUserId.IsSet()) return;
+        const auto CacheOwnerParentKey = CreateCacheParentKey(
+            CacheOwnerArgumentNamespaceName,
+            CacheOwnerArgumentUserId,
+            CacheOwnerArgumentInventoryName,
+            CacheOwnerArgumentTimeOffset
+        );
+        const auto CacheOwnerKey = CreateCacheKey(
+            CacheOwnerArgumentItemName,
+            CacheOwnerArgumentItemSetName
+        );
+        auto CacheOwnerValue = CacheOwnerArgumentItem;
+        if (CacheOwnerValue.IsValid() && CacheOwnerValue->GetCount().IsSet() && CacheOwnerValue->GetCount().Get(0) == 0) CacheOwnerValue = nullptr;
+        CacheSnapshot->Put(Gs2::Inventory::Model::FItemSet::TypeName, CacheOwnerParentKey, CacheOwnerKey, CacheOwnerValue,
+            CacheOwnerValue.IsValid() && CacheOwnerValue->GetExpiresAt().IsSet() && CacheOwnerValue->GetExpiresAt().Get(0) != 0
+                ? FDateTime::FromUnixTimestamp(0) + FTimespan::FromMilliseconds(CacheOwnerValue->GetExpiresAt().Get(0))
+                : FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
+        );
+    }
+
+    void FItemSetCache::Put(
+        const Gs2::Core::Domain::FCacheDatabasePtr& CacheOwnerArgumentCache,
+        TOptional<FString> CacheOwnerArgumentNamespaceName,
+        TOptional<FString> CacheOwnerArgumentUserId,
+        TOptional<FString> CacheOwnerArgumentInventoryName,
+        TOptional<FString> CacheOwnerArgumentItemName,
+        TOptional<int32> CacheOwnerArgumentTimeOffset,
+        const TSharedPtr<TArray<Gs2::Inventory::Model::FItemSetPtr>>& CacheOwnerArgumentItems
+    )
+    {
+        const auto CacheSnapshot = CacheOwnerArgumentCache;
+        if (!CacheSnapshot.IsValid() || !CacheOwnerArgumentUserId.IsSet() || !CacheOwnerArgumentItems.IsValid()) return;
+        const auto CacheOwnerParentKey = CreateCacheParentKey(
+            CacheOwnerArgumentNamespaceName,
+            CacheOwnerArgumentUserId,
+            CacheOwnerArgumentInventoryName,
+            CacheOwnerArgumentTimeOffset
+        );
+        CacheSnapshot->Put(
+            FItemSetAggregateCacheValue::TypeName,
+            CacheOwnerParentKey,
+            CreateCacheKey(CacheOwnerArgumentItemName),
+            MakeShared<FItemSetAggregateCacheValue>(AggregateCacheValue(CacheOwnerArgumentItems)),
+            AggregateCacheTtl(*CacheOwnerArgumentItems)
+        );
+    }
+
+    void FItemSetCache::Delete(
+        const Gs2::Core::Domain::FCacheDatabasePtr& CacheOwnerArgumentCache,
+        TOptional<FString> CacheOwnerArgumentNamespaceName,
+        TOptional<FString> CacheOwnerArgumentUserId,
+        TOptional<FString> CacheOwnerArgumentInventoryName,
+        TOptional<FString> CacheOwnerArgumentItemName,
+        TOptional<FString> CacheOwnerArgumentItemSetName,
+        TOptional<int32> CacheOwnerArgumentTimeOffset
+    )
+    {
+        const auto CacheSnapshot = CacheOwnerArgumentCache;
+        if (!CacheSnapshot.IsValid()) return;
+        if (!CacheOwnerArgumentUserId.IsSet()) return;
+        CacheSnapshot->Delete(Gs2::Inventory::Model::FItemSet::TypeName, CreateCacheParentKey(
+            CacheOwnerArgumentNamespaceName,
+            CacheOwnerArgumentUserId,
+            CacheOwnerArgumentInventoryName,
+            CacheOwnerArgumentTimeOffset
+        ), CreateCacheKey(
+            CacheOwnerArgumentItemName,
+            CacheOwnerArgumentItemSetName
+        ));
+    }
+
+    void FItemSetCache::Delete(
+        const Gs2::Core::Domain::FCacheDatabasePtr& CacheOwnerArgumentCache,
+        TOptional<FString> CacheOwnerArgumentNamespaceName,
+        TOptional<FString> CacheOwnerArgumentUserId,
+        TOptional<FString> CacheOwnerArgumentInventoryName,
+        TOptional<FString> CacheOwnerArgumentItemName,
+        TOptional<int32> CacheOwnerArgumentTimeOffset
+    )
+    {
+        const auto CacheSnapshot = CacheOwnerArgumentCache;
+        if (!CacheSnapshot.IsValid() || !CacheOwnerArgumentUserId.IsSet()) return;
+        CacheSnapshot->Delete(
+            FItemSetAggregateCacheValue::TypeName,
+            CreateCacheParentKey(
+                CacheOwnerArgumentNamespaceName,
+                CacheOwnerArgumentUserId,
+                CacheOwnerArgumentInventoryName,
+                CacheOwnerArgumentTimeOffset
+            ),
+            CreateCacheKey(CacheOwnerArgumentItemName)
+        );
+    }
+
+    Gs2::Core::Model::FGs2ErrorPtr FItemSetCache::Fetch(
+        const Gs2::Core::Domain::FCacheDatabasePtr& CacheOwnerArgumentCache,
+        TOptional<FString> CacheOwnerArgumentNamespaceName,
+        TOptional<FString> CacheOwnerArgumentUserId,
+        TOptional<FString> CacheOwnerArgumentInventoryName,
+        TOptional<FString> CacheOwnerArgumentItemName,
+        TOptional<FString> CacheOwnerArgumentItemSetName,
+        TOptional<int32> CacheOwnerArgumentTimeOffset,
+        const TFunction<Gs2::Core::Model::FGs2ErrorPtr(Gs2::Inventory::Model::FItemSetPtr*)>& CacheOwnerArgumentFetchImpl,
+        Gs2::Inventory::Model::FItemSetPtr* CacheOwnerArgumentOutItem
+    )
+    {
+        const auto CacheSnapshot = CacheOwnerArgumentCache;
+        const auto FetchImplSnapshot = CacheOwnerArgumentFetchImpl;
+        if (CacheOwnerArgumentOutItem) *CacheOwnerArgumentOutItem = nullptr;
+        if (!FetchImplSnapshot)
+        {
+            if (CacheOwnerArgumentOutItem) *CacheOwnerArgumentOutItem = nullptr;
+            const auto Details = MakeShared<TArray<TSharedPtr<Gs2::Core::Model::FGs2ErrorDetail>>>();
+            Details->Add(MakeShared<Gs2::Core::Model::FGs2ErrorDetail>(TEXT("fetchImpl"), TEXT("fetchImpl is required."), TEXT("required")));
+            return MakeShared<Gs2::Core::Model::FBadRequestError>(Details);
+        }
+        Gs2::Inventory::Model::FItemSetPtr CacheOwnerFetchedItem;
+        const auto CacheOwnerError = FetchImplSnapshot(&CacheOwnerFetchedItem);
+        if ((!CacheOwnerError || CacheOwnerError->IsChildOf(Gs2::Core::Model::FNotFoundError::Class)) && !CacheOwnerArgumentUserId.IsSet())
+        {
+            if (CacheOwnerArgumentOutItem) *CacheOwnerArgumentOutItem = nullptr;
+            const auto Details = MakeShared<TArray<TSharedPtr<Gs2::Core::Model::FGs2ErrorDetail>>>();
+            Details->Add(MakeShared<Gs2::Core::Model::FGs2ErrorDetail>(TEXT("userId"), TEXT("userId is required."), TEXT("required")));
+            return MakeShared<Gs2::Core::Model::FBadRequestError>(Details);
+        }
+        if (!CacheOwnerError)
+        {
+            Put(
+                CacheSnapshot,
+                CacheOwnerArgumentNamespaceName,
+                CacheOwnerArgumentUserId,
+                CacheOwnerArgumentInventoryName,
+                CacheOwnerArgumentItemName,
+                CacheOwnerArgumentItemSetName,
+                CacheOwnerArgumentTimeOffset,
+                CacheOwnerFetchedItem
+            );
+            if (CacheOwnerArgumentOutItem) *CacheOwnerArgumentOutItem = CacheOwnerFetchedItem;
+            return nullptr;
+        }
+        if (!CacheOwnerError->IsChildOf(Gs2::Core::Model::FNotFoundError::Class))
+        {
+            if (CacheOwnerArgumentOutItem) *CacheOwnerArgumentOutItem = nullptr;
+            return CacheOwnerError;
+        }
+        Put(
+            CacheSnapshot,
+            CacheOwnerArgumentNamespaceName,
+            CacheOwnerArgumentUserId,
+            CacheOwnerArgumentInventoryName,
+            CacheOwnerArgumentItemName,
+            CacheOwnerArgumentItemSetName,
+            CacheOwnerArgumentTimeOffset,
+            nullptr
+        );
+        if (CacheOwnerArgumentOutItem) *CacheOwnerArgumentOutItem = nullptr;
+        const auto CacheOwnerDetails = CacheOwnerError->GetErrors();
+        if (CacheOwnerDetails.IsValid() && CacheOwnerDetails->Num() > 0 && (*CacheOwnerDetails)[0].IsValid() && (*CacheOwnerDetails)[0]->GetComponent() == TEXT("itemSet"))
+        {
+            return nullptr;
+        }
+        if (CacheOwnerArgumentOutItem) *CacheOwnerArgumentOutItem = nullptr;
+        return CacheOwnerError;
+    }
+
+    Gs2::Core::Model::FGs2ErrorPtr FItemSetCache::Fetch(
+        const Gs2::Core::Domain::FCacheDatabasePtr& CacheOwnerArgumentCache,
+        TOptional<FString> CacheOwnerArgumentNamespaceName,
+        TOptional<FString> CacheOwnerArgumentUserId,
+        TOptional<FString> CacheOwnerArgumentInventoryName,
+        TOptional<FString> CacheOwnerArgumentItemName,
+        TOptional<int32> CacheOwnerArgumentTimeOffset,
+        const TFunction<Gs2::Core::Model::FGs2ErrorPtr(TSharedPtr<TArray<Gs2::Inventory::Model::FItemSetPtr>>*)>& CacheOwnerArgumentFetchImpl,
+        TSharedPtr<TArray<Gs2::Inventory::Model::FItemSetPtr>>* CacheOwnerArgumentOutItems
+    )
+    {
+        const auto CacheSnapshot = CacheOwnerArgumentCache;
+        if (CacheOwnerArgumentOutItems) *CacheOwnerArgumentOutItems = nullptr;
+        if (!CacheOwnerArgumentFetchImpl)
+        {
+            const auto Details = MakeShared<TArray<TSharedPtr<Gs2::Core::Model::FGs2ErrorDetail>>>();
+            Details->Add(MakeShared<Gs2::Core::Model::FGs2ErrorDetail>(TEXT("fetchImpl"), TEXT("fetchImpl is required."), TEXT("required")));
+            return MakeShared<Gs2::Core::Model::FBadRequestError>(Details);
+        }
+        TSharedPtr<TArray<Gs2::Inventory::Model::FItemSetPtr>> CacheOwnerFetchedItems;
+        const auto CacheOwnerError = CacheOwnerArgumentFetchImpl(&CacheOwnerFetchedItems);
+        if ((!CacheOwnerError || CacheOwnerError->IsChildOf(Gs2::Core::Model::FNotFoundError::Class)) && !CacheOwnerArgumentUserId.IsSet())
+        {
+            const auto Details = MakeShared<TArray<TSharedPtr<Gs2::Core::Model::FGs2ErrorDetail>>>();
+            Details->Add(MakeShared<Gs2::Core::Model::FGs2ErrorDetail>(TEXT("userId"), TEXT("userId is required."), TEXT("required")));
+            return MakeShared<Gs2::Core::Model::FBadRequestError>(Details);
+        }
+        if (!CacheOwnerError)
+        {
+            Put(
+                CacheSnapshot,
+                CacheOwnerArgumentNamespaceName,
+                CacheOwnerArgumentUserId,
+                CacheOwnerArgumentInventoryName,
+                CacheOwnerArgumentItemName,
+                CacheOwnerArgumentTimeOffset,
+                CacheOwnerFetchedItems
+            );
+            if (CacheOwnerArgumentOutItems) *CacheOwnerArgumentOutItems = CacheOwnerFetchedItems;
+            return nullptr;
+        }
+        if (!CacheOwnerError->IsChildOf(Gs2::Core::Model::FNotFoundError::Class)) return CacheOwnerError;
+        const auto CacheOwnerDetails = CacheOwnerError->GetErrors();
+        if (CacheOwnerDetails.IsValid() && CacheOwnerDetails->Num() > 0 && (*CacheOwnerDetails)[0].IsValid() && (*CacheOwnerDetails)[0]->GetComponent() == TEXT("itemSet"))
+        {
+            if (CacheOwnerArgumentOutItems) *CacheOwnerArgumentOutItems = MakeShared<TArray<Gs2::Inventory::Model::FItemSetPtr>>();
+            return nullptr;
+        }
+        return CacheOwnerError;
+    }
+
+    Gs2::Core::Domain::CallbackID FItemSetCache::ListSubscribe(
+        const Gs2::Core::Domain::FCacheDatabasePtr& CacheOwnerArgumentCache,
+        TOptional<FString> CacheOwnerArgumentNamespaceName,
+        TOptional<FString> CacheOwnerArgumentUserId,
+        TOptional<FString> CacheOwnerArgumentInventoryName,
+        TOptional<int32> CacheOwnerArgumentTimeOffset,
+        TFunction<void(TArray<Gs2::Inventory::Model::FItemSetPtr>)> CacheOwnerArgumentCallback
+    )
+    {
+        const auto CacheSnapshot = CacheOwnerArgumentCache;
+        if (!CacheSnapshot.IsValid()) return 0;
+        return CacheSnapshot->ListSubscribeTyped(Gs2::Inventory::Model::FItemSet::TypeName, CreateCacheParentKey(
+            CacheOwnerArgumentNamespaceName,
+            CacheOwnerArgumentUserId,
+            CacheOwnerArgumentInventoryName,
+            CacheOwnerArgumentTimeOffset
+        ), [CacheOwnerArgumentCallback](const TArray<FGs2ObjectPtr>& CacheOwnerValues)
+        {
+            TArray<Gs2::Inventory::Model::FItemSetPtr> CacheOwnerTypedValues;
+            for (const auto& CacheOwnerValue : CacheOwnerValues) if (CacheOwnerValue) CacheOwnerTypedValues.Add(StaticCastSharedPtr<Gs2::Inventory::Model::FItemSet>(CacheOwnerValue));
+            if (CacheOwnerArgumentCallback) CacheOwnerArgumentCallback(CacheOwnerTypedValues);
+        });
+    }
+
+    void FItemSetCache::ListUnsubscribe(
+        const Gs2::Core::Domain::FCacheDatabasePtr& CacheOwnerArgumentCache,
+        TOptional<FString> CacheOwnerArgumentNamespaceName,
+        TOptional<FString> CacheOwnerArgumentUserId,
+        TOptional<FString> CacheOwnerArgumentInventoryName,
+        TOptional<int32> CacheOwnerArgumentTimeOffset,
+        Gs2::Core::Domain::CallbackID CacheOwnerArgumentCallbackID
+    )
+    {
+        const auto CacheSnapshot = CacheOwnerArgumentCache;
+        if (!CacheSnapshot.IsValid()) return;
+        CacheSnapshot->ListUnsubscribe(Gs2::Inventory::Model::FItemSet::TypeName, CreateCacheParentKey(
+            CacheOwnerArgumentNamespaceName,
+            CacheOwnerArgumentUserId,
+            CacheOwnerArgumentInventoryName,
+            CacheOwnerArgumentTimeOffset
+        ), CacheOwnerArgumentCallbackID);
+    }
+}

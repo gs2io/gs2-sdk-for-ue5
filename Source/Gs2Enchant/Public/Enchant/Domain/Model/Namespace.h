@@ -108,6 +108,8 @@ namespace Gs2::Enchant::Domain::Model
             const FNamespaceDomain& From
         );
 
+
+
         class GS2ENCHANT_API FGetStatusTask final :
             public Gs2::Core::Util::TGs2Future<Gs2::Enchant::Domain::Model::FNamespaceDomain>,
             public TSharedFromThis<FGetStatusTask>
@@ -133,6 +135,8 @@ namespace Gs2::Enchant::Domain::Model
         TSharedPtr<FAsyncTask<FGetStatusTask>> GetStatus(
             Request::FGetNamespaceStatusRequestPtr Request
         );
+
+
 
         class GS2ENCHANT_API FGetTask final :
             public Gs2::Core::Util::TGs2Future<Gs2::Enchant::Model::FNamespace>,
@@ -160,6 +164,8 @@ namespace Gs2::Enchant::Domain::Model
             Request::FGetNamespaceRequestPtr Request
         );
 
+
+
         class GS2ENCHANT_API FUpdateTask final :
             public Gs2::Core::Util::TGs2Future<Gs2::Enchant::Domain::Model::FNamespaceDomain>,
             public TSharedFromThis<FUpdateTask>
@@ -185,6 +191,8 @@ namespace Gs2::Enchant::Domain::Model
         TSharedPtr<FAsyncTask<FUpdateTask>> Update(
             Request::FUpdateNamespaceRequestPtr Request
         );
+
+
 
         class GS2ENCHANT_API FDeleteTask final :
             public Gs2::Core::Util::TGs2Future<Gs2::Enchant::Domain::Model::FNamespaceDomain>,
@@ -212,6 +220,8 @@ namespace Gs2::Enchant::Domain::Model
             Request::FDeleteNamespaceRequestPtr Request
         );
 
+
+
         class GS2ENCHANT_API FCreateBalanceParameterModelMasterTask final :
             public Gs2::Core::Util::TGs2Future<Gs2::Enchant::Domain::Model::FBalanceParameterModelMasterDomain>,
             public TSharedFromThis<FCreateBalanceParameterModelMasterTask>
@@ -237,6 +247,8 @@ namespace Gs2::Enchant::Domain::Model
         TSharedPtr<FAsyncTask<FCreateBalanceParameterModelMasterTask>> CreateBalanceParameterModelMaster(
             Request::FCreateBalanceParameterModelMasterRequestPtr Request
         );
+
+
 
         class GS2ENCHANT_API FCreateRarityParameterModelMasterTask final :
             public Gs2::Core::Util::TGs2Future<Gs2::Enchant::Domain::Model::FRarityParameterModelMasterDomain>,
@@ -272,8 +284,33 @@ namespace Gs2::Enchant::Domain::Model
 
         Gs2::Core::Domain::CallbackID SubscribeBalanceParameterModels(
             TFunction<void()> Callback
+
         );
 
+        class FCollectBalanceParameterModelsTask;
+
+        Gs2::Core::Domain::CallbackID SubscribeBalanceParameterModels(
+            TFunction<void(TArray<Gs2::Enchant::Model::FBalanceParameterModelPtr>)> Callback
+        );
+
+        void InvalidateBalanceParameterModels();
+
+        class GS2ENCHANT_API FSubscribeBalanceParameterModelsWithInitialCallTask final :
+            public Gs2::Core::Util::TGs2Future<Gs2::Core::Domain::CallbackID>,
+            public TSharedFromThis<FSubscribeBalanceParameterModelsWithInitialCallTask>
+        {
+            const TSharedPtr<FNamespaceDomain> Self;
+            const TFunction<void(TArray<Gs2::Enchant::Model::FBalanceParameterModelPtr>)> Callback;
+
+        public:
+            FSubscribeBalanceParameterModelsWithInitialCallTask(const TSharedPtr<FNamespaceDomain>& Self, TFunction<void(TArray<Gs2::Enchant::Model::FBalanceParameterModelPtr>)> Callback);
+            FSubscribeBalanceParameterModelsWithInitialCallTask(const FSubscribeBalanceParameterModelsWithInitialCallTask& From);
+            virtual Gs2::Core::Model::FGs2ErrorPtr Action(TSharedPtr<TSharedPtr<Gs2::Core::Domain::CallbackID>> Result) override;
+        };
+
+        TSharedPtr<FAsyncTask<FSubscribeBalanceParameterModelsWithInitialCallTask>> SubscribeBalanceParameterModelsWithInitialCall(
+            TFunction<void(TArray<Gs2::Enchant::Model::FBalanceParameterModelPtr>)> Callback
+        );
         void UnsubscribeBalanceParameterModels(
             Gs2::Core::Domain::CallbackID CallbackID
         );
@@ -288,8 +325,33 @@ namespace Gs2::Enchant::Domain::Model
 
         Gs2::Core::Domain::CallbackID SubscribeBalanceParameterModelMasters(
             TFunction<void()> Callback
+
         );
 
+        class FCollectBalanceParameterModelMastersTask;
+
+        Gs2::Core::Domain::CallbackID SubscribeBalanceParameterModelMasters(
+            TFunction<void(TArray<Gs2::Enchant::Model::FBalanceParameterModelMasterPtr>)> Callback,const TOptional<FString> NamePrefix = TOptional<FString>()
+        );
+
+        void InvalidateBalanceParameterModelMasters(const TOptional<FString> NamePrefix = TOptional<FString>());
+
+        class GS2ENCHANT_API FSubscribeBalanceParameterModelMastersWithInitialCallTask final :
+            public Gs2::Core::Util::TGs2Future<Gs2::Core::Domain::CallbackID>,
+            public TSharedFromThis<FSubscribeBalanceParameterModelMastersWithInitialCallTask>
+        {
+            const TSharedPtr<FNamespaceDomain> Self;
+            const TFunction<void(TArray<Gs2::Enchant::Model::FBalanceParameterModelMasterPtr>)> Callback;
+        const TOptional<FString> QueryNamePrefix;
+        public:
+            FSubscribeBalanceParameterModelMastersWithInitialCallTask(const TSharedPtr<FNamespaceDomain>& Self, TFunction<void(TArray<Gs2::Enchant::Model::FBalanceParameterModelMasterPtr>)> Callback,const TOptional<FString> NamePrefix);
+            FSubscribeBalanceParameterModelMastersWithInitialCallTask(const FSubscribeBalanceParameterModelMastersWithInitialCallTask& From);
+            virtual Gs2::Core::Model::FGs2ErrorPtr Action(TSharedPtr<TSharedPtr<Gs2::Core::Domain::CallbackID>> Result) override;
+        };
+
+        TSharedPtr<FAsyncTask<FSubscribeBalanceParameterModelMastersWithInitialCallTask>> SubscribeBalanceParameterModelMastersWithInitialCall(
+            TFunction<void(TArray<Gs2::Enchant::Model::FBalanceParameterModelMasterPtr>)> Callback,const TOptional<FString> NamePrefix = TOptional<FString>()
+        );
         void UnsubscribeBalanceParameterModelMasters(
             Gs2::Core::Domain::CallbackID CallbackID
         );
@@ -303,8 +365,33 @@ namespace Gs2::Enchant::Domain::Model
 
         Gs2::Core::Domain::CallbackID SubscribeRarityParameterModels(
             TFunction<void()> Callback
+
         );
 
+        class FCollectRarityParameterModelsTask;
+
+        Gs2::Core::Domain::CallbackID SubscribeRarityParameterModels(
+            TFunction<void(TArray<Gs2::Enchant::Model::FRarityParameterModelPtr>)> Callback
+        );
+
+        void InvalidateRarityParameterModels();
+
+        class GS2ENCHANT_API FSubscribeRarityParameterModelsWithInitialCallTask final :
+            public Gs2::Core::Util::TGs2Future<Gs2::Core::Domain::CallbackID>,
+            public TSharedFromThis<FSubscribeRarityParameterModelsWithInitialCallTask>
+        {
+            const TSharedPtr<FNamespaceDomain> Self;
+            const TFunction<void(TArray<Gs2::Enchant::Model::FRarityParameterModelPtr>)> Callback;
+
+        public:
+            FSubscribeRarityParameterModelsWithInitialCallTask(const TSharedPtr<FNamespaceDomain>& Self, TFunction<void(TArray<Gs2::Enchant::Model::FRarityParameterModelPtr>)> Callback);
+            FSubscribeRarityParameterModelsWithInitialCallTask(const FSubscribeRarityParameterModelsWithInitialCallTask& From);
+            virtual Gs2::Core::Model::FGs2ErrorPtr Action(TSharedPtr<TSharedPtr<Gs2::Core::Domain::CallbackID>> Result) override;
+        };
+
+        TSharedPtr<FAsyncTask<FSubscribeRarityParameterModelsWithInitialCallTask>> SubscribeRarityParameterModelsWithInitialCall(
+            TFunction<void(TArray<Gs2::Enchant::Model::FRarityParameterModelPtr>)> Callback
+        );
         void UnsubscribeRarityParameterModels(
             Gs2::Core::Domain::CallbackID CallbackID
         );
@@ -318,8 +405,33 @@ namespace Gs2::Enchant::Domain::Model
 
         Gs2::Core::Domain::CallbackID SubscribeRarityParameterModelMasters(
             TFunction<void()> Callback
+
         );
 
+        class FCollectRarityParameterModelMastersTask;
+
+        Gs2::Core::Domain::CallbackID SubscribeRarityParameterModelMasters(
+            TFunction<void(TArray<Gs2::Enchant::Model::FRarityParameterModelMasterPtr>)> Callback
+        );
+
+        void InvalidateRarityParameterModelMasters();
+
+        class GS2ENCHANT_API FSubscribeRarityParameterModelMastersWithInitialCallTask final :
+            public Gs2::Core::Util::TGs2Future<Gs2::Core::Domain::CallbackID>,
+            public TSharedFromThis<FSubscribeRarityParameterModelMastersWithInitialCallTask>
+        {
+            const TSharedPtr<FNamespaceDomain> Self;
+            const TFunction<void(TArray<Gs2::Enchant::Model::FRarityParameterModelMasterPtr>)> Callback;
+
+        public:
+            FSubscribeRarityParameterModelMastersWithInitialCallTask(const TSharedPtr<FNamespaceDomain>& Self, TFunction<void(TArray<Gs2::Enchant::Model::FRarityParameterModelMasterPtr>)> Callback);
+            FSubscribeRarityParameterModelMastersWithInitialCallTask(const FSubscribeRarityParameterModelMastersWithInitialCallTask& From);
+            virtual Gs2::Core::Model::FGs2ErrorPtr Action(TSharedPtr<TSharedPtr<Gs2::Core::Domain::CallbackID>> Result) override;
+        };
+
+        TSharedPtr<FAsyncTask<FSubscribeRarityParameterModelMastersWithInitialCallTask>> SubscribeRarityParameterModelMastersWithInitialCall(
+            TFunction<void(TArray<Gs2::Enchant::Model::FRarityParameterModelMasterPtr>)> Callback
+        );
         void UnsubscribeRarityParameterModelMasters(
             Gs2::Core::Domain::CallbackID CallbackID
         );
@@ -367,7 +479,34 @@ namespace Gs2::Enchant::Domain::Model
 
         TSharedPtr<FAsyncTask<FModelTask>> Model();
 
+        void Invalidate();
+
         Gs2::Core::Domain::CallbackID Subscribe(
+            TFunction<void(Gs2::Enchant::Model::FNamespacePtr)> Callback
+        );
+
+        class GS2ENCHANT_API FSubscribeWithInitialCallTask final :
+            public Gs2::Core::Util::TGs2Future<Gs2::Core::Domain::CallbackID>,
+            public TSharedFromThis<FSubscribeWithInitialCallTask>
+        {
+            const TSharedPtr<FNamespaceDomain> Self;
+            const TFunction<void(Gs2::Enchant::Model::FNamespacePtr)> Callback;
+        public:
+            FSubscribeWithInitialCallTask(
+                const TSharedPtr<FNamespaceDomain>& Self,
+                TFunction<void(Gs2::Enchant::Model::FNamespacePtr)> Callback
+            );
+
+            FSubscribeWithInitialCallTask(
+                const FSubscribeWithInitialCallTask& From
+            );
+
+            virtual Gs2::Core::Model::FGs2ErrorPtr Action(
+                TSharedPtr<TSharedPtr<Gs2::Core::Domain::CallbackID>> Result
+            ) override;
+        };
+
+        TSharedPtr<FAsyncTask<FSubscribeWithInitialCallTask>> SubscribeWithInitialCall(
             TFunction<void(Gs2::Enchant::Model::FNamespacePtr)> Callback
         );
 

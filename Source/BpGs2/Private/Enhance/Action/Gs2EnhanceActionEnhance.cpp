@@ -12,8 +12,6 @@
  * on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either
  * express or implied. See the License for the specific language governing
  * permissions and limitations under the License.
- *
- * deny overwrite
  */
 
 #include "Enhance/Action/Gs2EnhanceActionEnhance.h"
@@ -28,7 +26,7 @@ UGs2EnhanceEnhanceAsyncFunction::UGs2EnhanceEnhanceAsyncFunction(
 
 UGs2EnhanceEnhanceAsyncFunction* UGs2EnhanceEnhanceAsyncFunction::Enhance(
     UObject* WorldContextObject,
-    FGs2EnhanceOwnEnhance Enhance,
+    FGs2EnhanceOwnEnhance EnhanceValue,
     FString RateName,
     FString TargetItemSetId,
     TArray<FGs2EnhanceMaterial> Materials,
@@ -37,11 +35,11 @@ UGs2EnhanceEnhanceAsyncFunction* UGs2EnhanceEnhanceAsyncFunction::Enhance(
 {
     UGs2EnhanceEnhanceAsyncFunction* Action = NewObject<UGs2EnhanceEnhanceAsyncFunction>();
     Action->RegisterWithGameInstance(WorldContextObject);
-    if (Enhance.Value == nullptr) {
+    if (EnhanceValue.Value == nullptr) {
         UE_LOG(BpGs2Log, Error, TEXT("[UGs2EnhanceEnhanceAsyncFunction::Enhance] Enhance parameter specification is missing."))
         return Action;
     }
-    Action->EnhanceValue = Enhance;
+    Action->EnhanceValue = EnhanceValue;
     Action->RateName = RateName;
     Action->TargetItemSetId = TargetItemSetId;
     Action->Materials = Materials;

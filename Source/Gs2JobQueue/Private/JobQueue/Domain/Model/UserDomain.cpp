@@ -12,8 +12,6 @@
  * on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either
  * express or implied. See the License for the specific language governing
  * permissions and limitations under the License.
- *
- * deny overwrite
  */
 
 #if defined(_MSC_VER)
@@ -32,6 +30,8 @@
 #include "JobQueue/Domain/Model/JobResultAccessToken.h"
 #include "JobQueue/Domain/Model/User.h"
 #include "JobQueue/Domain/Model/UserAccessToken.h"
+#include "JobQueue/Model/Cache/Job.h"
+#include "JobQueue/Model/Cache/JobResult.h"
 
 #include "Core/Domain/Gs2.h"
 #include "Core/Domain/Transaction/JobQueueJobDomainFactory.h"
@@ -92,7 +92,7 @@ namespace Gs2::JobQueue::Domain::Model
     )
     {
         Request
-            ->WithContextStack(Self->Gs2->DefaultContextStack)
+            ->WithContextStack((!Request->GetContextStack().IsSet() || Request->GetContextStack()->IsEmpty()) ? Self->Gs2->DefaultContextStack : Request->GetContextStack())
             ->WithNamespaceName(Self->NamespaceName)
             ->WithUserId(Self->UserId);
         const auto Future = Self->Client->PushByUserId(
@@ -103,32 +103,24 @@ namespace Gs2::JobQueue::Domain::Model
         {
             return Future->GetTask().Error();
         }
-        const auto RequestModel = Request;
         const auto ResultModel = Future->GetTask().Result();
         Future->EnsureCompletion();
-        if (ResultModel != nullptr) {
+        if (ResultModel.IsValid() && ResultModel->GetItems().IsValid())
+        {
+            for (const auto& Item : *ResultModel->GetItems())
             {
-                for (auto Item : *ResultModel->GetItems())
-                {
-                    const auto ParentKey = Gs2::JobQueue::Domain::Model::FUserDomain::CreateCacheParentKey(
-                        Self->NamespaceName,
-                        Self->UserId,
-                        "Job"
-                    );
-                    const auto Key = Gs2::JobQueue::Domain::Model::FJobDomain::CreateCacheKey(
-                        Item->GetName()
-                    );
-                    Self->Gs2->Cache->Put(
-                        Gs2::JobQueue::Model::FJob::TypeName,
-                        ParentKey,
-                        Key,
-                        Item,
-                        FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
-                    );
-                }
+                if (!Item.IsValid()) continue;
+                Gs2::JobQueue::Model::Cache::FJobCache::Put(
+                    Self->Gs2->Cache,
+                    Request->GetNamespaceName(), Request->GetUserId(), Item->GetName(),
+                    TOptional<int32>(), Item
+                );
             }
         }
+
         auto Domain = MakeShared<TArray<TSharedPtr<Gs2::JobQueue::Domain::Model::FJobDomain>>>();
+        if (ResultModel.IsValid() && ResultModel->GetItems().IsValid())
+        {
         for (auto i=0; i<ResultModel->GetItems()->Num(); i++)
         {
             Domain->Add(
@@ -140,26 +132,14 @@ namespace Gs2::JobQueue::Domain::Model
                     (*ResultModel->GetItems())[i]->GetName()
                 )
             );
-            const auto ParentKey = Gs2::JobQueue::Domain::Model::FUserDomain::CreateCacheParentKey(
-                Self->NamespaceName,
-                Self->UserId,
-                "Job"
-            );
-            const auto Key = Gs2::JobQueue::Domain::Model::FJobDomain::CreateCacheKey(
-                (*ResultModel->GetItems())[i]->GetName()
-            );
-            Self->Gs2->Cache->Put(
-                Gs2::JobQueue::Model::FJob::TypeName,
-                ParentKey,
-                Key,
-                (*ResultModel->GetItems())[i],
-                FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
-            );
         }
-        if (ResultModel->GetAutoRun().IsSet() && *ResultModel->GetAutoRun())
+        }
+        if (ResultModel->GetAutoRun().IsSet() && !*ResultModel->GetAutoRun() &&
+            Self->NamespaceName.IsSet() && Self->UserId.IsSet())
         {
-            Self->Gs2->JobQueueDomain->Push(
-                *Self->NamespaceName
+            Self->Gs2->JobQueueDomain->PushForUser(
+                *Self->NamespaceName,
+                *Self->UserId
             );
         }
         if (ResultModel != nullptr)
@@ -198,7 +178,7 @@ namespace Gs2::JobQueue::Domain::Model
     )
     {
         Request
-            ->WithContextStack(Self->Gs2->DefaultContextStack)
+            ->WithContextStack((!Request->GetContextStack().IsSet() || Request->GetContextStack()->IsEmpty()) ? Self->Gs2->DefaultContextStack : Request->GetContextStack())
             ->WithNamespaceName(Self->NamespaceName)
             ->WithUserId(Self->UserId);
         const auto Future = Self->Client->RunByUserId(
@@ -209,55 +189,54 @@ namespace Gs2::JobQueue::Domain::Model
         {
             return Future->GetTask().Error();
         }
-        const auto RequestModel = Request;
         const auto ResultModel = Future->GetTask().Result();
         Future->EnsureCompletion();
-        if (ResultModel != nullptr) {
-            
-            if (ResultModel->GetItem() != nullptr)
-            {
-                const auto ParentKey = Gs2::JobQueue::Domain::Model::FUserDomain::CreateCacheParentKey(
-                    Self->NamespaceName,
-                    Self->UserId,
-                    "Job"
-                );
-                const auto Key = Gs2::JobQueue::Domain::Model::FJobDomain::CreateCacheKey(
-                    ResultModel->GetItem()->GetName()
-                );
-                Self->Gs2->Cache->Delete(Gs2::JobQueue::Model::FJob::TypeName, ParentKey, Key);
-            }
-        }
-        if (ResultModel != nullptr)
-        {
-            if (ResultModel->GetItem() != nullptr)
-            {
-                Self->Gs2->JobQueueDomain->JobQueueExecutedEventHandler(
-                    ResultModel->GetItem(),
-                    ResultModel->GetResult()
-                );
-                auto Domain = MakeShared<Gs2::JobQueue::Domain::Model::FJobDomain>(
-                    Self->Gs2,
-                    Self->Service,
-                    Request->GetNamespaceName(),
-                    ResultModel->GetItem()->GetUserId(),
-                    ResultModel->GetItem()->GetName()
-                );
-                Domain->IsLastJob = *ResultModel->GetIsLastJob();
-                Domain->Result = ResultModel->GetResult();
 
-                *Result = Domain;
-            }
-            else
-            {
-                Self->IsLastJob = *ResultModel->GetIsLastJob();
-                
-                *Result = nullptr;
-            }
-        }
-        else
+        if (!ResultModel.IsValid())
         {
-            *Result = nullptr;
+            const auto Details = MakeShared<TArray<TSharedPtr<Gs2::Core::Model::FGs2ErrorDetail>>>();
+            return MakeShared<Gs2::Core::Model::FUnknownError>(Details);
         }
+        const auto Item = ResultModel->GetItem();
+        if (Item.IsValid())
+        {
+            if (!Item->GetUserId().IsSet())
+            {
+                const auto Details = MakeShared<TArray<TSharedPtr<Gs2::Core::Model::FGs2ErrorDetail>>>();
+                Details->Add(MakeShared<Gs2::Core::Model::FGs2ErrorDetail>(TEXT("userId"), TEXT("userId is invalid."), TEXT("invalid_response")));
+                return MakeShared<Gs2::Core::Model::FUnknownError>(Details);
+            }
+            Self->Gs2->JobQueueDomain->JobQueueExecutedEventHandler(
+                Item,
+                ResultModel->GetResult(),
+                TOptional<int32>()
+            );
+            Gs2::JobQueue::Model::Cache::FJobCache::Delete(
+                Self->Gs2->Cache,
+                Request->GetNamespaceName(),
+                Item->GetUserId(),
+                TOptional<FString>(),
+                TOptional<int32>()
+            );
+        }
+        auto Domain = MakeShared<Gs2::JobQueue::Domain::Model::FJobDomain>(
+            Self->Gs2,
+            Self->Service,
+            Request->GetNamespaceName(),
+            Item.IsValid() ? Item->GetUserId() : Self->UserId,
+            Item.IsValid() ? Item->GetName() : TOptional<FString>()
+        );
+        if (ResultModel.IsValid())
+        {
+            if (ResultModel->GetIsLastJob().IsSet())
+            {
+                Domain->IsLastJob = *ResultModel->GetIsLastJob();
+            }
+            Domain->Item = Item;
+            Domain->Result = ResultModel->GetResult();
+        }
+
+        *Result = Domain;
         return nullptr;
     }
 
@@ -282,32 +261,121 @@ namespace Gs2::JobQueue::Domain::Model
 
     Gs2::Core::Domain::CallbackID FUserDomain::SubscribeJobs(
     TFunction<void()> Callback
+
     )
     {
         return Gs2->Cache->ListSubscribe(
             Gs2::JobQueue::Model::FJob::TypeName,
-            Gs2::JobQueue::Domain::Model::FUserDomain::CreateCacheParentKey(
+            Gs2::JobQueue::Model::Cache::FJobCache::CreateCacheParentKey(
                 NamespaceName,
                 UserId,
-                "Job"
+                TOptional<int32>()
             ),
+            Callback,
             Callback
         );
     }
-
     void FUserDomain::UnsubscribeJobs(
         Gs2::Core::Domain::CallbackID CallbackID
     )
     {
         Gs2->Cache->ListUnsubscribe(
             Gs2::JobQueue::Model::FJob::TypeName,
-            Gs2::JobQueue::Domain::Model::FUserDomain::CreateCacheParentKey(
+            Gs2::JobQueue::Model::Cache::FJobCache::CreateCacheParentKey(
                 NamespaceName,
                 UserId,
-                "Job"
+                TOptional<int32>()
             ),
             CallbackID
         );
+    }
+    class FUserDomain::FCollectJobsTask : public Gs2::Core::Util::TGs2Future<TArray<Gs2::JobQueue::Model::FJobPtr>>, public TSharedFromThis<FCollectJobsTask>
+    {
+        const TSharedPtr<FUserDomain> Self;
+        const TFunction<void(TArray<Gs2::JobQueue::Model::FJobPtr>)> OnCollected;
+    const TOptional<FString> QueryTimeOffsetToken;
+    public:
+        explicit FCollectJobsTask(const TSharedPtr<FUserDomain>& Self, TFunction<void(TArray<Gs2::JobQueue::Model::FJobPtr>)> OnCollected,const TOptional<FString> TimeOffsetToken) : Self(Self), OnCollected(OnCollected), QueryTimeOffsetToken(TimeOffsetToken) {}
+        FCollectJobsTask(const FCollectJobsTask& From) : TGs2Future(From), Self(From.Self), OnCollected(From.OnCollected), QueryTimeOffsetToken(From.QueryTimeOffsetToken) {}
+        virtual Gs2::Core::Model::FGs2ErrorPtr Action(TSharedPtr<TSharedPtr<TArray<Gs2::JobQueue::Model::FJobPtr>>> Result) override
+        {
+            TArray<Gs2::JobQueue::Model::FJobPtr> Items;
+            auto Iterator = Self->Jobs(QueryTimeOffsetToken)->begin();
+            while (Iterator.HasNext())
+            {
+                if (Iterator.IsError()) return Iterator.Error();
+                if (Iterator.IsCurrentValid()) Items.Add(Iterator.Current());
+                ++Iterator;
+            }
+            if (Iterator.IsError()) return Iterator.Error();
+            *Result = MakeShared<TArray<Gs2::JobQueue::Model::FJobPtr>>(Items);
+            if (OnCollected) OnCollected(Items);
+            return nullptr;
+        }
+    };
+
+    Gs2::Core::Domain::CallbackID FUserDomain::SubscribeJobs(
+        TFunction<void(TArray<Gs2::JobQueue::Model::FJobPtr>)> Callback,const TOptional<FString> TimeOffsetToken
+    )
+    {
+        const TWeakPtr<Gs2::Core::Domain::FGs2> WeakGs2 = this->Gs2;
+        const TWeakPtr<JobQueue::Domain::FGs2JobQueueDomain> WeakService = this->Service;
+        const auto QueryNamespaceName = NamespaceName;
+        const auto QueryUserId = UserId;
+        const auto QueryTimeOffsetToken = TimeOffsetToken;
+        const auto Parent = Gs2::JobQueue::Model::Cache::FJobCache::CreateCacheParentKey(
+        NamespaceName,
+        UserId,
+        TOptional<int32>()
+    );
+        return Gs2->Cache->ListSubscribeTyped(
+            Gs2::JobQueue::Model::FJob::TypeName,
+            Parent,
+            [Callback, WeakGs2](const TArray<FGs2ObjectPtr>& Values)
+            {
+                if (!WeakGs2.Pin().IsValid()) return;
+                TArray<Gs2::JobQueue::Model::FJobPtr> TypedValues;
+                for (const auto& Value : Values) if (Value.IsValid()) TypedValues.Add(StaticCastSharedPtr<Gs2::JobQueue::Model::FJob>(Value));
+                Callback(TypedValues);
+            },
+            [WeakGs2, WeakService, Callback, QueryNamespaceName, QueryUserId, QueryTimeOffsetToken]()
+            {
+                const auto Owner = WeakGs2.Pin();
+                if (!Owner.IsValid()) return;
+                const auto Domain = MakeShared<FUserDomain>(Owner, WeakService.Pin(), QueryNamespaceName, QueryUserId);
+                const auto Task = Gs2::Core::Util::New<FAsyncTask<FCollectJobsTask>>(Domain, Callback, QueryTimeOffsetToken);
+                Task->StartBackgroundTask();
+            }
+        );
+    }
+
+    void FUserDomain::InvalidateJobs(const TOptional<FString> TimeOffsetToken)
+    {
+        Gs2->Cache->ClearListCache(
+            Gs2::JobQueue::Model::FJob::TypeName,
+            Gs2::JobQueue::Model::Cache::FJobCache::CreateCacheParentKey(
+        NamespaceName,
+        UserId,
+        TOptional<int32>()
+    )
+        );
+    }
+
+    FUserDomain::FSubscribeJobsWithInitialCallTask::FSubscribeJobsWithInitialCallTask(const TSharedPtr<FUserDomain>& Self, TFunction<void(TArray<Gs2::JobQueue::Model::FJobPtr>)> Callback,const TOptional<FString> TimeOffsetToken) : Self(Self), Callback(Callback), QueryTimeOffsetToken(TimeOffsetToken) {}
+    FUserDomain::FSubscribeJobsWithInitialCallTask::FSubscribeJobsWithInitialCallTask(const FSubscribeJobsWithInitialCallTask& From) : TGs2Future(From), Self(From.Self), Callback(From.Callback), QueryTimeOffsetToken(From.QueryTimeOffsetToken) {}
+    Gs2::Core::Model::FGs2ErrorPtr FUserDomain::FSubscribeJobsWithInitialCallTask::Action(TSharedPtr<TSharedPtr<Gs2::Core::Domain::CallbackID>> Result)
+    {
+        const auto Task = Gs2::Core::Util::New<FAsyncTask<FCollectJobsTask>>(Self, TFunction<void(TArray<Gs2::JobQueue::Model::FJobPtr>)>(), QueryTimeOffsetToken);
+        Task->StartSynchronousTask(); Task->EnsureCompletion();
+        if (Task->GetTask().IsError()) return Task->GetTask().Error();
+        const auto Values = Task->GetTask().Result();
+        const auto CallbackId = Self->SubscribeJobs(Callback, QueryTimeOffsetToken);
+        Callback(*Values); *Result = MakeShared<Gs2::Core::Domain::CallbackID>(CallbackId);
+        return nullptr;
+    }
+    TSharedPtr<FAsyncTask<FUserDomain::FSubscribeJobsWithInitialCallTask>> FUserDomain::SubscribeJobsWithInitialCall(TFunction<void(TArray<Gs2::JobQueue::Model::FJobPtr>)> Callback,const TOptional<FString> TimeOffsetToken)
+    {
+        return Gs2::Core::Util::New<FAsyncTask<FSubscribeJobsWithInitialCallTask>>(this->AsShared(), Callback, TimeOffsetToken);
     }
 
     TSharedPtr<Gs2::JobQueue::Domain::Model::FJobDomain> FUserDomain::Job(
@@ -349,4 +417,3 @@ namespace Gs2::JobQueue::Domain::Model
 #elif defined(__clang__)
 #pragma clang diagnostic pop
 #endif
-

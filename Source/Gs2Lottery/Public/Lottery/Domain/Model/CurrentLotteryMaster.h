@@ -97,6 +97,8 @@ namespace Gs2::Lottery::Domain::Model
             const FCurrentLotteryMasterDomain& From
         );
 
+
+
         class GS2LOTTERY_API FExportMasterTask final :
             public Gs2::Core::Util::TGs2Future<Gs2::Lottery::Domain::Model::FCurrentLotteryMasterDomain>,
             public TSharedFromThis<FExportMasterTask>
@@ -122,6 +124,8 @@ namespace Gs2::Lottery::Domain::Model
         TSharedPtr<FAsyncTask<FExportMasterTask>> ExportMaster(
             Request::FExportMasterRequestPtr Request
         );
+
+
 
         class GS2LOTTERY_API FGetTask final :
             public Gs2::Core::Util::TGs2Future<Gs2::Lottery::Model::FCurrentLotteryMaster>,
@@ -149,6 +153,8 @@ namespace Gs2::Lottery::Domain::Model
             Request::FGetCurrentLotteryMasterRequestPtr Request
         );
 
+
+
         class GS2LOTTERY_API FPreUpdateTask final :
             public Gs2::Core::Util::TGs2Future<Gs2::Lottery::Domain::Model::FCurrentLotteryMasterDomain>,
             public TSharedFromThis<FPreUpdateTask>
@@ -175,6 +181,8 @@ namespace Gs2::Lottery::Domain::Model
             Request::FPreUpdateCurrentLotteryMasterRequestPtr Request
         );
 
+
+
         class GS2LOTTERY_API FUpdateTask final :
             public Gs2::Core::Util::TGs2Future<Gs2::Lottery::Domain::Model::FCurrentLotteryMasterDomain>,
             public TSharedFromThis<FUpdateTask>
@@ -200,6 +208,8 @@ namespace Gs2::Lottery::Domain::Model
         TSharedPtr<FAsyncTask<FUpdateTask>> Update(
             Request::FUpdateCurrentLotteryMasterRequestPtr Request
         );
+
+
 
         class GS2LOTTERY_API FUpdateFromGitHubTask final :
             public Gs2::Core::Util::TGs2Future<Gs2::Lottery::Domain::Model::FCurrentLotteryMasterDomain>,
@@ -257,7 +267,34 @@ namespace Gs2::Lottery::Domain::Model
 
         TSharedPtr<FAsyncTask<FModelTask>> Model();
 
+        void Invalidate();
+
         Gs2::Core::Domain::CallbackID Subscribe(
+            TFunction<void(Gs2::Lottery::Model::FCurrentLotteryMasterPtr)> Callback
+        );
+
+        class GS2LOTTERY_API FSubscribeWithInitialCallTask final :
+            public Gs2::Core::Util::TGs2Future<Gs2::Core::Domain::CallbackID>,
+            public TSharedFromThis<FSubscribeWithInitialCallTask>
+        {
+            const TSharedPtr<FCurrentLotteryMasterDomain> Self;
+            const TFunction<void(Gs2::Lottery::Model::FCurrentLotteryMasterPtr)> Callback;
+        public:
+            FSubscribeWithInitialCallTask(
+                const TSharedPtr<FCurrentLotteryMasterDomain>& Self,
+                TFunction<void(Gs2::Lottery::Model::FCurrentLotteryMasterPtr)> Callback
+            );
+
+            FSubscribeWithInitialCallTask(
+                const FSubscribeWithInitialCallTask& From
+            );
+
+            virtual Gs2::Core::Model::FGs2ErrorPtr Action(
+                TSharedPtr<TSharedPtr<Gs2::Core::Domain::CallbackID>> Result
+            ) override;
+        };
+
+        TSharedPtr<FAsyncTask<FSubscribeWithInitialCallTask>> SubscribeWithInitialCall(
             TFunction<void(Gs2::Lottery::Model::FCurrentLotteryMasterPtr)> Callback
         );
 

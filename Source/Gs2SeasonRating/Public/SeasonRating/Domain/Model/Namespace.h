@@ -101,6 +101,8 @@ namespace Gs2::SeasonRating::Domain::Model
             const FNamespaceDomain& From
         );
 
+
+
         class GS2SEASONRATING_API FGetStatusTask final :
             public Gs2::Core::Util::TGs2Future<Gs2::SeasonRating::Domain::Model::FNamespaceDomain>,
             public TSharedFromThis<FGetStatusTask>
@@ -126,6 +128,8 @@ namespace Gs2::SeasonRating::Domain::Model
         TSharedPtr<FAsyncTask<FGetStatusTask>> GetStatus(
             Request::FGetNamespaceStatusRequestPtr Request
         );
+
+
 
         class GS2SEASONRATING_API FGetTask final :
             public Gs2::Core::Util::TGs2Future<Gs2::SeasonRating::Model::FNamespace>,
@@ -153,6 +157,8 @@ namespace Gs2::SeasonRating::Domain::Model
             Request::FGetNamespaceRequestPtr Request
         );
 
+
+
         class GS2SEASONRATING_API FUpdateTask final :
             public Gs2::Core::Util::TGs2Future<Gs2::SeasonRating::Domain::Model::FNamespaceDomain>,
             public TSharedFromThis<FUpdateTask>
@@ -178,6 +184,8 @@ namespace Gs2::SeasonRating::Domain::Model
         TSharedPtr<FAsyncTask<FUpdateTask>> Update(
             Request::FUpdateNamespaceRequestPtr Request
         );
+
+
 
         class GS2SEASONRATING_API FDeleteTask final :
             public Gs2::Core::Util::TGs2Future<Gs2::SeasonRating::Domain::Model::FNamespaceDomain>,
@@ -205,6 +213,8 @@ namespace Gs2::SeasonRating::Domain::Model
             Request::FDeleteNamespaceRequestPtr Request
         );
 
+
+
         class GS2SEASONRATING_API FCreateSeasonModelMasterTask final :
             public Gs2::Core::Util::TGs2Future<Gs2::SeasonRating::Domain::Model::FSeasonModelMasterDomain>,
             public TSharedFromThis<FCreateSeasonModelMasterTask>
@@ -230,6 +240,8 @@ namespace Gs2::SeasonRating::Domain::Model
         TSharedPtr<FAsyncTask<FCreateSeasonModelMasterTask>> CreateSeasonModelMaster(
             Request::FCreateSeasonModelMasterRequestPtr Request
         );
+
+
 
         class GS2SEASONRATING_API FCreateMatchSessionTask final :
             public Gs2::Core::Util::TGs2Future<Gs2::SeasonRating::Domain::Model::FMatchSessionDomain>,
@@ -257,6 +269,8 @@ namespace Gs2::SeasonRating::Domain::Model
             Request::FCreateMatchSessionRequestPtr Request
         );
 
+
+
         class GS2SEASONRATING_API FVoteTask final :
             public Gs2::Core::Util::TGs2Future<Gs2::SeasonRating::Domain::Model::FBallotDomain>,
             public TSharedFromThis<FVoteTask>
@@ -282,6 +296,8 @@ namespace Gs2::SeasonRating::Domain::Model
         TSharedPtr<FAsyncTask<FVoteTask>> Vote(
             Request::FVoteRequestPtr Request
         );
+
+
 
         class GS2SEASONRATING_API FVoteMultipleTask final :
             public Gs2::Core::Util::TGs2Future<Gs2::SeasonRating::Domain::Model::FBallotDomain>,
@@ -317,8 +333,33 @@ namespace Gs2::SeasonRating::Domain::Model
 
         Gs2::Core::Domain::CallbackID SubscribeSeasonModels(
             TFunction<void()> Callback
+
         );
 
+        class FCollectSeasonModelsTask;
+
+        Gs2::Core::Domain::CallbackID SubscribeSeasonModels(
+            TFunction<void(TArray<Gs2::SeasonRating::Model::FSeasonModelPtr>)> Callback
+        );
+
+        void InvalidateSeasonModels();
+
+        class GS2SEASONRATING_API FSubscribeSeasonModelsWithInitialCallTask final :
+            public Gs2::Core::Util::TGs2Future<Gs2::Core::Domain::CallbackID>,
+            public TSharedFromThis<FSubscribeSeasonModelsWithInitialCallTask>
+        {
+            const TSharedPtr<FNamespaceDomain> Self;
+            const TFunction<void(TArray<Gs2::SeasonRating::Model::FSeasonModelPtr>)> Callback;
+
+        public:
+            FSubscribeSeasonModelsWithInitialCallTask(const TSharedPtr<FNamespaceDomain>& Self, TFunction<void(TArray<Gs2::SeasonRating::Model::FSeasonModelPtr>)> Callback);
+            FSubscribeSeasonModelsWithInitialCallTask(const FSubscribeSeasonModelsWithInitialCallTask& From);
+            virtual Gs2::Core::Model::FGs2ErrorPtr Action(TSharedPtr<TSharedPtr<Gs2::Core::Domain::CallbackID>> Result) override;
+        };
+
+        TSharedPtr<FAsyncTask<FSubscribeSeasonModelsWithInitialCallTask>> SubscribeSeasonModelsWithInitialCall(
+            TFunction<void(TArray<Gs2::SeasonRating::Model::FSeasonModelPtr>)> Callback
+        );
         void UnsubscribeSeasonModels(
             Gs2::Core::Domain::CallbackID CallbackID
         );
@@ -333,8 +374,33 @@ namespace Gs2::SeasonRating::Domain::Model
 
         Gs2::Core::Domain::CallbackID SubscribeSeasonModelMasters(
             TFunction<void()> Callback
+
         );
 
+        class FCollectSeasonModelMastersTask;
+
+        Gs2::Core::Domain::CallbackID SubscribeSeasonModelMasters(
+            TFunction<void(TArray<Gs2::SeasonRating::Model::FSeasonModelMasterPtr>)> Callback,const TOptional<FString> NamePrefix = TOptional<FString>()
+        );
+
+        void InvalidateSeasonModelMasters(const TOptional<FString> NamePrefix = TOptional<FString>());
+
+        class GS2SEASONRATING_API FSubscribeSeasonModelMastersWithInitialCallTask final :
+            public Gs2::Core::Util::TGs2Future<Gs2::Core::Domain::CallbackID>,
+            public TSharedFromThis<FSubscribeSeasonModelMastersWithInitialCallTask>
+        {
+            const TSharedPtr<FNamespaceDomain> Self;
+            const TFunction<void(TArray<Gs2::SeasonRating::Model::FSeasonModelMasterPtr>)> Callback;
+        const TOptional<FString> QueryNamePrefix;
+        public:
+            FSubscribeSeasonModelMastersWithInitialCallTask(const TSharedPtr<FNamespaceDomain>& Self, TFunction<void(TArray<Gs2::SeasonRating::Model::FSeasonModelMasterPtr>)> Callback,const TOptional<FString> NamePrefix);
+            FSubscribeSeasonModelMastersWithInitialCallTask(const FSubscribeSeasonModelMastersWithInitialCallTask& From);
+            virtual Gs2::Core::Model::FGs2ErrorPtr Action(TSharedPtr<TSharedPtr<Gs2::Core::Domain::CallbackID>> Result) override;
+        };
+
+        TSharedPtr<FAsyncTask<FSubscribeSeasonModelMastersWithInitialCallTask>> SubscribeSeasonModelMastersWithInitialCall(
+            TFunction<void(TArray<Gs2::SeasonRating::Model::FSeasonModelMasterPtr>)> Callback,const TOptional<FString> NamePrefix = TOptional<FString>()
+        );
         void UnsubscribeSeasonModelMasters(
             Gs2::Core::Domain::CallbackID CallbackID
         );
@@ -356,8 +422,33 @@ namespace Gs2::SeasonRating::Domain::Model
 
         Gs2::Core::Domain::CallbackID SubscribeMatchSessions(
             TFunction<void()> Callback
+
         );
 
+        class FCollectMatchSessionsTask;
+
+        Gs2::Core::Domain::CallbackID SubscribeMatchSessions(
+            TFunction<void(TArray<Gs2::SeasonRating::Model::FMatchSessionPtr>)> Callback
+        );
+
+        void InvalidateMatchSessions();
+
+        class GS2SEASONRATING_API FSubscribeMatchSessionsWithInitialCallTask final :
+            public Gs2::Core::Util::TGs2Future<Gs2::Core::Domain::CallbackID>,
+            public TSharedFromThis<FSubscribeMatchSessionsWithInitialCallTask>
+        {
+            const TSharedPtr<FNamespaceDomain> Self;
+            const TFunction<void(TArray<Gs2::SeasonRating::Model::FMatchSessionPtr>)> Callback;
+
+        public:
+            FSubscribeMatchSessionsWithInitialCallTask(const TSharedPtr<FNamespaceDomain>& Self, TFunction<void(TArray<Gs2::SeasonRating::Model::FMatchSessionPtr>)> Callback);
+            FSubscribeMatchSessionsWithInitialCallTask(const FSubscribeMatchSessionsWithInitialCallTask& From);
+            virtual Gs2::Core::Model::FGs2ErrorPtr Action(TSharedPtr<TSharedPtr<Gs2::Core::Domain::CallbackID>> Result) override;
+        };
+
+        TSharedPtr<FAsyncTask<FSubscribeMatchSessionsWithInitialCallTask>> SubscribeMatchSessionsWithInitialCall(
+            TFunction<void(TArray<Gs2::SeasonRating::Model::FMatchSessionPtr>)> Callback
+        );
         void UnsubscribeMatchSessions(
             Gs2::Core::Domain::CallbackID CallbackID
         );
@@ -402,7 +493,34 @@ namespace Gs2::SeasonRating::Domain::Model
 
         TSharedPtr<FAsyncTask<FModelTask>> Model();
 
+        void Invalidate();
+
         Gs2::Core::Domain::CallbackID Subscribe(
+            TFunction<void(Gs2::SeasonRating::Model::FNamespacePtr)> Callback
+        );
+
+        class GS2SEASONRATING_API FSubscribeWithInitialCallTask final :
+            public Gs2::Core::Util::TGs2Future<Gs2::Core::Domain::CallbackID>,
+            public TSharedFromThis<FSubscribeWithInitialCallTask>
+        {
+            const TSharedPtr<FNamespaceDomain> Self;
+            const TFunction<void(Gs2::SeasonRating::Model::FNamespacePtr)> Callback;
+        public:
+            FSubscribeWithInitialCallTask(
+                const TSharedPtr<FNamespaceDomain>& Self,
+                TFunction<void(Gs2::SeasonRating::Model::FNamespacePtr)> Callback
+            );
+
+            FSubscribeWithInitialCallTask(
+                const FSubscribeWithInitialCallTask& From
+            );
+
+            virtual Gs2::Core::Model::FGs2ErrorPtr Action(
+                TSharedPtr<TSharedPtr<Gs2::Core::Domain::CallbackID>> Result
+            ) override;
+        };
+
+        TSharedPtr<FAsyncTask<FSubscribeWithInitialCallTask>> SubscribeWithInitialCall(
             TFunction<void(Gs2::SeasonRating::Model::FNamespacePtr)> Callback
         );
 

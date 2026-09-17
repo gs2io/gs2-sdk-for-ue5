@@ -25,102 +25,60 @@
 #endif
 
 #include "Limit/Domain/SpeculativeExecutor/Verify/VerifyCounterByUserIdSpeculativeExecutor.h"
-#include "Limit/Domain/Gs2Limit.h"
-
+#include "Limit/Model/Cache/Counter.h"
 #include "Core/Domain/Gs2.h"
-
+#include "Core/Domain/SpeculativeExecutor/PreparedSpeculativeCommit.h"
+#include "Core/Util/ServerRate.h"
 namespace Gs2::Limit::Domain::SpeculativeExecutor
 {
-
+namespace
+{
+    bool LimitVerifyCounterPredicate(const Gs2::Limit::Model::FCounterPtr& Item, const FString& ExpectedId,
+        const FString& UserId, const FString& LimitName, const FString& CounterName, const FString& VerifyType, const int32 RequestValue)
+    {
+        if (!Item.IsValid() || !Item->GetCounterId().IsSet() || Item->GetCounterId().Get(FString()) != ExpectedId ||
+            !Item->GetUserId().IsSet() || Item->GetUserId().Get(FString()) != UserId ||
+            !Item->GetLimitName().IsSet() || Item->GetLimitName().Get(FString()) != LimitName ||
+            !Item->GetName().IsSet() || Item->GetName().Get(FString()) != CounterName || !Item->GetCount().IsSet()) return false;
+        const int32 Current = Item->GetCount().Get(0);
+        if (VerifyType == TEXT("less")) return Current < RequestValue;
+        if (VerifyType == TEXT("lessEqual")) return Current <= RequestValue;
+        if (VerifyType == TEXT("greater")) return Current > RequestValue;
+        if (VerifyType == TEXT("greaterEqual")) return Current >= RequestValue;
+        if (VerifyType == TEXT("equal")) return Current == RequestValue;
+        if (VerifyType == TEXT("notEqual")) return Current != RequestValue;
+        return false;
+    }
+}
     FString FVerifyCounterByUserIdSpeculativeExecutor::Action()
     {
         return FString("Gs2Limit:VerifyCounterByUserId");
     }
 
     Gs2::Core::Model::FGs2ErrorPtr FVerifyCounterByUserIdSpeculativeExecutor::Transform(
-        const Gs2::Core::Domain::FGs2Ptr& Domain,
-        const Gs2::Auth::Model::FAccessTokenPtr& AccessToken,
+        const Gs2::Core::Domain::FGs2Ptr&,
+        const Gs2::Auth::Model::FAccessTokenPtr&,
         const Gs2::Limit::Request::FVerifyCounterByUserIdRequestPtr& Request,
         Gs2::Limit::Model::FCounterPtr Item
     )
     {
-        if (Request->GetVerifyType().IsSet()) {
-            if (*Request->GetVerifyType() == "less")
-            {
-                if (*Item->GetCount() >= *Request->GetCount())
-                {
-                    return MakeShared<Gs2::Core::Model::FBadRequestError>([]
-                    {
-                        auto Arr = MakeShared<TArray<Gs2::Core::Model::FGs2ErrorDetailPtr>>();
-                        Arr->Add(MakeShared<Gs2::Core::Model::FGs2ErrorDetail>("count", "invalid", ""));
-                        return Arr;
-                    }());
-                }
-            } else if (*Request->GetVerifyType() == "lessEqual")
-            {
-                if (*Item->GetCount() > *Request->GetCount())
-                {
-                    return MakeShared<Gs2::Core::Model::FBadRequestError>([]
-                    {
-                        auto Arr = MakeShared<TArray<Gs2::Core::Model::FGs2ErrorDetailPtr>>();
-                        Arr->Add(MakeShared<Gs2::Core::Model::FGs2ErrorDetail>("count", "invalid", ""));
-                        return Arr;
-                    }());
-                }
-            } else if (*Request->GetVerifyType() == "greater")
-            {
-                if (*Item->GetCount() <= *Request->GetCount())
-                {
-                    return MakeShared<Gs2::Core::Model::FBadRequestError>([]
-                    {
-                        auto Arr = MakeShared<TArray<Gs2::Core::Model::FGs2ErrorDetailPtr>>();
-                        Arr->Add(MakeShared<Gs2::Core::Model::FGs2ErrorDetail>("count", "invalid", ""));
-                        return Arr;
-                    }());
-                }
-            } else if (*Request->GetVerifyType() == "greaterEqual")
-            {
-                if (*Item->GetCount() > *Request->GetCount())
-                {
-                    return MakeShared<Gs2::Core::Model::FBadRequestError>([]
-                    {
-                        auto Arr = MakeShared<TArray<Gs2::Core::Model::FGs2ErrorDetailPtr>>();
-                        Arr->Add(MakeShared<Gs2::Core::Model::FGs2ErrorDetail>("count", "invalid", ""));
-                        return Arr;
-                    }());
-                }
-            } else if (*Request->GetVerifyType() == "equal")
-            {
-                if (*Item->GetCount() != *Request->GetCount())
-                {
-                    return MakeShared<Gs2::Core::Model::FBadRequestError>([]
-                    {
-                        auto Arr = MakeShared<TArray<Gs2::Core::Model::FGs2ErrorDetailPtr>>();
-                        Arr->Add(MakeShared<Gs2::Core::Model::FGs2ErrorDetail>("count", "invalid", ""));
-                        return Arr;
-                    }());
-                }
-            } else if (*Request->GetVerifyType() == "notEqual")
-            {
-                if (*Item->GetCount() == *Request->GetCount())
-                {
-                    return MakeShared<Gs2::Core::Model::FBadRequestError>([]
-                    {
-                        auto Arr = MakeShared<TArray<Gs2::Core::Model::FGs2ErrorDetailPtr>>();
-                        Arr->Add(MakeShared<Gs2::Core::Model::FGs2ErrorDetail>("count", "invalid", ""));
-                        return Arr;
-                    }());
-                }
-            } else {
-                return MakeShared<Gs2::Core::Model::FBadRequestError>([]
-                {
-                    auto Arr = MakeShared<TArray<Gs2::Core::Model::FGs2ErrorDetailPtr>>();
-                    Arr->Add(MakeShared<Gs2::Core::Model::FGs2ErrorDetail>("verifyType", "invalid", ""));
-                    return Arr;
-                }());
-            }
-        }
-        return nullptr;
+        const int32 Current = Item->GetCount().Get(0);
+        const int32 Expected = Request->GetCount().Get(0);
+        const FString Type = Request->GetVerifyType().Get(FString());
+        const bool Satisfied =
+            (Type == TEXT("less") && Current < Expected) ||
+            (Type == TEXT("lessEqual") && Current <= Expected) ||
+            (Type == TEXT("greater") && Current > Expected) ||
+            (Type == TEXT("greaterEqual") && Current >= Expected) ||
+            (Type == TEXT("equal") && Current == Expected) ||
+            (Type == TEXT("notEqual") && Current != Expected);
+        if (Satisfied) return nullptr;
+        return MakeShared<Gs2::Core::Model::FBadRequestError>([]
+        {
+            auto Details = MakeShared<TArray<Gs2::Core::Model::FGs2ErrorDetailPtr>>();
+            Details->Add(MakeShared<Gs2::Core::Model::FGs2ErrorDetail>("count", "invalid", ""));
+            return Details;
+        }());
     }
 
     FVerifyCounterByUserIdSpeculativeExecutor::FCommitTask::FCommitTask(
@@ -129,62 +87,52 @@ namespace Gs2::Limit::Domain::SpeculativeExecutor
         const Gs2::Auth::Model::FAccessTokenPtr& AccessToken,
         const Gs2::Limit::Request::FVerifyCounterByUserIdRequestPtr& Request
     ):
-        Domain(Domain),
-        Service(Service),
-        AccessToken(AccessToken),
-        Request(Request)
+        Domain(Domain), Service(Service), AccessToken(AccessToken), Request(Request)
     {
 
     }
 
-    FVerifyCounterByUserIdSpeculativeExecutor::FCommitTask::FCommitTask(
-        const FCommitTask& From
-    ):
-        Domain(From.Domain),
-        Service(From.Service),
-        AccessToken(From.AccessToken),
-        Request(From.Request)
+    FVerifyCounterByUserIdSpeculativeExecutor::FCommitTask::FCommitTask(const FCommitTask& From):
+        Domain(From.Domain), Service(From.Service), AccessToken(From.AccessToken), Request(From.Request)
     {
 
     }
 
     Gs2::Core::Model::FGs2ErrorPtr FVerifyCounterByUserIdSpeculativeExecutor::FCommitTask::Action(
-        TSharedPtr<TSharedPtr<TFunction<void()>>> Result
+        TSharedPtr<TSharedPtr<Gs2::Core::Domain::SpeculativeExecutor::FPreparedSpeculativeCommit>> Result
     )
     {
-        const auto Future = Domain->Limit->Namespace(
-                Request->GetNamespaceName().IsSet() ? *Request->GetNamespaceName() : FString("")
-            )->AccessToken(
-                AccessToken
-            )->Counter(
-                Request->GetLimitName().IsSet() ? *Request->GetLimitName() : FString(""),
-                Request->GetCounterName().IsSet() ? *Request->GetCounterName() : FString("")
-            )->Model();
-        Future->StartSynchronousTask();
-        if (Future->GetTask().IsError())
+        *Result = nullptr;
+        Gs2::Auth::Model::FAccessTokenPtr PreparedToken = nullptr;
+        if (AccessToken.IsValid()) PreparedToken = MakeShared<Gs2::Auth::Model::FAccessToken>(*AccessToken);
+        Gs2::Limit::Request::FVerifyCounterByUserIdRequestPtr PreparedRequest = nullptr;
+        if (Request.IsValid()) PreparedRequest = MakeShared<Gs2::Limit::Request::FVerifyCounterByUserIdRequest>(*Request);
+        if (!Domain.IsValid() || !Domain->RestSession.IsValid() || !PreparedToken.IsValid() || !PreparedRequest.IsValid() ||
+            !PreparedToken->GetUserId().IsSet() || PreparedToken->GetUserId().Get(FString()).IsEmpty()) return nullptr;
+        if (PreparedRequest->GetUserId().IsSet() && PreparedRequest->GetUserId().Get(FString()) == TEXT("#{userId}")) PreparedRequest->WithUserId(PreparedToken->GetUserId());
+        if (!PreparedRequest->GetNamespaceName().IsSet() || PreparedRequest->GetNamespaceName().Get(FString()).IsEmpty() ||
+            !PreparedRequest->GetLimitName().IsSet() || PreparedRequest->GetLimitName().Get(FString()).IsEmpty() ||
+            !PreparedRequest->GetCounterName().IsSet() || PreparedRequest->GetCounterName().Get(FString()).IsEmpty() ||
+            !PreparedRequest->GetUserId().IsSet() || PreparedRequest->GetUserId().Get(FString()).IsEmpty() ||
+            PreparedRequest->GetUserId().Get(FString()) != PreparedToken->GetUserId().Get(FString())) return nullptr;
+        const FString NamespaceName = PreparedRequest->GetNamespaceName().Get(FString()), UserId = PreparedRequest->GetUserId().Get(FString()), LimitName = PreparedRequest->GetLimitName().Get(FString()), CounterName = PreparedRequest->GetCounterName().Get(FString());
+        const FString VerifyType = PreparedRequest->GetVerifyType().Get(FString()); const int32 RequestValue = PreparedRequest->GetCount().Get(0); const auto TimeOffset = PreparedToken->GetTimeOffset();
+        const FString ExpectedId = FString::Printf(TEXT("grn:gs2:%s:%s:limit:%s:user:%s:limit:%s:counter:%s"), *Domain->RestSession->RegionName(), *Domain->RestSession->OwnerId(), *NamespaceName, *UserId, *LimitName, *CounterName);
+        Gs2::Limit::Model::FCounterPtr Cached;
+        if (!Gs2::Limit::Model::Cache::FCounterCache::TryGet(Domain->Cache, NamespaceName, UserId, LimitName, CounterName, TimeOffset, &Cached) || !Cached.IsValid()) return nullptr;
+        if (!Cached->GetCounterId().IsSet() || Cached->GetCounterId().Get(FString()) != ExpectedId ||
+            !Cached->GetUserId().IsSet() || Cached->GetUserId().Get(FString()) != UserId ||
+            !Cached->GetLimitName().IsSet() || Cached->GetLimitName().Get(FString()) != LimitName ||
+            !Cached->GetName().IsSet() || Cached->GetName().Get(FString()) != CounterName ||
+            !Cached->GetCount().IsSet()) return nullptr;
+        if (const auto Error = Transform(Domain, PreparedToken, PreparedRequest, Cached); Error.IsValid()) return Error;
+        const auto Guard = [Cache = Domain->Cache, NamespaceName, UserId, LimitName, CounterName, TimeOffset, ExpectedId, VerifyType, RequestValue]()
         {
-            return Future->GetTask().Error();
-        }
-        auto Item = Future->GetTask().Result();
-
-        if (!Item.IsValid())
-        {
-            *Result = MakeShared<TFunction<void()>>([&]()
-            {
-                return nullptr;
-            });
-            return nullptr;
-        }
-        auto Err = Transform(Domain, AccessToken, Request, Item);
-        if (Err != nullptr)
-        {
-            return Err;
-        }
-
-        *Result = MakeShared<TFunction<void()>>([&]()
-        {
-            return nullptr;
-        });
+            Gs2::Limit::Model::FCounterPtr Current;
+            if (!Gs2::Limit::Model::Cache::FCounterCache::TryGet(Cache, NamespaceName, UserId, LimitName, CounterName, TimeOffset, &Current) || !Current.IsValid()) return false;
+            return LimitVerifyCounterPredicate(Current, ExpectedId, UserId, LimitName, CounterName, VerifyType, RequestValue);
+        };
+        *Result = Gs2::Core::Domain::SpeculativeExecutor::FPreparedSpeculativeCommit::CreateGuarded(MakeShared<TFunction<void()>>([]() {}), Guard);
         return nullptr;
     }
 
@@ -198,11 +146,41 @@ namespace Gs2::Limit::Domain::SpeculativeExecutor
         return Gs2::Core::Util::New<FAsyncTask<FCommitTask>>(Domain, Service, AccessToken, Request);
     }
 
+    TSharedPtr<FAsyncTask<FVerifyCounterByUserIdSpeculativeExecutor::FCommitTask>> FVerifyCounterByUserIdSpeculativeExecutor::ExecuteInverse(
+        const Gs2::Core::Domain::FGs2Ptr& Domain,
+        const Gs2::Limit::Domain::FGs2LimitDomainPtr& Service,
+        const Gs2::Auth::Model::FAccessTokenPtr& AccessToken,
+        const Gs2::Limit::Request::FVerifyCounterByUserIdRequestPtr& Request
+    )
+    {
+        if (!Request.IsValid()) return nullptr;
+        auto Inverse = MakeShared<Gs2::Limit::Request::FVerifyCounterByUserIdRequest>(*Request);
+        if (!Inverse->GetVerifyType().IsSet()) return nullptr;
+        if (*Inverse->GetVerifyType() == TEXT("less")) Inverse->WithVerifyType(TOptional<FString>(TEXT("greaterEqual")));
+        else if (*Inverse->GetVerifyType() == TEXT("lessEqual")) Inverse->WithVerifyType(TOptional<FString>(TEXT("greater")));
+        else if (*Inverse->GetVerifyType() == TEXT("greater")) Inverse->WithVerifyType(TOptional<FString>(TEXT("lessEqual")));
+        else if (*Inverse->GetVerifyType() == TEXT("greaterEqual")) Inverse->WithVerifyType(TOptional<FString>(TEXT("less")));
+        else if (*Inverse->GetVerifyType() == TEXT("equal")) Inverse->WithVerifyType(TOptional<FString>(TEXT("notEqual")));
+        else if (*Inverse->GetVerifyType() == TEXT("notEqual")) Inverse->WithVerifyType(TOptional<FString>(TEXT("equal")));
+        else return nullptr;
+        return Execute(Domain, Service, AccessToken, Inverse);
+    }
+
     Gs2::Limit::Request::FVerifyCounterByUserIdRequestPtr FVerifyCounterByUserIdSpeculativeExecutor::Rate(
         const Gs2::Limit::Request::FVerifyCounterByUserIdRequestPtr& Request,
         const double Rate
     )
     {
+        if (!Request.IsValid() || !Request->GetMultiplyValueSpecifyingQuantity().Get(false))
+        {
+            return Request;
+        }
+        int32 Value = 0;
+        if (!Gs2::Core::Util::TryApplyServerRate(Request->GetCount().Get(0), Rate, Value))
+        {
+            return Request;
+        }
+        Request->WithCount(Value);
         return Request;
     }
 
@@ -211,6 +189,16 @@ namespace Gs2::Limit::Domain::SpeculativeExecutor
         TBigInt<1024, false> Rate
     )
     {
+        if (!Request.IsValid() || !Request->GetMultiplyValueSpecifyingQuantity().Get(false))
+        {
+            return Request;
+        }
+        int32 Value = 0;
+        if (!Gs2::Core::Util::TryApplyServerRate(Request->GetCount().Get(0), Rate, Value))
+        {
+            return Request;
+        }
+        Request->WithCount(Value);
         return Request;
     }
 }

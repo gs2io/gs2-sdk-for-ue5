@@ -272,7 +272,7 @@ namespace Gs2::UE5::Formation::Domain::Model
     Gs2::Core::Domain::CallbackID FEzFormGameSessionDomain::Subscribe(TFunction<void(Gs2::UE5::Formation::Model::FEzFormPtr)> Callback)
     {
         return Domain->Subscribe(
-            [&](Gs2::Formation::Model::FFormPtr Item)
+            [Callback](Gs2::Formation::Model::FFormPtr Item)
             {
                 Callback(Gs2::UE5::Formation::Model::FEzForm::FromModel(Item));
             }

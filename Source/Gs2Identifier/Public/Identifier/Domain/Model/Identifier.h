@@ -84,6 +84,8 @@ namespace Gs2::Identifier::Domain::Model
             const FIdentifierDomain& From
         );
 
+
+
         class GS2IDENTIFIER_API FGetTask final :
             public Gs2::Core::Util::TGs2Future<Gs2::Identifier::Model::FIdentifier>,
             public TSharedFromThis<FGetTask>
@@ -109,6 +111,8 @@ namespace Gs2::Identifier::Domain::Model
         TSharedPtr<FAsyncTask<FGetTask>> Get(
             Request::FGetIdentifierRequestPtr Request
         );
+
+
 
         class GS2IDENTIFIER_API FDeleteTask final :
             public Gs2::Core::Util::TGs2Future<Gs2::Identifier::Domain::Model::FIdentifierDomain>,
@@ -136,6 +140,8 @@ namespace Gs2::Identifier::Domain::Model
             Request::FDeleteIdentifierRequestPtr Request
         );
 
+
+
         class GS2IDENTIFIER_API FAttachGuardTask final :
             public Gs2::Core::Util::TGs2Future<TArray<TSharedPtr<Gs2::Identifier::Domain::Model::FIdentifierDomain>>>,
             public TSharedFromThis<FAttachGuardTask>
@@ -161,6 +167,8 @@ namespace Gs2::Identifier::Domain::Model
         TSharedPtr<FAsyncTask<FAttachGuardTask>> AttachGuard(
             Request::FAttachGuardRequestPtr Request
         );
+
+
 
         class GS2IDENTIFIER_API FDetachGuardTask final :
             public Gs2::Core::Util::TGs2Future<TArray<TSharedPtr<Gs2::Identifier::Domain::Model::FIdentifierDomain>>>,

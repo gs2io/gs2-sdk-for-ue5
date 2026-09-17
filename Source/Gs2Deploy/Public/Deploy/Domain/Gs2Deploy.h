@@ -78,6 +78,8 @@ namespace Gs2::Deploy::Domain
             const FGs2DeployDomain& From
         );
 
+
+
         class GS2DEPLOY_API FPreCreateStackTask final :
             public Gs2::Core::Util::TGs2Future<FGs2DeployDomain>,
             public TSharedFromThis<FPreCreateStackTask>
@@ -103,6 +105,8 @@ namespace Gs2::Deploy::Domain
         TSharedPtr<FAsyncTask<FPreCreateStackTask>> PreCreateStack(
             Request::FPreCreateStackRequestPtr Request
         );
+
+
 
         class GS2DEPLOY_API FCreateStackTask final :
             public Gs2::Core::Util::TGs2Future<Gs2::Deploy::Domain::Model::FStackDomain>,
@@ -130,6 +134,8 @@ namespace Gs2::Deploy::Domain
             Request::FCreateStackRequestPtr Request
         );
 
+
+
         class GS2DEPLOY_API FCreateStackFromGitHubTask final :
             public Gs2::Core::Util::TGs2Future<Gs2::Deploy::Domain::Model::FStackDomain>,
             public TSharedFromThis<FCreateStackFromGitHubTask>
@@ -156,6 +162,8 @@ namespace Gs2::Deploy::Domain
             Request::FCreateStackFromGitHubRequestPtr Request
         );
 
+
+
         class GS2DEPLOY_API FPreValidateTask final :
             public Gs2::Core::Util::TGs2Future<FGs2DeployDomain>,
             public TSharedFromThis<FPreValidateTask>
@@ -181,6 +189,8 @@ namespace Gs2::Deploy::Domain
         TSharedPtr<FAsyncTask<FPreValidateTask>> PreValidate(
             Request::FPreValidateRequestPtr Request
         );
+
+
 
         class GS2DEPLOY_API FValidateTask final :
             public Gs2::Core::Util::TGs2Future<FGs2DeployDomain>,
@@ -214,8 +224,33 @@ namespace Gs2::Deploy::Domain
 
         Gs2::Core::Domain::CallbackID SubscribeStacks(
             TFunction<void()> Callback
+
         );
 
+        class FCollectStacksTask;
+
+        Gs2::Core::Domain::CallbackID SubscribeStacks(
+            TFunction<void(TArray<Gs2::Deploy::Model::FStackPtr>)> Callback,const TOptional<FString> NamePrefix = TOptional<FString>()
+        );
+
+        void InvalidateStacks(const TOptional<FString> NamePrefix = TOptional<FString>());
+
+        class GS2DEPLOY_API FSubscribeStacksWithInitialCallTask final :
+            public Gs2::Core::Util::TGs2Future<Gs2::Core::Domain::CallbackID>,
+            public TSharedFromThis<FSubscribeStacksWithInitialCallTask>
+        {
+            const TSharedPtr<FGs2DeployDomain> Self;
+            const TFunction<void(TArray<Gs2::Deploy::Model::FStackPtr>)> Callback;
+        const TOptional<FString> QueryNamePrefix;
+        public:
+            FSubscribeStacksWithInitialCallTask(const TSharedPtr<FGs2DeployDomain>& Self, TFunction<void(TArray<Gs2::Deploy::Model::FStackPtr>)> Callback,const TOptional<FString> NamePrefix);
+            FSubscribeStacksWithInitialCallTask(const FSubscribeStacksWithInitialCallTask& From);
+            virtual Gs2::Core::Model::FGs2ErrorPtr Action(TSharedPtr<TSharedPtr<Gs2::Core::Domain::CallbackID>> Result) override;
+        };
+
+        TSharedPtr<FAsyncTask<FSubscribeStacksWithInitialCallTask>> SubscribeStacksWithInitialCall(
+            TFunction<void(TArray<Gs2::Deploy::Model::FStackPtr>)> Callback,const TOptional<FString> NamePrefix = TOptional<FString>()
+        );
         void UnsubscribeStacks(
             Gs2::Core::Domain::CallbackID CallbackID
         );
@@ -227,19 +262,22 @@ namespace Gs2::Deploy::Domain
         void UpdateCacheFromStampSheet(
             const FString Method,
             const FString Request,
-            const FString Result
+            const FString Result,
+            const TOptional<int32> TimeOffset = TOptional<int32>()
         );
 
         void UpdateCacheFromStampTask(
             const FString Method,
             const FString Request,
-            const FString Result
+            const FString Result,
+            const TOptional<int32> TimeOffset = TOptional<int32>()
         );
 
         void UpdateCacheFromJobResult(
             const FString Method,
             const Gs2::JobQueue::Model::FJobPtr Job,
-            const Gs2::JobQueue::Model::FJobResultBodyPtr Result
+            const Gs2::JobQueue::Model::FJobResultBodyPtr Result,
+            const TOptional<int32> TimeOffset = TOptional<int32>()
         );
 
         void HandleNotification(

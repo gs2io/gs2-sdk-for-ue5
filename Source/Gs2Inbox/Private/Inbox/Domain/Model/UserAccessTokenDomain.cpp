@@ -35,6 +35,8 @@
 #include "Inbox/Domain/Model/Received.h"
 #include "Inbox/Domain/Model/ReceivedAccessToken.h"
 #include "Inbox/Domain/SpeculativeExecutor/Transaction/BatchReadMessagesByUserIdSpeculativeExecutor.h"
+#include "Inbox/Model/Cache/Message.h"
+#include "Inbox/Model/Cache/Received.h"
 
 #include "Core/Domain/Gs2.h"
 #include "Core/Domain/Transaction/JobQueueJobDomainFactory.h"
@@ -98,6 +100,8 @@ namespace Gs2::Inbox::Domain::Model
             ->WithContextStack((!Request->GetContextStack().IsSet() || Request->GetContextStack()->IsEmpty()) ? Self->Gs2->DefaultContextStack : Request->GetContextStack())
             ->WithNamespaceName(Self->NamespaceName)
             ->WithAccessToken(Self->AccessToken->GetToken());
+        const auto CacheOwnerSnapshotUserId = Self->AccessToken.IsValid() ? Self->UserId() : TOptional<FString>();
+        const auto CacheOwnerSnapshotTimeOffset = Self->AccessToken.IsValid() ? Self->AccessToken->GetTimeOffset() : TOptional<int32>();
         const auto Future = Self->Client->ReceiveGlobalMessage(
             Request
         );
@@ -108,7 +112,36 @@ namespace Gs2::Inbox::Domain::Model
         }
         const auto ResultModel = Future->GetTask().Result();
         Future->EnsureCompletion();
+        if (ResultModel.IsValid() && ResultModel->GetItem().IsValid())
+        {
+            for (const auto& Item : *ResultModel->GetItem())
+            {
+                if (!Item.IsValid()) continue;
+                Gs2::Inbox::Model::Cache::FMessageCache::Put(
+                    Self->Gs2->Cache,
+                    Request->GetNamespaceName(), CacheOwnerSnapshotUserId, Item->GetName(),
+                    CacheOwnerSnapshotTimeOffset, Item
+                );
+            }
+        }
+        Self->Gs2->Cache->ClearListCache(
+            Gs2::Inbox::Model::FMessage::TypeName,
+            Gs2::Inbox::Model::Cache::FMessageCache::CreateCacheParentKey(
+                Request->GetNamespaceName(),
+                CacheOwnerSnapshotUserId,
+                CacheOwnerSnapshotTimeOffset
+            )
+        );
+        Gs2::Inbox::Model::Cache::FReceivedCache::Delete(
+            Self->Gs2->Cache,
+            Request->GetNamespaceName(),
+            CacheOwnerSnapshotUserId,
+            CacheOwnerSnapshotTimeOffset
+        );
+
         auto Domain = MakeShared<TArray<TSharedPtr<Gs2::Inbox::Domain::Model::FMessageAccessTokenDomain>>>();
+        if (ResultModel.IsValid() && ResultModel->GetItem().IsValid())
+        {
         for (auto i=0; i<ResultModel->GetItem()->Num(); i++)
         {
             Domain->Add(
@@ -120,21 +153,7 @@ namespace Gs2::Inbox::Domain::Model
                     (*ResultModel->GetItem())[i]->GetName()
                 )
             );
-            const auto ParentKey = Gs2::Inbox::Domain::Model::FUserDomain::CreateCacheParentKey(
-                Self->NamespaceName,
-                Self->UserId(),
-                "Message"
-            );
-            const auto Key = Gs2::Inbox::Domain::Model::FMessageDomain::CreateCacheKey(
-                (*ResultModel->GetItem())[i]->GetName()
-            );
-            Self->Gs2->Cache->Put(
-                Gs2::Inbox::Model::FMessage::TypeName,
-                ParentKey,
-                Key,
-                (*ResultModel->GetItem())[i],
-                (*ResultModel->GetItem())[i]->GetExpiresAt().IsSet() ? FDateTime::FromUnixTimestamp(*(*ResultModel->GetItem())[i]->GetExpiresAt()/1000) :  FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
-            );
+        }
         }
         *Result = Domain;
         return nullptr;
@@ -169,6 +188,8 @@ namespace Gs2::Inbox::Domain::Model
             ->WithContextStack((!Request->GetContextStack().IsSet() || Request->GetContextStack()->IsEmpty()) ? Self->Gs2->DefaultContextStack : Request->GetContextStack())
             ->WithNamespaceName(Self->NamespaceName)
             ->WithAccessToken(Self->AccessToken->GetToken());
+        const auto CacheOwnerSnapshotUserId = Self->AccessToken.IsValid() ? Self->UserId() : TOptional<FString>();
+        const auto CacheOwnerSnapshotTimeOffset = Self->AccessToken.IsValid() ? Self->AccessToken->GetTimeOffset() : TOptional<int32>();
         const auto Future = Self->Client->BatchReadMessages(
             Request
         );
@@ -179,6 +200,19 @@ namespace Gs2::Inbox::Domain::Model
         }
         const auto ResultModel = Future->GetTask().Result();
         Future->EnsureCompletion();
+        if (ResultModel.IsValid() && ResultModel->GetItems().IsValid())
+        {
+            for (const auto& Item : *ResultModel->GetItems())
+            {
+                if (!Item.IsValid()) continue;
+                Gs2::Inbox::Model::Cache::FMessageCache::Put(
+                    Self->Gs2->Cache,
+                    Request->GetNamespaceName(), CacheOwnerSnapshotUserId, Item->GetName(),
+                    CacheOwnerSnapshotTimeOffset, Item
+                );
+            }
+        }
+
         const auto Transaction = Gs2::Core::Domain::Internal::FTransactionDomainFactory::ToTransaction(
             Self->Gs2,
             Self->AccessToken,
@@ -221,32 +255,125 @@ namespace Gs2::Inbox::Domain::Model
 
     Gs2::Core::Domain::CallbackID FUserAccessTokenDomain::SubscribeMessages(
     TFunction<void()> Callback
+
     )
     {
         return Gs2->Cache->ListSubscribe(
             Gs2::Inbox::Model::FMessage::TypeName,
-            Gs2::Inbox::Domain::Model::FUserDomain::CreateCacheParentKey(
+            Gs2::Inbox::Model::Cache::FMessageCache::CreateCacheParentKey(
                 NamespaceName,
-                UserId(),
-                "Message"
+                AccessToken.IsValid() ? AccessToken->GetUserId() : TOptional<FString>(),
+                AccessToken.IsValid() ? AccessToken->GetTimeOffset() : TOptional<int32>()
             ),
+            Callback,
             Callback
         );
     }
-
     void FUserAccessTokenDomain::UnsubscribeMessages(
         Gs2::Core::Domain::CallbackID CallbackID
     )
     {
         Gs2->Cache->ListUnsubscribe(
             Gs2::Inbox::Model::FMessage::TypeName,
-            Gs2::Inbox::Domain::Model::FUserDomain::CreateCacheParentKey(
+            Gs2::Inbox::Model::Cache::FMessageCache::CreateCacheParentKey(
                 NamespaceName,
-                UserId(),
-                "Message"
+                AccessToken.IsValid() ? AccessToken->GetUserId() : TOptional<FString>(),
+                AccessToken.IsValid() ? AccessToken->GetTimeOffset() : TOptional<int32>()
             ),
             CallbackID
         );
+    }
+    class FUserAccessTokenDomain::FCollectMessagesTask : public Gs2::Core::Util::TGs2Future<TArray<Gs2::Inbox::Model::FMessagePtr>>, public TSharedFromThis<FCollectMessagesTask>
+    {
+        const TSharedPtr<FUserAccessTokenDomain> Self;
+        const TFunction<void(TArray<Gs2::Inbox::Model::FMessagePtr>)> OnCollected;
+    const TOptional<bool> QueryIsRead;
+    public:
+        explicit FCollectMessagesTask(const TSharedPtr<FUserAccessTokenDomain>& Self, TFunction<void(TArray<Gs2::Inbox::Model::FMessagePtr>)> OnCollected,const TOptional<bool> IsRead) : Self(Self), OnCollected(OnCollected), QueryIsRead(IsRead) {}
+        FCollectMessagesTask(const FCollectMessagesTask& From) : TGs2Future(From), Self(From.Self), OnCollected(From.OnCollected), QueryIsRead(From.QueryIsRead) {}
+        virtual Gs2::Core::Model::FGs2ErrorPtr Action(TSharedPtr<TSharedPtr<TArray<Gs2::Inbox::Model::FMessagePtr>>> Result) override
+        {
+            TArray<Gs2::Inbox::Model::FMessagePtr> Items;
+            auto Iterator = Self->Messages(QueryIsRead)->begin();
+            while (Iterator.HasNext())
+            {
+                if (Iterator.IsError()) return Iterator.Error();
+                if (Iterator.IsCurrentValid()) Items.Add(Iterator.Current());
+                ++Iterator;
+            }
+            if (Iterator.IsError()) return Iterator.Error();
+            *Result = MakeShared<TArray<Gs2::Inbox::Model::FMessagePtr>>(Items);
+            if (OnCollected) OnCollected(Items);
+            return nullptr;
+        }
+    };
+
+    Gs2::Core::Domain::CallbackID FUserAccessTokenDomain::SubscribeMessages(
+        TFunction<void(TArray<Gs2::Inbox::Model::FMessagePtr>)> Callback,const TOptional<bool> IsRead
+    )
+    {
+        const TWeakPtr<Gs2::Core::Domain::FGs2> WeakGs2 = this->Gs2;
+        const TWeakPtr<Inbox::Domain::FGs2InboxDomain> WeakService = this->Service;
+        const auto SourceToken = this->AccessToken;
+        const TOptional<FString> RegisteredUserId = SourceToken.IsValid() ? TOptional<FString>(SourceToken->GetUserId()) : TOptional<FString>();
+        const int32 RegisteredTimeOffset = SourceToken.IsValid() ? SourceToken->GetTimeOffset().Get(0) : 0;
+        const auto QueryNamespaceName = NamespaceName;
+        const auto QueryIsRead = IsRead;
+        const auto Parent = Gs2::Inbox::Model::Cache::FMessageCache::CreateCacheParentKey(
+        NamespaceName,
+        AccessToken.IsValid() ? AccessToken->GetUserId() : TOptional<FString>(),
+        AccessToken.IsValid() ? AccessToken->GetTimeOffset() : TOptional<int32>()
+    );
+        return Gs2->Cache->ListSubscribeTyped(
+            Gs2::Inbox::Model::FMessage::TypeName,
+            Parent,
+            [Callback, WeakGs2](const TArray<FGs2ObjectPtr>& Values)
+            {
+                if (!WeakGs2.Pin().IsValid()) return;
+                TArray<Gs2::Inbox::Model::FMessagePtr> TypedValues;
+                for (const auto& Value : Values) if (Value.IsValid()) TypedValues.Add(StaticCastSharedPtr<Gs2::Inbox::Model::FMessage>(Value));
+                Callback(TypedValues);
+            },
+            [WeakGs2, WeakService, Callback, QueryNamespaceName, QueryIsRead, SourceToken, RegisteredUserId, RegisteredTimeOffset]()
+            {
+                const auto Owner = WeakGs2.Pin();
+                if (!Owner.IsValid() || !SourceToken.IsValid() || !RegisteredUserId.IsSet()) return;
+                const auto TokenSnapshot = MakeShared<Gs2::Auth::Model::FAccessToken>(*SourceToken);
+                if (TokenSnapshot->GetUserId() != RegisteredUserId || TokenSnapshot->GetTimeOffset().Get(0) != RegisteredTimeOffset) return;
+                const auto Domain = MakeShared<FUserAccessTokenDomain>(Owner, WeakService.Pin(), QueryNamespaceName, TokenSnapshot);
+                const auto Task = Gs2::Core::Util::New<FAsyncTask<FCollectMessagesTask>>(Domain, Callback, QueryIsRead);
+                Task->StartBackgroundTask();
+            }
+        );
+    }
+
+    void FUserAccessTokenDomain::InvalidateMessages(const TOptional<bool> IsRead)
+    {
+        Gs2->Cache->ClearListCache(
+            Gs2::Inbox::Model::FMessage::TypeName,
+            Gs2::Inbox::Model::Cache::FMessageCache::CreateCacheParentKey(
+        NamespaceName,
+        AccessToken.IsValid() ? AccessToken->GetUserId() : TOptional<FString>(),
+        AccessToken.IsValid() ? AccessToken->GetTimeOffset() : TOptional<int32>()
+    )
+        );
+    }
+
+    FUserAccessTokenDomain::FSubscribeMessagesWithInitialCallTask::FSubscribeMessagesWithInitialCallTask(const TSharedPtr<FUserAccessTokenDomain>& Self, TFunction<void(TArray<Gs2::Inbox::Model::FMessagePtr>)> Callback,const TOptional<bool> IsRead) : Self(Self), Callback(Callback), QueryIsRead(IsRead) {}
+    FUserAccessTokenDomain::FSubscribeMessagesWithInitialCallTask::FSubscribeMessagesWithInitialCallTask(const FSubscribeMessagesWithInitialCallTask& From) : TGs2Future(From), Self(From.Self), Callback(From.Callback), QueryIsRead(From.QueryIsRead) {}
+    Gs2::Core::Model::FGs2ErrorPtr FUserAccessTokenDomain::FSubscribeMessagesWithInitialCallTask::Action(TSharedPtr<TSharedPtr<Gs2::Core::Domain::CallbackID>> Result)
+    {
+        const auto Task = Gs2::Core::Util::New<FAsyncTask<FCollectMessagesTask>>(Self, TFunction<void(TArray<Gs2::Inbox::Model::FMessagePtr>)>(), QueryIsRead);
+        Task->StartSynchronousTask(); Task->EnsureCompletion();
+        if (Task->GetTask().IsError()) return Task->GetTask().Error();
+        const auto Values = Task->GetTask().Result();
+        const auto CallbackId = Self->SubscribeMessages(Callback, QueryIsRead);
+        Callback(*Values); *Result = MakeShared<Gs2::Core::Domain::CallbackID>(CallbackId);
+        return nullptr;
+    }
+    TSharedPtr<FAsyncTask<FUserAccessTokenDomain::FSubscribeMessagesWithInitialCallTask>> FUserAccessTokenDomain::SubscribeMessagesWithInitialCall(TFunction<void(TArray<Gs2::Inbox::Model::FMessagePtr>)> Callback,const TOptional<bool> IsRead)
+    {
+        return Gs2::Core::Util::New<FAsyncTask<FSubscribeMessagesWithInitialCallTask>>(this->AsShared(), Callback, IsRead);
     }
 
     TSharedPtr<Gs2::Inbox::Domain::Model::FMessageAccessTokenDomain> FUserAccessTokenDomain::Message(
@@ -299,4 +426,3 @@ namespace Gs2::Inbox::Domain::Model
 #elif defined(__clang__)
 #pragma clang diagnostic pop
 #endif
-

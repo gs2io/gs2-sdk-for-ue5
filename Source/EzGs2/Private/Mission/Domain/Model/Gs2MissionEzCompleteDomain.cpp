@@ -87,7 +87,7 @@ namespace Gs2::UE5::Mission::Domain::Model
     Gs2::Core::Domain::CallbackID FEzCompleteDomain::Subscribe(TFunction<void(Gs2::UE5::Mission::Model::FEzCompletePtr)> Callback)
     {
         return Domain->Subscribe(
-            [&](Gs2::Mission::Model::FCompletePtr Item)
+            [Callback](Gs2::Mission::Model::FCompletePtr Item)
             {
                 Callback(Gs2::UE5::Mission::Model::FEzComplete::FromModel(Item));
             }

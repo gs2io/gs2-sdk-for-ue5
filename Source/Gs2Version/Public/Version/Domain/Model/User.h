@@ -94,6 +94,8 @@ namespace Gs2::Version::Domain::Model
             const FUserDomain& From
         );
 
+
+
         class GS2VERSION_API FCalculateSignatureTask final :
             public Gs2::Core::Util::TGs2Future<Gs2::Version::Domain::Model::FUserDomain>,
             public TSharedFromThis<FCalculateSignatureTask>
@@ -126,8 +128,33 @@ namespace Gs2::Version::Domain::Model
 
         Gs2::Core::Domain::CallbackID SubscribeAcceptVersions(
             TFunction<void()> Callback
+
         );
 
+        class FCollectAcceptVersionsTask;
+
+        Gs2::Core::Domain::CallbackID SubscribeAcceptVersions(
+            TFunction<void(TArray<Gs2::Version::Model::FAcceptVersionPtr>)> Callback,const TOptional<FString> TimeOffsetToken = TOptional<FString>()
+        );
+
+        void InvalidateAcceptVersions(const TOptional<FString> TimeOffsetToken = TOptional<FString>());
+
+        class GS2VERSION_API FSubscribeAcceptVersionsWithInitialCallTask final :
+            public Gs2::Core::Util::TGs2Future<Gs2::Core::Domain::CallbackID>,
+            public TSharedFromThis<FSubscribeAcceptVersionsWithInitialCallTask>
+        {
+            const TSharedPtr<FUserDomain> Self;
+            const TFunction<void(TArray<Gs2::Version::Model::FAcceptVersionPtr>)> Callback;
+        const TOptional<FString> QueryTimeOffsetToken;
+        public:
+            FSubscribeAcceptVersionsWithInitialCallTask(const TSharedPtr<FUserDomain>& Self, TFunction<void(TArray<Gs2::Version::Model::FAcceptVersionPtr>)> Callback,const TOptional<FString> TimeOffsetToken);
+            FSubscribeAcceptVersionsWithInitialCallTask(const FSubscribeAcceptVersionsWithInitialCallTask& From);
+            virtual Gs2::Core::Model::FGs2ErrorPtr Action(TSharedPtr<TSharedPtr<Gs2::Core::Domain::CallbackID>> Result) override;
+        };
+
+        TSharedPtr<FAsyncTask<FSubscribeAcceptVersionsWithInitialCallTask>> SubscribeAcceptVersionsWithInitialCall(
+            TFunction<void(TArray<Gs2::Version::Model::FAcceptVersionPtr>)> Callback,const TOptional<FString> TimeOffsetToken = TOptional<FString>()
+        );
         void UnsubscribeAcceptVersions(
             Gs2::Core::Domain::CallbackID CallbackID
         );

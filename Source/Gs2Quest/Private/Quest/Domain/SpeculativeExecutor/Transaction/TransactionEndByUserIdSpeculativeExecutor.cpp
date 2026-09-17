@@ -26,7 +26,14 @@
 
 #include "Quest/Domain/SpeculativeExecutor/Transaction/EndByUserIdSpeculativeExecutor.h"
 
+#include "Auth/Model/AccessToken.h"
 #include "Core/Domain/Gs2.h"
+#include "Core/Model/ConsumeAction.h"
+#include "Core/Domain/SpeculativeExecutor/PreparedSpeculativeCommit.h"
+#include "Quest/Domain/SpeculativeExecutor/Consume/ConsumeActionSpeculativeExecutorIndex.h"
+#include "Quest/Request/DeleteProgressByUserIdRequest.h"
+#include "Serialization/JsonSerializer.h"
+#include "Serialization/JsonWriter.h"
 
 namespace Gs2::Quest::Domain::Transaction::SpeculativeExecutor
 {
@@ -58,12 +65,41 @@ namespace Gs2::Quest::Domain::Transaction::SpeculativeExecutor
     }
 
     Gs2::Core::Model::FGs2ErrorPtr FEndByUserIdSpeculativeExecutor::FCommitTask::Action(
-        TSharedPtr<TSharedPtr<TFunction<void()>>> Result)
+        TSharedPtr<TSharedPtr<Gs2::Core::Domain::SpeculativeExecutor::FPreparedSpeculativeCommit>> Result)
     {
-        UE_LOG(Gs2Log, Warning, TEXT("Speculative execution not supported on this action: %s"), ToCStr(FEndByUserIdSpeculativeExecutor::Action()))
+        *Result = nullptr;
+        Gs2::Auth::Model::FAccessTokenPtr PreparedToken = nullptr;
+        if (AccessToken.IsValid()) PreparedToken = MakeShared<Gs2::Auth::Model::FAccessToken>(*AccessToken);
+        Gs2::Quest::Request::FEndByUserIdRequestPtr PreparedRequest = nullptr;
+        if (Request.IsValid())
+        {
+            PreparedRequest = Gs2::Quest::Request::FEndByUserIdRequest::FromJson(Request->ToJson());
+        }
+        if (!Domain.IsValid() || !Domain->RestSession.IsValid() || !PreparedToken.IsValid() || !PreparedRequest.IsValid() ||
+            !PreparedToken->GetUserId().IsSet() || PreparedToken->GetUserId().Get(FString()).IsEmpty()) return nullptr;
+        if (PreparedRequest->GetUserId().IsSet() && PreparedRequest->GetUserId().Get(FString()) == TEXT("#{userId}"))
+        {
+            PreparedRequest->WithUserId(PreparedToken->GetUserId());
+        }
+        if (!PreparedRequest->GetUserId().IsSet() ||
+            PreparedRequest->GetUserId().Get(FString()) != PreparedToken->GetUserId().Get(FString())) return nullptr;
 
-        *Result = MakeShared<TFunction<void()>>([]{});
-
+        const Gs2::Quest::Request::FDeleteProgressByUserIdRequestPtr ChildRequest =
+            MakeShared<Gs2::Quest::Request::FDeleteProgressByUserIdRequest>()
+                ->WithNamespaceName(PreparedRequest->GetNamespaceName())
+                ->WithUserId(PreparedToken->GetUserId());
+        FString ChildRequestBody;
+        const TSharedRef<TJsonWriter<TCHAR>> Writer = TJsonWriterFactory<TCHAR>::Create(&ChildRequestBody);
+        FJsonSerializer::Serialize(ChildRequest->ToJson().ToSharedRef(), Writer);
+        const Gs2::Core::Model::FConsumeActionPtr ChildAction =
+            MakeShared<Gs2::Core::Model::FConsumeAction>()
+                ->WithAction(TOptional<FString>(TEXT("Gs2Quest:DeleteProgressByUserId")))
+                ->WithRequest(TOptional<FString>(ChildRequestBody));
+        const auto Future = Gs2::Quest::Domain::SpeculativeExecutor::FConsumeActionSpeculativeExecutorIndex::Execute(
+            Domain, Service, PreparedToken, ChildAction, TBigInt<1024, false>(static_cast<int64>(1)));
+        Future->StartSynchronousTask();
+        if (Future->GetTask().IsError()) return Future->GetTask().Error();
+        *Result = Future->GetTask().Result();
         return nullptr;
     }
 

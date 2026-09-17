@@ -33,6 +33,8 @@
 #include "News/Domain/Model/User.h"
 #include "News/Domain/Model/UserAccessToken.h"
 #include "News/Domain/Model/SetCookieRequestEntryAccessToken.h"
+#include "News/Model/Cache/News.h"
+#include "News/Model/Cache/SetCookieRequestEntry.h"
 
 #include "Core/Domain/Gs2.h"
 #include "Core/Domain/Transaction/JobQueueJobDomainFactory.h"
@@ -54,10 +56,10 @@ namespace Gs2::News::Domain::Model
         Client(MakeShared<Gs2::News::FGs2NewsRestClient>(Gs2->RestSession)),
         NamespaceName(NamespaceName),
         AccessToken(AccessToken),
-        ParentKey(Gs2::News::Domain::Model::FUserDomain::CreateCacheParentKey(
+        ParentKey(Gs2::News::Model::Cache::FNewsCache::CreateCacheParentKey(
             NamespaceName,
             UserId(),
-            "News"
+            AccessToken.IsValid() ? AccessToken->GetTimeOffset() : TOptional<int32>()
         ))
     {
     }
@@ -97,6 +99,8 @@ namespace Gs2::News::Domain::Model
             ->WithContextStack((!Request->GetContextStack().IsSet() || Request->GetContextStack()->IsEmpty()) ? Self->Gs2->DefaultContextStack : Request->GetContextStack())
             ->WithNamespaceName(Self->NamespaceName)
             ->WithAccessToken(Self->AccessToken->GetToken());
+        const auto CacheOwnerSnapshotUserId = Self->AccessToken.IsValid() ? Self->UserId() : TOptional<FString>();
+        const auto CacheOwnerSnapshotTimeOffset = Self->AccessToken.IsValid() ? Self->AccessToken->GetTimeOffset() : TOptional<int32>();
         const auto Future = Self->Client->WantGrant(
             Request
         );
@@ -107,7 +111,22 @@ namespace Gs2::News::Domain::Model
         }
         const auto ResultModel = Future->GetTask().Result();
         Future->EnsureCompletion();
+        if (ResultModel.IsValid() && ResultModel->GetItems().IsValid())
+        {
+            for (const auto& Item : *ResultModel->GetItems())
+            {
+                if (!Item.IsValid()) continue;
+                Gs2::News::Model::Cache::FSetCookieRequestEntryCache::Put(
+                    Self->Gs2->Cache,
+                    Request->GetNamespaceName(), CacheOwnerSnapshotUserId, Item->GetKey(), Item->GetValue(),
+                    CacheOwnerSnapshotTimeOffset, Item
+                );
+            }
+        }
+
         auto Domain = MakeShared<TArray<TSharedPtr<Gs2::News::Domain::Model::FSetCookieRequestEntryAccessTokenDomain>>>();
+        if (ResultModel.IsValid() && ResultModel->GetItems().IsValid())
+        {
         for (auto i=0; i<ResultModel->GetItems()->Num(); i++)
         {
             Domain->Add(
@@ -120,22 +139,7 @@ namespace Gs2::News::Domain::Model
                     (*ResultModel->GetItems())[i]->GetValue()
                 )
             );
-            const auto ParentKey = Gs2::News::Domain::Model::FUserDomain::CreateCacheParentKey(
-                Self->NamespaceName,
-                Self->UserId(),
-                "SetCookieRequestEntry"
-            );
-            const auto Key = Gs2::News::Domain::Model::FSetCookieRequestEntryDomain::CreateCacheKey(
-                (*ResultModel->GetItems())[i]->GetKey(),
-                (*ResultModel->GetItems())[i]->GetValue()
-            );
-            Self->Gs2->Cache->Put(
-                Gs2::News::Model::FSetCookieRequestEntry::TypeName,
-                ParentKey,
-                Key,
-                (*ResultModel->GetItems())[i],
-                FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
-            );
+        }
         }
         if (ResultModel != nullptr)
         {
@@ -194,35 +198,124 @@ namespace Gs2::News::Domain::Model
         TSharedPtr<TSharedPtr<Gs2::News::Model::FNews>> Result
     )
     {
-        // ReSharper disable once CppLocalVariableMayBeConst
-        TSharedPtr<Gs2::News::Model::FNews> Value;
-        auto bCacheHit = Self->Gs2->Cache->TryGet<Gs2::News::Model::FNews>(
-            Self->ParentKey,
-            Gs2::News::Domain::Model::FNewsDomain::CreateCacheKey(
-            ),
-            &Value
+        const FString CacheKey = Gs2::News::Model::Cache::FNewsCache::CreateCacheKey(
         );
-        *Result = Value;
+        return Self->Gs2->Cache->ExecuteWithKeyLock(
+            Gs2::News::Model::FNews::TypeName,
+            Self->ParentKey,
+            CacheKey,
+            [this, Result, CacheKey]() -> Gs2::Core::Model::FGs2ErrorPtr
+            {
+                // ReSharper disable once CppLocalVariableMayBeConst
+                TSharedPtr<Gs2::News::Model::FNews> Value;
+                auto bCacheHit = Self->Gs2->Cache->TryGet<Gs2::News::Model::FNews>(
+                    Self->ParentKey,
+                    CacheKey,
+                    &Value
+                );
+                *Result = Value;
 
-        return nullptr;
+                return nullptr;
+            }
+        );
     }
 
     TSharedPtr<FAsyncTask<FNewsAccessTokenDomain::FModelTask>> FNewsAccessTokenDomain::Model() {
         return Gs2::Core::Util::New<FAsyncTask<FNewsAccessTokenDomain::FModelTask>>(this->AsShared());
     }
 
+
+    FNewsAccessTokenDomain::FSubscribeWithInitialCallTask::FSubscribeWithInitialCallTask(
+        const TSharedPtr<FNewsAccessTokenDomain> Self,
+        const TFunction<void(Gs2::News::Model::FNewsPtr)>& Callback
+    ): Self(Self), Callback(Callback)
+    {
+    }
+
+    FNewsAccessTokenDomain::FSubscribeWithInitialCallTask::FSubscribeWithInitialCallTask(
+        const FSubscribeWithInitialCallTask& From
+    ): TGs2Future(From), Self(From.Self), Callback(From.Callback)
+    {
+    }
+
+    Gs2::Core::Model::FGs2ErrorPtr FNewsAccessTokenDomain::FSubscribeWithInitialCallTask::Action(
+        TSharedPtr<TSharedPtr<Gs2::Core::Domain::CallbackID>> Result
+    )
+    {
+        const auto Future = Self->Model();
+        Future->StartSynchronousTask();
+        Future->EnsureCompletion();
+        if (Future->GetTask().IsError())
+        {
+            return Future->GetTask().Error();
+        }
+        const auto Item = Future->GetTask().Result();
+        const auto ID = Self->Subscribe(Callback);
+        Callback(Item);
+        *Result = MakeShared<Gs2::Core::Domain::CallbackID>(ID);
+        return nullptr;
+    }
+
+    TSharedPtr<FAsyncTask<FNewsAccessTokenDomain::FSubscribeWithInitialCallTask>> FNewsAccessTokenDomain::SubscribeWithInitialCall(
+        TFunction<void(Gs2::News::Model::FNewsPtr)> Callback
+    )
+    {
+        return Gs2::Core::Util::New<FAsyncTask<FNewsAccessTokenDomain::FSubscribeWithInitialCallTask>>(this->AsShared(), Callback);
+    }
+
+    void FNewsAccessTokenDomain::Invalidate()
+    {
+        Gs2::News::Model::Cache::FNewsCache::Delete(
+            Gs2->Cache,
+            NamespaceName,
+            AccessToken.IsValid() ? UserId() : TOptional<FString>(),
+            AccessToken.IsValid() ? AccessToken->GetTimeOffset() : TOptional<int32>()
+        );
+    }
+
     Gs2::Core::Domain::CallbackID FNewsAccessTokenDomain::Subscribe(
         TFunction<void(Gs2::News::Model::FNewsPtr)> Callback
     )
     {
+        const TWeakPtr<Gs2::Core::Domain::FGs2> WeakGs2 = Gs2;
+        const TWeakPtr<News::Domain::FGs2NewsDomain> WeakService = Service;
+        const FString RegisteredParentKey = ParentKey;
+        const TOptional<FString> QueryNamespaceName = NamespaceName;
+        const auto SourceToken = AccessToken;
+        const TOptional<FString> RegisteredUserId = SourceToken.IsValid()
+            ? TOptional<FString>(SourceToken->GetUserId())
+            : TOptional<FString>();
+        const int32 RegisteredTimeOffset = SourceToken.IsValid() ? SourceToken->GetTimeOffset().Get(0) : 0;
         return Gs2->Cache->Subscribe(
             Gs2::News::Model::FNews::TypeName,
             ParentKey,
-            Gs2::News::Domain::Model::FNewsDomain::CreateCacheKey(
+            Gs2::News::Model::Cache::FNewsCache::CreateCacheKey(
             ),
             [Callback](TSharedPtr<FGs2Object> obj)
             {
                 Callback(StaticCastSharedPtr<Gs2::News::Model::FNews>(obj));
+            },
+            [WeakGs2, WeakService, RegisteredParentKey, QueryNamespaceName, SourceToken, RegisteredUserId, RegisteredTimeOffset]()
+            {
+                const auto Owner = WeakGs2.Pin();
+                if (!Owner.IsValid() || !SourceToken.IsValid() || !RegisteredUserId.IsSet())
+                {
+                    return;
+                }
+                const auto TokenSnapshot = MakeShared<Gs2::Auth::Model::FAccessToken>(*SourceToken);
+                if (TokenSnapshot->GetUserId() != RegisteredUserId || TokenSnapshot->GetTimeOffset().Get(0) != RegisteredTimeOffset)
+                {
+                    return;
+                }
+                const auto Domain = MakeShared<FNewsAccessTokenDomain>(
+                    Owner,
+                    WeakService.Pin(),
+                    QueryNamespaceName,
+                    TokenSnapshot
+                );
+                Domain->ParentKey = RegisteredParentKey;
+                const auto Task = Domain->Model();
+                Task->StartBackgroundTask();
             }
         );
     }
@@ -234,7 +327,7 @@ namespace Gs2::News::Domain::Model
         Gs2->Cache->Unsubscribe(
             Gs2::News::Model::FNews::TypeName,
             ParentKey,
-            Gs2::News::Domain::Model::FNewsDomain::CreateCacheKey(
+            Gs2::News::Model::Cache::FNewsCache::CreateCacheKey(
             ),
             CallbackID
         );
@@ -246,4 +339,3 @@ namespace Gs2::News::Domain::Model
 #elif defined(__clang__)
 #pragma clang diagnostic pop
 #endif
-

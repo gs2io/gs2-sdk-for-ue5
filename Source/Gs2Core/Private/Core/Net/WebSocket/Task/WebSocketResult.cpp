@@ -54,7 +54,7 @@ namespace Gs2::Core::Net::WebSocket::Task
 
     bool FWebSocketResult::IsError() const
     {
-        return StatusCodeValue / 100 != 2;
+        return StatusCodeValue != 200;
     }
 
     uint16 FWebSocketResult::StatusCode() const
@@ -80,10 +80,13 @@ namespace Gs2::Core::Net::WebSocket::Task
 
         auto Type = Data->HasField(ANSI_TO_TCHAR("type")) ? Data->GetStringField(ANSI_TO_TCHAR("type")) : "";
         auto RequestId = Data->HasField(ANSI_TO_TCHAR("requestId")) ? Data->GetStringField(ANSI_TO_TCHAR("requestId")) : "";
-        int16 Status = Data->HasField(ANSI_TO_TCHAR("status")) ? static_cast<int16>(Data->GetIntegerField(ANSI_TO_TCHAR("status"))) : 200;
-        auto Body = Data->HasField(ANSI_TO_TCHAR("body")) ? Data->GetObjectField(ANSI_TO_TCHAR("body")) : nullptr;
+        int16 Status = Data->HasField(ANSI_TO_TCHAR("status")) ? static_cast<int16>(Data->GetIntegerField(ANSI_TO_TCHAR("status"))) : 0;
+        auto Body = Data->HasField(ANSI_TO_TCHAR("body")) &&
+            Data->HasTypedField<EJson::Object>(ANSI_TO_TCHAR("body"))
+            ? Data->GetObjectField(ANSI_TO_TCHAR("body"))
+            : nullptr;
 
-        if (Status / 100 == 2)
+        if (Status == 200)
         {
             return MakeShared<FWebSocketResult>(
                 RequestId,
@@ -91,14 +94,22 @@ namespace Gs2::Core::Net::WebSocket::Task
                 Body
             );
         }
-        const auto Message = Body->HasField(ANSI_TO_TCHAR("message")) ? Body->GetStringField(ANSI_TO_TCHAR("message")) : "";
+        const auto Message = Body != nullptr && Body->HasField(ANSI_TO_TCHAR("message")) && Body->HasTypedField<EJson::String>(ANSI_TO_TCHAR("message"))
+            ? Body->GetStringField(ANSI_TO_TCHAR("message"))
+            : "";
+        Gs2::Core::Model::FResultMetadataPtr Metadata;
+        if (Body != nullptr && Body->HasField(ANSI_TO_TCHAR("metadata")) &&
+            Body->HasTypedField<EJson::Object>(ANSI_TO_TCHAR("metadata")))
+        {
+            Metadata = Gs2::Core::Model::FResultMetadata::FromJson(Body->GetObjectField(ANSI_TO_TCHAR("metadata")));
+        }
         if (Message != "")
         {
             TArray<TSharedPtr<FJsonValue>> JsonRootObject;
             if (const TSharedRef<TJsonReader<>> JsonReader = TJsonReaderFactory<>::Create(Message);
                 FJsonSerializer::Deserialize(JsonReader, JsonRootObject))
             {
-                auto Error = Gs2::Core::Model::FGs2Error::FromJson(Status, JsonRootObject);
+                auto Error = Gs2::Core::Model::FGs2Error::FromJson(Status, JsonRootObject, Metadata);
                 return MakeShared<FWebSocketResult>(
                     RequestId,
                     Status,
@@ -106,18 +117,17 @@ namespace Gs2::Core::Net::WebSocket::Task
                 );
             }
         }
-        auto Detail = MakeShared<TArray<TSharedPtr<Gs2::Core::Model::FGs2ErrorDetail>>>();
-        Detail->Add(MakeShared<Gs2::Core::Model::FGs2ErrorDetail>(
-            "unknown",
-            Message,
-            ""
-        ));
+        auto Detail = MakeShared<FJsonObject>();
+        Detail->SetStringField(ANSI_TO_TCHAR("component"), ANSI_TO_TCHAR("unknown"));
+        Detail->SetStringField(ANSI_TO_TCHAR("message"), Message);
+        Detail->SetStringField(ANSI_TO_TCHAR("code"), ANSI_TO_TCHAR(""));
+        TArray<TSharedPtr<FJsonValue>> JsonRootObject;
+        JsonRootObject.Add(MakeShared<FJsonValueObject>(Detail));
+        const auto Error = Gs2::Core::Model::FGs2Error::FromJson(Status, JsonRootObject, Metadata);
         return MakeShared<FWebSocketResult>(
             RequestId,
             Status,
-            MakeShared<Gs2::Core::Model::FUnknownError>(
-                Detail
-            )
+            Error
         );
     }
 }

@@ -19,6 +19,7 @@
 #include "CoreMinimal.h"
 #include "Core/Gs2Object.h"
 #include "TransactionSetting.h"
+#include "TransactionSettingV2.h"
 #include "ScriptSetting.h"
 #include "LogSetting.h"
 
@@ -30,6 +31,7 @@ namespace Gs2::Grade::Model
         TOptional<FString> NameValue;
         TOptional<FString> DescriptionValue;
         TSharedPtr<FTransactionSetting> TransactionSettingValue;
+        TSharedPtr<FTransactionSettingV2> TransactionSettingV2Value;
         TSharedPtr<FScriptSetting> ChangeGradeScriptValue;
         TSharedPtr<FLogSetting> LogSettingValue;
         TOptional<int64> CreatedAtValue;
@@ -47,6 +49,7 @@ namespace Gs2::Grade::Model
         TSharedPtr<FNamespace> WithName(const TOptional<FString> Name);
         TSharedPtr<FNamespace> WithDescription(const TOptional<FString> Description);
         TSharedPtr<FNamespace> WithTransactionSetting(const TSharedPtr<FTransactionSetting> TransactionSetting);
+        TSharedPtr<FNamespace> WithTransactionSettingV2(const TSharedPtr<FTransactionSettingV2> TransactionSettingV2);
         TSharedPtr<FNamespace> WithChangeGradeScript(const TSharedPtr<FScriptSetting> ChangeGradeScript);
         TSharedPtr<FNamespace> WithLogSetting(const TSharedPtr<FLogSetting> LogSetting);
         TSharedPtr<FNamespace> WithCreatedAt(const TOptional<int64> CreatedAt);
@@ -57,6 +60,7 @@ namespace Gs2::Grade::Model
         TOptional<FString> GetName() const;
         TOptional<FString> GetDescription() const;
         TSharedPtr<FTransactionSetting> GetTransactionSetting() const;
+        TSharedPtr<FTransactionSettingV2> GetTransactionSettingV2() const;
         TSharedPtr<FScriptSetting> GetChangeGradeScript() const;
         TSharedPtr<FLogSetting> GetLogSetting() const;
         TOptional<int64> GetCreatedAt() const;

@@ -1,3 +1,4 @@
+
 /*
  * Copyright 2016 Game Server Services, Inc. or its affiliates. All Rights
  * Reserved.
@@ -30,6 +31,7 @@
 #include "Chat/Domain/Iterator/DescribeMessagesStartAt.h"
 #include "Chat/Domain/Model/Message.h"
 #include "Chat/Domain/Model/Room.h"
+#include "Chat/Model/Cache/Message.h"
 
 #include "Core/Domain/Gs2.h"
 
@@ -107,16 +109,15 @@ namespace Gs2::Chat::Domain::Iterator
 
         if (!RangeIteratorOpt || (!*RangeIteratorOpt && !bLast))
         {
-            const auto ListParentKey = Gs2::Chat::Domain::Model::FRoomDomain::CreateCacheParentKey(
+            const auto ListParentKey = Gs2::Chat::Model::Cache::FMessageCache::CreateCacheParentKey(
                 Self->NamespaceName,
-                TOptional<FString>("Singleton"),
+                Self->UserId,
                 Self->RoomName,
-                "Message"
+                TOptional<int32>()
             );
-
+                TSharedPtr<FGs2Object> UpdateContext;
             if (!RangeIteratorOpt)
             {
-                TSharedPtr<FGs2Object> UpdateContext;
                 Range = Self->Gs2->Cache->TryGetList<Gs2::Chat::Model::FMessage>(ListParentKey, &UpdateContext);
 
                 if (Range)
@@ -138,7 +139,7 @@ namespace Gs2::Chat::Domain::Iterator
                 }
             }
 
-            const auto Future = Self->Client->DescribeMessagesByUserId(
+            const auto Request =
                 MakeShared<Gs2::Chat::Request::FDescribeMessagesByUserIdRequest>()
                     ->WithContextStack(Self->Gs2->DefaultContextStack)
                     ->WithNamespaceName(Self->NamespaceName)
@@ -147,7 +148,8 @@ namespace Gs2::Chat::Domain::Iterator
                     ->WithUserId(Self->UserId)
                     ->WithStartAt(StartAt)
                     ->WithLimit(FetchSize)
-            );
+            ;
+            const auto Future = Self->Client->DescribeMessagesByUserId(Request);
             Future->StartSynchronousTask();
             if (Future->GetTask().IsError())
             {
@@ -161,18 +163,35 @@ namespace Gs2::Chat::Domain::Iterator
             }
             const auto R = Future->GetTask().Result();
             Future->EnsureCompletion();
-            Range = R->GetItems();
-            for (auto Item : *R->GetItems())
+            Range = R->GetItems().IsValid() ? R->GetItems() : MakeShared<TArray<Gs2::Chat::Model::FMessagePtr>>();
+            const auto ResultModel = R;
+
+
+            if (Range.IsValid())
             {
-                Self->Gs2->Cache->Put(
-                    Gs2::Chat::Model::FMessage::TypeName,
-                    ListParentKey,
-                    Gs2::Chat::Domain::Model::FMessageDomain::CreateCacheKey(
-                        Item->GetName()
-                    ),
-                    Item,
-                    FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
-                );
+                for (const auto& Item : *Range)
+                {
+                    if (!Item.IsValid()) continue;
+                    Gs2::Chat::Model::Cache::FMessageCache::Put(
+                        Self->Gs2->Cache,
+                        Request->GetNamespaceName(), Request->GetUserId(), Request->GetRoomName(), Item->GetName(),
+                        TOptional<int32>(), Item
+                    );
+                }
+            }
+            if (Range)
+            {
+                if (UpdateContext)
+                {
+                    auto UpdateContextValue = StaticCastSharedPtr<FDescribeMessagesStartAt>(UpdateContext)->Value;
+                    Range->RemoveAll([UpdateContextValue](const Gs2::Chat::Model::FMessagePtr& Message){ return *Message->GetCreatedAt() >= UpdateContextValue; });
+                    StartAt = UpdateContextValue;
+                    bLast = false;
+                }
+                else
+                {
+                    bLast = true;
+                }
             }
             RangeIteratorOpt = Range->CreateIterator();
             if (Range->Num() > 0) {

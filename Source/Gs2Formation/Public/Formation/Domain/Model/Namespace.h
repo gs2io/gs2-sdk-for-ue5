@@ -115,6 +115,8 @@ namespace Gs2::Formation::Domain::Model
             const FNamespaceDomain& From
         );
 
+
+
         class GS2FORMATION_API FGetStatusTask final :
             public Gs2::Core::Util::TGs2Future<Gs2::Formation::Domain::Model::FNamespaceDomain>,
             public TSharedFromThis<FGetStatusTask>
@@ -140,6 +142,8 @@ namespace Gs2::Formation::Domain::Model
         TSharedPtr<FAsyncTask<FGetStatusTask>> GetStatus(
             Request::FGetNamespaceStatusRequestPtr Request
         );
+
+
 
         class GS2FORMATION_API FGetTask final :
             public Gs2::Core::Util::TGs2Future<Gs2::Formation::Model::FNamespace>,
@@ -167,6 +171,8 @@ namespace Gs2::Formation::Domain::Model
             Request::FGetNamespaceRequestPtr Request
         );
 
+
+
         class GS2FORMATION_API FUpdateTask final :
             public Gs2::Core::Util::TGs2Future<Gs2::Formation::Domain::Model::FNamespaceDomain>,
             public TSharedFromThis<FUpdateTask>
@@ -192,6 +198,8 @@ namespace Gs2::Formation::Domain::Model
         TSharedPtr<FAsyncTask<FUpdateTask>> Update(
             Request::FUpdateNamespaceRequestPtr Request
         );
+
+
 
         class GS2FORMATION_API FDeleteTask final :
             public Gs2::Core::Util::TGs2Future<Gs2::Formation::Domain::Model::FNamespaceDomain>,
@@ -219,6 +227,8 @@ namespace Gs2::Formation::Domain::Model
             Request::FDeleteNamespaceRequestPtr Request
         );
 
+
+
         class GS2FORMATION_API FCreatePropertyFormModelMasterTask final :
             public Gs2::Core::Util::TGs2Future<Gs2::Formation::Domain::Model::FPropertyFormModelMasterDomain>,
             public TSharedFromThis<FCreatePropertyFormModelMasterTask>
@@ -245,6 +255,8 @@ namespace Gs2::Formation::Domain::Model
             Request::FCreatePropertyFormModelMasterRequestPtr Request
         );
 
+
+
         class GS2FORMATION_API FCreateFormModelMasterTask final :
             public Gs2::Core::Util::TGs2Future<Gs2::Formation::Domain::Model::FFormModelMasterDomain>,
             public TSharedFromThis<FCreateFormModelMasterTask>
@@ -270,6 +282,8 @@ namespace Gs2::Formation::Domain::Model
         TSharedPtr<FAsyncTask<FCreateFormModelMasterTask>> CreateFormModelMaster(
             Request::FCreateFormModelMasterRequestPtr Request
         );
+
+
 
         class GS2FORMATION_API FCreateMoldModelMasterTask final :
             public Gs2::Core::Util::TGs2Future<Gs2::Formation::Domain::Model::FMoldModelMasterDomain>,
@@ -305,8 +319,33 @@ namespace Gs2::Formation::Domain::Model
 
         Gs2::Core::Domain::CallbackID SubscribeMoldModels(
             TFunction<void()> Callback
+
         );
 
+        class FCollectMoldModelsTask;
+
+        Gs2::Core::Domain::CallbackID SubscribeMoldModels(
+            TFunction<void(TArray<Gs2::Formation::Model::FMoldModelPtr>)> Callback
+        );
+
+        void InvalidateMoldModels();
+
+        class GS2FORMATION_API FSubscribeMoldModelsWithInitialCallTask final :
+            public Gs2::Core::Util::TGs2Future<Gs2::Core::Domain::CallbackID>,
+            public TSharedFromThis<FSubscribeMoldModelsWithInitialCallTask>
+        {
+            const TSharedPtr<FNamespaceDomain> Self;
+            const TFunction<void(TArray<Gs2::Formation::Model::FMoldModelPtr>)> Callback;
+
+        public:
+            FSubscribeMoldModelsWithInitialCallTask(const TSharedPtr<FNamespaceDomain>& Self, TFunction<void(TArray<Gs2::Formation::Model::FMoldModelPtr>)> Callback);
+            FSubscribeMoldModelsWithInitialCallTask(const FSubscribeMoldModelsWithInitialCallTask& From);
+            virtual Gs2::Core::Model::FGs2ErrorPtr Action(TSharedPtr<TSharedPtr<Gs2::Core::Domain::CallbackID>> Result) override;
+        };
+
+        TSharedPtr<FAsyncTask<FSubscribeMoldModelsWithInitialCallTask>> SubscribeMoldModelsWithInitialCall(
+            TFunction<void(TArray<Gs2::Formation::Model::FMoldModelPtr>)> Callback
+        );
         void UnsubscribeMoldModels(
             Gs2::Core::Domain::CallbackID CallbackID
         );
@@ -320,8 +359,33 @@ namespace Gs2::Formation::Domain::Model
 
         Gs2::Core::Domain::CallbackID SubscribePropertyFormModels(
             TFunction<void()> Callback
+
         );
 
+        class FCollectPropertyFormModelsTask;
+
+        Gs2::Core::Domain::CallbackID SubscribePropertyFormModels(
+            TFunction<void(TArray<Gs2::Formation::Model::FPropertyFormModelPtr>)> Callback
+        );
+
+        void InvalidatePropertyFormModels();
+
+        class GS2FORMATION_API FSubscribePropertyFormModelsWithInitialCallTask final :
+            public Gs2::Core::Util::TGs2Future<Gs2::Core::Domain::CallbackID>,
+            public TSharedFromThis<FSubscribePropertyFormModelsWithInitialCallTask>
+        {
+            const TSharedPtr<FNamespaceDomain> Self;
+            const TFunction<void(TArray<Gs2::Formation::Model::FPropertyFormModelPtr>)> Callback;
+
+        public:
+            FSubscribePropertyFormModelsWithInitialCallTask(const TSharedPtr<FNamespaceDomain>& Self, TFunction<void(TArray<Gs2::Formation::Model::FPropertyFormModelPtr>)> Callback);
+            FSubscribePropertyFormModelsWithInitialCallTask(const FSubscribePropertyFormModelsWithInitialCallTask& From);
+            virtual Gs2::Core::Model::FGs2ErrorPtr Action(TSharedPtr<TSharedPtr<Gs2::Core::Domain::CallbackID>> Result) override;
+        };
+
+        TSharedPtr<FAsyncTask<FSubscribePropertyFormModelsWithInitialCallTask>> SubscribePropertyFormModelsWithInitialCall(
+            TFunction<void(TArray<Gs2::Formation::Model::FPropertyFormModelPtr>)> Callback
+        );
         void UnsubscribePropertyFormModels(
             Gs2::Core::Domain::CallbackID CallbackID
         );
@@ -344,8 +408,33 @@ namespace Gs2::Formation::Domain::Model
 
         Gs2::Core::Domain::CallbackID SubscribePropertyFormModelMasters(
             TFunction<void()> Callback
+
         );
 
+        class FCollectPropertyFormModelMastersTask;
+
+        Gs2::Core::Domain::CallbackID SubscribePropertyFormModelMasters(
+            TFunction<void(TArray<Gs2::Formation::Model::FPropertyFormModelMasterPtr>)> Callback,const TOptional<FString> NamePrefix = TOptional<FString>()
+        );
+
+        void InvalidatePropertyFormModelMasters(const TOptional<FString> NamePrefix = TOptional<FString>());
+
+        class GS2FORMATION_API FSubscribePropertyFormModelMastersWithInitialCallTask final :
+            public Gs2::Core::Util::TGs2Future<Gs2::Core::Domain::CallbackID>,
+            public TSharedFromThis<FSubscribePropertyFormModelMastersWithInitialCallTask>
+        {
+            const TSharedPtr<FNamespaceDomain> Self;
+            const TFunction<void(TArray<Gs2::Formation::Model::FPropertyFormModelMasterPtr>)> Callback;
+        const TOptional<FString> QueryNamePrefix;
+        public:
+            FSubscribePropertyFormModelMastersWithInitialCallTask(const TSharedPtr<FNamespaceDomain>& Self, TFunction<void(TArray<Gs2::Formation::Model::FPropertyFormModelMasterPtr>)> Callback,const TOptional<FString> NamePrefix);
+            FSubscribePropertyFormModelMastersWithInitialCallTask(const FSubscribePropertyFormModelMastersWithInitialCallTask& From);
+            virtual Gs2::Core::Model::FGs2ErrorPtr Action(TSharedPtr<TSharedPtr<Gs2::Core::Domain::CallbackID>> Result) override;
+        };
+
+        TSharedPtr<FAsyncTask<FSubscribePropertyFormModelMastersWithInitialCallTask>> SubscribePropertyFormModelMastersWithInitialCall(
+            TFunction<void(TArray<Gs2::Formation::Model::FPropertyFormModelMasterPtr>)> Callback,const TOptional<FString> NamePrefix = TOptional<FString>()
+        );
         void UnsubscribePropertyFormModelMasters(
             Gs2::Core::Domain::CallbackID CallbackID
         );
@@ -360,8 +449,33 @@ namespace Gs2::Formation::Domain::Model
 
         Gs2::Core::Domain::CallbackID SubscribeFormModelMasters(
             TFunction<void()> Callback
+
         );
 
+        class FCollectFormModelMastersTask;
+
+        Gs2::Core::Domain::CallbackID SubscribeFormModelMasters(
+            TFunction<void(TArray<Gs2::Formation::Model::FFormModelMasterPtr>)> Callback,const TOptional<FString> NamePrefix = TOptional<FString>()
+        );
+
+        void InvalidateFormModelMasters(const TOptional<FString> NamePrefix = TOptional<FString>());
+
+        class GS2FORMATION_API FSubscribeFormModelMastersWithInitialCallTask final :
+            public Gs2::Core::Util::TGs2Future<Gs2::Core::Domain::CallbackID>,
+            public TSharedFromThis<FSubscribeFormModelMastersWithInitialCallTask>
+        {
+            const TSharedPtr<FNamespaceDomain> Self;
+            const TFunction<void(TArray<Gs2::Formation::Model::FFormModelMasterPtr>)> Callback;
+        const TOptional<FString> QueryNamePrefix;
+        public:
+            FSubscribeFormModelMastersWithInitialCallTask(const TSharedPtr<FNamespaceDomain>& Self, TFunction<void(TArray<Gs2::Formation::Model::FFormModelMasterPtr>)> Callback,const TOptional<FString> NamePrefix);
+            FSubscribeFormModelMastersWithInitialCallTask(const FSubscribeFormModelMastersWithInitialCallTask& From);
+            virtual Gs2::Core::Model::FGs2ErrorPtr Action(TSharedPtr<TSharedPtr<Gs2::Core::Domain::CallbackID>> Result) override;
+        };
+
+        TSharedPtr<FAsyncTask<FSubscribeFormModelMastersWithInitialCallTask>> SubscribeFormModelMastersWithInitialCall(
+            TFunction<void(TArray<Gs2::Formation::Model::FFormModelMasterPtr>)> Callback,const TOptional<FString> NamePrefix = TOptional<FString>()
+        );
         void UnsubscribeFormModelMasters(
             Gs2::Core::Domain::CallbackID CallbackID
         );
@@ -376,8 +490,33 @@ namespace Gs2::Formation::Domain::Model
 
         Gs2::Core::Domain::CallbackID SubscribeMoldModelMasters(
             TFunction<void()> Callback
+
         );
 
+        class FCollectMoldModelMastersTask;
+
+        Gs2::Core::Domain::CallbackID SubscribeMoldModelMasters(
+            TFunction<void(TArray<Gs2::Formation::Model::FMoldModelMasterPtr>)> Callback,const TOptional<FString> NamePrefix = TOptional<FString>()
+        );
+
+        void InvalidateMoldModelMasters(const TOptional<FString> NamePrefix = TOptional<FString>());
+
+        class GS2FORMATION_API FSubscribeMoldModelMastersWithInitialCallTask final :
+            public Gs2::Core::Util::TGs2Future<Gs2::Core::Domain::CallbackID>,
+            public TSharedFromThis<FSubscribeMoldModelMastersWithInitialCallTask>
+        {
+            const TSharedPtr<FNamespaceDomain> Self;
+            const TFunction<void(TArray<Gs2::Formation::Model::FMoldModelMasterPtr>)> Callback;
+        const TOptional<FString> QueryNamePrefix;
+        public:
+            FSubscribeMoldModelMastersWithInitialCallTask(const TSharedPtr<FNamespaceDomain>& Self, TFunction<void(TArray<Gs2::Formation::Model::FMoldModelMasterPtr>)> Callback,const TOptional<FString> NamePrefix);
+            FSubscribeMoldModelMastersWithInitialCallTask(const FSubscribeMoldModelMastersWithInitialCallTask& From);
+            virtual Gs2::Core::Model::FGs2ErrorPtr Action(TSharedPtr<TSharedPtr<Gs2::Core::Domain::CallbackID>> Result) override;
+        };
+
+        TSharedPtr<FAsyncTask<FSubscribeMoldModelMastersWithInitialCallTask>> SubscribeMoldModelMastersWithInitialCall(
+            TFunction<void(TArray<Gs2::Formation::Model::FMoldModelMasterPtr>)> Callback,const TOptional<FString> NamePrefix = TOptional<FString>()
+        );
         void UnsubscribeMoldModelMasters(
             Gs2::Core::Domain::CallbackID CallbackID
         );
@@ -417,7 +556,34 @@ namespace Gs2::Formation::Domain::Model
 
         TSharedPtr<FAsyncTask<FModelTask>> Model();
 
+        void Invalidate();
+
         Gs2::Core::Domain::CallbackID Subscribe(
+            TFunction<void(Gs2::Formation::Model::FNamespacePtr)> Callback
+        );
+
+        class GS2FORMATION_API FSubscribeWithInitialCallTask final :
+            public Gs2::Core::Util::TGs2Future<Gs2::Core::Domain::CallbackID>,
+            public TSharedFromThis<FSubscribeWithInitialCallTask>
+        {
+            const TSharedPtr<FNamespaceDomain> Self;
+            const TFunction<void(Gs2::Formation::Model::FNamespacePtr)> Callback;
+        public:
+            FSubscribeWithInitialCallTask(
+                const TSharedPtr<FNamespaceDomain>& Self,
+                TFunction<void(Gs2::Formation::Model::FNamespacePtr)> Callback
+            );
+
+            FSubscribeWithInitialCallTask(
+                const FSubscribeWithInitialCallTask& From
+            );
+
+            virtual Gs2::Core::Model::FGs2ErrorPtr Action(
+                TSharedPtr<TSharedPtr<Gs2::Core::Domain::CallbackID>> Result
+            ) override;
+        };
+
+        TSharedPtr<FAsyncTask<FSubscribeWithInitialCallTask>> SubscribeWithInitialCall(
             TFunction<void(Gs2::Formation::Model::FNamespacePtr)> Callback
         );
 

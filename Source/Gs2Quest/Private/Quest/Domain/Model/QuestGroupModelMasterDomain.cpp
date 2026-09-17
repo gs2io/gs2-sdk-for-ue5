@@ -35,6 +35,8 @@
 #include "Quest/Domain/Model/QuestModel.h"
 #include "Quest/Domain/Model/User.h"
 #include "Quest/Domain/Model/UserAccessToken.h"
+#include "Quest/Model/Cache/QuestGroupModelMaster.h"
+#include "Quest/Model/Cache/QuestModelMaster.h"
 
 #include "Core/Domain/Gs2.h"
 #include "Core/Domain/Transaction/JobQueueJobDomainFactory.h"
@@ -108,6 +110,20 @@ namespace Gs2::Quest::Domain::Model
         }
         const auto ResultModel = Future->GetTask().Result();
         Future->EnsureCompletion();
+
+            if (ResultModel.IsValid() && ResultModel->GetItem() != nullptr)
+            {
+
+
+        Gs2::Quest::Model::Cache::FQuestGroupModelMasterCache::Put(
+            Self->Gs2->Cache,
+
+            Request->GetNamespaceName(),
+            Request->GetQuestGroupName(),
+            TOptional<int32>(),
+            ResultModel->GetItem()
+        );
+            }
         *Result = ResultModel->GetItem();
         return nullptr;
     }
@@ -150,19 +166,20 @@ namespace Gs2::Quest::Domain::Model
         }
         const auto ResultModel = Future->GetTask().Result();
         Future->EnsureCompletion();
-        if (ResultModel->GetItem() != nullptr)
-        {
-            const auto Key = Gs2::Quest::Domain::Model::FQuestGroupModelMasterDomain::CreateCacheKey(
-                ResultModel->GetItem()->GetName()
-            );
-            Self->Gs2->Cache->Put(
-                Gs2::Quest::Model::FQuestGroupModelMaster::TypeName,
-                Self->ParentKey,
-                Key,
-                ResultModel->GetItem(),
-                FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
-            );
-        }
+
+            if (ResultModel.IsValid() && ResultModel->GetItem() != nullptr)
+            {
+
+
+        Gs2::Quest::Model::Cache::FQuestGroupModelMasterCache::Put(
+            Self->Gs2->Cache,
+
+            Request->GetNamespaceName(),
+            Request->GetQuestGroupName(),
+            TOptional<int32>(),
+            ResultModel->GetItem()
+        );
+            }
         auto Domain = Self;
 
         *Result = Domain;
@@ -203,21 +220,25 @@ namespace Gs2::Quest::Domain::Model
         Future->StartSynchronousTask();
         if (Future->GetTask().IsError())
         {
-            return Future->GetTask().Error();
+            const auto Error = Future->GetTask().Error();
+            if (Error.IsValid() && Error->IsChildOf(Gs2::Core::Model::FNotFoundError::Class))
+            {
+                *Result = Self;
+                return nullptr;
+            }
+            return Error;
         }
         const auto ResultModel = Future->GetTask().Result();
         Future->EnsureCompletion();
-        if (ResultModel->GetItem() != nullptr)
-        {
-            const auto Key = Gs2::Quest::Domain::Model::FQuestGroupModelMasterDomain::CreateCacheKey(
-                ResultModel->GetItem()->GetName()
-            );
-            Self->Gs2->Cache->Delete(
-                Gs2::Quest::Model::FQuestGroupModelMaster::TypeName,
-                Self->ParentKey,
-                Key
-            );
-        }
+
+
+              Gs2::Quest::Model::Cache::FQuestGroupModelMasterCache::Delete(
+            Self->Gs2->Cache,
+
+            Request->GetNamespaceName(),
+            Request->GetQuestGroupName(),
+            TOptional<int32>()
+        );
         auto Domain = Self;
 
         *Result = Domain;
@@ -262,19 +283,26 @@ namespace Gs2::Quest::Domain::Model
         }
         const auto ResultModel = Future->GetTask().Result();
         Future->EnsureCompletion();
-        if (ResultModel->GetItem() != nullptr)
-        {
-            const auto Key = Gs2::Quest::Domain::Model::FQuestModelMasterDomain::CreateCacheKey(
-                ResultModel->GetItem()->GetName()
-            );
-            Self->Gs2->Cache->Put(
-                Gs2::Quest::Model::FQuestModelMaster::TypeName,
-                Self->ParentKey,
-                Key,
-                ResultModel->GetItem(),
-                FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
-            );
-        }
+
+            if (ResultModel.IsValid() && ResultModel->GetItem() != nullptr)
+            {
+
+        if (!ResultModel.IsValid() || !ResultModel->GetItem().IsValid())
+            {
+              const auto Details = MakeShared<TArray<TSharedPtr<Gs2::Core::Model::FGs2ErrorDetail>>>();
+                Details->Add(MakeShared<Gs2::Core::Model::FGs2ErrorDetail>(TEXT("result.item"), TEXT("result.item is invalid."), TEXT("invalid_response")));
+                return MakeShared<Gs2::Core::Model::FUnknownError>(Details);
+              }
+        Gs2::Quest::Model::Cache::FQuestModelMasterCache::Put(
+            Self->Gs2->Cache,
+
+            Request->GetNamespaceName(),
+            ResultModel->GetItem()->GetQuestGroupName(),
+            ResultModel->GetItem()->GetName(),
+            TOptional<int32>(),
+            ResultModel->GetItem()
+        );
+            }
         auto Domain = MakeShared<Gs2::Quest::Domain::Model::FQuestModelMasterDomain>(
             Self->Gs2,
             Self->Service,
@@ -308,32 +336,121 @@ namespace Gs2::Quest::Domain::Model
 
     Gs2::Core::Domain::CallbackID FQuestGroupModelMasterDomain::SubscribeQuestModelMasters(
     TFunction<void()> Callback
+
     )
     {
         return Gs2->Cache->ListSubscribe(
             Gs2::Quest::Model::FQuestModelMaster::TypeName,
-            Gs2::Quest::Domain::Model::FQuestGroupModelMasterDomain::CreateCacheParentKey(
+            Gs2::Quest::Model::Cache::FQuestModelMasterCache::CreateCacheParentKey(
                 NamespaceName,
                 QuestGroupName,
-                "QuestModelMaster"
+                TOptional<int32>()
             ),
+            Callback,
             Callback
         );
     }
-
     void FQuestGroupModelMasterDomain::UnsubscribeQuestModelMasters(
         Gs2::Core::Domain::CallbackID CallbackID
     )
     {
         Gs2->Cache->ListUnsubscribe(
             Gs2::Quest::Model::FQuestModelMaster::TypeName,
-            Gs2::Quest::Domain::Model::FQuestGroupModelMasterDomain::CreateCacheParentKey(
+            Gs2::Quest::Model::Cache::FQuestModelMasterCache::CreateCacheParentKey(
                 NamespaceName,
                 QuestGroupName,
-                "QuestModelMaster"
+                TOptional<int32>()
             ),
             CallbackID
         );
+    }
+    class FQuestGroupModelMasterDomain::FCollectQuestModelMastersTask : public Gs2::Core::Util::TGs2Future<TArray<Gs2::Quest::Model::FQuestModelMasterPtr>>, public TSharedFromThis<FCollectQuestModelMastersTask>
+    {
+        const TSharedPtr<FQuestGroupModelMasterDomain> Self;
+        const TFunction<void(TArray<Gs2::Quest::Model::FQuestModelMasterPtr>)> OnCollected;
+    const TOptional<FString> QueryNamePrefix;
+    public:
+        explicit FCollectQuestModelMastersTask(const TSharedPtr<FQuestGroupModelMasterDomain>& Self, TFunction<void(TArray<Gs2::Quest::Model::FQuestModelMasterPtr>)> OnCollected,const TOptional<FString> NamePrefix) : Self(Self), OnCollected(OnCollected), QueryNamePrefix(NamePrefix) {}
+        FCollectQuestModelMastersTask(const FCollectQuestModelMastersTask& From) : TGs2Future(From), Self(From.Self), OnCollected(From.OnCollected), QueryNamePrefix(From.QueryNamePrefix) {}
+        virtual Gs2::Core::Model::FGs2ErrorPtr Action(TSharedPtr<TSharedPtr<TArray<Gs2::Quest::Model::FQuestModelMasterPtr>>> Result) override
+        {
+            TArray<Gs2::Quest::Model::FQuestModelMasterPtr> Items;
+            auto Iterator = Self->QuestModelMasters(QueryNamePrefix)->begin();
+            while (Iterator.HasNext())
+            {
+                if (Iterator.IsError()) return Iterator.Error();
+                if (Iterator.IsCurrentValid()) Items.Add(Iterator.Current());
+                ++Iterator;
+            }
+            if (Iterator.IsError()) return Iterator.Error();
+            *Result = MakeShared<TArray<Gs2::Quest::Model::FQuestModelMasterPtr>>(Items);
+            if (OnCollected) OnCollected(Items);
+            return nullptr;
+        }
+    };
+
+    Gs2::Core::Domain::CallbackID FQuestGroupModelMasterDomain::SubscribeQuestModelMasters(
+        TFunction<void(TArray<Gs2::Quest::Model::FQuestModelMasterPtr>)> Callback,const TOptional<FString> NamePrefix
+    )
+    {
+        const TWeakPtr<Gs2::Core::Domain::FGs2> WeakGs2 = this->Gs2;
+        const TWeakPtr<Quest::Domain::FGs2QuestDomain> WeakService = this->Service;
+        const auto QueryNamespaceName = NamespaceName;
+        const auto QueryQuestGroupName = QuestGroupName;
+        const auto QueryNamePrefix = NamePrefix;
+        const auto Parent = Gs2::Quest::Model::Cache::FQuestModelMasterCache::CreateCacheParentKey(
+        NamespaceName,
+        QuestGroupName,
+        TOptional<int32>()
+    );
+        return Gs2->Cache->ListSubscribeTyped(
+            Gs2::Quest::Model::FQuestModelMaster::TypeName,
+            Parent,
+            [Callback, WeakGs2](const TArray<FGs2ObjectPtr>& Values)
+            {
+                if (!WeakGs2.Pin().IsValid()) return;
+                TArray<Gs2::Quest::Model::FQuestModelMasterPtr> TypedValues;
+                for (const auto& Value : Values) if (Value.IsValid()) TypedValues.Add(StaticCastSharedPtr<Gs2::Quest::Model::FQuestModelMaster>(Value));
+                Callback(TypedValues);
+            },
+            [WeakGs2, WeakService, Callback, QueryNamespaceName, QueryQuestGroupName, QueryNamePrefix]()
+            {
+                const auto Owner = WeakGs2.Pin();
+                if (!Owner.IsValid()) return;
+                const auto Domain = MakeShared<FQuestGroupModelMasterDomain>(Owner, WeakService.Pin(), QueryNamespaceName, QueryQuestGroupName);
+                const auto Task = Gs2::Core::Util::New<FAsyncTask<FCollectQuestModelMastersTask>>(Domain, Callback, QueryNamePrefix);
+                Task->StartBackgroundTask();
+            }
+        );
+    }
+
+    void FQuestGroupModelMasterDomain::InvalidateQuestModelMasters(const TOptional<FString> NamePrefix)
+    {
+        Gs2->Cache->ClearListCache(
+            Gs2::Quest::Model::FQuestModelMaster::TypeName,
+            Gs2::Quest::Model::Cache::FQuestModelMasterCache::CreateCacheParentKey(
+        NamespaceName,
+        QuestGroupName,
+        TOptional<int32>()
+    )
+        );
+    }
+
+    FQuestGroupModelMasterDomain::FSubscribeQuestModelMastersWithInitialCallTask::FSubscribeQuestModelMastersWithInitialCallTask(const TSharedPtr<FQuestGroupModelMasterDomain>& Self, TFunction<void(TArray<Gs2::Quest::Model::FQuestModelMasterPtr>)> Callback,const TOptional<FString> NamePrefix) : Self(Self), Callback(Callback), QueryNamePrefix(NamePrefix) {}
+    FQuestGroupModelMasterDomain::FSubscribeQuestModelMastersWithInitialCallTask::FSubscribeQuestModelMastersWithInitialCallTask(const FSubscribeQuestModelMastersWithInitialCallTask& From) : TGs2Future(From), Self(From.Self), Callback(From.Callback), QueryNamePrefix(From.QueryNamePrefix) {}
+    Gs2::Core::Model::FGs2ErrorPtr FQuestGroupModelMasterDomain::FSubscribeQuestModelMastersWithInitialCallTask::Action(TSharedPtr<TSharedPtr<Gs2::Core::Domain::CallbackID>> Result)
+    {
+        const auto Task = Gs2::Core::Util::New<FAsyncTask<FCollectQuestModelMastersTask>>(Self, TFunction<void(TArray<Gs2::Quest::Model::FQuestModelMasterPtr>)>(), QueryNamePrefix);
+        Task->StartSynchronousTask(); Task->EnsureCompletion();
+        if (Task->GetTask().IsError()) return Task->GetTask().Error();
+        const auto Values = Task->GetTask().Result();
+        const auto CallbackId = Self->SubscribeQuestModelMasters(Callback, QueryNamePrefix);
+        Callback(*Values); *Result = MakeShared<Gs2::Core::Domain::CallbackID>(CallbackId);
+        return nullptr;
+    }
+    TSharedPtr<FAsyncTask<FQuestGroupModelMasterDomain::FSubscribeQuestModelMastersWithInitialCallTask>> FQuestGroupModelMasterDomain::SubscribeQuestModelMastersWithInitialCall(TFunction<void(TArray<Gs2::Quest::Model::FQuestModelMasterPtr>)> Callback,const TOptional<FString> NamePrefix)
+    {
+        return Gs2::Core::Util::New<FAsyncTask<FSubscribeQuestModelMastersWithInitialCallTask>>(this->AsShared(), Callback, NamePrefix);
     }
 
     TSharedPtr<Gs2::Quest::Domain::Model::FQuestModelMasterDomain> FQuestGroupModelMasterDomain::QuestModelMaster(
@@ -387,71 +504,158 @@ namespace Gs2::Quest::Domain::Model
         TSharedPtr<TSharedPtr<Gs2::Quest::Model::FQuestGroupModelMaster>> Result
     )
     {
-        // ReSharper disable once CppLocalVariableMayBeConst
-        TSharedPtr<Gs2::Quest::Model::FQuestGroupModelMaster> Value;
-        auto bCacheHit = Self->Gs2->Cache->TryGet<Gs2::Quest::Model::FQuestGroupModelMaster>(
-            Self->ParentKey,
-            Gs2::Quest::Domain::Model::FQuestGroupModelMasterDomain::CreateCacheKey(
-                Self->QuestGroupName
-            ),
-            &Value
+        const auto CacheParentKey = Gs2::Quest::Model::Cache::FQuestGroupModelMasterCache::CreateCacheParentKey(
+
+            Self->NamespaceName,
+            TOptional<int32>()
         );
-        if (!bCacheHit) {
-            const auto Future = Self->Get(
-                MakeShared<Gs2::Quest::Request::FGetQuestGroupModelMasterRequest>()
-            );
-            Future->StartSynchronousTask();
-            if (Future->GetTask().IsError())
+        const auto CacheKey = Gs2::Quest::Model::Cache::FQuestGroupModelMasterCache::CreateCacheKey(
+
+            Self->QuestGroupName
+        );
+        return Self->Gs2->Cache->ExecuteWithKeyLock(
+            Gs2::Quest::Model::FQuestGroupModelMaster::TypeName,
+            CacheParentKey,
+            CacheKey,
+            [Self = Self, Result]() -> Gs2::Core::Model::FGs2ErrorPtr
             {
-                if (Future->GetTask().Error()->Type() != Gs2::Core::Model::FNotFoundError::TypeString)
-                {
-                    return Future->GetTask().Error();
-                }
+                Gs2::Quest::Model::FQuestGroupModelMasterPtr Value;
+                const auto CacheHit = Gs2::Quest::Model::Cache::FQuestGroupModelMasterCache::TryGet(
+                    Self->Gs2->Cache,
 
-                const auto Key = Gs2::Quest::Domain::Model::FQuestGroupModelMasterDomain::CreateCacheKey(
-                    Self->QuestGroupName
+                    Self->NamespaceName,
+                    Self->QuestGroupName,
+                    TOptional<int32>(),
+                    &Value
                 );
-                Self->Gs2->Cache->Put(
-                    Gs2::Quest::Model::FQuestGroupModelMaster::TypeName,
-                    Self->ParentKey,
-                    Key,
-                    nullptr,
-                    FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
-                );
-
-                if (Future->GetTask().Error()->Detail(0)->GetComponent() != "questGroupModelMaster")
+                if (CacheHit)
                 {
-                    return Future->GetTask().Error();
+                    *Result = Value;
+                    return nullptr;
                 }
-            }
-            else
-            {
-                Value = Future->GetTask().Result();
-            }
-            Future->EnsureCompletion();
-        }
-        *Result = Value;
+                const auto Error = Gs2::Quest::Model::Cache::FQuestGroupModelMasterCache::Fetch(
+                    Self->Gs2->Cache,
 
-        return nullptr;
+                    Self->NamespaceName,
+                    Self->QuestGroupName,
+                    TOptional<int32>(),
+                    [Self](Gs2::Quest::Model::FQuestGroupModelMasterPtr* OutItem) -> Gs2::Core::Model::FGs2ErrorPtr
+                    {
+                        const auto Future = Self->Get(
+                            MakeShared<Gs2::Quest::Request::FGetQuestGroupModelMasterRequest>()
+                        );
+                        Future->StartSynchronousTask();
+                        if (Future->GetTask().IsError()) return Future->GetTask().Error();
+                        *OutItem = Future->GetTask().Result();
+                        Future->EnsureCompletion();
+                        return nullptr;
+                    },
+                    &Value
+                );
+                if (Error.IsValid()) return Error;
+                *Result = Value;
+                return nullptr;
+            }
+        );
     }
 
     TSharedPtr<FAsyncTask<FQuestGroupModelMasterDomain::FModelTask>> FQuestGroupModelMasterDomain::Model() {
         return Gs2::Core::Util::New<FAsyncTask<FQuestGroupModelMasterDomain::FModelTask>>(this->AsShared());
     }
 
+    void FQuestGroupModelMasterDomain::Invalidate()
+    {
+        Gs2::Quest::Model::Cache::FQuestGroupModelMasterCache::Delete(
+            Gs2->Cache,
+
+            NamespaceName,
+            QuestGroupName,
+            TOptional<int32>()
+        );
+    }
+
+    FQuestGroupModelMasterDomain::FSubscribeWithInitialCallTask::FSubscribeWithInitialCallTask(
+        const TSharedPtr<FQuestGroupModelMasterDomain>& Self,
+        TFunction<void(Gs2::Quest::Model::FQuestGroupModelMasterPtr)> Callback
+    ):
+        Self(Self),
+        Callback(Callback)
+    {
+    }
+
+    FQuestGroupModelMasterDomain::FSubscribeWithInitialCallTask::FSubscribeWithInitialCallTask(
+        const FSubscribeWithInitialCallTask& From
+    ):
+        TGs2Future(From),
+        Self(From.Self),
+        Callback(From.Callback)
+    {
+    }
+
+    Gs2::Core::Model::FGs2ErrorPtr FQuestGroupModelMasterDomain::FSubscribeWithInitialCallTask::Action(
+        TSharedPtr<TSharedPtr<Gs2::Core::Domain::CallbackID>> Result
+    )
+    {
+        const auto Task = Self->Model();
+        Task->StartSynchronousTask();
+        Task->EnsureCompletion();
+        if (Task->GetTask().IsError()) return Task->GetTask().Error();
+        const auto Item = Task->GetTask().Result();
+        const auto CallbackId = Self->Subscribe(Callback);
+        Callback(Item);
+        *Result = MakeShared<Gs2::Core::Domain::CallbackID>(CallbackId);
+        return nullptr;
+    }
+
+    TSharedPtr<FAsyncTask<FQuestGroupModelMasterDomain::FSubscribeWithInitialCallTask>> FQuestGroupModelMasterDomain::SubscribeWithInitialCall(
+        TFunction<void(Gs2::Quest::Model::FQuestGroupModelMasterPtr)> Callback
+    )
+    {
+        return Gs2::Core::Util::New<FAsyncTask<FSubscribeWithInitialCallTask>>(this->AsShared(), Callback);
+    }
+
     Gs2::Core::Domain::CallbackID FQuestGroupModelMasterDomain::Subscribe(
         TFunction<void(Gs2::Quest::Model::FQuestGroupModelMasterPtr)> Callback
     )
     {
+        const auto SubscriptionParentKey = Gs2::Quest::Model::Cache::FQuestGroupModelMasterCache::CreateCacheParentKey(
+
+            NamespaceName,
+            TOptional<int32>()
+        );
+        const auto SubscriptionCacheKey = Gs2::Quest::Model::Cache::FQuestGroupModelMasterCache::CreateCacheKey(
+
+            QuestGroupName
+        );
+        const TWeakPtr<Gs2::Core::Domain::FGs2> WeakGs2 = Gs2;
+        const TWeakPtr<Quest::Domain::FGs2QuestDomain> WeakService = Service;
+        const FString RegisteredParentKey = SubscriptionParentKey;
+        const TOptional<FString> QueryNamespaceName = NamespaceName;
+        const TOptional<FString> QueryQuestGroupName = QuestGroupName;
         return Gs2->Cache->Subscribe(
             Gs2::Quest::Model::FQuestGroupModelMaster::TypeName,
-            ParentKey,
-            Gs2::Quest::Domain::Model::FQuestGroupModelMasterDomain::CreateCacheKey(
-                QuestGroupName
-            ),
+            SubscriptionParentKey,
+            SubscriptionCacheKey,
             [Callback](TSharedPtr<FGs2Object> obj)
             {
                 Callback(StaticCastSharedPtr<Gs2::Quest::Model::FQuestGroupModelMaster>(obj));
+            },
+            [WeakGs2, WeakService, RegisteredParentKey, QueryNamespaceName, QueryQuestGroupName]()
+            {
+                const auto Owner = WeakGs2.Pin();
+                if (!Owner.IsValid())
+                {
+                    return;
+                }
+                const auto Domain = MakeShared<FQuestGroupModelMasterDomain>(
+                    Owner,
+                    WeakService.Pin(),
+                    QueryNamespaceName,
+                    QueryQuestGroupName
+                );
+                Domain->ParentKey = RegisteredParentKey;
+                const auto Task = Domain->Model();
+                Task->StartBackgroundTask();
             }
         );
     }
@@ -460,12 +664,19 @@ namespace Gs2::Quest::Domain::Model
         Gs2::Core::Domain::CallbackID CallbackID
     )
     {
+        const auto SubscriptionParentKey = Gs2::Quest::Model::Cache::FQuestGroupModelMasterCache::CreateCacheParentKey(
+
+            NamespaceName,
+            TOptional<int32>()
+        );
+        const auto SubscriptionCacheKey = Gs2::Quest::Model::Cache::FQuestGroupModelMasterCache::CreateCacheKey(
+
+            QuestGroupName
+        );
         Gs2->Cache->Unsubscribe(
             Gs2::Quest::Model::FQuestGroupModelMaster::TypeName,
-            ParentKey,
-            Gs2::Quest::Domain::Model::FQuestGroupModelMasterDomain::CreateCacheKey(
-                QuestGroupName
-            ),
+            SubscriptionParentKey,
+            SubscriptionCacheKey,
             CallbackID
         );
     }
@@ -476,4 +687,3 @@ namespace Gs2::Quest::Domain::Model
 #elif defined(__clang__)
 #pragma clang diagnostic pop
 #endif
-

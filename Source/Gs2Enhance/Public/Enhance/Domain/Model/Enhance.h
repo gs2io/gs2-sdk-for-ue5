@@ -91,6 +91,8 @@ namespace Gs2::Enhance::Domain::Model
             const FEnhanceDomain& From
         );
 
+
+
         class GS2ENHANCE_API FDirectTask final :
             public Gs2::Core::Util::TGs2Future<Gs2::Core::Domain::FTransactionDomain>,
             public TSharedFromThis<FDirectTask>
@@ -116,6 +118,8 @@ namespace Gs2::Enhance::Domain::Model
         TSharedPtr<FAsyncTask<FDirectTask>> Direct(
             Request::FDirectEnhanceByUserIdRequestPtr Request
         );
+
+
 
         class GS2ENHANCE_API FUnleashTask final :
             public Gs2::Core::Util::TGs2Future<Gs2::Core::Domain::FTransactionDomain>,

@@ -27,7 +27,9 @@
 #include "Showcase/Domain/SpeculativeExecutor/Acquire/DecrementPurchaseCountByUserIdSpeculativeExecutor.h"
 
 #include "Core/Domain/Gs2.h"
+#include "Core/Domain/SpeculativeExecutor/PreparedSpeculativeCommit.h"
 #include "Showcase/Domain/Gs2Showcase.h"
+#include "Showcase/Model/Cache/RandomDisplayItem.h"
 
 namespace Gs2::Showcase::Domain::SpeculativeExecutor
 {
@@ -82,60 +84,32 @@ namespace Gs2::Showcase::Domain::SpeculativeExecutor
     }
 
     Gs2::Core::Model::FGs2ErrorPtr FDecrementPurchaseCountByUserIdSpeculativeExecutor::FCommitTask::Action(
-        TSharedPtr<TSharedPtr<TFunction<void()>>> Result
+        TSharedPtr<TSharedPtr<Gs2::Core::Domain::SpeculativeExecutor::FPreparedSpeculativeCommit>> Result
     )
     {
-        const auto Future = Domain->Showcase->Namespace(
-                Request->GetNamespaceName().IsSet() ? *Request->GetNamespaceName() : FString("")
-            )->AccessToken(
-                AccessToken
-            )->RandomShowcase(
-                Request->GetShowcaseName().IsSet() ? *Request->GetShowcaseName() : FString("")
-            )->RandomDisplayItem(
-                Request->GetDisplayItemName().IsSet() ? *Request->GetDisplayItemName() : FString("")
-            )->Model();
-        Future->StartSynchronousTask();
-        if (Future->GetTask().IsError())
+        *Result = nullptr;
+        const auto Prepared = Request.IsValid() ? Gs2::Showcase::Request::FDecrementPurchaseCountByUserIdRequest::FromJson(Request->ToJson()) : nullptr;
+        if (Prepared.IsValid() && Prepared->GetUserId().IsSet() && *Prepared->GetUserId() == TEXT("#{userId}")) Prepared->WithUserId(AccessToken.IsValid() ? AccessToken->GetUserId() : TOptional<FString>());
+        Gs2::Auth::Model::FAccessTokenPtr PreparedAccessToken;
+        if (AccessToken.IsValid()) PreparedAccessToken = MakeShared<Gs2::Auth::Model::FAccessToken>(*AccessToken);
+        if (!Domain.IsValid() || !Domain->RestSession.IsValid() || !Prepared.IsValid() || !PreparedAccessToken.IsValid() || !PreparedAccessToken->GetUserId().IsSet() || Prepared->GetUserId() != PreparedAccessToken->GetUserId()) return nullptr;
+        const auto UserId = *PreparedAccessToken->GetUserId();
+        const auto TimeOffset = PreparedAccessToken->GetTimeOffset();
+        Gs2::Showcase::Model::FRandomDisplayItemPtr PreparedItem;
+        if (!Gs2::Showcase::Model::Cache::FRandomDisplayItemCache::TryGet(Domain->Cache, Prepared->GetNamespaceName(), UserId, Prepared->GetShowcaseName(), Prepared->GetDisplayItemName(), TimeOffset, &PreparedItem) || !PreparedItem.IsValid() || PreparedItem->GetShowcaseName() != Prepared->GetShowcaseName() || PreparedItem->GetName() != Prepared->GetDisplayItemName()) return nullptr;
+        *Result = Gs2::Core::Domain::SpeculativeExecutor::FPreparedSpeculativeCommit::WrapLegacy(MakeShared<TFunction<void()>>([DomainCopy = Domain, Prepared, UserId, TimeOffset, PreparedItem]()
         {
-            return Future->GetTask().Error();
-        }
-        auto Item = Future->GetTask().Result();
-
-        if (!Item.IsValid())
-        {
-            *Result = MakeShared<TFunction<void()>>([&]()
-            {
-                return nullptr;
-            });
-            return nullptr;
-        }
-        auto Err = Transform(Domain, AccessToken, Request, Item);
-        if (Err != nullptr)
-        {
-            return Err;
-        }
-
-        const auto ParentKey = Gs2::Showcase::Domain::Model::FRandomShowcaseDomain::CreateCacheParentKey(
-            Request->GetNamespaceName(),
-            AccessToken->GetUserId(),
-            Request->GetShowcaseName(),
-            "RandomDisplayItem"
-        );
-        const auto Key = Gs2::Showcase::Domain::Model::FRandomDisplayItemDomain::CreateCacheKey(
-            Request->GetDisplayItemName()
-        );
-        
-        *Result = MakeShared<TFunction<void()>>([&]()
-        {
-            Domain->Cache->Put(
-                Showcase::Model::FRandomDisplayItem::TypeName,
-                ParentKey,
-                Key,
-                Item,
-                FDateTime::Now() + FTimespan::FromSeconds(10)
-            );
-            return nullptr;
-        });
+            Gs2::Showcase::Model::FRandomDisplayItemPtr Live;
+            if (!Gs2::Showcase::Model::Cache::FRandomDisplayItemCache::TryGet(DomainCopy->Cache, Prepared->GetNamespaceName(), UserId, Prepared->GetShowcaseName(), Prepared->GetDisplayItemName(), TimeOffset, &Live) || !Live.IsValid() || Live != PreparedItem || Live->GetShowcaseName() != Prepared->GetShowcaseName() || Live->GetName() != Prepared->GetDisplayItemName()) return;
+            const int64 Count = Prepared->GetCount().Get(1);
+            if (!Live->GetCurrentPurchaseCount().IsSet()) return;
+            const int64 ChangedCount = static_cast<int64>(*Live->GetCurrentPurchaseCount()) - Count;
+            if (ChangedCount < 0 || ChangedCount > INT32_MAX || ChangedCount < INT32_MIN) return;
+            auto Changed = Gs2::Showcase::Model::FRandomDisplayItem::FromJson(Live->ToJson());
+            if (!Changed.IsValid()) return;
+            Changed->WithCurrentPurchaseCount(static_cast<int32>(ChangedCount));
+            Gs2::Showcase::Model::Cache::FRandomDisplayItemCache::Put(DomainCopy->Cache, Prepared->GetNamespaceName(), UserId, Prepared->GetShowcaseName(), Prepared->GetDisplayItemName(), TimeOffset, Changed);
+        }));
         return nullptr;
     }
 

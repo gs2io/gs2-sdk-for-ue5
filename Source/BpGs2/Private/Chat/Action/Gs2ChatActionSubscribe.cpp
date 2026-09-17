@@ -12,8 +12,6 @@
  * on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either
  * express or implied. See the License for the specific language governing
  * permissions and limitations under the License.
- *
- * deny overwrite
  */
 
 #include "Chat/Action/Gs2ChatActionSubscribe.h"
@@ -28,16 +26,18 @@ UGs2ChatSubscribeAsyncFunction::UGs2ChatSubscribeAsyncFunction(
 
 UGs2ChatSubscribeAsyncFunction* UGs2ChatSubscribeAsyncFunction::Subscribe(
     UObject* WorldContextObject,
-    FGs2ChatOwnSubscribe Subscribe
+    FGs2ChatOwnSubscribe SubscribeValue,
+    TArray<FGs2ChatNotificationType> NotificationTypes
 )
 {
     UGs2ChatSubscribeAsyncFunction* Action = NewObject<UGs2ChatSubscribeAsyncFunction>();
     Action->RegisterWithGameInstance(WorldContextObject);
-    if (Subscribe.Value == nullptr) {
+    if (SubscribeValue.Value == nullptr) {
         UE_LOG(BpGs2Log, Error, TEXT("[UGs2ChatSubscribeAsyncFunction::Subscribe] Subscribe parameter specification is missing."))
         return Action;
     }
-    Action->SubscribeValue = Subscribe;
+    Action->SubscribeValue = SubscribeValue;
+    Action->NotificationTypes = NotificationTypes;
     return Action;
 }
 
@@ -59,18 +59,16 @@ void UGs2ChatSubscribeAsyncFunction::Activate()
             return r;
         }()
     );
-    Future->GetTask().OnSuccessDelegate().BindLambda([&](const auto Result)
+    Future->GetTask().OnSuccessDelegate().BindLambda([&](auto Result)
     {
-  
         FGs2ChatOwnSubscribe ReturnSubscribe;
         ReturnSubscribe.Value = Result;
         const FGs2Error ReturnError;
         OnSuccess.Broadcast(ReturnSubscribe, ReturnError);
         SetReadyToDestroy();
     });
-    Future->GetTask().OnErrorDelegate().BindLambda([&](const auto Error)
+    Future->GetTask().OnErrorDelegate().BindLambda([&](auto Error)
     {
-  
         FGs2ChatOwnSubscribe ReturnSubscribe;
         FGs2Error ReturnError;
         ReturnError.Value = Error;

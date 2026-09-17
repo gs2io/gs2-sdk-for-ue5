@@ -91,6 +91,8 @@ namespace Gs2::Enchant::Domain::Model
             const FRarityParameterStatusAccessTokenDomain& From
         );
 
+
+
         class GS2ENCHANT_API FGetTask final :
             public Gs2::Core::Util::TGs2Future<Gs2::Enchant::Model::FRarityParameterStatus>,
             public TSharedFromThis<FGetTask>
@@ -116,6 +118,8 @@ namespace Gs2::Enchant::Domain::Model
         TSharedPtr<FAsyncTask<FGetTask>> Get(
             Request::FGetRarityParameterStatusRequestPtr Request
         );
+
+
 
         class GS2ENCHANT_API FVerifyTask final :
             public Gs2::Core::Util::TGs2Future<Gs2::Enchant::Domain::Model::FRarityParameterStatusAccessTokenDomain>,
@@ -178,7 +182,34 @@ namespace Gs2::Enchant::Domain::Model
 
         TSharedPtr<FAsyncTask<FModelTask>> Model();
 
+        void Invalidate();
+
         Gs2::Core::Domain::CallbackID Subscribe(
+            TFunction<void(Gs2::Enchant::Model::FRarityParameterStatusPtr)> Callback
+        );
+
+        class GS2ENCHANT_API FSubscribeWithInitialCallTask final :
+            public Gs2::Core::Util::TGs2Future<Gs2::Core::Domain::CallbackID>,
+            public TSharedFromThis<FSubscribeWithInitialCallTask>
+        {
+            const TSharedPtr<FRarityParameterStatusAccessTokenDomain> Self;
+            const TFunction<void(Gs2::Enchant::Model::FRarityParameterStatusPtr)> Callback;
+        public:
+            FSubscribeWithInitialCallTask(
+                const TSharedPtr<FRarityParameterStatusAccessTokenDomain>& Self,
+                TFunction<void(Gs2::Enchant::Model::FRarityParameterStatusPtr)> Callback
+            );
+
+            FSubscribeWithInitialCallTask(
+                const FSubscribeWithInitialCallTask& From
+            );
+
+            virtual Gs2::Core::Model::FGs2ErrorPtr Action(
+                TSharedPtr<TSharedPtr<Gs2::Core::Domain::CallbackID>> Result
+            ) override;
+        };
+
+        TSharedPtr<FAsyncTask<FSubscribeWithInitialCallTask>> SubscribeWithInitialCall(
             TFunction<void(Gs2::Enchant::Model::FRarityParameterStatusPtr)> Callback
         );
 

@@ -31,6 +31,7 @@
 #include "Limit/Domain/Model/LimitModel.h"
 #include "Limit/Domain/Model/User.h"
 #include "Limit/Domain/Model/UserAccessToken.h"
+#include "Limit/Model/Cache/LimitModelMaster.h"
 
 #include "Core/Domain/Gs2.h"
 #include "Core/Domain/Transaction/JobQueueJobDomainFactory.h"
@@ -104,6 +105,20 @@ namespace Gs2::Limit::Domain::Model
         }
         const auto ResultModel = Future->GetTask().Result();
         Future->EnsureCompletion();
+
+            if (ResultModel.IsValid() && ResultModel->GetItem() != nullptr)
+            {
+
+
+        Gs2::Limit::Model::Cache::FLimitModelMasterCache::Put(
+            Self->Gs2->Cache,
+
+            Request->GetNamespaceName(),
+            Request->GetLimitName(),
+            TOptional<int32>(),
+            ResultModel->GetItem()
+        );
+            }
         *Result = ResultModel->GetItem();
         return nullptr;
     }
@@ -146,19 +161,20 @@ namespace Gs2::Limit::Domain::Model
         }
         const auto ResultModel = Future->GetTask().Result();
         Future->EnsureCompletion();
-        if (ResultModel->GetItem() != nullptr)
-        {
-            const auto Key = Gs2::Limit::Domain::Model::FLimitModelMasterDomain::CreateCacheKey(
-                ResultModel->GetItem()->GetName()
-            );
-            Self->Gs2->Cache->Put(
-                Gs2::Limit::Model::FLimitModelMaster::TypeName,
-                Self->ParentKey,
-                Key,
-                ResultModel->GetItem(),
-                FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
-            );
-        }
+
+            if (ResultModel.IsValid() && ResultModel->GetItem() != nullptr)
+            {
+
+
+        Gs2::Limit::Model::Cache::FLimitModelMasterCache::Put(
+            Self->Gs2->Cache,
+
+            Request->GetNamespaceName(),
+            Request->GetLimitName(),
+            TOptional<int32>(),
+            ResultModel->GetItem()
+        );
+            }
         auto Domain = Self;
 
         *Result = Domain;
@@ -199,21 +215,25 @@ namespace Gs2::Limit::Domain::Model
         Future->StartSynchronousTask();
         if (Future->GetTask().IsError())
         {
-            return Future->GetTask().Error();
+            const auto Error = Future->GetTask().Error();
+            if (Error.IsValid() && Error->IsChildOf(Gs2::Core::Model::FNotFoundError::Class))
+            {
+                *Result = Self;
+                return nullptr;
+            }
+            return Error;
         }
         const auto ResultModel = Future->GetTask().Result();
         Future->EnsureCompletion();
-        if (ResultModel->GetItem() != nullptr)
-        {
-            const auto Key = Gs2::Limit::Domain::Model::FLimitModelMasterDomain::CreateCacheKey(
-                ResultModel->GetItem()->GetName()
-            );
-            Self->Gs2->Cache->Delete(
-                Gs2::Limit::Model::FLimitModelMaster::TypeName,
-                Self->ParentKey,
-                Key
-            );
-        }
+
+
+              Gs2::Limit::Model::Cache::FLimitModelMasterCache::Delete(
+            Self->Gs2->Cache,
+
+            Request->GetNamespaceName(),
+            Request->GetLimitName(),
+            TOptional<int32>()
+        );
         auto Domain = Self;
 
         *Result = Domain;
@@ -264,71 +284,158 @@ namespace Gs2::Limit::Domain::Model
         TSharedPtr<TSharedPtr<Gs2::Limit::Model::FLimitModelMaster>> Result
     )
     {
-        // ReSharper disable once CppLocalVariableMayBeConst
-        TSharedPtr<Gs2::Limit::Model::FLimitModelMaster> Value;
-        auto bCacheHit = Self->Gs2->Cache->TryGet<Gs2::Limit::Model::FLimitModelMaster>(
-            Self->ParentKey,
-            Gs2::Limit::Domain::Model::FLimitModelMasterDomain::CreateCacheKey(
-                Self->LimitName
-            ),
-            &Value
+        const auto CacheParentKey = Gs2::Limit::Model::Cache::FLimitModelMasterCache::CreateCacheParentKey(
+
+            Self->NamespaceName,
+            TOptional<int32>()
         );
-        if (!bCacheHit) {
-            const auto Future = Self->Get(
-                MakeShared<Gs2::Limit::Request::FGetLimitModelMasterRequest>()
-            );
-            Future->StartSynchronousTask();
-            if (Future->GetTask().IsError())
+        const auto CacheKey = Gs2::Limit::Model::Cache::FLimitModelMasterCache::CreateCacheKey(
+
+            Self->LimitName
+        );
+        return Self->Gs2->Cache->ExecuteWithKeyLock(
+            Gs2::Limit::Model::FLimitModelMaster::TypeName,
+            CacheParentKey,
+            CacheKey,
+            [Self = Self, Result]() -> Gs2::Core::Model::FGs2ErrorPtr
             {
-                if (Future->GetTask().Error()->Type() != Gs2::Core::Model::FNotFoundError::TypeString)
-                {
-                    return Future->GetTask().Error();
-                }
+                Gs2::Limit::Model::FLimitModelMasterPtr Value;
+                const auto CacheHit = Gs2::Limit::Model::Cache::FLimitModelMasterCache::TryGet(
+                    Self->Gs2->Cache,
 
-                const auto Key = Gs2::Limit::Domain::Model::FLimitModelMasterDomain::CreateCacheKey(
-                    Self->LimitName
+                    Self->NamespaceName,
+                    Self->LimitName,
+                    TOptional<int32>(),
+                    &Value
                 );
-                Self->Gs2->Cache->Put(
-                    Gs2::Limit::Model::FLimitModelMaster::TypeName,
-                    Self->ParentKey,
-                    Key,
-                    nullptr,
-                    FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
-                );
-
-                if (Future->GetTask().Error()->Detail(0)->GetComponent() != "limitModelMaster")
+                if (CacheHit)
                 {
-                    return Future->GetTask().Error();
+                    *Result = Value;
+                    return nullptr;
                 }
-            }
-            else
-            {
-                Value = Future->GetTask().Result();
-            }
-            Future->EnsureCompletion();
-        }
-        *Result = Value;
+                const auto Error = Gs2::Limit::Model::Cache::FLimitModelMasterCache::Fetch(
+                    Self->Gs2->Cache,
 
-        return nullptr;
+                    Self->NamespaceName,
+                    Self->LimitName,
+                    TOptional<int32>(),
+                    [Self](Gs2::Limit::Model::FLimitModelMasterPtr* OutItem) -> Gs2::Core::Model::FGs2ErrorPtr
+                    {
+                        const auto Future = Self->Get(
+                            MakeShared<Gs2::Limit::Request::FGetLimitModelMasterRequest>()
+                        );
+                        Future->StartSynchronousTask();
+                        if (Future->GetTask().IsError()) return Future->GetTask().Error();
+                        *OutItem = Future->GetTask().Result();
+                        Future->EnsureCompletion();
+                        return nullptr;
+                    },
+                    &Value
+                );
+                if (Error.IsValid()) return Error;
+                *Result = Value;
+                return nullptr;
+            }
+        );
     }
 
     TSharedPtr<FAsyncTask<FLimitModelMasterDomain::FModelTask>> FLimitModelMasterDomain::Model() {
         return Gs2::Core::Util::New<FAsyncTask<FLimitModelMasterDomain::FModelTask>>(this->AsShared());
     }
 
+    void FLimitModelMasterDomain::Invalidate()
+    {
+        Gs2::Limit::Model::Cache::FLimitModelMasterCache::Delete(
+            Gs2->Cache,
+
+            NamespaceName,
+            LimitName,
+            TOptional<int32>()
+        );
+    }
+
+    FLimitModelMasterDomain::FSubscribeWithInitialCallTask::FSubscribeWithInitialCallTask(
+        const TSharedPtr<FLimitModelMasterDomain>& Self,
+        TFunction<void(Gs2::Limit::Model::FLimitModelMasterPtr)> Callback
+    ):
+        Self(Self),
+        Callback(Callback)
+    {
+    }
+
+    FLimitModelMasterDomain::FSubscribeWithInitialCallTask::FSubscribeWithInitialCallTask(
+        const FSubscribeWithInitialCallTask& From
+    ):
+        TGs2Future(From),
+        Self(From.Self),
+        Callback(From.Callback)
+    {
+    }
+
+    Gs2::Core::Model::FGs2ErrorPtr FLimitModelMasterDomain::FSubscribeWithInitialCallTask::Action(
+        TSharedPtr<TSharedPtr<Gs2::Core::Domain::CallbackID>> Result
+    )
+    {
+        const auto Task = Self->Model();
+        Task->StartSynchronousTask();
+        Task->EnsureCompletion();
+        if (Task->GetTask().IsError()) return Task->GetTask().Error();
+        const auto Item = Task->GetTask().Result();
+        const auto CallbackId = Self->Subscribe(Callback);
+        Callback(Item);
+        *Result = MakeShared<Gs2::Core::Domain::CallbackID>(CallbackId);
+        return nullptr;
+    }
+
+    TSharedPtr<FAsyncTask<FLimitModelMasterDomain::FSubscribeWithInitialCallTask>> FLimitModelMasterDomain::SubscribeWithInitialCall(
+        TFunction<void(Gs2::Limit::Model::FLimitModelMasterPtr)> Callback
+    )
+    {
+        return Gs2::Core::Util::New<FAsyncTask<FSubscribeWithInitialCallTask>>(this->AsShared(), Callback);
+    }
+
     Gs2::Core::Domain::CallbackID FLimitModelMasterDomain::Subscribe(
         TFunction<void(Gs2::Limit::Model::FLimitModelMasterPtr)> Callback
     )
     {
+        const auto SubscriptionParentKey = Gs2::Limit::Model::Cache::FLimitModelMasterCache::CreateCacheParentKey(
+
+            NamespaceName,
+            TOptional<int32>()
+        );
+        const auto SubscriptionCacheKey = Gs2::Limit::Model::Cache::FLimitModelMasterCache::CreateCacheKey(
+
+            LimitName
+        );
+        const TWeakPtr<Gs2::Core::Domain::FGs2> WeakGs2 = Gs2;
+        const TWeakPtr<Limit::Domain::FGs2LimitDomain> WeakService = Service;
+        const FString RegisteredParentKey = SubscriptionParentKey;
+        const TOptional<FString> QueryNamespaceName = NamespaceName;
+        const TOptional<FString> QueryLimitName = LimitName;
         return Gs2->Cache->Subscribe(
             Gs2::Limit::Model::FLimitModelMaster::TypeName,
-            ParentKey,
-            Gs2::Limit::Domain::Model::FLimitModelMasterDomain::CreateCacheKey(
-                LimitName
-            ),
+            SubscriptionParentKey,
+            SubscriptionCacheKey,
             [Callback](TSharedPtr<FGs2Object> obj)
             {
                 Callback(StaticCastSharedPtr<Gs2::Limit::Model::FLimitModelMaster>(obj));
+            },
+            [WeakGs2, WeakService, RegisteredParentKey, QueryNamespaceName, QueryLimitName]()
+            {
+                const auto Owner = WeakGs2.Pin();
+                if (!Owner.IsValid())
+                {
+                    return;
+                }
+                const auto Domain = MakeShared<FLimitModelMasterDomain>(
+                    Owner,
+                    WeakService.Pin(),
+                    QueryNamespaceName,
+                    QueryLimitName
+                );
+                Domain->ParentKey = RegisteredParentKey;
+                const auto Task = Domain->Model();
+                Task->StartBackgroundTask();
             }
         );
     }
@@ -337,12 +444,19 @@ namespace Gs2::Limit::Domain::Model
         Gs2::Core::Domain::CallbackID CallbackID
     )
     {
+        const auto SubscriptionParentKey = Gs2::Limit::Model::Cache::FLimitModelMasterCache::CreateCacheParentKey(
+
+            NamespaceName,
+            TOptional<int32>()
+        );
+        const auto SubscriptionCacheKey = Gs2::Limit::Model::Cache::FLimitModelMasterCache::CreateCacheKey(
+
+            LimitName
+        );
         Gs2->Cache->Unsubscribe(
             Gs2::Limit::Model::FLimitModelMaster::TypeName,
-            ParentKey,
-            Gs2::Limit::Domain::Model::FLimitModelMasterDomain::CreateCacheKey(
-                LimitName
-            ),
+            SubscriptionParentKey,
+            SubscriptionCacheKey,
             CallbackID
         );
     }
@@ -353,4 +467,3 @@ namespace Gs2::Limit::Domain::Model
 #elif defined(__clang__)
 #pragma clang diagnostic pop
 #endif
-

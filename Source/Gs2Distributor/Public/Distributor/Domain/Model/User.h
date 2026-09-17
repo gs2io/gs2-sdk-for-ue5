@@ -79,6 +79,8 @@ namespace Gs2::Distributor::Domain::Model
             const FUserDomain& From
         );
 
+
+
         class GS2DISTRIBUTOR_API FRunTransactionTask final :
             public Gs2::Core::Util::TGs2Future<Gs2::Distributor::Domain::Model::FTransactionResultDomain>,
             public TSharedFromThis<FRunTransactionTask>

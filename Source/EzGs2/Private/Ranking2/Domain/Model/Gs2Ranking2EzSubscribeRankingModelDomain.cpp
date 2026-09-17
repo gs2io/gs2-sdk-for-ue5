@@ -101,7 +101,7 @@ namespace Gs2::UE5::Ranking2::Domain::Model
     Gs2::Core::Domain::CallbackID FEzSubscribeRankingModelDomain::Subscribe(TFunction<void(Gs2::UE5::Ranking2::Model::FEzSubscribeRankingModelPtr)> Callback)
     {
         return Domain->Subscribe(
-            [&](Gs2::Ranking2::Model::FSubscribeRankingModelPtr Item)
+            [Callback](Gs2::Ranking2::Model::FSubscribeRankingModelPtr Item)
             {
                 Callback(Gs2::UE5::Ranking2::Model::FEzSubscribeRankingModel::FromModel(Item));
             }

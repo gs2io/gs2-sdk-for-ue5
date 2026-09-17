@@ -53,7 +53,8 @@
 #include "Inventory/Domain/Model/BigItemAccessToken.h"
 #include "Inventory/Domain/Model/User.h"
 #include "Inventory/Domain/Model/UserAccessToken.h"
-#include "Inventory/Domain/Model/ItemSetEntry.h"
+#include "Inventory/Model/Cache/InventoryModel.h"
+#include "Inventory/Model/Cache/ItemModel.h"
 
 #include "Core/Domain/Gs2.h"
 #include "Core/Domain/Transaction/JobQueueJobDomainFactory.h"
@@ -127,6 +128,20 @@ namespace Gs2::Inventory::Domain::Model
         }
         const auto ResultModel = Future->GetTask().Result();
         Future->EnsureCompletion();
+
+            if (ResultModel.IsValid() && ResultModel->GetItem() != nullptr)
+            {
+
+
+        Gs2::Inventory::Model::Cache::FInventoryModelCache::Put(
+            Self->Gs2->Cache,
+
+            Request->GetNamespaceName(),
+            Request->GetInventoryName(),
+            TOptional<int32>(),
+            ResultModel->GetItem()
+        );
+            }
         *Result = ResultModel->GetItem();
         return nullptr;
     }
@@ -150,32 +165,120 @@ namespace Gs2::Inventory::Domain::Model
 
     Gs2::Core::Domain::CallbackID FInventoryModelDomain::SubscribeItemModels(
     TFunction<void()> Callback
+
     )
     {
         return Gs2->Cache->ListSubscribe(
             Gs2::Inventory::Model::FItemModel::TypeName,
-            Gs2::Inventory::Domain::Model::FInventoryModelDomain::CreateCacheParentKey(
+            Gs2::Inventory::Model::Cache::FItemModelCache::CreateCacheParentKey(
                 NamespaceName,
                 InventoryName,
-                "ItemModel"
+                TOptional<int32>()
             ),
+            Callback,
             Callback
         );
     }
-
     void FInventoryModelDomain::UnsubscribeItemModels(
         Gs2::Core::Domain::CallbackID CallbackID
     )
     {
         Gs2->Cache->ListUnsubscribe(
             Gs2::Inventory::Model::FItemModel::TypeName,
-            Gs2::Inventory::Domain::Model::FInventoryModelDomain::CreateCacheParentKey(
+            Gs2::Inventory::Model::Cache::FItemModelCache::CreateCacheParentKey(
                 NamespaceName,
                 InventoryName,
-                "ItemModel"
+                TOptional<int32>()
             ),
             CallbackID
         );
+    }
+    class FInventoryModelDomain::FCollectItemModelsTask : public Gs2::Core::Util::TGs2Future<TArray<Gs2::Inventory::Model::FItemModelPtr>>, public TSharedFromThis<FCollectItemModelsTask>
+    {
+        const TSharedPtr<FInventoryModelDomain> Self;
+        const TFunction<void(TArray<Gs2::Inventory::Model::FItemModelPtr>)> OnCollected;
+
+    public:
+        explicit FCollectItemModelsTask(const TSharedPtr<FInventoryModelDomain>& Self, TFunction<void(TArray<Gs2::Inventory::Model::FItemModelPtr>)> OnCollected) : Self(Self), OnCollected(OnCollected) {}
+        FCollectItemModelsTask(const FCollectItemModelsTask& From) : TGs2Future(From), Self(From.Self), OnCollected(From.OnCollected) {}
+        virtual Gs2::Core::Model::FGs2ErrorPtr Action(TSharedPtr<TSharedPtr<TArray<Gs2::Inventory::Model::FItemModelPtr>>> Result) override
+        {
+            TArray<Gs2::Inventory::Model::FItemModelPtr> Items;
+            auto Iterator = Self->ItemModels()->begin();
+            while (Iterator.HasNext())
+            {
+                if (Iterator.IsError()) return Iterator.Error();
+                if (Iterator.IsCurrentValid()) Items.Add(Iterator.Current());
+                ++Iterator;
+            }
+            if (Iterator.IsError()) return Iterator.Error();
+            *Result = MakeShared<TArray<Gs2::Inventory::Model::FItemModelPtr>>(Items);
+            if (OnCollected) OnCollected(Items);
+            return nullptr;
+        }
+    };
+
+    Gs2::Core::Domain::CallbackID FInventoryModelDomain::SubscribeItemModels(
+        TFunction<void(TArray<Gs2::Inventory::Model::FItemModelPtr>)> Callback
+    )
+    {
+        const TWeakPtr<Gs2::Core::Domain::FGs2> WeakGs2 = this->Gs2;
+        const TWeakPtr<Inventory::Domain::FGs2InventoryDomain> WeakService = this->Service;
+        const auto QueryNamespaceName = NamespaceName;
+        const auto QueryInventoryName = InventoryName;
+        const auto Parent = Gs2::Inventory::Model::Cache::FItemModelCache::CreateCacheParentKey(
+        NamespaceName,
+        InventoryName,
+        TOptional<int32>()
+    );
+        return Gs2->Cache->ListSubscribeTyped(
+            Gs2::Inventory::Model::FItemModel::TypeName,
+            Parent,
+            [Callback, WeakGs2](const TArray<FGs2ObjectPtr>& Values)
+            {
+                if (!WeakGs2.Pin().IsValid()) return;
+                TArray<Gs2::Inventory::Model::FItemModelPtr> TypedValues;
+                for (const auto& Value : Values) if (Value.IsValid()) TypedValues.Add(StaticCastSharedPtr<Gs2::Inventory::Model::FItemModel>(Value));
+                Callback(TypedValues);
+            },
+            [WeakGs2, WeakService, Callback, QueryNamespaceName, QueryInventoryName]()
+            {
+                const auto Owner = WeakGs2.Pin();
+                if (!Owner.IsValid()) return;
+                const auto Domain = MakeShared<FInventoryModelDomain>(Owner, WeakService.Pin(), QueryNamespaceName, QueryInventoryName);
+                const auto Task = Gs2::Core::Util::New<FAsyncTask<FCollectItemModelsTask>>(Domain, Callback);
+                Task->StartBackgroundTask();
+            }
+        );
+    }
+
+    void FInventoryModelDomain::InvalidateItemModels()
+    {
+        Gs2->Cache->ClearListCache(
+            Gs2::Inventory::Model::FItemModel::TypeName,
+            Gs2::Inventory::Model::Cache::FItemModelCache::CreateCacheParentKey(
+        NamespaceName,
+        InventoryName,
+        TOptional<int32>()
+    )
+        );
+    }
+
+    FInventoryModelDomain::FSubscribeItemModelsWithInitialCallTask::FSubscribeItemModelsWithInitialCallTask(const TSharedPtr<FInventoryModelDomain>& Self, TFunction<void(TArray<Gs2::Inventory::Model::FItemModelPtr>)> Callback) : Self(Self), Callback(Callback) {}
+    FInventoryModelDomain::FSubscribeItemModelsWithInitialCallTask::FSubscribeItemModelsWithInitialCallTask(const FSubscribeItemModelsWithInitialCallTask& From) : TGs2Future(From), Self(From.Self), Callback(From.Callback) {}
+    Gs2::Core::Model::FGs2ErrorPtr FInventoryModelDomain::FSubscribeItemModelsWithInitialCallTask::Action(TSharedPtr<TSharedPtr<Gs2::Core::Domain::CallbackID>> Result)
+    {
+        const auto Task = Gs2::Core::Util::New<FAsyncTask<FCollectItemModelsTask>>(Self, TFunction<void(TArray<Gs2::Inventory::Model::FItemModelPtr>)>());
+        Task->StartSynchronousTask(); Task->EnsureCompletion();
+        if (Task->GetTask().IsError()) return Task->GetTask().Error();
+        const auto Values = Task->GetTask().Result();
+        const auto CallbackId = Self->SubscribeItemModels(Callback);
+        Callback(*Values); *Result = MakeShared<Gs2::Core::Domain::CallbackID>(CallbackId);
+        return nullptr;
+    }
+    TSharedPtr<FAsyncTask<FInventoryModelDomain::FSubscribeItemModelsWithInitialCallTask>> FInventoryModelDomain::SubscribeItemModelsWithInitialCall(TFunction<void(TArray<Gs2::Inventory::Model::FItemModelPtr>)> Callback)
+    {
+        return Gs2::Core::Util::New<FAsyncTask<FSubscribeItemModelsWithInitialCallTask>>(this->AsShared(), Callback);
     }
 
     TSharedPtr<Gs2::Inventory::Domain::Model::FItemModelDomain> FInventoryModelDomain::ItemModel(
@@ -229,71 +332,158 @@ namespace Gs2::Inventory::Domain::Model
         TSharedPtr<TSharedPtr<Gs2::Inventory::Model::FInventoryModel>> Result
     )
     {
-        // ReSharper disable once CppLocalVariableMayBeConst
-        TSharedPtr<Gs2::Inventory::Model::FInventoryModel> Value;
-        auto bCacheHit = Self->Gs2->Cache->TryGet<Gs2::Inventory::Model::FInventoryModel>(
-            Self->ParentKey,
-            Gs2::Inventory::Domain::Model::FInventoryModelDomain::CreateCacheKey(
-                Self->InventoryName
-            ),
-            &Value
+        const auto CacheParentKey = Gs2::Inventory::Model::Cache::FInventoryModelCache::CreateCacheParentKey(
+
+            Self->NamespaceName,
+            TOptional<int32>()
         );
-        if (!bCacheHit) {
-            const auto Future = Self->Get(
-                MakeShared<Gs2::Inventory::Request::FGetInventoryModelRequest>()
-            );
-            Future->StartSynchronousTask();
-            if (Future->GetTask().IsError())
+        const auto CacheKey = Gs2::Inventory::Model::Cache::FInventoryModelCache::CreateCacheKey(
+
+            Self->InventoryName
+        );
+        return Self->Gs2->Cache->ExecuteWithKeyLock(
+            Gs2::Inventory::Model::FInventoryModel::TypeName,
+            CacheParentKey,
+            CacheKey,
+            [Self = Self, Result]() -> Gs2::Core::Model::FGs2ErrorPtr
             {
-                if (Future->GetTask().Error()->Type() != Gs2::Core::Model::FNotFoundError::TypeString)
-                {
-                    return Future->GetTask().Error();
-                }
+                Gs2::Inventory::Model::FInventoryModelPtr Value;
+                const auto CacheHit = Gs2::Inventory::Model::Cache::FInventoryModelCache::TryGet(
+                    Self->Gs2->Cache,
 
-                const auto Key = Gs2::Inventory::Domain::Model::FInventoryModelDomain::CreateCacheKey(
-                    Self->InventoryName
+                    Self->NamespaceName,
+                    Self->InventoryName,
+                    TOptional<int32>(),
+                    &Value
                 );
-                Self->Gs2->Cache->Put(
-                    Gs2::Inventory::Model::FInventoryModel::TypeName,
-                    Self->ParentKey,
-                    Key,
-                    nullptr,
-                    FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
-                );
-
-                if (Future->GetTask().Error()->Detail(0)->GetComponent() != "inventoryModel")
+                if (CacheHit)
                 {
-                    return Future->GetTask().Error();
+                    *Result = Value;
+                    return nullptr;
                 }
-            }
-            else
-            {
-                Value = Future->GetTask().Result();
-            }
-            Future->EnsureCompletion();
-        }
-        *Result = Value;
+                const auto Error = Gs2::Inventory::Model::Cache::FInventoryModelCache::Fetch(
+                    Self->Gs2->Cache,
 
-        return nullptr;
+                    Self->NamespaceName,
+                    Self->InventoryName,
+                    TOptional<int32>(),
+                    [Self](Gs2::Inventory::Model::FInventoryModelPtr* OutItem) -> Gs2::Core::Model::FGs2ErrorPtr
+                    {
+                        const auto Future = Self->Get(
+                            MakeShared<Gs2::Inventory::Request::FGetInventoryModelRequest>()
+                        );
+                        Future->StartSynchronousTask();
+                        if (Future->GetTask().IsError()) return Future->GetTask().Error();
+                        *OutItem = Future->GetTask().Result();
+                        Future->EnsureCompletion();
+                        return nullptr;
+                    },
+                    &Value
+                );
+                if (Error.IsValid()) return Error;
+                *Result = Value;
+                return nullptr;
+            }
+        );
     }
 
     TSharedPtr<FAsyncTask<FInventoryModelDomain::FModelTask>> FInventoryModelDomain::Model() {
         return Gs2::Core::Util::New<FAsyncTask<FInventoryModelDomain::FModelTask>>(this->AsShared());
     }
 
+    void FInventoryModelDomain::Invalidate()
+    {
+        Gs2::Inventory::Model::Cache::FInventoryModelCache::Delete(
+            Gs2->Cache,
+
+            NamespaceName,
+            InventoryName,
+            TOptional<int32>()
+        );
+    }
+
+    FInventoryModelDomain::FSubscribeWithInitialCallTask::FSubscribeWithInitialCallTask(
+        const TSharedPtr<FInventoryModelDomain>& Self,
+        TFunction<void(Gs2::Inventory::Model::FInventoryModelPtr)> Callback
+    ):
+        Self(Self),
+        Callback(Callback)
+    {
+    }
+
+    FInventoryModelDomain::FSubscribeWithInitialCallTask::FSubscribeWithInitialCallTask(
+        const FSubscribeWithInitialCallTask& From
+    ):
+        TGs2Future(From),
+        Self(From.Self),
+        Callback(From.Callback)
+    {
+    }
+
+    Gs2::Core::Model::FGs2ErrorPtr FInventoryModelDomain::FSubscribeWithInitialCallTask::Action(
+        TSharedPtr<TSharedPtr<Gs2::Core::Domain::CallbackID>> Result
+    )
+    {
+        const auto Task = Self->Model();
+        Task->StartSynchronousTask();
+        Task->EnsureCompletion();
+        if (Task->GetTask().IsError()) return Task->GetTask().Error();
+        const auto Item = Task->GetTask().Result();
+        const auto CallbackId = Self->Subscribe(Callback);
+        Callback(Item);
+        *Result = MakeShared<Gs2::Core::Domain::CallbackID>(CallbackId);
+        return nullptr;
+    }
+
+    TSharedPtr<FAsyncTask<FInventoryModelDomain::FSubscribeWithInitialCallTask>> FInventoryModelDomain::SubscribeWithInitialCall(
+        TFunction<void(Gs2::Inventory::Model::FInventoryModelPtr)> Callback
+    )
+    {
+        return Gs2::Core::Util::New<FAsyncTask<FSubscribeWithInitialCallTask>>(this->AsShared(), Callback);
+    }
+
     Gs2::Core::Domain::CallbackID FInventoryModelDomain::Subscribe(
         TFunction<void(Gs2::Inventory::Model::FInventoryModelPtr)> Callback
     )
     {
+        const auto SubscriptionParentKey = Gs2::Inventory::Model::Cache::FInventoryModelCache::CreateCacheParentKey(
+
+            NamespaceName,
+            TOptional<int32>()
+        );
+        const auto SubscriptionCacheKey = Gs2::Inventory::Model::Cache::FInventoryModelCache::CreateCacheKey(
+
+            InventoryName
+        );
+        const TWeakPtr<Gs2::Core::Domain::FGs2> WeakGs2 = Gs2;
+        const TWeakPtr<Inventory::Domain::FGs2InventoryDomain> WeakService = Service;
+        const FString RegisteredParentKey = SubscriptionParentKey;
+        const TOptional<FString> QueryNamespaceName = NamespaceName;
+        const TOptional<FString> QueryInventoryName = InventoryName;
         return Gs2->Cache->Subscribe(
             Gs2::Inventory::Model::FInventoryModel::TypeName,
-            ParentKey,
-            Gs2::Inventory::Domain::Model::FInventoryModelDomain::CreateCacheKey(
-                InventoryName
-            ),
+            SubscriptionParentKey,
+            SubscriptionCacheKey,
             [Callback](TSharedPtr<FGs2Object> obj)
             {
                 Callback(StaticCastSharedPtr<Gs2::Inventory::Model::FInventoryModel>(obj));
+            },
+            [WeakGs2, WeakService, RegisteredParentKey, QueryNamespaceName, QueryInventoryName]()
+            {
+                const auto Owner = WeakGs2.Pin();
+                if (!Owner.IsValid())
+                {
+                    return;
+                }
+                const auto Domain = MakeShared<FInventoryModelDomain>(
+                    Owner,
+                    WeakService.Pin(),
+                    QueryNamespaceName,
+                    QueryInventoryName
+                );
+                Domain->ParentKey = RegisteredParentKey;
+                const auto Task = Domain->Model();
+                Task->StartBackgroundTask();
             }
         );
     }
@@ -302,12 +492,19 @@ namespace Gs2::Inventory::Domain::Model
         Gs2::Core::Domain::CallbackID CallbackID
     )
     {
+        const auto SubscriptionParentKey = Gs2::Inventory::Model::Cache::FInventoryModelCache::CreateCacheParentKey(
+
+            NamespaceName,
+            TOptional<int32>()
+        );
+        const auto SubscriptionCacheKey = Gs2::Inventory::Model::Cache::FInventoryModelCache::CreateCacheKey(
+
+            InventoryName
+        );
         Gs2->Cache->Unsubscribe(
             Gs2::Inventory::Model::FInventoryModel::TypeName,
-            ParentKey,
-            Gs2::Inventory::Domain::Model::FInventoryModelDomain::CreateCacheKey(
-                InventoryName
-            ),
+            SubscriptionParentKey,
+            SubscriptionCacheKey,
             CallbackID
         );
     }
@@ -318,4 +515,3 @@ namespace Gs2::Inventory::Domain::Model
 #elif defined(__clang__)
 #pragma clang diagnostic pop
 #endif
-

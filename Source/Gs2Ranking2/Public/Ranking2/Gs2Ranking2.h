@@ -41,6 +41,7 @@
 #include "Model/AcquireActionResult.h"
 #include "Model/TransactionResult.h"
 #include "Model/TransactionSetting.h"
+#include "Model/TransactionSettingV2.h"
 #include "Model/LogSetting.h"
 #include "Model/GitHubCheckoutSetting.h"
 #include "Model/AcquireAction.h"

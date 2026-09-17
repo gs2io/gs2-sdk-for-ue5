@@ -83,7 +83,8 @@ namespace Gs2::UE5::Schedule::Domain::Model
         );
     }
 
-    void FEzUserGameSessionDomain::UnsubscribeTriggers(Gs2::Core::Domain::CallbackID CallbackId)
+    void FEzUserGameSessionDomain::UnsubscribeTriggers(
+            Gs2::Core::Domain::CallbackID CallbackId)
     {
         Domain->UnsubscribeTriggers(
             CallbackId
@@ -107,7 +108,8 @@ namespace Gs2::UE5::Schedule::Domain::Model
         );
     }
 
-    void FEzUserGameSessionDomain::UnsubscribeEvents(Gs2::Core::Domain::CallbackID CallbackId)
+    void FEzUserGameSessionDomain::UnsubscribeEvents(
+            Gs2::Core::Domain::CallbackID CallbackId)
     {
         Domain->UnsubscribeEvents(
             CallbackId

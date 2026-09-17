@@ -19,6 +19,7 @@
 #include "CoreMinimal.h"
 #include "Core/Gs2Object.h"
 #include "TransactionSetting.h"
+#include "TransactionSettingV2.h"
 #include "ScriptSetting.h"
 #include "LogSetting.h"
 
@@ -30,6 +31,7 @@ namespace Gs2::SkillTree::Model
         TOptional<FString> NameValue;
         TOptional<FString> DescriptionValue;
         TSharedPtr<FTransactionSetting> TransactionSettingValue;
+        TSharedPtr<FTransactionSettingV2> TransactionSettingV2Value;
         TSharedPtr<FScriptSetting> ReleaseScriptValue;
         TSharedPtr<FScriptSetting> RestrainScriptValue;
         TSharedPtr<FLogSetting> LogSettingValue;
@@ -48,6 +50,7 @@ namespace Gs2::SkillTree::Model
         TSharedPtr<FNamespace> WithName(const TOptional<FString> Name);
         TSharedPtr<FNamespace> WithDescription(const TOptional<FString> Description);
         TSharedPtr<FNamespace> WithTransactionSetting(const TSharedPtr<FTransactionSetting> TransactionSetting);
+        TSharedPtr<FNamespace> WithTransactionSettingV2(const TSharedPtr<FTransactionSettingV2> TransactionSettingV2);
         TSharedPtr<FNamespace> WithReleaseScript(const TSharedPtr<FScriptSetting> ReleaseScript);
         TSharedPtr<FNamespace> WithRestrainScript(const TSharedPtr<FScriptSetting> RestrainScript);
         TSharedPtr<FNamespace> WithLogSetting(const TSharedPtr<FLogSetting> LogSetting);
@@ -59,6 +62,7 @@ namespace Gs2::SkillTree::Model
         TOptional<FString> GetName() const;
         TOptional<FString> GetDescription() const;
         TSharedPtr<FTransactionSetting> GetTransactionSetting() const;
+        TSharedPtr<FTransactionSettingV2> GetTransactionSettingV2() const;
         TSharedPtr<FScriptSetting> GetReleaseScript() const;
         TSharedPtr<FScriptSetting> GetRestrainScript() const;
         TSharedPtr<FLogSetting> GetLogSetting() const;

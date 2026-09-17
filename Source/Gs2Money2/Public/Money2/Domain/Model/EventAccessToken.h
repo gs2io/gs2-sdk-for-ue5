@@ -136,6 +136,33 @@ namespace Gs2::Money2::Domain::Model
         };
         friend FModelTask;
 
+        class GS2MONEY2_API FSubscribeWithInitialCallTask final :
+            public Gs2::Core::Util::TGs2Future<Gs2::Core::Domain::CallbackID>,
+            public TSharedFromThis<FSubscribeWithInitialCallTask>
+        {
+            const TSharedPtr<FEventAccessTokenDomain> Self;
+            const TFunction<void(Gs2::Money2::Model::FEventPtr)> Callback;
+        public:
+            explicit FSubscribeWithInitialCallTask(
+                const TSharedPtr<FEventAccessTokenDomain> Self,
+                const TFunction<void(Gs2::Money2::Model::FEventPtr)>& Callback
+            );
+
+            FSubscribeWithInitialCallTask(
+                const FSubscribeWithInitialCallTask& From
+            );
+
+            virtual Gs2::Core::Model::FGs2ErrorPtr Action(
+                TSharedPtr<TSharedPtr<Gs2::Core::Domain::CallbackID>> Result
+            ) override;
+        };
+        friend FSubscribeWithInitialCallTask;
+
+        TSharedPtr<FAsyncTask<FEventAccessTokenDomain::FSubscribeWithInitialCallTask>> SubscribeWithInitialCall(
+            TFunction<void(Gs2::Money2::Model::FEventPtr)> Callback
+        );
+        void Invalidate();
+
         TSharedPtr<FAsyncTask<FModelTask>> Model();
 
         Gs2::Core::Domain::CallbackID Subscribe(

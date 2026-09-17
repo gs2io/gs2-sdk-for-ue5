@@ -105,7 +105,8 @@ namespace Gs2::UE5::Matchmaking::Domain::Model
         );
     }
 
-    void FEzSeasonGameSessionDomain::UnsubscribeJoinedSeasonGatherings(Gs2::Core::Domain::CallbackID CallbackId)
+    void FEzSeasonGameSessionDomain::UnsubscribeJoinedSeasonGatherings(
+            Gs2::Core::Domain::CallbackID CallbackId)
     {
         Domain->UnsubscribeJoinedSeasonGatherings(
             CallbackId

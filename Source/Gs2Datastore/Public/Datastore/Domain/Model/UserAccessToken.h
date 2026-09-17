@@ -98,6 +98,8 @@ namespace Gs2::Datastore::Domain::Model
             const FUserAccessTokenDomain& From
         );
 
+
+
         class GS2DATASTORE_API FPrepareUploadTask final :
             public Gs2::Core::Util::TGs2Future<Gs2::Datastore::Domain::Model::FDataObjectAccessTokenDomain>,
             public TSharedFromThis<FPrepareUploadTask>
@@ -124,6 +126,8 @@ namespace Gs2::Datastore::Domain::Model
             Request::FPrepareUploadRequestPtr Request
         );
 
+
+
         class GS2DATASTORE_API FPrepareDownloadTask final :
             public Gs2::Core::Util::TGs2Future<Gs2::Datastore::Domain::Model::FDataObjectAccessTokenDomain>,
             public TSharedFromThis<FPrepareDownloadTask>
@@ -149,6 +153,8 @@ namespace Gs2::Datastore::Domain::Model
         TSharedPtr<FAsyncTask<FPrepareDownloadTask>> PrepareDownload(
             Request::FPrepareDownloadRequestPtr Request
         );
+
+
 
         class GS2DATASTORE_API FPrepareDownloadByGenerationTask final :
             public Gs2::Core::Util::TGs2Future<Gs2::Datastore::Domain::Model::FDataObjectAccessTokenDomain>,
@@ -182,8 +188,33 @@ namespace Gs2::Datastore::Domain::Model
 
         Gs2::Core::Domain::CallbackID SubscribeDataObjects(
             TFunction<void()> Callback
+
         );
 
+        class FCollectDataObjectsTask;
+
+        Gs2::Core::Domain::CallbackID SubscribeDataObjects(
+            TFunction<void(TArray<Gs2::Datastore::Model::FDataObjectPtr>)> Callback,const TOptional<FString> Status = TOptional<FString>()
+        );
+
+        void InvalidateDataObjects(const TOptional<FString> Status = TOptional<FString>());
+
+        class GS2DATASTORE_API FSubscribeDataObjectsWithInitialCallTask final :
+            public Gs2::Core::Util::TGs2Future<Gs2::Core::Domain::CallbackID>,
+            public TSharedFromThis<FSubscribeDataObjectsWithInitialCallTask>
+        {
+            const TSharedPtr<FUserAccessTokenDomain> Self;
+            const TFunction<void(TArray<Gs2::Datastore::Model::FDataObjectPtr>)> Callback;
+        const TOptional<FString> QueryStatus;
+        public:
+            FSubscribeDataObjectsWithInitialCallTask(const TSharedPtr<FUserAccessTokenDomain>& Self, TFunction<void(TArray<Gs2::Datastore::Model::FDataObjectPtr>)> Callback,const TOptional<FString> Status);
+            FSubscribeDataObjectsWithInitialCallTask(const FSubscribeDataObjectsWithInitialCallTask& From);
+            virtual Gs2::Core::Model::FGs2ErrorPtr Action(TSharedPtr<TSharedPtr<Gs2::Core::Domain::CallbackID>> Result) override;
+        };
+
+        TSharedPtr<FAsyncTask<FSubscribeDataObjectsWithInitialCallTask>> SubscribeDataObjectsWithInitialCall(
+            TFunction<void(TArray<Gs2::Datastore::Model::FDataObjectPtr>)> Callback,const TOptional<FString> Status = TOptional<FString>()
+        );
         void UnsubscribeDataObjects(
             Gs2::Core::Domain::CallbackID CallbackID
         );

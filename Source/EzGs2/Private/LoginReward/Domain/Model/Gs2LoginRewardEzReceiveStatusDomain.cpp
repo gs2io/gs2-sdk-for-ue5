@@ -87,7 +87,7 @@ namespace Gs2::UE5::LoginReward::Domain::Model
     Gs2::Core::Domain::CallbackID FEzReceiveStatusDomain::Subscribe(TFunction<void(Gs2::UE5::LoginReward::Model::FEzReceiveStatusPtr)> Callback)
     {
         return Domain->Subscribe(
-            [&](Gs2::LoginReward::Model::FReceiveStatusPtr Item)
+            [Callback](Gs2::LoginReward::Model::FReceiveStatusPtr Item)
             {
                 Callback(Gs2::UE5::LoginReward::Model::FEzReceiveStatus::FromModel(Item));
             }

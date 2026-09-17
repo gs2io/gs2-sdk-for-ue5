@@ -68,19 +68,22 @@ namespace Gs2::Auth::Domain
         void UpdateCacheFromStampSheet(
             const FString Method,
             const FString Request,
-            const FString Result
+            const FString Result,
+            const TOptional<int32> TimeOffset = TOptional<int32>()
         );
 
         void UpdateCacheFromStampTask(
             const FString Method,
             const FString Request,
-            const FString Result
+            const FString Result,
+            const TOptional<int32> TimeOffset = TOptional<int32>()
         );
 
         void UpdateCacheFromJobResult(
             const FString Method,
             const Gs2::JobQueue::Model::FJobPtr Job,
-            const Gs2::JobQueue::Model::FJobResultBodyPtr Result
+            const Gs2::JobQueue::Model::FJobResultBodyPtr Result,
+            const TOptional<int32> TimeOffset = TOptional<int32>()
         );
 
         void HandleNotification(

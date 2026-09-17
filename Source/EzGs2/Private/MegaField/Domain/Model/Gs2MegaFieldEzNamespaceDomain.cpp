@@ -60,7 +60,8 @@ namespace Gs2::UE5::MegaField::Domain::Model
         );
     }
 
-    void FEzNamespaceDomain::UnsubscribeAreaModels(Gs2::Core::Domain::CallbackID CallbackId)
+    void FEzNamespaceDomain::UnsubscribeAreaModels(
+            Gs2::Core::Domain::CallbackID CallbackId)
     {
         Domain->UnsubscribeAreaModels(
             CallbackId

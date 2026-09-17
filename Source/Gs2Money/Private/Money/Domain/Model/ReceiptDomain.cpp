@@ -30,6 +30,7 @@
 #include "Money/Domain/Model/WalletAccessToken.h"
 #include "Money/Domain/Model/Receipt.h"
 #include "Money/Domain/Model/ReceiptAccessToken.h"
+#include "Money/Model/Cache/Receipt.h"
 
 #include "Core/Domain/Gs2.h"
 #include "Core/Domain/Transaction/JobQueueJobDomainFactory.h"
@@ -108,19 +109,31 @@ namespace Gs2::Money::Domain::Model
         }
         const auto ResultModel = Future->GetTask().Result();
         Future->EnsureCompletion();
-        if (ResultModel->GetItem() != nullptr)
-        {
-            const auto Key = Gs2::Money::Domain::Model::FReceiptDomain::CreateCacheKey(
-                ResultModel->GetItem()->GetTransactionId()
-            );
-            Self->Gs2->Cache->Put(
-                Gs2::Money::Model::FReceipt::TypeName,
-                Self->ParentKey,
-                Key,
-                ResultModel->GetItem(),
-                FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
-            );
-        }
+
+            if (ResultModel.IsValid() && ResultModel->GetItem() != nullptr)
+            {
+
+        if (!ResultModel.IsValid() || !ResultModel->GetItem().IsValid())
+            {
+              const auto Details = MakeShared<TArray<TSharedPtr<Gs2::Core::Model::FGs2ErrorDetail>>>();
+                Details->Add(MakeShared<Gs2::Core::Model::FGs2ErrorDetail>(TEXT("result.item"), TEXT("result.item is invalid."), TEXT("invalid_response")));
+                return MakeShared<Gs2::Core::Model::FUnknownError>(Details);
+              }if (!ResultModel.IsValid() || !((ResultModel.IsValid() && ResultModel->GetItem().IsValid() ? ResultModel->GetItem()->GetUserId() : TOptional<FString>())).IsSet())
+            {
+              const auto Details = MakeShared<TArray<TSharedPtr<Gs2::Core::Model::FGs2ErrorDetail>>>();
+                Details->Add(MakeShared<Gs2::Core::Model::FGs2ErrorDetail>(TEXT("userId"), TEXT("userId is invalid."), TEXT("invalid_response")));
+                return MakeShared<Gs2::Core::Model::FUnknownError>(Details);
+              }
+        Gs2::Money::Model::Cache::FReceiptCache::Put(
+            Self->Gs2->Cache,
+
+            Request->GetNamespaceName(),
+            (ResultModel.IsValid() && ResultModel->GetItem().IsValid() ? ResultModel->GetItem()->GetUserId() : TOptional<FString>()),
+            ResultModel->GetItem()->GetTransactionId(),
+            TOptional<int32>(),
+            ResultModel->GetItem()
+        );
+            }
         auto Domain = Self;
 
         *Result = Domain;
@@ -173,37 +186,144 @@ namespace Gs2::Money::Domain::Model
         TSharedPtr<TSharedPtr<Gs2::Money::Model::FReceipt>> Result
     )
     {
-        // ReSharper disable once CppLocalVariableMayBeConst
-        TSharedPtr<Gs2::Money::Model::FReceipt> Value;
-        auto bCacheHit = Self->Gs2->Cache->TryGet<Gs2::Money::Model::FReceipt>(
-            Self->ParentKey,
-            Gs2::Money::Domain::Model::FReceiptDomain::CreateCacheKey(
-                Self->TransactionId
-            ),
-            &Value
-        );
-        *Result = Value;
+        const auto CacheParentKey = Gs2::Money::Model::Cache::FReceiptCache::CreateCacheParentKey(
 
-        return nullptr;
+            Self->NamespaceName,
+            Self->UserId,
+            TOptional<int32>()
+        );
+        const auto CacheKey = Gs2::Money::Model::Cache::FReceiptCache::CreateCacheKey(
+
+            Self->TransactionId
+        );
+        return Self->Gs2->Cache->ExecuteWithKeyLock(
+            Gs2::Money::Model::FReceipt::TypeName,
+            CacheParentKey,
+            CacheKey,
+            [Self = Self, Result]() -> Gs2::Core::Model::FGs2ErrorPtr
+            {
+                Gs2::Money::Model::FReceiptPtr Value;
+                const auto CacheHit = Gs2::Money::Model::Cache::FReceiptCache::TryGet(
+                    Self->Gs2->Cache,
+
+                    Self->NamespaceName,
+                    Self->UserId,
+                    Self->TransactionId,
+                    TOptional<int32>(),
+                    &Value
+                );
+                if (CacheHit)
+                {
+                    *Result = Value;
+                    return nullptr;
+                }
+                *Result = Value;
+                return nullptr;
+            }
+        );
     }
 
     TSharedPtr<FAsyncTask<FReceiptDomain::FModelTask>> FReceiptDomain::Model() {
         return Gs2::Core::Util::New<FAsyncTask<FReceiptDomain::FModelTask>>(this->AsShared());
     }
 
+    void FReceiptDomain::Invalidate()
+    {
+        Gs2::Money::Model::Cache::FReceiptCache::Delete(
+            Gs2->Cache,
+
+            NamespaceName,
+            UserId,
+            TransactionId,
+            TOptional<int32>()
+        );
+    }
+
+    FReceiptDomain::FSubscribeWithInitialCallTask::FSubscribeWithInitialCallTask(
+        const TSharedPtr<FReceiptDomain>& Self,
+        TFunction<void(Gs2::Money::Model::FReceiptPtr)> Callback
+    ):
+        Self(Self),
+        Callback(Callback)
+    {
+    }
+
+    FReceiptDomain::FSubscribeWithInitialCallTask::FSubscribeWithInitialCallTask(
+        const FSubscribeWithInitialCallTask& From
+    ):
+        TGs2Future(From),
+        Self(From.Self),
+        Callback(From.Callback)
+    {
+    }
+
+    Gs2::Core::Model::FGs2ErrorPtr FReceiptDomain::FSubscribeWithInitialCallTask::Action(
+        TSharedPtr<TSharedPtr<Gs2::Core::Domain::CallbackID>> Result
+    )
+    {
+        const auto Task = Self->Model();
+        Task->StartSynchronousTask();
+        Task->EnsureCompletion();
+        if (Task->GetTask().IsError()) return Task->GetTask().Error();
+        const auto Item = Task->GetTask().Result();
+        const auto CallbackId = Self->Subscribe(Callback);
+        Callback(Item);
+        *Result = MakeShared<Gs2::Core::Domain::CallbackID>(CallbackId);
+        return nullptr;
+    }
+
+    TSharedPtr<FAsyncTask<FReceiptDomain::FSubscribeWithInitialCallTask>> FReceiptDomain::SubscribeWithInitialCall(
+        TFunction<void(Gs2::Money::Model::FReceiptPtr)> Callback
+    )
+    {
+        return Gs2::Core::Util::New<FAsyncTask<FSubscribeWithInitialCallTask>>(this->AsShared(), Callback);
+    }
+
     Gs2::Core::Domain::CallbackID FReceiptDomain::Subscribe(
         TFunction<void(Gs2::Money::Model::FReceiptPtr)> Callback
     )
     {
+        const auto SubscriptionParentKey = Gs2::Money::Model::Cache::FReceiptCache::CreateCacheParentKey(
+
+            NamespaceName,
+            UserId,
+            TOptional<int32>()
+        );
+        const auto SubscriptionCacheKey = Gs2::Money::Model::Cache::FReceiptCache::CreateCacheKey(
+
+            TransactionId
+        );
+        const TWeakPtr<Gs2::Core::Domain::FGs2> WeakGs2 = Gs2;
+        const TWeakPtr<Money::Domain::FGs2MoneyDomain> WeakService = Service;
+        const FString RegisteredParentKey = SubscriptionParentKey;
+        const TOptional<FString> QueryNamespaceName = NamespaceName;
+        const TOptional<FString> QueryUserId = UserId;
+        const TOptional<FString> QueryTransactionId = TransactionId;
         return Gs2->Cache->Subscribe(
             Gs2::Money::Model::FReceipt::TypeName,
-            ParentKey,
-            Gs2::Money::Domain::Model::FReceiptDomain::CreateCacheKey(
-                TransactionId
-            ),
+            SubscriptionParentKey,
+            SubscriptionCacheKey,
             [Callback](TSharedPtr<FGs2Object> obj)
             {
                 Callback(StaticCastSharedPtr<Gs2::Money::Model::FReceipt>(obj));
+            },
+            [WeakGs2, WeakService, RegisteredParentKey, QueryNamespaceName, QueryUserId, QueryTransactionId]()
+            {
+                const auto Owner = WeakGs2.Pin();
+                if (!Owner.IsValid())
+                {
+                    return;
+                }
+                const auto Domain = MakeShared<FReceiptDomain>(
+                    Owner,
+                    WeakService.Pin(),
+                    QueryNamespaceName,
+                    QueryUserId,
+                    QueryTransactionId
+                );
+                Domain->ParentKey = RegisteredParentKey;
+                const auto Task = Domain->Model();
+                Task->StartBackgroundTask();
             }
         );
     }
@@ -212,12 +332,20 @@ namespace Gs2::Money::Domain::Model
         Gs2::Core::Domain::CallbackID CallbackID
     )
     {
+        const auto SubscriptionParentKey = Gs2::Money::Model::Cache::FReceiptCache::CreateCacheParentKey(
+
+            NamespaceName,
+            UserId,
+            TOptional<int32>()
+        );
+        const auto SubscriptionCacheKey = Gs2::Money::Model::Cache::FReceiptCache::CreateCacheKey(
+
+            TransactionId
+        );
         Gs2->Cache->Unsubscribe(
             Gs2::Money::Model::FReceipt::TypeName,
-            ParentKey,
-            Gs2::Money::Domain::Model::FReceiptDomain::CreateCacheKey(
-                TransactionId
-            ),
+            SubscriptionParentKey,
+            SubscriptionCacheKey,
             CallbackID
         );
     }
@@ -228,4 +356,3 @@ namespace Gs2::Money::Domain::Model
 #elif defined(__clang__)
 #pragma clang diagnostic pop
 #endif
-

@@ -228,7 +228,8 @@ namespace Gs2::UE5::Matchmaking::Domain::Model
         );
     }
 
-    void FEzNamespaceDomain::UnsubscribeRatingModels(Gs2::Core::Domain::CallbackID CallbackId)
+    void FEzNamespaceDomain::UnsubscribeRatingModels(
+            Gs2::Core::Domain::CallbackID CallbackId)
     {
         Domain->UnsubscribeRatingModels(
             CallbackId
@@ -251,7 +252,8 @@ namespace Gs2::UE5::Matchmaking::Domain::Model
         );
     }
 
-    void FEzNamespaceDomain::UnsubscribeSeasonModels(Gs2::Core::Domain::CallbackID CallbackId)
+    void FEzNamespaceDomain::UnsubscribeSeasonModels(
+            Gs2::Core::Domain::CallbackID CallbackId)
     {
         Domain->UnsubscribeSeasonModels(
             CallbackId

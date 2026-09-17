@@ -81,6 +81,8 @@ namespace Gs2::LoginReward::Domain::Model
             const FBonusAccessTokenDomain& From
         );
 
+
+
         class GS2LOGINREWARD_API FReceiveTask final :
             public Gs2::Core::Util::TGs2Future<Gs2::Core::Domain::FTransactionAccessTokenDomain>,
             public TSharedFromThis<FReceiveTask>
@@ -109,6 +111,8 @@ namespace Gs2::LoginReward::Domain::Model
             Request::FReceiveRequestPtr Request,
             bool SpeculativeExecute = true
         );
+
+
 
         class GS2LOGINREWARD_API FMissedReceiveTask final :
             public Gs2::Core::Util::TGs2Future<Gs2::Core::Domain::FTransactionAccessTokenDomain>,

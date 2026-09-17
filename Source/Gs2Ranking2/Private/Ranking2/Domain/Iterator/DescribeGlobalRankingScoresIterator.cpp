@@ -1,3 +1,4 @@
+
 /*
  * Copyright 2016 Game Server Services, Inc. or its affiliates. All Rights
  * Reserved.
@@ -31,6 +32,7 @@
 #include "Ranking2/Domain/Model/GlobalRankingSeason.h"
 
 #include "Core/Domain/Gs2.h"
+#include "Ranking2/Model/Cache/GlobalRankingScore.h"
 
 namespace Gs2::Ranking2::Domain::Iterator
 {
@@ -97,13 +99,12 @@ namespace Gs2::Ranking2::Domain::Iterator
 
         if (!RangeIteratorOpt || (!*RangeIteratorOpt && !bLast))
         {
-            const auto ListParentKey = Gs2::Ranking2::Domain::Model::FGlobalRankingSeasonDomain::CreateCacheParentKey(
+            const auto ListParentKey = Gs2::Ranking2::Model::Cache::FGlobalRankingScoreCache::CreateCacheParentKey(
                 Self->NamespaceName,
+                Self->AccessToken.IsValid() ? Self->AccessToken->GetUserId() : TOptional<FString>(),
                 Self->RankingName,
-                TOptional<int64>(),
-                "GlobalRankingScore"
+                Self->AccessToken.IsValid() ? Self->AccessToken->GetTimeOffset() : TOptional<int32>()
             );
-
             if (!RangeIteratorOpt)
             {
                 Range = Self->Gs2->Cache->TryGetList<Gs2::Ranking2::Model::FGlobalRankingScore>(ListParentKey);
@@ -118,7 +119,7 @@ namespace Gs2::Ranking2::Domain::Iterator
                 }
             }
 
-            const auto Future = Self->Client->DescribeGlobalRankingScores(
+            const auto Request =
                 MakeShared<Gs2::Ranking2::Request::FDescribeGlobalRankingScoresRequest>()
                     ->WithContextStack(Self->Gs2->DefaultContextStack)
                     ->WithNamespaceName(Self->NamespaceName)
@@ -126,7 +127,8 @@ namespace Gs2::Ranking2::Domain::Iterator
                     ->WithRankingName(Self->RankingName)
                     ->WithPageToken(PageToken)
                     ->WithLimit(FetchSize)
-            );
+            ;
+            const auto Future = Self->Client->DescribeGlobalRankingScores(Request);
             Future->StartSynchronousTask();
             if (Future->GetTask().IsError())
             {
@@ -140,19 +142,22 @@ namespace Gs2::Ranking2::Domain::Iterator
             }
             const auto R = Future->GetTask().Result();
             Future->EnsureCompletion();
-            Range = R->GetItems();
-            for (auto Item : *R->GetItems())
+            Range = R->GetItems().IsValid() ? R->GetItems() : MakeShared<TArray<Gs2::Ranking2::Model::FGlobalRankingScorePtr>>();
+            const auto CacheOwnerSnapshotTimeOffset = Self->AccessToken.IsValid() ? Self->AccessToken->GetTimeOffset() : TOptional<int32>();
+            const auto ResultModel = R;
+
+
+            if (Range.IsValid())
             {
-                Self->Gs2->Cache->Put(
-                    Gs2::Ranking2::Model::FGlobalRankingScore::TypeName,
-                    ListParentKey,
-                    Gs2::Ranking2::Domain::Model::FGlobalRankingScoreDomain::CreateCacheKey(
-                        Item->GetSeason(),
-                        Item->GetUserId()
-                    ),
-                    Item,
-                    FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
-                );
+                for (const auto& Item : *Range)
+                {
+                    if (!Item.IsValid()) continue;
+                    Gs2::Ranking2::Model::Cache::FGlobalRankingScoreCache::Put(
+                        Self->Gs2->Cache,
+                        Request->GetNamespaceName(), Request->GetRankingName(), Item->GetSeason(), Item->GetUserId(),
+                        CacheOwnerSnapshotTimeOffset, Item
+                    );
+                }
             }
             if (Range)
             {

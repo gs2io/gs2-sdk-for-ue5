@@ -12,8 +12,6 @@
  * on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either
  * express or implied. See the License for the specific language governing
  * permissions and limitations under the License.
- *
- * deny overwrite
  */
 
 #pragma once
@@ -22,6 +20,7 @@
 #include "Friend/Model/Gs2FriendFollowUser.h"
 #include "Friend/Model/Gs2FriendFollow.h"
 #include "../../Core/Model/Gs2Error.h"
+#include "Core/Model/Gs2CoreTransaction.h"
 #include "Kismet/BlueprintAsyncActionBase.h"
 #include "Gs2FriendActionFollow.generated.h"
 
@@ -50,7 +49,7 @@ public:
 	UFUNCTION(BlueprintCallable, DisplayName="Gs2::Friend::FollowUser::Action::Follow", Category="Game Server Services|GS2-Friend|Namespace|User|Follow|FollowUser|Action", meta=(WorldContext="WorldContextObject", BlueprintInternalUseOnly="true"))
     static UGs2FriendFollowAsyncFunction* Follow(
         UObject* WorldContextObject,
-        FGs2FriendOwnFollow Follow,
+        FGs2FriendOwnFollow FollowValue,
         FString TargetUserId
     );
 

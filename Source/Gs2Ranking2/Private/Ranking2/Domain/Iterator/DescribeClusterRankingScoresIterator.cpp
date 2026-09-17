@@ -31,6 +31,7 @@
 #include "Ranking2/Domain/Model/ClusterRankingSeason.h"
 
 #include "Core/Domain/Gs2.h"
+#include "Ranking2/Model/Cache/ClusterRankingScore.h"
 
 namespace Gs2::Ranking2::Domain::Iterator
 {
@@ -104,12 +105,11 @@ namespace Gs2::Ranking2::Domain::Iterator
         if (!RangeIteratorOpt || (!*RangeIteratorOpt && !bLast))
         {
             const auto bUseCache = Self->Season.IsSet();
-            const auto ListParentKey = Gs2::Ranking2::Domain::Model::FClusterRankingSeasonDomain::CreateCacheParentKey(
+            const auto ListParentKey = Gs2::Ranking2::Model::Cache::FClusterRankingScoreCache::CreateCacheParentKey(
                 Self->NamespaceName,
+                Self->AccessToken.IsValid() ? Self->AccessToken->GetUserId() : TOptional<FString>(),
                 Self->RankingName,
-                Self->ClusterName,
-                Self->Season,
-                TEXT("ClusterRankingScore")
+                Self->AccessToken.IsValid() ? Self->AccessToken->GetTimeOffset() : TOptional<int32>()
             );
 
             if (!RangeIteratorOpt && bUseCache)
@@ -150,10 +150,16 @@ namespace Gs2::Ranking2::Domain::Iterator
             }
             const auto R = Future->GetTask().Result();
             Future->EnsureCompletion();
-            Range = R->GetItems();
-            if (bUseCache)
+            Range = R->GetItems().IsValid() ? R->GetItems() : MakeShared<TArray<Gs2::Ranking2::Model::FClusterRankingScorePtr>>();
+            const auto CacheOwnerSnapshotTimeOffset = Self->AccessToken.IsValid() ? Self->AccessToken->GetTimeOffset() : TOptional<int32>();
+            const auto ResultModel = R;
+
+
+            if (Range.IsValid())
             {
-                for (auto Item : *R->GetItems())
+                if (bUseCache)
+                {
+                    for (const auto& Item : *Range)
                 {
                     Self->Gs2->Cache->Put(
                         Gs2::Ranking2::Model::FClusterRankingScore::TypeName,
@@ -166,6 +172,7 @@ namespace Gs2::Ranking2::Domain::Iterator
                         Item,
                         FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
                     );
+                }
                 }
             }
             if (Range)

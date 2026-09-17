@@ -37,6 +37,21 @@
 #include "Guild/Domain/Model/ReceiveMemberRequest.h"
 #include "Guild/Domain/Model/SendMemberRequest.h"
 #include "Guild/Domain/Model/IgnoreUser.h"
+#include "Guild/Model/Cache/ReceiveMemberRequest.h"
+#include "Guild/Model/Cache/SendMemberRequest.h"
+#include "Guild/Model/Cache/Guild.h"
+
+#include "Guild/Model/Cache/Namespace.h"
+#include "Guild/Model/Cache/GuildModelMaster.h"
+#include "Guild/Model/Cache/Guild.h"
+#include "Guild/Model/Cache/CurrentGuildMaster.h"
+#include "Guild/Model/Cache/GuildModel.h"
+#include "Guild/Model/Cache/SendMemberRequest.h"
+#include "Guild/Model/Cache/JoinedGuild.h"
+#include "Guild/Model/Cache/IgnoreUser.h"
+#include "Guild/Model/Cache/LastGuildMasterActivity.h"
+#include "Guild/Model/Cache/ReceiveMemberRequest.h"
+
 #include "Core/Domain/Gs2.h"
 
 namespace Gs2::Guild::Domain
@@ -90,6 +105,19 @@ namespace Gs2::Guild::Domain
         }
         const auto ResultModel = Future->GetTask().Result();
         Future->EnsureCompletion();
+
+            if (ResultModel.IsValid() && ResultModel->GetItem() != nullptr)
+            {
+
+
+        Gs2::Guild::Model::Cache::FNamespaceCache::Put(
+            Self->Gs2->Cache,
+
+            ResultModel->GetItem()->GetName(),
+            TOptional<int32>(),
+            ResultModel->GetItem()
+        );
+            }
         auto Domain = MakeShared<Gs2::Guild::Domain::Model::FNamespaceDomain>(
             Self->Gs2,
             Self,
@@ -133,6 +161,7 @@ namespace Gs2::Guild::Domain
         }
         const auto ResultModel = Future->GetTask().Result();
         Future->EnsureCompletion();
+
         const auto Domain = Self;
         *Result = Domain;
         return nullptr;
@@ -172,6 +201,7 @@ namespace Gs2::Guild::Domain
         }
         const auto ResultModel = Future->GetTask().Result();
         Future->EnsureCompletion();
+
         const auto Domain = Self;
         if (ResultModel != nullptr)
         {
@@ -218,6 +248,7 @@ namespace Gs2::Guild::Domain
         }
         const auto ResultModel = Future->GetTask().Result();
         Future->EnsureCompletion();
+
         const auto Domain = Self;
         *Result = Domain;
         return nullptr;
@@ -257,6 +288,7 @@ namespace Gs2::Guild::Domain
         }
         const auto ResultModel = Future->GetTask().Result();
         Future->EnsureCompletion();
+
         const auto Domain = Self;
         *Result = Domain;
         return nullptr;
@@ -296,6 +328,7 @@ namespace Gs2::Guild::Domain
         }
         const auto ResultModel = Future->GetTask().Result();
         Future->EnsureCompletion();
+
         const auto Domain = Self;
         if (ResultModel != nullptr)
         {
@@ -346,6 +379,7 @@ namespace Gs2::Guild::Domain
         }
         const auto ResultModel = Future->GetTask().Result();
         Future->EnsureCompletion();
+
         const auto Domain = Self;
         *Result = Domain;
         return nullptr;
@@ -385,6 +419,7 @@ namespace Gs2::Guild::Domain
         }
         const auto ResultModel = Future->GetTask().Result();
         Future->EnsureCompletion();
+
         const auto Domain = Self;
         if (ResultModel != nullptr)
         {
@@ -416,24 +451,110 @@ namespace Gs2::Guild::Domain
 
     Gs2::Core::Domain::CallbackID FGs2GuildDomain::SubscribeNamespaces(
     TFunction<void()> Callback
+
     )
     {
         return Gs2->Cache->ListSubscribe(
             Gs2::Guild::Model::FNamespace::TypeName,
-            "guild:Namespace",
+            Gs2::Guild::Model::Cache::FNamespaceCache::CreateCacheParentKey(
+                TOptional<int32>()
+            ),
+            Callback,
             Callback
         );
     }
-
     void FGs2GuildDomain::UnsubscribeNamespaces(
         Gs2::Core::Domain::CallbackID CallbackID
     )
     {
         Gs2->Cache->ListUnsubscribe(
             Gs2::Guild::Model::FNamespace::TypeName,
-            "guild:Namespace",
+            Gs2::Guild::Model::Cache::FNamespaceCache::CreateCacheParentKey(
+                TOptional<int32>()
+            ),
             CallbackID
         );
+    }
+    class FGs2GuildDomain::FCollectNamespacesTask : public Gs2::Core::Util::TGs2Future<TArray<Gs2::Guild::Model::FNamespacePtr>>, public TSharedFromThis<FCollectNamespacesTask>
+    {
+        const TSharedPtr<FGs2GuildDomain> Self;
+        const TFunction<void(TArray<Gs2::Guild::Model::FNamespacePtr>)> OnCollected;
+    const TOptional<FString> QueryNamePrefix;
+    public:
+        explicit FCollectNamespacesTask(const TSharedPtr<FGs2GuildDomain>& Self, TFunction<void(TArray<Gs2::Guild::Model::FNamespacePtr>)> OnCollected,const TOptional<FString> NamePrefix) : Self(Self), OnCollected(OnCollected), QueryNamePrefix(NamePrefix) {}
+        FCollectNamespacesTask(const FCollectNamespacesTask& From) : TGs2Future(From), Self(From.Self), OnCollected(From.OnCollected), QueryNamePrefix(From.QueryNamePrefix) {}
+        virtual Gs2::Core::Model::FGs2ErrorPtr Action(TSharedPtr<TSharedPtr<TArray<Gs2::Guild::Model::FNamespacePtr>>> Result) override
+        {
+            TArray<Gs2::Guild::Model::FNamespacePtr> Items;
+            auto Iterator = Self->Namespaces(QueryNamePrefix)->begin();
+            while (Iterator.HasNext())
+            {
+                if (Iterator.IsError()) return Iterator.Error();
+                if (Iterator.IsCurrentValid()) Items.Add(Iterator.Current());
+                ++Iterator;
+            }
+            if (Iterator.IsError()) return Iterator.Error();
+            *Result = MakeShared<TArray<Gs2::Guild::Model::FNamespacePtr>>(Items);
+            if (OnCollected) OnCollected(Items);
+            return nullptr;
+        }
+    };
+
+    Gs2::Core::Domain::CallbackID FGs2GuildDomain::SubscribeNamespaces(
+        TFunction<void(TArray<Gs2::Guild::Model::FNamespacePtr>)> Callback,const TOptional<FString> NamePrefix
+    )
+    {
+        const TWeakPtr<Gs2::Core::Domain::FGs2> WeakGs2 = this->Gs2;
+        const auto QueryNamePrefix = NamePrefix;
+        const auto Parent = Gs2::Guild::Model::Cache::FNamespaceCache::CreateCacheParentKey(
+        TOptional<int32>()
+    );
+        return Gs2->Cache->ListSubscribeTyped(
+            Gs2::Guild::Model::FNamespace::TypeName,
+            Parent,
+            [Callback, WeakGs2](const TArray<FGs2ObjectPtr>& Values)
+            {
+                if (!WeakGs2.Pin().IsValid()) return;
+                TArray<Gs2::Guild::Model::FNamespacePtr> TypedValues;
+                for (const auto& Value : Values) if (Value.IsValid()) TypedValues.Add(StaticCastSharedPtr<Gs2::Guild::Model::FNamespace>(Value));
+                Callback(TypedValues);
+            },
+            [WeakGs2, Callback, QueryNamePrefix]()
+            {
+                const auto Owner = WeakGs2.Pin();
+                if (!Owner.IsValid()) return;
+                const auto Domain = MakeShared<FGs2GuildDomain>(Owner);
+                const auto Task = Gs2::Core::Util::New<FAsyncTask<FCollectNamespacesTask>>(Domain, Callback, QueryNamePrefix);
+                Task->StartBackgroundTask();
+            }
+        );
+    }
+
+    void FGs2GuildDomain::InvalidateNamespaces(const TOptional<FString> NamePrefix)
+    {
+        Gs2->Cache->ClearListCache(
+            Gs2::Guild::Model::FNamespace::TypeName,
+            Gs2::Guild::Model::Cache::FNamespaceCache::CreateCacheParentKey(
+        TOptional<int32>()
+    )
+        );
+    }
+
+    FGs2GuildDomain::FSubscribeNamespacesWithInitialCallTask::FSubscribeNamespacesWithInitialCallTask(const TSharedPtr<FGs2GuildDomain>& Self, TFunction<void(TArray<Gs2::Guild::Model::FNamespacePtr>)> Callback,const TOptional<FString> NamePrefix) : Self(Self), Callback(Callback), QueryNamePrefix(NamePrefix) {}
+    FGs2GuildDomain::FSubscribeNamespacesWithInitialCallTask::FSubscribeNamespacesWithInitialCallTask(const FSubscribeNamespacesWithInitialCallTask& From) : TGs2Future(From), Self(From.Self), Callback(From.Callback), QueryNamePrefix(From.QueryNamePrefix) {}
+    Gs2::Core::Model::FGs2ErrorPtr FGs2GuildDomain::FSubscribeNamespacesWithInitialCallTask::Action(TSharedPtr<TSharedPtr<Gs2::Core::Domain::CallbackID>> Result)
+    {
+        const auto Task = Gs2::Core::Util::New<FAsyncTask<FCollectNamespacesTask>>(Self, TFunction<void(TArray<Gs2::Guild::Model::FNamespacePtr>)>(), QueryNamePrefix);
+        Task->StartSynchronousTask(); Task->EnsureCompletion();
+        if (Task->GetTask().IsError()) return Task->GetTask().Error();
+        const auto Values = Task->GetTask().Result();
+        const auto CallbackId = Self->SubscribeNamespaces(Callback, QueryNamePrefix);
+        Callback(*Values); *Result = MakeShared<Gs2::Core::Domain::CallbackID>(CallbackId);
+        return nullptr;
+    }
+    TSharedPtr<FAsyncTask<FGs2GuildDomain::FSubscribeNamespacesWithInitialCallTask>> FGs2GuildDomain::SubscribeNamespacesWithInitialCall(TFunction<void(TArray<Gs2::Guild::Model::FNamespacePtr>)> Callback,const TOptional<FString> NamePrefix)
+    {
+        return Gs2::Core::Util::New<FAsyncTask<FSubscribeNamespacesWithInitialCallTask>>(this->AsShared(), Callback, NamePrefix);
     }
 
     TSharedPtr<Gs2::Guild::Domain::Model::FNamespaceDomain> FGs2GuildDomain::Namespace(
@@ -450,7 +571,8 @@ namespace Gs2::Guild::Domain
     void FGs2GuildDomain::UpdateCacheFromStampSheet(
         const FString Method,
         const FString Request,
-        const FString Result
+        const FString Result,
+        const TOptional<int32> TimeOffset
     ) {
         if (Method == "IncreaseMaximumCurrentMaximumMemberCountByGuildName") {
             TSharedPtr<FJsonObject> RequestModelJson;
@@ -467,25 +589,25 @@ namespace Gs2::Guild::Domain
             }
             const auto RequestModel = Gs2::Guild::Request::FIncreaseMaximumCurrentMaximumMemberCountByGuildNameRequest::FromJson(RequestModelJson);
             const auto ResultModel = Gs2::Guild::Result::FIncreaseMaximumCurrentMaximumMemberCountByGuildNameResult::FromJson(ResultModelJson);
-            
-            if (ResultModel->GetItem() != nullptr)
-            {
-                const auto ParentKey = Gs2::Guild::Domain::Model::FNamespaceDomain::CreateCacheParentKey(
+
+                    if (ResultModel.IsValid() && ResultModel->GetItem() != nullptr)
+                    {
+
+                if (!ResultModel.IsValid() || !ResultModel->GetItem().IsValid())
+                    {
+                      return;
+                      }
+                Gs2::Guild::Model::Cache::FGuildCache::Put(
+                    Gs2->Cache,
+
                     RequestModel->GetNamespaceName(),
-                    "Guild"
-                );
-                const auto Key = Gs2::Guild::Domain::Model::FGuildDomain::CreateCacheKey(
                     ResultModel->GetItem()->GetGuildModelName(),
-                    ResultModel->GetItem()->GetName()
+                    RequestModel->GetGuildName(),
+                    TimeOffset,
+                    ResultModel->GetItem()
                 );
-                Gs2->Cache->Put(
-                    Gs2::Guild::Model::FGuild::TypeName,
-                    ParentKey,
-                    Key,
-                    ResultModel->GetItem(),
-                    FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
-                );
-            }
+                    }
+
         }
         if (Method == "SetMaximumCurrentMaximumMemberCountByGuildName") {
             TSharedPtr<FJsonObject> RequestModelJson;
@@ -502,32 +624,33 @@ namespace Gs2::Guild::Domain
             }
             const auto RequestModel = Gs2::Guild::Request::FSetMaximumCurrentMaximumMemberCountByGuildNameRequest::FromJson(RequestModelJson);
             const auto ResultModel = Gs2::Guild::Result::FSetMaximumCurrentMaximumMemberCountByGuildNameResult::FromJson(ResultModelJson);
-            
-            if (ResultModel->GetItem() != nullptr)
-            {
-                const auto ParentKey = Gs2::Guild::Domain::Model::FNamespaceDomain::CreateCacheParentKey(
+
+                    if (ResultModel.IsValid() && ResultModel->GetItem() != nullptr)
+                    {
+
+                if (!ResultModel.IsValid() || !ResultModel->GetItem().IsValid())
+                    {
+                      return;
+                      }
+                Gs2::Guild::Model::Cache::FGuildCache::Put(
+                    Gs2->Cache,
+
                     RequestModel->GetNamespaceName(),
-                    "Guild"
-                );
-                const auto Key = Gs2::Guild::Domain::Model::FGuildDomain::CreateCacheKey(
                     ResultModel->GetItem()->GetGuildModelName(),
-                    ResultModel->GetItem()->GetName()
+                    RequestModel->GetGuildName(),
+                    TimeOffset,
+                    ResultModel->GetItem()
                 );
-                Gs2->Cache->Put(
-                    Gs2::Guild::Model::FGuild::TypeName,
-                    ParentKey,
-                    Key,
-                    ResultModel->GetItem(),
-                    FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
-                );
-            }
+                    }
+
         }
     }
 
     void FGs2GuildDomain::UpdateCacheFromStampTask(
         const FString Method,
         const FString Request,
-        const FString Result
+        const FString Result,
+        const TOptional<int32> TimeOffset
     ) {
         if (Method == "DecreaseMaximumCurrentMaximumMemberCountByGuildName") {
             TSharedPtr<FJsonObject> RequestModelJson;
@@ -544,32 +667,33 @@ namespace Gs2::Guild::Domain
             }
             const auto RequestModel = Gs2::Guild::Request::FDecreaseMaximumCurrentMaximumMemberCountByGuildNameRequest::FromJson(RequestModelJson);
             const auto ResultModel = Gs2::Guild::Result::FDecreaseMaximumCurrentMaximumMemberCountByGuildNameResult::FromJson(ResultModelJson);
-            
-            if (ResultModel->GetItem() != nullptr)
-            {
-                const auto ParentKey = Gs2::Guild::Domain::Model::FNamespaceDomain::CreateCacheParentKey(
+
+                    if (ResultModel.IsValid() && ResultModel->GetItem() != nullptr)
+                    {
+
+                if (!ResultModel.IsValid() || !ResultModel->GetItem().IsValid())
+                    {
+                      return;
+                      }
+                Gs2::Guild::Model::Cache::FGuildCache::Put(
+                    Gs2->Cache,
+
                     RequestModel->GetNamespaceName(),
-                    "Guild"
-                );
-                const auto Key = Gs2::Guild::Domain::Model::FGuildDomain::CreateCacheKey(
                     ResultModel->GetItem()->GetGuildModelName(),
-                    ResultModel->GetItem()->GetName()
+                    RequestModel->GetGuildName(),
+                    TimeOffset,
+                    ResultModel->GetItem()
                 );
-                Gs2->Cache->Put(
-                    Gs2::Guild::Model::FGuild::TypeName,
-                    ParentKey,
-                    Key,
-                    ResultModel->GetItem(),
-                    FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
-                );
-            }
+                    }
+
         }
     }
 
     void FGs2GuildDomain::UpdateCacheFromJobResult(
         const FString Method,
         const Gs2::JobQueue::Model::FJobPtr Job,
-        const Gs2::JobQueue::Model::FJobResultBodyPtr Result
+        const Gs2::JobQueue::Model::FJobResultBodyPtr Result,
+        const TOptional<int32> TimeOffset
     ) {
         if (Method == "increase_maximum_current_maximum_member_count_by_guild_name") {
             TSharedPtr<FJsonObject> RequestModelJson;
@@ -594,25 +718,25 @@ namespace Gs2::Guild::Domain
             }
             const auto RequestModel = Gs2::Guild::Request::FIncreaseMaximumCurrentMaximumMemberCountByGuildNameRequest::FromJson(RequestModelJson);
             const auto ResultModel = Gs2::Guild::Result::FIncreaseMaximumCurrentMaximumMemberCountByGuildNameResult::FromJson(ResultModelJson);
-            
-            if (ResultModel->GetItem() != nullptr)
-            {
-                const auto ParentKey = Gs2::Guild::Domain::Model::FNamespaceDomain::CreateCacheParentKey(
+
+                    if (ResultModel.IsValid() && ResultModel->GetItem() != nullptr)
+                    {
+
+                if (!ResultModel.IsValid() || !ResultModel->GetItem().IsValid())
+                    {
+                      return;
+                      }
+                Gs2::Guild::Model::Cache::FGuildCache::Put(
+                    Gs2->Cache,
+
                     RequestModel->GetNamespaceName(),
-                    "Guild"
-                );
-                const auto Key = Gs2::Guild::Domain::Model::FGuildDomain::CreateCacheKey(
                     ResultModel->GetItem()->GetGuildModelName(),
-                    ResultModel->GetItem()->GetName()
+                    RequestModel->GetGuildName(),
+                    TimeOffset,
+                    ResultModel->GetItem()
                 );
-                Gs2->Cache->Put(
-                    Gs2::Guild::Model::FGuild::TypeName,
-                    ParentKey,
-                    Key,
-                    ResultModel->GetItem(),
-                    FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
-                );
-            }
+                    }
+
         }
         if (Method == "set_maximum_current_maximum_member_count_by_guild_name") {
             TSharedPtr<FJsonObject> RequestModelJson;
@@ -637,25 +761,25 @@ namespace Gs2::Guild::Domain
             }
             const auto RequestModel = Gs2::Guild::Request::FSetMaximumCurrentMaximumMemberCountByGuildNameRequest::FromJson(RequestModelJson);
             const auto ResultModel = Gs2::Guild::Result::FSetMaximumCurrentMaximumMemberCountByGuildNameResult::FromJson(ResultModelJson);
-            
-            if (ResultModel->GetItem() != nullptr)
-            {
-                const auto ParentKey = Gs2::Guild::Domain::Model::FNamespaceDomain::CreateCacheParentKey(
+
+                    if (ResultModel.IsValid() && ResultModel->GetItem() != nullptr)
+                    {
+
+                if (!ResultModel.IsValid() || !ResultModel->GetItem().IsValid())
+                    {
+                      return;
+                      }
+                Gs2::Guild::Model::Cache::FGuildCache::Put(
+                    Gs2->Cache,
+
                     RequestModel->GetNamespaceName(),
-                    "Guild"
-                );
-                const auto Key = Gs2::Guild::Domain::Model::FGuildDomain::CreateCacheKey(
                     ResultModel->GetItem()->GetGuildModelName(),
-                    ResultModel->GetItem()->GetName()
+                    RequestModel->GetGuildName(),
+                    TimeOffset,
+                    ResultModel->GetItem()
                 );
-                Gs2->Cache->Put(
-                    Gs2::Guild::Model::FGuild::TypeName,
-                    ParentKey,
-                    Key,
-                    ResultModel->GetItem(),
-                    FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
-                );
-            }
+                    }
+
         }
     }
 
@@ -687,29 +811,42 @@ namespace Gs2::Guild::Domain
                 return;
             }
             {
-                const auto ParentKey = Gs2::Guild::Domain::Model::FGuildDomain::CreateCacheParentKey(
+                Gs2::Guild::Model::Cache::FReceiveMemberRequestCache::Delete(
+                    Gs2->Cache,
                     PayloadJson->GetStringField(ANSI_TO_TCHAR("namespaceName")),
                     PayloadJson->GetStringField(ANSI_TO_TCHAR("guildModelName")),
                     PayloadJson->GetStringField(ANSI_TO_TCHAR("guildName")),
-                    "ReceiveMemberRequest"
+                    PayloadJson->GetStringField(ANSI_TO_TCHAR("fromUserId")),
+                    TOptional<int32>()
                 );
-                const auto Key = Gs2::Guild::Domain::Model::FReceiveMemberRequestDomain::CreateCacheKey(
-                    PayloadJson->GetStringField(ANSI_TO_TCHAR("fromUserId"))
+                Gs2->Cache->ClearListCache(
+                    Gs2::Guild::Model::FReceiveMemberRequest::TypeName,
+                    Gs2::Guild::Model::Cache::FReceiveMemberRequestCache::CreateCacheParentKey(
+                        PayloadJson->GetStringField(ANSI_TO_TCHAR("namespaceName")),
+                        PayloadJson->GetStringField(ANSI_TO_TCHAR("guildModelName")),
+                        PayloadJson->GetStringField(ANSI_TO_TCHAR("guildName")),
+                        TOptional<int32>()
+                    )
                 );
-                Gs2->Cache->ClearListCache(Gs2::Guild::Model::FReceiveMemberRequest::TypeName, ParentKey);
-                Gs2->Cache->Delete(Gs2::Guild::Model::FReceiveMemberRequest::TypeName, ParentKey, Key);
             }
             {
-                const auto ParentKey = Gs2::Guild::Domain::Model::FUserDomain::CreateCacheParentKey(
+                Gs2::Guild::Model::Cache::FSendMemberRequestCache::Delete(
+                    Gs2->Cache,
                     PayloadJson->GetStringField(ANSI_TO_TCHAR("namespaceName")),
                     PayloadJson->GetStringField(ANSI_TO_TCHAR("fromUserId")),
-                    "SendMemberRequest::" + PayloadJson->GetStringField(ANSI_TO_TCHAR("guildModelName"))
+                    PayloadJson->GetStringField(ANSI_TO_TCHAR("guildModelName")),
+                    PayloadJson->GetStringField(ANSI_TO_TCHAR("guildName")),
+                    TOptional<int32>()
                 );
-                const auto Key = Gs2::Guild::Domain::Model::FSendMemberRequestDomain::CreateCacheKey(
-                    PayloadJson->GetStringField(ANSI_TO_TCHAR("guildName"))
+                Gs2->Cache->ClearListCache(
+                    Gs2::Guild::Model::FSendMemberRequest::TypeName,
+                    Gs2::Guild::Model::Cache::FSendMemberRequestCache::CreateCacheParentKey(
+                        PayloadJson->GetStringField(ANSI_TO_TCHAR("namespaceName")),
+                        PayloadJson->GetStringField(ANSI_TO_TCHAR("guildModelName")),
+                        PayloadJson->GetStringField(ANSI_TO_TCHAR("fromUserId")),
+                        TOptional<int32>()
+                    )
                 );
-                Gs2->Cache->ClearListCache(Gs2::Guild::Model::FSendMemberRequest::TypeName, ParentKey);
-                Gs2->Cache->Delete(Gs2::Guild::Model::FSendMemberRequest::TypeName, ParentKey, Key);
             }
             RemoveRequestNotificationEvent.Broadcast(Gs2::Guild::Model::FRemoveRequestNotification::FromJson(PayloadJson));
         }
@@ -820,4 +957,3 @@ namespace Gs2::Guild::Domain
 #elif defined(__clang__)
 #pragma clang diagnostic pop
 #endif
-

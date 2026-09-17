@@ -19,6 +19,7 @@
 #include "CoreMinimal.h"
 #include "Dom/JsonObject.h"
 #include "../Model/TransactionSetting.h"
+#include "../Model/TransactionSettingV2.h"
 #include "../Model/ScriptSetting.h"
 #include "../Model/LogSetting.h"
 
@@ -32,6 +33,7 @@ namespace Gs2::Version::Request
         TOptional<FString> NameValue;
         TOptional<FString> DescriptionValue;
         TSharedPtr<Model::FTransactionSetting> TransactionSettingValue;
+        TSharedPtr<Model::FTransactionSettingV2> TransactionSettingV2Value;
         TOptional<FString> AssumeUserIdValue;
         TSharedPtr<Model::FScriptSetting> AcceptVersionScriptValue;
         TOptional<FString> CheckVersionTriggerScriptIdValue;
@@ -49,6 +51,7 @@ namespace Gs2::Version::Request
         TSharedPtr<FCreateNamespaceRequest> WithName(const TOptional<FString> Name);
         TSharedPtr<FCreateNamespaceRequest> WithDescription(const TOptional<FString> Description);
         TSharedPtr<FCreateNamespaceRequest> WithTransactionSetting(const TSharedPtr<Model::FTransactionSetting> TransactionSetting);
+        TSharedPtr<FCreateNamespaceRequest> WithTransactionSettingV2(const TSharedPtr<Model::FTransactionSettingV2> TransactionSettingV2);
         TSharedPtr<FCreateNamespaceRequest> WithAssumeUserId(const TOptional<FString> AssumeUserId);
         TSharedPtr<FCreateNamespaceRequest> WithAcceptVersionScript(const TSharedPtr<Model::FScriptSetting> AcceptVersionScript);
         TSharedPtr<FCreateNamespaceRequest> WithCheckVersionTriggerScriptId(const TOptional<FString> CheckVersionTriggerScriptId);
@@ -58,6 +61,7 @@ namespace Gs2::Version::Request
         TOptional<FString> GetName() const;
         TOptional<FString> GetDescription() const;
         TSharedPtr<Model::FTransactionSetting> GetTransactionSetting() const;
+        TSharedPtr<Model::FTransactionSettingV2> GetTransactionSettingV2() const;
         TOptional<FString> GetAssumeUserId() const;
         TSharedPtr<Model::FScriptSetting> GetAcceptVersionScript() const;
         TOptional<FString> GetCheckVersionTriggerScriptId() const;

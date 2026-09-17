@@ -28,9 +28,34 @@
 #include "Inbox/Domain/Gs2Inbox.h"
 
 #include "Core/Domain/Gs2.h"
+#include "Core/Domain/SpeculativeExecutor/PreparedSpeculativeCommit.h"
+#include "Auth/Model/AccessToken.h"
+#include "Inbox/Model/Cache/Namespace.h"
+#include "Inbox/Model/Cache/Message.h"
+#include "Serialization/JsonSerializer.h"
+#include "Serialization/JsonWriter.h"
 
 namespace Gs2::Inbox::Domain::SpeculativeExecutor
 {
+
+    namespace
+    {
+        FString DeleteMessageSnapshot(const Gs2::Inbox::Model::FNamespacePtr& Item)
+        {
+            FString Value;
+            auto Writer = TJsonWriterFactory<TCHAR, TCondensedJsonPrintPolicy<TCHAR>>::Create(&Value);
+            FJsonSerializer::Serialize(Item->ToJson().ToSharedRef(), Writer);
+            return Value;
+        }
+
+        FString DeleteMessageSnapshot(const Gs2::Inbox::Model::FMessagePtr& Item)
+        {
+            FString Value;
+            auto Writer = TJsonWriterFactory<TCHAR, TCondensedJsonPrintPolicy<TCHAR>>::Create(&Value);
+            FJsonSerializer::Serialize(Item->ToJson().ToSharedRef(), Writer);
+            return Value;
+        }
+    }
 
     FString FDeleteMessageByUserIdSpeculativeExecutor::Action()
     {
@@ -73,29 +98,40 @@ namespace Gs2::Inbox::Domain::SpeculativeExecutor
     }
 
     Gs2::Core::Model::FGs2ErrorPtr FDeleteMessageByUserIdSpeculativeExecutor::FCommitTask::Action(
-        TSharedPtr<TSharedPtr<TFunction<void()>>> Result
+        TSharedPtr<TSharedPtr<Gs2::Core::Domain::SpeculativeExecutor::FPreparedSpeculativeCommit>> Result
     )
     {
-        const auto ParentKey = Model::FUserDomain::CreateCacheParentKey(
-            Request->GetNamespaceName(),
-            AccessToken->GetUserId(),
-            FString("Message")
-        );
-        const auto Key = Model::FMessageDomain::CreateCacheKey(
-            Request->GetMessageName()
-        );
-
-        *Result = MakeShared<TFunction<void()>>([&]()
+        *Result = nullptr;
+        if (!Domain.IsValid() || !Domain->RestSession.IsValid() || !AccessToken.IsValid() || !Request.IsValid()) return nullptr;
+        const auto Token = MakeShared<Gs2::Auth::Model::FAccessToken>(*AccessToken);
+        const auto Prepared = MakeShared<Gs2::Inbox::Request::FDeleteMessageByUserIdRequest>(*Request);
+        if (Prepared->GetUserId().IsSet() && Prepared->GetUserId().Get(FString()) == TEXT("#{userId}")) Prepared->WithUserId(Token->GetUserId());
+        if (!Token->GetUserId().IsSet() || Token->GetUserId().Get(FString()).IsEmpty() || !Prepared->GetUserId().IsSet() || Prepared->GetUserId().Get(FString()) != Token->GetUserId().Get(FString()) || !Prepared->GetNamespaceName().IsSet() || Prepared->GetNamespaceName().Get(FString()).IsEmpty() || !Prepared->GetMessageName().IsSet() || Prepared->GetMessageName().Get(FString()).IsEmpty()) return nullptr;
+        const auto NamespaceName = Prepared->GetNamespaceName();
+        const auto MessageName = Prepared->GetMessageName();
+        const auto UserId = Token->GetUserId();
+        const auto TimeOffset = Token->GetTimeOffset();
+        const auto Region = Domain->RestSession->RegionName();
+        const auto OwnerId = Domain->RestSession->OwnerId();
+        Gs2::Inbox::Model::FNamespacePtr NamespaceModel;
+        if (!Gs2::Inbox::Model::Cache::FNamespaceCache::TryGet(Domain->Cache, NamespaceName, TOptional<int32>(), &NamespaceModel) || !NamespaceModel.IsValid() || !NamespaceModel->GetName().IsSet() || NamespaceModel->GetName().Get(FString()) != NamespaceName.Get(FString()) || !NamespaceModel->GetIsAutomaticDeletingEnabled().IsSet() || !NamespaceModel->GetCreatedAt().IsSet() || NamespaceModel->GetNamespaceId().Get(FString()) != FString::Printf(TEXT("grn:gs2:%s:%s:inbox:%s"), *Region, *OwnerId, *NamespaceName.Get(FString()))) return nullptr;
+        Gs2::Inbox::Model::FMessagePtr Item;
+        const bool Found = Gs2::Inbox::Model::Cache::FMessageCache::TryGet(Domain->Cache, NamespaceName, UserId, MessageName, TimeOffset, &Item);
+        const int64 PhysicalTimeMillis = static_cast<int64>(FDateTime::UtcNow().ToUnixTimestampDecimal() * 1000.0);
+        const auto ExpectedId = FString::Printf(TEXT("grn:gs2:%s:%s:inbox:%s:user:%s:message:%s"), *Region, *OwnerId, *NamespaceName.Get(FString()), *UserId.Get(FString()), *MessageName.Get(FString()));
+        if (!Found || !Item.IsValid() || Item->GetMessageId().Get(FString()) != ExpectedId || Item->GetName().Get(FString()) != MessageName.Get(FString()) || Item->GetUserId().Get(FString()) != UserId.Get(FString()) || !Item->GetReceivedAt().IsSet() || Item->GetReceivedAt().Get(0) < NamespaceModel->GetCreatedAt().Get(0) || (Item->GetExpiresAt().IsSet() && Item->GetExpiresAt().Get(0) < PhysicalTimeMillis)) return nullptr;
+        const auto ExpectedNamespace = MakeShared<Gs2::Inbox::Model::FNamespace>(*NamespaceModel);
+        const auto Expected = MakeShared<Gs2::Inbox::Model::FMessage>(*Item);
+        const auto NamespaceSnapshot = DeleteMessageSnapshot(ExpectedNamespace);
+        const auto MessageSnapshot = DeleteMessageSnapshot(Expected);
+        *Result = Gs2::Core::Domain::SpeculativeExecutor::FPreparedSpeculativeCommit::WrapLegacy(MakeShared<TFunction<void()>>(
+            [DomainCopy = Domain, NamespaceName, UserId, MessageName, TimeOffset, NamespaceSnapshot, MessageSnapshot]()
         {
-            Domain->Cache->Put(
-                Inbox::Model::FMessage::TypeName,
-                ParentKey,
-                Key,
-                nullptr,
-                FDateTime::Now() + FTimespan::FromSeconds(10)
-            );
-            return nullptr;
-        });
+            Gs2::Inbox::Model::FNamespacePtr LiveNamespace;
+            Gs2::Inbox::Model::FMessagePtr LiveMessage;
+            if (!Gs2::Inbox::Model::Cache::FNamespaceCache::TryGet(DomainCopy->Cache, NamespaceName, TOptional<int32>(), &LiveNamespace) || !LiveNamespace.IsValid() || DeleteMessageSnapshot(LiveNamespace) != NamespaceSnapshot || !Gs2::Inbox::Model::Cache::FMessageCache::TryGet(DomainCopy->Cache, NamespaceName, UserId, MessageName, TimeOffset, &LiveMessage) || !LiveMessage.IsValid() || DeleteMessageSnapshot(LiveMessage) != MessageSnapshot) return;
+            Gs2::Inbox::Model::Cache::FMessageCache::Put(DomainCopy->Cache, NamespaceName, UserId, MessageName, TimeOffset, nullptr);
+        }));
         return nullptr;
     }
 

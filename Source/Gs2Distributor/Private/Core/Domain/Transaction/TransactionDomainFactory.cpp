@@ -21,6 +21,7 @@
 #include "Core/Domain/Transaction/ManualTransactionAccessTokenDomain.h"
 #include "Core/Domain/Transaction/ManualTransactionDomain.h"
 #include "Core/Domain/Transaction/InternalTransactionDomainFactory.h"
+#include "Core/Domain/Gs2.h"
 
 namespace Gs2::Core::Domain
 {
@@ -35,10 +36,12 @@ namespace Gs2::Core::Domain
 		FString StampSheet,
 		FString StampSheetEncryptionKeyId,
 		bool bAtomicCommit,
-		Gs2::Core::Model::FTransactionResultPtr TransactionResult
+		Gs2::Core::Model::FTransactionResultPtr TransactionResult,
+		TOptional<FString> NamespaceName
 	)
 	{
-		auto NewTransactionDomain = [&](
+		const auto Dispatch = GS2->DispatchAccessToken;
+		auto NewTransactionDomain = [GS2, NewJobQueueDomain, AccessToken](
 			bool bAutoRun,
 			FString TransactionId,
 			FString StampSheet,
@@ -52,20 +55,24 @@ namespace Gs2::Core::Domain
 				NewJobQueueDomain,
 				AccessToken,
 				bAutoRun,
-				TransactionId,
-				StampSheet,
-				StampSheetEncryptionKeyId,
-				bAtomicCommit,
-				TransactionResult
+					TransactionId,
+					StampSheet,
+					StampSheetEncryptionKeyId,
+					bAtomicCommit,
+					TransactionResult
 			);
 		};
-		if (bAutoRun && !TransactionId.IsEmpty()) {
+		if (bAutoRun) {
 			return MakeShared<FAutoTransactionAccessTokenDomain>(
 				GS2,
 				NewJobQueueDomain,
 				NewTransactionDomain,
+				Dispatch,
 				AccessToken,
-				TransactionId
+				TransactionId,
+				bAtomicCommit,
+				TransactionResult,
+				NamespaceName
 			);
 		}
 		else {
@@ -73,6 +80,7 @@ namespace Gs2::Core::Domain
 				GS2,
 				NewJobQueueDomain,
 				NewTransactionDomain,
+				Dispatch,
 				AccessToken,
 				TransactionId,
 				StampSheet,
@@ -92,10 +100,11 @@ namespace Gs2::Core::Domain
 		FString StampSheet,
 		FString StampSheetEncryptionKeyId,
 		bool bAtomicCommit,
-		Gs2::Core::Model::FTransactionResultPtr TransactionResult
+		Gs2::Core::Model::FTransactionResultPtr TransactionResult,
+		TOptional<FString> NamespaceName
 	)
 	{
-		auto NewTransactionDomain = [&GS2, NewJobQueueDomain, UserId](
+		auto NewTransactionDomain = [GS2, NewJobQueueDomain, UserId](
 			bool bAutoRun,
 			FString TransactionId,
 			FString StampSheet,
@@ -109,20 +118,23 @@ namespace Gs2::Core::Domain
 				NewJobQueueDomain,
 				UserId,
 				bAutoRun,
-				TransactionId,
-				StampSheet,
-				StampSheetEncryptionKeyId,
-				bAtomicCommit,
-				TransactionResult
+					TransactionId,
+					StampSheet,
+					StampSheetEncryptionKeyId,
+					bAtomicCommit,
+					TransactionResult
 			);
 		};
-		if (bAutoRun && !TransactionId.IsEmpty()) {
+		if (bAutoRun) {
 			return MakeShared<FAutoTransactionDomain>(
 				GS2,
 				NewJobQueueDomain,
 				NewTransactionDomain,
 				UserId,
-				TransactionId
+				TransactionId,
+				bAtomicCommit,
+				TransactionResult,
+				NamespaceName
 			);
 		}
 		else {

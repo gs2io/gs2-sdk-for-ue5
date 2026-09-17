@@ -19,6 +19,7 @@
 #include "CoreMinimal.h"
 #include "Dom/JsonObject.h"
 #include "../Model/TransactionSetting.h"
+#include "../Model/TransactionSettingV2.h"
 #include "../Model/LogSetting.h"
 
 namespace Gs2::Gateway::Request
@@ -31,7 +32,9 @@ namespace Gs2::Gateway::Request
         TOptional<FString> NameValue;
         TOptional<FString> DescriptionValue;
         TSharedPtr<Model::FTransactionSetting> TransactionSettingValue;
+        TSharedPtr<Model::FTransactionSettingV2> TransactionSettingV2Value;
         TOptional<FString> FirebaseSecretValue;
+        TOptional<FString> FirebaseProjectIdValue;
         TSharedPtr<Model::FLogSetting> LogSettingValue;
         
     public:
@@ -46,14 +49,18 @@ namespace Gs2::Gateway::Request
         TSharedPtr<FCreateNamespaceRequest> WithName(const TOptional<FString> Name);
         TSharedPtr<FCreateNamespaceRequest> WithDescription(const TOptional<FString> Description);
         TSharedPtr<FCreateNamespaceRequest> WithTransactionSetting(const TSharedPtr<Model::FTransactionSetting> TransactionSetting);
+        TSharedPtr<FCreateNamespaceRequest> WithTransactionSettingV2(const TSharedPtr<Model::FTransactionSettingV2> TransactionSettingV2);
         TSharedPtr<FCreateNamespaceRequest> WithFirebaseSecret(const TOptional<FString> FirebaseSecret);
+        TSharedPtr<FCreateNamespaceRequest> WithFirebaseProjectId(const TOptional<FString> FirebaseProjectId);
         TSharedPtr<FCreateNamespaceRequest> WithLogSetting(const TSharedPtr<Model::FLogSetting> LogSetting);
 
         TOptional<FString> GetContextStack() const;
         TOptional<FString> GetName() const;
         TOptional<FString> GetDescription() const;
         TSharedPtr<Model::FTransactionSetting> GetTransactionSetting() const;
+        TSharedPtr<Model::FTransactionSettingV2> GetTransactionSettingV2() const;
         TOptional<FString> GetFirebaseSecret() const;
+        TOptional<FString> GetFirebaseProjectId() const;
         TSharedPtr<Model::FLogSetting> GetLogSetting() const;
 
         static TSharedPtr<FCreateNamespaceRequest> FromJson(const TSharedPtr<FJsonObject> Data);

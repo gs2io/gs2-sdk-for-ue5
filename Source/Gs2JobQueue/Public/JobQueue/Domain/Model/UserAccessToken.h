@@ -90,6 +90,8 @@ namespace Gs2::JobQueue::Domain::Model
             const FUserAccessTokenDomain& From
         );
 
+
+
         class GS2JOBQUEUE_API FRunTask final :
             public Gs2::Core::Util::TGs2Future<Gs2::JobQueue::Domain::Model::FJobAccessTokenDomain>,
             public TSharedFromThis<FRunTask>

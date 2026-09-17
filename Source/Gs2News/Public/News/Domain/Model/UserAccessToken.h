@@ -95,8 +95,33 @@ namespace Gs2::News::Domain::Model
 
         Gs2::Core::Domain::CallbackID SubscribeNewses(
             TFunction<void()> Callback
+
         );
 
+        class FCollectNewsesTask;
+
+        Gs2::Core::Domain::CallbackID SubscribeNewses(
+            TFunction<void(TArray<Gs2::News::Model::FNewsPtr>)> Callback
+        );
+
+        void InvalidateNewses();
+
+        class GS2NEWS_API FSubscribeNewsesWithInitialCallTask final :
+            public Gs2::Core::Util::TGs2Future<Gs2::Core::Domain::CallbackID>,
+            public TSharedFromThis<FSubscribeNewsesWithInitialCallTask>
+        {
+            const TSharedPtr<FUserAccessTokenDomain> Self;
+            const TFunction<void(TArray<Gs2::News::Model::FNewsPtr>)> Callback;
+
+        public:
+            FSubscribeNewsesWithInitialCallTask(const TSharedPtr<FUserAccessTokenDomain>& Self, TFunction<void(TArray<Gs2::News::Model::FNewsPtr>)> Callback);
+            FSubscribeNewsesWithInitialCallTask(const FSubscribeNewsesWithInitialCallTask& From);
+            virtual Gs2::Core::Model::FGs2ErrorPtr Action(TSharedPtr<TSharedPtr<Gs2::Core::Domain::CallbackID>> Result) override;
+        };
+
+        TSharedPtr<FAsyncTask<FSubscribeNewsesWithInitialCallTask>> SubscribeNewsesWithInitialCall(
+            TFunction<void(TArray<Gs2::News::Model::FNewsPtr>)> Callback
+        );
         void UnsubscribeNewses(
             Gs2::Core::Domain::CallbackID CallbackID
         );

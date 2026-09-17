@@ -39,6 +39,8 @@
 #include "Account/Domain/Model/TakeOverTypeModelMaster.h"
 #include "Account/Domain/Model/CurrentModelMaster.h"
 
+#include "Account/Model/Cache/PlatformId.h"
+#include "Account/Model/Cache/TakeOver.h"
 #include "Core/Domain/Gs2.h"
 #include "Core/Domain/Transaction/JobQueueJobDomainFactory.h"
 #include "Core/Domain/Transaction/InternalTransactionDomainFactory.h"
@@ -101,6 +103,8 @@ namespace Gs2::Account::Domain::Model
             ->WithContextStack(Self->Gs2->DefaultContextStack)
             ->WithNamespaceName(Self->NamespaceName)
             ->WithAccessToken(Self->AccessToken->GetToken());
+        const auto CacheOwnerUserId = Self->UserId();
+        const auto CacheOwnerTimeOffset = Self->AccessToken.IsValid() ? Self->AccessToken->GetTimeOffset() : TOptional<int32>();
         const auto Future = Self->Client->DeleteTakeOver(
             Request
         );
@@ -114,22 +118,14 @@ namespace Gs2::Account::Domain::Model
         }
         const auto ResultModel = Future->GetTask().Result();
         Future->EnsureCompletion();
-        if (ResultModel != nullptr)
+        if (ResultModel != nullptr && ResultModel->GetItem() != nullptr)
         {
-            if (ResultModel->GetItem() != nullptr)
-            {
-                const auto Key = Gs2::Account::Domain::Model::FTakeOverDomain::CreateCacheKey(
-                    ResultModel->GetItem()->GetType()
-                );
-                Self->Gs2->Cache->Delete(
-                    Gs2::Account::Model::FTakeOver::TypeName,
-                    Self->ParentKey,
-                    Key
-                );
-            }
-            Self->Gs2->Cache->ClearListCache(
-                Gs2::Account::Model::FTakeOver::TypeName,
-                Self->ParentKey
+            Gs2::Account::Model::Cache::FTakeOverCache::Delete(
+                Self->Gs2->Cache,
+                Request->GetNamespaceName(),
+                CacheOwnerUserId,
+                ResultModel->GetItem()->GetType().Get(0),
+                CacheOwnerTimeOffset
             );
         }
         auto Domain = MakeShared<Gs2::Account::Domain::Model::FTakeOverAccessTokenDomain>(
@@ -167,28 +163,119 @@ namespace Gs2::Account::Domain::Model
     {
         return Gs2->Cache->ListSubscribe(
             Gs2::Account::Model::FTakeOver::TypeName,
-            Gs2::Account::Domain::Model::FAccountDomain::CreateCacheParentKey(
+            Gs2::Account::Model::Cache::FTakeOverCache::CreateCacheParentKey(
                 NamespaceName,
-                UserId(),
-                "TakeOver"
+                AccessToken.IsValid() ? AccessToken->GetUserId() : TOptional<FString>(),
+                AccessToken.IsValid() ? AccessToken->GetTimeOffset() : TOptional<int32>()
             ),
+            Callback,
             Callback
         );
     }
-
     void FAccountAccessTokenDomain::UnsubscribeTakeOvers(
         Gs2::Core::Domain::CallbackID CallbackID
     )
     {
         Gs2->Cache->ListUnsubscribe(
             Gs2::Account::Model::FTakeOver::TypeName,
-            Gs2::Account::Domain::Model::FAccountDomain::CreateCacheParentKey(
+            Gs2::Account::Model::Cache::FTakeOverCache::CreateCacheParentKey(
                 NamespaceName,
-                UserId(),
-                "TakeOver"
+                AccessToken.IsValid() ? AccessToken->GetUserId() : TOptional<FString>(),
+                AccessToken.IsValid() ? AccessToken->GetTimeOffset() : TOptional<int32>()
             ),
             CallbackID
         );
+    }
+    class FAccountAccessTokenDomain::FCollectTakeOversTask : public Gs2::Core::Util::TGs2Future<TArray<Gs2::Account::Model::FTakeOverPtr>>, public TSharedFromThis<FCollectTakeOversTask>
+    {
+        const TSharedPtr<FAccountAccessTokenDomain> Self;
+        const TFunction<void(TArray<Gs2::Account::Model::FTakeOverPtr>)> OnCollected;
+
+    public:
+        explicit FCollectTakeOversTask(const TSharedPtr<FAccountAccessTokenDomain>& Self, TFunction<void(TArray<Gs2::Account::Model::FTakeOverPtr>)> OnCollected) : Self(Self), OnCollected(OnCollected) {}
+        FCollectTakeOversTask(const FCollectTakeOversTask& From) : TGs2Future(From), Self(From.Self), OnCollected(From.OnCollected) {}
+        virtual Gs2::Core::Model::FGs2ErrorPtr Action(TSharedPtr<TSharedPtr<TArray<Gs2::Account::Model::FTakeOverPtr>>> Result) override
+        {
+            TArray<Gs2::Account::Model::FTakeOverPtr> Items;
+            auto Iterator = Self->TakeOvers()->begin();
+            while (Iterator.HasNext())
+            {
+                if (Iterator.IsError()) return Iterator.Error();
+                if (Iterator.IsCurrentValid()) Items.Add(Iterator.Current());
+                ++Iterator;
+            }
+            if (Iterator.IsError()) return Iterator.Error();
+            *Result = MakeShared<TArray<Gs2::Account::Model::FTakeOverPtr>>(Items);
+            if (OnCollected) OnCollected(Items);
+            return nullptr;
+        }
+    };
+
+    Gs2::Core::Domain::CallbackID FAccountAccessTokenDomain::SubscribeTakeOvers(
+        TFunction<void(TArray<Gs2::Account::Model::FTakeOverPtr>)> Callback
+    )
+    {
+        const TWeakPtr<Gs2::Core::Domain::FGs2> WeakGs2 = this->Gs2;
+        const TWeakPtr<Account::Domain::FGs2AccountDomain> WeakService = this->Service;
+        const auto SourceToken = this->AccessToken;
+        const TOptional<FString> RegisteredUserId = SourceToken.IsValid() ? TOptional<FString>(SourceToken->GetUserId()) : TOptional<FString>();
+        const int32 RegisteredTimeOffset = SourceToken.IsValid() ? SourceToken->GetTimeOffset().Get(0) : 0;
+        const auto QueryNamespaceName = NamespaceName;
+        const auto Parent = Gs2::Account::Model::Cache::FTakeOverCache::CreateCacheParentKey(
+        NamespaceName,
+        AccessToken.IsValid() ? AccessToken->GetUserId() : TOptional<FString>(),
+        AccessToken.IsValid() ? AccessToken->GetTimeOffset() : TOptional<int32>()
+    );
+        return Gs2->Cache->ListSubscribeTyped(
+            Gs2::Account::Model::FTakeOver::TypeName,
+            Parent,
+            [Callback, WeakGs2](const TArray<FGs2ObjectPtr>& Values)
+            {
+                if (!WeakGs2.Pin().IsValid()) return;
+                TArray<Gs2::Account::Model::FTakeOverPtr> TypedValues;
+                for (const auto& Value : Values) if (Value.IsValid()) TypedValues.Add(StaticCastSharedPtr<Gs2::Account::Model::FTakeOver>(Value));
+                Callback(TypedValues);
+            },
+            [WeakGs2, WeakService, Callback, QueryNamespaceName, SourceToken, RegisteredUserId, RegisteredTimeOffset]()
+            {
+                const auto Owner = WeakGs2.Pin();
+                if (!Owner.IsValid() || !SourceToken.IsValid() || !RegisteredUserId.IsSet()) return;
+                const auto TokenSnapshot = MakeShared<Gs2::Auth::Model::FAccessToken>(*SourceToken);
+                if (TokenSnapshot->GetUserId() != RegisteredUserId || TokenSnapshot->GetTimeOffset().Get(0) != RegisteredTimeOffset) return;
+                const auto Domain = MakeShared<FAccountAccessTokenDomain>(Owner, WeakService.Pin(), QueryNamespaceName, TokenSnapshot);
+                const auto Task = Gs2::Core::Util::New<FAsyncTask<FCollectTakeOversTask>>(Domain, Callback);
+                Task->StartBackgroundTask();
+            }
+        );
+    }
+
+    void FAccountAccessTokenDomain::InvalidateTakeOvers()
+    {
+        Gs2->Cache->ClearListCache(
+            Gs2::Account::Model::FTakeOver::TypeName,
+            Gs2::Account::Model::Cache::FTakeOverCache::CreateCacheParentKey(
+        NamespaceName,
+        AccessToken.IsValid() ? AccessToken->GetUserId() : TOptional<FString>(),
+        AccessToken.IsValid() ? AccessToken->GetTimeOffset() : TOptional<int32>()
+    )
+        );
+    }
+
+    FAccountAccessTokenDomain::FSubscribeTakeOversWithInitialCallTask::FSubscribeTakeOversWithInitialCallTask(const TSharedPtr<FAccountAccessTokenDomain>& Self, TFunction<void(TArray<Gs2::Account::Model::FTakeOverPtr>)> Callback) : Self(Self), Callback(Callback) {}
+    FAccountAccessTokenDomain::FSubscribeTakeOversWithInitialCallTask::FSubscribeTakeOversWithInitialCallTask(const FSubscribeTakeOversWithInitialCallTask& From) : TGs2Future(From), Self(From.Self), Callback(From.Callback) {}
+    Gs2::Core::Model::FGs2ErrorPtr FAccountAccessTokenDomain::FSubscribeTakeOversWithInitialCallTask::Action(TSharedPtr<TSharedPtr<Gs2::Core::Domain::CallbackID>> Result)
+    {
+        const auto Task = Gs2::Core::Util::New<FAsyncTask<FCollectTakeOversTask>>(Self, TFunction<void(TArray<Gs2::Account::Model::FTakeOverPtr>)>());
+        Task->StartSynchronousTask(); Task->EnsureCompletion();
+        if (Task->GetTask().IsError()) return Task->GetTask().Error();
+        const auto Values = Task->GetTask().Result();
+        const auto CallbackId = Self->SubscribeTakeOvers(Callback);
+        Callback(*Values); *Result = MakeShared<Gs2::Core::Domain::CallbackID>(CallbackId);
+        return nullptr;
+    }
+    TSharedPtr<FAsyncTask<FAccountAccessTokenDomain::FSubscribeTakeOversWithInitialCallTask>> FAccountAccessTokenDomain::SubscribeTakeOversWithInitialCall(TFunction<void(TArray<Gs2::Account::Model::FTakeOverPtr>)> Callback)
+    {
+        return Gs2::Core::Util::New<FAsyncTask<FSubscribeTakeOversWithInitialCallTask>>(this->AsShared(), Callback);
     }
 
     TSharedPtr<Gs2::Account::Domain::Model::FTakeOverAccessTokenDomain> FAccountAccessTokenDomain::TakeOver(
@@ -232,28 +319,119 @@ namespace Gs2::Account::Domain::Model
     {
         return Gs2->Cache->ListSubscribe(
             Gs2::Account::Model::FPlatformId::TypeName,
-            Gs2::Account::Domain::Model::FAccountDomain::CreateCacheParentKey(
+            Gs2::Account::Model::Cache::FPlatformIdCache::CreateCacheParentKey(
                 NamespaceName,
-                UserId(),
-                "PlatformId"
+                AccessToken.IsValid() ? AccessToken->GetUserId() : TOptional<FString>(),
+                AccessToken.IsValid() ? AccessToken->GetTimeOffset() : TOptional<int32>()
             ),
+            Callback,
             Callback
         );
     }
-
     void FAccountAccessTokenDomain::UnsubscribePlatformIds(
         Gs2::Core::Domain::CallbackID CallbackID
     )
     {
         Gs2->Cache->ListUnsubscribe(
             Gs2::Account::Model::FPlatformId::TypeName,
-            Gs2::Account::Domain::Model::FAccountDomain::CreateCacheParentKey(
+            Gs2::Account::Model::Cache::FPlatformIdCache::CreateCacheParentKey(
                 NamespaceName,
-                UserId(),
-                "PlatformId"
+                AccessToken.IsValid() ? AccessToken->GetUserId() : TOptional<FString>(),
+                AccessToken.IsValid() ? AccessToken->GetTimeOffset() : TOptional<int32>()
             ),
             CallbackID
         );
+    }
+    class FAccountAccessTokenDomain::FCollectPlatformIdsTask : public Gs2::Core::Util::TGs2Future<TArray<Gs2::Account::Model::FPlatformIdPtr>>, public TSharedFromThis<FCollectPlatformIdsTask>
+    {
+        const TSharedPtr<FAccountAccessTokenDomain> Self;
+        const TFunction<void(TArray<Gs2::Account::Model::FPlatformIdPtr>)> OnCollected;
+
+    public:
+        explicit FCollectPlatformIdsTask(const TSharedPtr<FAccountAccessTokenDomain>& Self, TFunction<void(TArray<Gs2::Account::Model::FPlatformIdPtr>)> OnCollected) : Self(Self), OnCollected(OnCollected) {}
+        FCollectPlatformIdsTask(const FCollectPlatformIdsTask& From) : TGs2Future(From), Self(From.Self), OnCollected(From.OnCollected) {}
+        virtual Gs2::Core::Model::FGs2ErrorPtr Action(TSharedPtr<TSharedPtr<TArray<Gs2::Account::Model::FPlatformIdPtr>>> Result) override
+        {
+            TArray<Gs2::Account::Model::FPlatformIdPtr> Items;
+            auto Iterator = Self->PlatformIds()->begin();
+            while (Iterator.HasNext())
+            {
+                if (Iterator.IsError()) return Iterator.Error();
+                if (Iterator.IsCurrentValid()) Items.Add(Iterator.Current());
+                ++Iterator;
+            }
+            if (Iterator.IsError()) return Iterator.Error();
+            *Result = MakeShared<TArray<Gs2::Account::Model::FPlatformIdPtr>>(Items);
+            if (OnCollected) OnCollected(Items);
+            return nullptr;
+        }
+    };
+
+    Gs2::Core::Domain::CallbackID FAccountAccessTokenDomain::SubscribePlatformIds(
+        TFunction<void(TArray<Gs2::Account::Model::FPlatformIdPtr>)> Callback
+    )
+    {
+        const TWeakPtr<Gs2::Core::Domain::FGs2> WeakGs2 = this->Gs2;
+        const TWeakPtr<Account::Domain::FGs2AccountDomain> WeakService = this->Service;
+        const auto SourceToken = this->AccessToken;
+        const TOptional<FString> RegisteredUserId = SourceToken.IsValid() ? TOptional<FString>(SourceToken->GetUserId()) : TOptional<FString>();
+        const int32 RegisteredTimeOffset = SourceToken.IsValid() ? SourceToken->GetTimeOffset().Get(0) : 0;
+        const auto QueryNamespaceName = NamespaceName;
+        const auto Parent = Gs2::Account::Model::Cache::FPlatformIdCache::CreateCacheParentKey(
+        NamespaceName,
+        AccessToken.IsValid() ? AccessToken->GetUserId() : TOptional<FString>(),
+        AccessToken.IsValid() ? AccessToken->GetTimeOffset() : TOptional<int32>()
+    );
+        return Gs2->Cache->ListSubscribeTyped(
+            Gs2::Account::Model::FPlatformId::TypeName,
+            Parent,
+            [Callback, WeakGs2](const TArray<FGs2ObjectPtr>& Values)
+            {
+                if (!WeakGs2.Pin().IsValid()) return;
+                TArray<Gs2::Account::Model::FPlatformIdPtr> TypedValues;
+                for (const auto& Value : Values) if (Value.IsValid()) TypedValues.Add(StaticCastSharedPtr<Gs2::Account::Model::FPlatformId>(Value));
+                Callback(TypedValues);
+            },
+            [WeakGs2, WeakService, Callback, QueryNamespaceName, SourceToken, RegisteredUserId, RegisteredTimeOffset]()
+            {
+                const auto Owner = WeakGs2.Pin();
+                if (!Owner.IsValid() || !SourceToken.IsValid() || !RegisteredUserId.IsSet()) return;
+                const auto TokenSnapshot = MakeShared<Gs2::Auth::Model::FAccessToken>(*SourceToken);
+                if (TokenSnapshot->GetUserId() != RegisteredUserId || TokenSnapshot->GetTimeOffset().Get(0) != RegisteredTimeOffset) return;
+                const auto Domain = MakeShared<FAccountAccessTokenDomain>(Owner, WeakService.Pin(), QueryNamespaceName, TokenSnapshot);
+                const auto Task = Gs2::Core::Util::New<FAsyncTask<FCollectPlatformIdsTask>>(Domain, Callback);
+                Task->StartBackgroundTask();
+            }
+        );
+    }
+
+    void FAccountAccessTokenDomain::InvalidatePlatformIds()
+    {
+        Gs2->Cache->ClearListCache(
+            Gs2::Account::Model::FPlatformId::TypeName,
+            Gs2::Account::Model::Cache::FPlatformIdCache::CreateCacheParentKey(
+        NamespaceName,
+        AccessToken.IsValid() ? AccessToken->GetUserId() : TOptional<FString>(),
+        AccessToken.IsValid() ? AccessToken->GetTimeOffset() : TOptional<int32>()
+    )
+        );
+    }
+
+    FAccountAccessTokenDomain::FSubscribePlatformIdsWithInitialCallTask::FSubscribePlatformIdsWithInitialCallTask(const TSharedPtr<FAccountAccessTokenDomain>& Self, TFunction<void(TArray<Gs2::Account::Model::FPlatformIdPtr>)> Callback) : Self(Self), Callback(Callback) {}
+    FAccountAccessTokenDomain::FSubscribePlatformIdsWithInitialCallTask::FSubscribePlatformIdsWithInitialCallTask(const FSubscribePlatformIdsWithInitialCallTask& From) : TGs2Future(From), Self(From.Self), Callback(From.Callback) {}
+    Gs2::Core::Model::FGs2ErrorPtr FAccountAccessTokenDomain::FSubscribePlatformIdsWithInitialCallTask::Action(TSharedPtr<TSharedPtr<Gs2::Core::Domain::CallbackID>> Result)
+    {
+        const auto Task = Gs2::Core::Util::New<FAsyncTask<FCollectPlatformIdsTask>>(Self, TFunction<void(TArray<Gs2::Account::Model::FPlatformIdPtr>)>());
+        Task->StartSynchronousTask(); Task->EnsureCompletion();
+        if (Task->GetTask().IsError()) return Task->GetTask().Error();
+        const auto Values = Task->GetTask().Result();
+        const auto CallbackId = Self->SubscribePlatformIds(Callback);
+        Callback(*Values); *Result = MakeShared<Gs2::Core::Domain::CallbackID>(CallbackId);
+        return nullptr;
+    }
+    TSharedPtr<FAsyncTask<FAccountAccessTokenDomain::FSubscribePlatformIdsWithInitialCallTask>> FAccountAccessTokenDomain::SubscribePlatformIdsWithInitialCall(TFunction<void(TArray<Gs2::Account::Model::FPlatformIdPtr>)> Callback)
+    {
+        return Gs2::Core::Util::New<FAsyncTask<FSubscribePlatformIdsWithInitialCallTask>>(this->AsShared(), Callback);
     }
 
     TSharedPtr<Gs2::Account::Domain::Model::FPlatformIdAccessTokenDomain> FAccountAccessTokenDomain::PlatformId(
@@ -307,18 +485,27 @@ namespace Gs2::Account::Domain::Model
         TSharedPtr<TSharedPtr<Gs2::Account::Model::FAccount>> Result
     )
     {
-        // ReSharper disable once CppLocalVariableMayBeConst
-        TSharedPtr<Gs2::Account::Model::FAccount> Value;
-        auto bCacheHit = Self->Gs2->Cache->TryGet<Gs2::Account::Model::FAccount>(
-            Self->ParentKey,
-            Gs2::Account::Domain::Model::FAccountDomain::CreateCacheKey(
-                Self->UserId()
-            ),
-            &Value
+        const FString CacheKey = Gs2::Account::Domain::Model::FAccountDomain::CreateCacheKey(
+            Self->UserId()
         );
-        *Result = Value;
+        return Self->Gs2->Cache->ExecuteWithKeyLock(
+            Gs2::Account::Model::FAccount::TypeName,
+            Self->ParentKey,
+            CacheKey,
+            [this, Result, CacheKey]() -> Gs2::Core::Model::FGs2ErrorPtr
+            {
+                // ReSharper disable once CppLocalVariableMayBeConst
+                TSharedPtr<Gs2::Account::Model::FAccount> Value;
+                auto bCacheHit = Self->Gs2->Cache->TryGet<Gs2::Account::Model::FAccount>(
+                    Self->ParentKey,
+                    CacheKey,
+                    &Value
+                );
+                *Result = Value;
 
-        return nullptr;
+                return nullptr;
+            }
+        );
     }
 
     TSharedPtr<FAsyncTask<FAccountAccessTokenDomain::FModelTask>> FAccountAccessTokenDomain::Model() {
@@ -362,4 +549,3 @@ namespace Gs2::Account::Domain::Model
 #elif defined(__clang__)
 #pragma clang diagnostic pop
 #endif
-

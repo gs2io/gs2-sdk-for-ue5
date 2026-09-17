@@ -12,8 +12,6 @@
  * on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either
  * express or implied. See the License for the specific language governing
  * permissions and limitations under the License.
- *
- * deny overwrite
  */
 
 #if defined(_MSC_VER)
@@ -35,6 +33,7 @@
 #include "Inbox/Domain/Model/GlobalMessage.h"
 #include "Inbox/Domain/Model/Received.h"
 #include "Inbox/Domain/Model/ReceivedAccessToken.h"
+#include "Inbox/Model/Cache/Message.h"
 
 #include "Core/Domain/Gs2.h"
 #include "Core/Domain/Transaction/JobQueueJobDomainFactory.h"
@@ -58,10 +57,10 @@ namespace Gs2::Inbox::Domain::Model
         NamespaceName(NamespaceName),
         UserId(UserId),
         MessageName(MessageName),
-        ParentKey(Gs2::Inbox::Domain::Model::FUserDomain::CreateCacheParentKey(
+        ParentKey(Gs2::Inbox::Model::Cache::FMessageCache::CreateCacheParentKey(
             NamespaceName,
             UserId,
-            "Message"
+            TOptional<int32>()
         ))
     {
     }
@@ -99,7 +98,7 @@ namespace Gs2::Inbox::Domain::Model
     )
     {
         Request
-            ->WithContextStack(Self->Gs2->DefaultContextStack)
+            ->WithContextStack((!Request->GetContextStack().IsSet() || Request->GetContextStack()->IsEmpty()) ? Self->Gs2->DefaultContextStack : Request->GetContextStack())
             ->WithNamespaceName(Self->NamespaceName)
             ->WithUserId(Self->UserId)
             ->WithMessageName(Self->MessageName);
@@ -113,6 +112,26 @@ namespace Gs2::Inbox::Domain::Model
         }
         const auto ResultModel = Future->GetTask().Result();
         Future->EnsureCompletion();
+
+            if (ResultModel.IsValid() && ResultModel->GetItem() != nullptr)
+            {
+
+        if (!ResultModel.IsValid() || !((ResultModel.IsValid() && ResultModel->GetItem().IsValid() ? ResultModel->GetItem()->GetUserId() : TOptional<FString>())).IsSet())
+            {
+              const auto Details = MakeShared<TArray<TSharedPtr<Gs2::Core::Model::FGs2ErrorDetail>>>();
+                Details->Add(MakeShared<Gs2::Core::Model::FGs2ErrorDetail>(TEXT("userId"), TEXT("userId is invalid."), TEXT("invalid_response")));
+                return MakeShared<Gs2::Core::Model::FUnknownError>(Details);
+              }
+        Gs2::Inbox::Model::Cache::FMessageCache::Put(
+            Self->Gs2->Cache,
+
+            Request->GetNamespaceName(),
+            (ResultModel.IsValid() && ResultModel->GetItem().IsValid() ? ResultModel->GetItem()->GetUserId() : TOptional<FString>()),
+            Request->GetMessageName(),
+            TOptional<int32>(),
+            ResultModel->GetItem()
+        );
+            }
         *Result = ResultModel->GetItem();
         return nullptr;
     }
@@ -142,7 +161,7 @@ namespace Gs2::Inbox::Domain::Model
     )
     {
         Request
-            ->WithContextStack(Self->Gs2->DefaultContextStack)
+            ->WithContextStack((!Request->GetContextStack().IsSet() || Request->GetContextStack()->IsEmpty()) ? Self->Gs2->DefaultContextStack : Request->GetContextStack())
             ->WithNamespaceName(Self->NamespaceName)
             ->WithUserId(Self->UserId)
             ->WithMessageName(Self->MessageName);
@@ -156,22 +175,20 @@ namespace Gs2::Inbox::Domain::Model
         }
         const auto ResultModel = Future->GetTask().Result();
         Future->EnsureCompletion();
-        if (ResultModel->GetItem() != nullptr)
-        {
-            const auto Key = Gs2::Inbox::Domain::Model::FMessageDomain::CreateCacheKey(
-                ResultModel->GetItem()->GetName()
-            );
-            Self->Gs2->Cache->Put(
-                Gs2::Inbox::Model::FMessage::TypeName,
-                Self->ParentKey,
-                Key,
-                ResultModel->GetItem(),
-                ResultModel->GetItem()->GetExpiresAt().IsSet() && *ResultModel->GetItem()->GetExpiresAt() != 0 ? FDateTime::FromUnixTimestamp(*ResultModel->GetItem()->GetExpiresAt() / 1000) : FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
-            );
-        }
-        Self->Gs2->Cache->ClearListCache(
-            Gs2::Inbox::Model::FMessage::TypeName,
-            Self->ParentKey
+
+              if (!ResultModel.IsValid() || !((ResultModel.IsValid() && ResultModel->GetItem().IsValid() ? ResultModel->GetItem()->GetUserId() : TOptional<FString>())).IsSet())
+                  {
+                    const auto Details = MakeShared<TArray<TSharedPtr<Gs2::Core::Model::FGs2ErrorDetail>>>();
+                      Details->Add(MakeShared<Gs2::Core::Model::FGs2ErrorDetail>(TEXT("userId"), TEXT("userId is invalid."), TEXT("invalid_response")));
+                      return MakeShared<Gs2::Core::Model::FUnknownError>(Details);
+                    }
+              Gs2::Inbox::Model::Cache::FMessageCache::Delete(
+            Self->Gs2->Cache,
+
+            Request->GetNamespaceName(),
+            (ResultModel.IsValid() && ResultModel->GetItem().IsValid() ? ResultModel->GetItem()->GetUserId() : TOptional<FString>()),
+            Request->GetMessageName(),
+            TOptional<int32>()
         );
         auto Domain = Self;
 
@@ -204,7 +221,7 @@ namespace Gs2::Inbox::Domain::Model
     )
     {
         Request
-            ->WithContextStack(Self->Gs2->DefaultContextStack)
+            ->WithContextStack((!Request->GetContextStack().IsSet() || Request->GetContextStack()->IsEmpty()) ? Self->Gs2->DefaultContextStack : Request->GetContextStack())
             ->WithNamespaceName(Self->NamespaceName)
             ->WithUserId(Self->UserId)
             ->WithMessageName(Self->MessageName);
@@ -218,19 +235,26 @@ namespace Gs2::Inbox::Domain::Model
         }
         const auto ResultModel = Future->GetTask().Result();
         Future->EnsureCompletion();
-        if (ResultModel->GetItem() != nullptr)
-        {
-            const auto Key = Gs2::Inbox::Domain::Model::FMessageDomain::CreateCacheKey(
-                ResultModel->GetItem()->GetName()
-            );
-            Self->Gs2->Cache->Put(
-                Gs2::Inbox::Model::FMessage::TypeName,
-                Self->ParentKey,
-                Key,
-                ResultModel->GetItem(),
-                ResultModel->GetItem()->GetExpiresAt().IsSet() && *ResultModel->GetItem()->GetExpiresAt() != 0 ? FDateTime::FromUnixTimestamp(*ResultModel->GetItem()->GetExpiresAt() / 1000) : FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
-            );
-        }
+
+            if (ResultModel.IsValid() && ResultModel->GetItem() != nullptr)
+            {
+
+        if (!ResultModel.IsValid() || !((ResultModel.IsValid() && ResultModel->GetItem().IsValid() ? ResultModel->GetItem()->GetUserId() : TOptional<FString>())).IsSet())
+            {
+              const auto Details = MakeShared<TArray<TSharedPtr<Gs2::Core::Model::FGs2ErrorDetail>>>();
+                Details->Add(MakeShared<Gs2::Core::Model::FGs2ErrorDetail>(TEXT("userId"), TEXT("userId is invalid."), TEXT("invalid_response")));
+                return MakeShared<Gs2::Core::Model::FUnknownError>(Details);
+              }
+        Gs2::Inbox::Model::Cache::FMessageCache::Put(
+            Self->Gs2->Cache,
+
+            Request->GetNamespaceName(),
+            (ResultModel.IsValid() && ResultModel->GetItem().IsValid() ? ResultModel->GetItem()->GetUserId() : TOptional<FString>()),
+            Request->GetMessageName(),
+            TOptional<int32>(),
+            ResultModel->GetItem()
+        );
+            }
         auto Domain = Self;
 
         *Result = Domain;
@@ -262,7 +286,7 @@ namespace Gs2::Inbox::Domain::Model
     )
     {
         Request
-            ->WithContextStack(Self->Gs2->DefaultContextStack)
+            ->WithContextStack((!Request->GetContextStack().IsSet() || Request->GetContextStack()->IsEmpty()) ? Self->Gs2->DefaultContextStack : Request->GetContextStack())
             ->WithNamespaceName(Self->NamespaceName)
             ->WithUserId(Self->UserId)
             ->WithMessageName(Self->MessageName);
@@ -276,6 +300,26 @@ namespace Gs2::Inbox::Domain::Model
         }
         const auto ResultModel = Future->GetTask().Result();
         Future->EnsureCompletion();
+
+            if (ResultModel.IsValid() && ResultModel->GetItem() != nullptr)
+            {
+
+        if (!ResultModel.IsValid() || !((ResultModel.IsValid() && ResultModel->GetItem().IsValid() ? ResultModel->GetItem()->GetUserId() : TOptional<FString>())).IsSet())
+            {
+              const auto Details = MakeShared<TArray<TSharedPtr<Gs2::Core::Model::FGs2ErrorDetail>>>();
+                Details->Add(MakeShared<Gs2::Core::Model::FGs2ErrorDetail>(TEXT("userId"), TEXT("userId is invalid."), TEXT("invalid_response")));
+                return MakeShared<Gs2::Core::Model::FUnknownError>(Details);
+              }
+        Gs2::Inbox::Model::Cache::FMessageCache::Put(
+            Self->Gs2->Cache,
+
+            Request->GetNamespaceName(),
+            (ResultModel.IsValid() && ResultModel->GetItem().IsValid() ? ResultModel->GetItem()->GetUserId() : TOptional<FString>()),
+            Request->GetMessageName(),
+            TOptional<int32>(),
+            ResultModel->GetItem()
+        );
+            }
         const auto Transaction = Gs2::Core::Domain::Internal::FTransactionDomainFactory::ToTransaction(
             Self->Gs2,
             *Self->UserId,
@@ -292,21 +336,6 @@ namespace Gs2::Inbox::Domain::Model
         {
             return Future3->GetTask().Error();
         }
-        if (Self->MessageName.IsSet())
-        {
-            const auto Key = Gs2::Inbox::Domain::Model::FMessageDomain::CreateCacheKey(
-                Self->MessageName
-            );
-            Self->Gs2->Cache->Delete(
-                Gs2::Inbox::Model::FMessage::TypeName,
-                Self->ParentKey,
-                Key
-            );
-        }
-        Self->Gs2->Cache->ClearListCache(
-            Gs2::Inbox::Model::FMessage::TypeName,
-            Self->ParentKey
-        );
         *Result = Transaction;
         return nullptr;
     }
@@ -336,7 +365,7 @@ namespace Gs2::Inbox::Domain::Model
     )
     {
         Request
-            ->WithContextStack(Self->Gs2->DefaultContextStack)
+            ->WithContextStack((!Request->GetContextStack().IsSet() || Request->GetContextStack()->IsEmpty()) ? Self->Gs2->DefaultContextStack : Request->GetContextStack())
             ->WithNamespaceName(Self->NamespaceName)
             ->WithUserId(Self->UserId)
             ->WithMessageName(Self->MessageName);
@@ -346,24 +375,30 @@ namespace Gs2::Inbox::Domain::Model
         Future->StartSynchronousTask();
         if (Future->GetTask().IsError())
         {
-            return Future->GetTask().Error();
+            const auto Error = Future->GetTask().Error();
+            if (Error.IsValid() && Error->IsChildOf(Gs2::Core::Model::FNotFoundError::Class))
+            {
+                *Result = Self;
+                return nullptr;
+            }
+            return Error;
         }
         const auto ResultModel = Future->GetTask().Result();
         Future->EnsureCompletion();
-        if (ResultModel->GetItem() != nullptr)
-        {
-            const auto Key = Gs2::Inbox::Domain::Model::FMessageDomain::CreateCacheKey(
-                ResultModel->GetItem()->GetName()
-            );
-            Self->Gs2->Cache->Delete(
-                Gs2::Inbox::Model::FMessage::TypeName,
-                Self->ParentKey,
-                Key
-            );
-        }
-        Self->Gs2->Cache->ClearListCache(
-            Gs2::Inbox::Model::FMessage::TypeName,
-            Self->ParentKey
+
+              if (!ResultModel.IsValid() || !((ResultModel.IsValid() && ResultModel->GetItem().IsValid() ? ResultModel->GetItem()->GetUserId() : TOptional<FString>())).IsSet())
+                  {
+                    const auto Details = MakeShared<TArray<TSharedPtr<Gs2::Core::Model::FGs2ErrorDetail>>>();
+                      Details->Add(MakeShared<Gs2::Core::Model::FGs2ErrorDetail>(TEXT("userId"), TEXT("userId is invalid."), TEXT("invalid_response")));
+                      return MakeShared<Gs2::Core::Model::FUnknownError>(Details);
+                    }
+              Gs2::Inbox::Model::Cache::FMessageCache::Delete(
+            Self->Gs2->Cache,
+
+            Request->GetNamespaceName(),
+            (ResultModel.IsValid() && ResultModel->GetItem().IsValid() ? ResultModel->GetItem()->GetUserId() : TOptional<FString>()),
+            Request->GetMessageName(),
+            TOptional<int32>()
         );
         auto Domain = Self;
 
@@ -417,71 +452,165 @@ namespace Gs2::Inbox::Domain::Model
         TSharedPtr<TSharedPtr<Gs2::Inbox::Model::FMessage>> Result
     )
     {
-        // ReSharper disable once CppLocalVariableMayBeConst
-        TSharedPtr<Gs2::Inbox::Model::FMessage> Value;
-        auto bCacheHit = Self->Gs2->Cache->TryGet<Gs2::Inbox::Model::FMessage>(
-            Self->ParentKey,
-            Gs2::Inbox::Domain::Model::FMessageDomain::CreateCacheKey(
-                Self->MessageName
-            ),
-            &Value
+        const auto CacheParentKey = Gs2::Inbox::Model::Cache::FMessageCache::CreateCacheParentKey(
+
+            Self->NamespaceName,
+            Self->UserId,
+            TOptional<int32>()
         );
-        if (!bCacheHit) {
-            const auto Future = Self->Get(
-                MakeShared<Gs2::Inbox::Request::FGetMessageByUserIdRequest>()
-            );
-            Future->StartSynchronousTask();
-            if (Future->GetTask().IsError())
+        const auto CacheKey = Gs2::Inbox::Model::Cache::FMessageCache::CreateCacheKey(
+
+            Self->MessageName
+        );
+        return Self->Gs2->Cache->ExecuteWithKeyLock(
+            Gs2::Inbox::Model::FMessage::TypeName,
+            CacheParentKey,
+            CacheKey,
+            [Self = Self, Result]() -> Gs2::Core::Model::FGs2ErrorPtr
             {
-                if (Future->GetTask().Error()->Type() != Gs2::Core::Model::FNotFoundError::TypeString)
-                {
-                    return Future->GetTask().Error();
-                }
+                Gs2::Inbox::Model::FMessagePtr Value;
+                const auto CacheHit = Gs2::Inbox::Model::Cache::FMessageCache::TryGet(
+                    Self->Gs2->Cache,
 
-                const auto Key = Gs2::Inbox::Domain::Model::FMessageDomain::CreateCacheKey(
-                    Self->MessageName
+                    Self->NamespaceName,
+                    Self->UserId,
+                    Self->MessageName,
+                    TOptional<int32>(),
+                    &Value
                 );
-                Self->Gs2->Cache->Put(
-                    Gs2::Inbox::Model::FMessage::TypeName,
-                    Self->ParentKey,
-                    Key,
-                    nullptr,
-                    FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
-                );
-
-                if (Future->GetTask().Error()->Detail(0)->GetComponent() != "message")
+                if (CacheHit)
                 {
-                    return Future->GetTask().Error();
+                    *Result = Value;
+                    return nullptr;
                 }
-            }
-            else
-            {
-                Value = Future->GetTask().Result();
-            }
-            Future->EnsureCompletion();
-        }
-        *Result = Value;
+                const auto Error = Gs2::Inbox::Model::Cache::FMessageCache::Fetch(
+                    Self->Gs2->Cache,
 
-        return nullptr;
+                    Self->NamespaceName,
+                    Self->UserId,
+                    Self->MessageName,
+                    TOptional<int32>(),
+                    [Self](Gs2::Inbox::Model::FMessagePtr* OutItem) -> Gs2::Core::Model::FGs2ErrorPtr
+                    {
+                        const auto Future = Self->Get(
+                            MakeShared<Gs2::Inbox::Request::FGetMessageByUserIdRequest>()
+                        );
+                        Future->StartSynchronousTask();
+                        if (Future->GetTask().IsError()) return Future->GetTask().Error();
+                        *OutItem = Future->GetTask().Result();
+                        Future->EnsureCompletion();
+                        return nullptr;
+                    },
+                    &Value
+                );
+                if (Error.IsValid()) return Error;
+                *Result = Value;
+                return nullptr;
+            }
+        );
     }
 
     TSharedPtr<FAsyncTask<FMessageDomain::FModelTask>> FMessageDomain::Model() {
         return Gs2::Core::Util::New<FAsyncTask<FMessageDomain::FModelTask>>(this->AsShared());
     }
 
+    void FMessageDomain::Invalidate()
+    {
+        Gs2::Inbox::Model::Cache::FMessageCache::Delete(
+            Gs2->Cache,
+
+            NamespaceName,
+            UserId,
+            MessageName,
+            TOptional<int32>()
+        );
+    }
+
+    FMessageDomain::FSubscribeWithInitialCallTask::FSubscribeWithInitialCallTask(
+        const TSharedPtr<FMessageDomain>& Self,
+        TFunction<void(Gs2::Inbox::Model::FMessagePtr)> Callback
+    ):
+        Self(Self),
+        Callback(Callback)
+    {
+    }
+
+    FMessageDomain::FSubscribeWithInitialCallTask::FSubscribeWithInitialCallTask(
+        const FSubscribeWithInitialCallTask& From
+    ):
+        TGs2Future(From),
+        Self(From.Self),
+        Callback(From.Callback)
+    {
+    }
+
+    Gs2::Core::Model::FGs2ErrorPtr FMessageDomain::FSubscribeWithInitialCallTask::Action(
+        TSharedPtr<TSharedPtr<Gs2::Core::Domain::CallbackID>> Result
+    )
+    {
+        const auto Task = Self->Model();
+        Task->StartSynchronousTask();
+        Task->EnsureCompletion();
+        if (Task->GetTask().IsError()) return Task->GetTask().Error();
+        const auto Item = Task->GetTask().Result();
+        const auto CallbackId = Self->Subscribe(Callback);
+        Callback(Item);
+        *Result = MakeShared<Gs2::Core::Domain::CallbackID>(CallbackId);
+        return nullptr;
+    }
+
+    TSharedPtr<FAsyncTask<FMessageDomain::FSubscribeWithInitialCallTask>> FMessageDomain::SubscribeWithInitialCall(
+        TFunction<void(Gs2::Inbox::Model::FMessagePtr)> Callback
+    )
+    {
+        return Gs2::Core::Util::New<FAsyncTask<FSubscribeWithInitialCallTask>>(this->AsShared(), Callback);
+    }
+
     Gs2::Core::Domain::CallbackID FMessageDomain::Subscribe(
         TFunction<void(Gs2::Inbox::Model::FMessagePtr)> Callback
     )
     {
+        const auto SubscriptionParentKey = Gs2::Inbox::Model::Cache::FMessageCache::CreateCacheParentKey(
+
+            NamespaceName,
+            UserId,
+            TOptional<int32>()
+        );
+        const auto SubscriptionCacheKey = Gs2::Inbox::Model::Cache::FMessageCache::CreateCacheKey(
+
+            MessageName
+        );
+        const TWeakPtr<Gs2::Core::Domain::FGs2> WeakGs2 = Gs2;
+        const TWeakPtr<Inbox::Domain::FGs2InboxDomain> WeakService = Service;
+        const FString RegisteredParentKey = SubscriptionParentKey;
+        const TOptional<FString> QueryNamespaceName = NamespaceName;
+        const TOptional<FString> QueryUserId = UserId;
+        const TOptional<FString> QueryMessageName = MessageName;
         return Gs2->Cache->Subscribe(
             Gs2::Inbox::Model::FMessage::TypeName,
-            ParentKey,
-            Gs2::Inbox::Domain::Model::FMessageDomain::CreateCacheKey(
-                MessageName
-            ),
+            SubscriptionParentKey,
+            SubscriptionCacheKey,
             [Callback](TSharedPtr<FGs2Object> obj)
             {
                 Callback(StaticCastSharedPtr<Gs2::Inbox::Model::FMessage>(obj));
+            },
+            [WeakGs2, WeakService, RegisteredParentKey, QueryNamespaceName, QueryUserId, QueryMessageName]()
+            {
+                const auto Owner = WeakGs2.Pin();
+                if (!Owner.IsValid())
+                {
+                    return;
+                }
+                const auto Domain = MakeShared<FMessageDomain>(
+                    Owner,
+                    WeakService.Pin(),
+                    QueryNamespaceName,
+                    QueryUserId,
+                    QueryMessageName
+                );
+                Domain->ParentKey = RegisteredParentKey;
+                const auto Task = Domain->Model();
+                Task->StartBackgroundTask();
             }
         );
     }
@@ -490,12 +619,20 @@ namespace Gs2::Inbox::Domain::Model
         Gs2::Core::Domain::CallbackID CallbackID
     )
     {
+        const auto SubscriptionParentKey = Gs2::Inbox::Model::Cache::FMessageCache::CreateCacheParentKey(
+
+            NamespaceName,
+            UserId,
+            TOptional<int32>()
+        );
+        const auto SubscriptionCacheKey = Gs2::Inbox::Model::Cache::FMessageCache::CreateCacheKey(
+
+            MessageName
+        );
         Gs2->Cache->Unsubscribe(
             Gs2::Inbox::Model::FMessage::TypeName,
-            ParentKey,
-            Gs2::Inbox::Domain::Model::FMessageDomain::CreateCacheKey(
-                MessageName
-            ),
+            SubscriptionParentKey,
+            SubscriptionCacheKey,
             CallbackID
         );
     }

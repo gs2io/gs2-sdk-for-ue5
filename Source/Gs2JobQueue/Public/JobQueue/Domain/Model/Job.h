@@ -57,6 +57,7 @@ namespace Gs2::JobQueue::Domain::Model
         public:
         TOptional<bool> AutoRun;
         TOptional<bool> IsLastJob;
+        Gs2::JobQueue::Model::FJobPtr Item;
         Gs2::JobQueue::Model::FJobResultBodyPtr Result;
         TOptional<bool> NeedRetry;
         TOptional<bool> GetAutoRun() const
@@ -97,6 +98,8 @@ namespace Gs2::JobQueue::Domain::Model
             const FJobDomain& From
         );
 
+
+
         class GS2JOBQUEUE_API FGetTask final :
             public Gs2::Core::Util::TGs2Future<Gs2::JobQueue::Model::FJob>,
             public TSharedFromThis<FGetTask>
@@ -122,6 +125,8 @@ namespace Gs2::JobQueue::Domain::Model
         TSharedPtr<FAsyncTask<FGetTask>> Get(
             Request::FGetJobByUserIdRequestPtr Request
         );
+
+
 
         class GS2JOBQUEUE_API FDeleteTask final :
             public Gs2::Core::Util::TGs2Future<Gs2::JobQueue::Domain::Model::FJobDomain>,

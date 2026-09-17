@@ -27,6 +27,7 @@
 #include "Ranking2/Domain/SpeculativeExecutor/Consume/CreateClusterRankingReceivedRewardByUserIdSpeculativeExecutor.h"
 
 #include "Core/Domain/Gs2.h"
+#include "Core/Domain/SpeculativeExecutor/PreparedSpeculativeCommit.h"
 
 namespace Gs2::Ranking2::Domain::SpeculativeExecutor
 {
@@ -59,7 +60,7 @@ namespace Gs2::Ranking2::Domain::SpeculativeExecutor
     }
 
     Gs2::Core::Model::FGs2ErrorPtr FConsumeActionSpeculativeExecutorIndex::FCommitTask::Action(
-        TSharedPtr<TSharedPtr<TFunction<void()>>> Result
+        TSharedPtr<TSharedPtr<Gs2::Core::Domain::SpeculativeExecutor::FPreparedSpeculativeCommit>> Result
     )
     {
         auto NewConsumeAction = ConsumeAction->WithAction(ConsumeAction->GetAction()->Replace(TEXT("{region}"), ToCStr(Domain->RestSession->RegionName())));
@@ -73,7 +74,6 @@ namespace Gs2::Ranking2::Domain::SpeculativeExecutor
                 return nullptr;
             }
             auto Request = Request::FCreateGlobalRankingReceivedRewardByUserIdRequest::FromJson(RequestModelJson);
-            Request = FCreateGlobalRankingReceivedRewardByUserIdSpeculativeExecutor::Rate(Request, Rate);
             auto Future = FCreateGlobalRankingReceivedRewardByUserIdSpeculativeExecutor::Execute(
                 Domain,
                 Service,
@@ -86,6 +86,7 @@ namespace Gs2::Ranking2::Domain::SpeculativeExecutor
                 return Future->GetTask().Error();
             }
             *Result = Future->GetTask().Result();
+            return nullptr;
         }
         if (FCreateClusterRankingReceivedRewardByUserIdSpeculativeExecutor::Action() == NewConsumeAction->GetAction()) {
             TSharedPtr<FJsonObject> RequestModelJson;
@@ -95,7 +96,6 @@ namespace Gs2::Ranking2::Domain::SpeculativeExecutor
                 return nullptr;
             }
             auto Request = Request::FCreateClusterRankingReceivedRewardByUserIdRequest::FromJson(RequestModelJson);
-            Request = FCreateClusterRankingReceivedRewardByUserIdSpeculativeExecutor::Rate(Request, Rate);
             auto Future = FCreateClusterRankingReceivedRewardByUserIdSpeculativeExecutor::Execute(
                 Domain,
                 Service,
@@ -108,6 +108,7 @@ namespace Gs2::Ranking2::Domain::SpeculativeExecutor
                 return Future->GetTask().Error();
             }
             *Result = Future->GetTask().Result();
+            return nullptr;
         }
         return nullptr;
     }

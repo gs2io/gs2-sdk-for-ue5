@@ -195,7 +195,8 @@ namespace Gs2::UE5::Dictionary::Domain::Model
         );
     }
 
-    void FEzUserGameSessionDomain::UnsubscribeEntries(Gs2::Core::Domain::CallbackID CallbackId)
+    void FEzUserGameSessionDomain::UnsubscribeEntries(
+            Gs2::Core::Domain::CallbackID CallbackId)
     {
         Domain->UnsubscribeEntries(
             CallbackId
@@ -219,7 +220,8 @@ namespace Gs2::UE5::Dictionary::Domain::Model
         );
     }
 
-    void FEzUserGameSessionDomain::UnsubscribeLikes(Gs2::Core::Domain::CallbackID CallbackId)
+    void FEzUserGameSessionDomain::UnsubscribeLikes(
+            Gs2::Core::Domain::CallbackID CallbackId)
     {
         Domain->UnsubscribeLikes(
             CallbackId

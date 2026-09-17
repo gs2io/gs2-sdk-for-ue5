@@ -91,6 +91,8 @@ namespace Gs2::Quest::Domain::Model
             const FUserAccessTokenDomain& From
         );
 
+
+
         class GS2QUEST_API FStartTask final :
             public Gs2::Core::Util::TGs2Future<Gs2::Core::Domain::FTransactionAccessTokenDomain>,
             public TSharedFromThis<FStartTask>
@@ -125,8 +127,33 @@ namespace Gs2::Quest::Domain::Model
 
         Gs2::Core::Domain::CallbackID SubscribeCompletedQuestLists(
             TFunction<void()> Callback
+
         );
 
+        class FCollectCompletedQuestListsTask;
+
+        Gs2::Core::Domain::CallbackID SubscribeCompletedQuestLists(
+            TFunction<void(TArray<Gs2::Quest::Model::FCompletedQuestListPtr>)> Callback
+        );
+
+        void InvalidateCompletedQuestLists();
+
+        class GS2QUEST_API FSubscribeCompletedQuestListsWithInitialCallTask final :
+            public Gs2::Core::Util::TGs2Future<Gs2::Core::Domain::CallbackID>,
+            public TSharedFromThis<FSubscribeCompletedQuestListsWithInitialCallTask>
+        {
+            const TSharedPtr<FUserAccessTokenDomain> Self;
+            const TFunction<void(TArray<Gs2::Quest::Model::FCompletedQuestListPtr>)> Callback;
+
+        public:
+            FSubscribeCompletedQuestListsWithInitialCallTask(const TSharedPtr<FUserAccessTokenDomain>& Self, TFunction<void(TArray<Gs2::Quest::Model::FCompletedQuestListPtr>)> Callback);
+            FSubscribeCompletedQuestListsWithInitialCallTask(const FSubscribeCompletedQuestListsWithInitialCallTask& From);
+            virtual Gs2::Core::Model::FGs2ErrorPtr Action(TSharedPtr<TSharedPtr<Gs2::Core::Domain::CallbackID>> Result) override;
+        };
+
+        TSharedPtr<FAsyncTask<FSubscribeCompletedQuestListsWithInitialCallTask>> SubscribeCompletedQuestListsWithInitialCall(
+            TFunction<void(TArray<Gs2::Quest::Model::FCompletedQuestListPtr>)> Callback
+        );
         void UnsubscribeCompletedQuestLists(
             Gs2::Core::Domain::CallbackID CallbackID
         );

@@ -218,19 +218,28 @@ namespace Gs2::Ranking2::Domain::Model
         TSharedPtr<TSharedPtr<Gs2::Ranking2::Model::FSubscribeRankingData>> Result
     )
     {
-        // ReSharper disable once CppLocalVariableMayBeConst
-        TSharedPtr<Gs2::Ranking2::Model::FSubscribeRankingData> Value;
-        auto bCacheHit = Self->Gs2->Cache->TryGet<Gs2::Ranking2::Model::FSubscribeRankingData>(
-            Self->ParentKey,
-            Gs2::Ranking2::Domain::Model::FSubscribeRankingDataDomain::CreateCacheKey(
-                Self->RankingName,
-                Self->ScorerUserId
-            ),
-            &Value
+        const FString CacheKey = Gs2::Ranking2::Domain::Model::FSubscribeRankingDataDomain::CreateCacheKey(
+            Self->RankingName,
+            Self->ScorerUserId
         );
-        *Result = Value;
+        return Self->Gs2->Cache->ExecuteWithKeyLock(
+            Gs2::Ranking2::Model::FSubscribeRankingData::TypeName,
+            Self->ParentKey,
+            CacheKey,
+            [this, Result, CacheKey]() -> Gs2::Core::Model::FGs2ErrorPtr
+            {
+                // ReSharper disable once CppLocalVariableMayBeConst
+                TSharedPtr<Gs2::Ranking2::Model::FSubscribeRankingData> Value;
+                auto bCacheHit = Self->Gs2->Cache->TryGet<Gs2::Ranking2::Model::FSubscribeRankingData>(
+                    Self->ParentKey,
+                    CacheKey,
+                    &Value
+                );
+                *Result = Value;
 
-        return nullptr;
+                return nullptr;
+            }
+        );
     }
 
     TSharedPtr<FAsyncTask<FSubscribeRankingDataDomain::FModelTask>> FSubscribeRankingDataDomain::Model() {

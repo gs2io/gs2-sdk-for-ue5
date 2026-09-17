@@ -1,3 +1,4 @@
+
 /*
  * Copyright 2016 Game Server Services, Inc. or its affiliates. All Rights
  * Reserved.
@@ -29,6 +30,9 @@
 #include "Formation/Domain/Model/Namespace.h"
 
 #include "Core/Domain/Gs2.h"
+
+#include "Formation/Model/Cache/PropertyFormModelMaster.h"
+#include "Formation/Model/Cache/Namespace.h"
 
 namespace Gs2::Formation::Domain::Iterator
 {
@@ -78,7 +82,7 @@ namespace Gs2::Formation::Domain::Iterator
 
     FDescribePropertyFormModelMastersIterator::FIterator& FDescribePropertyFormModelMastersIterator::FIterator::operator++()
     {
-        
+
 
         if (bEnd) return *this;
 
@@ -88,15 +92,16 @@ namespace Gs2::Formation::Domain::Iterator
             return *this;
         }
 
-        if (RangeIteratorOpt) ++*RangeIteratorOpt;
+        if (RangeIteratorOpt && *RangeIteratorOpt) ++*RangeIteratorOpt;
 
+        // Keep the previous page alive until its iterator has been replaced.
+        const auto PreviousRange = Range;
         if (!RangeIteratorOpt || (!*RangeIteratorOpt && !bLast))
         {
-            const auto ListParentKey = Gs2::Formation::Domain::Model::FNamespaceDomain::CreateCacheParentKey(
+            const auto ListParentKey = Gs2::Formation::Model::Cache::FPropertyFormModelMasterCache::CreateCacheParentKey(
                 Self->NamespaceName,
-                "PropertyFormModelMaster"
+                TOptional<int32>()
             );
-
             if (!RangeIteratorOpt)
             {
                 Range = Self->Gs2->Cache->TryGetList<Gs2::Formation::Model::FPropertyFormModelMaster>(ListParentKey);
@@ -111,14 +116,14 @@ namespace Gs2::Formation::Domain::Iterator
                     return *this;
                 }
             }
-
-            const auto Future = Self->Client->DescribePropertyFormModelMasters(
+            const auto Request =
                 MakeShared<Gs2::Formation::Request::FDescribePropertyFormModelMastersRequest>()
                     ->WithContextStack(Self->Gs2->DefaultContextStack)
                     ->WithNamespaceName(Self->NamespaceName)
                     ->WithPageToken(PageToken)
                     ->WithLimit(FetchSize)
-            );
+            ;
+            const auto Future = Self->Client->DescribePropertyFormModelMasters(Request);
             Future->StartSynchronousTask();
             if (Future->GetTask().IsError())
             {
@@ -132,18 +137,21 @@ namespace Gs2::Formation::Domain::Iterator
             }
             const auto R = Future->GetTask().Result();
             Future->EnsureCompletion();
-            Range = R->GetItems();
-            for (auto Item : *R->GetItems())
+            Range = R->GetItems().IsValid() ? R->GetItems() : MakeShared<TArray<Gs2::Formation::Model::FPropertyFormModelMasterPtr>>();
+            const auto ResultModel = R;
+
+
+            if (Range.IsValid())
             {
-                Self->Gs2->Cache->Put(
-                    Gs2::Formation::Model::FPropertyFormModelMaster::TypeName,
-                    ListParentKey,
-                    Gs2::Formation::Domain::Model::FPropertyFormModelMasterDomain::CreateCacheKey(
-                        Item->GetName()
-                    ),
-                    Item,
-                    FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
-                );
+                for (const auto& Item : *Range)
+                {
+                    if (!Item.IsValid()) continue;
+                    Gs2::Formation::Model::Cache::FPropertyFormModelMasterCache::Put(
+                        Self->Gs2->Cache,
+                        Request->GetNamespaceName(), Item->GetName(),
+                        TOptional<int32>(), Item
+                    );
+                }
             }
             if (Range)
             {

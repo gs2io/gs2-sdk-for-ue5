@@ -19,6 +19,7 @@
 #include "CoreMinimal.h"
 #include "Dom/JsonObject.h"
 #include "../Model/TransactionSetting.h"
+#include "../Model/TransactionSettingV2.h"
 #include "../Model/ScriptSetting.h"
 #include "../Model/LogSetting.h"
 
@@ -34,6 +35,7 @@ namespace Gs2::Exchange::Request
         TOptional<bool> EnableAwaitExchangeValue;
         TOptional<bool> EnableDirectExchangeValue;
         TSharedPtr<Model::FTransactionSetting> TransactionSettingValue;
+        TSharedPtr<Model::FTransactionSettingV2> TransactionSettingV2Value;
         TSharedPtr<Model::FScriptSetting> ExchangeScriptValue;
         TSharedPtr<Model::FScriptSetting> IncrementalExchangeScriptValue;
         TSharedPtr<Model::FScriptSetting> AcquireAwaitScriptValue;
@@ -55,6 +57,7 @@ namespace Gs2::Exchange::Request
         TSharedPtr<FUpdateNamespaceRequest> WithEnableAwaitExchange(const TOptional<bool> EnableAwaitExchange);
         TSharedPtr<FUpdateNamespaceRequest> WithEnableDirectExchange(const TOptional<bool> EnableDirectExchange);
         TSharedPtr<FUpdateNamespaceRequest> WithTransactionSetting(const TSharedPtr<Model::FTransactionSetting> TransactionSetting);
+        TSharedPtr<FUpdateNamespaceRequest> WithTransactionSettingV2(const TSharedPtr<Model::FTransactionSettingV2> TransactionSettingV2);
         TSharedPtr<FUpdateNamespaceRequest> WithExchangeScript(const TSharedPtr<Model::FScriptSetting> ExchangeScript);
         TSharedPtr<FUpdateNamespaceRequest> WithIncrementalExchangeScript(const TSharedPtr<Model::FScriptSetting> IncrementalExchangeScript);
         TSharedPtr<FUpdateNamespaceRequest> WithAcquireAwaitScript(const TSharedPtr<Model::FScriptSetting> AcquireAwaitScript);
@@ -70,6 +73,7 @@ namespace Gs2::Exchange::Request
         TOptional<bool> GetEnableDirectExchange() const;
         FString GetEnableDirectExchangeString() const;
         TSharedPtr<Model::FTransactionSetting> GetTransactionSetting() const;
+        TSharedPtr<Model::FTransactionSettingV2> GetTransactionSettingV2() const;
         TSharedPtr<Model::FScriptSetting> GetExchangeScript() const;
         TSharedPtr<Model::FScriptSetting> GetIncrementalExchangeScript() const;
         TSharedPtr<Model::FScriptSetting> GetAcquireAwaitScript() const;

@@ -23,6 +23,7 @@ namespace Gs2::Dictionary::Model
         NameValue(TOptional<FString>()),
         DescriptionValue(TOptional<FString>()),
         TransactionSettingValue(nullptr),
+        TransactionSettingV2Value(nullptr),
         EntryScriptValue(nullptr),
         DuplicateEntryScriptValue(TOptional<FString>()),
         LogSettingValue(nullptr),
@@ -39,6 +40,7 @@ namespace Gs2::Dictionary::Model
         NameValue(From.NameValue),
         DescriptionValue(From.DescriptionValue),
         TransactionSettingValue(From.TransactionSettingValue),
+        TransactionSettingV2Value(From.TransactionSettingV2Value),
         EntryScriptValue(From.EntryScriptValue),
         DuplicateEntryScriptValue(From.DuplicateEntryScriptValue),
         LogSettingValue(From.LogSettingValue),
@@ -77,6 +79,14 @@ namespace Gs2::Dictionary::Model
     )
     {
         this->TransactionSettingValue = TransactionSetting;
+        return SharedThis(this);
+    }
+
+    TSharedPtr<FNamespace> FNamespace::WithTransactionSettingV2(
+        const TSharedPtr<FTransactionSettingV2> TransactionSettingV2
+    )
+    {
+        this->TransactionSettingV2Value = TransactionSettingV2;
         return SharedThis(this);
     }
 
@@ -142,6 +152,10 @@ namespace Gs2::Dictionary::Model
     TSharedPtr<FTransactionSetting> FNamespace::GetTransactionSetting() const
     {
         return TransactionSettingValue;
+    }
+    TSharedPtr<FTransactionSettingV2> FNamespace::GetTransactionSettingV2() const
+    {
+        return TransactionSettingV2Value;
     }
     TSharedPtr<FScriptSetting> FNamespace::GetEntryScript() const
     {
@@ -269,6 +283,14 @@ namespace Gs2::Dictionary::Model
                     }
                     return Model::FTransactionSetting::FromJson(Data->GetObjectField(ANSI_TO_TCHAR("transactionSetting")));
                  }() : nullptr)
+            ->WithTransactionSettingV2(Data->HasField(ANSI_TO_TCHAR("transactionSettingV2")) ? [Data]() -> Model::FTransactionSettingV2Ptr
+                {
+                    if (Data->HasTypedField<EJson::Null>(ANSI_TO_TCHAR("transactionSettingV2")))
+                    {
+                        return nullptr;
+                    }
+                    return Model::FTransactionSettingV2::FromJson(Data->GetObjectField(ANSI_TO_TCHAR("transactionSettingV2")));
+                 }() : nullptr)
             ->WithEntryScript(Data->HasField(ANSI_TO_TCHAR("entryScript")) ? [Data]() -> Model::FScriptSettingPtr
                 {
                     if (Data->HasTypedField<EJson::Null>(ANSI_TO_TCHAR("entryScript")))
@@ -342,6 +364,10 @@ namespace Gs2::Dictionary::Model
         {
             JsonRootObject->SetObjectField(TEXT("transactionSetting"), TransactionSettingValue->ToJson());
         }
+        if (TransactionSettingV2Value != nullptr && TransactionSettingV2Value.IsValid())
+        {
+            JsonRootObject->SetObjectField(TEXT("transactionSettingV2"), TransactionSettingV2Value->ToJson());
+        }
         if (EntryScriptValue != nullptr && EntryScriptValue.IsValid())
         {
             JsonRootObject->SetObjectField(TEXT("entryScript"), EntryScriptValue->ToJson());
@@ -370,4 +396,181 @@ namespace Gs2::Dictionary::Model
     }
 
     FString FNamespace::TypeName = "Namespace";
+}
+#include "Dictionary/Model/Cache/Namespace.h"
+
+namespace Gs2::Dictionary::Model::Cache
+{
+    FString FNamespaceCache::CreateCacheParentKey(
+        TOptional<int32> CacheOwnerArgumentTimeOffset
+    )
+    {
+        return FString("dictionary:")
+            + FString::FromInt(CacheOwnerArgumentTimeOffset.Get(0)) + FString(":Namespace");
+    }
+
+    FString FNamespaceCache::CreateCacheKey(
+        TOptional<FString> CacheOwnerArgumentNamespaceName
+    )
+    {
+        return
+            FString()
+            + CacheOwnerArgumentNamespaceName.Get(FString())
+            ;
+    }
+
+    bool FNamespaceCache::TryGet(
+        const Gs2::Core::Domain::FCacheDatabasePtr& CacheOwnerArgumentCache,
+        TOptional<FString> CacheOwnerArgumentNamespaceName,
+        TOptional<int32> CacheOwnerArgumentTimeOffset,
+        Gs2::Dictionary::Model::FNamespacePtr* CacheOwnerArgumentOutItem
+    )
+    {
+        const auto CacheSnapshot = CacheOwnerArgumentCache;
+        if (!CacheSnapshot.IsValid())
+        {
+            if (CacheOwnerArgumentOutItem) *CacheOwnerArgumentOutItem = nullptr;
+            return false;
+        }
+        if (CacheOwnerArgumentOutItem) *CacheOwnerArgumentOutItem = nullptr;
+        Gs2::Dictionary::Model::FNamespacePtr CacheOwnerValue;
+        const bool CacheOwnerFound = CacheSnapshot->TryGet<Gs2::Dictionary::Model::FNamespace>(
+            CreateCacheParentKey(
+                CacheOwnerArgumentTimeOffset
+            ),
+            CreateCacheKey(
+                CacheOwnerArgumentNamespaceName
+            ),
+            &CacheOwnerValue
+        );
+        if (CacheOwnerArgumentOutItem) *CacheOwnerArgumentOutItem = CacheOwnerFound ? CacheOwnerValue : nullptr;
+        return CacheOwnerFound;
+    }
+
+    void FNamespaceCache::Put(
+        const Gs2::Core::Domain::FCacheDatabasePtr& CacheOwnerArgumentCache,
+        TOptional<FString> CacheOwnerArgumentNamespaceName,
+        TOptional<int32> CacheOwnerArgumentTimeOffset,
+        const Gs2::Dictionary::Model::FNamespacePtr& CacheOwnerArgumentItem
+    )
+    {
+        const auto CacheSnapshot = CacheOwnerArgumentCache;
+        if (!CacheSnapshot.IsValid()) return;
+        const auto CacheOwnerParentKey = CreateCacheParentKey(
+            CacheOwnerArgumentTimeOffset
+        );
+        const auto CacheOwnerKey = CreateCacheKey(
+            CacheOwnerArgumentNamespaceName
+        );
+        auto CacheOwnerValue = CacheOwnerArgumentItem;
+        Gs2::Dictionary::Model::FNamespacePtr CacheOwnerExisting;
+        if (CacheSnapshot->TryGet<Gs2::Dictionary::Model::FNamespace>(CacheOwnerParentKey, CacheOwnerKey, &CacheOwnerExisting))
+        {
+            const int64 CacheOwnerOldRevision = CacheOwnerExisting.IsValid() ? CacheOwnerExisting->GetRevision().Get(-1) : -1;
+            const int64 CacheOwnerNewRevision = CacheOwnerValue.IsValid() ? CacheOwnerValue->GetRevision().Get(-1) : -1;
+            if (CacheOwnerOldRevision > CacheOwnerNewRevision && CacheOwnerNewRevision > 1) return;
+            if (CacheOwnerOldRevision == CacheOwnerNewRevision) return;
+        }
+        CacheSnapshot->Put(Gs2::Dictionary::Model::FNamespace::TypeName, CacheOwnerParentKey, CacheOwnerKey, CacheOwnerValue,
+            FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
+        );
+    }
+
+    void FNamespaceCache::Delete(
+        const Gs2::Core::Domain::FCacheDatabasePtr& CacheOwnerArgumentCache,
+        TOptional<FString> CacheOwnerArgumentNamespaceName,
+        TOptional<int32> CacheOwnerArgumentTimeOffset
+    )
+    {
+        const auto CacheSnapshot = CacheOwnerArgumentCache;
+        if (!CacheSnapshot.IsValid()) return;
+        CacheSnapshot->Delete(Gs2::Dictionary::Model::FNamespace::TypeName, CreateCacheParentKey(
+            CacheOwnerArgumentTimeOffset
+        ), CreateCacheKey(
+            CacheOwnerArgumentNamespaceName
+        ));
+    }
+
+    Gs2::Core::Model::FGs2ErrorPtr FNamespaceCache::Fetch(
+        const Gs2::Core::Domain::FCacheDatabasePtr& CacheOwnerArgumentCache,
+        TOptional<FString> CacheOwnerArgumentNamespaceName,
+        TOptional<int32> CacheOwnerArgumentTimeOffset,
+        const TFunction<Gs2::Core::Model::FGs2ErrorPtr(Gs2::Dictionary::Model::FNamespacePtr*)>& CacheOwnerArgumentFetchImpl,
+        Gs2::Dictionary::Model::FNamespacePtr* CacheOwnerArgumentOutItem
+    )
+    {
+        const auto CacheSnapshot = CacheOwnerArgumentCache;
+        const auto FetchImplSnapshot = CacheOwnerArgumentFetchImpl;
+        if (CacheOwnerArgumentOutItem) *CacheOwnerArgumentOutItem = nullptr;
+        if (!FetchImplSnapshot)
+        {
+            if (CacheOwnerArgumentOutItem) *CacheOwnerArgumentOutItem = nullptr;
+            const auto Details = MakeShared<TArray<TSharedPtr<Gs2::Core::Model::FGs2ErrorDetail>>>();
+            Details->Add(MakeShared<Gs2::Core::Model::FGs2ErrorDetail>(TEXT("fetchImpl"), TEXT("fetchImpl is required."), TEXT("required")));
+            return MakeShared<Gs2::Core::Model::FBadRequestError>(Details);
+        }
+        Gs2::Dictionary::Model::FNamespacePtr CacheOwnerFetchedItem;
+        const auto CacheOwnerError = FetchImplSnapshot(&CacheOwnerFetchedItem);
+        if (!CacheOwnerError)
+        {
+            Put(
+                CacheSnapshot,
+                CacheOwnerArgumentNamespaceName,
+                CacheOwnerArgumentTimeOffset,
+                CacheOwnerFetchedItem
+            );
+            if (CacheOwnerArgumentOutItem) *CacheOwnerArgumentOutItem = CacheOwnerFetchedItem;
+            return nullptr;
+        }
+        if (!CacheOwnerError->IsChildOf(Gs2::Core::Model::FNotFoundError::Class))
+        {
+            if (CacheOwnerArgumentOutItem) *CacheOwnerArgumentOutItem = nullptr;
+            return CacheOwnerError;
+        }
+        Put(
+            CacheSnapshot,
+            CacheOwnerArgumentNamespaceName,
+            CacheOwnerArgumentTimeOffset,
+            nullptr
+        );
+        if (CacheOwnerArgumentOutItem) *CacheOwnerArgumentOutItem = nullptr;
+        const auto CacheOwnerDetails = CacheOwnerError->GetErrors();
+        if (CacheOwnerDetails.IsValid() && CacheOwnerDetails->Num() > 0 && (*CacheOwnerDetails)[0].IsValid() && (*CacheOwnerDetails)[0]->GetComponent() == TEXT("namespace"))
+        {
+            return nullptr;
+        }
+        if (CacheOwnerArgumentOutItem) *CacheOwnerArgumentOutItem = nullptr;
+        return CacheOwnerError;
+    }
+
+    Gs2::Core::Domain::CallbackID FNamespaceCache::ListSubscribe(
+        const Gs2::Core::Domain::FCacheDatabasePtr& CacheOwnerArgumentCache,
+        TOptional<int32> CacheOwnerArgumentTimeOffset,
+        TFunction<void(TArray<Gs2::Dictionary::Model::FNamespacePtr>)> CacheOwnerArgumentCallback
+    )
+    {
+        const auto CacheSnapshot = CacheOwnerArgumentCache;
+        if (!CacheSnapshot.IsValid()) return 0;
+        return CacheSnapshot->ListSubscribeTyped(Gs2::Dictionary::Model::FNamespace::TypeName, CreateCacheParentKey(
+            CacheOwnerArgumentTimeOffset
+        ), [CacheOwnerArgumentCallback](const TArray<FGs2ObjectPtr>& CacheOwnerValues)
+        {
+            TArray<Gs2::Dictionary::Model::FNamespacePtr> CacheOwnerTypedValues;
+            for (const auto& CacheOwnerValue : CacheOwnerValues) if (CacheOwnerValue) CacheOwnerTypedValues.Add(StaticCastSharedPtr<Gs2::Dictionary::Model::FNamespace>(CacheOwnerValue));
+            if (CacheOwnerArgumentCallback) CacheOwnerArgumentCallback(CacheOwnerTypedValues);
+        });
+    }
+
+    void FNamespaceCache::ListUnsubscribe(
+        const Gs2::Core::Domain::FCacheDatabasePtr& CacheOwnerArgumentCache,
+        TOptional<int32> CacheOwnerArgumentTimeOffset,
+        Gs2::Core::Domain::CallbackID CacheOwnerArgumentCallbackID
+    )
+    {
+        const auto CacheSnapshot = CacheOwnerArgumentCache;
+        if (!CacheSnapshot.IsValid()) return;
+        CacheSnapshot->ListUnsubscribe(Gs2::Dictionary::Model::FNamespace::TypeName, CreateCacheParentKey(
+            CacheOwnerArgumentTimeOffset
+        ), CacheOwnerArgumentCallbackID);
+    }
 }

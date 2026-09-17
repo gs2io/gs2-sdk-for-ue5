@@ -119,6 +119,8 @@ namespace Gs2::Guild::Domain::Model
             const FNamespaceDomain& From
         );
 
+
+
         class GS2GUILD_API FGetStatusTask final :
             public Gs2::Core::Util::TGs2Future<Gs2::Guild::Domain::Model::FNamespaceDomain>,
             public TSharedFromThis<FGetStatusTask>
@@ -144,6 +146,8 @@ namespace Gs2::Guild::Domain::Model
         TSharedPtr<FAsyncTask<FGetStatusTask>> GetStatus(
             Request::FGetNamespaceStatusRequestPtr Request
         );
+
+
 
         class GS2GUILD_API FGetTask final :
             public Gs2::Core::Util::TGs2Future<Gs2::Guild::Model::FNamespace>,
@@ -171,6 +175,8 @@ namespace Gs2::Guild::Domain::Model
             Request::FGetNamespaceRequestPtr Request
         );
 
+
+
         class GS2GUILD_API FUpdateTask final :
             public Gs2::Core::Util::TGs2Future<Gs2::Guild::Domain::Model::FNamespaceDomain>,
             public TSharedFromThis<FUpdateTask>
@@ -197,6 +203,8 @@ namespace Gs2::Guild::Domain::Model
             Request::FUpdateNamespaceRequestPtr Request
         );
 
+
+
         class GS2GUILD_API FDeleteTask final :
             public Gs2::Core::Util::TGs2Future<Gs2::Guild::Domain::Model::FNamespaceDomain>,
             public TSharedFromThis<FDeleteTask>
@@ -222,6 +230,8 @@ namespace Gs2::Guild::Domain::Model
         TSharedPtr<FAsyncTask<FDeleteTask>> Delete(
             Request::FDeleteNamespaceRequestPtr Request
         );
+
+
 
         class GS2GUILD_API FCreateGuildModelMasterTask final :
             public Gs2::Core::Util::TGs2Future<Gs2::Guild::Domain::Model::FGuildModelMasterDomain>,
@@ -259,6 +269,30 @@ namespace Gs2::Guild::Domain::Model
             TFunction<void()> Callback
         );
 
+        class FCollectGuildModelsTask;
+
+        Gs2::Core::Domain::CallbackID SubscribeGuildModels(
+            TFunction<void(TArray<Gs2::Guild::Model::FGuildModelPtr>)> Callback
+        );
+
+        void InvalidateGuildModels();
+
+        class GS2GUILD_API FSubscribeGuildModelsWithInitialCallTask final :
+            public Gs2::Core::Util::TGs2Future<Gs2::Core::Domain::CallbackID>,
+            public TSharedFromThis<FSubscribeGuildModelsWithInitialCallTask>
+        {
+            const TSharedPtr<FNamespaceDomain> Self;
+            const TFunction<void(TArray<Gs2::Guild::Model::FGuildModelPtr>)> Callback;
+
+        public:
+            FSubscribeGuildModelsWithInitialCallTask(const TSharedPtr<FNamespaceDomain>& Self, TFunction<void(TArray<Gs2::Guild::Model::FGuildModelPtr>)> Callback);
+            FSubscribeGuildModelsWithInitialCallTask(const FSubscribeGuildModelsWithInitialCallTask& From);
+            virtual Gs2::Core::Model::FGs2ErrorPtr Action(TSharedPtr<TSharedPtr<Gs2::Core::Domain::CallbackID>> Result) override;
+        };
+
+        TSharedPtr<FAsyncTask<FSubscribeGuildModelsWithInitialCallTask>> SubscribeGuildModelsWithInitialCall(
+            TFunction<void(TArray<Gs2::Guild::Model::FGuildModelPtr>)> Callback
+        );
         void UnsubscribeGuildModels(
             Gs2::Core::Domain::CallbackID CallbackID
         );
@@ -275,12 +309,84 @@ namespace Gs2::Guild::Domain::Model
             TFunction<void()> Callback
         );
 
+        class FCollectGuildModelMastersTask;
+
+        Gs2::Core::Domain::CallbackID SubscribeGuildModelMasters(
+            TFunction<void(TArray<Gs2::Guild::Model::FGuildModelMasterPtr>)> Callback,const TOptional<FString> NamePrefix = TOptional<FString>()
+        );
+
+        void InvalidateGuildModelMasters(const TOptional<FString> NamePrefix = TOptional<FString>());
+
+        class GS2GUILD_API FSubscribeGuildModelMastersWithInitialCallTask final :
+            public Gs2::Core::Util::TGs2Future<Gs2::Core::Domain::CallbackID>,
+            public TSharedFromThis<FSubscribeGuildModelMastersWithInitialCallTask>
+        {
+            const TSharedPtr<FNamespaceDomain> Self;
+            const TFunction<void(TArray<Gs2::Guild::Model::FGuildModelMasterPtr>)> Callback;
+        const TOptional<FString> QueryNamePrefix;
+        public:
+            FSubscribeGuildModelMastersWithInitialCallTask(const TSharedPtr<FNamespaceDomain>& Self, TFunction<void(TArray<Gs2::Guild::Model::FGuildModelMasterPtr>)> Callback,const TOptional<FString> NamePrefix);
+            FSubscribeGuildModelMastersWithInitialCallTask(const FSubscribeGuildModelMastersWithInitialCallTask& From);
+            virtual Gs2::Core::Model::FGs2ErrorPtr Action(TSharedPtr<TSharedPtr<Gs2::Core::Domain::CallbackID>> Result) override;
+        };
+
+        TSharedPtr<FAsyncTask<FSubscribeGuildModelMastersWithInitialCallTask>> SubscribeGuildModelMastersWithInitialCall(
+            TFunction<void(TArray<Gs2::Guild::Model::FGuildModelMasterPtr>)> Callback,const TOptional<FString> NamePrefix = TOptional<FString>()
+        );
         void UnsubscribeGuildModelMasters(
             Gs2::Core::Domain::CallbackID CallbackID
         );
 
         TSharedPtr<Gs2::Guild::Domain::Model::FGuildModelMasterDomain> GuildModelMaster(
             const FString GuildModelName
+        );
+
+        Gs2::Guild::Domain::Iterator::FSearchGuildsByUserIdIteratorPtr SearchGuilds(
+            const FString GuildModelName,
+            const FString UserId,
+            const TOptional<FString> DisplayName = TOptional<FString>(),
+            const TSharedPtr<TArray<int32>> Attributes1 = nullptr,
+            const TSharedPtr<TArray<int32>> Attributes2 = nullptr,
+            const TSharedPtr<TArray<int32>> Attributes3 = nullptr,
+            const TSharedPtr<TArray<int32>> Attributes4 = nullptr,
+            const TSharedPtr<TArray<int32>> Attributes5 = nullptr,
+            const TSharedPtr<TArray<FString>> JoinPolicies = nullptr,
+            const TOptional<bool> IncludeFullMembersGuild = TOptional<bool>(),
+            const TOptional<FString> OrderBy = TOptional<FString>(),
+            const TOptional<FString> TimeOffsetToken = TOptional<FString>()
+        ) const;
+
+        Gs2::Core::Domain::CallbackID SubscribeSearchGuilds(
+             const FString GuildModelName, TFunction<void()> Callback
+        );
+
+        class FCollectSearchGuildsTask;
+
+        Gs2::Core::Domain::CallbackID SubscribeSearchGuilds(
+            TFunction<void(TArray<Gs2::Guild::Model::FGuildPtr>)> Callback,const FString GuildModelName,const FString UserId,const TOptional<FString> DisplayName = TOptional<FString>(),const TSharedPtr<TArray<int32>> Attributes1 = nullptr,const TSharedPtr<TArray<int32>> Attributes2 = nullptr,const TSharedPtr<TArray<int32>> Attributes3 = nullptr,const TSharedPtr<TArray<int32>> Attributes4 = nullptr,const TSharedPtr<TArray<int32>> Attributes5 = nullptr,const TSharedPtr<TArray<FString>> JoinPolicies = nullptr,const TOptional<bool> IncludeFullMembersGuild = TOptional<bool>(),const TOptional<FString> OrderBy = TOptional<FString>(),const TOptional<FString> TimeOffsetToken = TOptional<FString>()
+        );
+
+        void InvalidateSearchGuilds(const FString GuildModelName,const FString UserId,const TOptional<FString> DisplayName = TOptional<FString>(),const TSharedPtr<TArray<int32>> Attributes1 = nullptr,const TSharedPtr<TArray<int32>> Attributes2 = nullptr,const TSharedPtr<TArray<int32>> Attributes3 = nullptr,const TSharedPtr<TArray<int32>> Attributes4 = nullptr,const TSharedPtr<TArray<int32>> Attributes5 = nullptr,const TSharedPtr<TArray<FString>> JoinPolicies = nullptr,const TOptional<bool> IncludeFullMembersGuild = TOptional<bool>(),const TOptional<FString> OrderBy = TOptional<FString>(),const TOptional<FString> TimeOffsetToken = TOptional<FString>());
+
+        class GS2GUILD_API FSubscribeSearchGuildsWithInitialCallTask final :
+            public Gs2::Core::Util::TGs2Future<Gs2::Core::Domain::CallbackID>,
+            public TSharedFromThis<FSubscribeSearchGuildsWithInitialCallTask>
+        {
+            const TSharedPtr<FNamespaceDomain> Self;
+            const TFunction<void(TArray<Gs2::Guild::Model::FGuildPtr>)> Callback;
+        const FString QueryGuildModelName;const FString QueryUserId;const TOptional<FString> QueryDisplayName;const TSharedPtr<TArray<int32>> QueryAttributes1;const TSharedPtr<TArray<int32>> QueryAttributes2;const TSharedPtr<TArray<int32>> QueryAttributes3;const TSharedPtr<TArray<int32>> QueryAttributes4;const TSharedPtr<TArray<int32>> QueryAttributes5;const TSharedPtr<TArray<FString>> QueryJoinPolicies;const TOptional<bool> QueryIncludeFullMembersGuild;const TOptional<FString> QueryOrderBy;const TOptional<FString> QueryTimeOffsetToken;
+        public:
+            FSubscribeSearchGuildsWithInitialCallTask(const TSharedPtr<FNamespaceDomain>& Self, TFunction<void(TArray<Gs2::Guild::Model::FGuildPtr>)> Callback,const FString GuildModelName,const FString UserId,const TOptional<FString> DisplayName,const TSharedPtr<TArray<int32>> Attributes1,const TSharedPtr<TArray<int32>> Attributes2,const TSharedPtr<TArray<int32>> Attributes3,const TSharedPtr<TArray<int32>> Attributes4,const TSharedPtr<TArray<int32>> Attributes5,const TSharedPtr<TArray<FString>> JoinPolicies,const TOptional<bool> IncludeFullMembersGuild,const TOptional<FString> OrderBy,const TOptional<FString> TimeOffsetToken);
+            FSubscribeSearchGuildsWithInitialCallTask(const FSubscribeSearchGuildsWithInitialCallTask& From);
+            virtual Gs2::Core::Model::FGs2ErrorPtr Action(TSharedPtr<TSharedPtr<Gs2::Core::Domain::CallbackID>> Result) override;
+        };
+
+        TSharedPtr<FAsyncTask<FSubscribeSearchGuildsWithInitialCallTask>> SubscribeSearchGuildsWithInitialCall(
+            TFunction<void(TArray<Gs2::Guild::Model::FGuildPtr>)> Callback,const FString GuildModelName,const FString UserId,const TOptional<FString> DisplayName = TOptional<FString>(),const TSharedPtr<TArray<int32>> Attributes1 = nullptr,const TSharedPtr<TArray<int32>> Attributes2 = nullptr,const TSharedPtr<TArray<int32>> Attributes3 = nullptr,const TSharedPtr<TArray<int32>> Attributes4 = nullptr,const TSharedPtr<TArray<int32>> Attributes5 = nullptr,const TSharedPtr<TArray<FString>> JoinPolicies = nullptr,const TOptional<bool> IncludeFullMembersGuild = TOptional<bool>(),const TOptional<FString> OrderBy = TOptional<FString>(),const TOptional<FString> TimeOffsetToken = TOptional<FString>()
+        );
+        void UnsubscribeSearchGuilds(
+            const FString GuildModelName
+            , Gs2::Core::Domain::CallbackID CallbackID, const FString UserId = FString(), const TOptional<FString> DisplayName = TOptional<FString>(), const TSharedPtr<TArray<int32>> Attributes1 = nullptr, const TSharedPtr<TArray<int32>> Attributes2 = nullptr, const TSharedPtr<TArray<int32>> Attributes3 = nullptr, const TSharedPtr<TArray<int32>> Attributes4 = nullptr, const TSharedPtr<TArray<int32>> Attributes5 = nullptr, const TSharedPtr<TArray<FString>> JoinPolicies = nullptr, const TOptional<bool> IncludeFullMembersGuild = TOptional<bool>(), const TOptional<FString> OrderBy = TOptional<FString>(), const TOptional<FString> TimeOffsetToken = TOptional<FString>()
         );
 
         TSharedPtr<Gs2::Guild::Domain::Model::FUserDomain> User(

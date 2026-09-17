@@ -160,7 +160,7 @@ namespace Gs2::UE5::Showcase::Domain::Model
     Gs2::Core::Domain::CallbackID FEzDisplayItemGameSessionDomain::Subscribe(TFunction<void(Gs2::UE5::Showcase::Model::FEzDisplayItemPtr)> Callback)
     {
         return Domain->Subscribe(
-            [&](Gs2::Showcase::Model::FDisplayItemPtr Item)
+            [Callback](Gs2::Showcase::Model::FDisplayItemPtr Item)
             {
                 Callback(Gs2::UE5::Showcase::Model::FEzDisplayItem::FromModel(Item));
             }

@@ -76,6 +76,8 @@ namespace Gs2::StateMachine::Domain::Model
             const FStatusDomain& From
         );
 
+
+
         class GS2STATEMACHINE_API FGetTask final :
             public Gs2::Core::Util::TGs2Future<Gs2::StateMachine::Model::FStatus>,
             public TSharedFromThis<FGetTask>
@@ -101,6 +103,8 @@ namespace Gs2::StateMachine::Domain::Model
         TSharedPtr<FAsyncTask<FGetTask>> Get(
             Request::FGetStatusByUserIdRequestPtr Request
         );
+
+
 
         class GS2STATEMACHINE_API FEmitTask final :
             public Gs2::Core::Util::TGs2Future<Gs2::StateMachine::Domain::Model::FStatusDomain>,
@@ -128,6 +132,8 @@ namespace Gs2::StateMachine::Domain::Model
             Request::FEmitByUserIdRequestPtr Request
         );
 
+
+
         class GS2STATEMACHINE_API FReportTask final :
             public Gs2::Core::Util::TGs2Future<Gs2::StateMachine::Domain::Model::FStatusDomain>,
             public TSharedFromThis<FReportTask>
@@ -154,6 +160,8 @@ namespace Gs2::StateMachine::Domain::Model
             Request::FReportByUserIdRequestPtr Request
         );
 
+
+
         class GS2STATEMACHINE_API FDeleteTask final :
             public Gs2::Core::Util::TGs2Future<Gs2::StateMachine::Domain::Model::FStatusDomain>,
             public TSharedFromThis<FDeleteTask>
@@ -179,6 +187,8 @@ namespace Gs2::StateMachine::Domain::Model
         TSharedPtr<FAsyncTask<FDeleteTask>> Delete(
             Request::FDeleteStatusByUserIdRequestPtr Request
         );
+
+
 
         class GS2STATEMACHINE_API FExitStateMachineTask final :
             public Gs2::Core::Util::TGs2Future<Gs2::StateMachine::Domain::Model::FStatusDomain>,
@@ -239,7 +249,34 @@ namespace Gs2::StateMachine::Domain::Model
 
         TSharedPtr<FAsyncTask<FModelTask>> Model();
 
+        void Invalidate();
+
         Gs2::Core::Domain::CallbackID Subscribe(
+            TFunction<void(Gs2::StateMachine::Model::FStatusPtr)> Callback
+        );
+
+        class GS2STATEMACHINE_API FSubscribeWithInitialCallTask final :
+            public Gs2::Core::Util::TGs2Future<Gs2::Core::Domain::CallbackID>,
+            public TSharedFromThis<FSubscribeWithInitialCallTask>
+        {
+            const TSharedPtr<FStatusDomain> Self;
+            const TFunction<void(Gs2::StateMachine::Model::FStatusPtr)> Callback;
+        public:
+            FSubscribeWithInitialCallTask(
+                const TSharedPtr<FStatusDomain>& Self,
+                TFunction<void(Gs2::StateMachine::Model::FStatusPtr)> Callback
+            );
+
+            FSubscribeWithInitialCallTask(
+                const FSubscribeWithInitialCallTask& From
+            );
+
+            virtual Gs2::Core::Model::FGs2ErrorPtr Action(
+                TSharedPtr<TSharedPtr<Gs2::Core::Domain::CallbackID>> Result
+            ) override;
+        };
+
+        TSharedPtr<FAsyncTask<FSubscribeWithInitialCallTask>> SubscribeWithInitialCall(
             TFunction<void(Gs2::StateMachine::Model::FStatusPtr)> Callback
         );
 

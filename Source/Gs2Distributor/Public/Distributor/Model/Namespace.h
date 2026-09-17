@@ -19,6 +19,7 @@
 #include "CoreMinimal.h"
 #include "Core/Gs2Object.h"
 #include "TransactionSetting.h"
+#include "TransactionSettingV2.h"
 #include "NotificationSetting.h"
 #include "LogSetting.h"
 
@@ -30,6 +31,7 @@ namespace Gs2::Distributor::Model
         TOptional<FString> NameValue;
         TOptional<FString> DescriptionValue;
         TSharedPtr<FTransactionSetting> TransactionSettingValue;
+        TSharedPtr<FTransactionSettingV2> TransactionSettingV2Value;
         TOptional<FString> AssumeUserIdValue;
         TSharedPtr<FNotificationSetting> AutoRunStampSheetNotificationValue;
         TSharedPtr<FNotificationSetting> AutoRunTransactionNotificationValue;
@@ -49,6 +51,7 @@ namespace Gs2::Distributor::Model
         TSharedPtr<FNamespace> WithName(const TOptional<FString> Name);
         TSharedPtr<FNamespace> WithDescription(const TOptional<FString> Description);
         TSharedPtr<FNamespace> WithTransactionSetting(const TSharedPtr<FTransactionSetting> TransactionSetting);
+        TSharedPtr<FNamespace> WithTransactionSettingV2(const TSharedPtr<FTransactionSettingV2> TransactionSettingV2);
         TSharedPtr<FNamespace> WithAssumeUserId(const TOptional<FString> AssumeUserId);
         TSharedPtr<FNamespace> WithAutoRunStampSheetNotification(const TSharedPtr<FNotificationSetting> AutoRunStampSheetNotification);
         TSharedPtr<FNamespace> WithAutoRunTransactionNotification(const TSharedPtr<FNotificationSetting> AutoRunTransactionNotification);
@@ -61,6 +64,7 @@ namespace Gs2::Distributor::Model
         TOptional<FString> GetName() const;
         TOptional<FString> GetDescription() const;
         TSharedPtr<FTransactionSetting> GetTransactionSetting() const;
+        TSharedPtr<FTransactionSettingV2> GetTransactionSettingV2() const;
         TOptional<FString> GetAssumeUserId() const;
         TSharedPtr<FNotificationSetting> GetAutoRunStampSheetNotification() const;
         TSharedPtr<FNotificationSetting> GetAutoRunTransactionNotification() const;

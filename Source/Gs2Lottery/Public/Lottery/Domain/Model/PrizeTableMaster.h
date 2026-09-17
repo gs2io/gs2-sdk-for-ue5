@@ -89,6 +89,8 @@ namespace Gs2::Lottery::Domain::Model
             const FPrizeTableMasterDomain& From
         );
 
+
+
         class GS2LOTTERY_API FGetTask final :
             public Gs2::Core::Util::TGs2Future<Gs2::Lottery::Model::FPrizeTableMaster>,
             public TSharedFromThis<FGetTask>
@@ -115,6 +117,8 @@ namespace Gs2::Lottery::Domain::Model
             Request::FGetPrizeTableMasterRequestPtr Request
         );
 
+
+
         class GS2LOTTERY_API FUpdateTask final :
             public Gs2::Core::Util::TGs2Future<Gs2::Lottery::Domain::Model::FPrizeTableMasterDomain>,
             public TSharedFromThis<FUpdateTask>
@@ -140,6 +144,8 @@ namespace Gs2::Lottery::Domain::Model
         TSharedPtr<FAsyncTask<FUpdateTask>> Update(
             Request::FUpdatePrizeTableMasterRequestPtr Request
         );
+
+
 
         class GS2LOTTERY_API FDeleteTask final :
             public Gs2::Core::Util::TGs2Future<Gs2::Lottery::Domain::Model::FPrizeTableMasterDomain>,
@@ -199,7 +205,34 @@ namespace Gs2::Lottery::Domain::Model
 
         TSharedPtr<FAsyncTask<FModelTask>> Model();
 
+        void Invalidate();
+
         Gs2::Core::Domain::CallbackID Subscribe(
+            TFunction<void(Gs2::Lottery::Model::FPrizeTableMasterPtr)> Callback
+        );
+
+        class GS2LOTTERY_API FSubscribeWithInitialCallTask final :
+            public Gs2::Core::Util::TGs2Future<Gs2::Core::Domain::CallbackID>,
+            public TSharedFromThis<FSubscribeWithInitialCallTask>
+        {
+            const TSharedPtr<FPrizeTableMasterDomain> Self;
+            const TFunction<void(Gs2::Lottery::Model::FPrizeTableMasterPtr)> Callback;
+        public:
+            FSubscribeWithInitialCallTask(
+                const TSharedPtr<FPrizeTableMasterDomain>& Self,
+                TFunction<void(Gs2::Lottery::Model::FPrizeTableMasterPtr)> Callback
+            );
+
+            FSubscribeWithInitialCallTask(
+                const FSubscribeWithInitialCallTask& From
+            );
+
+            virtual Gs2::Core::Model::FGs2ErrorPtr Action(
+                TSharedPtr<TSharedPtr<Gs2::Core::Domain::CallbackID>> Result
+            ) override;
+        };
+
+        TSharedPtr<FAsyncTask<FSubscribeWithInitialCallTask>> SubscribeWithInitialCall(
             TFunction<void(Gs2::Lottery::Model::FPrizeTableMasterPtr)> Callback
         );
 

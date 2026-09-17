@@ -97,7 +97,7 @@ namespace Gs2::UE5::Grade::Domain::Model
     Gs2::Core::Domain::CallbackID FEzStatusDomain::Subscribe(TFunction<void(Gs2::UE5::Grade::Model::FEzStatusPtr)> Callback)
     {
         return Domain->Subscribe(
-            [&](Gs2::Grade::Model::FStatusPtr Item)
+            [Callback](Gs2::Grade::Model::FStatusPtr Item)
             {
                 Callback(Gs2::UE5::Grade::Model::FEzStatus::FromModel(Item));
             }

@@ -31,6 +31,8 @@
 #include "Log/Domain/Model/Namespace.h"
 
 #include "Core/Domain/Gs2.h"
+#include "Log/Model/Cache/FacetModel.h"
+#include "Log/Model/Cache/Namespace.h"
 
 namespace Gs2::Log::Domain::Iterator
 {
@@ -94,9 +96,9 @@ namespace Gs2::Log::Domain::Iterator
 
         if (!RangeIteratorOpt || (!*RangeIteratorOpt && !bLast))
         {
-            const auto ListParentKey = Gs2::Log::Domain::Model::FNamespaceDomain::CreateCacheParentKey(
+            const auto ListParentKey = Gs2::Log::Model::Cache::FFacetModelCache::CreateCacheParentKey(
                 Self->NamespaceName,
-                "FacetModel"
+                TOptional<int32>()
             );
 
             if (!RangeIteratorOpt)
@@ -114,13 +116,14 @@ namespace Gs2::Log::Domain::Iterator
                 }
             }
 
-            const auto Future = Self->Client->DescribeFacetModels(
+            const auto Request =
                 MakeShared<Gs2::Log::Request::FDescribeFacetModelsRequest>()
                     ->WithContextStack(Self->Gs2->DefaultContextStack)
                     ->WithNamespaceName(Self->NamespaceName)
                     ->WithPageToken(PageToken)
                     ->WithLimit(FetchSize)
-            );
+            ;
+            const auto Future = Self->Client->DescribeFacetModels(Request);
             Future->StartSynchronousTask();
             if (Future->GetTask().IsError())
             {
@@ -134,18 +137,21 @@ namespace Gs2::Log::Domain::Iterator
             }
             const auto R = Future->GetTask().Result();
             Future->EnsureCompletion();
-            Range = R->GetItems();
-            for (auto Item : *R->GetItems())
+            Range = R->GetItems().IsValid() ? R->GetItems() : MakeShared<TArray<Gs2::Log::Model::FFacetModelPtr>>();
+            const auto ResultModel = R;
+
+
+            if (Range.IsValid())
             {
-                Self->Gs2->Cache->Put(
-                    Gs2::Log::Model::FFacetModel::TypeName,
-                    ListParentKey,
-                    Gs2::Log::Domain::Model::FFacetModelDomain::CreateCacheKey(
-                        Item->GetField()
-                    ),
-                    Item,
-                    FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
-                );
+                for (const auto& Item : *Range)
+                {
+                    if (!Item.IsValid()) continue;
+                    Gs2::Log::Model::Cache::FFacetModelCache::Put(
+                        Self->Gs2->Cache,
+                        Request->GetNamespaceName(), Item->GetField(),
+                        TOptional<int32>(), Item
+                    );
+                }
             }
             if (Range)
             {

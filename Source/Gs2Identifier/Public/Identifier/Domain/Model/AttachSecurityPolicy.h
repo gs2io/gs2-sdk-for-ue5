@@ -72,6 +72,8 @@ namespace Gs2::Identifier::Domain::Model
             const FAttachSecurityPolicyDomain& From
         );
 
+
+
         class GS2IDENTIFIER_API FGetHasSecurityPolicyTask final :
             public Gs2::Core::Util::TGs2Future<TArray<TSharedPtr<Gs2::Identifier::Domain::Model::FSecurityPolicyDomain>>>,
             public TSharedFromThis<FGetHasSecurityPolicyTask>
@@ -98,6 +100,8 @@ namespace Gs2::Identifier::Domain::Model
             Request::FGetHasSecurityPolicyRequestPtr Request
         );
 
+
+
         class GS2IDENTIFIER_API FAttachSecurityPolicyTask final :
             public Gs2::Core::Util::TGs2Future<TArray<TSharedPtr<Gs2::Identifier::Domain::Model::FSecurityPolicyDomain>>>,
             public TSharedFromThis<FAttachSecurityPolicyTask>
@@ -123,6 +127,8 @@ namespace Gs2::Identifier::Domain::Model
         TSharedPtr<FAsyncTask<FAttachSecurityPolicyTask>> AttachSecurityPolicy(
             Request::FAttachSecurityPolicyRequestPtr Request
         );
+
+
 
         class GS2IDENTIFIER_API FDetachSecurityPolicyTask final :
             public Gs2::Core::Util::TGs2Future<TArray<TSharedPtr<Gs2::Identifier::Domain::Model::FSecurityPolicyDomain>>>,
@@ -180,7 +186,34 @@ namespace Gs2::Identifier::Domain::Model
 
         TSharedPtr<FAsyncTask<FModelTask>> Model();
 
+        void Invalidate();
+
         Gs2::Core::Domain::CallbackID Subscribe(
+            TFunction<void(Gs2::Identifier::Model::FAttachSecurityPolicyPtr)> Callback
+        );
+
+        class GS2IDENTIFIER_API FSubscribeWithInitialCallTask final :
+            public Gs2::Core::Util::TGs2Future<Gs2::Core::Domain::CallbackID>,
+            public TSharedFromThis<FSubscribeWithInitialCallTask>
+        {
+            const TSharedPtr<FAttachSecurityPolicyDomain> Self;
+            const TFunction<void(Gs2::Identifier::Model::FAttachSecurityPolicyPtr)> Callback;
+        public:
+            FSubscribeWithInitialCallTask(
+                const TSharedPtr<FAttachSecurityPolicyDomain>& Self,
+                TFunction<void(Gs2::Identifier::Model::FAttachSecurityPolicyPtr)> Callback
+            );
+
+            FSubscribeWithInitialCallTask(
+                const FSubscribeWithInitialCallTask& From
+            );
+
+            virtual Gs2::Core::Model::FGs2ErrorPtr Action(
+                TSharedPtr<TSharedPtr<Gs2::Core::Domain::CallbackID>> Result
+            ) override;
+        };
+
+        TSharedPtr<FAsyncTask<FSubscribeWithInitialCallTask>> SubscribeWithInitialCall(
             TFunction<void(Gs2::Identifier::Model::FAttachSecurityPolicyPtr)> Callback
         );
 

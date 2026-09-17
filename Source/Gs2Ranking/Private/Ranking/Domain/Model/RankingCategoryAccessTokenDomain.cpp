@@ -42,6 +42,8 @@
 #include "Ranking/Domain/Model/SubscribeUserAccessToken.h"
 #include "Ranking/Domain/Model/User.h"
 #include "Ranking/Domain/Model/UserAccessToken.h"
+#include "Ranking/Model/Cache/Score.h"
+#include "Ranking/Model/Cache/SubscribeUser.h"
 
 #include "Core/Domain/Gs2.h"
 #include "Core/Domain/Transaction/JobQueueJobDomainFactory.h"
@@ -69,7 +71,7 @@ namespace Gs2::Ranking::Domain::Model
         AdditionalScopeName(AdditionalScopeName),
         ParentKey(Gs2::Ranking::Domain::Model::FUserDomain::CreateCacheParentKey(
             NamespaceName,
-            UserId(),
+            AccessToken.IsValid() ? AccessToken->GetUserId() : TOptional<FString>(),
             "RankingCategory"
         ))
     {
@@ -124,37 +126,30 @@ namespace Gs2::Ranking::Domain::Model
         const auto RequestModel = Request;
         const auto ResultModel = Future->GetTask().Result();
         Future->EnsureCompletion();
-        if (ResultModel != nullptr) {
-            
-            if (ResultModel->GetItem() != nullptr)
-            {
-                const auto ParentKey = Gs2::Ranking::Domain::Model::FRankingCategoryDomain::CreateCacheParentKey(
-                    Self->NamespaceName,
-                    Self->UserId(),
-                    Self->CategoryName,
-                    Self->AdditionalScopeName,
-                    "SubscribeUser"
-                );
-                const auto Key = Gs2::Ranking::Domain::Model::FSubscribeUserDomain::CreateCacheKey(
-                    ResultModel->GetItem()->GetTargetUserId()
-                );
-                Self->Gs2->Cache->Put(
-                    Gs2::Ranking::Model::FSubscribeUser::TypeName,
-                    ParentKey,
-                    Key,
-                    ResultModel->GetItem(),
-                    FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
-                );
-            }
+        const auto Item = ResultModel.IsValid() ? ResultModel->GetItem() : nullptr;
+        if (Item.IsValid())
+        {
+            Gs2::Ranking::Model::Cache::FSubscribeUserCache::Put(
+                Self->Gs2->Cache,
+                Request->GetNamespaceName(),
+                Self->AccessToken.IsValid() ? Self->AccessToken->GetUserId() : TOptional<FString>(),
+                Item->GetCategoryName(),
+                TOptional<FString>(),
+                Item->GetTargetUserId(),
+                Self->AccessToken.IsValid() ? Self->AccessToken->GetTimeOffset() : TOptional<int32>(),
+                Item
+            );
         }
+        const auto ItemCategoryName = Item.IsValid() ? Item->GetCategoryName() : TOptional<FString>();
+        const auto ItemTargetUserId = Item.IsValid() ? Item->GetTargetUserId() : TOptional<FString>();
         auto Domain = MakeShared<Gs2::Ranking::Domain::Model::FSubscribeUserAccessTokenDomain>(
             Self->Gs2,
             Self->Service,
             Request->GetNamespaceName(),
             Self->AccessToken,
-            ResultModel->GetItem()->GetCategoryName(),
+            ItemCategoryName,
             Self->AdditionalScopeName,
-            ResultModel->GetItem()->GetTargetUserId()
+            ItemTargetUserId
         );
 
         *Result = Domain;
@@ -205,22 +200,14 @@ namespace Gs2::Ranking::Domain::Model
             
             if (ResultModel->GetItem() != nullptr)
             {
-                const auto ParentKey = FString("") +
-                    (Self->NamespaceName.IsSet() ? *Self->NamespaceName : "null") + ":" +
-                    (Self->UserId().IsSet() ? *Self->UserId() : "null") + ":" +
-                    (Self->CategoryName.IsSet() ? *Self->CategoryName : "null") + ":" +
-                    "Score";
-                const auto Key = Gs2::Ranking::Domain::Model::FScoreDomain::CreateCacheKey(
-                    ResultModel->GetItem()->GetCategoryName(),
+                Gs2::Ranking::Model::Cache::FScoreCache::Put(
+                    Self->Gs2->Cache,
+                    Request->GetNamespaceName(),
                     ResultModel->GetItem()->GetScorerUserId(),
-                    ResultModel->GetItem()->GetUniqueId()
-                );
-                Self->Gs2->Cache->Put(
-                    Gs2::Ranking::Model::FScore::TypeName,
-                    ParentKey,
-                    Key,
-                    ResultModel->GetItem(),
-                    FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
+                    Request->GetCategoryName(),
+                    ResultModel->GetItem()->GetUniqueId(),
+                    Self->AccessToken.IsValid() ? Self->AccessToken->GetTimeOffset() : TOptional<int32>(),
+                    ResultModel->GetItem()
                 );
             }
         }
@@ -262,13 +249,14 @@ namespace Gs2::Ranking::Domain::Model
     {
         return Gs2->Cache->ListSubscribe(
             Gs2::Ranking::Model::FSubscribeUser::TypeName,
-            Gs2::Ranking::Domain::Model::FRankingCategoryDomain::CreateCacheParentKey(
+            Gs2::Ranking::Model::Cache::FSubscribeUserCache::CreateCacheParentKey(
                 NamespaceName,
-                UserId(),
+                AccessToken.IsValid() ? AccessToken->GetUserId() : TOptional<FString>(),
                 CategoryName,
                 AdditionalScopeName,
-                "SubscribeUser"
+                AccessToken.IsValid() ? AccessToken->GetTimeOffset() : TOptional<int32>()
             ),
+            Callback,
             Callback
         );
     }
@@ -279,12 +267,12 @@ namespace Gs2::Ranking::Domain::Model
     {
         Gs2->Cache->ListUnsubscribe(
             Gs2::Ranking::Model::FSubscribeUser::TypeName,
-            Gs2::Ranking::Domain::Model::FRankingCategoryDomain::CreateCacheParentKey(
+            Gs2::Ranking::Model::Cache::FSubscribeUserCache::CreateCacheParentKey(
                 NamespaceName,
-                UserId(),
+                AccessToken.IsValid() ? AccessToken->GetUserId() : TOptional<FString>(),
                 CategoryName,
                 AdditionalScopeName,
-                "SubscribeUser"
+                AccessToken.IsValid() ? AccessToken->GetTimeOffset() : TOptional<int32>()
             ),
             CallbackID
         );
@@ -331,6 +319,7 @@ namespace Gs2::Ranking::Domain::Model
                 AdditionalScopeName,
                 "Ranking"
             ),
+            Callback,
             Callback
         );
     }

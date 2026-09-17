@@ -35,12 +35,13 @@ namespace Gs2::Core::Domain::Internal
 			FString StampSheet,
 			FString StampSheetEncryptionKeyId,
 			bool bAtomicCommit,
-			Core::Model::FTransactionResultPtr TransactionResult
+			Core::Model::FTransactionResultPtr TransactionResult,
+			TOptional<FString> NamespaceName = TOptional<FString>()
 		)
 		{
 			return Gs2::Core::Domain::FTransactionDomainFactory::ToTransaction(
 				GS2,
-				[&](
+				[GS2, AccessToken](
 					const Gs2::JobQueue::Result::FPushByUserIdResultPtr& Result
 				)
 				{
@@ -56,7 +57,8 @@ namespace Gs2::Core::Domain::Internal
 				StampSheet,
 				StampSheetEncryptionKeyId,
 				bAtomicCommit,
-				TransactionResult
+				TransactionResult,
+				NamespaceName
 			);
 		}
 
@@ -68,12 +70,13 @@ namespace Gs2::Core::Domain::Internal
 			FString StampSheet,
 			FString StampSheetEncryptionKeyId,
 			bool bAtomicCommit,
-			Core::Model::FTransactionResultPtr TransactionResult
+			Core::Model::FTransactionResultPtr TransactionResult,
+			TOptional<FString> NamespaceName = TOptional<FString>()
 		)
 		{
 			return Gs2::Core::Domain::FTransactionDomainFactory::ToTransaction(
 				GS2,
-				[&GS2, UserId](
+				[GS2, UserId](
 					const Gs2::JobQueue::Result::FPushByUserIdResultPtr& Result
 				)
 				{
@@ -89,7 +92,8 @@ namespace Gs2::Core::Domain::Internal
 				StampSheet,
 				StampSheetEncryptionKeyId,
 				bAtomicCommit,
-				TransactionResult
+				TransactionResult,
+				NamespaceName
 			);
 		}
 		
@@ -101,7 +105,7 @@ namespace Gs2::Core::Domain::Internal
 		{
 			return Gs2::Core::Domain::FJobQueueJobDomainFactory::ToTransaction(
 				GS2,
-				[&](
+				[GS2, AccessToken](
 					bool bAutoRun,
 					FString TransactionId,
 					FString StampSheet,
@@ -134,7 +138,7 @@ namespace Gs2::Core::Domain::Internal
 		{
 			return Gs2::Core::Domain::FJobQueueJobDomainFactory::ToTransaction(
 				GS2,
-				[&GS2, UserId](
+				[GS2, UserId](
 					bool bAutoRun,
 					FString TransactionId,
 					FString StampSheet,
@@ -169,7 +173,7 @@ namespace Gs2::Core::Domain::Internal
 		{
 			return Gs2::Core::Domain::FJobQueueJobDomainFactory::ToTransaction(
 				GS2,
-				[&](
+				[GS2, AccessToken](
 					bool bAutoRun,
 					FString TransactionId,
 					FString StampSheet,
@@ -206,7 +210,7 @@ namespace Gs2::Core::Domain::Internal
 		{
 			return Gs2::Core::Domain::FJobQueueJobDomainFactory::ToTransaction(
 				GS2,
-				[&GS2, UserId](
+				[GS2, UserId](
 					bool bAutoRun,
 					FString TransactionId,
 					FString StampSheet,

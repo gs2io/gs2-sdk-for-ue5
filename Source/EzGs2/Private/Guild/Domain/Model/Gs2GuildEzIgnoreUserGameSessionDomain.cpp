@@ -143,7 +143,7 @@ namespace Gs2::UE5::Guild::Domain::Model
     Gs2::Core::Domain::CallbackID FEzIgnoreUserGameSessionDomain::Subscribe(TFunction<void(Gs2::UE5::Guild::Model::FEzIgnoreUserPtr)> Callback)
     {
         return Domain->Subscribe(
-            [&](Gs2::Guild::Model::FIgnoreUserPtr Item)
+            [Callback](Gs2::Guild::Model::FIgnoreUserPtr Item)
             {
                 Callback(Gs2::UE5::Guild::Model::FEzIgnoreUser::FromModel(Item));
             }

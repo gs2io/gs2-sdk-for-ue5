@@ -88,6 +88,8 @@ namespace Gs2::Exchange::Domain::Model
             const FUserDomain& From
         );
 
+
+
         class GS2EXCHANGE_API FCreateAwaitTask final :
             public Gs2::Core::Util::TGs2Future<Gs2::Exchange::Domain::Model::FAwaitDomain>,
             public TSharedFromThis<FCreateAwaitTask>
@@ -124,8 +126,33 @@ namespace Gs2::Exchange::Domain::Model
 
         Gs2::Core::Domain::CallbackID SubscribeAwaits(
             TFunction<void()> Callback
+
         );
 
+        class FCollectAwaitsTask;
+
+        Gs2::Core::Domain::CallbackID SubscribeAwaits(
+            TFunction<void(TArray<Gs2::Exchange::Model::FAwaitPtr>)> Callback,const TOptional<FString> RateName = TOptional<FString>(),const TOptional<FString> TimeOffsetToken = TOptional<FString>()
+        );
+
+        void InvalidateAwaits(const TOptional<FString> RateName = TOptional<FString>(),const TOptional<FString> TimeOffsetToken = TOptional<FString>());
+
+        class GS2EXCHANGE_API FSubscribeAwaitsWithInitialCallTask final :
+            public Gs2::Core::Util::TGs2Future<Gs2::Core::Domain::CallbackID>,
+            public TSharedFromThis<FSubscribeAwaitsWithInitialCallTask>
+        {
+            const TSharedPtr<FUserDomain> Self;
+            const TFunction<void(TArray<Gs2::Exchange::Model::FAwaitPtr>)> Callback;
+        const TOptional<FString> QueryRateName;const TOptional<FString> QueryTimeOffsetToken;
+        public:
+            FSubscribeAwaitsWithInitialCallTask(const TSharedPtr<FUserDomain>& Self, TFunction<void(TArray<Gs2::Exchange::Model::FAwaitPtr>)> Callback,const TOptional<FString> RateName,const TOptional<FString> TimeOffsetToken);
+            FSubscribeAwaitsWithInitialCallTask(const FSubscribeAwaitsWithInitialCallTask& From);
+            virtual Gs2::Core::Model::FGs2ErrorPtr Action(TSharedPtr<TSharedPtr<Gs2::Core::Domain::CallbackID>> Result) override;
+        };
+
+        TSharedPtr<FAsyncTask<FSubscribeAwaitsWithInitialCallTask>> SubscribeAwaitsWithInitialCall(
+            TFunction<void(TArray<Gs2::Exchange::Model::FAwaitPtr>)> Callback,const TOptional<FString> RateName = TOptional<FString>(),const TOptional<FString> TimeOffsetToken = TOptional<FString>()
+        );
         void UnsubscribeAwaits(
             Gs2::Core::Domain::CallbackID CallbackID
         );

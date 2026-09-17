@@ -66,7 +66,8 @@ namespace Gs2::UE5::Lottery::Domain::Model
 
         Gs2::Core::Domain::CallbackID SubscribeBoxes(TFunction<void()> Callback);
 
-        void UnsubscribeBoxes(Gs2::Core::Domain::CallbackID CallbackId);
+        void UnsubscribeBoxes(
+                Gs2::Core::Domain::CallbackID CallbackId);
 
         Gs2::UE5::Lottery::Domain::Model::FEzBoxItemsGameSessionDomainPtr BoxItems(
             const FString PrizeTableName

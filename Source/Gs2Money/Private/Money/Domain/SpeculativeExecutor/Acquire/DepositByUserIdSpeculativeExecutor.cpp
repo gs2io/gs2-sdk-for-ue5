@@ -26,11 +26,166 @@
 
 #include "Money/Domain/SpeculativeExecutor/Acquire/DepositByUserIdSpeculativeExecutor.h"
 #include "Money/Domain/Gs2Money.h"
+#include "Money/Model/Cache/Wallet.h"
+#include "Money/Model/WalletDetail.h"
 
 #include "Core/Domain/Gs2.h"
+#include "Core/Domain/SpeculativeExecutor/PreparedSpeculativeCommit.h"
 
 namespace Gs2::Money::Domain::SpeculativeExecutor
 {
+
+    namespace
+    {
+        using FWallet = Gs2::Money::Model::FWallet;
+        using FWalletPtr = Gs2::Money::Model::FWalletPtr;
+        using FWalletDetail = Gs2::Money::Model::FWalletDetail;
+        using FWalletDetailPtr = Gs2::Money::Model::FWalletDetailPtr;
+        using FWalletCache = Gs2::Money::Model::Cache::FWalletCache;
+
+        static FString ExpectedWalletId(
+            const Gs2::Core::Domain::FGs2Ptr& Domain,
+            const FString& NamespaceName,
+            const FString& UserId,
+            const TOptional<int32>& Slot
+        )
+        {
+            return FString::Printf(
+                TEXT("grn:gs2:%s:%s:money:%s:user:%s:wallet:%s"),
+                *Domain->RestSession->RegionName(),
+                *Domain->RestSession->OwnerId(),
+                *NamespaceName,
+                *UserId,
+                *LexToString(Slot.Get(0))
+            );
+        }
+
+        static bool IsExpected(
+            const FWalletPtr& Item,
+            const FString& ExpectedId,
+            const FString& UserId,
+            const TOptional<int32>& Slot
+        )
+        {
+            return Item.IsValid() && Item->GetWalletId().IsSet() &&
+                *Item->GetWalletId() == ExpectedId && Item->GetUserId().IsSet() &&
+                *Item->GetUserId() == UserId && Item->GetSlot() == Slot;
+        }
+
+        static FWalletPtr SyncFreeWallet(
+            const FWalletPtr& Item,
+            const FWalletPtr& Source
+        )
+        {
+            if (!Item.IsValid() || !Source.IsValid()) return nullptr;
+            auto Clone = FWallet::FromJson(Item->ToJson());
+            if (!Clone.IsValid()) return nullptr;
+            auto Details = MakeShared<TArray<FWalletDetailPtr>>();
+            if (const auto Existing = Clone->GetDetail()) {
+                for (const auto& Detail : *Existing) {
+                    if (Detail.IsValid()) Details->Add(FWalletDetail::FromJson(Detail->ToJson()));
+                }
+            }
+            FWalletDetailPtr FreeDetail;
+            for (const auto& Detail : *Details) {
+                if (Detail.IsValid() && Detail->GetPrice().IsSet() && *Detail->GetPrice() == 0) {
+                    FreeDetail = Detail;
+                    break;
+                }
+            }
+            if (!FreeDetail.IsValid()) {
+                FreeDetail = MakeShared<FWalletDetail>()->WithPrice(0.0f);
+                Details->Add(FreeDetail);
+            }
+            TOptional<int32> FreeCount;
+            if (const auto Existing = Source->GetDetail()) {
+                for (const auto& Detail : *Existing) {
+                    if (Detail.IsValid() && Detail->GetPrice().IsSet() && *Detail->GetPrice() == 0) {
+                        FreeCount = Detail->GetCount();
+                        break;
+                    }
+                }
+            }
+            if (!FreeCount.IsSet()) FreeCount = Source->GetFree();
+            if (!FreeCount.IsSet()) FreeCount = 0;
+            FreeDetail->WithCount(FreeCount);
+            return Clone->WithFree(Source->GetFree())->WithDetail(Details);
+        }
+
+        static FWalletPtr SynchronizeSharedFree(
+            const Gs2::Core::Domain::FGs2Ptr& Domain,
+            const FWalletPtr& Item,
+            const FString& NamespaceName,
+            const FString& UserId,
+            const TOptional<int32>& Slot,
+            const TOptional<int32>& TimeOffset,
+            FWalletPtr& SharedWallet,
+            bool& SharedFreeUnavailable
+        )
+        {
+            SharedWallet = nullptr;
+            SharedFreeUnavailable = false;
+            if (!Item.IsValid() || !Item->GetShareFree().Get(false) ||
+                !Slot.IsSet() || *Slot == 0) return Item;
+
+            FWalletPtr CachedSharedWallet;
+            if (!FWalletCache::TryGet(
+                    Domain->Cache, NamespaceName, UserId, 0, TimeOffset,
+                    &CachedSharedWallet) || !CachedSharedWallet.IsValid()) {
+                SharedFreeUnavailable = true;
+                return Item;
+            }
+            SharedWallet = CachedSharedWallet;
+            return SyncFreeWallet(Item, CachedSharedWallet);
+        }
+
+        static FWalletPtr TransformWallet(
+            const FWalletPtr& Source,
+            const Gs2::Money::Request::FDepositByUserIdRequestPtr& Request
+        )
+        {
+            if (!Source.IsValid() || !Request.IsValid() ||
+                !Request->GetPrice().IsSet() || !Request->GetCount().IsSet()) return nullptr;
+            auto Clone = FWallet::FromJson(Source->ToJson());
+            if (!Clone.IsValid()) return nullptr;
+            const float UnitPrice = FMath::CeilToFloat(
+                *Request->GetPrice() * 10000.0f / static_cast<float>(*Request->GetCount())
+            ) / 10000.0f;
+            auto Details = MakeShared<TArray<FWalletDetailPtr>>();
+            if (const auto Existing = Clone->GetDetail()) {
+                for (const auto& Detail : *Existing) {
+                    if (Detail.IsValid()) Details->Add(FWalletDetail::FromJson(Detail->ToJson()));
+                }
+            }
+            FWalletDetailPtr Target;
+            for (const auto& Detail : *Details) {
+                if (Detail.IsValid() && Detail->GetPrice().IsSet() && *Detail->GetPrice() == UnitPrice) {
+                    Target = Detail;
+                    break;
+                }
+            }
+            if (!Target.IsValid()) {
+                Target = MakeShared<FWalletDetail>()->WithPrice(UnitPrice)->WithCount(0);
+                Details->Add(Target);
+            }
+            const int64 Count = *Request->GetCount();
+            if (Target->GetCount().IsSet()) {
+                const int64 Value = static_cast<int64>(*Target->GetCount()) + Count;
+                if (Value < INT32_MIN || Value > INT32_MAX) return nullptr;
+                Target->WithCount(static_cast<int32>(Value));
+            }
+            const bool Paid = *Request->GetPrice() > 0;
+            const auto Previous = Paid ? Clone->GetPaid() : Clone->GetFree();
+            if (Previous.IsSet()) {
+                const int64 Value = static_cast<int64>(*Previous) + Count;
+                if (Value < INT32_MIN || Value > INT32_MAX) return nullptr;
+                if (Paid) Clone->WithPaid(static_cast<int32>(Value));
+                else Clone->WithFree(static_cast<int32>(Value));
+            }
+            Clone->WithDetail(Details)->WithRevision(0);
+            return Clone;
+        }
+    }
 
     FString FDepositByUserIdSpeculativeExecutor::Action()
     {
@@ -44,8 +199,8 @@ namespace Gs2::Money::Domain::SpeculativeExecutor
         Gs2::Money::Model::FWalletPtr Item
     )
     {
-        // TODO: Speculative execution not supported
-        UE_LOG(Gs2Log, Warning, TEXT("Speculative execution not supported on this action: %s"), ToCStr(Action()))
+        const auto Changed = TransformWallet(Item, Request);
+        if (Item.IsValid() && Changed.IsValid()) *Item = *Changed;
         return nullptr;
     }
 
@@ -75,57 +230,51 @@ namespace Gs2::Money::Domain::SpeculativeExecutor
     }
 
     Gs2::Core::Model::FGs2ErrorPtr FDepositByUserIdSpeculativeExecutor::FCommitTask::Action(
-        TSharedPtr<TSharedPtr<TFunction<void()>>> Result
+        TSharedPtr<TSharedPtr<Gs2::Core::Domain::SpeculativeExecutor::FPreparedSpeculativeCommit>> Result
     )
     {
-        const auto Future = Domain->Money->Namespace(
-                Request->GetNamespaceName().IsSet() ? *Request->GetNamespaceName() : FString("")
-            )->AccessToken(
-                AccessToken
-            )->Wallet(
-                Request->GetSlot().IsSet() ? *Request->GetSlot() : 0
-            )->Model();
-        Future->StartSynchronousTask();
-        if (Future->GetTask().IsError())
+        *Result = nullptr;
+        const auto Prepared = Request.IsValid() ? Gs2::Money::Request::FDepositByUserIdRequest::FromJson(Request->ToJson()) : nullptr;
+        Gs2::Auth::Model::FAccessTokenPtr PreparedAccessToken;
+        if (AccessToken.IsValid()) PreparedAccessToken = MakeShared<Gs2::Auth::Model::FAccessToken>(*AccessToken);
+        if (Prepared.IsValid() && Prepared->GetUserId().IsSet() && *Prepared->GetUserId() == TEXT("#{userId}"))
+            Prepared->WithUserId(PreparedAccessToken.IsValid() ? PreparedAccessToken->GetUserId() : TOptional<FString>());
+        if (!Domain.IsValid() || !Domain->RestSession.IsValid() || !Prepared.IsValid() ||
+            !PreparedAccessToken.IsValid() || !Prepared->GetNamespaceName().IsSet() ||
+            !PreparedAccessToken->GetUserId().IsSet() || Prepared->GetUserId() != PreparedAccessToken->GetUserId() ||
+            !Prepared->GetSlot().IsSet() || !Prepared->GetPrice().IsSet() || !Prepared->GetCount().IsSet()) return nullptr;
+        const auto UserId = *PreparedAccessToken->GetUserId();
+        const auto TimeOffset = PreparedAccessToken->GetTimeOffset();
+        FWalletPtr PreparedItem;
+        const bool Found = FWalletCache::TryGet(Domain->Cache, Prepared->GetNamespaceName(), UserId, Prepared->GetSlot(), TimeOffset, &PreparedItem);
+        const auto ExpectedId = ExpectedWalletId(Domain, *Prepared->GetNamespaceName(), UserId, Prepared->GetSlot());
+        if (!Found || !IsExpected(PreparedItem, ExpectedId, UserId, Prepared->GetSlot())) return nullptr;
+        FWalletPtr PreparedShared;
+        bool PreparedSharedUnavailable = false;
+        SynchronizeSharedFree(Domain, PreparedItem, *Prepared->GetNamespaceName(), UserId, Prepared->GetSlot(), TimeOffset, PreparedShared, PreparedSharedUnavailable);
+        if ((PreparedSharedUnavailable && !(*Prepared->GetPrice() > 0)) ||
+            (PreparedShared.IsValid() && !IsExpected(PreparedShared, ExpectedWalletId(Domain, *Prepared->GetNamespaceName(), UserId, 0), UserId, 0))) return nullptr;
+        *Result = Gs2::Core::Domain::SpeculativeExecutor::FPreparedSpeculativeCommit::WrapLegacy(MakeShared<TFunction<void()>>([DomainCopy = Domain, Prepared, UserId, TimeOffset]()
         {
-            return Future->GetTask().Error();
-        }
-        auto Item = Future->GetTask().Result();
-
-        if (!Item.IsValid())
-        {
-            *Result = MakeShared<TFunction<void()>>([&]()
-            {
-                return nullptr;
-            });
-            return nullptr;
-        }
-        auto Err = Transform(Domain, AccessToken, Request, Item);
-        if (Err != nullptr)
-        {
-            return Err;
-        }
-
-        const auto ParentKey = Model::FUserDomain::CreateCacheParentKey(
-            Request->GetNamespaceName(),
-            AccessToken->GetUserId(),
-            FString("Wallet")
-        );
-        const auto Key = Model::FWalletDomain::CreateCacheKey(
-            Request->GetSlot()
-        );
-
-        *Result = MakeShared<TFunction<void()>>([&]()
-        {
-            Domain->Cache->Put(
-                Money::Model::FWallet::TypeName,
-                ParentKey,
-                Key,
-                Item,
-                FDateTime::Now() + FTimespan::FromSeconds(10)
-            );
-            return nullptr;
-        });
+            FWalletPtr Live;
+            if (!FWalletCache::TryGet(DomainCopy->Cache, Prepared->GetNamespaceName(), UserId, Prepared->GetSlot(), TimeOffset, &Live)) return;
+            const auto ExpectedId = ExpectedWalletId(DomainCopy, *Prepared->GetNamespaceName(), UserId, Prepared->GetSlot());
+            if (!IsExpected(Live, ExpectedId, UserId, Prepared->GetSlot())) return;
+            FWalletPtr Shared;
+            bool SharedUnavailable = false;
+            const auto Source = SynchronizeSharedFree(DomainCopy, Live, *Prepared->GetNamespaceName(), UserId, Prepared->GetSlot(), TimeOffset, Shared, SharedUnavailable);
+            if ((SharedUnavailable && !(*Prepared->GetPrice() > 0)) || (Shared.IsValid() && !IsExpected(Shared, ExpectedWalletId(DomainCopy, *Prepared->GetNamespaceName(), UserId, 0), UserId, 0))) return;
+            const auto PreviousFree = Source.IsValid() ? Source->GetFree() : TOptional<int32>();
+            const auto Changed = TransformWallet(Source, Prepared);
+            if (!Changed.IsValid()) return;
+            if (Shared.IsValid() && PreviousFree != Changed->GetFree()) {
+                auto ChangedShared = SyncFreeWallet(Shared, Changed);
+                if (!ChangedShared.IsValid()) return;
+                ChangedShared->WithRevision(0);
+                FWalletCache::Put(DomainCopy->Cache, *Prepared->GetNamespaceName(), UserId, 0, TimeOffset, ChangedShared);
+            }
+            FWalletCache::Put(DomainCopy->Cache, *Prepared->GetNamespaceName(), UserId, Prepared->GetSlot(), TimeOffset, Changed);
+        }));
         return nullptr;
     }
 

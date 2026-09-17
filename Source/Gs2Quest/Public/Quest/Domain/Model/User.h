@@ -89,6 +89,8 @@ namespace Gs2::Quest::Domain::Model
             const FUserDomain& From
         );
 
+
+
         class GS2QUEST_API FCreateProgressTask final :
             public Gs2::Core::Util::TGs2Future<Gs2::Quest::Domain::Model::FProgressDomain>,
             public TSharedFromThis<FCreateProgressTask>
@@ -114,6 +116,8 @@ namespace Gs2::Quest::Domain::Model
         TSharedPtr<FAsyncTask<FCreateProgressTask>> CreateProgress(
             Request::FCreateProgressByUserIdRequestPtr Request
         );
+
+
 
         class GS2QUEST_API FStartTask final :
             public Gs2::Core::Util::TGs2Future<Gs2::Core::Domain::FTransactionDomain>,
@@ -147,8 +151,33 @@ namespace Gs2::Quest::Domain::Model
 
         Gs2::Core::Domain::CallbackID SubscribeCompletedQuestLists(
             TFunction<void()> Callback
+
         );
 
+        class FCollectCompletedQuestListsTask;
+
+        Gs2::Core::Domain::CallbackID SubscribeCompletedQuestLists(
+            TFunction<void(TArray<Gs2::Quest::Model::FCompletedQuestListPtr>)> Callback,const TOptional<FString> TimeOffsetToken = TOptional<FString>()
+        );
+
+        void InvalidateCompletedQuestLists(const TOptional<FString> TimeOffsetToken = TOptional<FString>());
+
+        class GS2QUEST_API FSubscribeCompletedQuestListsWithInitialCallTask final :
+            public Gs2::Core::Util::TGs2Future<Gs2::Core::Domain::CallbackID>,
+            public TSharedFromThis<FSubscribeCompletedQuestListsWithInitialCallTask>
+        {
+            const TSharedPtr<FUserDomain> Self;
+            const TFunction<void(TArray<Gs2::Quest::Model::FCompletedQuestListPtr>)> Callback;
+        const TOptional<FString> QueryTimeOffsetToken;
+        public:
+            FSubscribeCompletedQuestListsWithInitialCallTask(const TSharedPtr<FUserDomain>& Self, TFunction<void(TArray<Gs2::Quest::Model::FCompletedQuestListPtr>)> Callback,const TOptional<FString> TimeOffsetToken);
+            FSubscribeCompletedQuestListsWithInitialCallTask(const FSubscribeCompletedQuestListsWithInitialCallTask& From);
+            virtual Gs2::Core::Model::FGs2ErrorPtr Action(TSharedPtr<TSharedPtr<Gs2::Core::Domain::CallbackID>> Result) override;
+        };
+
+        TSharedPtr<FAsyncTask<FSubscribeCompletedQuestListsWithInitialCallTask>> SubscribeCompletedQuestListsWithInitialCall(
+            TFunction<void(TArray<Gs2::Quest::Model::FCompletedQuestListPtr>)> Callback,const TOptional<FString> TimeOffsetToken = TOptional<FString>()
+        );
         void UnsubscribeCompletedQuestLists(
             Gs2::Core::Domain::CallbackID CallbackID
         );
@@ -163,8 +192,33 @@ namespace Gs2::Quest::Domain::Model
 
         Gs2::Core::Domain::CallbackID SubscribeProgresses(
             TFunction<void()> Callback
+
         );
 
+        class FCollectProgressesTask;
+
+        Gs2::Core::Domain::CallbackID SubscribeProgresses(
+            TFunction<void(TArray<Gs2::Quest::Model::FProgressPtr>)> Callback,const TOptional<FString> TimeOffsetToken = TOptional<FString>()
+        );
+
+        void InvalidateProgresses(const TOptional<FString> TimeOffsetToken = TOptional<FString>());
+
+        class GS2QUEST_API FSubscribeProgressesWithInitialCallTask final :
+            public Gs2::Core::Util::TGs2Future<Gs2::Core::Domain::CallbackID>,
+            public TSharedFromThis<FSubscribeProgressesWithInitialCallTask>
+        {
+            const TSharedPtr<FUserDomain> Self;
+            const TFunction<void(TArray<Gs2::Quest::Model::FProgressPtr>)> Callback;
+        const TOptional<FString> QueryTimeOffsetToken;
+        public:
+            FSubscribeProgressesWithInitialCallTask(const TSharedPtr<FUserDomain>& Self, TFunction<void(TArray<Gs2::Quest::Model::FProgressPtr>)> Callback,const TOptional<FString> TimeOffsetToken);
+            FSubscribeProgressesWithInitialCallTask(const FSubscribeProgressesWithInitialCallTask& From);
+            virtual Gs2::Core::Model::FGs2ErrorPtr Action(TSharedPtr<TSharedPtr<Gs2::Core::Domain::CallbackID>> Result) override;
+        };
+
+        TSharedPtr<FAsyncTask<FSubscribeProgressesWithInitialCallTask>> SubscribeProgressesWithInitialCall(
+            TFunction<void(TArray<Gs2::Quest::Model::FProgressPtr>)> Callback,const TOptional<FString> TimeOffsetToken = TOptional<FString>()
+        );
         void UnsubscribeProgresses(
             Gs2::Core::Domain::CallbackID CallbackID
         );

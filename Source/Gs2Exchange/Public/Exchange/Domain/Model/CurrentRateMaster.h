@@ -91,6 +91,8 @@ namespace Gs2::Exchange::Domain::Model
             const FCurrentRateMasterDomain& From
         );
 
+
+
         class GS2EXCHANGE_API FExportMasterTask final :
             public Gs2::Core::Util::TGs2Future<Gs2::Exchange::Domain::Model::FCurrentRateMasterDomain>,
             public TSharedFromThis<FExportMasterTask>
@@ -116,6 +118,8 @@ namespace Gs2::Exchange::Domain::Model
         TSharedPtr<FAsyncTask<FExportMasterTask>> ExportMaster(
             Request::FExportMasterRequestPtr Request
         );
+
+
 
         class GS2EXCHANGE_API FGetTask final :
             public Gs2::Core::Util::TGs2Future<Gs2::Exchange::Model::FCurrentRateMaster>,
@@ -143,6 +147,8 @@ namespace Gs2::Exchange::Domain::Model
             Request::FGetCurrentRateMasterRequestPtr Request
         );
 
+
+
         class GS2EXCHANGE_API FPreUpdateTask final :
             public Gs2::Core::Util::TGs2Future<Gs2::Exchange::Domain::Model::FCurrentRateMasterDomain>,
             public TSharedFromThis<FPreUpdateTask>
@@ -169,6 +175,8 @@ namespace Gs2::Exchange::Domain::Model
             Request::FPreUpdateCurrentRateMasterRequestPtr Request
         );
 
+
+
         class GS2EXCHANGE_API FUpdateTask final :
             public Gs2::Core::Util::TGs2Future<Gs2::Exchange::Domain::Model::FCurrentRateMasterDomain>,
             public TSharedFromThis<FUpdateTask>
@@ -194,6 +202,8 @@ namespace Gs2::Exchange::Domain::Model
         TSharedPtr<FAsyncTask<FUpdateTask>> Update(
             Request::FUpdateCurrentRateMasterRequestPtr Request
         );
+
+
 
         class GS2EXCHANGE_API FUpdateFromGitHubTask final :
             public Gs2::Core::Util::TGs2Future<Gs2::Exchange::Domain::Model::FCurrentRateMasterDomain>,
@@ -251,7 +261,34 @@ namespace Gs2::Exchange::Domain::Model
 
         TSharedPtr<FAsyncTask<FModelTask>> Model();
 
+        void Invalidate();
+
         Gs2::Core::Domain::CallbackID Subscribe(
+            TFunction<void(Gs2::Exchange::Model::FCurrentRateMasterPtr)> Callback
+        );
+
+        class GS2EXCHANGE_API FSubscribeWithInitialCallTask final :
+            public Gs2::Core::Util::TGs2Future<Gs2::Core::Domain::CallbackID>,
+            public TSharedFromThis<FSubscribeWithInitialCallTask>
+        {
+            const TSharedPtr<FCurrentRateMasterDomain> Self;
+            const TFunction<void(Gs2::Exchange::Model::FCurrentRateMasterPtr)> Callback;
+        public:
+            FSubscribeWithInitialCallTask(
+                const TSharedPtr<FCurrentRateMasterDomain>& Self,
+                TFunction<void(Gs2::Exchange::Model::FCurrentRateMasterPtr)> Callback
+            );
+
+            FSubscribeWithInitialCallTask(
+                const FSubscribeWithInitialCallTask& From
+            );
+
+            virtual Gs2::Core::Model::FGs2ErrorPtr Action(
+                TSharedPtr<TSharedPtr<Gs2::Core::Domain::CallbackID>> Result
+            ) override;
+        };
+
+        TSharedPtr<FAsyncTask<FSubscribeWithInitialCallTask>> SubscribeWithInitialCall(
             TFunction<void(Gs2::Exchange::Model::FCurrentRateMasterPtr)> Callback
         );
 

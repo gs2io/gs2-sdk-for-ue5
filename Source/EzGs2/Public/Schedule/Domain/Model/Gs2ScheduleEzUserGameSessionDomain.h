@@ -60,14 +60,16 @@ namespace Gs2::UE5::Schedule::Domain::Model
 
         Gs2::Core::Domain::CallbackID SubscribeTriggers(TFunction<void()> Callback);
 
-        void UnsubscribeTriggers(Gs2::Core::Domain::CallbackID CallbackId);
+        void UnsubscribeTriggers(
+                Gs2::Core::Domain::CallbackID CallbackId);
 
         Gs2::UE5::Schedule::Domain::Iterator::FEzDescribeEventsIteratorPtr Events(
         ) const;
 
         Gs2::Core::Domain::CallbackID SubscribeEvents(TFunction<void()> Callback);
 
-        void UnsubscribeEvents(Gs2::Core::Domain::CallbackID CallbackId);
+        void UnsubscribeEvents(
+                Gs2::Core::Domain::CallbackID CallbackId);
 
         Gs2::UE5::Schedule::Domain::Model::FEzTriggerGameSessionDomainPtr Trigger(
             const FString TriggerName

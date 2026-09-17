@@ -93,8 +93,33 @@ namespace Gs2::LoginReward::Domain::Model
 
         Gs2::Core::Domain::CallbackID SubscribeReceiveStatuses(
             TFunction<void()> Callback
+
         );
 
+        class FCollectReceiveStatusesTask;
+
+        Gs2::Core::Domain::CallbackID SubscribeReceiveStatuses(
+            TFunction<void(TArray<Gs2::LoginReward::Model::FReceiveStatusPtr>)> Callback,const TOptional<FString> TimeOffsetToken = TOptional<FString>()
+        );
+
+        void InvalidateReceiveStatuses(const TOptional<FString> TimeOffsetToken = TOptional<FString>());
+
+        class GS2LOGINREWARD_API FSubscribeReceiveStatusesWithInitialCallTask final :
+            public Gs2::Core::Util::TGs2Future<Gs2::Core::Domain::CallbackID>,
+            public TSharedFromThis<FSubscribeReceiveStatusesWithInitialCallTask>
+        {
+            const TSharedPtr<FUserDomain> Self;
+            const TFunction<void(TArray<Gs2::LoginReward::Model::FReceiveStatusPtr>)> Callback;
+        const TOptional<FString> QueryTimeOffsetToken;
+        public:
+            FSubscribeReceiveStatusesWithInitialCallTask(const TSharedPtr<FUserDomain>& Self, TFunction<void(TArray<Gs2::LoginReward::Model::FReceiveStatusPtr>)> Callback,const TOptional<FString> TimeOffsetToken);
+            FSubscribeReceiveStatusesWithInitialCallTask(const FSubscribeReceiveStatusesWithInitialCallTask& From);
+            virtual Gs2::Core::Model::FGs2ErrorPtr Action(TSharedPtr<TSharedPtr<Gs2::Core::Domain::CallbackID>> Result) override;
+        };
+
+        TSharedPtr<FAsyncTask<FSubscribeReceiveStatusesWithInitialCallTask>> SubscribeReceiveStatusesWithInitialCall(
+            TFunction<void(TArray<Gs2::LoginReward::Model::FReceiveStatusPtr>)> Callback,const TOptional<FString> TimeOffsetToken = TOptional<FString>()
+        );
         void UnsubscribeReceiveStatuses(
             Gs2::Core::Domain::CallbackID CallbackID
         );

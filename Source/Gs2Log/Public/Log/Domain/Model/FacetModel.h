@@ -97,6 +97,8 @@ namespace Gs2::Log::Domain::Model
             const FFacetModelDomain& From
         );
 
+
+
         class GS2LOG_API FCreateTask final :
             public Gs2::Core::Util::TGs2Future<Gs2::Log::Domain::Model::FFacetModelDomain>,
             public TSharedFromThis<FCreateTask>
@@ -122,6 +124,8 @@ namespace Gs2::Log::Domain::Model
         TSharedPtr<FAsyncTask<FCreateTask>> Create(
             Request::FCreateFacetModelRequestPtr Request
         );
+
+
 
         class GS2LOG_API FGetTask final :
             public Gs2::Core::Util::TGs2Future<Gs2::Log::Model::FFacetModel>,
@@ -149,6 +153,8 @@ namespace Gs2::Log::Domain::Model
             Request::FGetFacetModelRequestPtr Request
         );
 
+
+
         class GS2LOG_API FUpdateTask final :
             public Gs2::Core::Util::TGs2Future<Gs2::Log::Domain::Model::FFacetModelDomain>,
             public TSharedFromThis<FUpdateTask>
@@ -174,6 +180,8 @@ namespace Gs2::Log::Domain::Model
         TSharedPtr<FAsyncTask<FUpdateTask>> Update(
             Request::FUpdateFacetModelRequestPtr Request
         );
+
+
 
         class GS2LOG_API FDeleteTask final :
             public Gs2::Core::Util::TGs2Future<Gs2::Log::Domain::Model::FFacetModelDomain>,
@@ -233,7 +241,34 @@ namespace Gs2::Log::Domain::Model
 
         TSharedPtr<FAsyncTask<FModelTask>> Model();
 
+        void Invalidate();
+
         Gs2::Core::Domain::CallbackID Subscribe(
+            TFunction<void(Gs2::Log::Model::FFacetModelPtr)> Callback
+        );
+
+        class GS2LOG_API FSubscribeWithInitialCallTask final :
+            public Gs2::Core::Util::TGs2Future<Gs2::Core::Domain::CallbackID>,
+            public TSharedFromThis<FSubscribeWithInitialCallTask>
+        {
+            const TSharedPtr<FFacetModelDomain> Self;
+            const TFunction<void(Gs2::Log::Model::FFacetModelPtr)> Callback;
+        public:
+            FSubscribeWithInitialCallTask(
+                const TSharedPtr<FFacetModelDomain>& Self,
+                TFunction<void(Gs2::Log::Model::FFacetModelPtr)> Callback
+            );
+
+            FSubscribeWithInitialCallTask(
+                const FSubscribeWithInitialCallTask& From
+            );
+
+            virtual Gs2::Core::Model::FGs2ErrorPtr Action(
+                TSharedPtr<TSharedPtr<Gs2::Core::Domain::CallbackID>> Result
+            ) override;
+        };
+
+        TSharedPtr<FAsyncTask<FSubscribeWithInitialCallTask>> SubscribeWithInitialCall(
             TFunction<void(Gs2::Log::Model::FFacetModelPtr)> Callback
         );
 

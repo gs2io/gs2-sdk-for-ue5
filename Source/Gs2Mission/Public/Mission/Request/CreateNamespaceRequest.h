@@ -19,6 +19,7 @@
 #include "CoreMinimal.h"
 #include "Dom/JsonObject.h"
 #include "../Model/TransactionSetting.h"
+#include "../Model/TransactionSettingV2.h"
 #include "../Model/ScriptSetting.h"
 #include "../Model/NotificationSetting.h"
 #include "../Model/LogSetting.h"
@@ -33,6 +34,7 @@ namespace Gs2::Mission::Request
         TOptional<FString> NameValue;
         TOptional<FString> DescriptionValue;
         TSharedPtr<Model::FTransactionSetting> TransactionSettingValue;
+        TSharedPtr<Model::FTransactionSettingV2> TransactionSettingV2Value;
         TSharedPtr<Model::FScriptSetting> MissionCompleteScriptValue;
         TSharedPtr<Model::FScriptSetting> CounterIncrementScriptValue;
         TSharedPtr<Model::FScriptSetting> ReceiveRewardsScriptValue;
@@ -53,6 +55,7 @@ namespace Gs2::Mission::Request
         TSharedPtr<FCreateNamespaceRequest> WithName(const TOptional<FString> Name);
         TSharedPtr<FCreateNamespaceRequest> WithDescription(const TOptional<FString> Description);
         TSharedPtr<FCreateNamespaceRequest> WithTransactionSetting(const TSharedPtr<Model::FTransactionSetting> TransactionSetting);
+        TSharedPtr<FCreateNamespaceRequest> WithTransactionSettingV2(const TSharedPtr<Model::FTransactionSettingV2> TransactionSettingV2);
         TSharedPtr<FCreateNamespaceRequest> WithMissionCompleteScript(const TSharedPtr<Model::FScriptSetting> MissionCompleteScript);
         TSharedPtr<FCreateNamespaceRequest> WithCounterIncrementScript(const TSharedPtr<Model::FScriptSetting> CounterIncrementScript);
         TSharedPtr<FCreateNamespaceRequest> WithReceiveRewardsScript(const TSharedPtr<Model::FScriptSetting> ReceiveRewardsScript);
@@ -65,6 +68,7 @@ namespace Gs2::Mission::Request
         TOptional<FString> GetName() const;
         TOptional<FString> GetDescription() const;
         TSharedPtr<Model::FTransactionSetting> GetTransactionSetting() const;
+        TSharedPtr<Model::FTransactionSettingV2> GetTransactionSettingV2() const;
         TSharedPtr<Model::FScriptSetting> GetMissionCompleteScript() const;
         TSharedPtr<Model::FScriptSetting> GetCounterIncrementScript() const;
         TSharedPtr<Model::FScriptSetting> GetReceiveRewardsScript() const;

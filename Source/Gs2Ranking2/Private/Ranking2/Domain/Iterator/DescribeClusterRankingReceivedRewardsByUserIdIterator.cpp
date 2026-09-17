@@ -1,3 +1,4 @@
+
 /*
  * Copyright 2016 Game Server Services, Inc. or its affiliates. All Rights
  * Reserved.
@@ -31,6 +32,7 @@
 #include "Ranking2/Domain/Model/ClusterRankingSeason.h"
 
 #include "Core/Domain/Gs2.h"
+#include "Ranking2/Model/Cache/ClusterRankingReceivedReward.h"
 
 namespace Gs2::Ranking2::Domain::Iterator
 {
@@ -106,14 +108,12 @@ namespace Gs2::Ranking2::Domain::Iterator
 
         if (!RangeIteratorOpt || (!*RangeIteratorOpt && !bLast))
         {
-            const auto ListParentKey = Gs2::Ranking2::Domain::Model::FClusterRankingSeasonDomain::CreateCacheParentKey(
+            const auto ListParentKey = Gs2::Ranking2::Model::Cache::FClusterRankingReceivedRewardCache::CreateCacheParentKey(
                 Self->NamespaceName,
+                Self->UserId,
                 Self->RankingName,
-                Self->ClusterName,
-                Self->Season,
-                "ClusterRankingReceivedReward"
+                TOptional<int32>()
             );
-
             if (!RangeIteratorOpt)
             {
                 Range = Self->Gs2->Cache->TryGetList<Gs2::Ranking2::Model::FClusterRankingReceivedReward>(ListParentKey);
@@ -128,7 +128,7 @@ namespace Gs2::Ranking2::Domain::Iterator
                 }
             }
 
-            const auto Future = Self->Client->DescribeClusterRankingReceivedRewardsByUserId(
+            const auto Request =
                 MakeShared<Gs2::Ranking2::Request::FDescribeClusterRankingReceivedRewardsByUserIdRequest>()
                     ->WithContextStack(Self->Gs2->DefaultContextStack)
                     ->WithNamespaceName(Self->NamespaceName)
@@ -138,7 +138,8 @@ namespace Gs2::Ranking2::Domain::Iterator
                     ->WithSeason(Self->Season)
                     ->WithPageToken(PageToken)
                     ->WithLimit(FetchSize)
-            );
+            ;
+            const auto Future = Self->Client->DescribeClusterRankingReceivedRewardsByUserId(Request);
             Future->StartSynchronousTask();
             if (Future->GetTask().IsError())
             {
@@ -152,20 +153,21 @@ namespace Gs2::Ranking2::Domain::Iterator
             }
             const auto R = Future->GetTask().Result();
             Future->EnsureCompletion();
-            Range = R->GetItems();
-            for (auto Item : *R->GetItems())
+            Range = R->GetItems().IsValid() ? R->GetItems() : MakeShared<TArray<Gs2::Ranking2::Model::FClusterRankingReceivedRewardPtr>>();
+            const auto ResultModel = R;
+
+
+            if (Range.IsValid())
             {
-                Self->Gs2->Cache->Put(
-                    Gs2::Ranking2::Model::FClusterRankingReceivedReward::TypeName,
-                    ListParentKey,
-                    Gs2::Ranking2::Domain::Model::FClusterRankingReceivedRewardDomain::CreateCacheKey(
-                        Item->GetClusterName(),
-                        Item->GetSeason(),
-                        Item->GetUserId()
-                    ),
-                    Item,
-                    FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
-                );
+                for (const auto& Item : *Range)
+                {
+                    if (!Item.IsValid()) continue;
+                    Gs2::Ranking2::Model::Cache::FClusterRankingReceivedRewardCache::Put(
+                        Self->Gs2->Cache,
+                        Request->GetNamespaceName(), Request->GetRankingName(), Item->GetClusterName(), Item->GetSeason(), Item->GetUserId(),
+                        TOptional<int32>(), Item
+                    );
+                }
             }
             if (Range)
             {

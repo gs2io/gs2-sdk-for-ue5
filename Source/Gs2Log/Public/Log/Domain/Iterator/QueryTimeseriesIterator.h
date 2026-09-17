@@ -34,7 +34,7 @@ namespace Gs2::Log::Domain::Iterator
         const TOptional<int64> Begin;
         const TOptional<int64> End;
         const TOptional<FString> Query;
-        const TOptional<TArray<FString>> GroupBy;
+        const TSharedPtr<TArray<FString>> GroupBy;
         const Gs2::Log::Model::FAggregationConfigPtr Aggregation;
         const TOptional<int32> Interval;
         const TOptional<int32> SeriesLimit;
@@ -48,7 +48,7 @@ namespace Gs2::Log::Domain::Iterator
             const TOptional<int64> Begin = TOptional<int64>(),
             const TOptional<int64> End = TOptional<int64>(),
             const TOptional<FString> Query = TOptional<FString>(),
-            const TOptional<TArray<FString>> GroupBy = TOptional<TArray<FString>>(),
+            const TSharedPtr<TArray<FString>> GroupBy = nullptr,
             const TOptional<int32> Interval = TOptional<int32>(),
             const TOptional<int32> SeriesLimit = TOptional<int32>()
         );

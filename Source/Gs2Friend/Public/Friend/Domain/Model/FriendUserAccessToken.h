@@ -12,8 +12,6 @@
  * on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either
  * express or implied. See the License for the specific language governing
  * permissions and limitations under the License.
- *
- * deny overwrite
  */
 
 // ReSharper disable CppUnusedIncludeDirective
@@ -105,6 +103,8 @@ namespace Gs2::Friend::Domain::Model
             const FFriendUserAccessTokenDomain& From
         );
 
+
+
         class GS2FRIEND_API FGetTask final :
             public Gs2::Core::Util::TGs2Future<Gs2::Friend::Model::FFriendUser>,
             public TSharedFromThis<FGetTask>
@@ -130,6 +130,8 @@ namespace Gs2::Friend::Domain::Model
         TSharedPtr<FAsyncTask<FGetTask>> Get(
             Request::FGetFriendRequestPtr Request
         );
+
+
 
         class GS2FRIEND_API FDeleteTask final :
             public Gs2::Core::Util::TGs2Future<Gs2::Friend::Domain::Model::FFriendUserAccessTokenDomain>,
@@ -191,7 +193,34 @@ namespace Gs2::Friend::Domain::Model
 
         TSharedPtr<FAsyncTask<FModelTask>> Model();
 
+        void Invalidate();
+
         Gs2::Core::Domain::CallbackID Subscribe(
+            TFunction<void(Gs2::Friend::Model::FFriendUserPtr)> Callback
+        );
+
+        class GS2FRIEND_API FSubscribeWithInitialCallTask final :
+            public Gs2::Core::Util::TGs2Future<Gs2::Core::Domain::CallbackID>,
+            public TSharedFromThis<FSubscribeWithInitialCallTask>
+        {
+            const TSharedPtr<FFriendUserAccessTokenDomain> Self;
+            const TFunction<void(Gs2::Friend::Model::FFriendUserPtr)> Callback;
+        public:
+            FSubscribeWithInitialCallTask(
+                const TSharedPtr<FFriendUserAccessTokenDomain>& Self,
+                TFunction<void(Gs2::Friend::Model::FFriendUserPtr)> Callback
+            );
+
+            FSubscribeWithInitialCallTask(
+                const FSubscribeWithInitialCallTask& From
+            );
+
+            virtual Gs2::Core::Model::FGs2ErrorPtr Action(
+                TSharedPtr<TSharedPtr<Gs2::Core::Domain::CallbackID>> Result
+            ) override;
+        };
+
+        TSharedPtr<FAsyncTask<FSubscribeWithInitialCallTask>> SubscribeWithInitialCall(
             TFunction<void(Gs2::Friend::Model::FFriendUserPtr)> Callback
         );
 

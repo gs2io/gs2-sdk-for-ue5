@@ -94,6 +94,8 @@ namespace Gs2::Mission::Domain::Model
             const FMissionGroupModelMasterDomain& From
         );
 
+
+
         class GS2MISSION_API FGetTask final :
             public Gs2::Core::Util::TGs2Future<Gs2::Mission::Model::FMissionGroupModelMaster>,
             public TSharedFromThis<FGetTask>
@@ -119,6 +121,8 @@ namespace Gs2::Mission::Domain::Model
         TSharedPtr<FAsyncTask<FGetTask>> Get(
             Request::FGetMissionGroupModelMasterRequestPtr Request
         );
+
+
 
         class GS2MISSION_API FUpdateTask final :
             public Gs2::Core::Util::TGs2Future<Gs2::Mission::Domain::Model::FMissionGroupModelMasterDomain>,
@@ -146,6 +150,8 @@ namespace Gs2::Mission::Domain::Model
             Request::FUpdateMissionGroupModelMasterRequestPtr Request
         );
 
+
+
         class GS2MISSION_API FDeleteTask final :
             public Gs2::Core::Util::TGs2Future<Gs2::Mission::Domain::Model::FMissionGroupModelMasterDomain>,
             public TSharedFromThis<FDeleteTask>
@@ -171,6 +177,8 @@ namespace Gs2::Mission::Domain::Model
         TSharedPtr<FAsyncTask<FDeleteTask>> Delete(
             Request::FDeleteMissionGroupModelMasterRequestPtr Request
         );
+
+
 
         class GS2MISSION_API FCreateMissionTaskModelMasterTask final :
             public Gs2::Core::Util::TGs2Future<Gs2::Mission::Domain::Model::FMissionTaskModelMasterDomain>,
@@ -204,8 +212,33 @@ namespace Gs2::Mission::Domain::Model
 
         Gs2::Core::Domain::CallbackID SubscribeMissionTaskModelMasters(
             TFunction<void()> Callback
+
         );
 
+        class FCollectMissionTaskModelMastersTask;
+
+        Gs2::Core::Domain::CallbackID SubscribeMissionTaskModelMasters(
+            TFunction<void(TArray<Gs2::Mission::Model::FMissionTaskModelMasterPtr>)> Callback,const TOptional<FString> NamePrefix = TOptional<FString>()
+        );
+
+        void InvalidateMissionTaskModelMasters(const TOptional<FString> NamePrefix = TOptional<FString>());
+
+        class GS2MISSION_API FSubscribeMissionTaskModelMastersWithInitialCallTask final :
+            public Gs2::Core::Util::TGs2Future<Gs2::Core::Domain::CallbackID>,
+            public TSharedFromThis<FSubscribeMissionTaskModelMastersWithInitialCallTask>
+        {
+            const TSharedPtr<FMissionGroupModelMasterDomain> Self;
+            const TFunction<void(TArray<Gs2::Mission::Model::FMissionTaskModelMasterPtr>)> Callback;
+        const TOptional<FString> QueryNamePrefix;
+        public:
+            FSubscribeMissionTaskModelMastersWithInitialCallTask(const TSharedPtr<FMissionGroupModelMasterDomain>& Self, TFunction<void(TArray<Gs2::Mission::Model::FMissionTaskModelMasterPtr>)> Callback,const TOptional<FString> NamePrefix);
+            FSubscribeMissionTaskModelMastersWithInitialCallTask(const FSubscribeMissionTaskModelMastersWithInitialCallTask& From);
+            virtual Gs2::Core::Model::FGs2ErrorPtr Action(TSharedPtr<TSharedPtr<Gs2::Core::Domain::CallbackID>> Result) override;
+        };
+
+        TSharedPtr<FAsyncTask<FSubscribeMissionTaskModelMastersWithInitialCallTask>> SubscribeMissionTaskModelMastersWithInitialCall(
+            TFunction<void(TArray<Gs2::Mission::Model::FMissionTaskModelMasterPtr>)> Callback,const TOptional<FString> NamePrefix = TOptional<FString>()
+        );
         void UnsubscribeMissionTaskModelMasters(
             Gs2::Core::Domain::CallbackID CallbackID
         );
@@ -246,7 +279,34 @@ namespace Gs2::Mission::Domain::Model
 
         TSharedPtr<FAsyncTask<FModelTask>> Model();
 
+        void Invalidate();
+
         Gs2::Core::Domain::CallbackID Subscribe(
+            TFunction<void(Gs2::Mission::Model::FMissionGroupModelMasterPtr)> Callback
+        );
+
+        class GS2MISSION_API FSubscribeWithInitialCallTask final :
+            public Gs2::Core::Util::TGs2Future<Gs2::Core::Domain::CallbackID>,
+            public TSharedFromThis<FSubscribeWithInitialCallTask>
+        {
+            const TSharedPtr<FMissionGroupModelMasterDomain> Self;
+            const TFunction<void(Gs2::Mission::Model::FMissionGroupModelMasterPtr)> Callback;
+        public:
+            FSubscribeWithInitialCallTask(
+                const TSharedPtr<FMissionGroupModelMasterDomain>& Self,
+                TFunction<void(Gs2::Mission::Model::FMissionGroupModelMasterPtr)> Callback
+            );
+
+            FSubscribeWithInitialCallTask(
+                const FSubscribeWithInitialCallTask& From
+            );
+
+            virtual Gs2::Core::Model::FGs2ErrorPtr Action(
+                TSharedPtr<TSharedPtr<Gs2::Core::Domain::CallbackID>> Result
+            ) override;
+        };
+
+        TSharedPtr<FAsyncTask<FSubscribeWithInitialCallTask>> SubscribeWithInitialCall(
             TFunction<void(Gs2::Mission::Model::FMissionGroupModelMasterPtr)> Callback
         );
 

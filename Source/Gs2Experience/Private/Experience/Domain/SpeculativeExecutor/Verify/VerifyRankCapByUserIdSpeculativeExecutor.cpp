@@ -27,10 +27,33 @@
 #include "Experience/Domain/SpeculativeExecutor/Verify/VerifyRankCapByUserIdSpeculativeExecutor.h"
 
 #include "Core/Domain/Gs2.h"
-#include "Experience/Domain/Gs2Experience.h"
+#include "Core/Domain/SpeculativeExecutor/PreparedSpeculativeCommit.h"
+#include "Core/Util/ServerRate.h"
+#include "Experience/Model/Cache/Status.h"
 
 namespace Gs2::Experience::Domain::SpeculativeExecutor
 {
+namespace
+{
+bool ExperienceVerifyRankCapPredicate(const Gs2::Experience::Model::FStatusPtr& Item, const FString& ExpectedId,
+    const FString& UserId, const FString& ExperienceName, const FString& PropertyId,
+    const FString& VerifyType, const int64 RequestValue)
+{
+    if (!Item.IsValid() || !Item->GetStatusId().IsSet() || Item->GetStatusId().Get(FString()) != ExpectedId ||
+        !Item->GetUserId().IsSet() || Item->GetUserId().Get(FString()) != UserId ||
+        !Item->GetExperienceName().IsSet() || Item->GetExperienceName().Get(FString()) != ExperienceName ||
+        !Item->GetPropertyId().IsSet() || Item->GetPropertyId().Get(FString()) != PropertyId ||
+        !Item->GetRankCapValue().IsSet()) return false;
+    const int64 Current = Item->GetRankCapValue().Get(0);
+    if (VerifyType == TEXT("less")) return Current < RequestValue;
+    if (VerifyType == TEXT("lessEqual")) return Current <= RequestValue;
+    if (VerifyType == TEXT("greater")) return Current > RequestValue;
+    if (VerifyType == TEXT("greaterEqual")) return Current >= RequestValue;
+    if (VerifyType == TEXT("equal")) return Current == RequestValue;
+    if (VerifyType == TEXT("notEqual")) return Current != RequestValue;
+    return false;
+}
+}
 
     FString FVerifyRankCapByUserIdSpeculativeExecutor::Action()
     {
@@ -38,89 +61,30 @@ namespace Gs2::Experience::Domain::SpeculativeExecutor
     }
 
     Gs2::Core::Model::FGs2ErrorPtr FVerifyRankCapByUserIdSpeculativeExecutor::Transform(
-        const Gs2::Core::Domain::FGs2Ptr& Domain,
-        const Gs2::Auth::Model::FAccessTokenPtr& AccessToken,
+        const Gs2::Core::Domain::FGs2Ptr&, const Gs2::Auth::Model::FAccessTokenPtr&,
         const Gs2::Experience::Request::FVerifyRankCapByUserIdRequestPtr& Request,
-        Gs2::Experience::Model::FStatusPtr Item
-    )
+        Gs2::Experience::Model::FStatusPtr Item)
     {
-        if (Request->GetVerifyType().IsSet()) {
-            if (*Request->GetVerifyType() == "less")
-            {
-                if (*Item->GetRankCapValue() >= *Request->GetRankCapValue())
-                {
-                    return MakeShared<Gs2::Core::Model::FBadRequestError>([]
-                    {
-                        auto Arr = MakeShared<TArray<Gs2::Core::Model::FGs2ErrorDetailPtr>>();
-                        Arr->Add(MakeShared<Gs2::Core::Model::FGs2ErrorDetail>("rankCapValue", "invalid", ""));
-                        return Arr;
-                    }());
-                }
-            } else if (*Request->GetVerifyType() == "lessEqual")
-            {
-                if (*Item->GetRankCapValue() > *Request->GetRankCapValue())
-                {
-                    return MakeShared<Gs2::Core::Model::FBadRequestError>([]
-                    {
-                        auto Arr = MakeShared<TArray<Gs2::Core::Model::FGs2ErrorDetailPtr>>();
-                        Arr->Add(MakeShared<Gs2::Core::Model::FGs2ErrorDetail>("rankCapValue", "invalid", ""));
-                        return Arr;
-                    }());
-                }
-            } else if (*Request->GetVerifyType() == "greater")
-            {
-                if (*Item->GetRankCapValue() <= *Request->GetRankCapValue())
-                {
-                    return MakeShared<Gs2::Core::Model::FBadRequestError>([]
-                    {
-                        auto Arr = MakeShared<TArray<Gs2::Core::Model::FGs2ErrorDetailPtr>>();
-                        Arr->Add(MakeShared<Gs2::Core::Model::FGs2ErrorDetail>("rankCapValue", "invalid", ""));
-                        return Arr;
-                    }());
-                }
-            } else if (*Request->GetVerifyType() == "greaterEqual")
-            {
-                if (*Item->GetRankCapValue() > *Request->GetRankCapValue())
-                {
-                    return MakeShared<Gs2::Core::Model::FBadRequestError>([]
-                    {
-                        auto Arr = MakeShared<TArray<Gs2::Core::Model::FGs2ErrorDetailPtr>>();
-                        Arr->Add(MakeShared<Gs2::Core::Model::FGs2ErrorDetail>("rankCapValue", "invalid", ""));
-                        return Arr;
-                    }());
-                }
-            } else if (*Request->GetVerifyType() == "equal")
-            {
-                if (*Item->GetRankCapValue() != *Request->GetRankCapValue())
-                {
-                    return MakeShared<Gs2::Core::Model::FBadRequestError>([]
-                    {
-                        auto Arr = MakeShared<TArray<Gs2::Core::Model::FGs2ErrorDetailPtr>>();
-                        Arr->Add(MakeShared<Gs2::Core::Model::FGs2ErrorDetail>("rankCapValue", "invalid", ""));
-                        return Arr;
-                    }());
-                }
-            } else if (*Request->GetVerifyType() == "notEqual")
-            {
-                if (*Item->GetRankCapValue() == *Request->GetRankCapValue())
-                {
-                    return MakeShared<Gs2::Core::Model::FBadRequestError>([]
-                    {
-                        auto Arr = MakeShared<TArray<Gs2::Core::Model::FGs2ErrorDetailPtr>>();
-                        Arr->Add(MakeShared<Gs2::Core::Model::FGs2ErrorDetail>("rankCapValue", "invalid", ""));
-                        return Arr;
-                    }());
-                }
-            } else {
-                return MakeShared<Gs2::Core::Model::FBadRequestError>([]
-                {
-                    auto Arr = MakeShared<TArray<Gs2::Core::Model::FGs2ErrorDetailPtr>>();
-                    Arr->Add(MakeShared<Gs2::Core::Model::FGs2ErrorDetail>("verifyType", "invalid", ""));
-                    return Arr;
-                }());
-            }
+        bool Satisfied = false;
+        if (Item.IsValid() && Item->GetRankCapValue().IsSet() && Request->GetRankCapValue().IsSet())
+        {
+            const int64 Current = Item->GetRankCapValue().Get(0);
+            const int64 Expected = Request->GetRankCapValue().Get(0);
+            const auto Type = Request->GetVerifyType().Get(FString());
+            if (Type == TEXT("less")) Satisfied = Current < Expected;
+            else if (Type == TEXT("lessEqual")) Satisfied = Current <= Expected;
+            else if (Type == TEXT("greater")) Satisfied = Current > Expected;
+            else if (Type == TEXT("greaterEqual")) Satisfied = Current >= Expected;
+            else if (Type == TEXT("equal")) Satisfied = Current == Expected;
+            else if (Type == TEXT("notEqual")) Satisfied = Current != Expected;
         }
-        return nullptr;
+        if (Satisfied) return nullptr;
+        return MakeShared<Gs2::Core::Model::FBadRequestError>([]
+        {
+            auto Arr = MakeShared<TArray<Gs2::Core::Model::FGs2ErrorDetailPtr>>();
+            Arr->Add(MakeShared<Gs2::Core::Model::FGs2ErrorDetail>("rankCapValue", "invalid", ""));
+            return Arr;
+        }());
     }
 
     FVerifyRankCapByUserIdSpeculativeExecutor::FCommitTask::FCommitTask(
@@ -149,42 +113,54 @@ namespace Gs2::Experience::Domain::SpeculativeExecutor
     }
 
     Gs2::Core::Model::FGs2ErrorPtr FVerifyRankCapByUserIdSpeculativeExecutor::FCommitTask::Action(
-        TSharedPtr<TSharedPtr<TFunction<void()>>> Result
+        TSharedPtr<TSharedPtr<Gs2::Core::Domain::SpeculativeExecutor::FPreparedSpeculativeCommit>> Result
     )
     {
-        const auto Future = Domain->Experience->Namespace(
-                Request->GetNamespaceName().IsSet() ? *Request->GetNamespaceName() : FString("")
-            )->AccessToken(
-                AccessToken
-            )->Status(
-                Request->GetExperienceName().IsSet() ? *Request->GetExperienceName() : FString(""),
-                Request->GetPropertyId().IsSet() ? *Request->GetPropertyId() : FString("")
-            )->Model();
-        Future->StartSynchronousTask();
-        if (Future->GetTask().IsError())
+        *Result = nullptr;
+        Gs2::Auth::Model::FAccessTokenPtr Token = nullptr;
+        if (AccessToken.IsValid()) Token = MakeShared<Gs2::Auth::Model::FAccessToken>(*AccessToken);
+        Gs2::Experience::Request::FVerifyRankCapByUserIdRequestPtr Prepared = nullptr;
+        if (Request.IsValid()) Prepared = MakeShared<Gs2::Experience::Request::FVerifyRankCapByUserIdRequest>(*Request);
+        if (!Domain.IsValid() || !Domain->RestSession.IsValid() || !Token.IsValid() || !Prepared.IsValid() ||
+            !Token->GetUserId().IsSet() || Token->GetUserId().Get(FString()).IsEmpty()) return nullptr;
+        if (Prepared->GetUserId().IsSet() && Prepared->GetUserId().Get(FString()) == TEXT("#{userId}"))
+            Prepared->WithUserId(Token->GetUserId());
+        if (!Prepared->GetUserId().IsSet() || Prepared->GetUserId().Get(FString()) != Token->GetUserId().Get(FString()) ||
+            !Prepared->GetNamespaceName().IsSet() || Prepared->GetNamespaceName().Get(FString()).IsEmpty() ||
+            !Prepared->GetExperienceName().IsSet() || Prepared->GetExperienceName().Get(FString()).IsEmpty() ||
+            !Prepared->GetPropertyId().IsSet() || Prepared->GetPropertyId().Get(FString()).IsEmpty()) return nullptr;
+        const auto NamespaceName = Prepared->GetNamespaceName();
+        const FString UserId = Token->GetUserId().Get(FString());
+        const FString ExperienceName = Prepared->GetExperienceName().Get(FString());
+        const FString PropertyId = Prepared->GetPropertyId().Get(FString())
+            .Replace(TEXT("{region}"), *Domain->RestSession->RegionName())
+            .Replace(TEXT("{ownerId}"), *Domain->RestSession->OwnerId())
+            .Replace(TEXT("{userId}"), *UserId);
+        const FString ExpectedId = FString::Printf(
+            TEXT("grn:gs2:%s:%s:experience:%s:user:%s:experienceModel:%s:property:%s"),
+            *Domain->RestSession->RegionName(), *Domain->RestSession->OwnerId(), *NamespaceName.Get(FString()),
+            *UserId, *ExperienceName, *PropertyId);
+        const auto TimeOffset = Token->GetTimeOffset();
+        const FString VerifyType = Prepared->GetVerifyType().Get(FString());
+        Gs2::Experience::Model::FStatusPtr Cached;
+        if (!Gs2::Experience::Model::Cache::FStatusCache::TryGet(
+            Domain->Cache, NamespaceName, UserId, ExperienceName, PropertyId, TimeOffset, &Cached) || !Cached.IsValid()) return nullptr;
+        const int64 RequestValue = Prepared->GetRankCapValue().Get(0);
+        if (!Cached->GetStatusId().IsSet() || Cached->GetStatusId().Get(FString()) != ExpectedId ||
+            !Cached->GetUserId().IsSet() || Cached->GetUserId().Get(FString()) != UserId ||
+            !Cached->GetExperienceName().IsSet() || Cached->GetExperienceName().Get(FString()) != ExperienceName ||
+            !Cached->GetPropertyId().IsSet() || Cached->GetPropertyId().Get(FString()) != PropertyId) return nullptr;
+        if (const auto Error = Transform(Domain, Token, Prepared, Cached); Error.IsValid()) return Error;
+        const auto Guard = [Cache = Domain->Cache, NamespaceName, UserId, ExperienceName, PropertyId, TimeOffset,
+            ExpectedId, VerifyType, RequestValue]()
         {
-            return Future->GetTask().Error();
-        }
-        auto Item = Future->GetTask().Result();
-
-        if (!Item.IsValid())
-        {
-            *Result = MakeShared<TFunction<void()>>([&]()
-            {
-                return nullptr;
-            });
-            return nullptr;
-        }
-        auto Err = Transform(Domain, AccessToken, Request, Item);
-        if (Err != nullptr)
-        {
-            return Err;
-        }
-
-        *Result = MakeShared<TFunction<void()>>([&]()
-        {
-            return nullptr;
-        });
+            Gs2::Experience::Model::FStatusPtr Current;
+            if (!Gs2::Experience::Model::Cache::FStatusCache::TryGet(
+                Cache, NamespaceName, UserId, ExperienceName, PropertyId, TimeOffset, &Current) || !Current.IsValid()) return false;
+            return ExperienceVerifyRankCapPredicate(Current, ExpectedId, UserId, ExperienceName, PropertyId, VerifyType, RequestValue);
+        };
+        *Result = Gs2::Core::Domain::SpeculativeExecutor::FPreparedSpeculativeCommit::CreateGuarded(
+            MakeShared<TFunction<void()>>([]() {}), Guard);
         return nullptr;
     }
 
@@ -198,11 +174,42 @@ namespace Gs2::Experience::Domain::SpeculativeExecutor
         return Gs2::Core::Util::New<FAsyncTask<FCommitTask>>(Domain, Service, AccessToken, Request);
     }
 
+    TSharedPtr<FAsyncTask<FVerifyRankCapByUserIdSpeculativeExecutor::FCommitTask>> FVerifyRankCapByUserIdSpeculativeExecutor::ExecuteInverse(
+        const Gs2::Core::Domain::FGs2Ptr& Domain,
+        const Gs2::Experience::Domain::FGs2ExperienceDomainPtr& Service,
+        const Gs2::Auth::Model::FAccessTokenPtr& AccessToken,
+        const Gs2::Experience::Request::FVerifyRankCapByUserIdRequestPtr& Request
+    )
+    {
+        if (!Request.IsValid()) return nullptr;
+        auto Inverse = Gs2::Experience::Request::FVerifyRankCapByUserIdRequest::FromJson(Request->ToJson());
+        if (!Inverse.IsValid() || !Inverse->GetVerifyType().IsSet()) return nullptr;
+        const auto Type = *Inverse->GetVerifyType();
+        if (Type == TEXT("less")) Inverse->WithVerifyType(TOptional<FString>(TEXT("greaterEqual")));
+        else if (Type == TEXT("lessEqual")) Inverse->WithVerifyType(TOptional<FString>(TEXT("greater")));
+        else if (Type == TEXT("greater")) Inverse->WithVerifyType(TOptional<FString>(TEXT("lessEqual")));
+        else if (Type == TEXT("greaterEqual")) Inverse->WithVerifyType(TOptional<FString>(TEXT("less")));
+        else if (Type == TEXT("equal")) Inverse->WithVerifyType(TOptional<FString>(TEXT("notEqual")));
+        else if (Type == TEXT("notEqual")) Inverse->WithVerifyType(TOptional<FString>(TEXT("equal")));
+        else return nullptr;
+        return Execute(Domain, Service, AccessToken, Inverse);
+    }
+
     Gs2::Experience::Request::FVerifyRankCapByUserIdRequestPtr FVerifyRankCapByUserIdSpeculativeExecutor::Rate(
         const Gs2::Experience::Request::FVerifyRankCapByUserIdRequestPtr& Request,
         const double Rate
     )
     {
+        if (!Request.IsValid() || !Request->GetMultiplyValueSpecifyingQuantity().Get(false))
+        {
+            return Request;
+        }
+        int64 Value = 0;
+        if (!Gs2::Core::Util::TryApplyServerRate(Request->GetRankCapValue().Get(0), Rate, Value))
+        {
+            return Request;
+        }
+        Request->WithRankCapValue(Value);
         return Request;
     }
 
@@ -211,6 +218,16 @@ namespace Gs2::Experience::Domain::SpeculativeExecutor
         TBigInt<1024, false> Rate
     )
     {
+        if (!Request.IsValid() || !Request->GetMultiplyValueSpecifyingQuantity().Get(false))
+        {
+            return Request;
+        }
+        int64 Value = 0;
+        if (!Gs2::Core::Util::TryApplyServerRate(Request->GetRankCapValue().Get(0), Rate, Value))
+        {
+            return Request;
+        }
+        Request->WithRankCapValue(Value);
         return Request;
     }
 }

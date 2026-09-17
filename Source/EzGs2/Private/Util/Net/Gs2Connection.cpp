@@ -10,7 +10,8 @@ namespace Gs2::UE5::Util
 {
 	FGs2Connection::FGs2Connection(
 		Gs2::Core::Model::FGs2CredentialPtr Credential,
-		Gs2::Core::Model::ERegion Region
+		Gs2::Core::Model::ERegion Region,
+		const FString SteadyEndpoint
 	):
 		RestSessionValue(
 			MakeShared<Gs2::Core::Net::Rest::FGs2RestSession>(Credential)
@@ -19,6 +20,10 @@ namespace Gs2::UE5::Util
 			MakeShared<Gs2::Core::Net::WebSocket::FGs2WebSocketSession>(Credential)
 		)
 	{
+		if (!SteadyEndpoint.IsEmpty())
+		{
+			SetSteadyEndpoint(SteadyEndpoint);
+		}
 	}
 
 	FGs2Connection::FGs2Connection(
@@ -42,6 +47,22 @@ namespace Gs2::UE5::Util
 	Gs2::Core::Model::ERegion FGs2Connection::Region() const
 	{
 		return RestSessionValue->Region();
+	}
+
+	void FGs2Connection::SetSteadyEndpoint(const FString& SteadyEndpoint)
+	{
+		RestSessionValue->SetSteadyEndpoint(SteadyEndpoint);
+		WebSocketSessionValue->SetSteadyEndpoint(SteadyEndpoint);
+	}
+
+	FString FGs2Connection::SteadyEndpoint() const
+	{
+		return RestSessionValue->SteadyEndpoint();
+	}
+
+	bool FGs2Connection::HasSteadyEndpoint() const
+	{
+		return RestSessionValue->HasSteadyEndpoint();
 	}
 
 	FGs2Connection::FConnectTask::FConnectTask(
@@ -198,6 +219,8 @@ namespace Gs2::UE5::Util
 
 	bool FGs2Connection::IsDisconnected()
 	{
-		return !WebSocketSession()->IsConnected();
+		// ★IsConnected() は「これ以上待っても無駄か」も兼ねる口（切断後は true）なので、
+		//   本当に繋がっているかは IsAlive() で見る。
+		return !WebSocketSession()->IsAlive();
 	}
 }

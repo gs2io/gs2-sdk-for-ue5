@@ -12,8 +12,6 @@
  * on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either
  * express or implied. See the License for the specific language governing
  * permissions and limitations under the License.
- *
- * deny overwrite
  */
 
 #include "Exchange/Action/Gs2ExchangeActionExchange.h"
@@ -28,7 +26,7 @@ UGs2ExchangeExchangeAsyncFunction::UGs2ExchangeExchangeAsyncFunction(
 
 UGs2ExchangeExchangeAsyncFunction* UGs2ExchangeExchangeAsyncFunction::Exchange(
     UObject* WorldContextObject,
-    FGs2ExchangeOwnExchange Exchange,
+    FGs2ExchangeOwnExchange ExchangeValue,
     FString RateName,
     int32 Count,
     TArray<FGs2ExchangeConfig> Config
@@ -36,11 +34,11 @@ UGs2ExchangeExchangeAsyncFunction* UGs2ExchangeExchangeAsyncFunction::Exchange(
 {
     UGs2ExchangeExchangeAsyncFunction* Action = NewObject<UGs2ExchangeExchangeAsyncFunction>();
     Action->RegisterWithGameInstance(WorldContextObject);
-    if (Exchange.Value == nullptr) {
+    if (ExchangeValue.Value == nullptr) {
         UE_LOG(BpGs2Log, Error, TEXT("[UGs2ExchangeExchangeAsyncFunction::Exchange] Exchange parameter specification is missing."))
         return Action;
     }
-    Action->ExchangeValue = Exchange;
+    Action->ExchangeValue = ExchangeValue;
     Action->RateName = RateName;
     Action->Count = Count;
     Action->Config = Config;

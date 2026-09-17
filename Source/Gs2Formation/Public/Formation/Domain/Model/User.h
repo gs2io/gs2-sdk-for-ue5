@@ -103,8 +103,33 @@ namespace Gs2::Formation::Domain::Model
 
         Gs2::Core::Domain::CallbackID SubscribeMolds(
             TFunction<void()> Callback
+
         );
 
+        class FCollectMoldsTask;
+
+        Gs2::Core::Domain::CallbackID SubscribeMolds(
+            TFunction<void(TArray<Gs2::Formation::Model::FMoldPtr>)> Callback,const TOptional<FString> TimeOffsetToken = TOptional<FString>()
+        );
+
+        void InvalidateMolds(const TOptional<FString> TimeOffsetToken = TOptional<FString>());
+
+        class GS2FORMATION_API FSubscribeMoldsWithInitialCallTask final :
+            public Gs2::Core::Util::TGs2Future<Gs2::Core::Domain::CallbackID>,
+            public TSharedFromThis<FSubscribeMoldsWithInitialCallTask>
+        {
+            const TSharedPtr<FUserDomain> Self;
+            const TFunction<void(TArray<Gs2::Formation::Model::FMoldPtr>)> Callback;
+        const TOptional<FString> QueryTimeOffsetToken;
+        public:
+            FSubscribeMoldsWithInitialCallTask(const TSharedPtr<FUserDomain>& Self, TFunction<void(TArray<Gs2::Formation::Model::FMoldPtr>)> Callback,const TOptional<FString> TimeOffsetToken);
+            FSubscribeMoldsWithInitialCallTask(const FSubscribeMoldsWithInitialCallTask& From);
+            virtual Gs2::Core::Model::FGs2ErrorPtr Action(TSharedPtr<TSharedPtr<Gs2::Core::Domain::CallbackID>> Result) override;
+        };
+
+        TSharedPtr<FAsyncTask<FSubscribeMoldsWithInitialCallTask>> SubscribeMoldsWithInitialCall(
+            TFunction<void(TArray<Gs2::Formation::Model::FMoldPtr>)> Callback,const TOptional<FString> TimeOffsetToken = TOptional<FString>()
+        );
         void UnsubscribeMolds(
             Gs2::Core::Domain::CallbackID CallbackID
         );
@@ -120,10 +145,36 @@ namespace Gs2::Formation::Domain::Model
 
         Gs2::Core::Domain::CallbackID SubscribePropertyForms(
             TFunction<void()> Callback
+            , const FString PropertyFormModelName
         );
 
+        class FCollectPropertyFormsTask;
+
+        Gs2::Core::Domain::CallbackID SubscribePropertyForms(
+            TFunction<void(TArray<Gs2::Formation::Model::FPropertyFormPtr>)> Callback,const FString PropertyFormModelName,const TOptional<FString> TimeOffsetToken = TOptional<FString>()
+        );
+
+        void InvalidatePropertyForms(const FString PropertyFormModelName,const TOptional<FString> TimeOffsetToken = TOptional<FString>());
+
+        class GS2FORMATION_API FSubscribePropertyFormsWithInitialCallTask final :
+            public Gs2::Core::Util::TGs2Future<Gs2::Core::Domain::CallbackID>,
+            public TSharedFromThis<FSubscribePropertyFormsWithInitialCallTask>
+        {
+            const TSharedPtr<FUserDomain> Self;
+            const TFunction<void(TArray<Gs2::Formation::Model::FPropertyFormPtr>)> Callback;
+        const FString QueryPropertyFormModelName;const TOptional<FString> QueryTimeOffsetToken;
+        public:
+            FSubscribePropertyFormsWithInitialCallTask(const TSharedPtr<FUserDomain>& Self, TFunction<void(TArray<Gs2::Formation::Model::FPropertyFormPtr>)> Callback,const FString PropertyFormModelName,const TOptional<FString> TimeOffsetToken);
+            FSubscribePropertyFormsWithInitialCallTask(const FSubscribePropertyFormsWithInitialCallTask& From);
+            virtual Gs2::Core::Model::FGs2ErrorPtr Action(TSharedPtr<TSharedPtr<Gs2::Core::Domain::CallbackID>> Result) override;
+        };
+
+        TSharedPtr<FAsyncTask<FSubscribePropertyFormsWithInitialCallTask>> SubscribePropertyFormsWithInitialCall(
+            TFunction<void(TArray<Gs2::Formation::Model::FPropertyFormPtr>)> Callback,const FString PropertyFormModelName,const TOptional<FString> TimeOffsetToken = TOptional<FString>()
+        );
         void UnsubscribePropertyForms(
-            Gs2::Core::Domain::CallbackID CallbackID
+            const FString PropertyFormModelName
+            , Gs2::Core::Domain::CallbackID CallbackID, const TOptional<FString> TimeOffsetToken = TOptional<FString>()
         );
 
         TSharedPtr<Gs2::Formation::Domain::Model::FPropertyFormDomain> PropertyForm(

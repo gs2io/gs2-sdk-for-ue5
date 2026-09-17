@@ -32,6 +32,7 @@
 #include "Buff/Domain/Model/CurrentBuffMaster.h"
 #include "Buff/Domain/Model/User.h"
 #include "Buff/Domain/Model/UserAccessToken.h"
+#include "Buff/Model/Cache/BuffEntryModel.h"
 
 #include "Core/Domain/Gs2.h"
 #include "Core/Domain/Transaction/JobQueueJobDomainFactory.h"
@@ -110,4 +111,3 @@ namespace Gs2::Buff::Domain::Model
 #elif defined(__clang__)
 #pragma clang diagnostic pop
 #endif
-

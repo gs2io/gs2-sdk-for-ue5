@@ -325,6 +325,30 @@ namespace Gs2::Deploy::Domain::Model
             TFunction<void()> Callback
         );
 
+        class FCollectResourcesTask;
+
+        Gs2::Core::Domain::CallbackID SubscribeResources(
+            TFunction<void(TArray<Gs2::Deploy::Model::FResourcePtr>)> Callback
+        );
+
+        void InvalidateResources();
+
+        class GS2DEPLOY_API FSubscribeResourcesWithInitialCallTask final :
+            public Gs2::Core::Util::TGs2Future<Gs2::Core::Domain::CallbackID>,
+            public TSharedFromThis<FSubscribeResourcesWithInitialCallTask>
+        {
+            const TSharedPtr<FStackDomain> Self;
+            const TFunction<void(TArray<Gs2::Deploy::Model::FResourcePtr>)> Callback;
+
+        public:
+            FSubscribeResourcesWithInitialCallTask(const TSharedPtr<FStackDomain>& Self, TFunction<void(TArray<Gs2::Deploy::Model::FResourcePtr>)> Callback);
+            FSubscribeResourcesWithInitialCallTask(const FSubscribeResourcesWithInitialCallTask& From);
+            virtual Gs2::Core::Model::FGs2ErrorPtr Action(TSharedPtr<TSharedPtr<Gs2::Core::Domain::CallbackID>> Result) override;
+        };
+
+        TSharedPtr<FAsyncTask<FSubscribeResourcesWithInitialCallTask>> SubscribeResourcesWithInitialCall(
+            TFunction<void(TArray<Gs2::Deploy::Model::FResourcePtr>)> Callback
+        );
         void UnsubscribeResources(
             Gs2::Core::Domain::CallbackID CallbackID
         );
@@ -340,6 +364,30 @@ namespace Gs2::Deploy::Domain::Model
             TFunction<void()> Callback
         );
 
+        class FCollectEventsTask;
+
+        Gs2::Core::Domain::CallbackID SubscribeEvents(
+            TFunction<void(TArray<Gs2::Deploy::Model::FEventPtr>)> Callback
+        );
+
+        void InvalidateEvents();
+
+        class GS2DEPLOY_API FSubscribeEventsWithInitialCallTask final :
+            public Gs2::Core::Util::TGs2Future<Gs2::Core::Domain::CallbackID>,
+            public TSharedFromThis<FSubscribeEventsWithInitialCallTask>
+        {
+            const TSharedPtr<FStackDomain> Self;
+            const TFunction<void(TArray<Gs2::Deploy::Model::FEventPtr>)> Callback;
+
+        public:
+            FSubscribeEventsWithInitialCallTask(const TSharedPtr<FStackDomain>& Self, TFunction<void(TArray<Gs2::Deploy::Model::FEventPtr>)> Callback);
+            FSubscribeEventsWithInitialCallTask(const FSubscribeEventsWithInitialCallTask& From);
+            virtual Gs2::Core::Model::FGs2ErrorPtr Action(TSharedPtr<TSharedPtr<Gs2::Core::Domain::CallbackID>> Result) override;
+        };
+
+        TSharedPtr<FAsyncTask<FSubscribeEventsWithInitialCallTask>> SubscribeEventsWithInitialCall(
+            TFunction<void(TArray<Gs2::Deploy::Model::FEventPtr>)> Callback
+        );
         void UnsubscribeEvents(
             Gs2::Core::Domain::CallbackID CallbackID
         );
@@ -355,6 +403,30 @@ namespace Gs2::Deploy::Domain::Model
             TFunction<void()> Callback
         );
 
+        class FCollectOutputsTask;
+
+        Gs2::Core::Domain::CallbackID SubscribeOutputs(
+            TFunction<void(TArray<Gs2::Deploy::Model::FOutputPtr>)> Callback
+        );
+
+        void InvalidateOutputs();
+
+        class GS2DEPLOY_API FSubscribeOutputsWithInitialCallTask final :
+            public Gs2::Core::Util::TGs2Future<Gs2::Core::Domain::CallbackID>,
+            public TSharedFromThis<FSubscribeOutputsWithInitialCallTask>
+        {
+            const TSharedPtr<FStackDomain> Self;
+            const TFunction<void(TArray<Gs2::Deploy::Model::FOutputPtr>)> Callback;
+
+        public:
+            FSubscribeOutputsWithInitialCallTask(const TSharedPtr<FStackDomain>& Self, TFunction<void(TArray<Gs2::Deploy::Model::FOutputPtr>)> Callback);
+            FSubscribeOutputsWithInitialCallTask(const FSubscribeOutputsWithInitialCallTask& From);
+            virtual Gs2::Core::Model::FGs2ErrorPtr Action(TSharedPtr<TSharedPtr<Gs2::Core::Domain::CallbackID>> Result) override;
+        };
+
+        TSharedPtr<FAsyncTask<FSubscribeOutputsWithInitialCallTask>> SubscribeOutputsWithInitialCall(
+            TFunction<void(TArray<Gs2::Deploy::Model::FOutputPtr>)> Callback
+        );
         void UnsubscribeOutputs(
             Gs2::Core::Domain::CallbackID CallbackID
         );

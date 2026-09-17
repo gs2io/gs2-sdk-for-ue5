@@ -83,6 +83,8 @@ namespace Gs2::Idle::Domain::Model
             const FStatusAccessTokenDomain& From
         );
 
+
+
         class GS2IDLE_API FGetTask final :
             public Gs2::Core::Util::TGs2Future<Gs2::Idle::Model::FStatus>,
             public TSharedFromThis<FGetTask>
@@ -109,6 +111,8 @@ namespace Gs2::Idle::Domain::Model
             Request::FGetStatusRequestPtr Request
         );
 
+
+
         class GS2IDLE_API FPredictionTask final :
             public Gs2::Core::Util::TGs2Future<TArray<TSharedPtr<Gs2::Idle::Model::FAcquireAction>>>,
             public TSharedFromThis<FPredictionTask>
@@ -134,6 +138,8 @@ namespace Gs2::Idle::Domain::Model
         TSharedPtr<FAsyncTask<FPredictionTask>> Prediction(
             Request::FPredictionRequestPtr Request
         );
+
+
 
         class GS2IDLE_API FReceiveTask final :
             public Gs2::Core::Util::TGs2Future<Gs2::Core::Domain::FTransactionAccessTokenDomain>,
@@ -163,6 +169,8 @@ namespace Gs2::Idle::Domain::Model
             Request::FReceiveRequestPtr Request,
             bool SpeculativeExecute = true
         );
+
+
 
         class GS2IDLE_API FDecreaseMaximumIdleMinutesTask final :
             public Gs2::Core::Util::TGs2Future<Gs2::Idle::Domain::Model::FStatusAccessTokenDomain>,
@@ -222,6 +230,8 @@ namespace Gs2::Idle::Domain::Model
         friend FModelTask;
 
         TSharedPtr<FAsyncTask<FModelTask>> Model();
+
+        void Invalidate();
 
         Gs2::Core::Domain::CallbackID Subscribe(
             TFunction<void(Gs2::Idle::Model::FStatusPtr)> Callback

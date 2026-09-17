@@ -75,7 +75,8 @@ namespace Gs2::UE5::Mission::Domain::Model
         );
     }
 
-    void FEzNamespaceDomain::UnsubscribeCounterModels(Gs2::Core::Domain::CallbackID CallbackId)
+    void FEzNamespaceDomain::UnsubscribeCounterModels(
+            Gs2::Core::Domain::CallbackID CallbackId)
     {
         Domain->UnsubscribeCounterModels(
             CallbackId
@@ -98,7 +99,8 @@ namespace Gs2::UE5::Mission::Domain::Model
         );
     }
 
-    void FEzNamespaceDomain::UnsubscribeMissionGroupModels(Gs2::Core::Domain::CallbackID CallbackId)
+    void FEzNamespaceDomain::UnsubscribeMissionGroupModels(
+            Gs2::Core::Domain::CallbackID CallbackId)
     {
         Domain->UnsubscribeMissionGroupModels(
             CallbackId

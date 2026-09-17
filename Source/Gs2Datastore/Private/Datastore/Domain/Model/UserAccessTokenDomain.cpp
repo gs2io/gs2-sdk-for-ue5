@@ -33,6 +33,7 @@
 #include "Datastore/Domain/Model/DataObjectHistoryAccessToken.h"
 #include "Datastore/Domain/Model/User.h"
 #include "Datastore/Domain/Model/UserAccessToken.h"
+#include "Datastore/Model/Cache/DataObject.h"
 
 #include "Core/Domain/Gs2.h"
 #include "Core/Domain/Transaction/JobQueueJobDomainFactory.h"
@@ -108,19 +109,13 @@ namespace Gs2::Datastore::Domain::Model
         Future->EnsureCompletion();
         if (ResultModel->GetItem() != nullptr)
         {
-            const auto Key = Gs2::Datastore::Domain::Model::FDataObjectDomain::CreateCacheKey(
-                ResultModel->GetItem()->GetName()
-            );
-            Self->Gs2->Cache->Put(
-                Gs2::Datastore::Model::FDataObject::TypeName,
-                Gs2::Datastore::Domain::Model::FUserDomain::CreateCacheParentKey(
-                    Self->NamespaceName,
-                    Self->AccessToken->GetUserId(),
-                    "DataObject"
-                ),
-                Key,
-                ResultModel->GetItem(),
-                FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
+            Gs2::Datastore::Model::Cache::FDataObjectCache::Put(
+                Self->Gs2->Cache,
+                Request->GetNamespaceName(),
+                Self->UserId(),
+                ResultModel->GetItem()->GetName(),
+                Self->AccessToken->GetTimeOffset(),
+                ResultModel->GetItem()
             );
         }
         auto Domain = MakeShared<Gs2::Datastore::Domain::Model::FDataObjectAccessTokenDomain>(
@@ -328,6 +323,7 @@ namespace Gs2::Datastore::Domain::Model
                 UserId(),
                 "DataObject"
             ),
+            Callback,
             Callback
         );
     }
@@ -386,4 +382,3 @@ namespace Gs2::Datastore::Domain::Model
 #elif defined(__clang__)
 #pragma clang diagnostic pop
 #endif
-

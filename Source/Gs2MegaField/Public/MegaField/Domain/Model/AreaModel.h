@@ -79,6 +79,8 @@ namespace Gs2::MegaField::Domain::Model
             const FAreaModelDomain& From
         );
 
+
+
         class GS2MEGAFIELD_API FGetTask final :
             public Gs2::Core::Util::TGs2Future<Gs2::MegaField::Model::FAreaModel>,
             public TSharedFromThis<FGetTask>
@@ -110,8 +112,33 @@ namespace Gs2::MegaField::Domain::Model
 
         Gs2::Core::Domain::CallbackID SubscribeLayerModels(
             TFunction<void()> Callback
+
         );
 
+        class FCollectLayerModelsTask;
+
+        Gs2::Core::Domain::CallbackID SubscribeLayerModels(
+            TFunction<void(TArray<Gs2::MegaField::Model::FLayerModelPtr>)> Callback
+        );
+
+        void InvalidateLayerModels();
+
+        class GS2MEGAFIELD_API FSubscribeLayerModelsWithInitialCallTask final :
+            public Gs2::Core::Util::TGs2Future<Gs2::Core::Domain::CallbackID>,
+            public TSharedFromThis<FSubscribeLayerModelsWithInitialCallTask>
+        {
+            const TSharedPtr<FAreaModelDomain> Self;
+            const TFunction<void(TArray<Gs2::MegaField::Model::FLayerModelPtr>)> Callback;
+
+        public:
+            FSubscribeLayerModelsWithInitialCallTask(const TSharedPtr<FAreaModelDomain>& Self, TFunction<void(TArray<Gs2::MegaField::Model::FLayerModelPtr>)> Callback);
+            FSubscribeLayerModelsWithInitialCallTask(const FSubscribeLayerModelsWithInitialCallTask& From);
+            virtual Gs2::Core::Model::FGs2ErrorPtr Action(TSharedPtr<TSharedPtr<Gs2::Core::Domain::CallbackID>> Result) override;
+        };
+
+        TSharedPtr<FAsyncTask<FSubscribeLayerModelsWithInitialCallTask>> SubscribeLayerModelsWithInitialCall(
+            TFunction<void(TArray<Gs2::MegaField::Model::FLayerModelPtr>)> Callback
+        );
         void UnsubscribeLayerModels(
             Gs2::Core::Domain::CallbackID CallbackID
         );
@@ -152,7 +179,34 @@ namespace Gs2::MegaField::Domain::Model
 
         TSharedPtr<FAsyncTask<FModelTask>> Model();
 
+        void Invalidate();
+
         Gs2::Core::Domain::CallbackID Subscribe(
+            TFunction<void(Gs2::MegaField::Model::FAreaModelPtr)> Callback
+        );
+
+        class GS2MEGAFIELD_API FSubscribeWithInitialCallTask final :
+            public Gs2::Core::Util::TGs2Future<Gs2::Core::Domain::CallbackID>,
+            public TSharedFromThis<FSubscribeWithInitialCallTask>
+        {
+            const TSharedPtr<FAreaModelDomain> Self;
+            const TFunction<void(Gs2::MegaField::Model::FAreaModelPtr)> Callback;
+        public:
+            FSubscribeWithInitialCallTask(
+                const TSharedPtr<FAreaModelDomain>& Self,
+                TFunction<void(Gs2::MegaField::Model::FAreaModelPtr)> Callback
+            );
+
+            FSubscribeWithInitialCallTask(
+                const FSubscribeWithInitialCallTask& From
+            );
+
+            virtual Gs2::Core::Model::FGs2ErrorPtr Action(
+                TSharedPtr<TSharedPtr<Gs2::Core::Domain::CallbackID>> Result
+            ) override;
+        };
+
+        TSharedPtr<FAsyncTask<FSubscribeWithInitialCallTask>> SubscribeWithInitialCall(
             TFunction<void(Gs2::MegaField::Model::FAreaModelPtr)> Callback
         );
 

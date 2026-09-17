@@ -96,6 +96,8 @@ namespace Gs2::Mission::Domain::Model
             const FCounterDomain& From
         );
 
+
+
         class GS2MISSION_API FIncreaseTask final :
             public Gs2::Core::Util::TGs2Future<Gs2::Mission::Domain::Model::FCounterDomain>,
             public TSharedFromThis<FIncreaseTask>
@@ -121,6 +123,8 @@ namespace Gs2::Mission::Domain::Model
         TSharedPtr<FAsyncTask<FIncreaseTask>> Increase(
             Request::FIncreaseCounterByUserIdRequestPtr Request
         );
+
+
 
         class GS2MISSION_API FSetTask final :
             public Gs2::Core::Util::TGs2Future<Gs2::Mission::Domain::Model::FCounterDomain>,
@@ -148,6 +152,8 @@ namespace Gs2::Mission::Domain::Model
             Request::FSetCounterByUserIdRequestPtr Request
         );
 
+
+
         class GS2MISSION_API FDecreaseTask final :
             public Gs2::Core::Util::TGs2Future<Gs2::Mission::Domain::Model::FCounterDomain>,
             public TSharedFromThis<FDecreaseTask>
@@ -173,6 +179,8 @@ namespace Gs2::Mission::Domain::Model
         TSharedPtr<FAsyncTask<FDecreaseTask>> Decrease(
             Request::FDecreaseCounterByUserIdRequestPtr Request
         );
+
+
 
         class GS2MISSION_API FGetTask final :
             public Gs2::Core::Util::TGs2Future<Gs2::Mission::Model::FCounter>,
@@ -200,6 +208,8 @@ namespace Gs2::Mission::Domain::Model
             Request::FGetCounterByUserIdRequestPtr Request
         );
 
+
+
         class GS2MISSION_API FVerifyValueTask final :
             public Gs2::Core::Util::TGs2Future<Gs2::Mission::Domain::Model::FCounterDomain>,
             public TSharedFromThis<FVerifyValueTask>
@@ -226,6 +236,8 @@ namespace Gs2::Mission::Domain::Model
             Request::FVerifyCounterValueByUserIdRequestPtr Request
         );
 
+
+
         class GS2MISSION_API FResetTask final :
             public Gs2::Core::Util::TGs2Future<Gs2::Mission::Domain::Model::FCounterDomain>,
             public TSharedFromThis<FResetTask>
@@ -251,6 +263,8 @@ namespace Gs2::Mission::Domain::Model
         TSharedPtr<FAsyncTask<FResetTask>> Reset(
             Request::FResetCounterByUserIdRequestPtr Request
         );
+
+
 
         class GS2MISSION_API FDeleteTask final :
             public Gs2::Core::Util::TGs2Future<Gs2::Mission::Domain::Model::FCounterDomain>,
@@ -311,7 +325,34 @@ namespace Gs2::Mission::Domain::Model
 
         TSharedPtr<FAsyncTask<FModelTask>> Model();
 
+        void Invalidate();
+
         Gs2::Core::Domain::CallbackID Subscribe(
+            TFunction<void(Gs2::Mission::Model::FCounterPtr)> Callback
+        );
+
+        class GS2MISSION_API FSubscribeWithInitialCallTask final :
+            public Gs2::Core::Util::TGs2Future<Gs2::Core::Domain::CallbackID>,
+            public TSharedFromThis<FSubscribeWithInitialCallTask>
+        {
+            const TSharedPtr<FCounterDomain> Self;
+            const TFunction<void(Gs2::Mission::Model::FCounterPtr)> Callback;
+        public:
+            FSubscribeWithInitialCallTask(
+                const TSharedPtr<FCounterDomain>& Self,
+                TFunction<void(Gs2::Mission::Model::FCounterPtr)> Callback
+            );
+
+            FSubscribeWithInitialCallTask(
+                const FSubscribeWithInitialCallTask& From
+            );
+
+            virtual Gs2::Core::Model::FGs2ErrorPtr Action(
+                TSharedPtr<TSharedPtr<Gs2::Core::Domain::CallbackID>> Result
+            ) override;
+        };
+
+        TSharedPtr<FAsyncTask<FSubscribeWithInitialCallTask>> SubscribeWithInitialCall(
             TFunction<void(Gs2::Mission::Model::FCounterPtr)> Callback
         );
 

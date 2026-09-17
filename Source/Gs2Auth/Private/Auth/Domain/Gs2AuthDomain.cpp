@@ -26,6 +26,9 @@
 
 #include "Auth/Domain/Gs2Auth.h"
 #include "Auth/Domain/Model/AccessToken.h"
+
+#include "Auth/Model/Cache/AccessToken.h"
+
 #include "Core/Domain/Gs2.h"
 
 namespace Gs2::Auth::Domain
@@ -63,21 +66,24 @@ namespace Gs2::Auth::Domain
     void FGs2AuthDomain::UpdateCacheFromStampSheet(
         const FString Method,
         const FString Request,
-        const FString Result
+        const FString Result,
+        const TOptional<int32> TimeOffset
     ) {
     }
 
     void FGs2AuthDomain::UpdateCacheFromStampTask(
         const FString Method,
         const FString Request,
-        const FString Result
+        const FString Result,
+        const TOptional<int32> TimeOffset
     ) {
     }
 
     void FGs2AuthDomain::UpdateCacheFromJobResult(
         const FString Method,
         const Gs2::JobQueue::Model::FJobPtr Job,
-        const Gs2::JobQueue::Model::FJobResultBodyPtr Result
+        const Gs2::JobQueue::Model::FJobResultBodyPtr Result,
+        const TOptional<int32> TimeOffset
     ) {
     }
 
@@ -93,4 +99,3 @@ namespace Gs2::Auth::Domain
 #elif defined(__clang__)
 #pragma clang diagnostic pop
 #endif
-

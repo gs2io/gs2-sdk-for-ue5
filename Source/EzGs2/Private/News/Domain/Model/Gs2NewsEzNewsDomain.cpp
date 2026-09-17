@@ -92,7 +92,7 @@ namespace Gs2::UE5::News::Domain::Model
     Gs2::Core::Domain::CallbackID FEzNewsDomain::Subscribe(TFunction<void(Gs2::UE5::News::Model::FEzNewsPtr)> Callback)
     {
         return Domain->Subscribe(
-            [&](Gs2::News::Model::FNewsPtr Item)
+            [Callback](Gs2::News::Model::FNewsPtr Item)
             {
                 Callback(Gs2::UE5::News::Model::FEzNews::FromModel(Item));
             }

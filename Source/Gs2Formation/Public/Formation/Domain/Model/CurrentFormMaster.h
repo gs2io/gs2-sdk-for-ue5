@@ -100,6 +100,8 @@ namespace Gs2::Formation::Domain::Model
             const FCurrentFormMasterDomain& From
         );
 
+
+
         class GS2FORMATION_API FExportMasterTask final :
             public Gs2::Core::Util::TGs2Future<Gs2::Formation::Domain::Model::FCurrentFormMasterDomain>,
             public TSharedFromThis<FExportMasterTask>
@@ -125,6 +127,8 @@ namespace Gs2::Formation::Domain::Model
         TSharedPtr<FAsyncTask<FExportMasterTask>> ExportMaster(
             Request::FExportMasterRequestPtr Request
         );
+
+
 
         class GS2FORMATION_API FGetTask final :
             public Gs2::Core::Util::TGs2Future<Gs2::Formation::Model::FCurrentFormMaster>,
@@ -152,6 +156,8 @@ namespace Gs2::Formation::Domain::Model
             Request::FGetCurrentFormMasterRequestPtr Request
         );
 
+
+
         class GS2FORMATION_API FPreUpdateTask final :
             public Gs2::Core::Util::TGs2Future<Gs2::Formation::Domain::Model::FCurrentFormMasterDomain>,
             public TSharedFromThis<FPreUpdateTask>
@@ -178,6 +184,8 @@ namespace Gs2::Formation::Domain::Model
             Request::FPreUpdateCurrentFormMasterRequestPtr Request
         );
 
+
+
         class GS2FORMATION_API FUpdateTask final :
             public Gs2::Core::Util::TGs2Future<Gs2::Formation::Domain::Model::FCurrentFormMasterDomain>,
             public TSharedFromThis<FUpdateTask>
@@ -203,6 +211,8 @@ namespace Gs2::Formation::Domain::Model
         TSharedPtr<FAsyncTask<FUpdateTask>> Update(
             Request::FUpdateCurrentFormMasterRequestPtr Request
         );
+
+
 
         class GS2FORMATION_API FUpdateFromGitHubTask final :
             public Gs2::Core::Util::TGs2Future<Gs2::Formation::Domain::Model::FCurrentFormMasterDomain>,
@@ -260,7 +270,34 @@ namespace Gs2::Formation::Domain::Model
 
         TSharedPtr<FAsyncTask<FModelTask>> Model();
 
+        void Invalidate();
+
         Gs2::Core::Domain::CallbackID Subscribe(
+            TFunction<void(Gs2::Formation::Model::FCurrentFormMasterPtr)> Callback
+        );
+
+        class GS2FORMATION_API FSubscribeWithInitialCallTask final :
+            public Gs2::Core::Util::TGs2Future<Gs2::Core::Domain::CallbackID>,
+            public TSharedFromThis<FSubscribeWithInitialCallTask>
+        {
+            const TSharedPtr<FCurrentFormMasterDomain> Self;
+            const TFunction<void(Gs2::Formation::Model::FCurrentFormMasterPtr)> Callback;
+        public:
+            FSubscribeWithInitialCallTask(
+                const TSharedPtr<FCurrentFormMasterDomain>& Self,
+                TFunction<void(Gs2::Formation::Model::FCurrentFormMasterPtr)> Callback
+            );
+
+            FSubscribeWithInitialCallTask(
+                const FSubscribeWithInitialCallTask& From
+            );
+
+            virtual Gs2::Core::Model::FGs2ErrorPtr Action(
+                TSharedPtr<TSharedPtr<Gs2::Core::Domain::CallbackID>> Result
+            ) override;
+        };
+
+        TSharedPtr<FAsyncTask<FSubscribeWithInitialCallTask>> SubscribeWithInitialCall(
             TFunction<void(Gs2::Formation::Model::FCurrentFormMasterPtr)> Callback
         );
 

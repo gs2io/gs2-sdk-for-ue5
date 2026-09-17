@@ -12,8 +12,6 @@
  * on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either
  * express or implied. See the License for the specific language governing
  * permissions and limitations under the License.
- *
- * deny overwrite
  */
 
 #if defined(_MSC_VER)
@@ -43,7 +41,6 @@
 #include "Inventory/Domain/Model/CurrentItemModelMaster.h"
 #include "Inventory/Domain/Model/Inventory.h"
 #include "Inventory/Domain/Model/ItemSet.h"
-#include "Inventory/Domain/Model/ItemSetEntry.h"
 #include "Inventory/Domain/Model/ReferenceOf.h"
 #include "Inventory/Domain/Model/SimpleInventory.h"
 #include "Inventory/Domain/Model/SimpleItem.h"
@@ -51,8 +48,39 @@
 #include "Inventory/Domain/Model/BigItem.h"
 #include "Inventory/Domain/Model/User.h"
 #include "Inventory/Domain/Model/UserAccessToken.h"
+#include "Inventory/Model/Cache/Inventory.h"
+#include "Inventory/Model/Cache/ItemSet.h"
+#include "Inventory/Model/Cache/ItemModel.h"
+#include "Grade/Model/Cache/Status.h"
+#include "Inventory/Model/Cache/ReferenceOf.h"
+#include "Inventory/Model/Cache/SimpleItem.h"
+#include "Inventory/Model/Cache/SimpleInventory.h"
+#include "Inventory/Model/Cache/BigItem.h"
+
+#include "Inventory/Model/Cache/Namespace.h"
+#include "Inventory/Model/Cache/SimpleInventoryModelMaster.h"
+#include "Inventory/Model/Cache/BigInventoryModelMaster.h"
+#include "Inventory/Model/Cache/InventoryModelMaster.h"
+#include "Inventory/Model/Cache/CurrentItemModelMaster.h"
+#include "Inventory/Model/Cache/InventoryModel.h"
+#include "Inventory/Model/Cache/ItemModel.h"
+#include "Inventory/Model/Cache/Inventory.h"
+#include "Inventory/Model/Cache/ItemSet.h"
+#include "Grade/Model/Cache/Status.h"
+#include "Inventory/Model/Cache/ReferenceOf.h"
+#include "Inventory/Model/Cache/SimpleItem.h"
+#include "Inventory/Model/Cache/SimpleInventory.h"
+#include "Inventory/Model/Cache/SimpleItemModel.h"
+#include "Inventory/Model/Cache/BigItem.h"
+#include "Inventory/Model/Cache/BigInventory.h"
+#include "Inventory/Model/Cache/BigItemModel.h"
+#include "Inventory/Model/Cache/SimpleItemModelMaster.h"
+#include "Inventory/Model/Cache/SimpleInventoryModel.h"
+#include "Inventory/Model/Cache/BigInventoryModel.h"
+#include "Inventory/Model/Cache/BigItemModelMaster.h"
+#include "Inventory/Model/Cache/ItemModelMaster.h"
+
 #include "Core/Domain/Gs2.h"
-#include "Grade/Domain/Model/Status.h"
 
 namespace Gs2::Inventory::Domain
 {
@@ -105,6 +133,19 @@ namespace Gs2::Inventory::Domain
         }
         const auto ResultModel = Future->GetTask().Result();
         Future->EnsureCompletion();
+
+            if (ResultModel.IsValid() && ResultModel->GetItem() != nullptr)
+            {
+
+
+        Gs2::Inventory::Model::Cache::FNamespaceCache::Put(
+            Self->Gs2->Cache,
+
+            ResultModel->GetItem()->GetName(),
+            TOptional<int32>(),
+            ResultModel->GetItem()
+        );
+            }
         auto Domain = MakeShared<Gs2::Inventory::Domain::Model::FNamespaceDomain>(
             Self->Gs2,
             Self,
@@ -148,6 +189,7 @@ namespace Gs2::Inventory::Domain
         }
         const auto ResultModel = Future->GetTask().Result();
         Future->EnsureCompletion();
+
         const auto Domain = Self;
         *Result = Domain;
         return nullptr;
@@ -187,6 +229,7 @@ namespace Gs2::Inventory::Domain
         }
         const auto ResultModel = Future->GetTask().Result();
         Future->EnsureCompletion();
+
         const auto Domain = Self;
         if (ResultModel != nullptr)
         {
@@ -233,6 +276,7 @@ namespace Gs2::Inventory::Domain
         }
         const auto ResultModel = Future->GetTask().Result();
         Future->EnsureCompletion();
+
         const auto Domain = Self;
         *Result = Domain;
         return nullptr;
@@ -272,6 +316,7 @@ namespace Gs2::Inventory::Domain
         }
         const auto ResultModel = Future->GetTask().Result();
         Future->EnsureCompletion();
+
         const auto Domain = Self;
         *Result = Domain;
         return nullptr;
@@ -311,6 +356,7 @@ namespace Gs2::Inventory::Domain
         }
         const auto ResultModel = Future->GetTask().Result();
         Future->EnsureCompletion();
+
         const auto Domain = Self;
         if (ResultModel != nullptr)
         {
@@ -361,6 +407,7 @@ namespace Gs2::Inventory::Domain
         }
         const auto ResultModel = Future->GetTask().Result();
         Future->EnsureCompletion();
+
         const auto Domain = Self;
         *Result = Domain;
         return nullptr;
@@ -400,6 +447,7 @@ namespace Gs2::Inventory::Domain
         }
         const auto ResultModel = Future->GetTask().Result();
         Future->EnsureCompletion();
+
         const auto Domain = Self;
         if (ResultModel != nullptr)
         {
@@ -431,24 +479,110 @@ namespace Gs2::Inventory::Domain
 
     Gs2::Core::Domain::CallbackID FGs2InventoryDomain::SubscribeNamespaces(
     TFunction<void()> Callback
+
     )
     {
         return Gs2->Cache->ListSubscribe(
             Gs2::Inventory::Model::FNamespace::TypeName,
-            "inventory:Namespace",
+            Gs2::Inventory::Model::Cache::FNamespaceCache::CreateCacheParentKey(
+                TOptional<int32>()
+            ),
+            Callback,
             Callback
         );
     }
-
     void FGs2InventoryDomain::UnsubscribeNamespaces(
         Gs2::Core::Domain::CallbackID CallbackID
     )
     {
         Gs2->Cache->ListUnsubscribe(
             Gs2::Inventory::Model::FNamespace::TypeName,
-            "inventory:Namespace",
+            Gs2::Inventory::Model::Cache::FNamespaceCache::CreateCacheParentKey(
+                TOptional<int32>()
+            ),
             CallbackID
         );
+    }
+    class FGs2InventoryDomain::FCollectNamespacesTask : public Gs2::Core::Util::TGs2Future<TArray<Gs2::Inventory::Model::FNamespacePtr>>, public TSharedFromThis<FCollectNamespacesTask>
+    {
+        const TSharedPtr<FGs2InventoryDomain> Self;
+        const TFunction<void(TArray<Gs2::Inventory::Model::FNamespacePtr>)> OnCollected;
+    const TOptional<FString> QueryNamePrefix;
+    public:
+        explicit FCollectNamespacesTask(const TSharedPtr<FGs2InventoryDomain>& Self, TFunction<void(TArray<Gs2::Inventory::Model::FNamespacePtr>)> OnCollected,const TOptional<FString> NamePrefix) : Self(Self), OnCollected(OnCollected), QueryNamePrefix(NamePrefix) {}
+        FCollectNamespacesTask(const FCollectNamespacesTask& From) : TGs2Future(From), Self(From.Self), OnCollected(From.OnCollected), QueryNamePrefix(From.QueryNamePrefix) {}
+        virtual Gs2::Core::Model::FGs2ErrorPtr Action(TSharedPtr<TSharedPtr<TArray<Gs2::Inventory::Model::FNamespacePtr>>> Result) override
+        {
+            TArray<Gs2::Inventory::Model::FNamespacePtr> Items;
+            auto Iterator = Self->Namespaces(QueryNamePrefix)->begin();
+            while (Iterator.HasNext())
+            {
+                if (Iterator.IsError()) return Iterator.Error();
+                if (Iterator.IsCurrentValid()) Items.Add(Iterator.Current());
+                ++Iterator;
+            }
+            if (Iterator.IsError()) return Iterator.Error();
+            *Result = MakeShared<TArray<Gs2::Inventory::Model::FNamespacePtr>>(Items);
+            if (OnCollected) OnCollected(Items);
+            return nullptr;
+        }
+    };
+
+    Gs2::Core::Domain::CallbackID FGs2InventoryDomain::SubscribeNamespaces(
+        TFunction<void(TArray<Gs2::Inventory::Model::FNamespacePtr>)> Callback,const TOptional<FString> NamePrefix
+    )
+    {
+        const TWeakPtr<Gs2::Core::Domain::FGs2> WeakGs2 = this->Gs2;
+        const auto QueryNamePrefix = NamePrefix;
+        const auto Parent = Gs2::Inventory::Model::Cache::FNamespaceCache::CreateCacheParentKey(
+        TOptional<int32>()
+    );
+        return Gs2->Cache->ListSubscribeTyped(
+            Gs2::Inventory::Model::FNamespace::TypeName,
+            Parent,
+            [Callback, WeakGs2](const TArray<FGs2ObjectPtr>& Values)
+            {
+                if (!WeakGs2.Pin().IsValid()) return;
+                TArray<Gs2::Inventory::Model::FNamespacePtr> TypedValues;
+                for (const auto& Value : Values) if (Value.IsValid()) TypedValues.Add(StaticCastSharedPtr<Gs2::Inventory::Model::FNamespace>(Value));
+                Callback(TypedValues);
+            },
+            [WeakGs2, Callback, QueryNamePrefix]()
+            {
+                const auto Owner = WeakGs2.Pin();
+                if (!Owner.IsValid()) return;
+                const auto Domain = MakeShared<FGs2InventoryDomain>(Owner);
+                const auto Task = Gs2::Core::Util::New<FAsyncTask<FCollectNamespacesTask>>(Domain, Callback, QueryNamePrefix);
+                Task->StartBackgroundTask();
+            }
+        );
+    }
+
+    void FGs2InventoryDomain::InvalidateNamespaces(const TOptional<FString> NamePrefix)
+    {
+        Gs2->Cache->ClearListCache(
+            Gs2::Inventory::Model::FNamespace::TypeName,
+            Gs2::Inventory::Model::Cache::FNamespaceCache::CreateCacheParentKey(
+        TOptional<int32>()
+    )
+        );
+    }
+
+    FGs2InventoryDomain::FSubscribeNamespacesWithInitialCallTask::FSubscribeNamespacesWithInitialCallTask(const TSharedPtr<FGs2InventoryDomain>& Self, TFunction<void(TArray<Gs2::Inventory::Model::FNamespacePtr>)> Callback,const TOptional<FString> NamePrefix) : Self(Self), Callback(Callback), QueryNamePrefix(NamePrefix) {}
+    FGs2InventoryDomain::FSubscribeNamespacesWithInitialCallTask::FSubscribeNamespacesWithInitialCallTask(const FSubscribeNamespacesWithInitialCallTask& From) : TGs2Future(From), Self(From.Self), Callback(From.Callback), QueryNamePrefix(From.QueryNamePrefix) {}
+    Gs2::Core::Model::FGs2ErrorPtr FGs2InventoryDomain::FSubscribeNamespacesWithInitialCallTask::Action(TSharedPtr<TSharedPtr<Gs2::Core::Domain::CallbackID>> Result)
+    {
+        const auto Task = Gs2::Core::Util::New<FAsyncTask<FCollectNamespacesTask>>(Self, TFunction<void(TArray<Gs2::Inventory::Model::FNamespacePtr>)>(), QueryNamePrefix);
+        Task->StartSynchronousTask(); Task->EnsureCompletion();
+        if (Task->GetTask().IsError()) return Task->GetTask().Error();
+        const auto Values = Task->GetTask().Result();
+        const auto CallbackId = Self->SubscribeNamespaces(Callback, QueryNamePrefix);
+        Callback(*Values); *Result = MakeShared<Gs2::Core::Domain::CallbackID>(CallbackId);
+        return nullptr;
+    }
+    TSharedPtr<FAsyncTask<FGs2InventoryDomain::FSubscribeNamespacesWithInitialCallTask>> FGs2InventoryDomain::SubscribeNamespacesWithInitialCall(TFunction<void(TArray<Gs2::Inventory::Model::FNamespacePtr>)> Callback,const TOptional<FString> NamePrefix)
+    {
+        return Gs2::Core::Util::New<FAsyncTask<FSubscribeNamespacesWithInitialCallTask>>(this->AsShared(), Callback, NamePrefix);
     }
 
     TSharedPtr<Gs2::Inventory::Domain::Model::FNamespaceDomain> FGs2InventoryDomain::Namespace(
@@ -465,7 +599,8 @@ namespace Gs2::Inventory::Domain
     void FGs2InventoryDomain::UpdateCacheFromStampSheet(
         const FString Method,
         const FString Request,
-        const FString Result
+        const FString Result,
+        const TOptional<int32> TimeOffset
     ) {
         if (Method == "AddCapacityByUserId") {
             TSharedPtr<FJsonObject> RequestModelJson;
@@ -482,25 +617,28 @@ namespace Gs2::Inventory::Domain
             }
             const auto RequestModel = Gs2::Inventory::Request::FAddCapacityByUserIdRequest::FromJson(RequestModelJson);
             const auto ResultModel = Gs2::Inventory::Result::FAddCapacityByUserIdResult::FromJson(ResultModelJson);
-            
-            if (ResultModel->GetItem() != nullptr)
-            {
-                const auto ParentKey = Gs2::Inventory::Domain::Model::FUserDomain::CreateCacheParentKey(
+
+                    if (ResultModel.IsValid() && ResultModel->GetItem() != nullptr)
+                    {
+
+                if (!ResultModel.IsValid() || !ResultModel->GetItem().IsValid())
+                    {
+                      return;
+                      }if (!ResultModel.IsValid() || !((ResultModel.IsValid() && ResultModel->GetItem().IsValid() ? ResultModel->GetItem()->GetUserId() : TOptional<FString>())).IsSet())
+                    {
+                      return;
+                      }
+                Gs2::Inventory::Model::Cache::FInventoryCache::Put(
+                    Gs2->Cache,
+
                     RequestModel->GetNamespaceName(),
-                    RequestModel->GetUserId(),
-                    "Inventory"
+                    (ResultModel.IsValid() && ResultModel->GetItem().IsValid() ? ResultModel->GetItem()->GetUserId() : TOptional<FString>()),
+                    ResultModel->GetItem()->GetInventoryName(),
+                    TimeOffset,
+                    ResultModel->GetItem()
                 );
-                const auto Key = Gs2::Inventory::Domain::Model::FInventoryDomain::CreateCacheKey(
-                    ResultModel->GetItem()->GetInventoryName()
-                );
-                Gs2->Cache->Put(
-                    Gs2::Inventory::Model::FInventory::TypeName,
-                    ParentKey,
-                    Key,
-                    ResultModel->GetItem(),
-                    FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
-                );
-            }
+                    }
+
         }
         if (Method == "SetCapacityByUserId") {
             TSharedPtr<FJsonObject> RequestModelJson;
@@ -517,25 +655,28 @@ namespace Gs2::Inventory::Domain
             }
             const auto RequestModel = Gs2::Inventory::Request::FSetCapacityByUserIdRequest::FromJson(RequestModelJson);
             const auto ResultModel = Gs2::Inventory::Result::FSetCapacityByUserIdResult::FromJson(ResultModelJson);
-            
-            if (ResultModel->GetItem() != nullptr)
-            {
-                const auto ParentKey = Gs2::Inventory::Domain::Model::FUserDomain::CreateCacheParentKey(
+
+                    if (ResultModel.IsValid() && ResultModel->GetItem() != nullptr)
+                    {
+
+                if (!ResultModel.IsValid() || !ResultModel->GetItem().IsValid())
+                    {
+                      return;
+                      }if (!ResultModel.IsValid() || !((ResultModel.IsValid() && ResultModel->GetItem().IsValid() ? ResultModel->GetItem()->GetUserId() : TOptional<FString>())).IsSet())
+                    {
+                      return;
+                      }
+                Gs2::Inventory::Model::Cache::FInventoryCache::Put(
+                    Gs2->Cache,
+
                     RequestModel->GetNamespaceName(),
-                    RequestModel->GetUserId(),
-                    "Inventory"
+                    (ResultModel.IsValid() && ResultModel->GetItem().IsValid() ? ResultModel->GetItem()->GetUserId() : TOptional<FString>()),
+                    ResultModel->GetItem()->GetInventoryName(),
+                    TimeOffset,
+                    ResultModel->GetItem()
                 );
-                const auto Key = Gs2::Inventory::Domain::Model::FInventoryDomain::CreateCacheKey(
-                    ResultModel->GetItem()->GetInventoryName()
-                );
-                Gs2->Cache->Put(
-                    Gs2::Inventory::Model::FInventory::TypeName,
-                    ParentKey,
-                    Key,
-                    ResultModel->GetItem(),
-                    FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
-                );
-            }
+                    }
+
         }
         if (Method == "AcquireItemSetByUserId") {
             TSharedPtr<FJsonObject> RequestModelJson;
@@ -552,104 +693,56 @@ namespace Gs2::Inventory::Domain
             }
             const auto RequestModel = Gs2::Inventory::Request::FAcquireItemSetByUserIdRequest::FromJson(RequestModelJson);
             const auto ResultModel = Gs2::Inventory::Result::FAcquireItemSetByUserIdResult::FromJson(ResultModelJson);
-            {
-                for (auto Item : *ResultModel->GetItems())
-                {
-                    const auto ParentKey = Gs2::Inventory::Domain::Model::FInventoryDomain::CreateCacheParentKey(
-                        RequestModel->GetNamespaceName(),
-                        RequestModel->GetUserId(),
-                        RequestModel->GetInventoryName(),
-                        "ItemSet"
-                    );
-                    const auto Key = Gs2::Inventory::Domain::Model::FItemSetDomain::CreateCacheKey(
-                        Item->GetItemName(),
-                        Item->GetName()
-                    );
-                    if (Item->GetCount() == 0) {
-                        Gs2->Cache->Delete(
-                            Gs2::Inventory::Model::FItemSet::TypeName,
-                            ParentKey,
-                            Key
-                        );
-                    }
-                    else
+
+                    if (ResultModel.IsValid() && ResultModel->GetItemModel() != nullptr)
                     {
-                        Gs2->Cache->Put(
-                            Gs2::Inventory::Model::FItemSet::TypeName,
-                            ParentKey,
-                            Key,
-                            Item,
-                            Item->GetExpiresAt().IsSet() && *Item->GetExpiresAt() != 0 ? FDateTime::FromUnixTimestamp(*Item->GetExpiresAt()/1000) : FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
-                        );
-                    }
-                }
-                TMap<FString, TSharedPtr<TArray<Gs2::Inventory::Model::FItemSetPtr>>> Groups;
-                for (auto Item : *ResultModel->GetItems())
-                {
-                    if (!Groups.Contains(*Item->GetItemName()))
-                    {
-                        Groups.Add(*Item->GetItemName(), MakeShared<TArray<Gs2::Inventory::Model::FItemSetPtr>>());
-                    }
-                    Groups[*Item->GetItemName()]->Add(Item);
-                }
-                for (auto Group : Groups)
-                {
-                    const auto ParentKey = Gs2::Inventory::Domain::Model::FInventoryDomain::CreateCacheParentKey(
-                        RequestModel->GetNamespaceName(),
-                        RequestModel->GetUserId(),
-                        RequestModel->GetInventoryName(),
-                        "ItemSet"
-                    );
-                    const auto Key = Gs2::Inventory::Domain::Model::FItemSetDomain::CreateCacheKey(
-                        Group.Key,
-                        TOptional<FString>()
-                    );
-                    int64 ExpiresAt = (FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)).ToUnixTimestamp() * 1000;
-                    for (auto Item : *Group.Value)
-                    {
-                        if (Item->GetExpiresAt().IsSet())
-                        {
-                            if (*Item->GetExpiresAt() != 0 && ExpiresAt > *Item->GetExpiresAt())
-                            {
-                                ExpiresAt = *Item->GetExpiresAt();
-                            }
-                        }
-                    }
-                    Gs2->Cache->Put(
-                        Gs2::Inventory::Model::FItemSetEntry::TypeName,
-                        ParentKey,
-                        Key,
-                        MakeShared<Gs2::Inventory::Model::FItemSetEntry>(*Group.Value),
-                        FDateTime::FromUnixTimestamp(ExpiresAt / 1000)
-                    );
-                }
-            }
-            if (ResultModel->GetItemModel() != nullptr)
-            {
-                const auto ParentKey = Gs2::Inventory::Domain::Model::FInventoryModelDomain::CreateCacheParentKey(
+
+
+                Gs2::Inventory::Model::Cache::FItemModelCache::Put(
+                    Gs2->Cache,
+
                     RequestModel->GetNamespaceName(),
                     RequestModel->GetInventoryName(),
-                    "ItemModel"
+                    RequestModel->GetItemName(),
+                    TimeOffset,
+                    ResultModel->GetItemModel()
                 );
-                const auto Key = Gs2::Inventory::Domain::Model::FItemModelDomain::CreateCacheKey(
-                    ResultModel->GetItemModel()->GetName()
+                    }
+                if (ResultModel.IsValid() && ResultModel->GetItems().IsValid())
+                {
+                    for (const auto& Item : *ResultModel->GetItems())
+                    {
+                        if (!Item.IsValid()) continue;
+                        Gs2::Inventory::Model::Cache::FItemSetCache::Put(
+                            Gs2->Cache,
+                            RequestModel->GetNamespaceName(), RequestModel->GetUserId(), RequestModel->GetInventoryName(), Item->GetItemName(), Item->GetName(),
+                            TimeOffset, Item
+                        );
+                    }
+                    Gs2::Inventory::Model::Cache::FItemSetCache::Put(
+                        Gs2->Cache,
+                        RequestModel->GetNamespaceName(), RequestModel->GetUserId(), RequestModel->GetInventoryName(), RequestModel->GetItemName(),
+                        TimeOffset, ResultModel->GetItems()
+                    );
+                }
+                Gs2->Cache->SetListCached(
+                    Gs2::Inventory::Model::FItemSet::TypeName,
+                    Gs2::Inventory::Model::Cache::FItemSetCache::CreateCacheParentKey(
+                        RequestModel->GetNamespaceName(),
+                        RequestModel->GetUserId(),
+                        RequestModel->GetInventoryName(),
+                        TimeOffset
+                    )
                 );
-                Gs2->Cache->Put(
-                    Gs2::Inventory::Model::FItemModel::TypeName,
-                    ParentKey,
-                    Key,
-                    ResultModel->GetItemModel(),
-                    FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
-                );
-            }
+
             if (ResultModel->GetInventory() != nullptr)
             {
-                const auto ParentKey = Gs2::Inventory::Domain::Model::FUserDomain::CreateCacheParentKey(
+                const auto ParentKey = Gs2::Inventory::Model::Cache::FInventoryCache::CreateCacheParentKey(
                     RequestModel->GetNamespaceName(),
                     RequestModel->GetUserId(),
-                    "Inventory"
+                    TimeOffset
                 );
-                const auto Key = Gs2::Inventory::Domain::Model::FInventoryDomain::CreateCacheKey(
+                const auto Key = Gs2::Inventory::Model::Cache::FInventoryCache::CreateCacheKey(
                     ResultModel->GetInventory()->GetInventoryName()
                 );
                 TSharedPtr<Gs2::Inventory::Model::FInventory> Item;
@@ -696,82 +789,88 @@ namespace Gs2::Inventory::Domain
             }
             const auto RequestModel = Gs2::Inventory::Request::FAcquireItemSetWithGradeByUserIdRequest::FromJson(RequestModelJson);
             const auto ResultModel = Gs2::Inventory::Result::FAcquireItemSetWithGradeByUserIdResult::FromJson(ResultModelJson);
-            
-            if (ResultModel->GetItem() != nullptr)
-            {
-                const auto ParentKey = Gs2::Inventory::Domain::Model::FInventoryDomain::CreateCacheParentKey(
+
+                    if (ResultModel.IsValid() && ResultModel->GetItem() != nullptr)
+                    {
+
+                if (!ResultModel.IsValid() || !ResultModel->GetItem().IsValid())
+                    {
+                      return;
+                      }if (!ResultModel.IsValid() || !((ResultModel.IsValid() && ResultModel->GetItem().IsValid() ? ResultModel->GetItem()->GetUserId() : TOptional<FString>())).IsSet())
+                    {
+                      return;
+                      }
+                Gs2::Inventory::Model::Cache::FItemSetCache::Put(
+                    Gs2->Cache,
+
                     RequestModel->GetNamespaceName(),
-                    RequestModel->GetUserId(),
-                    RequestModel->GetInventoryName(),
-                    "ItemSet"
-                );
-                const auto Key = Gs2::Inventory::Domain::Model::FItemSetDomain::CreateCacheKey(
+                    (ResultModel.IsValid() && ResultModel->GetItem().IsValid() ? ResultModel->GetItem()->GetUserId() : TOptional<FString>()),
+                    ResultModel->GetItem()->GetInventoryName(),
                     ResultModel->GetItem()->GetItemName(),
-                    ResultModel->GetItem()->GetName()
+                    ResultModel->GetItem()->GetName(),
+                    TimeOffset,
+                    ResultModel->GetItem()
                 );
-                Gs2->Cache->Put(
-                    Gs2::Inventory::Model::FItemSet::TypeName,
-                    ParentKey,
-                    Key,
-                    ResultModel->GetItem(),
-                    ResultModel->GetItem()->GetExpiresAt().IsSet() && *ResultModel->GetItem()->GetExpiresAt() != 0 ? FDateTime::FromUnixTimestamp(*ResultModel->GetItem()->GetExpiresAt() / 1000) : FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
-                );
-            }
-            if (ResultModel->GetStatus() != nullptr)
-            {
-                const auto ParentKey = Gs2::Inventory::Domain::Model::FUserDomain::CreateCacheParentKey(
-                    RequestModel->GetNamespaceName(),
-                    RequestModel->GetUserId(),
-                    "Status"
-                );
-                const auto Key = Gs2::Grade::Domain::Model::FStatusDomain::CreateCacheKey(
+                    }
+                    if (ResultModel.IsValid() && ResultModel->GetStatus() != nullptr)
+                    {
+
+                if (!ResultModel.IsValid() || !((ResultModel.IsValid() && ResultModel->GetItem().IsValid() ? ResultModel->GetItem()->GetUserId() : TOptional<FString>())).IsSet())
+                    {
+                      return;
+                      }
+                Gs2::Grade::Model::Cache::FStatusCache::Put(
+                    Gs2->Cache,
+
+                    Gs2::Grade::Model::FStatus::GetNamespaceNameFromGrn(ResultModel->GetStatus()->GetStatusId().Get(FString())),
+                    (ResultModel.IsValid() && ResultModel->GetItem().IsValid() ? ResultModel->GetItem()->GetUserId() : TOptional<FString>()),
                     ResultModel->GetStatus()->GetGradeName(),
-                    ResultModel->GetStatus()->GetPropertyId()
+                    ResultModel->GetStatus()->GetPropertyId(),
+                    TimeOffset,
+                    ResultModel->GetStatus()
                 );
-                Gs2->Cache->Put(
-                    Gs2::Grade::Model::FStatus::TypeName,
-                    ParentKey,
-                    Key,
-                    ResultModel->GetStatus(),
-                    FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
-                );
-            }
-            if (ResultModel->GetItemModel() != nullptr)
-            {
-                const auto ParentKey = Gs2::Inventory::Domain::Model::FInventoryModelDomain::CreateCacheParentKey(
+                    }
+                    if (ResultModel.IsValid() && ResultModel->GetItemModel() != nullptr)
+                    {
+
+                if (!ResultModel.IsValid() || !ResultModel->GetItem().IsValid())
+                    {
+                      return;
+                      }
+                Gs2::Inventory::Model::Cache::FItemModelCache::Put(
+                    Gs2->Cache,
+
                     RequestModel->GetNamespaceName(),
-                    RequestModel->GetInventoryName(),
-                    "ItemModel"
+                    ResultModel->GetItem()->GetInventoryName(),
+                    ResultModel->GetItem()->GetItemName(),
+                    TimeOffset,
+                    ResultModel->GetItemModel()
                 );
-                const auto Key = Gs2::Inventory::Domain::Model::FItemModelDomain::CreateCacheKey(
-                    ResultModel->GetItemModel()->GetName()
-                );
-                Gs2->Cache->Put(
-                    Gs2::Inventory::Model::FItemModel::TypeName,
-                    ParentKey,
-                    Key,
-                    ResultModel->GetItemModel(),
-                    FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
-                );
-            }
-            if (ResultModel->GetInventory() != nullptr)
-            {
-                const auto ParentKey = Gs2::Inventory::Domain::Model::FUserDomain::CreateCacheParentKey(
+                    }
+                    if (ResultModel.IsValid() && ResultModel->GetInventory() != nullptr)
+                    {
+
+                if (!ResultModel.IsValid() || !ResultModel->GetItem().IsValid())
+                    {
+                      return;
+                      }if (!ResultModel.IsValid() || !((ResultModel.IsValid() && ResultModel->GetItem().IsValid() ? ResultModel->GetItem()->GetUserId() : TOptional<FString>())).IsSet())
+                    {
+                      return;
+                      }
+                Gs2::Inventory::Model::Cache::FInventoryCache::Put(
+                    Gs2->Cache,
+
                     RequestModel->GetNamespaceName(),
-                    RequestModel->GetUserId(),
-                    "Inventory"
+                    (ResultModel.IsValid() && ResultModel->GetItem().IsValid() ? ResultModel->GetItem()->GetUserId() : TOptional<FString>()),
+                    ResultModel->GetItem()->GetInventoryName(),
+                    TimeOffset,
+                    ResultModel->GetInventory()
                 );
-                const auto Key = Gs2::Inventory::Domain::Model::FInventoryDomain::CreateCacheKey(
-                    ResultModel->GetInventory()->GetInventoryName()
-                );
-                Gs2->Cache->Put(
-                    Gs2::Inventory::Model::FInventory::TypeName,
-                    ParentKey,
-                    Key,
-                    ResultModel->GetInventory(),
-                    FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
-                );
-            }
+                    }
+
+
+
+
         }
         if (Method == "AddReferenceOfByUserId") {
             TSharedPtr<FJsonObject> RequestModelJson;
@@ -788,63 +887,60 @@ namespace Gs2::Inventory::Domain
             }
             const auto RequestModel = Gs2::Inventory::Request::FAddReferenceOfByUserIdRequest::FromJson(RequestModelJson);
             const auto ResultModel = Gs2::Inventory::Result::FAddReferenceOfByUserIdResult::FromJson(ResultModelJson);
-            
-            if (ResultModel->GetItemSet() != nullptr)
-            {
-                const auto ParentKey = Gs2::Inventory::Domain::Model::FInventoryDomain::CreateCacheParentKey(
+
+                    if (ResultModel.IsValid() && ResultModel->GetItemSet() != nullptr)
+                    {
+
+                if (!(RequestModel->GetUserId()).IsSet())
+                    {
+                      return;
+                      }
+                Gs2::Inventory::Model::Cache::FItemSetCache::Put(
+                    Gs2->Cache,
+
                     RequestModel->GetNamespaceName(),
                     RequestModel->GetUserId(),
                     RequestModel->GetInventoryName(),
-                    "ItemSet"
+                    RequestModel->GetItemName(),
+                    RequestModel->GetItemSetName(),
+                    TimeOffset,
+                    ResultModel->GetItemSet()
                 );
-                const auto Key = Gs2::Inventory::Domain::Model::FItemSetDomain::CreateCacheKey(
-                    ResultModel->GetItemSet()->GetItemName(),
-                    ResultModel->GetItemSet()->GetName()
-                );
-                Gs2->Cache->Put(
-                    Gs2::Inventory::Model::FItemSet::TypeName,
-                    ParentKey,
-                    Key,
-                    ResultModel->GetItemSet(),
-                    ResultModel->GetItemSet()->GetExpiresAt().IsSet() && *ResultModel->GetItemSet()->GetExpiresAt() != 0 ? FDateTime::FromUnixTimestamp(*ResultModel->GetItemSet()->GetExpiresAt() / 1000) : FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
-                );
-            }
-            if (ResultModel->GetItemModel() != nullptr)
-            {
-                const auto ParentKey = Gs2::Inventory::Domain::Model::FInventoryModelDomain::CreateCacheParentKey(
+                    }
+                    if (ResultModel.IsValid() && ResultModel->GetItemModel() != nullptr)
+                    {
+
+
+                Gs2::Inventory::Model::Cache::FItemModelCache::Put(
+                    Gs2->Cache,
+
                     RequestModel->GetNamespaceName(),
                     RequestModel->GetInventoryName(),
-                    "ItemModel"
+                    RequestModel->GetItemName(),
+                    TimeOffset,
+                    ResultModel->GetItemModel()
                 );
-                const auto Key = Gs2::Inventory::Domain::Model::FItemModelDomain::CreateCacheKey(
-                    ResultModel->GetItemModel()->GetName()
-                );
-                Gs2->Cache->Put(
-                    Gs2::Inventory::Model::FItemModel::TypeName,
-                    ParentKey,
-                    Key,
-                    ResultModel->GetItemModel(),
-                    FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
-                );
-            }
-            if (ResultModel->GetInventory() != nullptr)
-            {
-                const auto ParentKey = Gs2::Inventory::Domain::Model::FUserDomain::CreateCacheParentKey(
+                    }
+                    if (ResultModel.IsValid() && ResultModel->GetInventory() != nullptr)
+                    {
+
+                if (!(RequestModel->GetUserId()).IsSet())
+                    {
+                      return;
+                      }
+                Gs2::Inventory::Model::Cache::FInventoryCache::Put(
+                    Gs2->Cache,
+
                     RequestModel->GetNamespaceName(),
                     RequestModel->GetUserId(),
-                    "Inventory"
+                    RequestModel->GetInventoryName(),
+                    TimeOffset,
+                    ResultModel->GetInventory()
                 );
-                const auto Key = Gs2::Inventory::Domain::Model::FInventoryDomain::CreateCacheKey(
-                    ResultModel->GetInventory()->GetInventoryName()
-                );
-                Gs2->Cache->Put(
-                    Gs2::Inventory::Model::FInventory::TypeName,
-                    ParentKey,
-                    Key,
-                    ResultModel->GetInventory(),
-                    FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
-                );
-            }
+                    }
+
+
+
         }
         if (Method == "DeleteReferenceOfByUserId") {
             TSharedPtr<FJsonObject> RequestModelJson;
@@ -861,45 +957,45 @@ namespace Gs2::Inventory::Domain
             }
             const auto RequestModel = Gs2::Inventory::Request::FDeleteReferenceOfByUserIdRequest::FromJson(RequestModelJson);
             const auto ResultModel = Gs2::Inventory::Result::FDeleteReferenceOfByUserIdResult::FromJson(ResultModelJson);
-            
-            if (ResultModel->GetItemSet() != nullptr)
-            {
-                const auto ParentKey = Gs2::Inventory::Domain::Model::FInventoryDomain::CreateCacheParentKey(
+
+                      if (!(RequestModel->GetUserId()).IsSet())
+                          {
+                            return;
+                            }
+                      Gs2::Inventory::Model::Cache::FItemSetCache::Delete(
+                    Gs2->Cache,
+
                     RequestModel->GetNamespaceName(),
                     RequestModel->GetUserId(),
                     RequestModel->GetInventoryName(),
-                    "ItemSet"
+                    RequestModel->GetItemName(),
+                    RequestModel->GetItemSetName(),
+                    TimeOffset
                 );
-                const auto Key = Gs2::Inventory::Domain::Model::FItemSetDomain::CreateCacheKey(
-                    ResultModel->GetItemSet()->GetItemName(),
-                    ResultModel->GetItemSet()->GetName()
-                );
-                Gs2->Cache->Delete(Gs2::Inventory::Model::FItemSet::TypeName, ParentKey, Key);
-            }
-            if (ResultModel->GetItemModel() != nullptr)
-            {
-                const auto ParentKey = Gs2::Inventory::Domain::Model::FInventoryModelDomain::CreateCacheParentKey(
+
+                      Gs2::Inventory::Model::Cache::FItemModelCache::Delete(
+                    Gs2->Cache,
+
                     RequestModel->GetNamespaceName(),
                     RequestModel->GetInventoryName(),
-                    "ItemModel"
+                    RequestModel->GetItemName(),
+                    TimeOffset
                 );
-                const auto Key = Gs2::Inventory::Domain::Model::FItemModelDomain::CreateCacheKey(
-                    ResultModel->GetItemModel()->GetName()
-                );
-                Gs2->Cache->Delete(Gs2::Inventory::Model::FItemModel::TypeName, ParentKey, Key);
-            }
-            if (ResultModel->GetInventory() != nullptr)
-            {
-                const auto ParentKey = Gs2::Inventory::Domain::Model::FUserDomain::CreateCacheParentKey(
+                      if (!(RequestModel->GetUserId()).IsSet())
+                          {
+                            return;
+                            }
+                      Gs2::Inventory::Model::Cache::FInventoryCache::Delete(
+                    Gs2->Cache,
+
                     RequestModel->GetNamespaceName(),
                     RequestModel->GetUserId(),
-                    "Inventory"
+                    RequestModel->GetInventoryName(),
+                    TimeOffset
                 );
-                const auto Key = Gs2::Inventory::Domain::Model::FInventoryDomain::CreateCacheKey(
-                    ResultModel->GetInventory()->GetInventoryName()
-                );
-                Gs2->Cache->Delete(Gs2::Inventory::Model::FInventory::TypeName, ParentKey, Key);
-            }
+
+
+
         }
         if (Method == "AcquireSimpleItemsByUserId") {
             TSharedPtr<FJsonObject> RequestModelJson;
@@ -916,27 +1012,19 @@ namespace Gs2::Inventory::Domain
             }
             const auto RequestModel = Gs2::Inventory::Request::FAcquireSimpleItemsByUserIdRequest::FromJson(RequestModelJson);
             const auto ResultModel = Gs2::Inventory::Result::FAcquireSimpleItemsByUserIdResult::FromJson(ResultModelJson);
-            {
-                for (auto Item : *ResultModel->GetItems())
+
+                if (ResultModel.IsValid() && ResultModel->GetItems().IsValid())
                 {
-                    const auto ParentKey = Gs2::Inventory::Domain::Model::FSimpleInventoryDomain::CreateCacheParentKey(
-                        RequestModel->GetNamespaceName(),
-                        RequestModel->GetUserId(),
-                        RequestModel->GetInventoryName(),
-                        "SimpleItem"
-                    );
-                    const auto Key = Gs2::Inventory::Domain::Model::FSimpleItemDomain::CreateCacheKey(
-                        Item->GetItemName()
-                    );
-                    Gs2->Cache->Put(
-                        Gs2::Inventory::Model::FSimpleItem::TypeName,
-                        ParentKey,
-                        Key,
-                        Item,
-                        FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
-                    );
+                    for (const auto& Item : *ResultModel->GetItems())
+                    {
+                        if (!Item.IsValid()) continue;
+                        Gs2::Inventory::Model::Cache::FSimpleItemCache::Put(
+                            Gs2->Cache,
+                            RequestModel->GetNamespaceName(), RequestModel->GetUserId(), RequestModel->GetInventoryName(), Item->GetItemName(),
+                            TimeOffset, Item
+                        );
+                    }
                 }
-            }
         }
         if (Method == "SetSimpleItemsByUserId") {
             TSharedPtr<FJsonObject> RequestModelJson;
@@ -953,27 +1041,19 @@ namespace Gs2::Inventory::Domain
             }
             const auto RequestModel = Gs2::Inventory::Request::FSetSimpleItemsByUserIdRequest::FromJson(RequestModelJson);
             const auto ResultModel = Gs2::Inventory::Result::FSetSimpleItemsByUserIdResult::FromJson(ResultModelJson);
-            {
-                for (auto Item : *ResultModel->GetItems())
+
+                if (ResultModel.IsValid() && ResultModel->GetItems().IsValid())
                 {
-                    const auto ParentKey = Gs2::Inventory::Domain::Model::FSimpleInventoryDomain::CreateCacheParentKey(
-                        RequestModel->GetNamespaceName(),
-                        RequestModel->GetUserId(),
-                        RequestModel->GetInventoryName(),
-                        "SimpleItem"
-                    );
-                    const auto Key = Gs2::Inventory::Domain::Model::FSimpleItemDomain::CreateCacheKey(
-                        Item->GetItemName()
-                    );
-                    Gs2->Cache->Put(
-                        Gs2::Inventory::Model::FSimpleItem::TypeName,
-                        ParentKey,
-                        Key,
-                        Item,
-                        FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
-                    );
+                    for (const auto& Item : *ResultModel->GetItems())
+                    {
+                        if (!Item.IsValid()) continue;
+                        Gs2::Inventory::Model::Cache::FSimpleItemCache::Put(
+                            Gs2->Cache,
+                            RequestModel->GetNamespaceName(), RequestModel->GetUserId(), RequestModel->GetInventoryName(), Item->GetItemName(),
+                            TimeOffset, Item
+                        );
+                    }
                 }
-            }
         }
         if (Method == "AcquireBigItemByUserId") {
             TSharedPtr<FJsonObject> RequestModelJson;
@@ -990,26 +1070,29 @@ namespace Gs2::Inventory::Domain
             }
             const auto RequestModel = Gs2::Inventory::Request::FAcquireBigItemByUserIdRequest::FromJson(RequestModelJson);
             const auto ResultModel = Gs2::Inventory::Result::FAcquireBigItemByUserIdResult::FromJson(ResultModelJson);
-            
-            if (ResultModel->GetItem() != nullptr)
-            {
-                const auto ParentKey = Gs2::Inventory::Domain::Model::FBigInventoryDomain::CreateCacheParentKey(
+
+                    if (ResultModel.IsValid() && ResultModel->GetItem() != nullptr)
+                    {
+
+                if (!ResultModel.IsValid() || !ResultModel->GetItem().IsValid())
+                    {
+                      return;
+                      }if (!ResultModel.IsValid() || !((ResultModel.IsValid() && ResultModel->GetItem().IsValid() ? ResultModel->GetItem()->GetUserId() : TOptional<FString>())).IsSet())
+                    {
+                      return;
+                      }
+                Gs2::Inventory::Model::Cache::FBigItemCache::Put(
+                    Gs2->Cache,
+
                     RequestModel->GetNamespaceName(),
-                    RequestModel->GetUserId(),
+                    (ResultModel.IsValid() && ResultModel->GetItem().IsValid() ? ResultModel->GetItem()->GetUserId() : TOptional<FString>()),
                     RequestModel->GetInventoryName(),
-                    "BigItem"
+                    ResultModel->GetItem()->GetItemName(),
+                    TimeOffset,
+                    ResultModel->GetItem()
                 );
-                const auto Key = Gs2::Inventory::Domain::Model::FBigItemDomain::CreateCacheKey(
-                    ResultModel->GetItem()->GetItemName()
-                );
-                Gs2->Cache->Put(
-                    Gs2::Inventory::Model::FBigItem::TypeName,
-                    ParentKey,
-                    Key,
-                    ResultModel->GetItem(),
-                    FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
-                );
-            }
+                    }
+
         }
         if (Method == "SetBigItemByUserId") {
             TSharedPtr<FJsonObject> RequestModelJson;
@@ -1026,33 +1109,37 @@ namespace Gs2::Inventory::Domain
             }
             const auto RequestModel = Gs2::Inventory::Request::FSetBigItemByUserIdRequest::FromJson(RequestModelJson);
             const auto ResultModel = Gs2::Inventory::Result::FSetBigItemByUserIdResult::FromJson(ResultModelJson);
-            
-            if (ResultModel->GetItem() != nullptr)
-            {
-                const auto ParentKey = Gs2::Inventory::Domain::Model::FBigInventoryDomain::CreateCacheParentKey(
+
+                    if (ResultModel.IsValid() && ResultModel->GetItem() != nullptr)
+                    {
+
+                if (!ResultModel.IsValid() || !ResultModel->GetItem().IsValid())
+                    {
+                      return;
+                      }if (!ResultModel.IsValid() || !((ResultModel.IsValid() && ResultModel->GetItem().IsValid() ? ResultModel->GetItem()->GetUserId() : TOptional<FString>())).IsSet())
+                    {
+                      return;
+                      }
+                Gs2::Inventory::Model::Cache::FBigItemCache::Put(
+                    Gs2->Cache,
+
                     RequestModel->GetNamespaceName(),
-                    RequestModel->GetUserId(),
+                    (ResultModel.IsValid() && ResultModel->GetItem().IsValid() ? ResultModel->GetItem()->GetUserId() : TOptional<FString>()),
                     RequestModel->GetInventoryName(),
-                    "BigItem"
+                    ResultModel->GetItem()->GetItemName(),
+                    TimeOffset,
+                    ResultModel->GetItem()
                 );
-                const auto Key = Gs2::Inventory::Domain::Model::FBigItemDomain::CreateCacheKey(
-                    ResultModel->GetItem()->GetItemName()
-                );
-                Gs2->Cache->Put(
-                    Gs2::Inventory::Model::FBigItem::TypeName,
-                    ParentKey,
-                    Key,
-                    ResultModel->GetItem(),
-                    FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
-                );
-            }
+                    }
+
         }
     }
 
     void FGs2InventoryDomain::UpdateCacheFromStampTask(
         const FString Method,
         const FString Request,
-        const FString Result
+        const FString Result,
+        const TOptional<int32> TimeOffset
     ) {
         if (Method == "ConsumeItemSetByUserId") {
             TSharedPtr<FJsonObject> RequestModelJson;
@@ -1069,104 +1156,56 @@ namespace Gs2::Inventory::Domain
             }
             const auto RequestModel = Gs2::Inventory::Request::FConsumeItemSetByUserIdRequest::FromJson(RequestModelJson);
             const auto ResultModel = Gs2::Inventory::Result::FConsumeItemSetByUserIdResult::FromJson(ResultModelJson);
-            {
-                for (auto Item : *ResultModel->GetItems())
-                {
-                    const auto ParentKey = Gs2::Inventory::Domain::Model::FInventoryDomain::CreateCacheParentKey(
-                        RequestModel->GetNamespaceName(),
-                        RequestModel->GetUserId(),
-                        RequestModel->GetInventoryName(),
-                        "ItemSet"
-                    );
-                    const auto Key = Gs2::Inventory::Domain::Model::FItemSetDomain::CreateCacheKey(
-                        Item->GetItemName(),
-                        Item->GetName()
-                    );
-                    if (Item->GetCount() == 0) {
-                        Gs2->Cache->Delete(
-                            Gs2::Inventory::Model::FItemSet::TypeName,
-                            ParentKey,
-                            Key
-                        );
-                    }
-                    else
+
+                    if (ResultModel.IsValid() && ResultModel->GetItemModel() != nullptr)
                     {
-                        Gs2->Cache->Put(
-                            Gs2::Inventory::Model::FItemSet::TypeName,
-                            ParentKey,
-                            Key,
-                            Item,
-                            Item->GetExpiresAt().IsSet() && *Item->GetExpiresAt() != 0 ? FDateTime::FromUnixTimestamp(*Item->GetExpiresAt()/1000) : FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
-                        );
-                    }
-                }
-                TMap<FString, TSharedPtr<TArray<Gs2::Inventory::Model::FItemSetPtr>>> Groups;
-                for (auto Item : *ResultModel->GetItems())
-                {
-                    if (!Groups.Contains(*Item->GetItemName()))
-                    {
-                        Groups.Add(*Item->GetItemName(), MakeShared<TArray<Gs2::Inventory::Model::FItemSetPtr>>());
-                    }
-                    Groups[*Item->GetItemName()]->Add(Item);
-                }
-                for (auto Group : Groups)
-                {
-                    const auto ParentKey = Gs2::Inventory::Domain::Model::FInventoryDomain::CreateCacheParentKey(
-                        RequestModel->GetNamespaceName(),
-                        RequestModel->GetUserId(),
-                        RequestModel->GetInventoryName(),
-                        "ItemSet"
-                    );
-                    const auto Key = Gs2::Inventory::Domain::Model::FItemSetDomain::CreateCacheKey(
-                        Group.Key,
-                        TOptional<FString>()
-                    );
-                    int64 ExpiresAt = (FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)).ToUnixTimestamp() * 1000;
-                    for (auto Item : *Group.Value)
-                    {
-                        if (Item->GetExpiresAt().IsSet())
-                        {
-                            if (*Item->GetExpiresAt() != 0 && ExpiresAt > *Item->GetExpiresAt())
-                            {
-                                ExpiresAt = *Item->GetExpiresAt();
-                            }
-                        }
-                    }
-                    Gs2->Cache->Put(
-                        Gs2::Inventory::Model::FItemSetEntry::TypeName,
-                        ParentKey,
-                        Key,
-                        MakeShared<Gs2::Inventory::Model::FItemSetEntry>(*Group.Value),
-                        FDateTime::FromUnixTimestamp(ExpiresAt / 1000)
-                    );
-                }
-            }
-            if (ResultModel->GetItemModel() != nullptr)
-            {
-                const auto ParentKey = Gs2::Inventory::Domain::Model::FInventoryModelDomain::CreateCacheParentKey(
+
+
+                Gs2::Inventory::Model::Cache::FItemModelCache::Put(
+                    Gs2->Cache,
+
                     RequestModel->GetNamespaceName(),
                     RequestModel->GetInventoryName(),
-                    "ItemModel"
+                    RequestModel->GetItemName(),
+                    TimeOffset,
+                    ResultModel->GetItemModel()
                 );
-                const auto Key = Gs2::Inventory::Domain::Model::FItemModelDomain::CreateCacheKey(
-                    ResultModel->GetItemModel()->GetName()
+                    }
+                if (ResultModel.IsValid() && ResultModel->GetItems().IsValid())
+                {
+                    for (const auto& Item : *ResultModel->GetItems())
+                    {
+                        if (!Item.IsValid()) continue;
+                        Gs2::Inventory::Model::Cache::FItemSetCache::Put(
+                            Gs2->Cache,
+                            RequestModel->GetNamespaceName(), RequestModel->GetUserId(), RequestModel->GetInventoryName(), Item->GetItemName(), Item->GetName(),
+                            TimeOffset, Item
+                        );
+                    }
+                    Gs2::Inventory::Model::Cache::FItemSetCache::Put(
+                        Gs2->Cache,
+                        RequestModel->GetNamespaceName(), RequestModel->GetUserId(), RequestModel->GetInventoryName(), RequestModel->GetItemName(),
+                        TimeOffset, ResultModel->GetItems()
+                    );
+                }
+                Gs2->Cache->SetListCached(
+                    Gs2::Inventory::Model::FItemSet::TypeName,
+                    Gs2::Inventory::Model::Cache::FItemSetCache::CreateCacheParentKey(
+                        RequestModel->GetNamespaceName(),
+                        RequestModel->GetUserId(),
+                        RequestModel->GetInventoryName(),
+                        TimeOffset
+                    )
                 );
-                Gs2->Cache->Put(
-                    Gs2::Inventory::Model::FItemModel::TypeName,
-                    ParentKey,
-                    Key,
-                    ResultModel->GetItemModel(),
-                    FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
-                );
-            }
+
             if (ResultModel->GetInventory() != nullptr)
             {
-                const auto ParentKey = Gs2::Inventory::Domain::Model::FUserDomain::CreateCacheParentKey(
+                const auto ParentKey = Gs2::Inventory::Model::Cache::FInventoryCache::CreateCacheParentKey(
                     RequestModel->GetNamespaceName(),
                     RequestModel->GetUserId(),
-                    "Inventory"
+                    TimeOffset
                 );
-                const auto Key = Gs2::Inventory::Domain::Model::FInventoryDomain::CreateCacheKey(
+                const auto Key = Gs2::Inventory::Model::Cache::FInventoryCache::CreateCacheKey(
                     ResultModel->GetInventory()->GetInventoryName()
                 );
                 TSharedPtr<Gs2::Inventory::Model::FInventory> Item;
@@ -1213,27 +1252,19 @@ namespace Gs2::Inventory::Domain
             }
             const auto RequestModel = Gs2::Inventory::Request::FConsumeSimpleItemsByUserIdRequest::FromJson(RequestModelJson);
             const auto ResultModel = Gs2::Inventory::Result::FConsumeSimpleItemsByUserIdResult::FromJson(ResultModelJson);
-            {
-                for (auto Item : *ResultModel->GetItems())
+
+                if (ResultModel.IsValid() && ResultModel->GetItems().IsValid())
                 {
-                    const auto ParentKey = Gs2::Inventory::Domain::Model::FSimpleInventoryDomain::CreateCacheParentKey(
-                        RequestModel->GetNamespaceName(),
-                        RequestModel->GetUserId(),
-                        RequestModel->GetInventoryName(),
-                        "SimpleItem"
-                    );
-                    const auto Key = Gs2::Inventory::Domain::Model::FSimpleItemDomain::CreateCacheKey(
-                        Item->GetItemName()
-                    );
-                    Gs2->Cache->Put(
-                        Gs2::Inventory::Model::FSimpleItem::TypeName,
-                        ParentKey,
-                        Key,
-                        Item,
-                        FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
-                    );
+                    for (const auto& Item : *ResultModel->GetItems())
+                    {
+                        if (!Item.IsValid()) continue;
+                        Gs2::Inventory::Model::Cache::FSimpleItemCache::Put(
+                            Gs2->Cache,
+                            RequestModel->GetNamespaceName(), RequestModel->GetUserId(), RequestModel->GetInventoryName(), Item->GetItemName(),
+                            TimeOffset, Item
+                        );
+                    }
                 }
-            }
         }
         if (Method == "ConsumeBigItemByUserId") {
             TSharedPtr<FJsonObject> RequestModelJson;
@@ -1250,33 +1281,37 @@ namespace Gs2::Inventory::Domain
             }
             const auto RequestModel = Gs2::Inventory::Request::FConsumeBigItemByUserIdRequest::FromJson(RequestModelJson);
             const auto ResultModel = Gs2::Inventory::Result::FConsumeBigItemByUserIdResult::FromJson(ResultModelJson);
-            
-            if (ResultModel->GetItem() != nullptr)
-            {
-                const auto ParentKey = Gs2::Inventory::Domain::Model::FBigInventoryDomain::CreateCacheParentKey(
+
+                    if (ResultModel.IsValid() && ResultModel->GetItem() != nullptr)
+                    {
+
+                if (!ResultModel.IsValid() || !ResultModel->GetItem().IsValid())
+                    {
+                      return;
+                      }if (!ResultModel.IsValid() || !((ResultModel.IsValid() && ResultModel->GetItem().IsValid() ? ResultModel->GetItem()->GetUserId() : TOptional<FString>())).IsSet())
+                    {
+                      return;
+                      }
+                Gs2::Inventory::Model::Cache::FBigItemCache::Put(
+                    Gs2->Cache,
+
                     RequestModel->GetNamespaceName(),
-                    RequestModel->GetUserId(),
+                    (ResultModel.IsValid() && ResultModel->GetItem().IsValid() ? ResultModel->GetItem()->GetUserId() : TOptional<FString>()),
                     RequestModel->GetInventoryName(),
-                    "BigItem"
+                    ResultModel->GetItem()->GetItemName(),
+                    TimeOffset,
+                    ResultModel->GetItem()
                 );
-                const auto Key = Gs2::Inventory::Domain::Model::FBigItemDomain::CreateCacheKey(
-                    ResultModel->GetItem()->GetItemName()
-                );
-                Gs2->Cache->Put(
-                    Gs2::Inventory::Model::FBigItem::TypeName,
-                    ParentKey,
-                    Key,
-                    ResultModel->GetItem(),
-                    FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
-                );
-            }
+                    }
+
         }
     }
 
     void FGs2InventoryDomain::UpdateCacheFromJobResult(
         const FString Method,
         const Gs2::JobQueue::Model::FJobPtr Job,
-        const Gs2::JobQueue::Model::FJobResultBodyPtr Result
+        const Gs2::JobQueue::Model::FJobResultBodyPtr Result,
+        const TOptional<int32> TimeOffset
     ) {
         if (Method == "add_capacity_by_user_id") {
             TSharedPtr<FJsonObject> RequestModelJson;
@@ -1301,25 +1336,28 @@ namespace Gs2::Inventory::Domain
             }
             const auto RequestModel = Gs2::Inventory::Request::FAddCapacityByUserIdRequest::FromJson(RequestModelJson);
             const auto ResultModel = Gs2::Inventory::Result::FAddCapacityByUserIdResult::FromJson(ResultModelJson);
-            
-            if (ResultModel->GetItem() != nullptr)
-            {
-                const auto ParentKey = Gs2::Inventory::Domain::Model::FUserDomain::CreateCacheParentKey(
+
+                    if (ResultModel.IsValid() && ResultModel->GetItem() != nullptr)
+                    {
+
+                if (!ResultModel.IsValid() || !ResultModel->GetItem().IsValid())
+                    {
+                      return;
+                      }if (!ResultModel.IsValid() || !((ResultModel.IsValid() && ResultModel->GetItem().IsValid() ? ResultModel->GetItem()->GetUserId() : TOptional<FString>())).IsSet())
+                    {
+                      return;
+                      }
+                Gs2::Inventory::Model::Cache::FInventoryCache::Put(
+                    Gs2->Cache,
+
                     RequestModel->GetNamespaceName(),
-                    RequestModel->GetUserId(),
-                    "Inventory"
+                    (ResultModel.IsValid() && ResultModel->GetItem().IsValid() ? ResultModel->GetItem()->GetUserId() : TOptional<FString>()),
+                    ResultModel->GetItem()->GetInventoryName(),
+                    TimeOffset,
+                    ResultModel->GetItem()
                 );
-                const auto Key = Gs2::Inventory::Domain::Model::FInventoryDomain::CreateCacheKey(
-                    ResultModel->GetItem()->GetInventoryName()
-                );
-                Gs2->Cache->Put(
-                    Gs2::Inventory::Model::FInventory::TypeName,
-                    ParentKey,
-                    Key,
-                    ResultModel->GetItem(),
-                    FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
-                );
-            }
+                    }
+
         }
         if (Method == "set_capacity_by_user_id") {
             TSharedPtr<FJsonObject> RequestModelJson;
@@ -1344,25 +1382,28 @@ namespace Gs2::Inventory::Domain
             }
             const auto RequestModel = Gs2::Inventory::Request::FSetCapacityByUserIdRequest::FromJson(RequestModelJson);
             const auto ResultModel = Gs2::Inventory::Result::FSetCapacityByUserIdResult::FromJson(ResultModelJson);
-            
-            if (ResultModel->GetItem() != nullptr)
-            {
-                const auto ParentKey = Gs2::Inventory::Domain::Model::FUserDomain::CreateCacheParentKey(
+
+                    if (ResultModel.IsValid() && ResultModel->GetItem() != nullptr)
+                    {
+
+                if (!ResultModel.IsValid() || !ResultModel->GetItem().IsValid())
+                    {
+                      return;
+                      }if (!ResultModel.IsValid() || !((ResultModel.IsValid() && ResultModel->GetItem().IsValid() ? ResultModel->GetItem()->GetUserId() : TOptional<FString>())).IsSet())
+                    {
+                      return;
+                      }
+                Gs2::Inventory::Model::Cache::FInventoryCache::Put(
+                    Gs2->Cache,
+
                     RequestModel->GetNamespaceName(),
-                    RequestModel->GetUserId(),
-                    "Inventory"
+                    (ResultModel.IsValid() && ResultModel->GetItem().IsValid() ? ResultModel->GetItem()->GetUserId() : TOptional<FString>()),
+                    ResultModel->GetItem()->GetInventoryName(),
+                    TimeOffset,
+                    ResultModel->GetItem()
                 );
-                const auto Key = Gs2::Inventory::Domain::Model::FInventoryDomain::CreateCacheKey(
-                    ResultModel->GetItem()->GetInventoryName()
-                );
-                Gs2->Cache->Put(
-                    Gs2::Inventory::Model::FInventory::TypeName,
-                    ParentKey,
-                    Key,
-                    ResultModel->GetItem(),
-                    FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
-                );
-            }
+                    }
+
         }
         if (Method == "acquire_item_set_by_user_id") {
             TSharedPtr<FJsonObject> RequestModelJson;
@@ -1387,104 +1428,56 @@ namespace Gs2::Inventory::Domain
             }
             const auto RequestModel = Gs2::Inventory::Request::FAcquireItemSetByUserIdRequest::FromJson(RequestModelJson);
             const auto ResultModel = Gs2::Inventory::Result::FAcquireItemSetByUserIdResult::FromJson(ResultModelJson);
-            {
-                for (auto Item : *ResultModel->GetItems())
-                {
-                    const auto ParentKey = Gs2::Inventory::Domain::Model::FInventoryDomain::CreateCacheParentKey(
-                        RequestModel->GetNamespaceName(),
-                        RequestModel->GetUserId(),
-                        RequestModel->GetInventoryName(),
-                        "ItemSet"
-                    );
-                    const auto Key = Gs2::Inventory::Domain::Model::FItemSetDomain::CreateCacheKey(
-                        Item->GetItemName(),
-                        Item->GetName()
-                    );
-                    if (Item->GetCount() == 0) {
-                        Gs2->Cache->Delete(
-                            Gs2::Inventory::Model::FItemSet::TypeName,
-                            ParentKey,
-                            Key
-                        );
-                    }
-                    else
+
+                    if (ResultModel.IsValid() && ResultModel->GetItemModel() != nullptr)
                     {
-                        Gs2->Cache->Put(
-                            Gs2::Inventory::Model::FItemSet::TypeName,
-                            ParentKey,
-                            Key,
-                            Item,
-                            Item->GetExpiresAt().IsSet() && *Item->GetExpiresAt() != 0 ? FDateTime::FromUnixTimestamp(*Item->GetExpiresAt()/1000) : FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
-                        );
-                    }
-                }
-                TMap<FString, TSharedPtr<TArray<Gs2::Inventory::Model::FItemSetPtr>>> Groups;
-                for (auto Item : *ResultModel->GetItems())
-                {
-                    if (!Groups.Contains(*Item->GetItemName()))
-                    {
-                        Groups.Add(*Item->GetItemName(), MakeShared<TArray<Gs2::Inventory::Model::FItemSetPtr>>());
-                    }
-                    Groups[*Item->GetItemName()]->Add(Item);
-                }
-                for (auto Group : Groups)
-                {
-                    const auto ParentKey = Gs2::Inventory::Domain::Model::FInventoryDomain::CreateCacheParentKey(
-                        RequestModel->GetNamespaceName(),
-                        RequestModel->GetUserId(),
-                        RequestModel->GetInventoryName(),
-                        "ItemSet"
-                    );
-                    const auto Key = Gs2::Inventory::Domain::Model::FItemSetDomain::CreateCacheKey(
-                        Group.Key,
-                        TOptional<FString>()
-                    );
-                    int64 ExpiresAt = (FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)).ToUnixTimestamp() * 1000;
-                    for (auto Item : *Group.Value)
-                    {
-                        if (Item->GetExpiresAt().IsSet())
-                        {
-                            if (*Item->GetExpiresAt() != 0 && ExpiresAt > *Item->GetExpiresAt())
-                            {
-                                ExpiresAt = *Item->GetExpiresAt();
-                            }
-                        }
-                    }
-                    Gs2->Cache->Put(
-                        Gs2::Inventory::Model::FItemSetEntry::TypeName,
-                        ParentKey,
-                        Key,
-                        MakeShared<Gs2::Inventory::Model::FItemSetEntry>(*Group.Value),
-                        FDateTime::FromUnixTimestamp(ExpiresAt / 1000)
-                    );
-                }
-            }
-            if (ResultModel->GetItemModel() != nullptr)
-            {
-                const auto ParentKey = Gs2::Inventory::Domain::Model::FInventoryModelDomain::CreateCacheParentKey(
+
+
+                Gs2::Inventory::Model::Cache::FItemModelCache::Put(
+                    Gs2->Cache,
+
                     RequestModel->GetNamespaceName(),
                     RequestModel->GetInventoryName(),
-                    "ItemModel"
+                    RequestModel->GetItemName(),
+                    TimeOffset,
+                    ResultModel->GetItemModel()
                 );
-                const auto Key = Gs2::Inventory::Domain::Model::FItemModelDomain::CreateCacheKey(
-                    ResultModel->GetItemModel()->GetName()
+                    }
+                if (ResultModel.IsValid() && ResultModel->GetItems().IsValid())
+                {
+                    for (const auto& Item : *ResultModel->GetItems())
+                    {
+                        if (!Item.IsValid()) continue;
+                        Gs2::Inventory::Model::Cache::FItemSetCache::Put(
+                            Gs2->Cache,
+                            RequestModel->GetNamespaceName(), RequestModel->GetUserId(), RequestModel->GetInventoryName(), Item->GetItemName(), Item->GetName(),
+                            TimeOffset, Item
+                        );
+                    }
+                    Gs2::Inventory::Model::Cache::FItemSetCache::Put(
+                        Gs2->Cache,
+                        RequestModel->GetNamespaceName(), RequestModel->GetUserId(), RequestModel->GetInventoryName(), RequestModel->GetItemName(),
+                        TimeOffset, ResultModel->GetItems()
+                    );
+                }
+                Gs2->Cache->SetListCached(
+                    Gs2::Inventory::Model::FItemSet::TypeName,
+                    Gs2::Inventory::Model::Cache::FItemSetCache::CreateCacheParentKey(
+                        RequestModel->GetNamespaceName(),
+                        RequestModel->GetUserId(),
+                        RequestModel->GetInventoryName(),
+                        TimeOffset
+                    )
                 );
-                Gs2->Cache->Put(
-                    Gs2::Inventory::Model::FItemModel::TypeName,
-                    ParentKey,
-                    Key,
-                    ResultModel->GetItemModel(),
-                    FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
-                );
-            }
+
             if (ResultModel->GetInventory() != nullptr)
             {
-                const auto ParentKey = Gs2::Inventory::Domain::Model::FUserDomain::CreateCacheParentKey(
+                const auto ParentKey = Gs2::Inventory::Model::Cache::FInventoryCache::CreateCacheParentKey(
                     RequestModel->GetNamespaceName(),
                     RequestModel->GetUserId(),
-                    "Inventory"
+                    TimeOffset
                 );
-                const auto Key = Gs2::Inventory::Domain::Model::FInventoryDomain::CreateCacheKey(
+                const auto Key = Gs2::Inventory::Model::Cache::FInventoryCache::CreateCacheKey(
                     ResultModel->GetInventory()->GetInventoryName()
                 );
                 TSharedPtr<Gs2::Inventory::Model::FInventory> Item;
@@ -1539,82 +1532,88 @@ namespace Gs2::Inventory::Domain
             }
             const auto RequestModel = Gs2::Inventory::Request::FAcquireItemSetWithGradeByUserIdRequest::FromJson(RequestModelJson);
             const auto ResultModel = Gs2::Inventory::Result::FAcquireItemSetWithGradeByUserIdResult::FromJson(ResultModelJson);
-            
-            if (ResultModel->GetItem() != nullptr)
-            {
-                const auto ParentKey = Gs2::Inventory::Domain::Model::FInventoryDomain::CreateCacheParentKey(
+
+                    if (ResultModel.IsValid() && ResultModel->GetItem() != nullptr)
+                    {
+
+                if (!ResultModel.IsValid() || !ResultModel->GetItem().IsValid())
+                    {
+                      return;
+                      }if (!ResultModel.IsValid() || !((ResultModel.IsValid() && ResultModel->GetItem().IsValid() ? ResultModel->GetItem()->GetUserId() : TOptional<FString>())).IsSet())
+                    {
+                      return;
+                      }
+                Gs2::Inventory::Model::Cache::FItemSetCache::Put(
+                    Gs2->Cache,
+
                     RequestModel->GetNamespaceName(),
-                    RequestModel->GetUserId(),
-                    RequestModel->GetInventoryName(),
-                    "ItemSet"
-                );
-                const auto Key = Gs2::Inventory::Domain::Model::FItemSetDomain::CreateCacheKey(
+                    (ResultModel.IsValid() && ResultModel->GetItem().IsValid() ? ResultModel->GetItem()->GetUserId() : TOptional<FString>()),
+                    ResultModel->GetItem()->GetInventoryName(),
                     ResultModel->GetItem()->GetItemName(),
-                    ResultModel->GetItem()->GetName()
+                    ResultModel->GetItem()->GetName(),
+                    TimeOffset,
+                    ResultModel->GetItem()
                 );
-                Gs2->Cache->Put(
-                    Gs2::Inventory::Model::FItemSet::TypeName,
-                    ParentKey,
-                    Key,
-                    ResultModel->GetItem(),
-                    ResultModel->GetItem()->GetExpiresAt().IsSet() && *ResultModel->GetItem()->GetExpiresAt() != 0 ? FDateTime::FromUnixTimestamp(*ResultModel->GetItem()->GetExpiresAt() / 1000) : FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
-                );
-            }
-            if (ResultModel->GetStatus() != nullptr)
-            {
-                const auto ParentKey = Gs2::Inventory::Domain::Model::FUserDomain::CreateCacheParentKey(
-                    RequestModel->GetNamespaceName(),
-                    RequestModel->GetUserId(),
-                    "Status"
-                );
-                const auto Key = Gs2::Grade::Domain::Model::FStatusDomain::CreateCacheKey(
+                    }
+                    if (ResultModel.IsValid() && ResultModel->GetStatus() != nullptr)
+                    {
+
+                if (!ResultModel.IsValid() || !((ResultModel.IsValid() && ResultModel->GetItem().IsValid() ? ResultModel->GetItem()->GetUserId() : TOptional<FString>())).IsSet())
+                    {
+                      return;
+                      }
+                Gs2::Grade::Model::Cache::FStatusCache::Put(
+                    Gs2->Cache,
+
+                    Gs2::Grade::Model::FStatus::GetNamespaceNameFromGrn(ResultModel->GetStatus()->GetStatusId().Get(FString())),
+                    (ResultModel.IsValid() && ResultModel->GetItem().IsValid() ? ResultModel->GetItem()->GetUserId() : TOptional<FString>()),
                     ResultModel->GetStatus()->GetGradeName(),
-                    ResultModel->GetStatus()->GetPropertyId()
+                    ResultModel->GetStatus()->GetPropertyId(),
+                    TimeOffset,
+                    ResultModel->GetStatus()
                 );
-                Gs2->Cache->Put(
-                    Gs2::Grade::Model::FStatus::TypeName,
-                    ParentKey,
-                    Key,
-                    ResultModel->GetStatus(),
-                    FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
-                );
-            }
-            if (ResultModel->GetItemModel() != nullptr)
-            {
-                const auto ParentKey = Gs2::Inventory::Domain::Model::FInventoryModelDomain::CreateCacheParentKey(
+                    }
+                    if (ResultModel.IsValid() && ResultModel->GetItemModel() != nullptr)
+                    {
+
+                if (!ResultModel.IsValid() || !ResultModel->GetItem().IsValid())
+                    {
+                      return;
+                      }
+                Gs2::Inventory::Model::Cache::FItemModelCache::Put(
+                    Gs2->Cache,
+
                     RequestModel->GetNamespaceName(),
-                    RequestModel->GetInventoryName(),
-                    "ItemModel"
+                    ResultModel->GetItem()->GetInventoryName(),
+                    ResultModel->GetItem()->GetItemName(),
+                    TimeOffset,
+                    ResultModel->GetItemModel()
                 );
-                const auto Key = Gs2::Inventory::Domain::Model::FItemModelDomain::CreateCacheKey(
-                    ResultModel->GetItemModel()->GetName()
-                );
-                Gs2->Cache->Put(
-                    Gs2::Inventory::Model::FItemModel::TypeName,
-                    ParentKey,
-                    Key,
-                    ResultModel->GetItemModel(),
-                    FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
-                );
-            }
-            if (ResultModel->GetInventory() != nullptr)
-            {
-                const auto ParentKey = Gs2::Inventory::Domain::Model::FUserDomain::CreateCacheParentKey(
+                    }
+                    if (ResultModel.IsValid() && ResultModel->GetInventory() != nullptr)
+                    {
+
+                if (!ResultModel.IsValid() || !ResultModel->GetItem().IsValid())
+                    {
+                      return;
+                      }if (!ResultModel.IsValid() || !((ResultModel.IsValid() && ResultModel->GetItem().IsValid() ? ResultModel->GetItem()->GetUserId() : TOptional<FString>())).IsSet())
+                    {
+                      return;
+                      }
+                Gs2::Inventory::Model::Cache::FInventoryCache::Put(
+                    Gs2->Cache,
+
                     RequestModel->GetNamespaceName(),
-                    RequestModel->GetUserId(),
-                    "Inventory"
+                    (ResultModel.IsValid() && ResultModel->GetItem().IsValid() ? ResultModel->GetItem()->GetUserId() : TOptional<FString>()),
+                    ResultModel->GetItem()->GetInventoryName(),
+                    TimeOffset,
+                    ResultModel->GetInventory()
                 );
-                const auto Key = Gs2::Inventory::Domain::Model::FInventoryDomain::CreateCacheKey(
-                    ResultModel->GetInventory()->GetInventoryName()
-                );
-                Gs2->Cache->Put(
-                    Gs2::Inventory::Model::FInventory::TypeName,
-                    ParentKey,
-                    Key,
-                    ResultModel->GetInventory(),
-                    FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
-                );
-            }
+                    }
+
+
+
+
         }
         if (Method == "add_reference_of_by_user_id") {
             TSharedPtr<FJsonObject> RequestModelJson;
@@ -1639,63 +1638,60 @@ namespace Gs2::Inventory::Domain
             }
             const auto RequestModel = Gs2::Inventory::Request::FAddReferenceOfByUserIdRequest::FromJson(RequestModelJson);
             const auto ResultModel = Gs2::Inventory::Result::FAddReferenceOfByUserIdResult::FromJson(ResultModelJson);
-            
-            if (ResultModel->GetItemSet() != nullptr)
-            {
-                const auto ParentKey = Gs2::Inventory::Domain::Model::FInventoryDomain::CreateCacheParentKey(
+
+                    if (ResultModel.IsValid() && ResultModel->GetItemSet() != nullptr)
+                    {
+
+                if (!(RequestModel->GetUserId()).IsSet())
+                    {
+                      return;
+                      }
+                Gs2::Inventory::Model::Cache::FItemSetCache::Put(
+                    Gs2->Cache,
+
                     RequestModel->GetNamespaceName(),
                     RequestModel->GetUserId(),
                     RequestModel->GetInventoryName(),
-                    "ItemSet"
+                    RequestModel->GetItemName(),
+                    RequestModel->GetItemSetName(),
+                    TimeOffset,
+                    ResultModel->GetItemSet()
                 );
-                const auto Key = Gs2::Inventory::Domain::Model::FItemSetDomain::CreateCacheKey(
-                    ResultModel->GetItemSet()->GetItemName(),
-                    ResultModel->GetItemSet()->GetName()
-                );
-                Gs2->Cache->Put(
-                    Gs2::Inventory::Model::FItemSet::TypeName,
-                    ParentKey,
-                    Key,
-                    ResultModel->GetItemSet(),
-                    ResultModel->GetItemSet()->GetExpiresAt().IsSet() && *ResultModel->GetItemSet()->GetExpiresAt() != 0 ? FDateTime::FromUnixTimestamp(*ResultModel->GetItemSet()->GetExpiresAt() / 1000) : FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
-                );
-            }
-            if (ResultModel->GetItemModel() != nullptr)
-            {
-                const auto ParentKey = Gs2::Inventory::Domain::Model::FInventoryModelDomain::CreateCacheParentKey(
+                    }
+                    if (ResultModel.IsValid() && ResultModel->GetItemModel() != nullptr)
+                    {
+
+
+                Gs2::Inventory::Model::Cache::FItemModelCache::Put(
+                    Gs2->Cache,
+
                     RequestModel->GetNamespaceName(),
                     RequestModel->GetInventoryName(),
-                    "ItemModel"
+                    RequestModel->GetItemName(),
+                    TimeOffset,
+                    ResultModel->GetItemModel()
                 );
-                const auto Key = Gs2::Inventory::Domain::Model::FItemModelDomain::CreateCacheKey(
-                    ResultModel->GetItemModel()->GetName()
-                );
-                Gs2->Cache->Put(
-                    Gs2::Inventory::Model::FItemModel::TypeName,
-                    ParentKey,
-                    Key,
-                    ResultModel->GetItemModel(),
-                    FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
-                );
-            }
-            if (ResultModel->GetInventory() != nullptr)
-            {
-                const auto ParentKey = Gs2::Inventory::Domain::Model::FUserDomain::CreateCacheParentKey(
+                    }
+                    if (ResultModel.IsValid() && ResultModel->GetInventory() != nullptr)
+                    {
+
+                if (!(RequestModel->GetUserId()).IsSet())
+                    {
+                      return;
+                      }
+                Gs2::Inventory::Model::Cache::FInventoryCache::Put(
+                    Gs2->Cache,
+
                     RequestModel->GetNamespaceName(),
                     RequestModel->GetUserId(),
-                    "Inventory"
+                    RequestModel->GetInventoryName(),
+                    TimeOffset,
+                    ResultModel->GetInventory()
                 );
-                const auto Key = Gs2::Inventory::Domain::Model::FInventoryDomain::CreateCacheKey(
-                    ResultModel->GetInventory()->GetInventoryName()
-                );
-                Gs2->Cache->Put(
-                    Gs2::Inventory::Model::FInventory::TypeName,
-                    ParentKey,
-                    Key,
-                    ResultModel->GetInventory(),
-                    FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
-                );
-            }
+                    }
+
+
+
         }
         if (Method == "delete_reference_of_by_user_id") {
             TSharedPtr<FJsonObject> RequestModelJson;
@@ -1720,45 +1716,45 @@ namespace Gs2::Inventory::Domain
             }
             const auto RequestModel = Gs2::Inventory::Request::FDeleteReferenceOfByUserIdRequest::FromJson(RequestModelJson);
             const auto ResultModel = Gs2::Inventory::Result::FDeleteReferenceOfByUserIdResult::FromJson(ResultModelJson);
-            
-            if (ResultModel->GetItemSet() != nullptr)
-            {
-                const auto ParentKey = Gs2::Inventory::Domain::Model::FInventoryDomain::CreateCacheParentKey(
+
+                      if (!(RequestModel->GetUserId()).IsSet())
+                          {
+                            return;
+                            }
+                      Gs2::Inventory::Model::Cache::FItemSetCache::Delete(
+                    Gs2->Cache,
+
                     RequestModel->GetNamespaceName(),
                     RequestModel->GetUserId(),
                     RequestModel->GetInventoryName(),
-                    "ItemSet"
+                    RequestModel->GetItemName(),
+                    RequestModel->GetItemSetName(),
+                    TimeOffset
                 );
-                const auto Key = Gs2::Inventory::Domain::Model::FItemSetDomain::CreateCacheKey(
-                    ResultModel->GetItemSet()->GetItemName(),
-                    ResultModel->GetItemSet()->GetName()
-                );
-                Gs2->Cache->Delete(Gs2::Inventory::Model::FItemSet::TypeName, ParentKey, Key);
-            }
-            if (ResultModel->GetItemModel() != nullptr)
-            {
-                const auto ParentKey = Gs2::Inventory::Domain::Model::FInventoryModelDomain::CreateCacheParentKey(
+
+                      Gs2::Inventory::Model::Cache::FItemModelCache::Delete(
+                    Gs2->Cache,
+
                     RequestModel->GetNamespaceName(),
                     RequestModel->GetInventoryName(),
-                    "ItemModel"
+                    RequestModel->GetItemName(),
+                    TimeOffset
                 );
-                const auto Key = Gs2::Inventory::Domain::Model::FItemModelDomain::CreateCacheKey(
-                    ResultModel->GetItemModel()->GetName()
-                );
-                Gs2->Cache->Delete(Gs2::Inventory::Model::FItemModel::TypeName, ParentKey, Key);
-            }
-            if (ResultModel->GetInventory() != nullptr)
-            {
-                const auto ParentKey = Gs2::Inventory::Domain::Model::FUserDomain::CreateCacheParentKey(
+                      if (!(RequestModel->GetUserId()).IsSet())
+                          {
+                            return;
+                            }
+                      Gs2::Inventory::Model::Cache::FInventoryCache::Delete(
+                    Gs2->Cache,
+
                     RequestModel->GetNamespaceName(),
                     RequestModel->GetUserId(),
-                    "Inventory"
+                    RequestModel->GetInventoryName(),
+                    TimeOffset
                 );
-                const auto Key = Gs2::Inventory::Domain::Model::FInventoryDomain::CreateCacheKey(
-                    ResultModel->GetInventory()->GetInventoryName()
-                );
-                Gs2->Cache->Delete(Gs2::Inventory::Model::FInventory::TypeName, ParentKey, Key);
-            }
+
+
+
         }
         if (Method == "acquire_simple_items_by_user_id") {
             TSharedPtr<FJsonObject> RequestModelJson;
@@ -1783,27 +1779,19 @@ namespace Gs2::Inventory::Domain
             }
             const auto RequestModel = Gs2::Inventory::Request::FAcquireSimpleItemsByUserIdRequest::FromJson(RequestModelJson);
             const auto ResultModel = Gs2::Inventory::Result::FAcquireSimpleItemsByUserIdResult::FromJson(ResultModelJson);
-            {
-                for (auto Item : *ResultModel->GetItems())
+
+                if (ResultModel.IsValid() && ResultModel->GetItems().IsValid())
                 {
-                    const auto ParentKey = Gs2::Inventory::Domain::Model::FSimpleInventoryDomain::CreateCacheParentKey(
-                        RequestModel->GetNamespaceName(),
-                        RequestModel->GetUserId(),
-                        RequestModel->GetInventoryName(),
-                        "SimpleItem"
-                    );
-                    const auto Key = Gs2::Inventory::Domain::Model::FSimpleItemDomain::CreateCacheKey(
-                        Item->GetItemName()
-                    );
-                    Gs2->Cache->Put(
-                        Gs2::Inventory::Model::FSimpleItem::TypeName,
-                        ParentKey,
-                        Key,
-                        Item,
-                        FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
-                    );
+                    for (const auto& Item : *ResultModel->GetItems())
+                    {
+                        if (!Item.IsValid()) continue;
+                        Gs2::Inventory::Model::Cache::FSimpleItemCache::Put(
+                            Gs2->Cache,
+                            RequestModel->GetNamespaceName(), RequestModel->GetUserId(), RequestModel->GetInventoryName(), Item->GetItemName(),
+                            TimeOffset, Item
+                        );
+                    }
                 }
-            }
         }
         if (Method == "set_simple_items_by_user_id") {
             TSharedPtr<FJsonObject> RequestModelJson;
@@ -1828,27 +1816,19 @@ namespace Gs2::Inventory::Domain
             }
             const auto RequestModel = Gs2::Inventory::Request::FSetSimpleItemsByUserIdRequest::FromJson(RequestModelJson);
             const auto ResultModel = Gs2::Inventory::Result::FSetSimpleItemsByUserIdResult::FromJson(ResultModelJson);
-            {
-                for (auto Item : *ResultModel->GetItems())
+
+                if (ResultModel.IsValid() && ResultModel->GetItems().IsValid())
                 {
-                    const auto ParentKey = Gs2::Inventory::Domain::Model::FSimpleInventoryDomain::CreateCacheParentKey(
-                        RequestModel->GetNamespaceName(),
-                        RequestModel->GetUserId(),
-                        RequestModel->GetInventoryName(),
-                        "SimpleItem"
-                    );
-                    const auto Key = Gs2::Inventory::Domain::Model::FSimpleItemDomain::CreateCacheKey(
-                        Item->GetItemName()
-                    );
-                    Gs2->Cache->Put(
-                        Gs2::Inventory::Model::FSimpleItem::TypeName,
-                        ParentKey,
-                        Key,
-                        Item,
-                        FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
-                    );
+                    for (const auto& Item : *ResultModel->GetItems())
+                    {
+                        if (!Item.IsValid()) continue;
+                        Gs2::Inventory::Model::Cache::FSimpleItemCache::Put(
+                            Gs2->Cache,
+                            RequestModel->GetNamespaceName(), RequestModel->GetUserId(), RequestModel->GetInventoryName(), Item->GetItemName(),
+                            TimeOffset, Item
+                        );
+                    }
                 }
-            }
         }
         if (Method == "acquire_big_item_by_user_id") {
             TSharedPtr<FJsonObject> RequestModelJson;
@@ -1873,26 +1853,29 @@ namespace Gs2::Inventory::Domain
             }
             const auto RequestModel = Gs2::Inventory::Request::FAcquireBigItemByUserIdRequest::FromJson(RequestModelJson);
             const auto ResultModel = Gs2::Inventory::Result::FAcquireBigItemByUserIdResult::FromJson(ResultModelJson);
-            
-            if (ResultModel->GetItem() != nullptr)
-            {
-                const auto ParentKey = Gs2::Inventory::Domain::Model::FBigInventoryDomain::CreateCacheParentKey(
+
+                    if (ResultModel.IsValid() && ResultModel->GetItem() != nullptr)
+                    {
+
+                if (!ResultModel.IsValid() || !ResultModel->GetItem().IsValid())
+                    {
+                      return;
+                      }if (!ResultModel.IsValid() || !((ResultModel.IsValid() && ResultModel->GetItem().IsValid() ? ResultModel->GetItem()->GetUserId() : TOptional<FString>())).IsSet())
+                    {
+                      return;
+                      }
+                Gs2::Inventory::Model::Cache::FBigItemCache::Put(
+                    Gs2->Cache,
+
                     RequestModel->GetNamespaceName(),
-                    RequestModel->GetUserId(),
+                    (ResultModel.IsValid() && ResultModel->GetItem().IsValid() ? ResultModel->GetItem()->GetUserId() : TOptional<FString>()),
                     RequestModel->GetInventoryName(),
-                    "BigItem"
+                    ResultModel->GetItem()->GetItemName(),
+                    TimeOffset,
+                    ResultModel->GetItem()
                 );
-                const auto Key = Gs2::Inventory::Domain::Model::FBigItemDomain::CreateCacheKey(
-                    ResultModel->GetItem()->GetItemName()
-                );
-                Gs2->Cache->Put(
-                    Gs2::Inventory::Model::FBigItem::TypeName,
-                    ParentKey,
-                    Key,
-                    ResultModel->GetItem(),
-                    FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
-                );
-            }
+                    }
+
         }
         if (Method == "set_big_item_by_user_id") {
             TSharedPtr<FJsonObject> RequestModelJson;
@@ -1917,26 +1900,29 @@ namespace Gs2::Inventory::Domain
             }
             const auto RequestModel = Gs2::Inventory::Request::FSetBigItemByUserIdRequest::FromJson(RequestModelJson);
             const auto ResultModel = Gs2::Inventory::Result::FSetBigItemByUserIdResult::FromJson(ResultModelJson);
-            
-            if (ResultModel->GetItem() != nullptr)
-            {
-                const auto ParentKey = Gs2::Inventory::Domain::Model::FBigInventoryDomain::CreateCacheParentKey(
+
+                    if (ResultModel.IsValid() && ResultModel->GetItem() != nullptr)
+                    {
+
+                if (!ResultModel.IsValid() || !ResultModel->GetItem().IsValid())
+                    {
+                      return;
+                      }if (!ResultModel.IsValid() || !((ResultModel.IsValid() && ResultModel->GetItem().IsValid() ? ResultModel->GetItem()->GetUserId() : TOptional<FString>())).IsSet())
+                    {
+                      return;
+                      }
+                Gs2::Inventory::Model::Cache::FBigItemCache::Put(
+                    Gs2->Cache,
+
                     RequestModel->GetNamespaceName(),
-                    RequestModel->GetUserId(),
+                    (ResultModel.IsValid() && ResultModel->GetItem().IsValid() ? ResultModel->GetItem()->GetUserId() : TOptional<FString>()),
                     RequestModel->GetInventoryName(),
-                    "BigItem"
+                    ResultModel->GetItem()->GetItemName(),
+                    TimeOffset,
+                    ResultModel->GetItem()
                 );
-                const auto Key = Gs2::Inventory::Domain::Model::FBigItemDomain::CreateCacheKey(
-                    ResultModel->GetItem()->GetItemName()
-                );
-                Gs2->Cache->Put(
-                    Gs2::Inventory::Model::FBigItem::TypeName,
-                    ParentKey,
-                    Key,
-                    ResultModel->GetItem(),
-                    FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
-                );
-            }
+                    }
+
         }
     }
 
@@ -1952,4 +1938,3 @@ namespace Gs2::Inventory::Domain
 #elif defined(__clang__)
 #pragma clang diagnostic pop
 #endif
-

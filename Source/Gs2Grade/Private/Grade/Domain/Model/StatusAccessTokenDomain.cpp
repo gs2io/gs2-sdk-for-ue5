@@ -477,67 +477,80 @@ namespace Gs2::Grade::Domain::Model
         TSharedPtr<TSharedPtr<Gs2::Grade::Model::FStatus>> Result
     )
     {
-        // ReSharper disable once CppLocalVariableMayBeConst
-        TSharedPtr<Gs2::Grade::Model::FStatus> Value;
-        auto bCacheHit = Self->Gs2->Cache->TryGet<Gs2::Grade::Model::FStatus>(
-            Self->ParentKey,
-            Gs2::Grade::Domain::Model::FStatusDomain::CreateCacheKey(
-                Self->GradeName,
-                Self->PropertyId
-            ),
-            &Value
+        const FString CacheKey = Gs2::Grade::Domain::Model::FStatusDomain::CreateCacheKey(
+            Self->GradeName,
+            Self->PropertyId
         );
-        if (!bCacheHit) {
-            const auto Future = Self->Get(
-                MakeShared<Gs2::Grade::Request::FGetStatusRequest>()
-            );
-            Future->StartSynchronousTask();
-            if (Future->GetTask().IsError())
+        return Self->Gs2->Cache->ExecuteWithKeyLock(
+            Gs2::Grade::Model::FStatus::TypeName,
+            Self->ParentKey,
+            CacheKey,
+            [this, Result, CacheKey]() -> Gs2::Core::Model::FGs2ErrorPtr
             {
-                if (Future->GetTask().Error()->Type() != Gs2::Core::Model::FNotFoundError::TypeString)
-                {
-                    return Future->GetTask().Error();
-                }
-
-                const auto Key = Gs2::Grade::Domain::Model::FStatusDomain::CreateCacheKey(
-                    Self->GradeName,
-                    Self->PropertyId
-                );
-                Self->Gs2->Cache->Put(
-                    Gs2::Grade::Model::FStatus::TypeName,
+                // ReSharper disable once CppLocalVariableMayBeConst
+                TSharedPtr<Gs2::Grade::Model::FStatus> Value;
+                auto bCacheHit = Self->Gs2->Cache->TryGet<Gs2::Grade::Model::FStatus>(
                     Self->ParentKey,
-                    Key,
-                    nullptr,
-                    FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
+                    CacheKey,
+                    &Value
                 );
+                if (!bCacheHit) {
+                    const auto Future = Self->Get(
+                        MakeShared<Gs2::Grade::Request::FGetStatusRequest>()
+                    );
+                    Future->StartSynchronousTask();
+                    if (Future->GetTask().IsError())
+                    {
+                        const auto Error = Future->GetTask().Error();
+                        if (!Error.IsValid() || Error->Type() != Gs2::Core::Model::FNotFoundError::TypeString)
+                        {
+                            return Error;
+                        }
+                        Self->Gs2->Cache->Put(
+                            Gs2::Grade::Model::FStatus::TypeName,
+                            Self->ParentKey,
+                            CacheKey,
+                            nullptr,
+                            FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
+                        );
 
-                if (Future->GetTask().Error()->Detail(0)->GetComponent() != "status")
-                {
-                    return Future->GetTask().Error();
+                        if (!Error->GetErrors().IsValid() || Error->Count() == 0 || !Error->Detail(0).IsValid() || Error->Detail(0)->GetComponent() != "status")
+                        {
+                            return Error;
+                        }
+                    }
+                    else
+                    {
+                        Value = Future->GetTask().Result();
+                    }
+                    Future->EnsureCompletion();
                 }
-            }
-            else
-            {
-                Value = Future->GetTask().Result();
-                if (Value.IsValid())
+                if (!bCacheHit)
                 {
-                    Self->Gs2->Cache->Put(
+                    FGs2ObjectPtr ExistingObject;
+                    const bool Existing = Self->Gs2->Cache->TryGet(
                         Gs2::Grade::Model::FStatus::TypeName,
                         Self->ParentKey,
-                        FStatusDomain::CreateCacheKey(
-                            Self->GradeName,
-                            Self->PropertyId
-                        ),
-                        Value,
-                        FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
+                        CacheKey,
+                        &ExistingObject
                     );
+                    if (!Existing || ExistingObject != Value)
+                    {
+                        Self->Gs2->Cache->Put(
+                            Gs2::Grade::Model::FStatus::TypeName,
+                            Self->ParentKey,
+                            CacheKey,
+                            Value,
+                            FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
+                        );
+                    }
                 }
-            }
-            Future->EnsureCompletion();
-        }
-        *Result = Value;
 
-        return nullptr;
+                *Result = Value;
+
+                return nullptr;
+            }
+        );
     }
 
     TSharedPtr<FAsyncTask<FStatusAccessTokenDomain::FModelTask>> FStatusAccessTokenDomain::Model() {
@@ -548,6 +561,16 @@ namespace Gs2::Grade::Domain::Model
         TFunction<void(Gs2::Grade::Model::FStatusPtr)> Callback
     )
     {
+        const TWeakPtr<Gs2::Core::Domain::FGs2> WeakGs2 = Gs2;
+        const TWeakPtr<Grade::Domain::FGs2GradeDomain> WeakService = Service;
+        const FString RegisteredParentKey = ParentKey;
+        const TOptional<FString> QueryNamespaceName = NamespaceName;
+        const TOptional<FString> QueryGradeName = GradeName;
+        const TOptional<FString> QueryPropertyId = PropertyId;
+        const auto SourceToken = AccessToken;
+        const TOptional<FString> RegisteredUserId = SourceToken.IsValid()
+            ? TOptional<FString>(SourceToken->GetUserId())
+            : TOptional<FString>();
         return Gs2->Cache->Subscribe(
             Gs2::Grade::Model::FStatus::TypeName,
             ParentKey,
@@ -558,6 +581,30 @@ namespace Gs2::Grade::Domain::Model
             [Callback](TSharedPtr<FGs2Object> obj)
             {
                 Callback(StaticCastSharedPtr<Gs2::Grade::Model::FStatus>(obj));
+            },
+            [WeakGs2, WeakService, RegisteredParentKey, QueryNamespaceName, QueryGradeName, QueryPropertyId, SourceToken, RegisteredUserId]()
+            {
+                const auto Owner = WeakGs2.Pin();
+                if (!Owner.IsValid() || !SourceToken.IsValid() || !RegisteredUserId.IsSet())
+                {
+                    return;
+                }
+                const auto TokenSnapshot = MakeShared<Gs2::Auth::Model::FAccessToken>(*SourceToken);
+                if (TokenSnapshot->GetUserId() != RegisteredUserId)
+                {
+                    return;
+                }
+                const auto Domain = MakeShared<FStatusAccessTokenDomain>(
+                    Owner,
+                    WeakService.Pin(),
+                    QueryNamespaceName,
+                    TokenSnapshot,
+                    QueryGradeName,
+                    QueryPropertyId
+                );
+                Domain->ParentKey = RegisteredParentKey;
+                const auto Task = Domain->Model();
+                Task->StartBackgroundTask();
             }
         );
     }

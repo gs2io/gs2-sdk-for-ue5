@@ -17,12 +17,9 @@
 
 #include "Core/Net/Rest/Task/RestReOpenTask.h"
 
-#include "HttpManager.h"
-#include "HttpModule.h"
 #include "Core/Gs2Constant.h"
 #include "Core/Model/Gs2Error.h"
-
-#include "Interfaces/IHttpResponse.h"
+#include "Core/Net/Rest/RestSessionRequest.h"
 
 namespace Gs2::Core::Net::Rest::Task
 {
@@ -37,33 +34,14 @@ namespace Gs2::Core::Net::Rest::Task
 
     Model::FGs2ErrorPtr FRestReOpenTask::Action(TSharedPtr<TSharedPtr<Result::FReOpenTaskResult>> Result)
     {
-        auto Processing = true;
-        int32 ResponseCode;
-        FString ResponseBody;
+        if (Session->Credential()->IsProjectTokenCredential())
         {
-            auto Request = FHttpModule::Get().CreateRequest();
-            Request->OnProcessRequestComplete().BindLambda(
-                [&Processing, &ResponseCode, &ResponseBody](FHttpRequestPtr Request, FHttpResponsePtr Response, bool Successful)
-                {
-                    if (Successful) {
-                        ResponseCode = Response->GetResponseCode();
-                        ResponseBody = Response->GetContentAsString();
-                    } else {
-                        ResponseCode = 999;
-                    }
-                    Processing = false;
-                }
-            );
-            const auto Url = FGs2Constant::EndpointHost
-                             .Replace(TEXT("{service}"), TEXT("identifier"))
-                             .Replace(TEXT("{region}"), *this->Session->RegionName())
-                             .Append("/projectToken/login");
-            Request->SetURL(
-                Url
-            );
-            Request->SetVerb(TEXT("POST"));
-        
-            FString Body;
+            Session->SetOwnerId(Session->Credential()->ClientId());
+            *Result = MakeShared<Result::FReOpenTaskResult>();
+            return nullptr;
+        }
+        FString Body;
+        {
             const TSharedRef<TJsonWriter<TCHAR>> Writer = TJsonWriterFactory<TCHAR>::Create(&Body);
             const TSharedPtr<FJsonObject> JsonRootObject = MakeShared<FJsonObject>();
             if (Session->Credential()->ClientId() != "")
@@ -75,40 +53,58 @@ namespace Gs2::Core::Net::Rest::Task
                 JsonRootObject->SetStringField(TEXT("client_secret"), Session->Credential()->ClientSecret());
             }
             FJsonSerializer::Serialize(JsonRootObject.ToSharedRef(), Writer);
-            Request->SetContentAsString(Body);
-            Request->SetHeader("Content-Type", "application/json");
-            Request->ProcessRequest();
-            
-            UE_LOG(Gs2Log, VeryVerbose, TEXT("[%s] %s %s"), TEXT("POST"), ToCStr(Url), ToCStr(Body));
         }
 
-        if (FPlatformTLS::GetCurrentThreadId() == GGameThreadId)
+        // steady 未設定なら従来どおり FGs2Constant::EndpointHost の置換、設定済みなら <steady>/identifier。
+        const auto Url = this->Session->EndpointHost(TEXT("identifier"))
+                         .Append("/projectToken/login");
+
+        // ★セッションの Send 経路を通す（Steady のときだけ接続段階の失敗で同じ要求を 1 回だけ再送する）。
+        FRestSessionRequest Request(TEXT("POST"), Url);
+        Request
+            .AddHeader("Content-Type", "application/json")
+            .SetBody(Body);
+
+        const auto Response = Session->Send(Request);
+        if (!Response.HasResponse())
         {
-            FHttpModule::Get().GetHttpManager().Flush(EHttpFlushReason::FullFlush);
+            // 応答が 1 つも得られなかった（接続段階の失敗・タイムアウト・送信後の切断）。
+            UE_LOG(Gs2Log, Warning, TEXT("no response from %s"), ToCStr(Url));
+            const auto Details = MakeShared<TArray<TSharedPtr<Core::Model::FGs2ErrorDetail>>>();
+            return MakeShared<Core::Model::FUnknownError>(Details);
         }
-        else
-        {
-            while (Processing)
-            {
-                FPlatformProcess::Sleep(0.01f);
-            }
-        }
-        
-        if (ResponseCode / 100 == 2)
+        const auto ResponseCode = Response.ResponseCode;
+        const auto ResponseBody = Response.ResponseBody;
+
+        if (ResponseCode == 200)
         {
             UE_LOG(Gs2Log, Verbose, TEXT("[%d] %s"), ResponseCode, ToCStr(ResponseBody));
 
-            TSharedPtr<FJsonObject> JsonRootObject = MakeShared<FJsonObject>();
-            if (TSharedRef<TJsonReader<>> JsonReader = TJsonReaderFactory<>::Create(ResponseBody);
-                FJsonSerializer::Deserialize(JsonReader, JsonRootObject))
+            TSharedPtr<FJsonObject> JsonRootObject;
+            const TSharedRef<TJsonReader<>> JsonReader = TJsonReaderFactory<>::Create(ResponseBody);
+            const bool bParsed = FJsonSerializer::Deserialize(JsonReader, JsonRootObject);
+            if (bParsed && JsonRootObject.IsValid())
             {
-                const auto Token = JsonRootObject->GetStringField(ANSI_TO_TCHAR("access_token"));
-                Session->Credential()->UpdateProjectToken(Token);
-                Session->SetOwnerId(JsonRootObject->GetStringField(ANSI_TO_TCHAR("owner_id")));
+                FString Token;
+                if (JsonRootObject->TryGetStringField(ANSI_TO_TCHAR("access_token"), Token))
+                {
+                    FString OwnerId;
+                    JsonRootObject->TryGetStringField(ANSI_TO_TCHAR("owner_id"), OwnerId);
+                    Session->Credential()->UpdateProjectToken(Token);
+                    Session->SetOwnerId(OwnerId);
+                    *Result = MakeShared<Result::FReOpenTaskResult>();
+                    return nullptr;
+                }
             }
-            auto Details = TArray<TSharedPtr<Model::FGs2ErrorDetail>>();
-            *Result = MakeShared<Result::FReOpenTaskResult>();
-            return nullptr;
+            const auto Details = MakeShared<TArray<TSharedPtr<Model::FGs2ErrorDetail>>>();
+            Details->Add(MakeShared<Model::FGs2ErrorDetail>(
+                TEXT("client"),
+                bParsed && JsonRootObject.IsValid()
+                    ? TEXT("Login response did not contain an access token.")
+                    : TEXT("core.network.result.error.parse.failed"),
+                TEXT("")
+            ));
+            return MakeShared<Model::FUnknownError>(Details);
         }
         return Model::FGs2Error::FromResponse(ResponseCode, ResponseBody);
     }

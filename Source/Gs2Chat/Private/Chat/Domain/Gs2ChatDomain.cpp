@@ -34,6 +34,15 @@
 #include "Chat/Domain/Model/CurrentModelMaster.h"
 #include "Chat/Domain/Model/User.h"
 #include "Chat/Domain/Model/UserAccessToken.h"
+
+#include "Chat/Model/Cache/Namespace.h"
+#include "Chat/Model/Cache/CurrentModelMaster.h"
+#include "Chat/Model/Cache/CategoryModel.h"
+#include "Chat/Model/Cache/CategoryModelMaster.h"
+#include "Chat/Model/Cache/Room.h"
+#include "Chat/Model/Cache/Message.h"
+#include "Chat/Model/Cache/Subscribe.h"
+
 #include "Core/Domain/Gs2.h"
 
 namespace Gs2::Chat::Domain
@@ -87,6 +96,19 @@ namespace Gs2::Chat::Domain
         }
         const auto ResultModel = Future->GetTask().Result();
         Future->EnsureCompletion();
+
+            if (ResultModel.IsValid() && ResultModel->GetItem() != nullptr)
+            {
+
+
+        Gs2::Chat::Model::Cache::FNamespaceCache::Put(
+            Self->Gs2->Cache,
+
+            ResultModel->GetItem()->GetName(),
+            TOptional<int32>(),
+            ResultModel->GetItem()
+        );
+            }
         auto Domain = MakeShared<Gs2::Chat::Domain::Model::FNamespaceDomain>(
             Self->Gs2,
             Self,
@@ -130,6 +152,7 @@ namespace Gs2::Chat::Domain
         }
         const auto ResultModel = Future->GetTask().Result();
         Future->EnsureCompletion();
+
         const auto Domain = Self;
         *Result = Domain;
         return nullptr;
@@ -169,6 +192,7 @@ namespace Gs2::Chat::Domain
         }
         const auto ResultModel = Future->GetTask().Result();
         Future->EnsureCompletion();
+
         const auto Domain = Self;
         if (ResultModel != nullptr)
         {
@@ -215,6 +239,7 @@ namespace Gs2::Chat::Domain
         }
         const auto ResultModel = Future->GetTask().Result();
         Future->EnsureCompletion();
+
         const auto Domain = Self;
         *Result = Domain;
         return nullptr;
@@ -254,6 +279,7 @@ namespace Gs2::Chat::Domain
         }
         const auto ResultModel = Future->GetTask().Result();
         Future->EnsureCompletion();
+
         const auto Domain = Self;
         *Result = Domain;
         return nullptr;
@@ -293,6 +319,7 @@ namespace Gs2::Chat::Domain
         }
         const auto ResultModel = Future->GetTask().Result();
         Future->EnsureCompletion();
+
         const auto Domain = Self;
         if (ResultModel != nullptr)
         {
@@ -343,6 +370,7 @@ namespace Gs2::Chat::Domain
         }
         const auto ResultModel = Future->GetTask().Result();
         Future->EnsureCompletion();
+
         const auto Domain = Self;
         *Result = Domain;
         return nullptr;
@@ -382,6 +410,7 @@ namespace Gs2::Chat::Domain
         }
         const auto ResultModel = Future->GetTask().Result();
         Future->EnsureCompletion();
+
         const auto Domain = Self;
         if (ResultModel != nullptr)
         {
@@ -413,24 +442,110 @@ namespace Gs2::Chat::Domain
 
     Gs2::Core::Domain::CallbackID FGs2ChatDomain::SubscribeNamespaces(
     TFunction<void()> Callback
+
     )
     {
         return Gs2->Cache->ListSubscribe(
             Gs2::Chat::Model::FNamespace::TypeName,
-            "chat:Namespace",
+            Gs2::Chat::Model::Cache::FNamespaceCache::CreateCacheParentKey(
+                TOptional<int32>()
+            ),
+            Callback,
             Callback
         );
     }
-
     void FGs2ChatDomain::UnsubscribeNamespaces(
         Gs2::Core::Domain::CallbackID CallbackID
     )
     {
         Gs2->Cache->ListUnsubscribe(
             Gs2::Chat::Model::FNamespace::TypeName,
-            "chat:Namespace",
+            Gs2::Chat::Model::Cache::FNamespaceCache::CreateCacheParentKey(
+                TOptional<int32>()
+            ),
             CallbackID
         );
+    }
+    class FGs2ChatDomain::FCollectNamespacesTask : public Gs2::Core::Util::TGs2Future<TArray<Gs2::Chat::Model::FNamespacePtr>>, public TSharedFromThis<FCollectNamespacesTask>
+    {
+        const TSharedPtr<FGs2ChatDomain> Self;
+        const TFunction<void(TArray<Gs2::Chat::Model::FNamespacePtr>)> OnCollected;
+    const TOptional<FString> QueryNamePrefix;
+    public:
+        explicit FCollectNamespacesTask(const TSharedPtr<FGs2ChatDomain>& Self, TFunction<void(TArray<Gs2::Chat::Model::FNamespacePtr>)> OnCollected,const TOptional<FString> NamePrefix) : Self(Self), OnCollected(OnCollected), QueryNamePrefix(NamePrefix) {}
+        FCollectNamespacesTask(const FCollectNamespacesTask& From) : TGs2Future(From), Self(From.Self), OnCollected(From.OnCollected), QueryNamePrefix(From.QueryNamePrefix) {}
+        virtual Gs2::Core::Model::FGs2ErrorPtr Action(TSharedPtr<TSharedPtr<TArray<Gs2::Chat::Model::FNamespacePtr>>> Result) override
+        {
+            TArray<Gs2::Chat::Model::FNamespacePtr> Items;
+            auto Iterator = Self->Namespaces(QueryNamePrefix)->begin();
+            while (Iterator.HasNext())
+            {
+                if (Iterator.IsError()) return Iterator.Error();
+                if (Iterator.IsCurrentValid()) Items.Add(Iterator.Current());
+                ++Iterator;
+            }
+            if (Iterator.IsError()) return Iterator.Error();
+            *Result = MakeShared<TArray<Gs2::Chat::Model::FNamespacePtr>>(Items);
+            if (OnCollected) OnCollected(Items);
+            return nullptr;
+        }
+    };
+
+    Gs2::Core::Domain::CallbackID FGs2ChatDomain::SubscribeNamespaces(
+        TFunction<void(TArray<Gs2::Chat::Model::FNamespacePtr>)> Callback,const TOptional<FString> NamePrefix
+    )
+    {
+        const TWeakPtr<Gs2::Core::Domain::FGs2> WeakGs2 = this->Gs2;
+        const auto QueryNamePrefix = NamePrefix;
+        const auto Parent = Gs2::Chat::Model::Cache::FNamespaceCache::CreateCacheParentKey(
+        TOptional<int32>()
+    );
+        return Gs2->Cache->ListSubscribeTyped(
+            Gs2::Chat::Model::FNamespace::TypeName,
+            Parent,
+            [Callback, WeakGs2](const TArray<FGs2ObjectPtr>& Values)
+            {
+                if (!WeakGs2.Pin().IsValid()) return;
+                TArray<Gs2::Chat::Model::FNamespacePtr> TypedValues;
+                for (const auto& Value : Values) if (Value.IsValid()) TypedValues.Add(StaticCastSharedPtr<Gs2::Chat::Model::FNamespace>(Value));
+                Callback(TypedValues);
+            },
+            [WeakGs2, Callback, QueryNamePrefix]()
+            {
+                const auto Owner = WeakGs2.Pin();
+                if (!Owner.IsValid()) return;
+                const auto Domain = MakeShared<FGs2ChatDomain>(Owner);
+                const auto Task = Gs2::Core::Util::New<FAsyncTask<FCollectNamespacesTask>>(Domain, Callback, QueryNamePrefix);
+                Task->StartBackgroundTask();
+            }
+        );
+    }
+
+    void FGs2ChatDomain::InvalidateNamespaces(const TOptional<FString> NamePrefix)
+    {
+        Gs2->Cache->ClearListCache(
+            Gs2::Chat::Model::FNamespace::TypeName,
+            Gs2::Chat::Model::Cache::FNamespaceCache::CreateCacheParentKey(
+        TOptional<int32>()
+    )
+        );
+    }
+
+    FGs2ChatDomain::FSubscribeNamespacesWithInitialCallTask::FSubscribeNamespacesWithInitialCallTask(const TSharedPtr<FGs2ChatDomain>& Self, TFunction<void(TArray<Gs2::Chat::Model::FNamespacePtr>)> Callback,const TOptional<FString> NamePrefix) : Self(Self), Callback(Callback), QueryNamePrefix(NamePrefix) {}
+    FGs2ChatDomain::FSubscribeNamespacesWithInitialCallTask::FSubscribeNamespacesWithInitialCallTask(const FSubscribeNamespacesWithInitialCallTask& From) : TGs2Future(From), Self(From.Self), Callback(From.Callback), QueryNamePrefix(From.QueryNamePrefix) {}
+    Gs2::Core::Model::FGs2ErrorPtr FGs2ChatDomain::FSubscribeNamespacesWithInitialCallTask::Action(TSharedPtr<TSharedPtr<Gs2::Core::Domain::CallbackID>> Result)
+    {
+        const auto Task = Gs2::Core::Util::New<FAsyncTask<FCollectNamespacesTask>>(Self, TFunction<void(TArray<Gs2::Chat::Model::FNamespacePtr>)>(), QueryNamePrefix);
+        Task->StartSynchronousTask(); Task->EnsureCompletion();
+        if (Task->GetTask().IsError()) return Task->GetTask().Error();
+        const auto Values = Task->GetTask().Result();
+        const auto CallbackId = Self->SubscribeNamespaces(Callback, QueryNamePrefix);
+        Callback(*Values); *Result = MakeShared<Gs2::Core::Domain::CallbackID>(CallbackId);
+        return nullptr;
+    }
+    TSharedPtr<FAsyncTask<FGs2ChatDomain::FSubscribeNamespacesWithInitialCallTask>> FGs2ChatDomain::SubscribeNamespacesWithInitialCall(TFunction<void(TArray<Gs2::Chat::Model::FNamespacePtr>)> Callback,const TOptional<FString> NamePrefix)
+    {
+        return Gs2::Core::Util::New<FAsyncTask<FSubscribeNamespacesWithInitialCallTask>>(this->AsShared(), Callback, NamePrefix);
     }
 
     TSharedPtr<Gs2::Chat::Domain::Model::FNamespaceDomain> FGs2ChatDomain::Namespace(
@@ -447,21 +562,24 @@ namespace Gs2::Chat::Domain
     void FGs2ChatDomain::UpdateCacheFromStampSheet(
         const FString Method,
         const FString Request,
-        const FString Result
+        const FString Result,
+        const TOptional<int32> TimeOffset
     ) {
     }
 
     void FGs2ChatDomain::UpdateCacheFromStampTask(
         const FString Method,
         const FString Request,
-        const FString Result
+        const FString Result,
+        const TOptional<int32> TimeOffset
     ) {
     }
 
     void FGs2ChatDomain::UpdateCacheFromJobResult(
         const FString Method,
         const Gs2::JobQueue::Model::FJobPtr Job,
-        const Gs2::JobQueue::Model::FJobResultBodyPtr Result
+        const Gs2::JobQueue::Model::FJobResultBodyPtr Result,
+        const TOptional<int32> TimeOffset
     ) {
     }
 
@@ -476,13 +594,13 @@ namespace Gs2::Chat::Domain
             {
                 return;
             }
-            const auto ListParentKey = Gs2::Chat::Domain::Model::FRoomDomain::CreateCacheParentKey(
+            const auto ListParentKey = Gs2::Chat::Model::Cache::FMessageCache::CreateCacheParentKey(
                 PayloadJson->GetStringField(ANSI_TO_TCHAR("namespaceName")),
                 TOptional<FString>("Singleton"),
                 PayloadJson->GetStringField(ANSI_TO_TCHAR("roomName")),
-                "Message"
+                TOptional<int32>()
             );
-            Gs2->Cache->ClearListCache(Gs2::Chat::Model::FMessage::TypeName, ListParentKey);
+            Gs2->Cache->SetListCacheUpdateRequired(Gs2::Chat::Model::FMessage::TypeName, ListParentKey);
             PostNotificationEvent.Broadcast(Gs2::Chat::Model::FPostNotification::FromJson(PayloadJson));
         }
     }
@@ -498,4 +616,3 @@ namespace Gs2::Chat::Domain
 #elif defined(__clang__)
 #pragma clang diagnostic pop
 #endif
-

@@ -42,6 +42,7 @@
 #include "Model/ScriptSetting.h"
 #include "Model/LogSetting.h"
 #include "Model/TransactionSetting.h"
+#include "Model/TransactionSettingV2.h"
 #include "Model/AcquireCount.h"
 #include "Model/ConsumeCount.h"
 #include "Model/HeldCount.h"

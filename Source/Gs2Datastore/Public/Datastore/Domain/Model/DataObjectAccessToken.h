@@ -100,6 +100,8 @@ namespace Gs2::Datastore::Domain::Model
             const FDataObjectAccessTokenDomain& From
         );
 
+
+
         class GS2DATASTORE_API FUpdateTask final :
             public Gs2::Core::Util::TGs2Future<Gs2::Datastore::Domain::Model::FDataObjectAccessTokenDomain>,
             public TSharedFromThis<FUpdateTask>
@@ -125,6 +127,8 @@ namespace Gs2::Datastore::Domain::Model
         TSharedPtr<FAsyncTask<FUpdateTask>> Update(
             Request::FUpdateDataObjectRequestPtr Request
         );
+
+
 
         class GS2DATASTORE_API FPrepareReUploadTask final :
             public Gs2::Core::Util::TGs2Future<Gs2::Datastore::Domain::Model::FDataObjectAccessTokenDomain>,
@@ -152,6 +156,8 @@ namespace Gs2::Datastore::Domain::Model
             Request::FPrepareReUploadRequestPtr Request
         );
 
+
+
         class GS2DATASTORE_API FDoneUploadTask final :
             public Gs2::Core::Util::TGs2Future<Gs2::Datastore::Domain::Model::FDataObjectAccessTokenDomain>,
             public TSharedFromThis<FDoneUploadTask>
@@ -177,6 +183,8 @@ namespace Gs2::Datastore::Domain::Model
         TSharedPtr<FAsyncTask<FDoneUploadTask>> DoneUpload(
             Request::FDoneUploadRequestPtr Request
         );
+
+
 
         class GS2DATASTORE_API FDeleteTask final :
             public Gs2::Core::Util::TGs2Future<Gs2::Datastore::Domain::Model::FDataObjectAccessTokenDomain>,
@@ -204,6 +212,8 @@ namespace Gs2::Datastore::Domain::Model
             Request::FDeleteDataObjectRequestPtr Request
         );
 
+
+
         class GS2DATASTORE_API FPrepareDownloadOwnDataTask final :
             public Gs2::Core::Util::TGs2Future<Gs2::Datastore::Domain::Model::FDataObjectAccessTokenDomain>,
             public TSharedFromThis<FPrepareDownloadOwnDataTask>
@@ -229,6 +239,8 @@ namespace Gs2::Datastore::Domain::Model
         TSharedPtr<FAsyncTask<FPrepareDownloadOwnDataTask>> PrepareDownloadOwnData(
             Request::FPrepareDownloadOwnDataRequestPtr Request
         );
+
+
 
         class GS2DATASTORE_API FPrepareDownloadOwnDataByGenerationTask final :
             public Gs2::Core::Util::TGs2Future<Gs2::Datastore::Domain::Model::FDataObjectAccessTokenDomain>,
@@ -261,8 +273,33 @@ namespace Gs2::Datastore::Domain::Model
 
         Gs2::Core::Domain::CallbackID SubscribeDataObjectHistories(
             TFunction<void()> Callback
+
         );
 
+        class FCollectDataObjectHistoriesTask;
+
+        Gs2::Core::Domain::CallbackID SubscribeDataObjectHistories(
+            TFunction<void(TArray<Gs2::Datastore::Model::FDataObjectHistoryPtr>)> Callback
+        );
+
+        void InvalidateDataObjectHistories();
+
+        class GS2DATASTORE_API FSubscribeDataObjectHistoriesWithInitialCallTask final :
+            public Gs2::Core::Util::TGs2Future<Gs2::Core::Domain::CallbackID>,
+            public TSharedFromThis<FSubscribeDataObjectHistoriesWithInitialCallTask>
+        {
+            const TSharedPtr<FDataObjectAccessTokenDomain> Self;
+            const TFunction<void(TArray<Gs2::Datastore::Model::FDataObjectHistoryPtr>)> Callback;
+
+        public:
+            FSubscribeDataObjectHistoriesWithInitialCallTask(const TSharedPtr<FDataObjectAccessTokenDomain>& Self, TFunction<void(TArray<Gs2::Datastore::Model::FDataObjectHistoryPtr>)> Callback);
+            FSubscribeDataObjectHistoriesWithInitialCallTask(const FSubscribeDataObjectHistoriesWithInitialCallTask& From);
+            virtual Gs2::Core::Model::FGs2ErrorPtr Action(TSharedPtr<TSharedPtr<Gs2::Core::Domain::CallbackID>> Result) override;
+        };
+
+        TSharedPtr<FAsyncTask<FSubscribeDataObjectHistoriesWithInitialCallTask>> SubscribeDataObjectHistoriesWithInitialCall(
+            TFunction<void(TArray<Gs2::Datastore::Model::FDataObjectHistoryPtr>)> Callback
+        );
         void UnsubscribeDataObjectHistories(
             Gs2::Core::Domain::CallbackID CallbackID
         );

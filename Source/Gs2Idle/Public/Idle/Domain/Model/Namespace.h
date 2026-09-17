@@ -100,6 +100,8 @@ namespace Gs2::Idle::Domain::Model
             const FNamespaceDomain& From
         );
 
+
+
         class GS2IDLE_API FGetStatusTask final :
             public Gs2::Core::Util::TGs2Future<Gs2::Idle::Domain::Model::FNamespaceDomain>,
             public TSharedFromThis<FGetStatusTask>
@@ -125,6 +127,8 @@ namespace Gs2::Idle::Domain::Model
         TSharedPtr<FAsyncTask<FGetStatusTask>> GetStatus(
             Request::FGetNamespaceStatusRequestPtr Request
         );
+
+
 
         class GS2IDLE_API FGetTask final :
             public Gs2::Core::Util::TGs2Future<Gs2::Idle::Model::FNamespace>,
@@ -152,6 +156,8 @@ namespace Gs2::Idle::Domain::Model
             Request::FGetNamespaceRequestPtr Request
         );
 
+
+
         class GS2IDLE_API FUpdateTask final :
             public Gs2::Core::Util::TGs2Future<Gs2::Idle::Domain::Model::FNamespaceDomain>,
             public TSharedFromThis<FUpdateTask>
@@ -178,6 +184,8 @@ namespace Gs2::Idle::Domain::Model
             Request::FUpdateNamespaceRequestPtr Request
         );
 
+
+
         class GS2IDLE_API FDeleteTask final :
             public Gs2::Core::Util::TGs2Future<Gs2::Idle::Domain::Model::FNamespaceDomain>,
             public TSharedFromThis<FDeleteTask>
@@ -203,6 +211,8 @@ namespace Gs2::Idle::Domain::Model
         TSharedPtr<FAsyncTask<FDeleteTask>> Delete(
             Request::FDeleteNamespaceRequestPtr Request
         );
+
+
 
         class GS2IDLE_API FCreateCategoryModelMasterTask final :
             public Gs2::Core::Util::TGs2Future<Gs2::Idle::Domain::Model::FCategoryModelMasterDomain>,
@@ -238,8 +248,33 @@ namespace Gs2::Idle::Domain::Model
 
         Gs2::Core::Domain::CallbackID SubscribeCategoryModels(
             TFunction<void()> Callback
+
         );
 
+        class FCollectCategoryModelsTask;
+
+        Gs2::Core::Domain::CallbackID SubscribeCategoryModels(
+            TFunction<void(TArray<Gs2::Idle::Model::FCategoryModelPtr>)> Callback
+        );
+
+        void InvalidateCategoryModels();
+
+        class GS2IDLE_API FSubscribeCategoryModelsWithInitialCallTask final :
+            public Gs2::Core::Util::TGs2Future<Gs2::Core::Domain::CallbackID>,
+            public TSharedFromThis<FSubscribeCategoryModelsWithInitialCallTask>
+        {
+            const TSharedPtr<FNamespaceDomain> Self;
+            const TFunction<void(TArray<Gs2::Idle::Model::FCategoryModelPtr>)> Callback;
+
+        public:
+            FSubscribeCategoryModelsWithInitialCallTask(const TSharedPtr<FNamespaceDomain>& Self, TFunction<void(TArray<Gs2::Idle::Model::FCategoryModelPtr>)> Callback);
+            FSubscribeCategoryModelsWithInitialCallTask(const FSubscribeCategoryModelsWithInitialCallTask& From);
+            virtual Gs2::Core::Model::FGs2ErrorPtr Action(TSharedPtr<TSharedPtr<Gs2::Core::Domain::CallbackID>> Result) override;
+        };
+
+        TSharedPtr<FAsyncTask<FSubscribeCategoryModelsWithInitialCallTask>> SubscribeCategoryModelsWithInitialCall(
+            TFunction<void(TArray<Gs2::Idle::Model::FCategoryModelPtr>)> Callback
+        );
         void UnsubscribeCategoryModels(
             Gs2::Core::Domain::CallbackID CallbackID
         );
@@ -262,8 +297,33 @@ namespace Gs2::Idle::Domain::Model
 
         Gs2::Core::Domain::CallbackID SubscribeCategoryModelMasters(
             TFunction<void()> Callback
+
         );
 
+        class FCollectCategoryModelMastersTask;
+
+        Gs2::Core::Domain::CallbackID SubscribeCategoryModelMasters(
+            TFunction<void(TArray<Gs2::Idle::Model::FCategoryModelMasterPtr>)> Callback,const TOptional<FString> NamePrefix = TOptional<FString>()
+        );
+
+        void InvalidateCategoryModelMasters(const TOptional<FString> NamePrefix = TOptional<FString>());
+
+        class GS2IDLE_API FSubscribeCategoryModelMastersWithInitialCallTask final :
+            public Gs2::Core::Util::TGs2Future<Gs2::Core::Domain::CallbackID>,
+            public TSharedFromThis<FSubscribeCategoryModelMastersWithInitialCallTask>
+        {
+            const TSharedPtr<FNamespaceDomain> Self;
+            const TFunction<void(TArray<Gs2::Idle::Model::FCategoryModelMasterPtr>)> Callback;
+        const TOptional<FString> QueryNamePrefix;
+        public:
+            FSubscribeCategoryModelMastersWithInitialCallTask(const TSharedPtr<FNamespaceDomain>& Self, TFunction<void(TArray<Gs2::Idle::Model::FCategoryModelMasterPtr>)> Callback,const TOptional<FString> NamePrefix);
+            FSubscribeCategoryModelMastersWithInitialCallTask(const FSubscribeCategoryModelMastersWithInitialCallTask& From);
+            virtual Gs2::Core::Model::FGs2ErrorPtr Action(TSharedPtr<TSharedPtr<Gs2::Core::Domain::CallbackID>> Result) override;
+        };
+
+        TSharedPtr<FAsyncTask<FSubscribeCategoryModelMastersWithInitialCallTask>> SubscribeCategoryModelMastersWithInitialCall(
+            TFunction<void(TArray<Gs2::Idle::Model::FCategoryModelMasterPtr>)> Callback,const TOptional<FString> NamePrefix = TOptional<FString>()
+        );
         void UnsubscribeCategoryModelMasters(
             Gs2::Core::Domain::CallbackID CallbackID
         );
@@ -303,7 +363,34 @@ namespace Gs2::Idle::Domain::Model
 
         TSharedPtr<FAsyncTask<FModelTask>> Model();
 
+        void Invalidate();
+
         Gs2::Core::Domain::CallbackID Subscribe(
+            TFunction<void(Gs2::Idle::Model::FNamespacePtr)> Callback
+        );
+
+        class GS2IDLE_API FSubscribeWithInitialCallTask final :
+            public Gs2::Core::Util::TGs2Future<Gs2::Core::Domain::CallbackID>,
+            public TSharedFromThis<FSubscribeWithInitialCallTask>
+        {
+            const TSharedPtr<FNamespaceDomain> Self;
+            const TFunction<void(Gs2::Idle::Model::FNamespacePtr)> Callback;
+        public:
+            FSubscribeWithInitialCallTask(
+                const TSharedPtr<FNamespaceDomain>& Self,
+                TFunction<void(Gs2::Idle::Model::FNamespacePtr)> Callback
+            );
+
+            FSubscribeWithInitialCallTask(
+                const FSubscribeWithInitialCallTask& From
+            );
+
+            virtual Gs2::Core::Model::FGs2ErrorPtr Action(
+                TSharedPtr<TSharedPtr<Gs2::Core::Domain::CallbackID>> Result
+            ) override;
+        };
+
+        TSharedPtr<FAsyncTask<FSubscribeWithInitialCallTask>> SubscribeWithInitialCall(
             TFunction<void(Gs2::Idle::Model::FNamespacePtr)> Callback
         );
 

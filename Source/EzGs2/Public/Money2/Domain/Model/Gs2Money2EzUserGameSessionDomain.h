@@ -110,14 +110,16 @@ namespace Gs2::UE5::Money2::Domain::Model
 
         Gs2::Core::Domain::CallbackID SubscribeWallets(TFunction<void()> Callback);
 
-        void UnsubscribeWallets(Gs2::Core::Domain::CallbackID CallbackId);
+        void UnsubscribeWallets(
+                Gs2::Core::Domain::CallbackID CallbackId);
 
         Gs2::UE5::Money2::Domain::Iterator::FEzDescribeSubscriptionStatusesIteratorPtr SubscriptionStatuses(
         ) const;
 
         Gs2::Core::Domain::CallbackID SubscribeSubscriptionStatuses(TFunction<void()> Callback);
 
-        void UnsubscribeSubscriptionStatuses(Gs2::Core::Domain::CallbackID CallbackId);
+        void UnsubscribeSubscriptionStatuses(
+                Gs2::Core::Domain::CallbackID CallbackId);
 
         Gs2::UE5::Money2::Domain::Model::FEzWalletGameSessionDomainPtr Wallet(
             const int32 Slot

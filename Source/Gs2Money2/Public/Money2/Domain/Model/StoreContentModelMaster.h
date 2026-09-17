@@ -96,6 +96,8 @@ namespace Gs2::Money2::Domain::Model
             const FStoreContentModelMasterDomain& From
         );
 
+
+
         class GS2MONEY2_API FGetTask final :
             public Gs2::Core::Util::TGs2Future<Gs2::Money2::Model::FStoreContentModelMaster>,
             public TSharedFromThis<FGetTask>
@@ -122,6 +124,8 @@ namespace Gs2::Money2::Domain::Model
             Request::FGetStoreContentModelMasterRequestPtr Request
         );
 
+
+
         class GS2MONEY2_API FUpdateTask final :
             public Gs2::Core::Util::TGs2Future<Gs2::Money2::Domain::Model::FStoreContentModelMasterDomain>,
             public TSharedFromThis<FUpdateTask>
@@ -147,6 +151,8 @@ namespace Gs2::Money2::Domain::Model
         TSharedPtr<FAsyncTask<FUpdateTask>> Update(
             Request::FUpdateStoreContentModelMasterRequestPtr Request
         );
+
+
 
         class GS2MONEY2_API FDeleteTask final :
             public Gs2::Core::Util::TGs2Future<Gs2::Money2::Domain::Model::FStoreContentModelMasterDomain>,
@@ -206,7 +212,34 @@ namespace Gs2::Money2::Domain::Model
 
         TSharedPtr<FAsyncTask<FModelTask>> Model();
 
+        void Invalidate();
+
         Gs2::Core::Domain::CallbackID Subscribe(
+            TFunction<void(Gs2::Money2::Model::FStoreContentModelMasterPtr)> Callback
+        );
+
+        class GS2MONEY2_API FSubscribeWithInitialCallTask final :
+            public Gs2::Core::Util::TGs2Future<Gs2::Core::Domain::CallbackID>,
+            public TSharedFromThis<FSubscribeWithInitialCallTask>
+        {
+            const TSharedPtr<FStoreContentModelMasterDomain> Self;
+            const TFunction<void(Gs2::Money2::Model::FStoreContentModelMasterPtr)> Callback;
+        public:
+            FSubscribeWithInitialCallTask(
+                const TSharedPtr<FStoreContentModelMasterDomain>& Self,
+                TFunction<void(Gs2::Money2::Model::FStoreContentModelMasterPtr)> Callback
+            );
+
+            FSubscribeWithInitialCallTask(
+                const FSubscribeWithInitialCallTask& From
+            );
+
+            virtual Gs2::Core::Model::FGs2ErrorPtr Action(
+                TSharedPtr<TSharedPtr<Gs2::Core::Domain::CallbackID>> Result
+            ) override;
+        };
+
+        TSharedPtr<FAsyncTask<FSubscribeWithInitialCallTask>> SubscribeWithInitialCall(
             TFunction<void(Gs2::Money2::Model::FStoreContentModelMasterPtr)> Callback
         );
 

@@ -88,12 +88,11 @@ namespace Gs2::Ranking::Domain::Iterator
 
         if (!RangeIteratorOpt || (!*RangeIteratorOpt && !bLast))
         {
-            const auto ListParentKey = FString("") +
-                (Self->NamespaceName.IsSet() ? *Self->NamespaceName : "null") + ":" +
-                (Self->UserId().IsSet() ? *Self->UserId() : "null") + ":" +
-                (Self->CategoryName.IsSet() ? *Self->CategoryName : "null") + ":" +
-                (Self->ScorerUserId.IsSet() ? *Self->ScorerUserId : "null") + ":" +
-                "Score";
+            const auto ListParentKey = Gs2::Ranking::Model::Cache::FScoreCache::CreateCacheParentKey(
+                Self->NamespaceName,
+                Self->UserId(),
+                Self->AccessToken.IsValid() ? Self->AccessToken->GetTimeOffset() : TOptional<int32>()
+            );
 
             if (!RangeIteratorOpt)
             {
@@ -111,7 +110,7 @@ namespace Gs2::Ranking::Domain::Iterator
                 }
             }
 
-            const auto Future = Self->Client->DescribeScores(
+            const auto Request =
                 MakeShared<Gs2::Ranking::Request::FDescribeScoresRequest>()
                     ->WithContextStack(Self->Gs2->DefaultContextStack)
                     ->WithNamespaceName(Self->NamespaceName)
@@ -120,7 +119,8 @@ namespace Gs2::Ranking::Domain::Iterator
                     ->WithScorerUserId(Self->ScorerUserId)
                     ->WithPageToken(PageToken)
                     ->WithLimit(FetchSize)
-            );
+            ;
+            const auto Future = Self->Client->DescribeScores(Request);
             Future->StartSynchronousTask();
             if (Future->GetTask().IsError())
             {
@@ -134,20 +134,22 @@ namespace Gs2::Ranking::Domain::Iterator
             }
             const auto R = Future->GetTask().Result();
             Future->EnsureCompletion();
-            Range = R->GetItems();
-            for (auto Item : *R->GetItems())
+            Range = R->GetItems().IsValid() ? R->GetItems() : MakeShared<TArray<Gs2::Ranking::Model::FScorePtr>>();
+            const auto CacheOwnerSnapshotTimeOffset = Self->AccessToken.IsValid() ? Self->AccessToken->GetTimeOffset() : TOptional<int32>();
+            const auto ResultModel = R;
+
+
+            if (Range.IsValid())
             {
-                Self->Gs2->Cache->Put(
-                    Gs2::Ranking::Model::FScore::TypeName,
-                    ListParentKey,
-                    Gs2::Ranking::Domain::Model::FScoreDomain::CreateCacheKey(
-                        Item->GetCategoryName(),
-                        Item->GetScorerUserId(),
-                        Item->GetUniqueId()
-                    ),
-                    Item,
-                    FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
-                );
+                for (const auto& Item : *Range)
+                {
+                    if (!Item.IsValid()) continue;
+                    Gs2::Ranking::Model::Cache::FScoreCache::Put(
+                        Self->Gs2->Cache,
+                        Request->GetNamespaceName(), Item->GetScorerUserId(), Item->GetCategoryName(), Item->GetUniqueId(),
+                        CacheOwnerSnapshotTimeOffset, Item
+                    );
+                }
             }
             if (Range)
             {

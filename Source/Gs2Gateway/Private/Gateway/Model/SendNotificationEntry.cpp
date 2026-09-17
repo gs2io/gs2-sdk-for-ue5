@@ -24,7 +24,8 @@ namespace Gs2::Gateway::Model
         SubjectValue(TOptional<FString>()),
         PayloadValue(TOptional<FString>()),
         EnableTransferMobileNotificationValue(TOptional<bool>()),
-        SoundValue(TOptional<FString>())
+        SoundValue(TOptional<FString>()),
+        MobileNotificationMessagesValue(nullptr)
     {
     }
 
@@ -36,7 +37,8 @@ namespace Gs2::Gateway::Model
         SubjectValue(From.SubjectValue),
         PayloadValue(From.PayloadValue),
         EnableTransferMobileNotificationValue(From.EnableTransferMobileNotificationValue),
-        SoundValue(From.SoundValue)
+        SoundValue(From.SoundValue),
+        MobileNotificationMessagesValue(From.MobileNotificationMessagesValue)
     {
     }
 
@@ -87,6 +89,14 @@ namespace Gs2::Gateway::Model
         this->SoundValue = Sound;
         return SharedThis(this);
     }
+
+    TSharedPtr<FSendNotificationEntry> FSendNotificationEntry::WithMobileNotificationMessages(
+        const TSharedPtr<TArray<TSharedPtr<Model::FMobileNotificationMessage>>> MobileNotificationMessages
+    )
+    {
+        this->MobileNotificationMessagesValue = MobileNotificationMessages;
+        return SharedThis(this);
+    }
     TOptional<FString> FSendNotificationEntry::GetUserId() const
     {
         return UserIdValue;
@@ -119,6 +129,10 @@ namespace Gs2::Gateway::Model
     TOptional<FString> FSendNotificationEntry::GetSound() const
     {
         return SoundValue;
+    }
+    TSharedPtr<TArray<TSharedPtr<Model::FMobileNotificationMessage>>> FSendNotificationEntry::GetMobileNotificationMessages() const
+    {
+        return MobileNotificationMessagesValue;
     }
 
     TSharedPtr<FSendNotificationEntry> FSendNotificationEntry::FromJson(const TSharedPtr<FJsonObject> Data)
@@ -180,7 +194,19 @@ namespace Gs2::Gateway::Model
                         return TOptional(v);
                     }
                     return TOptional<FString>();
-                }() : TOptional<FString>());
+                }() : TOptional<FString>())
+            ->WithMobileNotificationMessages(Data->HasField(ANSI_TO_TCHAR("mobileNotificationMessages")) ? [Data]() -> TSharedPtr<TArray<Model::FMobileNotificationMessagePtr>>
+                {
+                    auto v = MakeShared<TArray<Model::FMobileNotificationMessagePtr>>();
+                    if (!Data->HasTypedField<EJson::Null>(ANSI_TO_TCHAR("mobileNotificationMessages")) && Data->HasTypedField<EJson::Array>(ANSI_TO_TCHAR("mobileNotificationMessages")))
+                    {
+                        for (auto JsonObjectValue : Data->GetArrayField(ANSI_TO_TCHAR("mobileNotificationMessages")))
+                        {
+                            v->Add(Model::FMobileNotificationMessage::FromJson(JsonObjectValue->AsObject()));
+                        }
+                    }
+                    return v;
+                 }() : MakeShared<TArray<Model::FMobileNotificationMessagePtr>>());
     }
 
     TSharedPtr<FJsonObject> FSendNotificationEntry::ToJson() const
@@ -209,6 +235,15 @@ namespace Gs2::Gateway::Model
         if (SoundValue.IsSet())
         {
             JsonRootObject->SetStringField(TEXT("sound"), SoundValue.GetValue());
+        }
+        if (MobileNotificationMessagesValue != nullptr && MobileNotificationMessagesValue.IsValid())
+        {
+            TArray<TSharedPtr<FJsonValue>> v;
+            for (auto JsonObjectValue : *MobileNotificationMessagesValue)
+            {
+                v.Add(MakeShared<FJsonValueObject>(JsonObjectValue->ToJson()));
+            }
+            JsonRootObject->SetArrayField(TEXT("mobileNotificationMessages"), v);
         }
         return JsonRootObject;
     }

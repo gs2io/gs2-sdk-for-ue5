@@ -94,7 +94,7 @@ namespace Gs2::UE5::Enchant::Domain::Model
     Gs2::Core::Domain::CallbackID FEzBalanceParameterStatusGameSessionDomain::Subscribe(TFunction<void(Gs2::UE5::Enchant::Model::FEzBalanceParameterStatusPtr)> Callback)
     {
         return Domain->Subscribe(
-            [&](Gs2::Enchant::Model::FBalanceParameterStatusPtr Item)
+            [Callback](Gs2::Enchant::Model::FBalanceParameterStatusPtr Item)
             {
                 Callback(Gs2::UE5::Enchant::Model::FEzBalanceParameterStatus::FromModel(Item));
             }

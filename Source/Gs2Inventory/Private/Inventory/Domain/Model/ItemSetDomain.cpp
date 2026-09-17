@@ -56,6 +56,7 @@
 #include "Inventory/Domain/Model/User.h"
 #include "Inventory/Domain/Model/UserAccessToken.h"
 #include "Inventory/Domain/Model/ItemSetEntry.h"
+#include "Inventory/Model/Cache/ItemSet.h"
 
 #include "Core/Domain/Gs2.h"
 
@@ -141,7 +142,15 @@ namespace Gs2::Inventory::Domain::Model
         const auto RequestModel = Request;
         const auto ResultModel = Future->GetTask().Result();
         Future->EnsureCompletion();
+        if (ResultModel != nullptr)
+        {
+            Gs2::Inventory::Model::Cache::FItemSetCache::Put(
+                Self->Gs2->Cache, Self->NamespaceName, Self->UserId, Self->InventoryName, Self->ItemName,
+                TOptional<int32>(), ResultModel->GetItems()
+            );
+        }
         if (ResultModel != nullptr) {
+            if (ResultModel->GetItems().IsValid())
             {
                 for (auto Item : *ResultModel->GetItems())
                 {
@@ -273,13 +282,16 @@ namespace Gs2::Inventory::Domain::Model
                 if (Item == nullptr || *Item->GetRevision() < *ResultModel->GetInventory()->GetRevision())
                 {
                     int64 ExpiresAt = (FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)).ToUnixTimestamp() * 1000;
-                    for (auto Item2 : *ResultModel->GetItems())
+                    if (ResultModel->GetItems().IsValid())
                     {
-                        if (Item2->GetExpiresAt().IsSet())
+                        for (auto Item2 : *ResultModel->GetItems())
                         {
-                            if (*Item2->GetExpiresAt() != 0 && ExpiresAt > *Item2->GetExpiresAt())
+                            if (Item2->GetExpiresAt().IsSet())
                             {
-                                ExpiresAt = *Item2->GetExpiresAt();
+                                if (*Item2->GetExpiresAt() != 0 && ExpiresAt > *Item2->GetExpiresAt())
+                                {
+                                    ExpiresAt = *Item2->GetExpiresAt();
+                                }
                             }
                         }
                     }
@@ -293,7 +305,7 @@ namespace Gs2::Inventory::Domain::Model
                 }
             }
         }
-        *Result = ResultModel->GetItems();
+        *Result = ResultModel.IsValid() ? ResultModel->GetItems() : nullptr;
         return nullptr;
     }
 
@@ -339,6 +351,13 @@ namespace Gs2::Inventory::Domain::Model
         const auto RequestModel = Request;
         const auto ResultModel = Future->GetTask().Result();
         Future->EnsureCompletion();
+        if (ResultModel != nullptr)
+        {
+            Gs2::Inventory::Model::Cache::FItemSetCache::Put(
+                Self->Gs2->Cache, Self->NamespaceName, Self->UserId, Self->InventoryName, Self->ItemName,
+                TOptional<int32>(), ResultModel->GetItems()
+            );
+        }
         if (ResultModel != nullptr) {
             {
                 for (auto Item : *ResultModel->GetItems())
@@ -562,6 +581,13 @@ namespace Gs2::Inventory::Domain::Model
         const auto RequestModel = Request;
         const auto ResultModel = Future->GetTask().Result();
         Future->EnsureCompletion();
+        if (ResultModel != nullptr)
+        {
+            Gs2::Inventory::Model::Cache::FItemSetCache::Put(
+                Self->Gs2->Cache, Self->NamespaceName, Self->UserId, Self->InventoryName, Self->ItemName,
+                TOptional<int32>(), ResultModel->GetItems()
+            );
+        }
         if (ResultModel != nullptr) {
             {
                 for (auto Item : *ResultModel->GetItems())
@@ -714,25 +740,12 @@ namespace Gs2::Inventory::Domain::Model
                 }
             }
         }
-        Gs2::Inventory::Domain::Model::FItemSetDomainPtr Domain = nullptr;
-        if (ResultModel->GetItems()->Num() > 0) {
-            Domain = MakeShared<Gs2::Inventory::Domain::Model::FItemSetDomain>(
-                Self->Gs2,
-                Self->Service,
-                Request->GetNamespaceName(),
-                (*ResultModel->GetItems())[0]->GetUserId(),
-                (*ResultModel->GetItems())[0]->GetInventoryName(),
-                (*ResultModel->GetItems())[0]->GetItemName(),
-                (*ResultModel->GetItems())[0]->GetName()
-            );
-        } else {
-            Domain = Self;
-        }
+        Gs2::Inventory::Domain::Model::FItemSetDomainPtr Domain = Self;
         if (ResultModel != nullptr)
         {
             if (ResultModel->GetOverflowCount().IsSet())
             {
-                Self->OverflowCount = Domain->OverflowCount = ResultModel->GetOverflowCount();
+                Self->OverflowCount = ResultModel->GetOverflowCount();
             }
         }
         *Result = Domain;
@@ -781,6 +794,13 @@ namespace Gs2::Inventory::Domain::Model
         const auto RequestModel = Request;
         const auto ResultModel = Future->GetTask().Result();
         Future->EnsureCompletion();
+        if (ResultModel != nullptr)
+        {
+            Gs2::Inventory::Model::Cache::FItemSetCache::Put(
+                Self->Gs2->Cache, Self->NamespaceName, Self->UserId, Self->InventoryName, Self->ItemName,
+                TOptional<int32>(), ResultModel->GetItems()
+            );
+        }
         if (ResultModel != nullptr) {
             {
                 for (auto Item : *ResultModel->GetItems())
@@ -993,6 +1013,13 @@ namespace Gs2::Inventory::Domain::Model
         const auto RequestModel = Request;
         const auto ResultModel = Future->GetTask().Result();
         Future->EnsureCompletion();
+        if (ResultModel != nullptr)
+        {
+            Gs2::Inventory::Model::Cache::FItemSetCache::Put(
+                Self->Gs2->Cache, Self->NamespaceName, Self->UserId, Self->InventoryName, Self->ItemName,
+                TOptional<int32>(), ResultModel->GetItems()
+            );
+        }
         if (ResultModel != nullptr) {
             {
                 for (auto Item : *ResultModel->GetItems())
@@ -1161,6 +1188,13 @@ namespace Gs2::Inventory::Domain::Model
         const auto RequestModel = Request;
         const auto ResultModel = Future->GetTask().Result();
         Future->EnsureCompletion();
+        if (ResultModel != nullptr)
+        {
+            Gs2::Inventory::Model::Cache::FItemSetCache::Put(
+                Self->Gs2->Cache, Self->NamespaceName, Self->UserId, Self->InventoryName, Self->ItemName,
+                TOptional<int32>(), ResultModel->GetItems()
+            );
+        }
         if (ResultModel != nullptr) {
             
         }
@@ -1359,71 +1393,121 @@ namespace Gs2::Inventory::Domain::Model
         TSharedPtr<TSharedPtr<TArray<Gs2::Inventory::Model::FItemSetPtr>>> Result
     )
     {
-        // ReSharper disable once CppLocalVariableMayBeConst
-        Gs2::Inventory::Model::FItemSetEntryPtr Value;
-        const auto bCacheHit = Self->Gs2->Cache->TryGet<Gs2::Inventory::Model::FItemSetEntry>(
-            Self->ParentKey,
-            Gs2::Inventory::Domain::Model::FItemSetDomain::CreateCacheKey(
+        if (!Self->ItemSetName.IsSet())
+        {
+            TSharedPtr<TArray<Gs2::Inventory::Model::FItemSetPtr>> CachedItems;
+            if (Gs2::Inventory::Model::Cache::FItemSetCache::TryGet(
+                Self->Gs2->Cache,
+                Self->NamespaceName,
+                Self->UserId,
+                Self->InventoryName,
                 Self->ItemName,
-                TOptional<FString>()
-            ),
-            &Value
-        );
-        if (!bCacheHit) {
+                TOptional<int32>(),
+                &CachedItems
+            ))
+            {
+                *Result = CachedItems;
+                return nullptr;
+            }
             const auto Future = Self->Get(
                 MakeShared<Gs2::Inventory::Request::FGetItemSetByUserIdRequest>()
             );
             Future->StartSynchronousTask();
             if (Future->GetTask().IsError())
             {
-                if (Future->GetTask().Error()->Type() != Gs2::Core::Model::FNotFoundError::TypeString)
+                const auto Error = Future->GetTask().Error();
+                if (!Error.IsValid() || Error->Type() != Gs2::Core::Model::FNotFoundError::TypeString)
                 {
-                    return Future->GetTask().Error();
+                    return Error;
                 }
-
-                const auto Key = Gs2::Inventory::Domain::Model::FItemSetDomain::CreateCacheKey(
-                    Self->ItemName,
-                    Self->ItemSetName
-                );
-                Self->Gs2->Cache->Put(
-                    Gs2::Inventory::Model::FItemSetEntry::TypeName,
-                    Self->ParentKey,
-                    Key,
-                    nullptr,
-                    FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
-                );
-
-                if (Future->GetTask().Error()->Detail(0)->GetComponent() != "itemSet")
+                if (!Error->GetErrors().IsValid() || Error->Count() == 0 || !Error->Detail(0).IsValid() || Error->Detail(0)->GetComponent() != "itemSet")
                 {
-                    return Future->GetTask().Error();
+                    return Error;
                 }
+                *Result = MakeShared<TArray<Gs2::Inventory::Model::FItemSetPtr>>();
+                return nullptr;
             }
-            else
-            {
-                const auto ResultItemSets = Future->GetTask().Result();
-                if (ResultItemSets.IsValid())
-                {
-                    Value = MakeShared<Gs2::Inventory::Model::FItemSetEntry>(*ResultItemSets);
-                    Self->Gs2->Cache->Put(
-                        Gs2::Inventory::Model::FItemSetEntry::TypeName,
-                        Self->ParentKey,
-                        FItemSetDomain::CreateCacheKey(
-                            Self->ItemName,
-                            TOptional<FString>()
-                        ),
-                        Value,
-                        FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
-                    );
-                }
-            }
+            const auto ResultItemSets = Future->GetTask().Result();
             Future->EnsureCompletion();
+            *Result = ResultItemSets;
+            return nullptr;
         }
-        if (Value != nullptr)
-        {
-            *Result = MakeShared<TArray<Inventory::Model::FItemSetPtr>>(Value->Value);
-        }
-
-        return nullptr;
+        const FString CacheKey = Gs2::Inventory::Domain::Model::FItemSetDomain::CreateCacheKey(
+            Self->ItemName,
+            Self->ItemSetName
+        );
+        return Self->Gs2->Cache->ExecuteWithKeyLock(
+            Gs2::Inventory::Model::FItemSetEntry::TypeName,
+            Self->ParentKey,
+            CacheKey,
+            [this, Result, CacheKey]() -> Gs2::Core::Model::FGs2ErrorPtr
+            {
+                Gs2::Inventory::Model::FItemSetEntryPtr Value;
+                auto bCacheHit = Self->Gs2->Cache->TryGet<Gs2::Inventory::Model::FItemSetEntry>(
+                    Self->ParentKey,
+                    CacheKey,
+                    &Value
+                );
+                if (!bCacheHit)
+                {
+                    const auto Future = Self->Get(
+                        MakeShared<Gs2::Inventory::Request::FGetItemSetByUserIdRequest>()
+                    );
+                    Future->StartSynchronousTask();
+                    if (Future->GetTask().IsError())
+                    {
+                        const auto Error = Future->GetTask().Error();
+                        if (!Error.IsValid() || Error->Type() != Gs2::Core::Model::FNotFoundError::TypeString)
+                        {
+                            return Error;
+                        }
+                        Self->Gs2->Cache->Put(
+                            Gs2::Inventory::Model::FItemSetEntry::TypeName,
+                            Self->ParentKey,
+                            CacheKey,
+                            nullptr,
+                            FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
+                        );
+                        if (!Error->GetErrors().IsValid() || Error->Count() == 0 || !Error->Detail(0).IsValid() || Error->Detail(0)->GetComponent() != "itemSet")
+                        {
+                            return Error;
+                        }
+                        *Result = nullptr;
+                        return nullptr;
+                    }
+                    const auto ResultItemSets = Future->GetTask().Result();
+                    Future->EnsureCompletion();
+                    const bool bFetchedCacheHit = Self->Gs2->Cache->TryGet<Gs2::Inventory::Model::FItemSetEntry>(
+                        Self->ParentKey,
+                        CacheKey,
+                        &Value
+                    );
+                    if (bFetchedCacheHit)
+                    {
+                        if (Value.IsValid())
+                        {
+                            *Result = MakeShared<TArray<Gs2::Inventory::Model::FItemSetPtr>>(Value->Value);
+                        }
+                        else
+                        {
+                            *Result = nullptr;
+                        }
+                        return nullptr;
+                    }
+                    *Result = ResultItemSets;
+                    return nullptr;
+                }
+                if (Value.IsValid())
+                {
+                    *Result = MakeShared<TArray<Gs2::Inventory::Model::FItemSetPtr>>(Value->Value);
+                }
+                else
+                {
+                    *Result = nullptr;
+                }
+                return nullptr;
+            }
+        );
     }
 
     TSharedPtr<FAsyncTask<FItemSetDomain::FModelTask>> FItemSetDomain::Model() {
@@ -1469,4 +1553,3 @@ namespace Gs2::Inventory::Domain::Model
 #elif defined(__clang__)
 #pragma clang diagnostic pop
 #endif
-

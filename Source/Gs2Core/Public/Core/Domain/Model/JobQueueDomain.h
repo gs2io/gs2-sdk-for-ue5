@@ -29,13 +29,26 @@ namespace Gs2::JobQueue::Model
 
 namespace Gs2::Core::Domain::Model
 {
-    typedef TFunction<void (const Gs2::JobQueue::Model::FJobPtr&, const Gs2::JobQueue::Model::FJobResultBodyPtr&)> FJobQueueExecutedEvent;
+    typedef TFunction<void (const Gs2::JobQueue::Model::FJobPtr&, const Gs2::JobQueue::Model::FJobResultBodyPtr&, const TOptional<int32>)> FJobQueueExecutedEvent;
 
     class GS2CORE_API FJobQueueDomain :
         public TSharedFromThis<FJobQueueDomain>
     {
-        FCriticalSection Mutex;
-        TArray<FString> Tasks;
+        struct FPendingTask
+        {
+            FString NamespaceName;
+            FString UserId;
+            bool bWildcard;
+        };
+
+        mutable FCriticalSection Mutex;
+        TArray<FPendingTask> Tasks;
+
+        void PushPendingTask(
+            FString NamespaceName,
+            FString UserId,
+            bool bWildcard
+        );
     public:
         FJobQueueExecutedEvent JobQueueExecutedEventHandler;
         
@@ -50,6 +63,16 @@ namespace Gs2::Core::Domain::Model
         void Push(
             FString NamespaceName
         );
+        void PushForUser(
+            FString NamespaceName,
+            FString UserId
+        );
+        TOptional<FString> TakeNextTaskForUser(
+            FString UserId
+        );
+        bool IsEmptyForUser(
+            FString UserId
+        ) const;
     };
 
     typedef TSharedPtr<FJobQueueDomain> FJobQueueDomainPtr;

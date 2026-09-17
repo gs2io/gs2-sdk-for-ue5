@@ -91,6 +91,8 @@ namespace Gs2::Mission::Domain::Model
             const FCompleteDomain& From
         );
 
+
+
         class GS2MISSION_API FCompleteTask final :
             public Gs2::Core::Util::TGs2Future<Gs2::Core::Domain::FTransactionDomain>,
             public TSharedFromThis<FCompleteTask>
@@ -116,6 +118,8 @@ namespace Gs2::Mission::Domain::Model
         TSharedPtr<FAsyncTask<FCompleteTask>> Complete(
             Request::FCompleteByUserIdRequestPtr Request
         );
+
+
 
         class GS2MISSION_API FBatchTask final :
             public Gs2::Core::Util::TGs2Future<Gs2::Core::Domain::FTransactionDomain>,
@@ -143,6 +147,8 @@ namespace Gs2::Mission::Domain::Model
             Request::FBatchCompleteByUserIdRequestPtr Request
         );
 
+
+
         class GS2MISSION_API FReceiveTask final :
             public Gs2::Core::Util::TGs2Future<Gs2::Mission::Domain::Model::FCompleteDomain>,
             public TSharedFromThis<FReceiveTask>
@@ -168,6 +174,8 @@ namespace Gs2::Mission::Domain::Model
         TSharedPtr<FAsyncTask<FReceiveTask>> Receive(
             Request::FReceiveByUserIdRequestPtr Request
         );
+
+
 
         class GS2MISSION_API FBatchReceiveTask final :
             public Gs2::Core::Util::TGs2Future<Gs2::Mission::Domain::Model::FCompleteDomain>,
@@ -195,6 +203,8 @@ namespace Gs2::Mission::Domain::Model
             Request::FBatchReceiveByUserIdRequestPtr Request
         );
 
+
+
         class GS2MISSION_API FRevertReceiveTask final :
             public Gs2::Core::Util::TGs2Future<Gs2::Mission::Domain::Model::FCompleteDomain>,
             public TSharedFromThis<FRevertReceiveTask>
@@ -220,6 +230,8 @@ namespace Gs2::Mission::Domain::Model
         TSharedPtr<FAsyncTask<FRevertReceiveTask>> RevertReceive(
             Request::FRevertReceiveByUserIdRequestPtr Request
         );
+
+
 
         class GS2MISSION_API FGetTask final :
             public Gs2::Core::Util::TGs2Future<Gs2::Mission::Model::FComplete>,
@@ -247,6 +259,8 @@ namespace Gs2::Mission::Domain::Model
             Request::FGetCompleteByUserIdRequestPtr Request
         );
 
+
+
         class GS2MISSION_API FEvaluateTask final :
             public Gs2::Core::Util::TGs2Future<Gs2::Mission::Domain::Model::FCompleteDomain>,
             public TSharedFromThis<FEvaluateTask>
@@ -273,6 +287,8 @@ namespace Gs2::Mission::Domain::Model
             Request::FEvaluateCompleteByUserIdRequestPtr Request
         );
 
+
+
         class GS2MISSION_API FDeleteTask final :
             public Gs2::Core::Util::TGs2Future<Gs2::Mission::Domain::Model::FCompleteDomain>,
             public TSharedFromThis<FDeleteTask>
@@ -298,6 +314,8 @@ namespace Gs2::Mission::Domain::Model
         TSharedPtr<FAsyncTask<FDeleteTask>> Delete(
             Request::FDeleteCompleteByUserIdRequestPtr Request
         );
+
+
 
         class GS2MISSION_API FVerifyTask final :
             public Gs2::Core::Util::TGs2Future<Gs2::Mission::Domain::Model::FCompleteDomain>,
@@ -358,7 +376,34 @@ namespace Gs2::Mission::Domain::Model
 
         TSharedPtr<FAsyncTask<FModelTask>> Model();
 
+        void Invalidate();
+
         Gs2::Core::Domain::CallbackID Subscribe(
+            TFunction<void(Gs2::Mission::Model::FCompletePtr)> Callback
+        );
+
+        class GS2MISSION_API FSubscribeWithInitialCallTask final :
+            public Gs2::Core::Util::TGs2Future<Gs2::Core::Domain::CallbackID>,
+            public TSharedFromThis<FSubscribeWithInitialCallTask>
+        {
+            const TSharedPtr<FCompleteDomain> Self;
+            const TFunction<void(Gs2::Mission::Model::FCompletePtr)> Callback;
+        public:
+            FSubscribeWithInitialCallTask(
+                const TSharedPtr<FCompleteDomain>& Self,
+                TFunction<void(Gs2::Mission::Model::FCompletePtr)> Callback
+            );
+
+            FSubscribeWithInitialCallTask(
+                const FSubscribeWithInitialCallTask& From
+            );
+
+            virtual Gs2::Core::Model::FGs2ErrorPtr Action(
+                TSharedPtr<TSharedPtr<Gs2::Core::Domain::CallbackID>> Result
+            ) override;
+        };
+
+        TSharedPtr<FAsyncTask<FSubscribeWithInitialCallTask>> SubscribeWithInitialCall(
             TFunction<void(Gs2::Mission::Model::FCompletePtr)> Callback
         );
 

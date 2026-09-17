@@ -16,7 +16,9 @@
 
 #pragma once
 
+#include "HAL/CriticalSection.h"
 #include "Distributor/Model/StampSheetResult.h"
+#include "Distributor/Model/TransactionResult.h"
 #include "Core/Domain/Transaction/TransactionDomain.h"
 
 namespace Gs2::Core::Domain
@@ -26,11 +28,26 @@ namespace Gs2::Core::Domain
 	{
 	private:
 	    static TMap<FString, FDateTime> Handled;
+            static FCriticalSection HandledMutex;
         FString TransactionId;
+        TOptional<FString> TransactionNamespaceName;
+	    const bool bAtomicCommit;
+	    Gs2::Core::Model::FTransactionResultPtr InitialTransactionResult;
+        FCriticalSection TransactionResultMutex;
+        bool bTransactionResultHandled;
 
         FTransactionDomainPtr HandleResult(
-            Gs2::Distributor::Model::FStampSheetResultPtr Result
+            Gs2::Distributor::Model::FStampSheetResultPtr Result,
+            Gs2::Core::Model::FGs2ErrorPtr& Error
         );
+
+        FTransactionDomainPtr HandleTransactionResult(
+            Gs2::Distributor::Model::FTransactionResultPtr Result,
+            Gs2::Core::Model::FGs2ErrorPtr& Error
+        );
+
+        bool MarkHandled();
+        bool MarkTransactionResultHandled();
 
     public:
 	    FAutoTransactionDomain(
@@ -47,7 +64,10 @@ namespace Gs2::Core::Domain
 				Gs2::Core::Model::FTransactionResultPtr TransactionResult
 			)>& NewTransactionDomain,
             const FString UserId,
-            const FString TransactionId
+            const FString TransactionId,
+            const bool bAtomicCommit = false,
+            const Gs2::Core::Model::FTransactionResultPtr InitialTransactionResult = nullptr,
+            const TOptional<FString> NamespaceName = TOptional<FString>()
         );
 		FAutoTransactionDomain(
 			const FAutoTransactionDomain& From

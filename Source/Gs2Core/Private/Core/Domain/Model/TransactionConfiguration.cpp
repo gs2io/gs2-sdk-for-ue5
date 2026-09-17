@@ -26,7 +26,25 @@ namespace Gs2::Core::Domain::Model
     ):
         NamespaceName(NamespaceName.IsSet() ? NamespaceName : TOptional<FString>("default")),
         StampTaskEventHandler(StampTaskEventHandler),
-        StampSheetEventHandler(StampSheetEventHandler)
+        StampSheetEventHandler(StampSheetEventHandler),
+        VerifyActionEventHandler(nullptr),
+        ConsumeActionEventHandler(nullptr),
+        AcquireActionEventHandler(nullptr)
+    {
+    }
+
+    FTransactionConfiguration::FTransactionConfiguration(
+        const TOptional<FString> NamespaceName,
+        const FTransactionActionEvent VerifyActionEventHandler,
+        const FTransactionActionEvent ConsumeActionEventHandler,
+        const FTransactionActionEvent AcquireActionEventHandler
+    ):
+        NamespaceName(NamespaceName.IsSet() ? NamespaceName : TOptional<FString>("default")),
+        StampTaskEventHandler(nullptr),
+        StampSheetEventHandler(nullptr),
+        VerifyActionEventHandler(VerifyActionEventHandler),
+        ConsumeActionEventHandler(ConsumeActionEventHandler),
+        AcquireActionEventHandler(AcquireActionEventHandler)
     {
     }
     
@@ -35,7 +53,10 @@ namespace Gs2::Core::Domain::Model
     ):
         NamespaceName(From.NamespaceName),
         StampTaskEventHandler(From.StampTaskEventHandler),
-        StampSheetEventHandler(From.StampSheetEventHandler)
+        StampSheetEventHandler(From.StampSheetEventHandler),
+        VerifyActionEventHandler(From.VerifyActionEventHandler),
+        ConsumeActionEventHandler(From.ConsumeActionEventHandler),
+        AcquireActionEventHandler(From.AcquireActionEventHandler)
     {
     }
 }

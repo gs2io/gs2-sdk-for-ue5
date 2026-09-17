@@ -33,6 +33,13 @@
 #include "Version/Domain/Model/User.h"
 #include "Version/Domain/Model/UserAccessToken.h"
 #include "Version/Domain/Model/CurrentVersionMaster.h"
+
+#include "Version/Model/Cache/Namespace.h"
+#include "Version/Model/Cache/VersionModelMaster.h"
+#include "Version/Model/Cache/CurrentVersionMaster.h"
+#include "Version/Model/Cache/VersionModel.h"
+#include "Version/Model/Cache/AcceptVersion.h"
+
 #include "Core/Domain/Gs2.h"
 
 namespace Gs2::Version::Domain
@@ -86,6 +93,19 @@ namespace Gs2::Version::Domain
         }
         const auto ResultModel = Future->GetTask().Result();
         Future->EnsureCompletion();
+
+            if (ResultModel.IsValid() && ResultModel->GetItem() != nullptr)
+            {
+
+
+        Gs2::Version::Model::Cache::FNamespaceCache::Put(
+            Self->Gs2->Cache,
+
+            ResultModel->GetItem()->GetName(),
+            TOptional<int32>(),
+            ResultModel->GetItem()
+        );
+            }
         auto Domain = MakeShared<Gs2::Version::Domain::Model::FNamespaceDomain>(
             Self->Gs2,
             Self,
@@ -129,6 +149,7 @@ namespace Gs2::Version::Domain
         }
         const auto ResultModel = Future->GetTask().Result();
         Future->EnsureCompletion();
+
         const auto Domain = Self;
         *Result = Domain;
         return nullptr;
@@ -168,6 +189,7 @@ namespace Gs2::Version::Domain
         }
         const auto ResultModel = Future->GetTask().Result();
         Future->EnsureCompletion();
+
         const auto Domain = Self;
         if (ResultModel != nullptr)
         {
@@ -214,6 +236,7 @@ namespace Gs2::Version::Domain
         }
         const auto ResultModel = Future->GetTask().Result();
         Future->EnsureCompletion();
+
         const auto Domain = Self;
         *Result = Domain;
         return nullptr;
@@ -253,6 +276,7 @@ namespace Gs2::Version::Domain
         }
         const auto ResultModel = Future->GetTask().Result();
         Future->EnsureCompletion();
+
         const auto Domain = Self;
         *Result = Domain;
         return nullptr;
@@ -292,6 +316,7 @@ namespace Gs2::Version::Domain
         }
         const auto ResultModel = Future->GetTask().Result();
         Future->EnsureCompletion();
+
         const auto Domain = Self;
         if (ResultModel != nullptr)
         {
@@ -342,6 +367,7 @@ namespace Gs2::Version::Domain
         }
         const auto ResultModel = Future->GetTask().Result();
         Future->EnsureCompletion();
+
         const auto Domain = Self;
         *Result = Domain;
         return nullptr;
@@ -381,6 +407,7 @@ namespace Gs2::Version::Domain
         }
         const auto ResultModel = Future->GetTask().Result();
         Future->EnsureCompletion();
+
         const auto Domain = Self;
         if (ResultModel != nullptr)
         {
@@ -412,24 +439,110 @@ namespace Gs2::Version::Domain
 
     Gs2::Core::Domain::CallbackID FGs2VersionDomain::SubscribeNamespaces(
     TFunction<void()> Callback
+
     )
     {
         return Gs2->Cache->ListSubscribe(
             Gs2::Version::Model::FNamespace::TypeName,
-            "version:Namespace",
+            Gs2::Version::Model::Cache::FNamespaceCache::CreateCacheParentKey(
+                TOptional<int32>()
+            ),
+            Callback,
             Callback
         );
     }
-
     void FGs2VersionDomain::UnsubscribeNamespaces(
         Gs2::Core::Domain::CallbackID CallbackID
     )
     {
         Gs2->Cache->ListUnsubscribe(
             Gs2::Version::Model::FNamespace::TypeName,
-            "version:Namespace",
+            Gs2::Version::Model::Cache::FNamespaceCache::CreateCacheParentKey(
+                TOptional<int32>()
+            ),
             CallbackID
         );
+    }
+    class FGs2VersionDomain::FCollectNamespacesTask : public Gs2::Core::Util::TGs2Future<TArray<Gs2::Version::Model::FNamespacePtr>>, public TSharedFromThis<FCollectNamespacesTask>
+    {
+        const TSharedPtr<FGs2VersionDomain> Self;
+        const TFunction<void(TArray<Gs2::Version::Model::FNamespacePtr>)> OnCollected;
+    const TOptional<FString> QueryNamePrefix;
+    public:
+        explicit FCollectNamespacesTask(const TSharedPtr<FGs2VersionDomain>& Self, TFunction<void(TArray<Gs2::Version::Model::FNamespacePtr>)> OnCollected,const TOptional<FString> NamePrefix) : Self(Self), OnCollected(OnCollected), QueryNamePrefix(NamePrefix) {}
+        FCollectNamespacesTask(const FCollectNamespacesTask& From) : TGs2Future(From), Self(From.Self), OnCollected(From.OnCollected), QueryNamePrefix(From.QueryNamePrefix) {}
+        virtual Gs2::Core::Model::FGs2ErrorPtr Action(TSharedPtr<TSharedPtr<TArray<Gs2::Version::Model::FNamespacePtr>>> Result) override
+        {
+            TArray<Gs2::Version::Model::FNamespacePtr> Items;
+            auto Iterator = Self->Namespaces(QueryNamePrefix)->begin();
+            while (Iterator.HasNext())
+            {
+                if (Iterator.IsError()) return Iterator.Error();
+                if (Iterator.IsCurrentValid()) Items.Add(Iterator.Current());
+                ++Iterator;
+            }
+            if (Iterator.IsError()) return Iterator.Error();
+            *Result = MakeShared<TArray<Gs2::Version::Model::FNamespacePtr>>(Items);
+            if (OnCollected) OnCollected(Items);
+            return nullptr;
+        }
+    };
+
+    Gs2::Core::Domain::CallbackID FGs2VersionDomain::SubscribeNamespaces(
+        TFunction<void(TArray<Gs2::Version::Model::FNamespacePtr>)> Callback,const TOptional<FString> NamePrefix
+    )
+    {
+        const TWeakPtr<Gs2::Core::Domain::FGs2> WeakGs2 = this->Gs2;
+        const auto QueryNamePrefix = NamePrefix;
+        const auto Parent = Gs2::Version::Model::Cache::FNamespaceCache::CreateCacheParentKey(
+        TOptional<int32>()
+    );
+        return Gs2->Cache->ListSubscribeTyped(
+            Gs2::Version::Model::FNamespace::TypeName,
+            Parent,
+            [Callback, WeakGs2](const TArray<FGs2ObjectPtr>& Values)
+            {
+                if (!WeakGs2.Pin().IsValid()) return;
+                TArray<Gs2::Version::Model::FNamespacePtr> TypedValues;
+                for (const auto& Value : Values) if (Value.IsValid()) TypedValues.Add(StaticCastSharedPtr<Gs2::Version::Model::FNamespace>(Value));
+                Callback(TypedValues);
+            },
+            [WeakGs2, Callback, QueryNamePrefix]()
+            {
+                const auto Owner = WeakGs2.Pin();
+                if (!Owner.IsValid()) return;
+                const auto Domain = MakeShared<FGs2VersionDomain>(Owner);
+                const auto Task = Gs2::Core::Util::New<FAsyncTask<FCollectNamespacesTask>>(Domain, Callback, QueryNamePrefix);
+                Task->StartBackgroundTask();
+            }
+        );
+    }
+
+    void FGs2VersionDomain::InvalidateNamespaces(const TOptional<FString> NamePrefix)
+    {
+        Gs2->Cache->ClearListCache(
+            Gs2::Version::Model::FNamespace::TypeName,
+            Gs2::Version::Model::Cache::FNamespaceCache::CreateCacheParentKey(
+        TOptional<int32>()
+    )
+        );
+    }
+
+    FGs2VersionDomain::FSubscribeNamespacesWithInitialCallTask::FSubscribeNamespacesWithInitialCallTask(const TSharedPtr<FGs2VersionDomain>& Self, TFunction<void(TArray<Gs2::Version::Model::FNamespacePtr>)> Callback,const TOptional<FString> NamePrefix) : Self(Self), Callback(Callback), QueryNamePrefix(NamePrefix) {}
+    FGs2VersionDomain::FSubscribeNamespacesWithInitialCallTask::FSubscribeNamespacesWithInitialCallTask(const FSubscribeNamespacesWithInitialCallTask& From) : TGs2Future(From), Self(From.Self), Callback(From.Callback), QueryNamePrefix(From.QueryNamePrefix) {}
+    Gs2::Core::Model::FGs2ErrorPtr FGs2VersionDomain::FSubscribeNamespacesWithInitialCallTask::Action(TSharedPtr<TSharedPtr<Gs2::Core::Domain::CallbackID>> Result)
+    {
+        const auto Task = Gs2::Core::Util::New<FAsyncTask<FCollectNamespacesTask>>(Self, TFunction<void(TArray<Gs2::Version::Model::FNamespacePtr>)>(), QueryNamePrefix);
+        Task->StartSynchronousTask(); Task->EnsureCompletion();
+        if (Task->GetTask().IsError()) return Task->GetTask().Error();
+        const auto Values = Task->GetTask().Result();
+        const auto CallbackId = Self->SubscribeNamespaces(Callback, QueryNamePrefix);
+        Callback(*Values); *Result = MakeShared<Gs2::Core::Domain::CallbackID>(CallbackId);
+        return nullptr;
+    }
+    TSharedPtr<FAsyncTask<FGs2VersionDomain::FSubscribeNamespacesWithInitialCallTask>> FGs2VersionDomain::SubscribeNamespacesWithInitialCall(TFunction<void(TArray<Gs2::Version::Model::FNamespacePtr>)> Callback,const TOptional<FString> NamePrefix)
+    {
+        return Gs2::Core::Util::New<FAsyncTask<FSubscribeNamespacesWithInitialCallTask>>(this->AsShared(), Callback, NamePrefix);
     }
 
     TSharedPtr<Gs2::Version::Domain::Model::FNamespaceDomain> FGs2VersionDomain::Namespace(
@@ -446,21 +559,24 @@ namespace Gs2::Version::Domain
     void FGs2VersionDomain::UpdateCacheFromStampSheet(
         const FString Method,
         const FString Request,
-        const FString Result
+        const FString Result,
+        const TOptional<int32> TimeOffset
     ) {
     }
 
     void FGs2VersionDomain::UpdateCacheFromStampTask(
         const FString Method,
         const FString Request,
-        const FString Result
+        const FString Result,
+        const TOptional<int32> TimeOffset
     ) {
     }
 
     void FGs2VersionDomain::UpdateCacheFromJobResult(
         const FString Method,
         const Gs2::JobQueue::Model::FJobPtr Job,
-        const Gs2::JobQueue::Model::FJobResultBodyPtr Result
+        const Gs2::JobQueue::Model::FJobResultBodyPtr Result,
+        const TOptional<int32> TimeOffset
     ) {
     }
 
@@ -476,4 +592,3 @@ namespace Gs2::Version::Domain
 #elif defined(__clang__)
 #pragma clang diagnostic pop
 #endif
-

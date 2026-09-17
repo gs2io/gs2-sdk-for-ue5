@@ -18,6 +18,7 @@
 
 #include "CoreMinimal.h"
 #include "Core/Gs2Object.h"
+#include "MobileNotificationMessage.h"
 
 namespace Gs2::Gateway::Model
 {
@@ -29,6 +30,7 @@ namespace Gs2::Gateway::Model
         TOptional<FString> PayloadValue;
         TOptional<bool> EnableTransferMobileNotificationValue;
         TOptional<FString> SoundValue;
+        TSharedPtr<TArray<TSharedPtr<FMobileNotificationMessage>>> MobileNotificationMessagesValue;
 
     public:
         FSendNotificationEntry();
@@ -43,6 +45,7 @@ namespace Gs2::Gateway::Model
         TSharedPtr<FSendNotificationEntry> WithPayload(const TOptional<FString> Payload);
         TSharedPtr<FSendNotificationEntry> WithEnableTransferMobileNotification(const TOptional<bool> EnableTransferMobileNotification);
         TSharedPtr<FSendNotificationEntry> WithSound(const TOptional<FString> Sound);
+        TSharedPtr<FSendNotificationEntry> WithMobileNotificationMessages(const TSharedPtr<TArray<TSharedPtr<FMobileNotificationMessage>>> MobileNotificationMessages);
 
         TOptional<FString> GetUserId() const;
         TOptional<FString> GetIssuer() const;
@@ -51,6 +54,7 @@ namespace Gs2::Gateway::Model
         TOptional<bool> GetEnableTransferMobileNotification() const;
         FString GetEnableTransferMobileNotificationString() const;
         TOptional<FString> GetSound() const;
+        TSharedPtr<TArray<TSharedPtr<FMobileNotificationMessage>>> GetMobileNotificationMessages() const;
 
 
         static TSharedPtr<FSendNotificationEntry> FromJson(const TSharedPtr<FJsonObject> Data);

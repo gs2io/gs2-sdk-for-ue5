@@ -89,10 +89,36 @@ namespace Gs2::Limit::Domain::Model
 
         Gs2::Core::Domain::CallbackID SubscribeCounters(
             TFunction<void()> Callback
+            , const TOptional<FString> LimitName = TOptional<FString>()
         );
 
+        class FCollectCountersTask;
+
+        Gs2::Core::Domain::CallbackID SubscribeCounters(
+            TFunction<void(TArray<Gs2::Limit::Model::FCounterPtr>)> Callback,const TOptional<FString> LimitName = TOptional<FString>(),const TOptional<FString> TimeOffsetToken = TOptional<FString>()
+        );
+
+        void InvalidateCounters(const TOptional<FString> LimitName = TOptional<FString>(),const TOptional<FString> TimeOffsetToken = TOptional<FString>());
+
+        class GS2LIMIT_API FSubscribeCountersWithInitialCallTask final :
+            public Gs2::Core::Util::TGs2Future<Gs2::Core::Domain::CallbackID>,
+            public TSharedFromThis<FSubscribeCountersWithInitialCallTask>
+        {
+            const TSharedPtr<FUserDomain> Self;
+            const TFunction<void(TArray<Gs2::Limit::Model::FCounterPtr>)> Callback;
+        const TOptional<FString> QueryLimitName;const TOptional<FString> QueryTimeOffsetToken;
+        public:
+            FSubscribeCountersWithInitialCallTask(const TSharedPtr<FUserDomain>& Self, TFunction<void(TArray<Gs2::Limit::Model::FCounterPtr>)> Callback,const TOptional<FString> LimitName,const TOptional<FString> TimeOffsetToken);
+            FSubscribeCountersWithInitialCallTask(const FSubscribeCountersWithInitialCallTask& From);
+            virtual Gs2::Core::Model::FGs2ErrorPtr Action(TSharedPtr<TSharedPtr<Gs2::Core::Domain::CallbackID>> Result) override;
+        };
+
+        TSharedPtr<FAsyncTask<FSubscribeCountersWithInitialCallTask>> SubscribeCountersWithInitialCall(
+            TFunction<void(TArray<Gs2::Limit::Model::FCounterPtr>)> Callback,const TOptional<FString> LimitName = TOptional<FString>(),const TOptional<FString> TimeOffsetToken = TOptional<FString>()
+        );
         void UnsubscribeCounters(
-            Gs2::Core::Domain::CallbackID CallbackID
+
+            Gs2::Core::Domain::CallbackID CallbackID, const TOptional<FString> LimitName = TOptional<FString>(), const TOptional<FString> TimeOffsetToken = TOptional<FString>()
         );
 
         TSharedPtr<Gs2::Limit::Domain::Model::FCounterDomain> Counter(

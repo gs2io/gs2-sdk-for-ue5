@@ -77,6 +77,8 @@ namespace Gs2::Idle::Domain::Model
             const FCategoryModelDomain& From
         );
 
+
+
         class GS2IDLE_API FGetTask final :
             public Gs2::Core::Util::TGs2Future<Gs2::Idle::Model::FCategoryModel>,
             public TSharedFromThis<FGetTask>

@@ -63,10 +63,6 @@ namespace Gs2::Distributor::Domain::Model
         Gs2::Auth::Model::FAccessTokenPtr AccessToken;
         TOptional<FString> UserId() const { return AccessToken->GetUserId(); }
         TOptional<FString> TransactionId;
-    private:
-
-        FString ParentKey;
-
     public:
 
         FStampSheetResultAccessTokenDomain(
@@ -81,6 +77,8 @@ namespace Gs2::Distributor::Domain::Model
         FStampSheetResultAccessTokenDomain(
             const FStampSheetResultAccessTokenDomain& From
         );
+
+
 
         class GS2DISTRIBUTOR_API FGetTask final :
             public Gs2::Core::Util::TGs2Future<Gs2::Distributor::Model::FStampSheetResult>,
@@ -162,6 +160,34 @@ namespace Gs2::Distributor::Domain::Model
         friend FModelNoCacheTask;
 
         TSharedPtr<FAsyncTask<FModelNoCacheTask>> ModelNoCache();
+
+        class GS2DISTRIBUTOR_API FSubscribeWithInitialCallTask final:
+            public Gs2::Core::Util::TGs2Future<Gs2::Core::Domain::CallbackID>,
+            public TSharedFromThis<FSubscribeWithInitialCallTask>
+        {
+            const TSharedPtr<FStampSheetResultAccessTokenDomain> Self;
+            const TFunction<void(Gs2::Distributor::Model::FStampSheetResultPtr)> Callback;
+        public:
+            explicit FSubscribeWithInitialCallTask(
+                const TSharedPtr<FStampSheetResultAccessTokenDomain> Self,
+                const TFunction<void(Gs2::Distributor::Model::FStampSheetResultPtr)>& Callback
+            );
+
+            FSubscribeWithInitialCallTask(
+                const FSubscribeWithInitialCallTask& From
+            );
+
+            virtual Gs2::Core::Model::FGs2ErrorPtr Action(
+                TSharedPtr<TSharedPtr<Gs2::Core::Domain::CallbackID>> Result
+            ) override;
+        };
+        friend FSubscribeWithInitialCallTask;
+
+        TSharedPtr<FAsyncTask<FStampSheetResultAccessTokenDomain::FSubscribeWithInitialCallTask>> SubscribeWithInitialCall(
+            TFunction<void(Gs2::Distributor::Model::FStampSheetResultPtr)> Callback
+        );
+
+        void Invalidate();
 
         Gs2::Core::Domain::CallbackID Subscribe(
             TFunction<void(Gs2::Distributor::Model::FStampSheetResultPtr)> Callback

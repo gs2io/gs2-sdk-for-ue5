@@ -88,7 +88,6 @@ namespace Gs2::Inventory::Domain::Model
     class FBigItemAccessTokenDomain;
     class FUserDomain;
     class FUserAccessTokenDomain;
-    class FItemSetEntry;
 
     class GS2INVENTORY_API FCurrentItemModelMasterDomain:
         public TSharedFromThis<FCurrentItemModelMasterDomain>
@@ -126,6 +125,8 @@ namespace Gs2::Inventory::Domain::Model
             const FCurrentItemModelMasterDomain& From
         );
 
+
+
         class GS2INVENTORY_API FExportMasterTask final :
             public Gs2::Core::Util::TGs2Future<Gs2::Inventory::Domain::Model::FCurrentItemModelMasterDomain>,
             public TSharedFromThis<FExportMasterTask>
@@ -151,6 +152,8 @@ namespace Gs2::Inventory::Domain::Model
         TSharedPtr<FAsyncTask<FExportMasterTask>> ExportMaster(
             Request::FExportMasterRequestPtr Request
         );
+
+
 
         class GS2INVENTORY_API FGetTask final :
             public Gs2::Core::Util::TGs2Future<Gs2::Inventory::Model::FCurrentItemModelMaster>,
@@ -178,6 +181,8 @@ namespace Gs2::Inventory::Domain::Model
             Request::FGetCurrentItemModelMasterRequestPtr Request
         );
 
+
+
         class GS2INVENTORY_API FPreUpdateTask final :
             public Gs2::Core::Util::TGs2Future<Gs2::Inventory::Domain::Model::FCurrentItemModelMasterDomain>,
             public TSharedFromThis<FPreUpdateTask>
@@ -204,6 +209,8 @@ namespace Gs2::Inventory::Domain::Model
             Request::FPreUpdateCurrentItemModelMasterRequestPtr Request
         );
 
+
+
         class GS2INVENTORY_API FUpdateTask final :
             public Gs2::Core::Util::TGs2Future<Gs2::Inventory::Domain::Model::FCurrentItemModelMasterDomain>,
             public TSharedFromThis<FUpdateTask>
@@ -229,6 +236,8 @@ namespace Gs2::Inventory::Domain::Model
         TSharedPtr<FAsyncTask<FUpdateTask>> Update(
             Request::FUpdateCurrentItemModelMasterRequestPtr Request
         );
+
+
 
         class GS2INVENTORY_API FUpdateFromGitHubTask final :
             public Gs2::Core::Util::TGs2Future<Gs2::Inventory::Domain::Model::FCurrentItemModelMasterDomain>,
@@ -286,7 +295,34 @@ namespace Gs2::Inventory::Domain::Model
 
         TSharedPtr<FAsyncTask<FModelTask>> Model();
 
+        void Invalidate();
+
         Gs2::Core::Domain::CallbackID Subscribe(
+            TFunction<void(Gs2::Inventory::Model::FCurrentItemModelMasterPtr)> Callback
+        );
+
+        class GS2INVENTORY_API FSubscribeWithInitialCallTask final :
+            public Gs2::Core::Util::TGs2Future<Gs2::Core::Domain::CallbackID>,
+            public TSharedFromThis<FSubscribeWithInitialCallTask>
+        {
+            const TSharedPtr<FCurrentItemModelMasterDomain> Self;
+            const TFunction<void(Gs2::Inventory::Model::FCurrentItemModelMasterPtr)> Callback;
+        public:
+            FSubscribeWithInitialCallTask(
+                const TSharedPtr<FCurrentItemModelMasterDomain>& Self,
+                TFunction<void(Gs2::Inventory::Model::FCurrentItemModelMasterPtr)> Callback
+            );
+
+            FSubscribeWithInitialCallTask(
+                const FSubscribeWithInitialCallTask& From
+            );
+
+            virtual Gs2::Core::Model::FGs2ErrorPtr Action(
+                TSharedPtr<TSharedPtr<Gs2::Core::Domain::CallbackID>> Result
+            ) override;
+        };
+
+        TSharedPtr<FAsyncTask<FSubscribeWithInitialCallTask>> SubscribeWithInitialCall(
             TFunction<void(Gs2::Inventory::Model::FCurrentItemModelMasterPtr)> Callback
         );
 

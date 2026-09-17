@@ -102,7 +102,7 @@ namespace Gs2::UE5::Inventory::Domain::Model
     Gs2::Core::Domain::CallbackID FEzSimpleItemDomain::Subscribe(TFunction<void(Gs2::UE5::Inventory::Model::FEzSimpleItemPtr)> Callback)
     {
         return Domain->Subscribe(
-            [&](Gs2::Inventory::Model::FSimpleItemPtr Item)
+            [Callback](Gs2::Inventory::Model::FSimpleItemPtr Item)
             {
                 Callback(Gs2::UE5::Inventory::Model::FEzSimpleItem::FromModel(Item));
             }

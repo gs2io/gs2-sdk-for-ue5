@@ -30,6 +30,9 @@
 #include "Deploy/Domain/Model/Event.h"
 #include "Deploy/Domain/Model/Output.h"
 
+#include "Deploy/Model/Cache/Event.h"
+#include "Deploy/Model/Cache/Output.h"
+#include "Deploy/Model/Cache/Resource.h"
 #include "Core/Domain/Gs2.h"
 
 namespace Gs2::Deploy::Domain::Model
@@ -575,26 +578,110 @@ namespace Gs2::Deploy::Domain::Model
     {
         return Gs2->Cache->ListSubscribe(
             Gs2::Deploy::Model::FResource::TypeName,
-            Gs2::Deploy::Domain::Model::FStackDomain::CreateCacheParentKey(
+            Gs2::Deploy::Model::Cache::FResourceCache::CreateCacheParentKey(
                 StackName,
-                "Resource"
+                TOptional<int32>()
             ),
+            Callback,
             Callback
         );
     }
-
     void FStackDomain::UnsubscribeResources(
         Gs2::Core::Domain::CallbackID CallbackID
     )
     {
         Gs2->Cache->ListUnsubscribe(
             Gs2::Deploy::Model::FResource::TypeName,
-            Gs2::Deploy::Domain::Model::FStackDomain::CreateCacheParentKey(
+            Gs2::Deploy::Model::Cache::FResourceCache::CreateCacheParentKey(
                 StackName,
-                "Resource"
+                TOptional<int32>()
             ),
             CallbackID
         );
+    }
+    class FStackDomain::FCollectResourcesTask : public Gs2::Core::Util::TGs2Future<TArray<Gs2::Deploy::Model::FResourcePtr>>, public TSharedFromThis<FCollectResourcesTask>
+    {
+        const TSharedPtr<FStackDomain> Self;
+        const TFunction<void(TArray<Gs2::Deploy::Model::FResourcePtr>)> OnCollected;
+
+    public:
+        explicit FCollectResourcesTask(const TSharedPtr<FStackDomain>& Self, TFunction<void(TArray<Gs2::Deploy::Model::FResourcePtr>)> OnCollected) : Self(Self), OnCollected(OnCollected) {}
+        FCollectResourcesTask(const FCollectResourcesTask& From) : TGs2Future(From), Self(From.Self), OnCollected(From.OnCollected) {}
+        virtual Gs2::Core::Model::FGs2ErrorPtr Action(TSharedPtr<TSharedPtr<TArray<Gs2::Deploy::Model::FResourcePtr>>> Result) override
+        {
+            TArray<Gs2::Deploy::Model::FResourcePtr> Items;
+            auto Iterator = Self->Resources()->begin();
+            while (Iterator.HasNext())
+            {
+                if (Iterator.IsError()) return Iterator.Error();
+                if (Iterator.IsCurrentValid()) Items.Add(Iterator.Current());
+                ++Iterator;
+            }
+            if (Iterator.IsError()) return Iterator.Error();
+            *Result = MakeShared<TArray<Gs2::Deploy::Model::FResourcePtr>>(Items);
+            if (OnCollected) OnCollected(Items);
+            return nullptr;
+        }
+    };
+
+    Gs2::Core::Domain::CallbackID FStackDomain::SubscribeResources(
+        TFunction<void(TArray<Gs2::Deploy::Model::FResourcePtr>)> Callback
+    )
+    {
+        const TWeakPtr<Gs2::Core::Domain::FGs2> WeakGs2 = this->Gs2;
+        const TWeakPtr<Deploy::Domain::FGs2DeployDomain> WeakService = this->Service;
+        const auto QueryStackName = StackName;
+        const auto Parent = Gs2::Deploy::Model::Cache::FResourceCache::CreateCacheParentKey(
+        StackName,
+        TOptional<int32>()
+    );
+        return Gs2->Cache->ListSubscribeTyped(
+            Gs2::Deploy::Model::FResource::TypeName,
+            Parent,
+            [Callback, WeakGs2](const TArray<FGs2ObjectPtr>& Values)
+            {
+                if (!WeakGs2.Pin().IsValid()) return;
+                TArray<Gs2::Deploy::Model::FResourcePtr> TypedValues;
+                for (const auto& Value : Values) if (Value.IsValid()) TypedValues.Add(StaticCastSharedPtr<Gs2::Deploy::Model::FResource>(Value));
+                Callback(TypedValues);
+            },
+            [WeakGs2, WeakService, Callback, QueryStackName]()
+            {
+                const auto Owner = WeakGs2.Pin();
+                if (!Owner.IsValid()) return;
+                const auto Domain = MakeShared<FStackDomain>(Owner, WeakService.Pin(), QueryStackName);
+                const auto Task = Gs2::Core::Util::New<FAsyncTask<FCollectResourcesTask>>(Domain, Callback);
+                Task->StartBackgroundTask();
+            }
+        );
+    }
+
+    void FStackDomain::InvalidateResources()
+    {
+        Gs2->Cache->ClearListCache(
+            Gs2::Deploy::Model::FResource::TypeName,
+            Gs2::Deploy::Model::Cache::FResourceCache::CreateCacheParentKey(
+        StackName,
+        TOptional<int32>()
+    )
+        );
+    }
+
+    FStackDomain::FSubscribeResourcesWithInitialCallTask::FSubscribeResourcesWithInitialCallTask(const TSharedPtr<FStackDomain>& Self, TFunction<void(TArray<Gs2::Deploy::Model::FResourcePtr>)> Callback) : Self(Self), Callback(Callback) {}
+    FStackDomain::FSubscribeResourcesWithInitialCallTask::FSubscribeResourcesWithInitialCallTask(const FSubscribeResourcesWithInitialCallTask& From) : TGs2Future(From), Self(From.Self), Callback(From.Callback) {}
+    Gs2::Core::Model::FGs2ErrorPtr FStackDomain::FSubscribeResourcesWithInitialCallTask::Action(TSharedPtr<TSharedPtr<Gs2::Core::Domain::CallbackID>> Result)
+    {
+        const auto Task = Gs2::Core::Util::New<FAsyncTask<FCollectResourcesTask>>(Self, TFunction<void(TArray<Gs2::Deploy::Model::FResourcePtr>)>());
+        Task->StartSynchronousTask(); Task->EnsureCompletion();
+        if (Task->GetTask().IsError()) return Task->GetTask().Error();
+        const auto Values = Task->GetTask().Result();
+        const auto CallbackId = Self->SubscribeResources(Callback);
+        Callback(*Values); *Result = MakeShared<Gs2::Core::Domain::CallbackID>(CallbackId);
+        return nullptr;
+    }
+    TSharedPtr<FAsyncTask<FStackDomain::FSubscribeResourcesWithInitialCallTask>> FStackDomain::SubscribeResourcesWithInitialCall(TFunction<void(TArray<Gs2::Deploy::Model::FResourcePtr>)> Callback)
+    {
+        return Gs2::Core::Util::New<FAsyncTask<FSubscribeResourcesWithInitialCallTask>>(this->AsShared(), Callback);
     }
 
     TSharedPtr<Gs2::Deploy::Domain::Model::FResourceDomain> FStackDomain::Resource(
@@ -625,26 +712,110 @@ namespace Gs2::Deploy::Domain::Model
     {
         return Gs2->Cache->ListSubscribe(
             Gs2::Deploy::Model::FEvent::TypeName,
-            Gs2::Deploy::Domain::Model::FStackDomain::CreateCacheParentKey(
+            Gs2::Deploy::Model::Cache::FEventCache::CreateCacheParentKey(
                 StackName,
-                "Event"
+                TOptional<int32>()
             ),
+            Callback,
             Callback
         );
     }
-
     void FStackDomain::UnsubscribeEvents(
         Gs2::Core::Domain::CallbackID CallbackID
     )
     {
         Gs2->Cache->ListUnsubscribe(
             Gs2::Deploy::Model::FEvent::TypeName,
-            Gs2::Deploy::Domain::Model::FStackDomain::CreateCacheParentKey(
+            Gs2::Deploy::Model::Cache::FEventCache::CreateCacheParentKey(
                 StackName,
-                "Event"
+                TOptional<int32>()
             ),
             CallbackID
         );
+    }
+    class FStackDomain::FCollectEventsTask : public Gs2::Core::Util::TGs2Future<TArray<Gs2::Deploy::Model::FEventPtr>>, public TSharedFromThis<FCollectEventsTask>
+    {
+        const TSharedPtr<FStackDomain> Self;
+        const TFunction<void(TArray<Gs2::Deploy::Model::FEventPtr>)> OnCollected;
+
+    public:
+        explicit FCollectEventsTask(const TSharedPtr<FStackDomain>& Self, TFunction<void(TArray<Gs2::Deploy::Model::FEventPtr>)> OnCollected) : Self(Self), OnCollected(OnCollected) {}
+        FCollectEventsTask(const FCollectEventsTask& From) : TGs2Future(From), Self(From.Self), OnCollected(From.OnCollected) {}
+        virtual Gs2::Core::Model::FGs2ErrorPtr Action(TSharedPtr<TSharedPtr<TArray<Gs2::Deploy::Model::FEventPtr>>> Result) override
+        {
+            TArray<Gs2::Deploy::Model::FEventPtr> Items;
+            auto Iterator = Self->Events()->begin();
+            while (Iterator.HasNext())
+            {
+                if (Iterator.IsError()) return Iterator.Error();
+                if (Iterator.IsCurrentValid()) Items.Add(Iterator.Current());
+                ++Iterator;
+            }
+            if (Iterator.IsError()) return Iterator.Error();
+            *Result = MakeShared<TArray<Gs2::Deploy::Model::FEventPtr>>(Items);
+            if (OnCollected) OnCollected(Items);
+            return nullptr;
+        }
+    };
+
+    Gs2::Core::Domain::CallbackID FStackDomain::SubscribeEvents(
+        TFunction<void(TArray<Gs2::Deploy::Model::FEventPtr>)> Callback
+    )
+    {
+        const TWeakPtr<Gs2::Core::Domain::FGs2> WeakGs2 = this->Gs2;
+        const TWeakPtr<Deploy::Domain::FGs2DeployDomain> WeakService = this->Service;
+        const auto QueryStackName = StackName;
+        const auto Parent = Gs2::Deploy::Model::Cache::FEventCache::CreateCacheParentKey(
+        StackName,
+        TOptional<int32>()
+    );
+        return Gs2->Cache->ListSubscribeTyped(
+            Gs2::Deploy::Model::FEvent::TypeName,
+            Parent,
+            [Callback, WeakGs2](const TArray<FGs2ObjectPtr>& Values)
+            {
+                if (!WeakGs2.Pin().IsValid()) return;
+                TArray<Gs2::Deploy::Model::FEventPtr> TypedValues;
+                for (const auto& Value : Values) if (Value.IsValid()) TypedValues.Add(StaticCastSharedPtr<Gs2::Deploy::Model::FEvent>(Value));
+                Callback(TypedValues);
+            },
+            [WeakGs2, WeakService, Callback, QueryStackName]()
+            {
+                const auto Owner = WeakGs2.Pin();
+                if (!Owner.IsValid()) return;
+                const auto Domain = MakeShared<FStackDomain>(Owner, WeakService.Pin(), QueryStackName);
+                const auto Task = Gs2::Core::Util::New<FAsyncTask<FCollectEventsTask>>(Domain, Callback);
+                Task->StartBackgroundTask();
+            }
+        );
+    }
+
+    void FStackDomain::InvalidateEvents()
+    {
+        Gs2->Cache->ClearListCache(
+            Gs2::Deploy::Model::FEvent::TypeName,
+            Gs2::Deploy::Model::Cache::FEventCache::CreateCacheParentKey(
+        StackName,
+        TOptional<int32>()
+    )
+        );
+    }
+
+    FStackDomain::FSubscribeEventsWithInitialCallTask::FSubscribeEventsWithInitialCallTask(const TSharedPtr<FStackDomain>& Self, TFunction<void(TArray<Gs2::Deploy::Model::FEventPtr>)> Callback) : Self(Self), Callback(Callback) {}
+    FStackDomain::FSubscribeEventsWithInitialCallTask::FSubscribeEventsWithInitialCallTask(const FSubscribeEventsWithInitialCallTask& From) : TGs2Future(From), Self(From.Self), Callback(From.Callback) {}
+    Gs2::Core::Model::FGs2ErrorPtr FStackDomain::FSubscribeEventsWithInitialCallTask::Action(TSharedPtr<TSharedPtr<Gs2::Core::Domain::CallbackID>> Result)
+    {
+        const auto Task = Gs2::Core::Util::New<FAsyncTask<FCollectEventsTask>>(Self, TFunction<void(TArray<Gs2::Deploy::Model::FEventPtr>)>());
+        Task->StartSynchronousTask(); Task->EnsureCompletion();
+        if (Task->GetTask().IsError()) return Task->GetTask().Error();
+        const auto Values = Task->GetTask().Result();
+        const auto CallbackId = Self->SubscribeEvents(Callback);
+        Callback(*Values); *Result = MakeShared<Gs2::Core::Domain::CallbackID>(CallbackId);
+        return nullptr;
+    }
+    TSharedPtr<FAsyncTask<FStackDomain::FSubscribeEventsWithInitialCallTask>> FStackDomain::SubscribeEventsWithInitialCall(TFunction<void(TArray<Gs2::Deploy::Model::FEventPtr>)> Callback)
+    {
+        return Gs2::Core::Util::New<FAsyncTask<FSubscribeEventsWithInitialCallTask>>(this->AsShared(), Callback);
     }
 
     TSharedPtr<Gs2::Deploy::Domain::Model::FEventDomain> FStackDomain::Event(
@@ -675,26 +846,110 @@ namespace Gs2::Deploy::Domain::Model
     {
         return Gs2->Cache->ListSubscribe(
             Gs2::Deploy::Model::FOutput::TypeName,
-            Gs2::Deploy::Domain::Model::FStackDomain::CreateCacheParentKey(
+            Gs2::Deploy::Model::Cache::FOutputCache::CreateCacheParentKey(
                 StackName,
-                "Output"
+                TOptional<int32>()
             ),
+            Callback,
             Callback
         );
     }
-
     void FStackDomain::UnsubscribeOutputs(
         Gs2::Core::Domain::CallbackID CallbackID
     )
     {
         Gs2->Cache->ListUnsubscribe(
             Gs2::Deploy::Model::FOutput::TypeName,
-            Gs2::Deploy::Domain::Model::FStackDomain::CreateCacheParentKey(
+            Gs2::Deploy::Model::Cache::FOutputCache::CreateCacheParentKey(
                 StackName,
-                "Output"
+                TOptional<int32>()
             ),
             CallbackID
         );
+    }
+    class FStackDomain::FCollectOutputsTask : public Gs2::Core::Util::TGs2Future<TArray<Gs2::Deploy::Model::FOutputPtr>>, public TSharedFromThis<FCollectOutputsTask>
+    {
+        const TSharedPtr<FStackDomain> Self;
+        const TFunction<void(TArray<Gs2::Deploy::Model::FOutputPtr>)> OnCollected;
+
+    public:
+        explicit FCollectOutputsTask(const TSharedPtr<FStackDomain>& Self, TFunction<void(TArray<Gs2::Deploy::Model::FOutputPtr>)> OnCollected) : Self(Self), OnCollected(OnCollected) {}
+        FCollectOutputsTask(const FCollectOutputsTask& From) : TGs2Future(From), Self(From.Self), OnCollected(From.OnCollected) {}
+        virtual Gs2::Core::Model::FGs2ErrorPtr Action(TSharedPtr<TSharedPtr<TArray<Gs2::Deploy::Model::FOutputPtr>>> Result) override
+        {
+            TArray<Gs2::Deploy::Model::FOutputPtr> Items;
+            auto Iterator = Self->Outputs()->begin();
+            while (Iterator.HasNext())
+            {
+                if (Iterator.IsError()) return Iterator.Error();
+                if (Iterator.IsCurrentValid()) Items.Add(Iterator.Current());
+                ++Iterator;
+            }
+            if (Iterator.IsError()) return Iterator.Error();
+            *Result = MakeShared<TArray<Gs2::Deploy::Model::FOutputPtr>>(Items);
+            if (OnCollected) OnCollected(Items);
+            return nullptr;
+        }
+    };
+
+    Gs2::Core::Domain::CallbackID FStackDomain::SubscribeOutputs(
+        TFunction<void(TArray<Gs2::Deploy::Model::FOutputPtr>)> Callback
+    )
+    {
+        const TWeakPtr<Gs2::Core::Domain::FGs2> WeakGs2 = this->Gs2;
+        const TWeakPtr<Deploy::Domain::FGs2DeployDomain> WeakService = this->Service;
+        const auto QueryStackName = StackName;
+        const auto Parent = Gs2::Deploy::Model::Cache::FOutputCache::CreateCacheParentKey(
+        StackName,
+        TOptional<int32>()
+    );
+        return Gs2->Cache->ListSubscribeTyped(
+            Gs2::Deploy::Model::FOutput::TypeName,
+            Parent,
+            [Callback, WeakGs2](const TArray<FGs2ObjectPtr>& Values)
+            {
+                if (!WeakGs2.Pin().IsValid()) return;
+                TArray<Gs2::Deploy::Model::FOutputPtr> TypedValues;
+                for (const auto& Value : Values) if (Value.IsValid()) TypedValues.Add(StaticCastSharedPtr<Gs2::Deploy::Model::FOutput>(Value));
+                Callback(TypedValues);
+            },
+            [WeakGs2, WeakService, Callback, QueryStackName]()
+            {
+                const auto Owner = WeakGs2.Pin();
+                if (!Owner.IsValid()) return;
+                const auto Domain = MakeShared<FStackDomain>(Owner, WeakService.Pin(), QueryStackName);
+                const auto Task = Gs2::Core::Util::New<FAsyncTask<FCollectOutputsTask>>(Domain, Callback);
+                Task->StartBackgroundTask();
+            }
+        );
+    }
+
+    void FStackDomain::InvalidateOutputs()
+    {
+        Gs2->Cache->ClearListCache(
+            Gs2::Deploy::Model::FOutput::TypeName,
+            Gs2::Deploy::Model::Cache::FOutputCache::CreateCacheParentKey(
+        StackName,
+        TOptional<int32>()
+    )
+        );
+    }
+
+    FStackDomain::FSubscribeOutputsWithInitialCallTask::FSubscribeOutputsWithInitialCallTask(const TSharedPtr<FStackDomain>& Self, TFunction<void(TArray<Gs2::Deploy::Model::FOutputPtr>)> Callback) : Self(Self), Callback(Callback) {}
+    FStackDomain::FSubscribeOutputsWithInitialCallTask::FSubscribeOutputsWithInitialCallTask(const FSubscribeOutputsWithInitialCallTask& From) : TGs2Future(From), Self(From.Self), Callback(From.Callback) {}
+    Gs2::Core::Model::FGs2ErrorPtr FStackDomain::FSubscribeOutputsWithInitialCallTask::Action(TSharedPtr<TSharedPtr<Gs2::Core::Domain::CallbackID>> Result)
+    {
+        const auto Task = Gs2::Core::Util::New<FAsyncTask<FCollectOutputsTask>>(Self, TFunction<void(TArray<Gs2::Deploy::Model::FOutputPtr>)>());
+        Task->StartSynchronousTask(); Task->EnsureCompletion();
+        if (Task->GetTask().IsError()) return Task->GetTask().Error();
+        const auto Values = Task->GetTask().Result();
+        const auto CallbackId = Self->SubscribeOutputs(Callback);
+        Callback(*Values); *Result = MakeShared<Gs2::Core::Domain::CallbackID>(CallbackId);
+        return nullptr;
+    }
+    TSharedPtr<FAsyncTask<FStackDomain::FSubscribeOutputsWithInitialCallTask>> FStackDomain::SubscribeOutputsWithInitialCall(TFunction<void(TArray<Gs2::Deploy::Model::FOutputPtr>)> Callback)
+    {
+        return Gs2::Core::Util::New<FAsyncTask<FSubscribeOutputsWithInitialCallTask>>(this->AsShared(), Callback);
     }
 
     TSharedPtr<Gs2::Deploy::Domain::Model::FOutputDomain> FStackDomain::Output(
@@ -746,64 +1001,79 @@ namespace Gs2::Deploy::Domain::Model
     )
     {
         const auto ParentKey = FString("deploy:Stack");
-        // ReSharper disable once CppLocalVariableMayBeConst
-        TSharedPtr<Gs2::Deploy::Model::FStack> Value;
-        auto bCacheHit = Self->Gs2->Cache->TryGet<Gs2::Deploy::Model::FStack>(
-            ParentKey,
-            Gs2::Deploy::Domain::Model::FStackDomain::CreateCacheKey(
-                Self->StackName
-            ),
-            &Value
+        const FString CacheKey = Gs2::Deploy::Domain::Model::FStackDomain::CreateCacheKey(
+            Self->StackName
         );
-        if (!bCacheHit) {
-            const auto Future = Self->Get(
-                MakeShared<Gs2::Deploy::Request::FGetStackRequest>()
-            );
-            Future->StartSynchronousTask();
-            if (Future->GetTask().IsError())
+        return Self->Gs2->Cache->ExecuteWithKeyLock(
+            Gs2::Deploy::Model::FStack::TypeName,
+            ParentKey,
+            CacheKey,
+            [this, Result, CacheKey, ParentKey]() -> Gs2::Core::Model::FGs2ErrorPtr
             {
-                if (Future->GetTask().Error()->Type() != Gs2::Core::Model::FNotFoundError::TypeString)
-                {
-                    return Future->GetTask().Error();
-                }
-
-                const auto Key = Gs2::Deploy::Domain::Model::FStackDomain::CreateCacheKey(
-                    Self->StackName
-                );
-                Self->Gs2->Cache->Put(
-                    Gs2::Deploy::Model::FStack::TypeName,
+                // ReSharper disable once CppLocalVariableMayBeConst
+                TSharedPtr<Gs2::Deploy::Model::FStack> Value;
+                auto bCacheHit = Self->Gs2->Cache->TryGet<Gs2::Deploy::Model::FStack>(
                     ParentKey,
-                    Key,
-                    nullptr,
-                    FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
+                    CacheKey,
+                    &Value
                 );
+                if (!bCacheHit) {
+                    const auto Future = Self->Get(
+                        MakeShared<Gs2::Deploy::Request::FGetStackRequest>()
+                    );
+                    Future->StartSynchronousTask();
+                    if (Future->GetTask().IsError())
+                    {
+                        const auto Error = Future->GetTask().Error();
+                        if (!Error.IsValid() || Error->Type() != Gs2::Core::Model::FNotFoundError::TypeString)
+                        {
+                            return Error;
+                        }
+                        Self->Gs2->Cache->Put(
+                            Gs2::Deploy::Model::FStack::TypeName,
+                            ParentKey,
+                            CacheKey,
+                            nullptr,
+                            FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
+                        );
 
-                if (Future->GetTask().Error()->Detail(0)->GetComponent() != "stack")
-                {
-                    return Future->GetTask().Error();
+                        if (!Error->GetErrors().IsValid() || Error->Count() == 0 || !Error->Detail(0).IsValid() || Error->Detail(0)->GetComponent() != "stack")
+                        {
+                            return Error;
+                        }
+                    }
+                    else
+                    {
+                        Value = Future->GetTask().Result();
+                    }
+                    Future->EnsureCompletion();
                 }
-            }
-            else
-            {
-                Value = Future->GetTask().Result();
-                if (Value.IsValid())
+                if (!bCacheHit)
                 {
-                    Self->Gs2->Cache->Put(
+                    FGs2ObjectPtr ExistingObject;
+                    const bool Existing = Self->Gs2->Cache->TryGet(
                         Gs2::Deploy::Model::FStack::TypeName,
                         ParentKey,
-                        FStackDomain::CreateCacheKey(
-                            Self->StackName
-                        ),
-                        Value,
-                        FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
+                        CacheKey,
+                        &ExistingObject
                     );
+                    if (!Existing || ExistingObject != Value)
+                    {
+                        Self->Gs2->Cache->Put(
+                            Gs2::Deploy::Model::FStack::TypeName,
+                            ParentKey,
+                            CacheKey,
+                            Value,
+                            FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
+                        );
+                    }
                 }
-            }
-            Future->EnsureCompletion();
-        }
-        *Result = Value;
 
-        return nullptr;
+                *Result = Value;
+
+                return nullptr;
+            }
+        );
     }
 
     TSharedPtr<FAsyncTask<FStackDomain::FModelTask>> FStackDomain::Model() {
@@ -814,6 +1084,10 @@ namespace Gs2::Deploy::Domain::Model
         TFunction<void(Gs2::Deploy::Model::FStackPtr)> Callback
     )
     {
+        const TWeakPtr<Gs2::Core::Domain::FGs2> WeakGs2 = Gs2;
+        const TWeakPtr<Deploy::Domain::FGs2DeployDomain> WeakService = Service;
+        const FString RegisteredParentKey = ParentKey;
+        const TOptional<FString> QueryStackName = StackName;
         return Gs2->Cache->Subscribe(
             Gs2::Deploy::Model::FStack::TypeName,
             ParentKey,
@@ -823,6 +1097,22 @@ namespace Gs2::Deploy::Domain::Model
             [Callback](TSharedPtr<FGs2Object> obj)
             {
                 Callback(StaticCastSharedPtr<Gs2::Deploy::Model::FStack>(obj));
+            },
+            [WeakGs2, WeakService, RegisteredParentKey, QueryStackName]()
+            {
+                const auto Owner = WeakGs2.Pin();
+                if (!Owner.IsValid())
+                {
+                    return;
+                }
+                const auto Domain = MakeShared<FStackDomain>(
+                    Owner,
+                    WeakService.Pin(),
+                    QueryStackName
+                );
+                Domain->ParentKey = RegisteredParentKey;
+                const auto Task = Domain->Model();
+                Task->StartBackgroundTask();
             }
         );
     }

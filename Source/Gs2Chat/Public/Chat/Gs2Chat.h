@@ -27,8 +27,10 @@
 #include "Model/NotificationType.h"
 #include "Model/ScriptSetting.h"
 #include "Model/NotificationSetting.h"
+#include "Model/MobileNotificationMessage.h"
 #include "Model/LogSetting.h"
 #include "Model/TransactionSetting.h"
+#include "Model/TransactionSettingV2.h"
 #include "Model/GitHubCheckoutSetting.h"
 
 // DescribeNamespaces

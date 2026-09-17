@@ -75,7 +75,8 @@ namespace Gs2::UE5::Grade::Domain::Model
         );
     }
 
-    void FEzNamespaceDomain::UnsubscribeGradeModels(Gs2::Core::Domain::CallbackID CallbackId)
+    void FEzNamespaceDomain::UnsubscribeGradeModels(
+            Gs2::Core::Domain::CallbackID CallbackId)
     {
         Domain->UnsubscribeGradeModels(
             CallbackId

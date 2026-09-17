@@ -63,7 +63,8 @@ namespace Gs2::UE5::Inventory::Domain::Model
         );
     }
 
-    void FEzUserGameSessionDomain::UnsubscribeInventories(Gs2::Core::Domain::CallbackID CallbackId)
+    void FEzUserGameSessionDomain::UnsubscribeInventories(
+            Gs2::Core::Domain::CallbackID CallbackId)
     {
         Domain->UnsubscribeInventories(
             CallbackId

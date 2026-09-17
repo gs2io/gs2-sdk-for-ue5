@@ -27,6 +27,7 @@
 #include "Idle/Domain/SpeculativeExecutor/Transaction/ReceiveByUserIdSpeculativeExecutor.h"
 
 #include "Core/Domain/Gs2.h"
+#include "Core/Domain/SpeculativeExecutor/PreparedSpeculativeCommit.h"
 
 namespace Gs2::Idle::Domain::Transaction::SpeculativeExecutor
 {
@@ -58,42 +59,10 @@ namespace Gs2::Idle::Domain::Transaction::SpeculativeExecutor
     }
 
     Gs2::Core::Model::FGs2ErrorPtr FReceiveByUserIdSpeculativeExecutor::FCommitTask::Action(
-        TSharedPtr<TSharedPtr<TFunction<void()>>> Result)
+        TSharedPtr<TSharedPtr<Gs2::Core::Domain::SpeculativeExecutor::FPreparedSpeculativeCommit>> Result)
     {
-        const auto Future = Domain->Idle->Namespace(
-                Request->GetNamespaceName().IsSet() ? *Request->GetNamespaceName() : ""
-            )->AccessToken(
-                AccessToken
-            )->Status(
-                Request->GetCategoryName().IsSet() ? *Request->GetCategoryName() : ""
-            )->Prediction(
-                MakeShared<Gs2::Idle::Request::FPredictionRequest>()
-            );
-        Future->StartSynchronousTask();
-        if (Future->GetTask().IsError())
-        {
-            return Future->GetTask().Error();
-        }
-        const auto Item = Future->GetTask().Result();
-
-        if (!Item.IsValid())
-        {
-            *Result = MakeShared<TFunction<void()>>([]{});
-            return nullptr;
-        }
-
-        Service->OnIssueTransaction.Broadcast(
-            MakeShared<Gs2::Core::Domain::Model::FIssueTransactionEvent>(
-                AccessToken,
-                []{
-                    auto Arr = MakeShared<TArray<Gs2::Core::Model::FConsumeActionPtr>>();
-                    return Arr;
-                }(),
-                Item,
-                1.0
-            )
-        );
-
+        UE_LOG(Gs2Log, Warning, TEXT("Speculative execution not supported on this action: %s"), ToCStr(FReceiveByUserIdSpeculativeExecutor::Action()))
+        *Result = Gs2::Core::Domain::SpeculativeExecutor::FPreparedSpeculativeCommit::WrapLegacy(MakeShared<TFunction<void()>>([](){}));
         return nullptr;
     }
 

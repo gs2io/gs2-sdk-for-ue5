@@ -12,16 +12,15 @@
  * on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either
  * express or implied. See the License for the specific language governing
  * permissions and limitations under the License.
- *
- * deny overwrite
  */
 
 #pragma once
 
 #include "CoreMinimal.h"
 #include "Friend/Model/Gs2FriendFriendUser.h"
-#include "Friend/Model/Gs2FriendFriendUser.h"
+#include "Friend/Model/Gs2FriendFriend.h"
 #include "../../Core/Model/Gs2Error.h"
+#include "Core/Model/Gs2CoreTransaction.h"
 #include "Kismet/BlueprintAsyncActionBase.h"
 #include "Gs2FriendActionDeleteFriend.generated.h"
 
@@ -34,7 +33,8 @@ class BPGS2_API UGs2FriendDeleteFriendAsyncFunction : public UBlueprintAsyncActi
 {
     GENERATED_BODY()
 
-    FGs2FriendOwnFriendUser FriendUser;
+    FGs2FriendOwnFriend Friend;
+    FString TargetUserId;
 
 public:
 
@@ -49,7 +49,8 @@ public:
 	UFUNCTION(BlueprintCallable, DisplayName="Gs2::Friend::FriendUser::Action::DeleteFriend", Category="Game Server Services|GS2-Friend|Namespace|User|Friend|FriendUser|Action", meta=(WorldContext="WorldContextObject", BlueprintInternalUseOnly="true"))
     static UGs2FriendDeleteFriendAsyncFunction* DeleteFriend(
         UObject* WorldContextObject,
-        FGs2FriendOwnFriendUser FriendUser
+        FGs2FriendOwnFriend Friend,
+        FString TargetUserId
     );
 
     virtual void Activate() override;

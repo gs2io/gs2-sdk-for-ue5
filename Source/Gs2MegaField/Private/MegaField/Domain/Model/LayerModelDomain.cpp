@@ -33,6 +33,7 @@
 #include "MegaField/Domain/Model/UserAccessToken.h"
 #include "MegaField/Domain/Model/Spatial.h"
 #include "MegaField/Domain/Model/SpatialAccessToken.h"
+#include "MegaField/Model/Cache/LayerModel.h"
 
 #include "Core/Domain/Gs2.h"
 #include "Core/Domain/Transaction/JobQueueJobDomainFactory.h"
@@ -111,6 +112,21 @@ namespace Gs2::MegaField::Domain::Model
         }
         const auto ResultModel = Future->GetTask().Result();
         Future->EnsureCompletion();
+
+            if (ResultModel.IsValid() && ResultModel->GetItem() != nullptr)
+            {
+
+
+        Gs2::MegaField::Model::Cache::FLayerModelCache::Put(
+            Self->Gs2->Cache,
+
+            Request->GetNamespaceName(),
+            Request->GetAreaModelName(),
+            Request->GetLayerModelName(),
+            TOptional<int32>(),
+            ResultModel->GetItem()
+        );
+            }
         *Result = ResultModel->GetItem();
         return nullptr;
     }
@@ -161,71 +177,165 @@ namespace Gs2::MegaField::Domain::Model
         TSharedPtr<TSharedPtr<Gs2::MegaField::Model::FLayerModel>> Result
     )
     {
-        // ReSharper disable once CppLocalVariableMayBeConst
-        TSharedPtr<Gs2::MegaField::Model::FLayerModel> Value;
-        auto bCacheHit = Self->Gs2->Cache->TryGet<Gs2::MegaField::Model::FLayerModel>(
-            Self->ParentKey,
-            Gs2::MegaField::Domain::Model::FLayerModelDomain::CreateCacheKey(
-                Self->LayerModelName
-            ),
-            &Value
+        const auto CacheParentKey = Gs2::MegaField::Model::Cache::FLayerModelCache::CreateCacheParentKey(
+
+            Self->NamespaceName,
+            Self->AreaModelName,
+            TOptional<int32>()
         );
-        if (!bCacheHit) {
-            const auto Future = Self->Get(
-                MakeShared<Gs2::MegaField::Request::FGetLayerModelRequest>()
-            );
-            Future->StartSynchronousTask();
-            if (Future->GetTask().IsError())
+        const auto CacheKey = Gs2::MegaField::Model::Cache::FLayerModelCache::CreateCacheKey(
+
+            Self->LayerModelName
+        );
+        return Self->Gs2->Cache->ExecuteWithKeyLock(
+            Gs2::MegaField::Model::FLayerModel::TypeName,
+            CacheParentKey,
+            CacheKey,
+            [Self = Self, Result]() -> Gs2::Core::Model::FGs2ErrorPtr
             {
-                if (Future->GetTask().Error()->Type() != Gs2::Core::Model::FNotFoundError::TypeString)
-                {
-                    return Future->GetTask().Error();
-                }
+                Gs2::MegaField::Model::FLayerModelPtr Value;
+                const auto CacheHit = Gs2::MegaField::Model::Cache::FLayerModelCache::TryGet(
+                    Self->Gs2->Cache,
 
-                const auto Key = Gs2::MegaField::Domain::Model::FLayerModelDomain::CreateCacheKey(
-                    Self->LayerModelName
+                    Self->NamespaceName,
+                    Self->AreaModelName,
+                    Self->LayerModelName,
+                    TOptional<int32>(),
+                    &Value
                 );
-                Self->Gs2->Cache->Put(
-                    Gs2::MegaField::Model::FLayerModel::TypeName,
-                    Self->ParentKey,
-                    Key,
-                    nullptr,
-                    FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
-                );
-
-                if (Future->GetTask().Error()->Detail(0)->GetComponent() != "layerModel")
+                if (CacheHit)
                 {
-                    return Future->GetTask().Error();
+                    *Result = Value;
+                    return nullptr;
                 }
-            }
-            else
-            {
-                Value = Future->GetTask().Result();
-            }
-            Future->EnsureCompletion();
-        }
-        *Result = Value;
+                const auto Error = Gs2::MegaField::Model::Cache::FLayerModelCache::Fetch(
+                    Self->Gs2->Cache,
 
-        return nullptr;
+                    Self->NamespaceName,
+                    Self->AreaModelName,
+                    Self->LayerModelName,
+                    TOptional<int32>(),
+                    [Self](Gs2::MegaField::Model::FLayerModelPtr* OutItem) -> Gs2::Core::Model::FGs2ErrorPtr
+                    {
+                        const auto Future = Self->Get(
+                            MakeShared<Gs2::MegaField::Request::FGetLayerModelRequest>()
+                        );
+                        Future->StartSynchronousTask();
+                        if (Future->GetTask().IsError()) return Future->GetTask().Error();
+                        *OutItem = Future->GetTask().Result();
+                        Future->EnsureCompletion();
+                        return nullptr;
+                    },
+                    &Value
+                );
+                if (Error.IsValid()) return Error;
+                *Result = Value;
+                return nullptr;
+            }
+        );
     }
 
     TSharedPtr<FAsyncTask<FLayerModelDomain::FModelTask>> FLayerModelDomain::Model() {
         return Gs2::Core::Util::New<FAsyncTask<FLayerModelDomain::FModelTask>>(this->AsShared());
     }
 
+    void FLayerModelDomain::Invalidate()
+    {
+        Gs2::MegaField::Model::Cache::FLayerModelCache::Delete(
+            Gs2->Cache,
+
+            NamespaceName,
+            AreaModelName,
+            LayerModelName,
+            TOptional<int32>()
+        );
+    }
+
+    FLayerModelDomain::FSubscribeWithInitialCallTask::FSubscribeWithInitialCallTask(
+        const TSharedPtr<FLayerModelDomain>& Self,
+        TFunction<void(Gs2::MegaField::Model::FLayerModelPtr)> Callback
+    ):
+        Self(Self),
+        Callback(Callback)
+    {
+    }
+
+    FLayerModelDomain::FSubscribeWithInitialCallTask::FSubscribeWithInitialCallTask(
+        const FSubscribeWithInitialCallTask& From
+    ):
+        TGs2Future(From),
+        Self(From.Self),
+        Callback(From.Callback)
+    {
+    }
+
+    Gs2::Core::Model::FGs2ErrorPtr FLayerModelDomain::FSubscribeWithInitialCallTask::Action(
+        TSharedPtr<TSharedPtr<Gs2::Core::Domain::CallbackID>> Result
+    )
+    {
+        const auto Task = Self->Model();
+        Task->StartSynchronousTask();
+        Task->EnsureCompletion();
+        if (Task->GetTask().IsError()) return Task->GetTask().Error();
+        const auto Item = Task->GetTask().Result();
+        const auto CallbackId = Self->Subscribe(Callback);
+        Callback(Item);
+        *Result = MakeShared<Gs2::Core::Domain::CallbackID>(CallbackId);
+        return nullptr;
+    }
+
+    TSharedPtr<FAsyncTask<FLayerModelDomain::FSubscribeWithInitialCallTask>> FLayerModelDomain::SubscribeWithInitialCall(
+        TFunction<void(Gs2::MegaField::Model::FLayerModelPtr)> Callback
+    )
+    {
+        return Gs2::Core::Util::New<FAsyncTask<FSubscribeWithInitialCallTask>>(this->AsShared(), Callback);
+    }
+
     Gs2::Core::Domain::CallbackID FLayerModelDomain::Subscribe(
         TFunction<void(Gs2::MegaField::Model::FLayerModelPtr)> Callback
     )
     {
+        const auto SubscriptionParentKey = Gs2::MegaField::Model::Cache::FLayerModelCache::CreateCacheParentKey(
+
+            NamespaceName,
+            AreaModelName,
+            TOptional<int32>()
+        );
+        const auto SubscriptionCacheKey = Gs2::MegaField::Model::Cache::FLayerModelCache::CreateCacheKey(
+
+            LayerModelName
+        );
+        const TWeakPtr<Gs2::Core::Domain::FGs2> WeakGs2 = Gs2;
+        const TWeakPtr<MegaField::Domain::FGs2MegaFieldDomain> WeakService = Service;
+        const FString RegisteredParentKey = SubscriptionParentKey;
+        const TOptional<FString> QueryNamespaceName = NamespaceName;
+        const TOptional<FString> QueryAreaModelName = AreaModelName;
+        const TOptional<FString> QueryLayerModelName = LayerModelName;
         return Gs2->Cache->Subscribe(
             Gs2::MegaField::Model::FLayerModel::TypeName,
-            ParentKey,
-            Gs2::MegaField::Domain::Model::FLayerModelDomain::CreateCacheKey(
-                LayerModelName
-            ),
+            SubscriptionParentKey,
+            SubscriptionCacheKey,
             [Callback](TSharedPtr<FGs2Object> obj)
             {
                 Callback(StaticCastSharedPtr<Gs2::MegaField::Model::FLayerModel>(obj));
+            },
+            [WeakGs2, WeakService, RegisteredParentKey, QueryNamespaceName, QueryAreaModelName, QueryLayerModelName]()
+            {
+                const auto Owner = WeakGs2.Pin();
+                if (!Owner.IsValid())
+                {
+                    return;
+                }
+                const auto Domain = MakeShared<FLayerModelDomain>(
+                    Owner,
+                    WeakService.Pin(),
+                    QueryNamespaceName,
+                    QueryAreaModelName,
+                    QueryLayerModelName
+                );
+                Domain->ParentKey = RegisteredParentKey;
+                const auto Task = Domain->Model();
+                Task->StartBackgroundTask();
             }
         );
     }
@@ -234,12 +344,20 @@ namespace Gs2::MegaField::Domain::Model
         Gs2::Core::Domain::CallbackID CallbackID
     )
     {
+        const auto SubscriptionParentKey = Gs2::MegaField::Model::Cache::FLayerModelCache::CreateCacheParentKey(
+
+            NamespaceName,
+            AreaModelName,
+            TOptional<int32>()
+        );
+        const auto SubscriptionCacheKey = Gs2::MegaField::Model::Cache::FLayerModelCache::CreateCacheKey(
+
+            LayerModelName
+        );
         Gs2->Cache->Unsubscribe(
             Gs2::MegaField::Model::FLayerModel::TypeName,
-            ParentKey,
-            Gs2::MegaField::Domain::Model::FLayerModelDomain::CreateCacheKey(
-                LayerModelName
-            ),
+            SubscriptionParentKey,
+            SubscriptionCacheKey,
             CallbackID
         );
     }
@@ -250,4 +368,3 @@ namespace Gs2::MegaField::Domain::Model
 #elif defined(__clang__)
 #pragma clang diagnostic pop
 #endif
-

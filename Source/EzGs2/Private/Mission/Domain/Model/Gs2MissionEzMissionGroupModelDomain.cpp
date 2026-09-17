@@ -55,7 +55,8 @@ namespace Gs2::UE5::Mission::Domain::Model
         );
     }
 
-    void FEzMissionGroupModelDomain::UnsubscribeMissionTaskModels(Gs2::Core::Domain::CallbackID CallbackId)
+    void FEzMissionGroupModelDomain::UnsubscribeMissionTaskModels(
+            Gs2::Core::Domain::CallbackID CallbackId)
     {
         Domain->UnsubscribeMissionTaskModels(
             CallbackId
@@ -117,7 +118,7 @@ namespace Gs2::UE5::Mission::Domain::Model
     Gs2::Core::Domain::CallbackID FEzMissionGroupModelDomain::Subscribe(TFunction<void(Gs2::UE5::Mission::Model::FEzMissionGroupModelPtr)> Callback)
     {
         return Domain->Subscribe(
-            [&](Gs2::Mission::Model::FMissionGroupModelPtr Item)
+            [Callback](Gs2::Mission::Model::FMissionGroupModelPtr Item)
             {
                 Callback(Gs2::UE5::Mission::Model::FEzMissionGroupModel::FromModel(Item));
             }

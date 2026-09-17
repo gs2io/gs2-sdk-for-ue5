@@ -88,6 +88,8 @@ namespace Gs2::SerialKey::Domain::Model
             const FSerialKeyDomain& From
         );
 
+
+
         class GS2SERIALKEY_API FGetTask final :
             public Gs2::Core::Util::TGs2Future<Gs2::SerialKey::Model::FSerialKey>,
             public TSharedFromThis<FGetTask>
@@ -113,6 +115,8 @@ namespace Gs2::SerialKey::Domain::Model
         TSharedPtr<FAsyncTask<FGetTask>> Get(
             Request::FGetSerialKeyRequestPtr Request
         );
+
+
 
         class GS2SERIALKEY_API FUseTask final :
             public Gs2::Core::Util::TGs2Future<Gs2::SerialKey::Domain::Model::FSerialKeyDomain>,

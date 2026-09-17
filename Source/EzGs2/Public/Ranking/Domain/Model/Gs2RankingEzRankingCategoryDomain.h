@@ -60,7 +60,8 @@ namespace Gs2::UE5::Ranking::Domain::Model
 
         Gs2::Core::Domain::CallbackID SubscribeNearRankings(TFunction<void()> Callback);
 
-        void UnsubscribeNearRankings(Gs2::Core::Domain::CallbackID CallbackId);
+        void UnsubscribeNearRankings(
+                Gs2::Core::Domain::CallbackID CallbackId);
 
         Gs2::UE5::Ranking::Domain::Model::FEzSubscribeUserDomainPtr SubscribeUser(
             const FString TargetUserId

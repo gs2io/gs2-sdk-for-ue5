@@ -106,6 +106,8 @@ namespace Gs2::Matchmaking::Domain::Model
             const FGatheringAccessTokenDomain& From
         );
 
+
+
         class GS2MATCHMAKING_API FUpdateTask final :
             public Gs2::Core::Util::TGs2Future<Gs2::Matchmaking::Domain::Model::FGatheringAccessTokenDomain>,
             public TSharedFromThis<FUpdateTask>
@@ -131,6 +133,8 @@ namespace Gs2::Matchmaking::Domain::Model
         TSharedPtr<FAsyncTask<FUpdateTask>> Update(
             Request::FUpdateGatheringRequestPtr Request
         );
+
+
 
         class GS2MATCHMAKING_API FPingTask final :
             public Gs2::Core::Util::TGs2Future<Gs2::Matchmaking::Domain::Model::FGatheringAccessTokenDomain>,
@@ -158,6 +162,8 @@ namespace Gs2::Matchmaking::Domain::Model
             Request::FPingRequestPtr Request
         );
 
+
+
         class GS2MATCHMAKING_API FCancelMatchmakingTask final :
             public Gs2::Core::Util::TGs2Future<Gs2::Matchmaking::Domain::Model::FGatheringAccessTokenDomain>,
             public TSharedFromThis<FCancelMatchmakingTask>
@@ -184,6 +190,8 @@ namespace Gs2::Matchmaking::Domain::Model
             Request::FCancelMatchmakingRequestPtr Request
         );
 
+
+
         class GS2MATCHMAKING_API FEarlyCompleteTask final :
             public Gs2::Core::Util::TGs2Future<Gs2::Matchmaking::Domain::Model::FGatheringAccessTokenDomain>,
             public TSharedFromThis<FEarlyCompleteTask>
@@ -209,6 +217,8 @@ namespace Gs2::Matchmaking::Domain::Model
         TSharedPtr<FAsyncTask<FEarlyCompleteTask>> EarlyComplete(
             Request::FEarlyCompleteRequestPtr Request
         );
+
+
 
         class GS2MATCHMAKING_API FGetTask final :
             public Gs2::Core::Util::TGs2Future<Gs2::Matchmaking::Model::FGathering>,
@@ -269,7 +279,34 @@ namespace Gs2::Matchmaking::Domain::Model
 
         TSharedPtr<FAsyncTask<FModelTask>> Model();
 
+        void Invalidate();
+
         Gs2::Core::Domain::CallbackID Subscribe(
+            TFunction<void(Gs2::Matchmaking::Model::FGatheringPtr)> Callback
+        );
+
+        class GS2MATCHMAKING_API FSubscribeWithInitialCallTask final :
+            public Gs2::Core::Util::TGs2Future<Gs2::Core::Domain::CallbackID>,
+            public TSharedFromThis<FSubscribeWithInitialCallTask>
+        {
+            const TSharedPtr<FGatheringAccessTokenDomain> Self;
+            const TFunction<void(Gs2::Matchmaking::Model::FGatheringPtr)> Callback;
+        public:
+            FSubscribeWithInitialCallTask(
+                const TSharedPtr<FGatheringAccessTokenDomain>& Self,
+                TFunction<void(Gs2::Matchmaking::Model::FGatheringPtr)> Callback
+            );
+
+            FSubscribeWithInitialCallTask(
+                const FSubscribeWithInitialCallTask& From
+            );
+
+            virtual Gs2::Core::Model::FGs2ErrorPtr Action(
+                TSharedPtr<TSharedPtr<Gs2::Core::Domain::CallbackID>> Result
+            ) override;
+        };
+
+        TSharedPtr<FAsyncTask<FSubscribeWithInitialCallTask>> SubscribeWithInitialCall(
             TFunction<void(Gs2::Matchmaking::Model::FGatheringPtr)> Callback
         );
 

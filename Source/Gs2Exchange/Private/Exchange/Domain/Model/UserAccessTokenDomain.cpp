@@ -36,6 +36,9 @@
 #include "Exchange/Domain/Model/AwaitAccessToken.h"
 #include "Exchange/Domain/Model/User.h"
 #include "Exchange/Domain/Model/UserAccessToken.h"
+#include "Exchange/Model/Cache/RateModel.h"
+#include "Exchange/Model/Cache/IncrementalRateModel.h"
+#include "Exchange/Model/Cache/Await.h"
 
 #include "Core/Domain/Gs2.h"
 #include "Core/Domain/Transaction/JobQueueJobDomainFactory.h"
@@ -103,32 +106,125 @@ namespace Gs2::Exchange::Domain::Model
 
     Gs2::Core::Domain::CallbackID FUserAccessTokenDomain::SubscribeAwaits(
     TFunction<void()> Callback
+
     )
     {
         return Gs2->Cache->ListSubscribe(
             Gs2::Exchange::Model::FAwait::TypeName,
-            Gs2::Exchange::Domain::Model::FUserDomain::CreateCacheParentKey(
+            Gs2::Exchange::Model::Cache::FAwaitCache::CreateCacheParentKey(
                 NamespaceName,
-                UserId(),
-                "Await"
+                AccessToken.IsValid() ? AccessToken->GetUserId() : TOptional<FString>(),
+                AccessToken.IsValid() ? AccessToken->GetTimeOffset() : TOptional<int32>()
             ),
+            Callback,
             Callback
         );
     }
-
     void FUserAccessTokenDomain::UnsubscribeAwaits(
         Gs2::Core::Domain::CallbackID CallbackID
     )
     {
         Gs2->Cache->ListUnsubscribe(
             Gs2::Exchange::Model::FAwait::TypeName,
-            Gs2::Exchange::Domain::Model::FUserDomain::CreateCacheParentKey(
+            Gs2::Exchange::Model::Cache::FAwaitCache::CreateCacheParentKey(
                 NamespaceName,
-                UserId(),
-                "Await"
+                AccessToken.IsValid() ? AccessToken->GetUserId() : TOptional<FString>(),
+                AccessToken.IsValid() ? AccessToken->GetTimeOffset() : TOptional<int32>()
             ),
             CallbackID
         );
+    }
+    class FUserAccessTokenDomain::FCollectAwaitsTask : public Gs2::Core::Util::TGs2Future<TArray<Gs2::Exchange::Model::FAwaitPtr>>, public TSharedFromThis<FCollectAwaitsTask>
+    {
+        const TSharedPtr<FUserAccessTokenDomain> Self;
+        const TFunction<void(TArray<Gs2::Exchange::Model::FAwaitPtr>)> OnCollected;
+    const TOptional<FString> QueryRateName;
+    public:
+        explicit FCollectAwaitsTask(const TSharedPtr<FUserAccessTokenDomain>& Self, TFunction<void(TArray<Gs2::Exchange::Model::FAwaitPtr>)> OnCollected,const TOptional<FString> RateName) : Self(Self), OnCollected(OnCollected), QueryRateName(RateName) {}
+        FCollectAwaitsTask(const FCollectAwaitsTask& From) : TGs2Future(From), Self(From.Self), OnCollected(From.OnCollected), QueryRateName(From.QueryRateName) {}
+        virtual Gs2::Core::Model::FGs2ErrorPtr Action(TSharedPtr<TSharedPtr<TArray<Gs2::Exchange::Model::FAwaitPtr>>> Result) override
+        {
+            TArray<Gs2::Exchange::Model::FAwaitPtr> Items;
+            auto Iterator = Self->Awaits(QueryRateName)->begin();
+            while (Iterator.HasNext())
+            {
+                if (Iterator.IsError()) return Iterator.Error();
+                if (Iterator.IsCurrentValid()) Items.Add(Iterator.Current());
+                ++Iterator;
+            }
+            if (Iterator.IsError()) return Iterator.Error();
+            *Result = MakeShared<TArray<Gs2::Exchange::Model::FAwaitPtr>>(Items);
+            if (OnCollected) OnCollected(Items);
+            return nullptr;
+        }
+    };
+
+    Gs2::Core::Domain::CallbackID FUserAccessTokenDomain::SubscribeAwaits(
+        TFunction<void(TArray<Gs2::Exchange::Model::FAwaitPtr>)> Callback,const TOptional<FString> RateName
+    )
+    {
+        const TWeakPtr<Gs2::Core::Domain::FGs2> WeakGs2 = this->Gs2;
+        const TWeakPtr<Exchange::Domain::FGs2ExchangeDomain> WeakService = this->Service;
+        const auto SourceToken = this->AccessToken;
+        const TOptional<FString> RegisteredUserId = SourceToken.IsValid() ? TOptional<FString>(SourceToken->GetUserId()) : TOptional<FString>();
+        const int32 RegisteredTimeOffset = SourceToken.IsValid() ? SourceToken->GetTimeOffset().Get(0) : 0;
+        const auto QueryNamespaceName = NamespaceName;
+        const auto QueryRateName = RateName;
+        const auto Parent = Gs2::Exchange::Model::Cache::FAwaitCache::CreateCacheParentKey(
+        NamespaceName,
+        AccessToken.IsValid() ? AccessToken->GetUserId() : TOptional<FString>(),
+        AccessToken.IsValid() ? AccessToken->GetTimeOffset() : TOptional<int32>()
+    );
+        return Gs2->Cache->ListSubscribeTyped(
+            Gs2::Exchange::Model::FAwait::TypeName,
+            Parent,
+            [Callback, WeakGs2](const TArray<FGs2ObjectPtr>& Values)
+            {
+                if (!WeakGs2.Pin().IsValid()) return;
+                TArray<Gs2::Exchange::Model::FAwaitPtr> TypedValues;
+                for (const auto& Value : Values) if (Value.IsValid()) TypedValues.Add(StaticCastSharedPtr<Gs2::Exchange::Model::FAwait>(Value));
+                Callback(TypedValues);
+            },
+            [WeakGs2, WeakService, Callback, QueryNamespaceName, QueryRateName, SourceToken, RegisteredUserId, RegisteredTimeOffset]()
+            {
+                const auto Owner = WeakGs2.Pin();
+                if (!Owner.IsValid() || !SourceToken.IsValid() || !RegisteredUserId.IsSet()) return;
+                const auto TokenSnapshot = MakeShared<Gs2::Auth::Model::FAccessToken>(*SourceToken);
+                if (TokenSnapshot->GetUserId() != RegisteredUserId || TokenSnapshot->GetTimeOffset().Get(0) != RegisteredTimeOffset) return;
+                const auto Domain = MakeShared<FUserAccessTokenDomain>(Owner, WeakService.Pin(), QueryNamespaceName, TokenSnapshot);
+                const auto Task = Gs2::Core::Util::New<FAsyncTask<FCollectAwaitsTask>>(Domain, Callback, QueryRateName);
+                Task->StartBackgroundTask();
+            }
+        );
+    }
+
+    void FUserAccessTokenDomain::InvalidateAwaits(const TOptional<FString> RateName)
+    {
+        Gs2->Cache->ClearListCache(
+            Gs2::Exchange::Model::FAwait::TypeName,
+            Gs2::Exchange::Model::Cache::FAwaitCache::CreateCacheParentKey(
+        NamespaceName,
+        AccessToken.IsValid() ? AccessToken->GetUserId() : TOptional<FString>(),
+        AccessToken.IsValid() ? AccessToken->GetTimeOffset() : TOptional<int32>()
+    )
+        );
+    }
+
+    FUserAccessTokenDomain::FSubscribeAwaitsWithInitialCallTask::FSubscribeAwaitsWithInitialCallTask(const TSharedPtr<FUserAccessTokenDomain>& Self, TFunction<void(TArray<Gs2::Exchange::Model::FAwaitPtr>)> Callback,const TOptional<FString> RateName) : Self(Self), Callback(Callback), QueryRateName(RateName) {}
+    FUserAccessTokenDomain::FSubscribeAwaitsWithInitialCallTask::FSubscribeAwaitsWithInitialCallTask(const FSubscribeAwaitsWithInitialCallTask& From) : TGs2Future(From), Self(From.Self), Callback(From.Callback), QueryRateName(From.QueryRateName) {}
+    Gs2::Core::Model::FGs2ErrorPtr FUserAccessTokenDomain::FSubscribeAwaitsWithInitialCallTask::Action(TSharedPtr<TSharedPtr<Gs2::Core::Domain::CallbackID>> Result)
+    {
+        const auto Task = Gs2::Core::Util::New<FAsyncTask<FCollectAwaitsTask>>(Self, TFunction<void(TArray<Gs2::Exchange::Model::FAwaitPtr>)>(), QueryRateName);
+        Task->StartSynchronousTask(); Task->EnsureCompletion();
+        if (Task->GetTask().IsError()) return Task->GetTask().Error();
+        const auto Values = Task->GetTask().Result();
+        const auto CallbackId = Self->SubscribeAwaits(Callback, QueryRateName);
+        Callback(*Values); *Result = MakeShared<Gs2::Core::Domain::CallbackID>(CallbackId);
+        return nullptr;
+    }
+    TSharedPtr<FAsyncTask<FUserAccessTokenDomain::FSubscribeAwaitsWithInitialCallTask>> FUserAccessTokenDomain::SubscribeAwaitsWithInitialCall(TFunction<void(TArray<Gs2::Exchange::Model::FAwaitPtr>)> Callback,const TOptional<FString> RateName)
+    {
+        return Gs2::Core::Util::New<FAsyncTask<FSubscribeAwaitsWithInitialCallTask>>(this->AsShared(), Callback, RateName);
     }
 
     TSharedPtr<Gs2::Exchange::Domain::Model::FAwaitAccessTokenDomain> FUserAccessTokenDomain::Await(
@@ -170,4 +266,3 @@ namespace Gs2::Exchange::Domain::Model
 #elif defined(__clang__)
 #pragma clang diagnostic pop
 #endif
-

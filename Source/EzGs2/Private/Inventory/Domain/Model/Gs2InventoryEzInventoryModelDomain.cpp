@@ -55,7 +55,8 @@ namespace Gs2::UE5::Inventory::Domain::Model
         );
     }
 
-    void FEzInventoryModelDomain::UnsubscribeItemModels(Gs2::Core::Domain::CallbackID CallbackId)
+    void FEzInventoryModelDomain::UnsubscribeItemModels(
+            Gs2::Core::Domain::CallbackID CallbackId)
     {
         Domain->UnsubscribeItemModels(
             CallbackId
@@ -117,7 +118,7 @@ namespace Gs2::UE5::Inventory::Domain::Model
     Gs2::Core::Domain::CallbackID FEzInventoryModelDomain::Subscribe(TFunction<void(Gs2::UE5::Inventory::Model::FEzInventoryModelPtr)> Callback)
     {
         return Domain->Subscribe(
-            [&](Gs2::Inventory::Model::FInventoryModelPtr Item)
+            [Callback](Gs2::Inventory::Model::FInventoryModelPtr Item)
             {
                 Callback(Gs2::UE5::Inventory::Model::FEzInventoryModel::FromModel(Item));
             }

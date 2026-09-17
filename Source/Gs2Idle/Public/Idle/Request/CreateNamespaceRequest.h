@@ -19,6 +19,7 @@
 #include "CoreMinimal.h"
 #include "Dom/JsonObject.h"
 #include "../Model/TransactionSetting.h"
+#include "../Model/TransactionSettingV2.h"
 #include "../Model/ScriptSetting.h"
 #include "../Model/LogSetting.h"
 
@@ -32,6 +33,7 @@ namespace Gs2::Idle::Request
         TOptional<FString> NameValue;
         TOptional<FString> DescriptionValue;
         TSharedPtr<Model::FTransactionSetting> TransactionSettingValue;
+        TSharedPtr<Model::FTransactionSettingV2> TransactionSettingV2Value;
         TSharedPtr<Model::FScriptSetting> ReceiveScriptValue;
         TOptional<FString> OverrideAcquireActionsScriptIdValue;
         TSharedPtr<Model::FLogSetting> LogSettingValue;
@@ -48,6 +50,7 @@ namespace Gs2::Idle::Request
         TSharedPtr<FCreateNamespaceRequest> WithName(const TOptional<FString> Name);
         TSharedPtr<FCreateNamespaceRequest> WithDescription(const TOptional<FString> Description);
         TSharedPtr<FCreateNamespaceRequest> WithTransactionSetting(const TSharedPtr<Model::FTransactionSetting> TransactionSetting);
+        TSharedPtr<FCreateNamespaceRequest> WithTransactionSettingV2(const TSharedPtr<Model::FTransactionSettingV2> TransactionSettingV2);
         TSharedPtr<FCreateNamespaceRequest> WithReceiveScript(const TSharedPtr<Model::FScriptSetting> ReceiveScript);
         TSharedPtr<FCreateNamespaceRequest> WithOverrideAcquireActionsScriptId(const TOptional<FString> OverrideAcquireActionsScriptId);
         TSharedPtr<FCreateNamespaceRequest> WithLogSetting(const TSharedPtr<Model::FLogSetting> LogSetting);
@@ -56,6 +59,7 @@ namespace Gs2::Idle::Request
         TOptional<FString> GetName() const;
         TOptional<FString> GetDescription() const;
         TSharedPtr<Model::FTransactionSetting> GetTransactionSetting() const;
+        TSharedPtr<Model::FTransactionSettingV2> GetTransactionSettingV2() const;
         TSharedPtr<Model::FScriptSetting> GetReceiveScript() const;
         TOptional<FString> GetOverrideAcquireActionsScriptId() const;
         TSharedPtr<Model::FLogSetting> GetLogSetting() const;

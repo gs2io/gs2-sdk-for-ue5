@@ -81,6 +81,8 @@ namespace Gs2::Schedule::Domain::Model
             const FTriggerDomain& From
         );
 
+
+
         class GS2SCHEDULE_API FGetTask final :
             public Gs2::Core::Util::TGs2Future<Gs2::Schedule::Model::FTrigger>,
             public TSharedFromThis<FGetTask>
@@ -106,6 +108,8 @@ namespace Gs2::Schedule::Domain::Model
         TSharedPtr<FAsyncTask<FGetTask>> Get(
             Request::FGetTriggerByUserIdRequestPtr Request
         );
+
+
 
         class GS2SCHEDULE_API FTriggerTask final :
             public Gs2::Core::Util::TGs2Future<Gs2::Schedule::Domain::Model::FTriggerDomain>,
@@ -133,6 +137,8 @@ namespace Gs2::Schedule::Domain::Model
             Request::FTriggerByUserIdRequestPtr Request
         );
 
+
+
         class GS2SCHEDULE_API FExtendTask final :
             public Gs2::Core::Util::TGs2Future<Gs2::Schedule::Domain::Model::FTriggerDomain>,
             public TSharedFromThis<FExtendTask>
@@ -159,6 +165,8 @@ namespace Gs2::Schedule::Domain::Model
             Request::FExtendTriggerByUserIdRequestPtr Request
         );
 
+
+
         class GS2SCHEDULE_API FDeleteTask final :
             public Gs2::Core::Util::TGs2Future<Gs2::Schedule::Domain::Model::FTriggerDomain>,
             public TSharedFromThis<FDeleteTask>
@@ -184,6 +192,8 @@ namespace Gs2::Schedule::Domain::Model
         TSharedPtr<FAsyncTask<FDeleteTask>> Delete(
             Request::FDeleteTriggerByUserIdRequestPtr Request
         );
+
+
 
         class GS2SCHEDULE_API FVerifyTask final :
             public Gs2::Core::Util::TGs2Future<Gs2::Schedule::Domain::Model::FTriggerDomain>,
@@ -244,7 +254,34 @@ namespace Gs2::Schedule::Domain::Model
 
         TSharedPtr<FAsyncTask<FModelTask>> Model();
 
+        void Invalidate();
+
         Gs2::Core::Domain::CallbackID Subscribe(
+            TFunction<void(Gs2::Schedule::Model::FTriggerPtr)> Callback
+        );
+
+        class GS2SCHEDULE_API FSubscribeWithInitialCallTask final :
+            public Gs2::Core::Util::TGs2Future<Gs2::Core::Domain::CallbackID>,
+            public TSharedFromThis<FSubscribeWithInitialCallTask>
+        {
+            const TSharedPtr<FTriggerDomain> Self;
+            const TFunction<void(Gs2::Schedule::Model::FTriggerPtr)> Callback;
+        public:
+            FSubscribeWithInitialCallTask(
+                const TSharedPtr<FTriggerDomain>& Self,
+                TFunction<void(Gs2::Schedule::Model::FTriggerPtr)> Callback
+            );
+
+            FSubscribeWithInitialCallTask(
+                const FSubscribeWithInitialCallTask& From
+            );
+
+            virtual Gs2::Core::Model::FGs2ErrorPtr Action(
+                TSharedPtr<TSharedPtr<Gs2::Core::Domain::CallbackID>> Result
+            ) override;
+        };
+
+        TSharedPtr<FAsyncTask<FSubscribeWithInitialCallTask>> SubscribeWithInitialCall(
             TFunction<void(Gs2::Schedule::Model::FTriggerPtr)> Callback
         );
 

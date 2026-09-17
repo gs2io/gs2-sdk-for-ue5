@@ -81,6 +81,8 @@ namespace Gs2::LoginReward::Domain::Model
             const FReceiveStatusDomain& From
         );
 
+
+
         class GS2LOGINREWARD_API FGetTask final :
             public Gs2::Core::Util::TGs2Future<Gs2::LoginReward::Model::FReceiveStatus>,
             public TSharedFromThis<FGetTask>
@@ -106,6 +108,8 @@ namespace Gs2::LoginReward::Domain::Model
         TSharedPtr<FAsyncTask<FGetTask>> Get(
             Request::FGetReceiveStatusByUserIdRequestPtr Request
         );
+
+
 
         class GS2LOGINREWARD_API FDeleteTask final :
             public Gs2::Core::Util::TGs2Future<Gs2::LoginReward::Domain::Model::FReceiveStatusDomain>,
@@ -133,6 +137,8 @@ namespace Gs2::LoginReward::Domain::Model
             Request::FDeleteReceiveStatusByUserIdRequestPtr Request
         );
 
+
+
         class GS2LOGINREWARD_API FMarkReceivedTask final :
             public Gs2::Core::Util::TGs2Future<Gs2::LoginReward::Domain::Model::FReceiveStatusDomain>,
             public TSharedFromThis<FMarkReceivedTask>
@@ -158,6 +164,8 @@ namespace Gs2::LoginReward::Domain::Model
         TSharedPtr<FAsyncTask<FMarkReceivedTask>> MarkReceived(
             Request::FMarkReceivedByUserIdRequestPtr Request
         );
+
+
 
         class GS2LOGINREWARD_API FUnmarkReceivedTask final :
             public Gs2::Core::Util::TGs2Future<Gs2::LoginReward::Domain::Model::FReceiveStatusDomain>,
@@ -218,7 +226,34 @@ namespace Gs2::LoginReward::Domain::Model
 
         TSharedPtr<FAsyncTask<FModelTask>> Model();
 
+        void Invalidate();
+
         Gs2::Core::Domain::CallbackID Subscribe(
+            TFunction<void(Gs2::LoginReward::Model::FReceiveStatusPtr)> Callback
+        );
+
+        class GS2LOGINREWARD_API FSubscribeWithInitialCallTask final :
+            public Gs2::Core::Util::TGs2Future<Gs2::Core::Domain::CallbackID>,
+            public TSharedFromThis<FSubscribeWithInitialCallTask>
+        {
+            const TSharedPtr<FReceiveStatusDomain> Self;
+            const TFunction<void(Gs2::LoginReward::Model::FReceiveStatusPtr)> Callback;
+        public:
+            FSubscribeWithInitialCallTask(
+                const TSharedPtr<FReceiveStatusDomain>& Self,
+                TFunction<void(Gs2::LoginReward::Model::FReceiveStatusPtr)> Callback
+            );
+
+            FSubscribeWithInitialCallTask(
+                const FSubscribeWithInitialCallTask& From
+            );
+
+            virtual Gs2::Core::Model::FGs2ErrorPtr Action(
+                TSharedPtr<TSharedPtr<Gs2::Core::Domain::CallbackID>> Result
+            ) override;
+        };
+
+        TSharedPtr<FAsyncTask<FSubscribeWithInitialCallTask>> SubscribeWithInitialCall(
             TFunction<void(Gs2::LoginReward::Model::FReceiveStatusPtr)> Callback
         );
 

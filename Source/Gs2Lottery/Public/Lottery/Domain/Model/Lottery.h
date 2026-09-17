@@ -93,6 +93,8 @@ namespace Gs2::Lottery::Domain::Model
             const FLotteryDomain& From
         );
 
+
+
         class GS2LOTTERY_API FDrawTask final :
             public Gs2::Core::Util::TGs2Future<Gs2::Core::Domain::FTransactionDomain>,
             public TSharedFromThis<FDrawTask>
@@ -119,6 +121,8 @@ namespace Gs2::Lottery::Domain::Model
             Request::FDrawByUserIdRequestPtr Request
         );
 
+
+
         class GS2LOTTERY_API FPredictionTask final :
             public Gs2::Core::Util::TGs2Future<TArray<TSharedPtr<Gs2::Lottery::Model::FDrawnPrize>>>,
             public TSharedFromThis<FPredictionTask>
@@ -144,6 +148,8 @@ namespace Gs2::Lottery::Domain::Model
         TSharedPtr<FAsyncTask<FPredictionTask>> Prediction(
             Request::FPredictionByUserIdRequestPtr Request
         );
+
+
 
         class GS2LOTTERY_API FDrawWithRandomSeedTask final :
             public Gs2::Core::Util::TGs2Future<Gs2::Core::Domain::FTransactionDomain>,
@@ -179,8 +185,36 @@ namespace Gs2::Lottery::Domain::Model
             TFunction<void()> Callback
         );
 
+        class FCollectProbabilitiesTask;
+
+        Gs2::Core::Domain::CallbackID SubscribeProbabilities(
+            TFunction<void(TArray<Gs2::Lottery::Model::FProbabilityPtr>)> Callback,const TOptional<FString> TimeOffsetToken = TOptional<FString>()
+        );
+
+        void InvalidateProbabilities(const TOptional<FString> TimeOffsetToken = TOptional<FString>());
+
+        class GS2LOTTERY_API FSubscribeProbabilitiesWithInitialCallTask final :
+            public Gs2::Core::Util::TGs2Future<Gs2::Core::Domain::CallbackID>,
+            public TSharedFromThis<FSubscribeProbabilitiesWithInitialCallTask>
+        {
+            const TSharedPtr<FLotteryDomain> Self;
+            const TFunction<void(TArray<Gs2::Lottery::Model::FProbabilityPtr>)> Callback;
+        const TOptional<FString> QueryTimeOffsetToken;
+        public:
+            FSubscribeProbabilitiesWithInitialCallTask(const TSharedPtr<FLotteryDomain>& Self, TFunction<void(TArray<Gs2::Lottery::Model::FProbabilityPtr>)> Callback,const TOptional<FString> TimeOffsetToken);
+            FSubscribeProbabilitiesWithInitialCallTask(const FSubscribeProbabilitiesWithInitialCallTask& From);
+            virtual Gs2::Core::Model::FGs2ErrorPtr Action(TSharedPtr<TSharedPtr<Gs2::Core::Domain::CallbackID>> Result) override;
+        };
+
+        TSharedPtr<FAsyncTask<FSubscribeProbabilitiesWithInitialCallTask>> SubscribeProbabilitiesWithInitialCall(
+            TFunction<void(TArray<Gs2::Lottery::Model::FProbabilityPtr>)> Callback,const TOptional<FString> TimeOffsetToken = TOptional<FString>()
+        );
         void UnsubscribeProbabilities(
             Gs2::Core::Domain::CallbackID CallbackID
+        );
+
+        TSharedPtr<Gs2::Lottery::Domain::Model::FProbabilityDomain> Probability(
+            const FString PrizeId
         );
 
         static FString CreateCacheParentKey(

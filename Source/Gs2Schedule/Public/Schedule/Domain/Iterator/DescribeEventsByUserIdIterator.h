@@ -18,6 +18,8 @@
 
 #pragma once
 
+// deny overwrite
+
 #include "Core/Domain/Gs2Core.h"
 #include "Auth/Gs2Auth.h"
 #include "Schedule/Gs2Schedule.h"

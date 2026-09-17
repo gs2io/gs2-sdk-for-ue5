@@ -108,6 +108,7 @@ namespace Gs2::Version::Domain::Model
         }
         const auto ResultModel = Future->GetTask().Result();
         Future->EnsureCompletion();
+
         const auto Domain = Self;
         if (ResultModel != nullptr)
         {
@@ -152,4 +153,3 @@ namespace Gs2::Version::Domain::Model
 #elif defined(__clang__)
 #pragma clang diagnostic pop
 #endif
-

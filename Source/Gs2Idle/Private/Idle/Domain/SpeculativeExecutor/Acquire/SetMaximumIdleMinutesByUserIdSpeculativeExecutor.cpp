@@ -12,6 +12,8 @@
  * on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either
  * express or implied. See the License for the specific language governing
  * permissions and limitations under the License.
+ *
+ * deny overwrite
  */
 
 #if defined(_MSC_VER)
@@ -26,6 +28,9 @@
 #include "Idle/Domain/Gs2Idle.h"
 
 #include "Core/Domain/Gs2.h"
+#include "Core/Domain/SpeculativeExecutor/PreparedSpeculativeCommit.h"
+#include "Auth/Model/AccessToken.h"
+#include "Idle/Model/Cache/Status.h"
 
 namespace Gs2::Idle::Domain::SpeculativeExecutor
 {
@@ -73,57 +78,52 @@ namespace Gs2::Idle::Domain::SpeculativeExecutor
     }
 
     Gs2::Core::Model::FGs2ErrorPtr FSetMaximumIdleMinutesByUserIdSpeculativeExecutor::FCommitTask::Action(
-        TSharedPtr<TSharedPtr<TFunction<void()>>> Result
+        TSharedPtr<TSharedPtr<Gs2::Core::Domain::SpeculativeExecutor::FPreparedSpeculativeCommit>> Result
     )
     {
-        const auto Future = Domain->Idle->Namespace(
-                Request->GetNamespaceName().IsSet() ? *Request->GetNamespaceName() : FString("")
-            )->AccessToken(
-                AccessToken
-            )->Status(
-                Request->GetCategoryName().IsSet() ? *Request->GetCategoryName() : FString("")
-            )->Model();
-        Future->StartSynchronousTask();
-        if (Future->GetTask().IsError())
-        {
-            return Future->GetTask().Error();
-        }
-        auto Item = Future->GetTask().Result();
-
-        if (!Item.IsValid())
-        {
-            *Result = MakeShared<TFunction<void()>>([&]()
+        *Result = nullptr;
+        Gs2::Auth::Model::FAccessTokenPtr Token = nullptr;
+        if (AccessToken.IsValid()) Token = MakeShared<Gs2::Auth::Model::FAccessToken>(*AccessToken);
+        Gs2::Idle::Request::FSetMaximumIdleMinutesByUserIdRequestPtr Prepared = nullptr;
+        if (Request.IsValid()) Prepared = MakeShared<Gs2::Idle::Request::FSetMaximumIdleMinutesByUserIdRequest>(*Request);
+        if (!Domain.IsValid() || !Domain->RestSession.IsValid() || !Token.IsValid() || !Token->GetUserId().IsSet() || Token->GetUserId().Get(FString()).IsEmpty() || !Prepared.IsValid()) return nullptr;
+        if (Prepared->GetUserId().IsSet() && Prepared->GetUserId().Get(FString()) == TEXT("#{userId}")) Prepared->WithUserId(Token->GetUserId());
+        if (!Prepared->GetUserId().IsSet() || Prepared->GetUserId().Get(FString()) != Token->GetUserId().Get(FString()) || !Prepared->GetNamespaceName().IsSet() || Prepared->GetNamespaceName().Get(FString()).IsEmpty() || !Prepared->GetCategoryName().IsSet() || Prepared->GetCategoryName().Get(FString()).IsEmpty()) return nullptr;
+        const auto NamespaceName = Prepared->GetNamespaceName();
+        const auto CategoryName = Prepared->GetCategoryName();
+        const auto UserId = Token->GetUserId();
+        const auto TimeOffset = Token->GetTimeOffset();
+        const auto ExpectedId = FString::Printf(TEXT("grn:gs2:%s:%s:idle:%s:user:%s:categoryModel:%s"), *Domain->RestSession->RegionName(), *Domain->RestSession->OwnerId(), *NamespaceName.Get(FString()), *UserId.Get(FString()), *CategoryName.Get(FString()));
+        Gs2::Idle::Model::FStatusPtr Item;
+        if (!Gs2::Idle::Model::Cache::FStatusCache::TryGet(Domain->Cache, NamespaceName, UserId, CategoryName, TimeOffset, &Item) || !Item.IsValid() || Item->GetStatusId().Get(FString()) != ExpectedId || Item->GetUserId().Get(FString()) != UserId.Get(FString()) || Item->GetCategoryName().Get(FString()) != CategoryName.Get(FString())) return nullptr;
+        const int64 UpdatedAt = static_cast<int64>(FDateTime::UtcNow().ToUnixTimestampDecimal() * 1000.0) + static_cast<int64>(TimeOffset.Get(0)) * 1000;
+        const int32 MaximumIdleMinutes = Prepared->GetMaximumIdleMinutes().Get(0);
+        const auto CompositionKey = FString::Printf(TEXT("idle:%s:%s:%d:Status:%s"), *NamespaceName.Get(FString()), *UserId.Get(FString()), TimeOffset.Get(0), *CategoryName.Get(FString()));
+        *Result = Gs2::Core::Domain::SpeculativeExecutor::FPreparedSpeculativeCommit::CreateComposable(
+            CompositionKey,
+            [DomainCopy = Domain, NamespaceName, CategoryName, UserId = UserId.Get(FString()), TimeOffset, ExpectedId, MaximumIdleMinutes, UpdatedAt](const TSharedPtr<void>& Current, const bool HasCurrent, TSharedPtr<void>& Next)
             {
-                return nullptr;
-            });
-            return nullptr;
-        }
-        auto Err = Transform(Domain, AccessToken, Request, Item);
-        if (Err != nullptr)
-        {
-            return Err;
-        }
-
-        const auto ParentKey = Model::FUserDomain::CreateCacheParentKey(
-            Request->GetNamespaceName(),
-            AccessToken->GetUserId(),
-            FString("Status")
+                Gs2::Idle::Model::FStatusPtr CurrentItem;
+                if (HasCurrent) CurrentItem = StaticCastSharedPtr<Gs2::Idle::Model::FStatus>(Current);
+                else if (!Gs2::Idle::Model::Cache::FStatusCache::TryGet(DomainCopy->Cache, NamespaceName, UserId, CategoryName, TimeOffset, &CurrentItem)) { Next = nullptr; return false; }
+                if (!CurrentItem.IsValid() || CurrentItem->GetStatusId().Get(FString()) != ExpectedId || CurrentItem->GetUserId().Get(FString()) != UserId || CurrentItem->GetCategoryName().Get(FString()) != CategoryName) { Next = nullptr; return false; }
+                auto Changed = MakeShared<Gs2::Idle::Model::FStatus>(*CurrentItem);
+                Changed->WithMaximumIdleMinutes(MaximumIdleMinutes)->WithUpdatedAt(UpdatedAt)->WithRevision(0);
+                Next = Changed;
+                return Changed->GetStatusId().Get(FString()) == ExpectedId && Changed->GetUserId().Get(FString()) == UserId && Changed->GetCategoryName().Get(FString()) == CategoryName && Changed->GetRevision().Get(-1) == 0;
+            },
+            [DomainCopy = Domain, NamespaceName, CategoryName, UserId = UserId.Get(FString()), TimeOffset, ExpectedId](const TSharedPtr<void>& State)
+            {
+                const auto ItemToCommit = StaticCastSharedPtr<Gs2::Idle::Model::FStatus>(State);
+                if (ItemToCommit.IsValid() && ItemToCommit->GetStatusId().Get(FString()) == ExpectedId && ItemToCommit->GetUserId().Get(FString()) == UserId && ItemToCommit->GetCategoryName().Get(FString()) == CategoryName && ItemToCommit->GetRevision().Get(-1) == 0) DomainCopy->Cache->Put(
+                    Gs2::Idle::Model::FStatus::TypeName,
+                    Gs2::Idle::Model::Cache::FStatusCache::CreateCacheParentKey(NamespaceName, UserId, TimeOffset),
+                    Gs2::Idle::Model::Cache::FStatusCache::CreateCacheKey(CategoryName),
+                    ItemToCommit,
+                    FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
+                );
+            }
         );
-        const auto Key = Model::FStatusDomain::CreateCacheKey(
-            Request->GetCategoryName()
-        );
-
-        *Result = MakeShared<TFunction<void()>>([&]()
-        {
-            Domain->Cache->Put(
-                Idle::Model::FStatus::TypeName,
-                ParentKey,
-                Key,
-                Item,
-                FDateTime::Now() + FTimespan::FromSeconds(10)
-            );
-            return nullptr;
-        });
         return nullptr;
     }
 

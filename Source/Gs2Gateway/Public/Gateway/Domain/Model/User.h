@@ -91,6 +91,8 @@ namespace Gs2::Gateway::Domain::Model
             const FUserDomain& From
         );
 
+
+
         class GS2GATEWAY_API FSendNotificationTask final :
             public Gs2::Core::Util::TGs2Future<Gs2::Gateway::Domain::Model::FUserDomain>,
             public TSharedFromThis<FSendNotificationTask>
@@ -117,6 +119,8 @@ namespace Gs2::Gateway::Domain::Model
             Request::FSendNotificationRequestPtr Request
         );
 
+
+
         class GS2GATEWAY_API FDisconnectTask final :
             public Gs2::Core::Util::TGs2Future<TArray<TSharedPtr<Gs2::Gateway::Domain::Model::FWebSocketSessionDomain>>>,
             public TSharedFromThis<FDisconnectTask>
@@ -142,6 +146,8 @@ namespace Gs2::Gateway::Domain::Model
         TSharedPtr<FAsyncTask<FDisconnectTask>> Disconnect(
             Request::FDisconnectByUserIdRequestPtr Request
         );
+
+
 
         class GS2GATEWAY_API FDisconnectAllTask final :
             public Gs2::Core::Util::TGs2Future<Gs2::Gateway::Domain::Model::FUserDomain>,
@@ -175,8 +181,33 @@ namespace Gs2::Gateway::Domain::Model
 
         Gs2::Core::Domain::CallbackID SubscribeWebSocketSessions(
             TFunction<void()> Callback
+
         );
 
+        class FCollectWebSocketSessionsTask;
+
+        Gs2::Core::Domain::CallbackID SubscribeWebSocketSessions(
+            TFunction<void(TArray<Gs2::Gateway::Model::FWebSocketSessionPtr>)> Callback,const TOptional<FString> TimeOffsetToken = TOptional<FString>()
+        );
+
+        void InvalidateWebSocketSessions(const TOptional<FString> TimeOffsetToken = TOptional<FString>());
+
+        class GS2GATEWAY_API FSubscribeWebSocketSessionsWithInitialCallTask final :
+            public Gs2::Core::Util::TGs2Future<Gs2::Core::Domain::CallbackID>,
+            public TSharedFromThis<FSubscribeWebSocketSessionsWithInitialCallTask>
+        {
+            const TSharedPtr<FUserDomain> Self;
+            const TFunction<void(TArray<Gs2::Gateway::Model::FWebSocketSessionPtr>)> Callback;
+        const TOptional<FString> QueryTimeOffsetToken;
+        public:
+            FSubscribeWebSocketSessionsWithInitialCallTask(const TSharedPtr<FUserDomain>& Self, TFunction<void(TArray<Gs2::Gateway::Model::FWebSocketSessionPtr>)> Callback,const TOptional<FString> TimeOffsetToken);
+            FSubscribeWebSocketSessionsWithInitialCallTask(const FSubscribeWebSocketSessionsWithInitialCallTask& From);
+            virtual Gs2::Core::Model::FGs2ErrorPtr Action(TSharedPtr<TSharedPtr<Gs2::Core::Domain::CallbackID>> Result) override;
+        };
+
+        TSharedPtr<FAsyncTask<FSubscribeWebSocketSessionsWithInitialCallTask>> SubscribeWebSocketSessionsWithInitialCall(
+            TFunction<void(TArray<Gs2::Gateway::Model::FWebSocketSessionPtr>)> Callback,const TOptional<FString> TimeOffsetToken = TOptional<FString>()
+        );
         void UnsubscribeWebSocketSessions(
             Gs2::Core::Domain::CallbackID CallbackID
         );

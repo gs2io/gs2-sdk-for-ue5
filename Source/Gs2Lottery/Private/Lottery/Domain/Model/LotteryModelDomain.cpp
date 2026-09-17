@@ -38,6 +38,7 @@
 #include "Lottery/Domain/Model/BoxItemsAccessToken.h"
 #include "Lottery/Domain/Model/User.h"
 #include "Lottery/Domain/Model/UserAccessToken.h"
+#include "Lottery/Model/Cache/LotteryModel.h"
 
 #include "Core/Domain/Gs2.h"
 #include "Core/Domain/Transaction/JobQueueJobDomainFactory.h"
@@ -111,6 +112,20 @@ namespace Gs2::Lottery::Domain::Model
         }
         const auto ResultModel = Future->GetTask().Result();
         Future->EnsureCompletion();
+
+            if (ResultModel.IsValid() && ResultModel->GetItem() != nullptr)
+            {
+
+
+        Gs2::Lottery::Model::Cache::FLotteryModelCache::Put(
+            Self->Gs2->Cache,
+
+            Request->GetNamespaceName(),
+            Request->GetLotteryName(),
+            TOptional<int32>(),
+            ResultModel->GetItem()
+        );
+            }
         *Result = ResultModel->GetItem();
         return nullptr;
     }
@@ -159,71 +174,158 @@ namespace Gs2::Lottery::Domain::Model
         TSharedPtr<TSharedPtr<Gs2::Lottery::Model::FLotteryModel>> Result
     )
     {
-        // ReSharper disable once CppLocalVariableMayBeConst
-        TSharedPtr<Gs2::Lottery::Model::FLotteryModel> Value;
-        auto bCacheHit = Self->Gs2->Cache->TryGet<Gs2::Lottery::Model::FLotteryModel>(
-            Self->ParentKey,
-            Gs2::Lottery::Domain::Model::FLotteryModelDomain::CreateCacheKey(
-                Self->LotteryName
-            ),
-            &Value
+        const auto CacheParentKey = Gs2::Lottery::Model::Cache::FLotteryModelCache::CreateCacheParentKey(
+
+            Self->NamespaceName,
+            TOptional<int32>()
         );
-        if (!bCacheHit) {
-            const auto Future = Self->Get(
-                MakeShared<Gs2::Lottery::Request::FGetLotteryModelRequest>()
-            );
-            Future->StartSynchronousTask();
-            if (Future->GetTask().IsError())
+        const auto CacheKey = Gs2::Lottery::Model::Cache::FLotteryModelCache::CreateCacheKey(
+
+            Self->LotteryName
+        );
+        return Self->Gs2->Cache->ExecuteWithKeyLock(
+            Gs2::Lottery::Model::FLotteryModel::TypeName,
+            CacheParentKey,
+            CacheKey,
+            [Self = Self, Result]() -> Gs2::Core::Model::FGs2ErrorPtr
             {
-                if (Future->GetTask().Error()->Type() != Gs2::Core::Model::FNotFoundError::TypeString)
-                {
-                    return Future->GetTask().Error();
-                }
+                Gs2::Lottery::Model::FLotteryModelPtr Value;
+                const auto CacheHit = Gs2::Lottery::Model::Cache::FLotteryModelCache::TryGet(
+                    Self->Gs2->Cache,
 
-                const auto Key = Gs2::Lottery::Domain::Model::FLotteryModelDomain::CreateCacheKey(
-                    Self->LotteryName
+                    Self->NamespaceName,
+                    Self->LotteryName,
+                    TOptional<int32>(),
+                    &Value
                 );
-                Self->Gs2->Cache->Put(
-                    Gs2::Lottery::Model::FLotteryModel::TypeName,
-                    Self->ParentKey,
-                    Key,
-                    nullptr,
-                    FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
-                );
-
-                if (Future->GetTask().Error()->Detail(0)->GetComponent() != "lotteryModel")
+                if (CacheHit)
                 {
-                    return Future->GetTask().Error();
+                    *Result = Value;
+                    return nullptr;
                 }
-            }
-            else
-            {
-                Value = Future->GetTask().Result();
-            }
-            Future->EnsureCompletion();
-        }
-        *Result = Value;
+                const auto Error = Gs2::Lottery::Model::Cache::FLotteryModelCache::Fetch(
+                    Self->Gs2->Cache,
 
-        return nullptr;
+                    Self->NamespaceName,
+                    Self->LotteryName,
+                    TOptional<int32>(),
+                    [Self](Gs2::Lottery::Model::FLotteryModelPtr* OutItem) -> Gs2::Core::Model::FGs2ErrorPtr
+                    {
+                        const auto Future = Self->Get(
+                            MakeShared<Gs2::Lottery::Request::FGetLotteryModelRequest>()
+                        );
+                        Future->StartSynchronousTask();
+                        if (Future->GetTask().IsError()) return Future->GetTask().Error();
+                        *OutItem = Future->GetTask().Result();
+                        Future->EnsureCompletion();
+                        return nullptr;
+                    },
+                    &Value
+                );
+                if (Error.IsValid()) return Error;
+                *Result = Value;
+                return nullptr;
+            }
+        );
     }
 
     TSharedPtr<FAsyncTask<FLotteryModelDomain::FModelTask>> FLotteryModelDomain::Model() {
         return Gs2::Core::Util::New<FAsyncTask<FLotteryModelDomain::FModelTask>>(this->AsShared());
     }
 
+    void FLotteryModelDomain::Invalidate()
+    {
+        Gs2::Lottery::Model::Cache::FLotteryModelCache::Delete(
+            Gs2->Cache,
+
+            NamespaceName,
+            LotteryName,
+            TOptional<int32>()
+        );
+    }
+
+    FLotteryModelDomain::FSubscribeWithInitialCallTask::FSubscribeWithInitialCallTask(
+        const TSharedPtr<FLotteryModelDomain>& Self,
+        TFunction<void(Gs2::Lottery::Model::FLotteryModelPtr)> Callback
+    ):
+        Self(Self),
+        Callback(Callback)
+    {
+    }
+
+    FLotteryModelDomain::FSubscribeWithInitialCallTask::FSubscribeWithInitialCallTask(
+        const FSubscribeWithInitialCallTask& From
+    ):
+        TGs2Future(From),
+        Self(From.Self),
+        Callback(From.Callback)
+    {
+    }
+
+    Gs2::Core::Model::FGs2ErrorPtr FLotteryModelDomain::FSubscribeWithInitialCallTask::Action(
+        TSharedPtr<TSharedPtr<Gs2::Core::Domain::CallbackID>> Result
+    )
+    {
+        const auto Task = Self->Model();
+        Task->StartSynchronousTask();
+        Task->EnsureCompletion();
+        if (Task->GetTask().IsError()) return Task->GetTask().Error();
+        const auto Item = Task->GetTask().Result();
+        const auto CallbackId = Self->Subscribe(Callback);
+        Callback(Item);
+        *Result = MakeShared<Gs2::Core::Domain::CallbackID>(CallbackId);
+        return nullptr;
+    }
+
+    TSharedPtr<FAsyncTask<FLotteryModelDomain::FSubscribeWithInitialCallTask>> FLotteryModelDomain::SubscribeWithInitialCall(
+        TFunction<void(Gs2::Lottery::Model::FLotteryModelPtr)> Callback
+    )
+    {
+        return Gs2::Core::Util::New<FAsyncTask<FSubscribeWithInitialCallTask>>(this->AsShared(), Callback);
+    }
+
     Gs2::Core::Domain::CallbackID FLotteryModelDomain::Subscribe(
         TFunction<void(Gs2::Lottery::Model::FLotteryModelPtr)> Callback
     )
     {
+        const auto SubscriptionParentKey = Gs2::Lottery::Model::Cache::FLotteryModelCache::CreateCacheParentKey(
+
+            NamespaceName,
+            TOptional<int32>()
+        );
+        const auto SubscriptionCacheKey = Gs2::Lottery::Model::Cache::FLotteryModelCache::CreateCacheKey(
+
+            LotteryName
+        );
+        const TWeakPtr<Gs2::Core::Domain::FGs2> WeakGs2 = Gs2;
+        const TWeakPtr<Lottery::Domain::FGs2LotteryDomain> WeakService = Service;
+        const FString RegisteredParentKey = SubscriptionParentKey;
+        const TOptional<FString> QueryNamespaceName = NamespaceName;
+        const TOptional<FString> QueryLotteryName = LotteryName;
         return Gs2->Cache->Subscribe(
             Gs2::Lottery::Model::FLotteryModel::TypeName,
-            ParentKey,
-            Gs2::Lottery::Domain::Model::FLotteryModelDomain::CreateCacheKey(
-                LotteryName
-            ),
+            SubscriptionParentKey,
+            SubscriptionCacheKey,
             [Callback](TSharedPtr<FGs2Object> obj)
             {
                 Callback(StaticCastSharedPtr<Gs2::Lottery::Model::FLotteryModel>(obj));
+            },
+            [WeakGs2, WeakService, RegisteredParentKey, QueryNamespaceName, QueryLotteryName]()
+            {
+                const auto Owner = WeakGs2.Pin();
+                if (!Owner.IsValid())
+                {
+                    return;
+                }
+                const auto Domain = MakeShared<FLotteryModelDomain>(
+                    Owner,
+                    WeakService.Pin(),
+                    QueryNamespaceName,
+                    QueryLotteryName
+                );
+                Domain->ParentKey = RegisteredParentKey;
+                const auto Task = Domain->Model();
+                Task->StartBackgroundTask();
             }
         );
     }
@@ -232,12 +334,19 @@ namespace Gs2::Lottery::Domain::Model
         Gs2::Core::Domain::CallbackID CallbackID
     )
     {
+        const auto SubscriptionParentKey = Gs2::Lottery::Model::Cache::FLotteryModelCache::CreateCacheParentKey(
+
+            NamespaceName,
+            TOptional<int32>()
+        );
+        const auto SubscriptionCacheKey = Gs2::Lottery::Model::Cache::FLotteryModelCache::CreateCacheKey(
+
+            LotteryName
+        );
         Gs2->Cache->Unsubscribe(
             Gs2::Lottery::Model::FLotteryModel::TypeName,
-            ParentKey,
-            Gs2::Lottery::Domain::Model::FLotteryModelDomain::CreateCacheKey(
-                LotteryName
-            ),
+            SubscriptionParentKey,
+            SubscriptionCacheKey,
             CallbackID
         );
     }
@@ -248,4 +357,3 @@ namespace Gs2::Lottery::Domain::Model
 #elif defined(__clang__)
 #pragma clang diagnostic pop
 #endif
-

@@ -25,6 +25,7 @@
 #include "Freeze/Domain/Model/Output.h"
 #include "Freeze/Domain/Model/Stage.h"
 #include "Freeze/Domain/Model/Output.h"
+#include "Freeze/Model/Cache/Output.h"
 
 #include "Core/Domain/Gs2.h"
 #include "Core/Domain/Transaction/JobQueueJobDomainFactory.h"
@@ -46,9 +47,9 @@ namespace Gs2::Freeze::Domain::Model
         Client(MakeShared<Gs2::Freeze::FGs2FreezeRestClient>(Gs2->RestSession)),
         StageName(StageName),
         OutputName(OutputName),
-        ParentKey(Gs2::Freeze::Domain::Model::FStageDomain::CreateCacheParentKey(
+        ParentKey(Gs2::Freeze::Model::Cache::FOutputCache::CreateCacheParentKey(
             StageName,
-            "Output"
+            TOptional<int32>()
         ))
     {
     }
@@ -146,71 +147,176 @@ namespace Gs2::Freeze::Domain::Model
         TSharedPtr<TSharedPtr<Gs2::Freeze::Model::FOutput>> Result
     )
     {
-        // ReSharper disable once CppLocalVariableMayBeConst
-        TSharedPtr<Gs2::Freeze::Model::FOutput> Value;
-        auto bCacheHit = Self->Gs2->Cache->TryGet<Gs2::Freeze::Model::FOutput>(
-            Self->ParentKey,
-            Gs2::Freeze::Domain::Model::FOutputDomain::CreateCacheKey(
-                Self->OutputName
-            ),
-            &Value
+        const FString CacheKey = Gs2::Freeze::Domain::Model::FOutputDomain::CreateCacheKey(
+            Self->OutputName
         );
-        if (!bCacheHit) {
-            const auto Future = Self->Get(
-                MakeShared<Gs2::Freeze::Request::FGetOutputRequest>()
-            );
-            Future->StartSynchronousTask();
-            if (Future->GetTask().IsError())
+        return Self->Gs2->Cache->ExecuteWithKeyLock(
+            Gs2::Freeze::Model::FOutput::TypeName,
+            Self->ParentKey,
+            CacheKey,
+            [this, Result, CacheKey]() -> Gs2::Core::Model::FGs2ErrorPtr
             {
-                if (Future->GetTask().Error()->Type() != Gs2::Core::Model::FNotFoundError::TypeString)
-                {
-                    return Future->GetTask().Error();
-                }
-
-                const auto Key = Gs2::Freeze::Domain::Model::FOutputDomain::CreateCacheKey(
-                    Self->OutputName
-                );
-                Self->Gs2->Cache->Put(
-                    Gs2::Freeze::Model::FOutput::TypeName,
+                // ReSharper disable once CppLocalVariableMayBeConst
+                TSharedPtr<Gs2::Freeze::Model::FOutput> Value;
+                auto bCacheHit = Self->Gs2->Cache->TryGet<Gs2::Freeze::Model::FOutput>(
                     Self->ParentKey,
-                    Key,
-                    nullptr,
-                    FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
+                    CacheKey,
+                    &Value
                 );
+                if (!bCacheHit) {
+                    const auto Future = Self->Get(
+                        MakeShared<Gs2::Freeze::Request::FGetOutputRequest>()
+                    );
+                    Future->StartSynchronousTask();
+                    if (Future->GetTask().IsError())
+                    {
+                        const auto Error = Future->GetTask().Error();
+                        if (!Error.IsValid() || Error->Type() != Gs2::Core::Model::FNotFoundError::TypeString)
+                        {
+                            return Error;
+                        }
 
-                if (Future->GetTask().Error()->Detail(0)->GetComponent() != "output")
-                {
-                    return Future->GetTask().Error();
+                        Self->Gs2->Cache->Put(
+                            Gs2::Freeze::Model::FOutput::TypeName,
+                            Self->ParentKey,
+                            CacheKey,
+                            nullptr,
+                            FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
+                        );
+
+                        if (!Error->GetErrors().IsValid() || Error->Count() == 0 || !Error->Detail(0).IsValid() || Error->Detail(0)->GetComponent() != "output")
+                        {
+                            return Error;
+                        }
+                    }
+                    else
+                    {
+                        Value = Future->GetTask().Result();
+                    }
+                    Future->EnsureCompletion();
                 }
-            }
-            else
-            {
-                Value = Future->GetTask().Result();
-            }
-            Future->EnsureCompletion();
-        }
-        *Result = Value;
 
-        return nullptr;
+                if (!bCacheHit)
+                {
+                    FGs2ObjectPtr ExistingObject;
+                    const bool Existing = Self->Gs2->Cache->TryGet(
+                        Gs2::Freeze::Model::FOutput::TypeName,
+                        Self->ParentKey,
+                        CacheKey,
+                        &ExistingObject
+                    );
+                    if (!Existing || ExistingObject != Value)
+                    {
+                        Self->Gs2->Cache->Put(
+                            Gs2::Freeze::Model::FOutput::TypeName,
+                            Self->ParentKey,
+                            CacheKey,
+                            Value,
+                            FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
+                        );
+                    }
+                }
+                *Result = Value;
+
+                return nullptr;
+            }
+        );
     }
 
     TSharedPtr<FAsyncTask<FOutputDomain::FModelTask>> FOutputDomain::Model() {
         return Gs2::Core::Util::New<FAsyncTask<FOutputDomain::FModelTask>>(this->AsShared());
     }
 
+    FOutputDomain::FSubscribeWithInitialCallTask::FSubscribeWithInitialCallTask(
+        const TSharedPtr<FOutputDomain> Self,
+        const TFunction<void(Gs2::Freeze::Model::FOutputPtr)>& Callback
+    ): Self(Self), Callback(Callback)
+    {
+    }
+
+    FOutputDomain::FSubscribeWithInitialCallTask::FSubscribeWithInitialCallTask(
+        const FSubscribeWithInitialCallTask& From
+    ): TGs2Future(From), Self(From.Self), Callback(From.Callback)
+    {
+    }
+
+    Gs2::Core::Model::FGs2ErrorPtr FOutputDomain::FSubscribeWithInitialCallTask::Action(
+        TSharedPtr<TSharedPtr<Gs2::Core::Domain::CallbackID>> Result
+    )
+    {
+        const auto Future = Self->Model();
+        Future->StartSynchronousTask();
+        Future->EnsureCompletion();
+        if (Future->GetTask().IsError())
+        {
+            return Future->GetTask().Error();
+        }
+        const auto Item = Future->GetTask().Result();
+        const auto ID = Self->Subscribe(Callback);
+        Callback(Item);
+        *Result = MakeShared<Gs2::Core::Domain::CallbackID>(ID);
+        return nullptr;
+    }
+
+    TSharedPtr<FAsyncTask<FOutputDomain::FSubscribeWithInitialCallTask>> FOutputDomain::SubscribeWithInitialCall(
+        TFunction<void(Gs2::Freeze::Model::FOutputPtr)> Callback
+    )
+    {
+        return Gs2::Core::Util::New<FAsyncTask<FSubscribeWithInitialCallTask>>(this->AsShared(), Callback);
+    }
+
+    void FOutputDomain::Invalidate()
+    {
+        Gs2::Freeze::Model::Cache::FOutputCache::Delete(
+            Gs2->Cache,
+            StageName,
+            OutputName,
+            TOptional<int32>()
+        );
+    }
+
     Gs2::Core::Domain::CallbackID FOutputDomain::Subscribe(
         TFunction<void(Gs2::Freeze::Model::FOutputPtr)> Callback
     )
     {
+        const auto SubscriptionParentKey = Gs2::Freeze::Model::Cache::FOutputCache::CreateCacheParentKey(
+
+            StageName,
+            TOptional<int32>()
+        );
+        const auto SubscriptionCacheKey = Gs2::Freeze::Model::Cache::FOutputCache::CreateCacheKey(
+
+            OutputName
+        );
+        const TWeakPtr<Gs2::Core::Domain::FGs2> WeakGs2 = Gs2;
+        const TWeakPtr<Freeze::Domain::FGs2FreezeDomain> WeakService = Service;
+        const FString RegisteredParentKey = SubscriptionParentKey;
+        const TOptional<FString> QueryStageName = StageName;
+        const TOptional<FString> QueryOutputName = OutputName;
         return Gs2->Cache->Subscribe(
             Gs2::Freeze::Model::FOutput::TypeName,
-            ParentKey,
-            Gs2::Freeze::Domain::Model::FOutputDomain::CreateCacheKey(
-                OutputName
-            ),
+            SubscriptionParentKey,
+            SubscriptionCacheKey,
             [Callback](TSharedPtr<FGs2Object> obj)
             {
                 Callback(StaticCastSharedPtr<Gs2::Freeze::Model::FOutput>(obj));
+            },
+            [WeakGs2, WeakService, RegisteredParentKey, QueryStageName, QueryOutputName]()
+            {
+                const auto Owner = WeakGs2.Pin();
+                if (!Owner.IsValid())
+                {
+                    return;
+                }
+                const auto Domain = MakeShared<FOutputDomain>(
+                    Owner,
+                    WeakService.Pin(),
+                    QueryStageName,
+                    QueryOutputName
+                );
+                Domain->ParentKey = RegisteredParentKey;
+                const auto Task = Domain->Model();
+                Task->StartBackgroundTask();
             }
         );
     }
@@ -219,12 +325,19 @@ namespace Gs2::Freeze::Domain::Model
         Gs2::Core::Domain::CallbackID CallbackID
     )
     {
+        const auto SubscriptionParentKey = Gs2::Freeze::Model::Cache::FOutputCache::CreateCacheParentKey(
+
+            StageName,
+            TOptional<int32>()
+        );
+        const auto SubscriptionCacheKey = Gs2::Freeze::Model::Cache::FOutputCache::CreateCacheKey(
+
+            OutputName
+        );
         Gs2->Cache->Unsubscribe(
             Gs2::Freeze::Model::FOutput::TypeName,
-            ParentKey,
-            Gs2::Freeze::Domain::Model::FOutputDomain::CreateCacheKey(
-                OutputName
-            ),
+            SubscriptionParentKey,
+            SubscriptionCacheKey,
             CallbackID
         );
     }
@@ -235,4 +348,3 @@ namespace Gs2::Freeze::Domain::Model
 #elif defined(__clang__)
 #pragma clang diagnostic pop
 #endif
-

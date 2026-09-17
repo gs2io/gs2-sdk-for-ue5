@@ -98,27 +98,89 @@ namespace Gs2::Stamina::Domain::Model
         TSharedPtr<TSharedPtr<Gs2::Stamina::Model::FRecoverValueTable>> Result
     )
     {
-        // ReSharper disable once CppLocalVariableMayBeConst
-        TSharedPtr<Gs2::Stamina::Model::FRecoverValueTable> Value;
-        auto bCacheHit = Self->Gs2->Cache->TryGet<Gs2::Stamina::Model::FRecoverValueTable>(
-            Self->ParentKey,
-            Gs2::Stamina::Domain::Model::FRecoverValueTableDomain::CreateCacheKey(
-            ),
-            &Value
+        const FString CacheKey = Gs2::Stamina::Domain::Model::FRecoverValueTableDomain::CreateCacheKey(
         );
-        *Result = Value;
+        return Self->Gs2->Cache->ExecuteWithKeyLock(
+            Gs2::Stamina::Model::FRecoverValueTable::TypeName,
+            Self->ParentKey,
+            CacheKey,
+            [this, Result, CacheKey]() -> Gs2::Core::Model::FGs2ErrorPtr
+            {
+                // ReSharper disable once CppLocalVariableMayBeConst
+                TSharedPtr<Gs2::Stamina::Model::FRecoverValueTable> Value;
+                auto bCacheHit = Self->Gs2->Cache->TryGet<Gs2::Stamina::Model::FRecoverValueTable>(
+                    Self->ParentKey,
+                    CacheKey,
+                    &Value
+                );
+                *Result = Value;
 
-        return nullptr;
+                return nullptr;
+            }
+        );
     }
 
     TSharedPtr<FAsyncTask<FRecoverValueTableDomain::FModelTask>> FRecoverValueTableDomain::Model() {
         return Gs2::Core::Util::New<FAsyncTask<FRecoverValueTableDomain::FModelTask>>(this->AsShared());
     }
 
+    void FRecoverValueTableDomain::Invalidate()
+    {
+        Gs2->Cache->Delete(
+            Gs2::Stamina::Model::FRecoverValueTable::TypeName,
+            ParentKey,
+            Gs2::Stamina::Domain::Model::FRecoverValueTableDomain::CreateCacheKey(
+            )
+        );
+    }
+
+    FRecoverValueTableDomain::FSubscribeWithInitialCallTask::FSubscribeWithInitialCallTask(
+        const TSharedPtr<FRecoverValueTableDomain>& Self,
+        TFunction<void(Gs2::Stamina::Model::FRecoverValueTablePtr)> Callback
+    ):
+        Self(Self),
+        Callback(Callback)
+    {
+    }
+
+    FRecoverValueTableDomain::FSubscribeWithInitialCallTask::FSubscribeWithInitialCallTask(
+        const FSubscribeWithInitialCallTask& From
+    ):
+        TGs2Future(From),
+        Self(From.Self),
+        Callback(From.Callback)
+    {
+    }
+
+    Gs2::Core::Model::FGs2ErrorPtr FRecoverValueTableDomain::FSubscribeWithInitialCallTask::Action(
+        TSharedPtr<TSharedPtr<Gs2::Core::Domain::CallbackID>> Result
+    )
+    {
+        const auto Task = Self->Model();
+        Task->StartSynchronousTask();
+        Task->EnsureCompletion();
+        if (Task->GetTask().IsError()) return Task->GetTask().Error();
+        const auto Item = Task->GetTask().Result();
+        const auto CallbackId = Self->Subscribe(Callback);
+        Callback(Item);
+        *Result = MakeShared<Gs2::Core::Domain::CallbackID>(CallbackId);
+        return nullptr;
+    }
+
+    TSharedPtr<FAsyncTask<FRecoverValueTableDomain::FSubscribeWithInitialCallTask>> FRecoverValueTableDomain::SubscribeWithInitialCall(
+        TFunction<void(Gs2::Stamina::Model::FRecoverValueTablePtr)> Callback
+    )
+    {
+        return Gs2::Core::Util::New<FAsyncTask<FSubscribeWithInitialCallTask>>(this->AsShared(), Callback);
+    }
+
     Gs2::Core::Domain::CallbackID FRecoverValueTableDomain::Subscribe(
         TFunction<void(Gs2::Stamina::Model::FRecoverValueTablePtr)> Callback
     )
     {
+        const TWeakPtr<Gs2::Core::Domain::FGs2> WeakGs2 = Gs2;
+        const TWeakPtr<Stamina::Domain::FGs2StaminaDomain> WeakService = Service;
+        const FString RegisteredParentKey = ParentKey;
         return Gs2->Cache->Subscribe(
             Gs2::Stamina::Model::FRecoverValueTable::TypeName,
             ParentKey,
@@ -127,6 +189,21 @@ namespace Gs2::Stamina::Domain::Model
             [Callback](TSharedPtr<FGs2Object> obj)
             {
                 Callback(StaticCastSharedPtr<Gs2::Stamina::Model::FRecoverValueTable>(obj));
+            },
+            [WeakGs2, WeakService, RegisteredParentKey]()
+            {
+                const auto Owner = WeakGs2.Pin();
+                if (!Owner.IsValid())
+                {
+                    return;
+                }
+                const auto Domain = MakeShared<FRecoverValueTableDomain>(
+                    Owner,
+                    WeakService.Pin()
+                );
+                Domain->ParentKey = RegisteredParentKey;
+                const auto Task = Domain->Model();
+                Task->StartBackgroundTask();
             }
         );
     }
@@ -150,4 +227,3 @@ namespace Gs2::Stamina::Domain::Model
 #elif defined(__clang__)
 #pragma clang diagnostic pop
 #endif
-

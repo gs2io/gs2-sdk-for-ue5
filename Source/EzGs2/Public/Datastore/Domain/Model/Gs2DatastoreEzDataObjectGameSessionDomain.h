@@ -168,7 +168,8 @@ namespace Gs2::UE5::Datastore::Domain::Model
 
         Gs2::Core::Domain::CallbackID SubscribeDataObjectHistories(TFunction<void()> Callback);
 
-        void UnsubscribeDataObjectHistories(Gs2::Core::Domain::CallbackID CallbackId);
+        void UnsubscribeDataObjectHistories(
+                Gs2::Core::Domain::CallbackID CallbackId);
 
         Gs2::UE5::Datastore::Domain::Model::FEzDataObjectHistoryGameSessionDomainPtr DataObjectHistory(
             const FString Generation

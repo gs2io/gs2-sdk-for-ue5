@@ -194,7 +194,7 @@ namespace Gs2::UE5::Guild::Domain::Model
     Gs2::Core::Domain::CallbackID FEzReceiveMemberRequestGameSessionDomain::Subscribe(TFunction<void(Gs2::UE5::Guild::Model::FEzReceiveMemberRequestPtr)> Callback)
     {
         return Domain->Subscribe(
-            [&](Gs2::Guild::Model::FReceiveMemberRequestPtr Item)
+            [Callback](Gs2::Guild::Model::FReceiveMemberRequestPtr Item)
             {
                 Callback(Gs2::UE5::Guild::Model::FEzReceiveMemberRequest::FromModel(Item));
             }

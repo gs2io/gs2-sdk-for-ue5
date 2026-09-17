@@ -105,6 +105,8 @@ namespace Gs2::Money2::Domain::Model
             const FWalletAccessTokenDomain& From
         );
 
+
+
         class GS2MONEY2_API FGetTask final :
             public Gs2::Core::Util::TGs2Future<Gs2::Money2::Model::FWallet>,
             public TSharedFromThis<FGetTask>
@@ -130,6 +132,8 @@ namespace Gs2::Money2::Domain::Model
         TSharedPtr<FAsyncTask<FGetTask>> Get(
             Request::FGetWalletRequestPtr Request
         );
+
+
 
         class GS2MONEY2_API FWithdrawTask final :
             public Gs2::Core::Util::TGs2Future<Gs2::Money2::Domain::Model::FWalletAccessTokenDomain>,
@@ -190,7 +194,34 @@ namespace Gs2::Money2::Domain::Model
 
         TSharedPtr<FAsyncTask<FModelTask>> Model();
 
+        void Invalidate();
+
         Gs2::Core::Domain::CallbackID Subscribe(
+            TFunction<void(Gs2::Money2::Model::FWalletPtr)> Callback
+        );
+
+        class GS2MONEY2_API FSubscribeWithInitialCallTask final :
+            public Gs2::Core::Util::TGs2Future<Gs2::Core::Domain::CallbackID>,
+            public TSharedFromThis<FSubscribeWithInitialCallTask>
+        {
+            const TSharedPtr<FWalletAccessTokenDomain> Self;
+            const TFunction<void(Gs2::Money2::Model::FWalletPtr)> Callback;
+        public:
+            FSubscribeWithInitialCallTask(
+                const TSharedPtr<FWalletAccessTokenDomain>& Self,
+                TFunction<void(Gs2::Money2::Model::FWalletPtr)> Callback
+            );
+
+            FSubscribeWithInitialCallTask(
+                const FSubscribeWithInitialCallTask& From
+            );
+
+            virtual Gs2::Core::Model::FGs2ErrorPtr Action(
+                TSharedPtr<TSharedPtr<Gs2::Core::Domain::CallbackID>> Result
+            ) override;
+        };
+
+        TSharedPtr<FAsyncTask<FSubscribeWithInitialCallTask>> SubscribeWithInitialCall(
             TFunction<void(Gs2::Money2::Model::FWalletPtr)> Callback
         );
 

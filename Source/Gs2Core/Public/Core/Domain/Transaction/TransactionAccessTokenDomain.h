@@ -50,6 +50,9 @@ namespace Gs2::Core::Domain
 			bool bAtomicCommit,
 			Gs2::Core::Model::FTransactionResultPtr TransactionResult
 		)> NewTransactionDomain;
+		const TFunction<Gs2::Core::Model::FGs2ErrorPtr(
+			const Gs2::Auth::Model::FAccessTokenPtr& AccessToken
+		)> Dispatch;
 		const Gs2::Auth::Model::FAccessTokenPtr AccessToken;
 		const TSharedPtr<TArray<TSharedPtr<FTransactionAccessTokenDomain>>> Actions;
 
@@ -66,6 +69,9 @@ namespace Gs2::Core::Domain
 				bool bAtomicCommit,
 				Gs2::Core::Model::FTransactionResultPtr TransactionResult
 			)>& NewTransactionDomain,
+	        const TFunction<Gs2::Core::Model::FGs2ErrorPtr(
+			const Gs2::Auth::Model::FAccessTokenPtr& AccessToken
+		)>& Dispatch,
 	        const Gs2::Auth::Model::FAccessTokenPtr& AccessToken,
 	        const TSharedPtr<TArray<TSharedPtr<FTransactionAccessTokenDomain>>>& Actions
         );
@@ -74,6 +80,9 @@ namespace Gs2::Core::Domain
 		);
 
 	    virtual ~FTransactionAccessTokenDomain() = default;
+
+		virtual TOptional<FString> GetTransactionId() const;
+		virtual TOptional<FString> GetJobName() const;
 
 		Gs2::Core::Model::FGs2ErrorPtr WaitImpl(
 			const bool All,

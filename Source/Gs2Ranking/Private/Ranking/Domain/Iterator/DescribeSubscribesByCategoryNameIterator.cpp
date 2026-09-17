@@ -1,3 +1,4 @@
+
 /*
  * Copyright 2016 Game Server Services, Inc. or its affiliates. All Rights
  * Reserved.
@@ -29,6 +30,7 @@
 #include "Ranking/Domain/Iterator/DescribeSubscribesByCategoryNameIterator.h"
 #include "Ranking/Domain/Model/SubscribeUser.h"
 #include "Ranking/Domain/Model/RankingCategory.h"
+#include "Ranking/Model/Cache/SubscribeUser.h"
 
 #include "Core/Domain/Gs2.h"
 
@@ -85,14 +87,15 @@ namespace Gs2::Ranking::Domain::Iterator
 
         if (!RangeIteratorOpt || (!*RangeIteratorOpt && !bLast))
         {
-            const auto ListParentKey = Gs2::Ranking::Domain::Model::FRankingCategoryDomain::CreateCacheParentKey(
+            const auto UserId = Self->AccessToken.IsValid() ? Self->AccessToken->GetUserId() : TOptional<FString>();
+            const auto TimeOffset = Self->AccessToken.IsValid() ? Self->AccessToken->GetTimeOffset() : TOptional<int32>();
+            const auto ListParentKey = Gs2::Ranking::Model::Cache::FSubscribeUserCache::CreateCacheParentKey(
                 Self->NamespaceName,
-                Self->UserId(),
+                UserId,
                 Self->CategoryName,
                 TOptional<FString>(),
-                "SubscribeUser"
+                TimeOffset
             );
-
             if (!RangeIteratorOpt)
             {
                 Range = Self->Gs2->Cache->TryGetList<Gs2::Ranking::Model::FSubscribeUser>(ListParentKey);
@@ -106,13 +109,14 @@ namespace Gs2::Ranking::Domain::Iterator
                 }
             }
 
-            const auto Future = Self->Client->DescribeSubscribesByCategoryName(
+            const auto Request =
                 MakeShared<Gs2::Ranking::Request::FDescribeSubscribesByCategoryNameRequest>()
                     ->WithContextStack(Self->Gs2->DefaultContextStack)
                     ->WithNamespaceName(Self->NamespaceName)
                     ->WithCategoryName(Self->CategoryName)
                     ->WithAccessToken(Self->AccessToken == nullptr ? TOptional<FString>() : Self->AccessToken->GetToken())
-            );
+            ;
+            const auto Future = Self->Client->DescribeSubscribesByCategoryName(Request);
             Future->StartSynchronousTask();
             if (Future->GetTask().IsError())
             {
@@ -126,18 +130,23 @@ namespace Gs2::Ranking::Domain::Iterator
             }
             const auto R = Future->GetTask().Result();
             Future->EnsureCompletion();
-            Range = R->GetItems();
-            for (auto Item : *R->GetItems())
+            Range = R->GetItems().IsValid() ? R->GetItems() : MakeShared<TArray<Gs2::Ranking::Model::FSubscribeUserPtr>>();
+            const auto CacheOwnerSnapshotUserId = Self->AccessToken.IsValid() ? Self->UserId() : TOptional<FString>();
+            const auto CacheOwnerSnapshotTimeOffset = Self->AccessToken.IsValid() ? Self->AccessToken->GetTimeOffset() : TOptional<int32>();
+            const auto ResultModel = R;
+
+
+            if (Range.IsValid())
             {
-                Self->Gs2->Cache->Put(
-                    Gs2::Ranking::Model::FSubscribeUser::TypeName,
-                    ListParentKey,
-                    Gs2::Ranking::Domain::Model::FSubscribeUserDomain::CreateCacheKey(
-                        Item->GetTargetUserId()
-                    ),
-                    Item,
-                    FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
-                );
+                for (const auto& Item : *Range)
+                {
+                    if (!Item.IsValid()) continue;
+                    Gs2::Ranking::Model::Cache::FSubscribeUserCache::Put(
+                        Self->Gs2->Cache,
+                        Request->GetNamespaceName(), CacheOwnerSnapshotUserId, Request->GetCategoryName(), TOptional<FString>(), Item->GetTargetUserId(),
+                        CacheOwnerSnapshotTimeOffset, Item
+                    );
+                }
             }
             if (Range)
             {
@@ -177,4 +186,3 @@ namespace Gs2::Ranking::Domain::Iterator
 #elif defined(__clang__)
 #pragma clang diagnostic pop
 #endif
-

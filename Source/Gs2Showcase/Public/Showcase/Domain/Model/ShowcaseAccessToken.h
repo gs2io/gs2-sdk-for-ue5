@@ -95,6 +95,8 @@ namespace Gs2::Showcase::Domain::Model
             const FShowcaseAccessTokenDomain& From
         );
 
+
+
         class GS2SHOWCASE_API FGetTask final :
             public Gs2::Core::Util::TGs2Future<Gs2::Showcase::Model::FShowcase>,
             public TSharedFromThis<FGetTask>
@@ -158,7 +160,34 @@ namespace Gs2::Showcase::Domain::Model
 
         TSharedPtr<FAsyncTask<FModelTask>> Model();
 
+        void Invalidate();
+
         Gs2::Core::Domain::CallbackID Subscribe(
+            TFunction<void(Gs2::Showcase::Model::FShowcasePtr)> Callback
+        );
+
+        class GS2SHOWCASE_API FSubscribeWithInitialCallTask final :
+            public Gs2::Core::Util::TGs2Future<Gs2::Core::Domain::CallbackID>,
+            public TSharedFromThis<FSubscribeWithInitialCallTask>
+        {
+            const TSharedPtr<FShowcaseAccessTokenDomain> Self;
+            const TFunction<void(Gs2::Showcase::Model::FShowcasePtr)> Callback;
+        public:
+            FSubscribeWithInitialCallTask(
+                const TSharedPtr<FShowcaseAccessTokenDomain>& Self,
+                TFunction<void(Gs2::Showcase::Model::FShowcasePtr)> Callback
+            );
+
+            FSubscribeWithInitialCallTask(
+                const FSubscribeWithInitialCallTask& From
+            );
+
+            virtual Gs2::Core::Model::FGs2ErrorPtr Action(
+                TSharedPtr<TSharedPtr<Gs2::Core::Domain::CallbackID>> Result
+            ) override;
+        };
+
+        TSharedPtr<FAsyncTask<FSubscribeWithInitialCallTask>> SubscribeWithInitialCall(
             TFunction<void(Gs2::Showcase::Model::FShowcasePtr)> Callback
         );
 

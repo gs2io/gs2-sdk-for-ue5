@@ -138,6 +138,8 @@ namespace Gs2::Ranking2::Domain::Model
             const FClusterRankingReceivedRewardDomain& From
         );
 
+
+
         class GS2RANKING2_API FCreateTask final :
             public Gs2::Core::Util::TGs2Future<Gs2::Ranking2::Domain::Model::FClusterRankingReceivedRewardDomain>,
             public TSharedFromThis<FCreateTask>
@@ -163,6 +165,8 @@ namespace Gs2::Ranking2::Domain::Model
         TSharedPtr<FAsyncTask<FCreateTask>> Create(
             Request::FCreateClusterRankingReceivedRewardByUserIdRequestPtr Request
         );
+
+
 
         class GS2RANKING2_API FReceiveTask final :
             public Gs2::Core::Util::TGs2Future<Gs2::Core::Domain::FTransactionDomain>,
@@ -190,6 +194,8 @@ namespace Gs2::Ranking2::Domain::Model
             Request::FReceiveClusterRankingReceivedRewardByUserIdRequestPtr Request
         );
 
+
+
         class GS2RANKING2_API FGetTask final :
             public Gs2::Core::Util::TGs2Future<Gs2::Ranking2::Model::FClusterRankingReceivedReward>,
             public TSharedFromThis<FGetTask>
@@ -215,6 +221,8 @@ namespace Gs2::Ranking2::Domain::Model
         TSharedPtr<FAsyncTask<FGetTask>> Get(
             Request::FGetClusterRankingReceivedRewardByUserIdRequestPtr Request
         );
+
+
 
         class GS2RANKING2_API FDeleteTask final :
             public Gs2::Core::Util::TGs2Future<Gs2::Ranking2::Domain::Model::FClusterRankingReceivedRewardDomain>,

@@ -25,6 +25,7 @@
 #include "Model/LogSetting.h"
 #include "Model/ScriptSetting.h"
 #include "Model/TransactionSetting.h"
+#include "Model/TransactionSettingV2.h"
 #include "Model/LimitModel.h"
 
 // DescribeNamespaces

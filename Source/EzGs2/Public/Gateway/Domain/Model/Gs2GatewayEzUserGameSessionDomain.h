@@ -19,8 +19,9 @@
 #include "CoreMinimal.h"
 #include "Gateway/Domain/Model/UserAccessToken.h"
 #include "Gateway/Model/Gs2GatewayEzWebSocketSession.h"
-#include "Gs2GatewayEzWebSocketSessionGameSessionDomain.h"
+#include "Gateway/Model/Gs2GatewayEzFirebaseToken.h"
 #include "Gs2GatewayEzFirebaseTokenGameSessionDomain.h"
+#include "Gs2GatewayEzWebSocketSessionGameSessionDomain.h"
 #include "Gs2GatewayEzUserGameSessionDomain.h"
 #include "Core/EzTransactionGameSessionDomain.h"
 #include "Util/Net/GameSession.h"
@@ -49,10 +50,10 @@ namespace Gs2::UE5::Gateway::Domain::Model
             Gs2::UE5::Util::FGs2ConnectionPtr Connection
         );
 
-        Gs2::UE5::Gateway::Domain::Model::FEzWebSocketSessionGameSessionDomainPtr WebSocketSession(
+        Gs2::UE5::Gateway::Domain::Model::FEzFirebaseTokenGameSessionDomainPtr FirebaseToken(
         ) const;
 
-        Gs2::UE5::Gateway::Domain::Model::FEzFirebaseTokenGameSessionDomainPtr FirebaseToken(
+        Gs2::UE5::Gateway::Domain::Model::FEzWebSocketSessionGameSessionDomainPtr WebSocketSession(
         ) const;
 
     };

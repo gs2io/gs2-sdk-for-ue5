@@ -12,8 +12,6 @@
  * on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either
  * express or implied. See the License for the specific language governing
  * permissions and limitations under the License.
- *
- * deny overwrite
  */
 
 #pragma once
@@ -21,6 +19,7 @@
 #include "CoreMinimal.h"
 #include "Formation/Domain/Model/Gs2FormationEzMoldModelDomain.h"
 #include "Formation/Model/Gs2FormationFormModel.h"
+#include "Core/BpGs2Constant.h"
 #include "Gs2FormationMoldModel.generated.h"
 
 USTRUCT(BlueprintType)
@@ -53,6 +52,10 @@ inline FGs2FormationMoldModelValue EzMoldModelToFGs2FormationMoldModelValue(
 )
 {
     FGs2FormationMoldModelValue Value;
+    if (Model == nullptr) {
+        UE_LOG(BpGs2Log, Error, TEXT("[UGs2FormationMoldModelFunctionLibrary::EzMoldModelToFGs2FormationMoldModelValue] Model parameter specification is missing."))
+        return Value;
+    }
     Value.Name = Model->GetName() ? *Model->GetName() : "";
     Value.Metadata = Model->GetMetadata() ? *Model->GetMetadata() : "";
     Value.FormModel = Model->GetFormModel() ? EzFormModelToFGs2FormationFormModelValue(Model->GetFormModel()) : FGs2FormationFormModelValue();
@@ -77,4 +80,9 @@ UCLASS()
 class BPGS2_API UGs2FormationMoldModelFunctionLibrary : public UBlueprintFunctionLibrary
 {
     GENERATED_BODY()
+
+    UFUNCTION(BlueprintCallable, DisplayName="Gs2::Formation::FormModel", Category="Game Server Services|GS2-Formation|Namespace|MoldModel|FormModel", meta=(WorldContext="WorldContextObject"))
+    static UPARAM(DisplayName="FormModel") FGs2FormationFormModel FormModel(
+        FGs2FormationMoldModel MoldModel
+    );
 };

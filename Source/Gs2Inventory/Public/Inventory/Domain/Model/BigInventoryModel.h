@@ -88,7 +88,6 @@ namespace Gs2::Inventory::Domain::Model
     class FBigItemAccessTokenDomain;
     class FUserDomain;
     class FUserAccessTokenDomain;
-    class FItemSetEntry;
 
     class GS2INVENTORY_API FBigInventoryModelDomain:
         public TSharedFromThis<FBigInventoryModelDomain>
@@ -117,6 +116,8 @@ namespace Gs2::Inventory::Domain::Model
         FBigInventoryModelDomain(
             const FBigInventoryModelDomain& From
         );
+
+
 
         class GS2INVENTORY_API FGetTask final :
             public Gs2::Core::Util::TGs2Future<Gs2::Inventory::Model::FBigInventoryModel>,
@@ -149,8 +150,33 @@ namespace Gs2::Inventory::Domain::Model
 
         Gs2::Core::Domain::CallbackID SubscribeBigItemModels(
             TFunction<void()> Callback
+
         );
 
+        class FCollectBigItemModelsTask;
+
+        Gs2::Core::Domain::CallbackID SubscribeBigItemModels(
+            TFunction<void(TArray<Gs2::Inventory::Model::FBigItemModelPtr>)> Callback
+        );
+
+        void InvalidateBigItemModels();
+
+        class GS2INVENTORY_API FSubscribeBigItemModelsWithInitialCallTask final :
+            public Gs2::Core::Util::TGs2Future<Gs2::Core::Domain::CallbackID>,
+            public TSharedFromThis<FSubscribeBigItemModelsWithInitialCallTask>
+        {
+            const TSharedPtr<FBigInventoryModelDomain> Self;
+            const TFunction<void(TArray<Gs2::Inventory::Model::FBigItemModelPtr>)> Callback;
+
+        public:
+            FSubscribeBigItemModelsWithInitialCallTask(const TSharedPtr<FBigInventoryModelDomain>& Self, TFunction<void(TArray<Gs2::Inventory::Model::FBigItemModelPtr>)> Callback);
+            FSubscribeBigItemModelsWithInitialCallTask(const FSubscribeBigItemModelsWithInitialCallTask& From);
+            virtual Gs2::Core::Model::FGs2ErrorPtr Action(TSharedPtr<TSharedPtr<Gs2::Core::Domain::CallbackID>> Result) override;
+        };
+
+        TSharedPtr<FAsyncTask<FSubscribeBigItemModelsWithInitialCallTask>> SubscribeBigItemModelsWithInitialCall(
+            TFunction<void(TArray<Gs2::Inventory::Model::FBigItemModelPtr>)> Callback
+        );
         void UnsubscribeBigItemModels(
             Gs2::Core::Domain::CallbackID CallbackID
         );
@@ -191,7 +217,34 @@ namespace Gs2::Inventory::Domain::Model
 
         TSharedPtr<FAsyncTask<FModelTask>> Model();
 
+        void Invalidate();
+
         Gs2::Core::Domain::CallbackID Subscribe(
+            TFunction<void(Gs2::Inventory::Model::FBigInventoryModelPtr)> Callback
+        );
+
+        class GS2INVENTORY_API FSubscribeWithInitialCallTask final :
+            public Gs2::Core::Util::TGs2Future<Gs2::Core::Domain::CallbackID>,
+            public TSharedFromThis<FSubscribeWithInitialCallTask>
+        {
+            const TSharedPtr<FBigInventoryModelDomain> Self;
+            const TFunction<void(Gs2::Inventory::Model::FBigInventoryModelPtr)> Callback;
+        public:
+            FSubscribeWithInitialCallTask(
+                const TSharedPtr<FBigInventoryModelDomain>& Self,
+                TFunction<void(Gs2::Inventory::Model::FBigInventoryModelPtr)> Callback
+            );
+
+            FSubscribeWithInitialCallTask(
+                const FSubscribeWithInitialCallTask& From
+            );
+
+            virtual Gs2::Core::Model::FGs2ErrorPtr Action(
+                TSharedPtr<TSharedPtr<Gs2::Core::Domain::CallbackID>> Result
+            ) override;
+        };
+
+        TSharedPtr<FAsyncTask<FSubscribeWithInitialCallTask>> SubscribeWithInitialCall(
             TFunction<void(Gs2::Inventory::Model::FBigInventoryModelPtr)> Callback
         );
 

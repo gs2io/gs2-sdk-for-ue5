@@ -19,6 +19,7 @@
 #include "CoreMinimal.h"
 #include "Dom/JsonObject.h"
 #include "../Model/TransactionSetting.h"
+#include "../Model/TransactionSettingV2.h"
 #include "../Model/ScriptSetting.h"
 #include "../Model/LogSetting.h"
 
@@ -32,6 +33,7 @@ namespace Gs2::Experience::Request
         TOptional<FString> NamespaceNameValue;
         TOptional<FString> DescriptionValue;
         TSharedPtr<Model::FTransactionSetting> TransactionSettingValue;
+        TSharedPtr<Model::FTransactionSettingV2> TransactionSettingV2Value;
         TOptional<FString> RankCapScriptIdValue;
         TSharedPtr<Model::FScriptSetting> ChangeExperienceScriptValue;
         TSharedPtr<Model::FScriptSetting> ChangeRankScriptValue;
@@ -51,6 +53,7 @@ namespace Gs2::Experience::Request
         TSharedPtr<FUpdateNamespaceRequest> WithNamespaceName(const TOptional<FString> NamespaceName);
         TSharedPtr<FUpdateNamespaceRequest> WithDescription(const TOptional<FString> Description);
         TSharedPtr<FUpdateNamespaceRequest> WithTransactionSetting(const TSharedPtr<Model::FTransactionSetting> TransactionSetting);
+        TSharedPtr<FUpdateNamespaceRequest> WithTransactionSettingV2(const TSharedPtr<Model::FTransactionSettingV2> TransactionSettingV2);
         TSharedPtr<FUpdateNamespaceRequest> WithRankCapScriptId(const TOptional<FString> RankCapScriptId);
         TSharedPtr<FUpdateNamespaceRequest> WithChangeExperienceScript(const TSharedPtr<Model::FScriptSetting> ChangeExperienceScript);
         TSharedPtr<FUpdateNamespaceRequest> WithChangeRankScript(const TSharedPtr<Model::FScriptSetting> ChangeRankScript);
@@ -62,6 +65,7 @@ namespace Gs2::Experience::Request
         TOptional<FString> GetNamespaceName() const;
         TOptional<FString> GetDescription() const;
         TSharedPtr<Model::FTransactionSetting> GetTransactionSetting() const;
+        TSharedPtr<Model::FTransactionSettingV2> GetTransactionSettingV2() const;
         TOptional<FString> GetRankCapScriptId() const;
         TSharedPtr<Model::FScriptSetting> GetChangeExperienceScript() const;
         TSharedPtr<Model::FScriptSetting> GetChangeRankScript() const;

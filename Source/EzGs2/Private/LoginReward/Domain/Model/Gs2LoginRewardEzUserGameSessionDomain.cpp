@@ -63,7 +63,8 @@ namespace Gs2::UE5::LoginReward::Domain::Model
         );
     }
 
-    void FEzUserGameSessionDomain::UnsubscribeReceiveStatuses(Gs2::Core::Domain::CallbackID CallbackId)
+    void FEzUserGameSessionDomain::UnsubscribeReceiveStatuses(
+            Gs2::Core::Domain::CallbackID CallbackId)
     {
         Domain->UnsubscribeReceiveStatuses(
             CallbackId

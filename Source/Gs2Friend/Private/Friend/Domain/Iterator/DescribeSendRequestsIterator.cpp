@@ -1,3 +1,4 @@
+
 /*
  * Copyright 2016 Game Server Services, Inc. or its affiliates. All Rights
  * Reserved.
@@ -12,8 +13,6 @@
  * on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either
  * express or implied. See the License for the specific language governing
  * permissions and limitations under the License.
- *
- * deny overwrite
  */
 
 #if defined(_MSC_VER)
@@ -32,6 +31,9 @@
 
 #include "Core/Domain/Gs2.h"
 
+#include "Friend/Model/Cache/SendFriendRequest.h"
+#include "Friend/Model/Cache/FriendRequest.h"
+
 namespace Gs2::Friend::Domain::Iterator
 {
 
@@ -39,15 +41,13 @@ namespace Gs2::Friend::Domain::Iterator
         const TSharedPtr<Core::Domain::FGs2> Gs2,
         const Gs2::Friend::FGs2FriendRestClientPtr Client,
         const TOptional<FString> NamespaceName,
-        const Gs2::Auth::Model::FAccessTokenPtr AccessToken,
-        const TOptional<bool> WithProfile
+        const Gs2::Auth::Model::FAccessTokenPtr AccessToken
         // ReSharper disable once CppMemberInitializersOrder
     ):
         Gs2(Gs2),
         Client(Client),
         NamespaceName(NamespaceName),
-        AccessToken(AccessToken),
-        WithProfile(WithProfile)
+        AccessToken(AccessToken)
     {
     }
 
@@ -57,8 +57,7 @@ namespace Gs2::Friend::Domain::Iterator
         Gs2(From.Gs2),
         Client(From.Client),
         NamespaceName(From.NamespaceName),
-        AccessToken(From.AccessToken),
-        WithProfile(From.WithProfile)
+        AccessToken(From.AccessToken)
     {
     }
 
@@ -83,9 +82,7 @@ namespace Gs2::Friend::Domain::Iterator
 
     FDescribeSendRequestsIterator::FIterator& FDescribeSendRequestsIterator::FIterator::operator++()
     {
-        
-
-        if (bEnd) return *this;
+                if (bEnd) return *this;
 
         if (ErrorValue && bLast)
         {
@@ -93,16 +90,17 @@ namespace Gs2::Friend::Domain::Iterator
             return *this;
         }
 
-        if (RangeIteratorOpt) ++*RangeIteratorOpt;
+        if (RangeIteratorOpt && *RangeIteratorOpt) ++*RangeIteratorOpt;
 
+        // Keep the previous page alive until its iterator has been replaced.
+        const auto PreviousRange = Range;
         if (!RangeIteratorOpt || (!*RangeIteratorOpt && !bLast))
         {
-            const auto ListParentKey = Gs2::Friend::Domain::Model::FUserDomain::CreateCacheParentKey(
+            const auto ListParentKey = Gs2::Friend::Model::Cache::FSendFriendRequestCache::CreateCacheParentKey(
                 Self->NamespaceName,
-                Self->UserId(),
-                FString("SendFriendRequest:") + (Self->WithProfile.IsSet() ? *Self->WithProfile == true ? "True" : "False" : "False")
+                Self->AccessToken.IsValid() ? Self->AccessToken->GetUserId() : TOptional<FString>(),
+                Self->AccessToken.IsValid() ? Self->AccessToken->GetTimeOffset() : TOptional<int32>()
             );
-
             if (!RangeIteratorOpt)
             {
                 Range = Self->Gs2->Cache->TryGetList<Gs2::Friend::Model::FSendFriendRequest>(ListParentKey);
@@ -116,16 +114,15 @@ namespace Gs2::Friend::Domain::Iterator
                     return *this;
                 }
             }
-
-            const auto Future = Self->Client->DescribeSendRequests(
+            const auto Request =
                 MakeShared<Gs2::Friend::Request::FDescribeSendRequestsRequest>()
                     ->WithContextStack(Self->Gs2->DefaultContextStack)
                     ->WithNamespaceName(Self->NamespaceName)
                     ->WithAccessToken(Self->AccessToken == nullptr ? TOptional<FString>() : Self->AccessToken->GetToken())
-                    ->WithWithProfile(Self->WithProfile)
                     ->WithPageToken(PageToken)
                     ->WithLimit(FetchSize)
-            );
+            ;
+            const auto Future = Self->Client->DescribeSendRequests(Request);
             Future->StartSynchronousTask();
             if (Future->GetTask().IsError())
             {
@@ -139,18 +136,44 @@ namespace Gs2::Friend::Domain::Iterator
             }
             const auto R = Future->GetTask().Result();
             Future->EnsureCompletion();
-            Range = R->GetItems();
-            for (auto Item : *R->GetItems())
+            const auto ProjectedRange = MakeShared<TArray<Gs2::Friend::Model::FSendFriendRequestPtr>>();
+            if (R.IsValid() && R->GetItems().IsValid())
             {
-                Self->Gs2->Cache->Put(
-                    Gs2::Friend::Model::FSendFriendRequest::TypeName,
-                    ListParentKey,
-                    Gs2::Friend::Domain::Model::FSendFriendRequestDomain::CreateCacheKey(
-                        Item->GetTargetUserId()
-                    ),
-                    Item,
-                    FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
-                );
+                for (const auto& Item : *R->GetItems())
+                {
+                    if (Item.IsValid() && Item->GetUserId().IsSet() && Item->GetTargetUserId().IsSet())
+                    {
+                        ProjectedRange->Add(MakeShared<Gs2::Friend::Model::FSendFriendRequest>()
+                            ->WithUserId(Item->GetUserId())
+                            ->WithTargetUserId(Item->GetTargetUserId()));
+                    }
+                    else
+                    {
+                        const auto Details = MakeShared<TArray<TSharedPtr<Gs2::Core::Model::FGs2ErrorDetail>>>();
+                        Details->Add(MakeShared<Gs2::Core::Model::FGs2ErrorDetail>(TEXT("item"), TEXT("item is required."), TEXT("required")));
+                        ErrorValue = MakeShared<Gs2::Core::Model::FUnknownError>(Details);
+                        bLast = true;
+                        return *this;
+                    }
+                }
+            }
+            Range = ProjectedRange;
+            const auto CacheOwnerSnapshotUserId = Self->AccessToken.IsValid() ? Self->UserId() : TOptional<FString>();
+            const auto CacheOwnerSnapshotTimeOffset = Self->AccessToken.IsValid() ? Self->AccessToken->GetTimeOffset() : TOptional<int32>();
+            const auto ResultModel = R;
+
+
+            if (Range.IsValid())
+            {
+                for (const auto& Item : *Range)
+                {
+                    if (!Item.IsValid()) continue;
+                    Gs2::Friend::Model::Cache::FSendFriendRequestCache::Put(
+                        Self->Gs2->Cache,
+                        Request->GetNamespaceName(), CacheOwnerSnapshotUserId, Item->GetTargetUserId(),
+                        CacheOwnerSnapshotTimeOffset, Item
+                    );
+                }
             }
             if (Range)
             {
@@ -161,7 +184,11 @@ namespace Gs2::Friend::Domain::Iterator
             if (bLast) {
                 Self->Gs2->Cache->SetListCached(
                     Gs2::Friend::Model::FSendFriendRequest::TypeName,
-                    ListParentKey
+                    Gs2::Friend::Model::Cache::FSendFriendRequestCache::CreateCacheParentKey(
+                        Self->NamespaceName,
+                        Self->AccessToken.IsValid() ? Self->AccessToken->GetUserId() : TOptional<FString>(),
+                        Self->AccessToken.IsValid() ? Self->AccessToken->GetTimeOffset() : TOptional<int32>()
+                    )
                 );
             }
         }

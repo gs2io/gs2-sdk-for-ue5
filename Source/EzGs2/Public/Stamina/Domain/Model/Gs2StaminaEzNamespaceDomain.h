@@ -60,7 +60,8 @@ namespace Gs2::UE5::Stamina::Domain::Model
 
         Gs2::Core::Domain::CallbackID SubscribeStaminaModels(TFunction<void()> Callback);
 
-        void UnsubscribeStaminaModels(Gs2::Core::Domain::CallbackID CallbackId);
+        void UnsubscribeStaminaModels(
+                Gs2::Core::Domain::CallbackID CallbackId);
 
         Gs2::UE5::Stamina::Domain::Model::FEzStaminaModelDomainPtr StaminaModel(
             const FString StaminaName

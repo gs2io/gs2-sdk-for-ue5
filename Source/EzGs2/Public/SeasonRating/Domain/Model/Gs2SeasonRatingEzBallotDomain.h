@@ -57,7 +57,7 @@ namespace Gs2::UE5::SeasonRating::Domain::Model
         );
 
         class EZGS2_API FModelTask :
-            public Gs2::Core::Util::TGs2Future<Gs2::UE5::SeasonRating::Model::FEzBallot>,
+            public Gs2::Core::Util::TGs2Future<Gs2::UE5::SeasonRating::Model::FEzSignedBallot>,
             public TSharedFromThis<FModelTask>
         {
             TSharedPtr<FEzBallotDomain> Self;
@@ -68,13 +68,13 @@ namespace Gs2::UE5::SeasonRating::Domain::Model
             );
 
             virtual Gs2::Core::Model::FGs2ErrorPtr Action(
-                TSharedPtr<Gs2::UE5::SeasonRating::Model::FEzBallotPtr> Result
+                TSharedPtr<Gs2::UE5::SeasonRating::Model::FEzSignedBallotPtr> Result
             ) override;
         };
 
         TSharedPtr<FAsyncTask<FModelTask>> Model();
 
-        Gs2::Core::Domain::CallbackID Subscribe(TFunction<void(Gs2::UE5::SeasonRating::Model::FEzBallotPtr)> Callback);
+        Gs2::Core::Domain::CallbackID Subscribe(TFunction<void(Gs2::UE5::SeasonRating::Model::FEzSignedBallotPtr)> Callback);
 
         void Unsubscribe(Gs2::Core::Domain::CallbackID CallbackId);
 

@@ -92,7 +92,7 @@ namespace Gs2::UE5::MegaField::Domain::Model
     Gs2::Core::Domain::CallbackID FEzSpatialDomain::Subscribe(TFunction<void(Gs2::UE5::MegaField::Model::FEzSpatialPtr)> Callback)
     {
         return Domain->Subscribe(
-            [&](Gs2::MegaField::Model::FSpatialPtr Item)
+            [Callback](Gs2::MegaField::Model::FSpatialPtr Item)
             {
                 Callback(Gs2::UE5::MegaField::Model::FEzSpatial::FromModel(Item));
             }

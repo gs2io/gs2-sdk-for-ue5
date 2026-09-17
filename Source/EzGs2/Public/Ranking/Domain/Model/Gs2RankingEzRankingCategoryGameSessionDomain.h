@@ -113,7 +113,8 @@ namespace Gs2::UE5::Ranking::Domain::Model
 
         Gs2::Core::Domain::CallbackID SubscribeSubscribeUsers(TFunction<void()> Callback);
 
-        void UnsubscribeSubscribeUsers(Gs2::Core::Domain::CallbackID CallbackId);
+        void UnsubscribeSubscribeUsers(
+                Gs2::Core::Domain::CallbackID CallbackId);
 
         Gs2::UE5::Ranking::Domain::Model::FEzSubscribeUserGameSessionDomainPtr SubscribeUser(
             const FString TargetUserId
@@ -124,7 +125,8 @@ namespace Gs2::UE5::Ranking::Domain::Model
 
         Gs2::Core::Domain::CallbackID SubscribeRankings(TFunction<void()> Callback);
 
-        void UnsubscribeRankings(Gs2::Core::Domain::CallbackID CallbackId);
+        void UnsubscribeRankings(
+                Gs2::Core::Domain::CallbackID CallbackId);
 
         Gs2::UE5::Ranking::Domain::Model::FEzRankingGameSessionDomainPtr Ranking(
             const TOptional<FString> ScorerUserId = TOptional<FString>(),

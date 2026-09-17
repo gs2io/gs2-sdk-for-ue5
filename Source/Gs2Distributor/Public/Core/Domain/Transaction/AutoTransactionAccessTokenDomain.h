@@ -16,7 +16,9 @@
 
 #pragma once
 
+#include "HAL/CriticalSection.h"
 #include "Distributor/Model/StampSheetResult.h"
+#include "Distributor/Model/TransactionResult.h"
 #include "Core/Domain/Transaction/TransactionAccessTokenDomain.h"
 
 namespace Gs2::Core::Domain
@@ -26,11 +28,26 @@ namespace Gs2::Core::Domain
 	{
 	private:
 	    static TMap<FString, FDateTime> Handled;
+        static FCriticalSection HandledMutex;
         FString TransactionId;
+        TOptional<FString> TransactionNamespaceName;
+        const bool bAtomicCommit;
+        const Gs2::Core::Model::FTransactionResultPtr InitialTransactionResult;
+        FCriticalSection TransactionResultMutex;
+        bool bTransactionResultHandled;
 
         FTransactionAccessTokenDomainPtr HandleResult(
-            Gs2::Distributor::Model::FStampSheetResultPtr Result
+            Gs2::Distributor::Model::FStampSheetResultPtr Result,
+            Gs2::Core::Model::FGs2ErrorPtr& Error
         );
+
+        FTransactionAccessTokenDomainPtr HandleTransactionResult(
+            Gs2::Distributor::Model::FTransactionResultPtr Result,
+            Gs2::Core::Model::FGs2ErrorPtr& Error
+        );
+
+        bool MarkHandled();
+        bool MarkTransactionResultHandled();
 
     public:
 	    FAutoTransactionAccessTokenDomain(
@@ -46,14 +63,22 @@ namespace Gs2::Core::Domain
 				bool bAtomicCommit,
 				Gs2::Core::Model::FTransactionResultPtr TransactionResult
 			)>& NewTransactionDomain,
+            const TFunction<Gs2::Core::Model::FGs2ErrorPtr(
+                const Gs2::Auth::Model::FAccessTokenPtr& AccessToken
+            )>& Dispatch,
             const Gs2::Auth::Model::FAccessTokenPtr& AccessToken,
-            const FString TransactionId
+            const FString TransactionId,
+            const bool bAtomicCommit = false,
+            const Gs2::Core::Model::FTransactionResultPtr InitialTransactionResult = nullptr,
+            const TOptional<FString> NamespaceName = TOptional<FString>()
         );
 		FAutoTransactionAccessTokenDomain(
 			const FAutoTransactionAccessTokenDomain& From
 		);
 
 	    virtual ~FAutoTransactionAccessTokenDomain() override = default;
+
+		virtual TOptional<FString> GetTransactionId() const override;
 
 		Gs2::Core::Model::FGs2ErrorPtr WaitImpl(
 			const bool All,

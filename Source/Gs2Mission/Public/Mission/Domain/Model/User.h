@@ -105,8 +105,33 @@ namespace Gs2::Mission::Domain::Model
 
         Gs2::Core::Domain::CallbackID SubscribeCompletes(
             TFunction<void()> Callback
+
         );
 
+        class FCollectCompletesTask;
+
+        Gs2::Core::Domain::CallbackID SubscribeCompletes(
+            TFunction<void(TArray<Gs2::Mission::Model::FCompletePtr>)> Callback,const TOptional<FString> TimeOffsetToken = TOptional<FString>()
+        );
+
+        void InvalidateCompletes(const TOptional<FString> TimeOffsetToken = TOptional<FString>());
+
+        class GS2MISSION_API FSubscribeCompletesWithInitialCallTask final :
+            public Gs2::Core::Util::TGs2Future<Gs2::Core::Domain::CallbackID>,
+            public TSharedFromThis<FSubscribeCompletesWithInitialCallTask>
+        {
+            const TSharedPtr<FUserDomain> Self;
+            const TFunction<void(TArray<Gs2::Mission::Model::FCompletePtr>)> Callback;
+        const TOptional<FString> QueryTimeOffsetToken;
+        public:
+            FSubscribeCompletesWithInitialCallTask(const TSharedPtr<FUserDomain>& Self, TFunction<void(TArray<Gs2::Mission::Model::FCompletePtr>)> Callback,const TOptional<FString> TimeOffsetToken);
+            FSubscribeCompletesWithInitialCallTask(const FSubscribeCompletesWithInitialCallTask& From);
+            virtual Gs2::Core::Model::FGs2ErrorPtr Action(TSharedPtr<TSharedPtr<Gs2::Core::Domain::CallbackID>> Result) override;
+        };
+
+        TSharedPtr<FAsyncTask<FSubscribeCompletesWithInitialCallTask>> SubscribeCompletesWithInitialCall(
+            TFunction<void(TArray<Gs2::Mission::Model::FCompletePtr>)> Callback,const TOptional<FString> TimeOffsetToken = TOptional<FString>()
+        );
         void UnsubscribeCompletes(
             Gs2::Core::Domain::CallbackID CallbackID
         );
@@ -121,8 +146,33 @@ namespace Gs2::Mission::Domain::Model
 
         Gs2::Core::Domain::CallbackID SubscribeCounters(
             TFunction<void()> Callback
+
         );
 
+        class FCollectCountersTask;
+
+        Gs2::Core::Domain::CallbackID SubscribeCounters(
+            TFunction<void(TArray<Gs2::Mission::Model::FCounterPtr>)> Callback,const TOptional<FString> TimeOffsetToken = TOptional<FString>()
+        );
+
+        void InvalidateCounters(const TOptional<FString> TimeOffsetToken = TOptional<FString>());
+
+        class GS2MISSION_API FSubscribeCountersWithInitialCallTask final :
+            public Gs2::Core::Util::TGs2Future<Gs2::Core::Domain::CallbackID>,
+            public TSharedFromThis<FSubscribeCountersWithInitialCallTask>
+        {
+            const TSharedPtr<FUserDomain> Self;
+            const TFunction<void(TArray<Gs2::Mission::Model::FCounterPtr>)> Callback;
+        const TOptional<FString> QueryTimeOffsetToken;
+        public:
+            FSubscribeCountersWithInitialCallTask(const TSharedPtr<FUserDomain>& Self, TFunction<void(TArray<Gs2::Mission::Model::FCounterPtr>)> Callback,const TOptional<FString> TimeOffsetToken);
+            FSubscribeCountersWithInitialCallTask(const FSubscribeCountersWithInitialCallTask& From);
+            virtual Gs2::Core::Model::FGs2ErrorPtr Action(TSharedPtr<TSharedPtr<Gs2::Core::Domain::CallbackID>> Result) override;
+        };
+
+        TSharedPtr<FAsyncTask<FSubscribeCountersWithInitialCallTask>> SubscribeCountersWithInitialCall(
+            TFunction<void(TArray<Gs2::Mission::Model::FCounterPtr>)> Callback,const TOptional<FString> TimeOffsetToken = TOptional<FString>()
+        );
         void UnsubscribeCounters(
             Gs2::Core::Domain::CallbackID CallbackID
         );

@@ -27,6 +27,7 @@
 #include "Showcase/Domain/SpeculativeExecutor/Transaction/RandomShowcaseBuyByUserIdSpeculativeExecutor.h"
 
 #include "Core/Domain/Gs2.h"
+#include "Core/Domain/SpeculativeExecutor/PreparedSpeculativeCommit.h"
 
 namespace Gs2::Showcase::Domain::Transaction::SpeculativeExecutor
 {
@@ -58,39 +59,10 @@ namespace Gs2::Showcase::Domain::Transaction::SpeculativeExecutor
     }
 
     Gs2::Core::Model::FGs2ErrorPtr FRandomShowcaseBuyByUserIdSpeculativeExecutor::FCommitTask::Action(
-        TSharedPtr<TSharedPtr<TFunction<void()>>> Result)
+        TSharedPtr<TSharedPtr<Gs2::Core::Domain::SpeculativeExecutor::FPreparedSpeculativeCommit>> Result)
     {
-        const auto Future = Domain->Showcase->Namespace(
-                Request->GetNamespaceName().IsSet() ? *Request->GetNamespaceName() : ""
-            )->AccessToken(
-                AccessToken
-            )->RandomShowcase(
-                Request->GetShowcaseName().IsSet() ? *Request->GetShowcaseName() : ""
-            )->RandomDisplayItem(
-                Request->GetDisplayItemName().IsSet() ? *Request->GetDisplayItemName() : ""
-            )->Model();
-        Future->StartSynchronousTask();
-        if (Future->GetTask().IsError())
-        {
-            return Future->GetTask().Error();
-        }
-        const auto Item = Future->GetTask().Result();
-
-        if (!Item.IsValid())
-        {
-            *Result = MakeShared<TFunction<void()>>([]{});
-            return nullptr;
-        }
-
-        Service->OnIssueTransaction.Broadcast(
-            MakeShared<Gs2::Core::Domain::Model::FIssueTransactionEvent>(
-                AccessToken,
-                Item->GetConsumeActions(),
-                Item->GetAcquireActions(),
-                Request->GetQuantity().IsSet() ? *Request->GetQuantity() : 1.0
-            )
-        );
-
+        UE_LOG(Gs2Log, Warning, TEXT("Speculative execution not supported on this action: %s"), ToCStr(FRandomShowcaseBuyByUserIdSpeculativeExecutor::Action()))
+        *Result = Gs2::Core::Domain::SpeculativeExecutor::FPreparedSpeculativeCommit::WrapLegacy(MakeShared<TFunction<void()>>([](){}));
         return nullptr;
     }
 

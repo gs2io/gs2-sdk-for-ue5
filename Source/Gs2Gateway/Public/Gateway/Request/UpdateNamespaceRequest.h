@@ -19,6 +19,7 @@
 #include "CoreMinimal.h"
 #include "Dom/JsonObject.h"
 #include "../Model/TransactionSetting.h"
+#include "../Model/TransactionSettingV2.h"
 #include "../Model/LogSetting.h"
 
 namespace Gs2::Gateway::Request
@@ -31,7 +32,9 @@ namespace Gs2::Gateway::Request
         TOptional<FString> NamespaceNameValue;
         TOptional<FString> DescriptionValue;
         TSharedPtr<Model::FTransactionSetting> TransactionSettingValue;
+        TSharedPtr<Model::FTransactionSettingV2> TransactionSettingV2Value;
         TOptional<FString> FirebaseSecretValue;
+        TOptional<FString> FirebaseProjectIdValue;
         TSharedPtr<Model::FLogSetting> LogSettingValue;
         
     public:
@@ -46,14 +49,18 @@ namespace Gs2::Gateway::Request
         TSharedPtr<FUpdateNamespaceRequest> WithNamespaceName(const TOptional<FString> NamespaceName);
         TSharedPtr<FUpdateNamespaceRequest> WithDescription(const TOptional<FString> Description);
         TSharedPtr<FUpdateNamespaceRequest> WithTransactionSetting(const TSharedPtr<Model::FTransactionSetting> TransactionSetting);
+        TSharedPtr<FUpdateNamespaceRequest> WithTransactionSettingV2(const TSharedPtr<Model::FTransactionSettingV2> TransactionSettingV2);
         TSharedPtr<FUpdateNamespaceRequest> WithFirebaseSecret(const TOptional<FString> FirebaseSecret);
+        TSharedPtr<FUpdateNamespaceRequest> WithFirebaseProjectId(const TOptional<FString> FirebaseProjectId);
         TSharedPtr<FUpdateNamespaceRequest> WithLogSetting(const TSharedPtr<Model::FLogSetting> LogSetting);
 
         TOptional<FString> GetContextStack() const;
         TOptional<FString> GetNamespaceName() const;
         TOptional<FString> GetDescription() const;
         TSharedPtr<Model::FTransactionSetting> GetTransactionSetting() const;
+        TSharedPtr<Model::FTransactionSettingV2> GetTransactionSettingV2() const;
         TOptional<FString> GetFirebaseSecret() const;
+        TOptional<FString> GetFirebaseProjectId() const;
         TSharedPtr<Model::FLogSetting> GetLogSetting() const;
 
         static TSharedPtr<FUpdateNamespaceRequest> FromJson(const TSharedPtr<FJsonObject> Data);

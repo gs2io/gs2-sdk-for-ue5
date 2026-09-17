@@ -19,6 +19,7 @@
 #include "CoreMinimal.h"
 #include "Dom/JsonObject.h"
 #include "../Model/TransactionSetting.h"
+#include "../Model/TransactionSettingV2.h"
 #include "../Model/NotificationSetting.h"
 #include "../Model/LogSetting.h"
 
@@ -32,6 +33,7 @@ namespace Gs2::Distributor::Request
         TOptional<FString> NamespaceNameValue;
         TOptional<FString> DescriptionValue;
         TSharedPtr<Model::FTransactionSetting> TransactionSettingValue;
+        TSharedPtr<Model::FTransactionSettingV2> TransactionSettingV2Value;
         TOptional<FString> AssumeUserIdValue;
         TSharedPtr<Model::FNotificationSetting> AutoRunStampSheetNotificationValue;
         TSharedPtr<Model::FNotificationSetting> AutoRunTransactionNotificationValue;
@@ -49,6 +51,7 @@ namespace Gs2::Distributor::Request
         TSharedPtr<FUpdateNamespaceRequest> WithNamespaceName(const TOptional<FString> NamespaceName);
         TSharedPtr<FUpdateNamespaceRequest> WithDescription(const TOptional<FString> Description);
         TSharedPtr<FUpdateNamespaceRequest> WithTransactionSetting(const TSharedPtr<Model::FTransactionSetting> TransactionSetting);
+        TSharedPtr<FUpdateNamespaceRequest> WithTransactionSettingV2(const TSharedPtr<Model::FTransactionSettingV2> TransactionSettingV2);
         TSharedPtr<FUpdateNamespaceRequest> WithAssumeUserId(const TOptional<FString> AssumeUserId);
         TSharedPtr<FUpdateNamespaceRequest> WithAutoRunStampSheetNotification(const TSharedPtr<Model::FNotificationSetting> AutoRunStampSheetNotification);
         TSharedPtr<FUpdateNamespaceRequest> WithAutoRunTransactionNotification(const TSharedPtr<Model::FNotificationSetting> AutoRunTransactionNotification);
@@ -58,6 +61,7 @@ namespace Gs2::Distributor::Request
         TOptional<FString> GetNamespaceName() const;
         TOptional<FString> GetDescription() const;
         TSharedPtr<Model::FTransactionSetting> GetTransactionSetting() const;
+        TSharedPtr<Model::FTransactionSettingV2> GetTransactionSettingV2() const;
         TOptional<FString> GetAssumeUserId() const;
         TSharedPtr<Model::FNotificationSetting> GetAutoRunStampSheetNotification() const;
         TSharedPtr<Model::FNotificationSetting> GetAutoRunTransactionNotification() const;

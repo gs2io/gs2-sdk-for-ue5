@@ -22,6 +22,7 @@ namespace Gs2::Grade::Request
         NameValue(TOptional<FString>()),
         DescriptionValue(TOptional<FString>()),
         TransactionSettingValue(nullptr),
+        TransactionSettingV2Value(nullptr),
         ChangeGradeScriptValue(nullptr),
         LogSettingValue(nullptr)
     {
@@ -33,6 +34,7 @@ namespace Gs2::Grade::Request
         NameValue(From.NameValue),
         DescriptionValue(From.DescriptionValue),
         TransactionSettingValue(From.TransactionSettingValue),
+        TransactionSettingV2Value(From.TransactionSettingV2Value),
         ChangeGradeScriptValue(From.ChangeGradeScriptValue),
         LogSettingValue(From.LogSettingValue)
     {
@@ -67,6 +69,14 @@ namespace Gs2::Grade::Request
     )
     {
         this->TransactionSettingValue = TransactionSetting;
+        return SharedThis(this);
+    }
+
+    TSharedPtr<FCreateNamespaceRequest> FCreateNamespaceRequest::WithTransactionSettingV2(
+        const TSharedPtr<Model::FTransactionSettingV2> TransactionSettingV2
+    )
+    {
+        this->TransactionSettingV2Value = TransactionSettingV2;
         return SharedThis(this);
     }
 
@@ -108,6 +118,15 @@ namespace Gs2::Grade::Request
             return nullptr;
         }
         return TransactionSettingValue;
+    }
+
+    TSharedPtr<Model::FTransactionSettingV2> FCreateNamespaceRequest::GetTransactionSettingV2() const
+    {
+        if (!TransactionSettingV2Value.IsValid())
+        {
+            return nullptr;
+        }
+        return TransactionSettingV2Value;
     }
 
     TSharedPtr<Model::FScriptSetting> FCreateNamespaceRequest::GetChangeGradeScript() const
@@ -161,6 +180,14 @@ namespace Gs2::Grade::Request
                   }
                   return Model::FTransactionSetting::FromJson(Data->GetObjectField(ANSI_TO_TCHAR("transactionSetting")));
               }() : nullptr)
+          ->WithTransactionSettingV2(Data->HasField(ANSI_TO_TCHAR("transactionSettingV2")) ? [Data]() -> Model::FTransactionSettingV2Ptr
+              {
+                  if (Data->HasTypedField<EJson::Null>(ANSI_TO_TCHAR("transactionSettingV2")))
+                  {
+                      return nullptr;
+                  }
+                  return Model::FTransactionSettingV2::FromJson(Data->GetObjectField(ANSI_TO_TCHAR("transactionSettingV2")));
+              }() : nullptr)
           ->WithChangeGradeScript(Data->HasField(ANSI_TO_TCHAR("changeGradeScript")) ? [Data]() -> Model::FScriptSettingPtr
               {
                   if (Data->HasTypedField<EJson::Null>(ANSI_TO_TCHAR("changeGradeScript")))
@@ -197,6 +224,10 @@ namespace Gs2::Grade::Request
         if (TransactionSettingValue != nullptr && TransactionSettingValue.IsValid())
         {
             JsonRootObject->SetObjectField(TEXT("transactionSetting"), TransactionSettingValue->ToJson());
+        }
+        if (TransactionSettingV2Value != nullptr && TransactionSettingV2Value.IsValid())
+        {
+            JsonRootObject->SetObjectField(TEXT("transactionSettingV2"), TransactionSettingV2Value->ToJson());
         }
         if (ChangeGradeScriptValue != nullptr && ChangeGradeScriptValue.IsValid())
         {

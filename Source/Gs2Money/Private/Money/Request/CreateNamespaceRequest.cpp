@@ -22,6 +22,7 @@ namespace Gs2::Money::Request
         NameValue(TOptional<FString>()),
         DescriptionValue(TOptional<FString>()),
         TransactionSettingValue(nullptr),
+        TransactionSettingV2Value(nullptr),
         PriorityValue(TOptional<FString>()),
         ShareFreeValue(TOptional<bool>()),
         CurrencyValue(TOptional<FString>()),
@@ -41,6 +42,7 @@ namespace Gs2::Money::Request
         NameValue(From.NameValue),
         DescriptionValue(From.DescriptionValue),
         TransactionSettingValue(From.TransactionSettingValue),
+        TransactionSettingV2Value(From.TransactionSettingV2Value),
         PriorityValue(From.PriorityValue),
         ShareFreeValue(From.ShareFreeValue),
         CurrencyValue(From.CurrencyValue),
@@ -83,6 +85,14 @@ namespace Gs2::Money::Request
     )
     {
         this->TransactionSettingValue = TransactionSetting;
+        return SharedThis(this);
+    }
+
+    TSharedPtr<FCreateNamespaceRequest> FCreateNamespaceRequest::WithTransactionSettingV2(
+        const TSharedPtr<Model::FTransactionSettingV2> TransactionSettingV2
+    )
+    {
+        this->TransactionSettingV2Value = TransactionSettingV2;
         return SharedThis(this);
     }
 
@@ -188,6 +198,15 @@ namespace Gs2::Money::Request
             return nullptr;
         }
         return TransactionSettingValue;
+    }
+
+    TSharedPtr<Model::FTransactionSettingV2> FCreateNamespaceRequest::GetTransactionSettingV2() const
+    {
+        if (!TransactionSettingV2Value.IsValid())
+        {
+            return nullptr;
+        }
+        return TransactionSettingV2Value;
     }
 
     TOptional<FString> FCreateNamespaceRequest::GetPriority() const
@@ -307,6 +326,14 @@ namespace Gs2::Money::Request
                   }
                   return Model::FTransactionSetting::FromJson(Data->GetObjectField(ANSI_TO_TCHAR("transactionSetting")));
               }() : nullptr)
+          ->WithTransactionSettingV2(Data->HasField(ANSI_TO_TCHAR("transactionSettingV2")) ? [Data]() -> Model::FTransactionSettingV2Ptr
+              {
+                  if (Data->HasTypedField<EJson::Null>(ANSI_TO_TCHAR("transactionSettingV2")))
+                  {
+                      return nullptr;
+                  }
+                  return Model::FTransactionSettingV2::FromJson(Data->GetObjectField(ANSI_TO_TCHAR("transactionSettingV2")));
+              }() : nullptr)
             ->WithPriority(Data->HasField(ANSI_TO_TCHAR("priority")) ? [Data]() -> TOptional<FString>
               {
                   FString v("");
@@ -413,6 +440,10 @@ namespace Gs2::Money::Request
         if (TransactionSettingValue != nullptr && TransactionSettingValue.IsValid())
         {
             JsonRootObject->SetObjectField(TEXT("transactionSetting"), TransactionSettingValue->ToJson());
+        }
+        if (TransactionSettingV2Value != nullptr && TransactionSettingV2Value.IsValid())
+        {
+            JsonRootObject->SetObjectField(TEXT("transactionSettingV2"), TransactionSettingV2Value->ToJson());
         }
         if (PriorityValue.IsSet())
         {

@@ -108,10 +108,36 @@ namespace Gs2::Ranking::Domain::Model
 
         Gs2::Core::Domain::CallbackID SubscribeScores(
             TFunction<void()> Callback
+            , const FString CategoryName, const FString ScorerUserId
         );
 
+        class FCollectScoresTask;
+
+        Gs2::Core::Domain::CallbackID SubscribeScores(
+            TFunction<void(TArray<Gs2::Ranking::Model::FScorePtr>)> Callback,const FString CategoryName,const FString ScorerUserId,const TOptional<FString> TimeOffsetToken = TOptional<FString>()
+        );
+
+        void InvalidateScores(const FString CategoryName,const FString ScorerUserId,const TOptional<FString> TimeOffsetToken = TOptional<FString>());
+
+        class GS2RANKING_API FSubscribeScoresWithInitialCallTask final :
+            public Gs2::Core::Util::TGs2Future<Gs2::Core::Domain::CallbackID>,
+            public TSharedFromThis<FSubscribeScoresWithInitialCallTask>
+        {
+            const TSharedPtr<FUserDomain> Self;
+            const TFunction<void(TArray<Gs2::Ranking::Model::FScorePtr>)> Callback;
+        const FString QueryCategoryName;const FString QueryScorerUserId;const TOptional<FString> QueryTimeOffsetToken;
+        public:
+            FSubscribeScoresWithInitialCallTask(const TSharedPtr<FUserDomain>& Self, TFunction<void(TArray<Gs2::Ranking::Model::FScorePtr>)> Callback,const FString CategoryName,const FString ScorerUserId,const TOptional<FString> TimeOffsetToken);
+            FSubscribeScoresWithInitialCallTask(const FSubscribeScoresWithInitialCallTask& From);
+            virtual Gs2::Core::Model::FGs2ErrorPtr Action(TSharedPtr<TSharedPtr<Gs2::Core::Domain::CallbackID>> Result) override;
+        };
+
+        TSharedPtr<FAsyncTask<FSubscribeScoresWithInitialCallTask>> SubscribeScoresWithInitialCall(
+            TFunction<void(TArray<Gs2::Ranking::Model::FScorePtr>)> Callback,const FString CategoryName,const FString ScorerUserId,const TOptional<FString> TimeOffsetToken = TOptional<FString>()
+        );
         void UnsubscribeScores(
-            Gs2::Core::Domain::CallbackID CallbackID
+            const FString CategoryName, const FString ScorerUserId
+            , Gs2::Core::Domain::CallbackID CallbackID, const TOptional<FString> TimeOffsetToken = TOptional<FString>()
         );
 
         TSharedPtr<Gs2::Ranking::Domain::Model::FScoreDomain> Score(

@@ -63,7 +63,8 @@ namespace Gs2::UE5::Idle::Domain::Model
         );
     }
 
-    void FEzUserGameSessionDomain::UnsubscribeStatuses(Gs2::Core::Domain::CallbackID CallbackId)
+    void FEzUserGameSessionDomain::UnsubscribeStatuses(
+            Gs2::Core::Domain::CallbackID CallbackId)
     {
         Domain->UnsubscribeStatuses(
             CallbackId

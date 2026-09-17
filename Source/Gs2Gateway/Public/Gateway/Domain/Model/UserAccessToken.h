@@ -98,8 +98,33 @@ namespace Gs2::Gateway::Domain::Model
 
         Gs2::Core::Domain::CallbackID SubscribeWebSocketSessions(
             TFunction<void()> Callback
+
         );
 
+        class FCollectWebSocketSessionsTask;
+
+        Gs2::Core::Domain::CallbackID SubscribeWebSocketSessions(
+            TFunction<void(TArray<Gs2::Gateway::Model::FWebSocketSessionPtr>)> Callback
+        );
+
+        void InvalidateWebSocketSessions();
+
+        class GS2GATEWAY_API FSubscribeWebSocketSessionsWithInitialCallTask final :
+            public Gs2::Core::Util::TGs2Future<Gs2::Core::Domain::CallbackID>,
+            public TSharedFromThis<FSubscribeWebSocketSessionsWithInitialCallTask>
+        {
+            const TSharedPtr<FUserAccessTokenDomain> Self;
+            const TFunction<void(TArray<Gs2::Gateway::Model::FWebSocketSessionPtr>)> Callback;
+
+        public:
+            FSubscribeWebSocketSessionsWithInitialCallTask(const TSharedPtr<FUserAccessTokenDomain>& Self, TFunction<void(TArray<Gs2::Gateway::Model::FWebSocketSessionPtr>)> Callback);
+            FSubscribeWebSocketSessionsWithInitialCallTask(const FSubscribeWebSocketSessionsWithInitialCallTask& From);
+            virtual Gs2::Core::Model::FGs2ErrorPtr Action(TSharedPtr<TSharedPtr<Gs2::Core::Domain::CallbackID>> Result) override;
+        };
+
+        TSharedPtr<FAsyncTask<FSubscribeWebSocketSessionsWithInitialCallTask>> SubscribeWebSocketSessionsWithInitialCall(
+            TFunction<void(TArray<Gs2::Gateway::Model::FWebSocketSessionPtr>)> Callback
+        );
         void UnsubscribeWebSocketSessions(
             Gs2::Core::Domain::CallbackID CallbackID
         );

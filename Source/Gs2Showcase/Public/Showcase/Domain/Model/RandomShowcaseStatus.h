@@ -93,6 +93,8 @@ namespace Gs2::Showcase::Domain::Model
             const FRandomShowcaseStatusDomain& From
         );
 
+
+
         class GS2SHOWCASE_API FIncrementPurchaseCountTask final :
             public Gs2::Core::Util::TGs2Future<Gs2::Showcase::Domain::Model::FRandomDisplayItemDomain>,
             public TSharedFromThis<FIncrementPurchaseCountTask>
@@ -119,6 +121,8 @@ namespace Gs2::Showcase::Domain::Model
             Request::FIncrementPurchaseCountByUserIdRequestPtr Request
         );
 
+
+
         class GS2SHOWCASE_API FDecrementPurchaseCountTask final :
             public Gs2::Core::Util::TGs2Future<Gs2::Showcase::Domain::Model::FRandomDisplayItemDomain>,
             public TSharedFromThis<FDecrementPurchaseCountTask>
@@ -144,6 +148,8 @@ namespace Gs2::Showcase::Domain::Model
         TSharedPtr<FAsyncTask<FDecrementPurchaseCountTask>> DecrementPurchaseCount(
             Request::FDecrementPurchaseCountByUserIdRequestPtr Request
         );
+
+
 
         class GS2SHOWCASE_API FForceReDrawTask final :
             public Gs2::Core::Util::TGs2Future<TArray<TSharedPtr<Gs2::Showcase::Domain::Model::FRandomDisplayItemDomain>>>,

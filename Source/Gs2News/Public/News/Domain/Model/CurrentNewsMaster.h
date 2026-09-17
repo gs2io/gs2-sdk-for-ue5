@@ -86,6 +86,8 @@ namespace Gs2::News::Domain::Model
             const FCurrentNewsMasterDomain& From
         );
 
+
+
         class GS2NEWS_API FPrepareUpdateTask final :
             public Gs2::Core::Util::TGs2Future<Gs2::News::Domain::Model::FCurrentNewsMasterDomain>,
             public TSharedFromThis<FPrepareUpdateTask>
@@ -112,6 +114,8 @@ namespace Gs2::News::Domain::Model
             Request::FPrepareUpdateCurrentNewsMasterRequestPtr Request
         );
 
+
+
         class GS2NEWS_API FUpdateTask final :
             public Gs2::Core::Util::TGs2Future<Gs2::News::Domain::Model::FCurrentNewsMasterDomain>,
             public TSharedFromThis<FUpdateTask>
@@ -137,6 +141,8 @@ namespace Gs2::News::Domain::Model
         TSharedPtr<FAsyncTask<FUpdateTask>> Update(
             Request::FUpdateCurrentNewsMasterRequestPtr Request
         );
+
+
 
         class GS2NEWS_API FPrepareUpdateFromGitHubTask final :
             public Gs2::Core::Util::TGs2Future<Gs2::News::Domain::Model::FCurrentNewsMasterDomain>,

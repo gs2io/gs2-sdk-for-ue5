@@ -75,7 +75,8 @@ namespace Gs2::UE5::Enhance::Domain::Model
         );
     }
 
-    void FEzNamespaceDomain::UnsubscribeRateModels(Gs2::Core::Domain::CallbackID CallbackId)
+    void FEzNamespaceDomain::UnsubscribeRateModels(
+            Gs2::Core::Domain::CallbackID CallbackId)
     {
         Domain->UnsubscribeRateModels(
             CallbackId
@@ -98,7 +99,8 @@ namespace Gs2::UE5::Enhance::Domain::Model
         );
     }
 
-    void FEzNamespaceDomain::UnsubscribeUnleashRateModels(Gs2::Core::Domain::CallbackID CallbackId)
+    void FEzNamespaceDomain::UnsubscribeUnleashRateModels(
+            Gs2::Core::Domain::CallbackID CallbackId)
     {
         Domain->UnsubscribeUnleashRateModels(
             CallbackId

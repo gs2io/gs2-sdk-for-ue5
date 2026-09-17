@@ -92,6 +92,8 @@ namespace Gs2::Account::Domain::Model
             const FCurrentModelMasterDomain& From
         );
 
+
+
         class GS2ACCOUNT_API FExportMasterTask final :
             public Gs2::Core::Util::TGs2Future<Gs2::Account::Domain::Model::FCurrentModelMasterDomain>,
             public TSharedFromThis<FExportMasterTask>
@@ -117,6 +119,8 @@ namespace Gs2::Account::Domain::Model
         TSharedPtr<FAsyncTask<FExportMasterTask>> ExportMaster(
             Request::FExportMasterRequestPtr Request
         );
+
+
 
         class GS2ACCOUNT_API FGetTask final :
             public Gs2::Core::Util::TGs2Future<Gs2::Account::Model::FCurrentModelMaster>,
@@ -144,6 +148,8 @@ namespace Gs2::Account::Domain::Model
             Request::FGetCurrentModelMasterRequestPtr Request
         );
 
+
+
         class GS2ACCOUNT_API FPreUpdateTask final :
             public Gs2::Core::Util::TGs2Future<Gs2::Account::Domain::Model::FCurrentModelMasterDomain>,
             public TSharedFromThis<FPreUpdateTask>
@@ -170,6 +176,8 @@ namespace Gs2::Account::Domain::Model
             Request::FPreUpdateCurrentModelMasterRequestPtr Request
         );
 
+
+
         class GS2ACCOUNT_API FUpdateTask final :
             public Gs2::Core::Util::TGs2Future<Gs2::Account::Domain::Model::FCurrentModelMasterDomain>,
             public TSharedFromThis<FUpdateTask>
@@ -195,6 +203,8 @@ namespace Gs2::Account::Domain::Model
         TSharedPtr<FAsyncTask<FUpdateTask>> Update(
             Request::FUpdateCurrentModelMasterRequestPtr Request
         );
+
+
 
         class GS2ACCOUNT_API FUpdateFromGitHubTask final :
             public Gs2::Core::Util::TGs2Future<Gs2::Account::Domain::Model::FCurrentModelMasterDomain>,
@@ -252,7 +262,34 @@ namespace Gs2::Account::Domain::Model
 
         TSharedPtr<FAsyncTask<FModelTask>> Model();
 
+        void Invalidate();
+
         Gs2::Core::Domain::CallbackID Subscribe(
+            TFunction<void(Gs2::Account::Model::FCurrentModelMasterPtr)> Callback
+        );
+
+        class GS2ACCOUNT_API FSubscribeWithInitialCallTask final :
+            public Gs2::Core::Util::TGs2Future<Gs2::Core::Domain::CallbackID>,
+            public TSharedFromThis<FSubscribeWithInitialCallTask>
+        {
+            const TSharedPtr<FCurrentModelMasterDomain> Self;
+            const TFunction<void(Gs2::Account::Model::FCurrentModelMasterPtr)> Callback;
+        public:
+            FSubscribeWithInitialCallTask(
+                const TSharedPtr<FCurrentModelMasterDomain>& Self,
+                TFunction<void(Gs2::Account::Model::FCurrentModelMasterPtr)> Callback
+            );
+
+            FSubscribeWithInitialCallTask(
+                const FSubscribeWithInitialCallTask& From
+            );
+
+            virtual Gs2::Core::Model::FGs2ErrorPtr Action(
+                TSharedPtr<TSharedPtr<Gs2::Core::Domain::CallbackID>> Result
+            ) override;
+        };
+
+        TSharedPtr<FAsyncTask<FSubscribeWithInitialCallTask>> SubscribeWithInitialCall(
             TFunction<void(Gs2::Account::Model::FCurrentModelMasterPtr)> Callback
         );
 

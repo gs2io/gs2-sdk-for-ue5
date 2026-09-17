@@ -94,7 +94,7 @@ namespace Gs2::UE5::Datastore::Domain::Model
     Gs2::Core::Domain::CallbackID FEzDataObjectHistoryGameSessionDomain::Subscribe(TFunction<void(Gs2::UE5::Datastore::Model::FEzDataObjectHistoryPtr)> Callback)
     {
         return Domain->Subscribe(
-            [&](Gs2::Datastore::Model::FDataObjectHistoryPtr Item)
+            [Callback](Gs2::Datastore::Model::FDataObjectHistoryPtr Item)
             {
                 Callback(Gs2::UE5::Datastore::Model::FEzDataObjectHistory::FromModel(Item));
             }

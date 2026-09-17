@@ -31,6 +31,7 @@
 #include "Ranking2/Domain/Model/ClusterRankingSeason.h"
 
 #include "Core/Domain/Gs2.h"
+#include "Ranking2/Model/Cache/ClusterRankingData.h"
 
 namespace Gs2::Ranking2::Domain::Iterator
 {
@@ -106,22 +107,20 @@ namespace Gs2::Ranking2::Domain::Iterator
 
         if (!RangeIteratorOpt || (!*RangeIteratorOpt && !bLast))
         {
-            const auto bUseCache = Self->Season.IsSet();
-            const auto ListParentKey = Gs2::Ranking2::Domain::Model::FClusterRankingSeasonDomain::CreateCacheParentKey(
+            const auto ListParentKey = Gs2::Ranking2::Model::Cache::FClusterRankingDataCache::CreateCacheParentKey(
                 Self->NamespaceName,
                 Self->RankingName,
                 Self->ClusterName,
                 Self->Season,
-                TEXT("ClusterRankingData")
+                TOptional<int32>()
             );
 
-            if (!RangeIteratorOpt && bUseCache)
+            if (!RangeIteratorOpt)
             {
                 Range = Self->Gs2->Cache->TryGetList<Gs2::Ranking2::Model::FClusterRankingData>(ListParentKey);
 
                 if (Range)
                 {
-                    Range->RemoveAll([this](const Gs2::Ranking2::Model::FClusterRankingDataPtr& Item) { return Self->UserId && Item->GetUserId() != Self->UserId; });
                     bLast = true;
                     RangeIteratorOpt = Range->CreateIterator();
                     PageToken = TOptional<FString>();
@@ -130,7 +129,7 @@ namespace Gs2::Ranking2::Domain::Iterator
                 }
             }
 
-            const auto Future = Self->Client->DescribeClusterRankingsByUserId(
+            const auto Request =
                 MakeShared<Gs2::Ranking2::Request::FDescribeClusterRankingsByUserIdRequest>()
                     ->WithContextStack(Self->Gs2->DefaultContextStack)
                     ->WithNamespaceName(Self->NamespaceName)
@@ -140,7 +139,8 @@ namespace Gs2::Ranking2::Domain::Iterator
                     ->WithSeason(Self->Season)
                     ->WithPageToken(PageToken)
                     ->WithLimit(FetchSize)
-            );
+            ;
+            const auto Future = Self->Client->DescribeClusterRankingsByUserId(Request);
             Future->StartSynchronousTask();
             if (Future->GetTask().IsError())
             {
@@ -154,30 +154,34 @@ namespace Gs2::Ranking2::Domain::Iterator
             }
             const auto R = Future->GetTask().Result();
             Future->EnsureCompletion();
-            Range = R->GetItems();
-            if (bUseCache)
+            Range = R->GetItems().IsValid() ? R->GetItems() : MakeShared<TArray<Gs2::Ranking2::Model::FClusterRankingDataPtr>>();
+            const auto ResultModel = R;
+
+
+            if (Range.IsValid())
             {
-                for (auto Item : *R->GetItems())
+                for (const auto& Item : *Range)
                 {
-                    Self->Gs2->Cache->Put(
-                        Gs2::Ranking2::Model::FClusterRankingData::TypeName,
-                        ListParentKey,
-                        Gs2::Ranking2::Domain::Model::FClusterRankingDataDomain::CreateCacheKey(
-                            Item->GetUserId()
-                        ),
-                        Item,
-                        FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
+                    if (!Item.IsValid()) continue;
+                    Gs2::Ranking2::Model::Cache::FClusterRankingDataCache::Put(
+                        Self->Gs2->Cache,
+                        Request->GetNamespaceName(), Request->GetRankingName(), Request->GetClusterName(), Item->GetSeason(), Item->GetUserId(),
+                        TOptional<int32>(), Item
                     );
+                    if (!Request->GetSeason().IsSet())
+                    {
+                        Gs2::Ranking2::Model::Cache::FClusterRankingDataCache::Put(
+                            Self->Gs2->Cache,
+                            Request->GetNamespaceName(), Request->GetRankingName(), Request->GetClusterName(), TOptional<int64>(), Item->GetUserId(),
+                            TOptional<int32>(), Item
+                        );
+                    }
                 }
-            }
-            if (Range)
-            {
-                Range->RemoveAll([this](const Gs2::Ranking2::Model::FClusterRankingDataPtr& Item) { return Self->UserId && Item->GetUserId() != Self->UserId; });
             }
             RangeIteratorOpt = Range->CreateIterator();
             PageToken = R->GetNextPageToken();
             bLast = !PageToken.IsSet();
-            if (bUseCache && bLast) {
+            if (bLast) {
                 Self->Gs2->Cache->SetListCached(
                     Gs2::Ranking2::Model::FClusterRankingData::TypeName,
                     ListParentKey
@@ -210,4 +214,3 @@ namespace Gs2::Ranking2::Domain::Iterator
 #elif defined(__clang__)
 #pragma clang diagnostic pop
 #endif
-

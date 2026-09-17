@@ -26,6 +26,7 @@
 #include "Idle/Domain/SpeculativeExecutor/Consume/DecreaseMaximumIdleMinutesByUserIdSpeculativeExecutor.h"
 
 #include "Core/Domain/Gs2.h"
+#include "Core/Domain/SpeculativeExecutor/PreparedSpeculativeCommit.h"
 
 namespace Gs2::Idle::Domain::SpeculativeExecutor
 {
@@ -58,7 +59,7 @@ namespace Gs2::Idle::Domain::SpeculativeExecutor
     }
 
     Gs2::Core::Model::FGs2ErrorPtr FConsumeActionSpeculativeExecutorIndex::FCommitTask::Action(
-        TSharedPtr<TSharedPtr<TFunction<void()>>> Result
+        TSharedPtr<TSharedPtr<Gs2::Core::Domain::SpeculativeExecutor::FPreparedSpeculativeCommit>> Result
     )
     {
         auto NewConsumeAction = ConsumeAction->WithAction(ConsumeAction->GetAction()->Replace(TEXT("{region}"), ToCStr(Domain->RestSession->RegionName())));
@@ -72,7 +73,23 @@ namespace Gs2::Idle::Domain::SpeculativeExecutor
                 return nullptr;
             }
             auto Request = Request::FDecreaseMaximumIdleMinutesByUserIdRequest::FromJson(RequestModelJson);
-            Request = FDecreaseMaximumIdleMinutesByUserIdSpeculativeExecutor::Rate(Request, Rate);
+            const int64 Count = Request->GetDecreaseMinutes().IsSet() ? static_cast<int64>(*Request->GetDecreaseMinutes()) : 1;
+            if (Count == 0)
+            {
+                Request->WithDecreaseMinutes(0);
+            }
+            else
+            {
+                const uint64 Magnitude = Count < 0 ? static_cast<uint64>(-Count) : static_cast<uint64>(Count);
+                const uint64 MaxMagnitude = Count < 0 ? 2147483648ULL : 2147483647ULL;
+                const uint64 MaxRate = MaxMagnitude / Magnitude;
+                if (Rate > TBigInt<1024, false>(static_cast<int64>(MaxRate)))
+                {
+                    return nullptr;
+                }
+                const int64 Scaled = Count * Rate.ToInt();
+                Request->WithDecreaseMinutes(static_cast<int32>(Scaled));
+            }
             auto Future = FDecreaseMaximumIdleMinutesByUserIdSpeculativeExecutor::Execute(
                 Domain,
                 Service,
@@ -85,6 +102,7 @@ namespace Gs2::Idle::Domain::SpeculativeExecutor
                 return Future->GetTask().Error();
             }
             *Result = Future->GetTask().Result();
+            return nullptr;
         }
         return nullptr;
     }

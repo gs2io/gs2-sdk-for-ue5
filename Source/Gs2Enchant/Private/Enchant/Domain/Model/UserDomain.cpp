@@ -35,6 +35,8 @@
 #include "Enchant/Domain/Model/BalanceParameterStatusAccessToken.h"
 #include "Enchant/Domain/Model/RarityParameterStatus.h"
 #include "Enchant/Domain/Model/RarityParameterStatusAccessToken.h"
+#include "Enchant/Model/Cache/BalanceParameterStatus.h"
+#include "Enchant/Model/Cache/RarityParameterStatus.h"
 
 #include "Core/Domain/Gs2.h"
 #include "Core/Domain/Transaction/JobQueueJobDomainFactory.h"
@@ -93,32 +95,123 @@ namespace Gs2::Enchant::Domain::Model
 
     Gs2::Core::Domain::CallbackID FUserDomain::SubscribeBalanceParameterStatuses(
     TFunction<void()> Callback
+        , const TOptional<FString> ParameterName
     )
     {
         return Gs2->Cache->ListSubscribe(
             Gs2::Enchant::Model::FBalanceParameterStatus::TypeName,
-            Gs2::Enchant::Domain::Model::FUserDomain::CreateCacheParentKey(
+            Gs2::Enchant::Model::Cache::FBalanceParameterStatusCache::CreateCacheParentKey(
                 NamespaceName,
                 UserId,
-                "BalanceParameterStatus"
+                TOptional<int32>()
             ),
+            Callback,
             Callback
         );
     }
-
     void FUserDomain::UnsubscribeBalanceParameterStatuses(
-        Gs2::Core::Domain::CallbackID CallbackID
+
+        Gs2::Core::Domain::CallbackID CallbackID, const TOptional<FString> ParameterName, const TOptional<FString> TimeOffsetToken
     )
     {
         Gs2->Cache->ListUnsubscribe(
             Gs2::Enchant::Model::FBalanceParameterStatus::TypeName,
-            Gs2::Enchant::Domain::Model::FUserDomain::CreateCacheParentKey(
+            Gs2::Enchant::Model::Cache::FBalanceParameterStatusCache::CreateCacheParentKey(
                 NamespaceName,
                 UserId,
-                "BalanceParameterStatus"
+                TOptional<int32>()
             ),
             CallbackID
         );
+    }
+    class FUserDomain::FCollectBalanceParameterStatusesTask : public Gs2::Core::Util::TGs2Future<TArray<Gs2::Enchant::Model::FBalanceParameterStatusPtr>>, public TSharedFromThis<FCollectBalanceParameterStatusesTask>
+    {
+        const TSharedPtr<FUserDomain> Self;
+        const TFunction<void(TArray<Gs2::Enchant::Model::FBalanceParameterStatusPtr>)> OnCollected;
+    const TOptional<FString> QueryParameterName;const TOptional<FString> QueryTimeOffsetToken;
+    public:
+        explicit FCollectBalanceParameterStatusesTask(const TSharedPtr<FUserDomain>& Self, TFunction<void(TArray<Gs2::Enchant::Model::FBalanceParameterStatusPtr>)> OnCollected,const TOptional<FString> ParameterName,const TOptional<FString> TimeOffsetToken) : Self(Self), OnCollected(OnCollected), QueryParameterName(ParameterName), QueryTimeOffsetToken(TimeOffsetToken) {}
+        FCollectBalanceParameterStatusesTask(const FCollectBalanceParameterStatusesTask& From) : TGs2Future(From), Self(From.Self), OnCollected(From.OnCollected), QueryParameterName(From.QueryParameterName), QueryTimeOffsetToken(From.QueryTimeOffsetToken) {}
+        virtual Gs2::Core::Model::FGs2ErrorPtr Action(TSharedPtr<TSharedPtr<TArray<Gs2::Enchant::Model::FBalanceParameterStatusPtr>>> Result) override
+        {
+            TArray<Gs2::Enchant::Model::FBalanceParameterStatusPtr> Items;
+            auto Iterator = Self->BalanceParameterStatuses(QueryParameterName, QueryTimeOffsetToken)->begin();
+            while (Iterator.HasNext())
+            {
+                if (Iterator.IsError()) return Iterator.Error();
+                if (Iterator.IsCurrentValid()) Items.Add(Iterator.Current());
+                ++Iterator;
+            }
+            if (Iterator.IsError()) return Iterator.Error();
+            *Result = MakeShared<TArray<Gs2::Enchant::Model::FBalanceParameterStatusPtr>>(Items);
+            if (OnCollected) OnCollected(Items);
+            return nullptr;
+        }
+    };
+
+    Gs2::Core::Domain::CallbackID FUserDomain::SubscribeBalanceParameterStatuses(
+        TFunction<void(TArray<Gs2::Enchant::Model::FBalanceParameterStatusPtr>)> Callback,const TOptional<FString> ParameterName,const TOptional<FString> TimeOffsetToken
+    )
+    {
+        const TWeakPtr<Gs2::Core::Domain::FGs2> WeakGs2 = this->Gs2;
+        const TWeakPtr<Enchant::Domain::FGs2EnchantDomain> WeakService = this->Service;
+        const auto QueryNamespaceName = NamespaceName;
+        const auto QueryUserId = UserId;
+        const auto QueryParameterName = ParameterName;
+        const auto QueryTimeOffsetToken = TimeOffsetToken;
+        const auto Parent = Gs2::Enchant::Model::Cache::FBalanceParameterStatusCache::CreateCacheParentKey(
+        NamespaceName,
+        UserId,
+        TOptional<int32>()
+    );
+        return Gs2->Cache->ListSubscribeTyped(
+            Gs2::Enchant::Model::FBalanceParameterStatus::TypeName,
+            Parent,
+            [Callback, WeakGs2](const TArray<FGs2ObjectPtr>& Values)
+            {
+                if (!WeakGs2.Pin().IsValid()) return;
+                TArray<Gs2::Enchant::Model::FBalanceParameterStatusPtr> TypedValues;
+                for (const auto& Value : Values) if (Value.IsValid()) TypedValues.Add(StaticCastSharedPtr<Gs2::Enchant::Model::FBalanceParameterStatus>(Value));
+                Callback(TypedValues);
+            },
+            [WeakGs2, WeakService, Callback, QueryNamespaceName, QueryUserId, QueryParameterName, QueryTimeOffsetToken]()
+            {
+                const auto Owner = WeakGs2.Pin();
+                if (!Owner.IsValid()) return;
+                const auto Domain = MakeShared<FUserDomain>(Owner, WeakService.Pin(), QueryNamespaceName, QueryUserId);
+                const auto Task = Gs2::Core::Util::New<FAsyncTask<FCollectBalanceParameterStatusesTask>>(Domain, Callback, QueryParameterName, QueryTimeOffsetToken);
+                Task->StartBackgroundTask();
+            }
+        );
+    }
+
+    void FUserDomain::InvalidateBalanceParameterStatuses(const TOptional<FString> ParameterName,const TOptional<FString> TimeOffsetToken)
+    {
+        Gs2->Cache->ClearListCache(
+            Gs2::Enchant::Model::FBalanceParameterStatus::TypeName,
+            Gs2::Enchant::Model::Cache::FBalanceParameterStatusCache::CreateCacheParentKey(
+        NamespaceName,
+        UserId,
+        TOptional<int32>()
+    )
+        );
+    }
+
+    FUserDomain::FSubscribeBalanceParameterStatusesWithInitialCallTask::FSubscribeBalanceParameterStatusesWithInitialCallTask(const TSharedPtr<FUserDomain>& Self, TFunction<void(TArray<Gs2::Enchant::Model::FBalanceParameterStatusPtr>)> Callback,const TOptional<FString> ParameterName,const TOptional<FString> TimeOffsetToken) : Self(Self), Callback(Callback), QueryParameterName(ParameterName), QueryTimeOffsetToken(TimeOffsetToken) {}
+    FUserDomain::FSubscribeBalanceParameterStatusesWithInitialCallTask::FSubscribeBalanceParameterStatusesWithInitialCallTask(const FSubscribeBalanceParameterStatusesWithInitialCallTask& From) : TGs2Future(From), Self(From.Self), Callback(From.Callback), QueryParameterName(From.QueryParameterName), QueryTimeOffsetToken(From.QueryTimeOffsetToken) {}
+    Gs2::Core::Model::FGs2ErrorPtr FUserDomain::FSubscribeBalanceParameterStatusesWithInitialCallTask::Action(TSharedPtr<TSharedPtr<Gs2::Core::Domain::CallbackID>> Result)
+    {
+        const auto Task = Gs2::Core::Util::New<FAsyncTask<FCollectBalanceParameterStatusesTask>>(Self, TFunction<void(TArray<Gs2::Enchant::Model::FBalanceParameterStatusPtr>)>(), QueryParameterName, QueryTimeOffsetToken);
+        Task->StartSynchronousTask(); Task->EnsureCompletion();
+        if (Task->GetTask().IsError()) return Task->GetTask().Error();
+        const auto Values = Task->GetTask().Result();
+        const auto CallbackId = Self->SubscribeBalanceParameterStatuses(Callback, QueryParameterName, QueryTimeOffsetToken);
+        Callback(*Values); *Result = MakeShared<Gs2::Core::Domain::CallbackID>(CallbackId);
+        return nullptr;
+    }
+    TSharedPtr<FAsyncTask<FUserDomain::FSubscribeBalanceParameterStatusesWithInitialCallTask>> FUserDomain::SubscribeBalanceParameterStatusesWithInitialCall(TFunction<void(TArray<Gs2::Enchant::Model::FBalanceParameterStatusPtr>)> Callback,const TOptional<FString> ParameterName,const TOptional<FString> TimeOffsetToken)
+    {
+        return Gs2::Core::Util::New<FAsyncTask<FSubscribeBalanceParameterStatusesWithInitialCallTask>>(this->AsShared(), Callback, ParameterName, TimeOffsetToken);
     }
 
     TSharedPtr<Gs2::Enchant::Domain::Model::FBalanceParameterStatusDomain> FUserDomain::BalanceParameterStatus(
@@ -153,32 +246,123 @@ namespace Gs2::Enchant::Domain::Model
 
     Gs2::Core::Domain::CallbackID FUserDomain::SubscribeRarityParameterStatuses(
     TFunction<void()> Callback
+        , const TOptional<FString> ParameterName
     )
     {
         return Gs2->Cache->ListSubscribe(
             Gs2::Enchant::Model::FRarityParameterStatus::TypeName,
-            Gs2::Enchant::Domain::Model::FUserDomain::CreateCacheParentKey(
+            Gs2::Enchant::Model::Cache::FRarityParameterStatusCache::CreateCacheParentKey(
                 NamespaceName,
                 UserId,
-                "RarityParameterStatus"
+                TOptional<int32>()
             ),
+            Callback,
             Callback
         );
     }
-
     void FUserDomain::UnsubscribeRarityParameterStatuses(
-        Gs2::Core::Domain::CallbackID CallbackID
+
+        Gs2::Core::Domain::CallbackID CallbackID, const TOptional<FString> ParameterName, const TOptional<FString> TimeOffsetToken
     )
     {
         Gs2->Cache->ListUnsubscribe(
             Gs2::Enchant::Model::FRarityParameterStatus::TypeName,
-            Gs2::Enchant::Domain::Model::FUserDomain::CreateCacheParentKey(
+            Gs2::Enchant::Model::Cache::FRarityParameterStatusCache::CreateCacheParentKey(
                 NamespaceName,
                 UserId,
-                "RarityParameterStatus"
+                TOptional<int32>()
             ),
             CallbackID
         );
+    }
+    class FUserDomain::FCollectRarityParameterStatusesTask : public Gs2::Core::Util::TGs2Future<TArray<Gs2::Enchant::Model::FRarityParameterStatusPtr>>, public TSharedFromThis<FCollectRarityParameterStatusesTask>
+    {
+        const TSharedPtr<FUserDomain> Self;
+        const TFunction<void(TArray<Gs2::Enchant::Model::FRarityParameterStatusPtr>)> OnCollected;
+    const TOptional<FString> QueryParameterName;const TOptional<FString> QueryTimeOffsetToken;
+    public:
+        explicit FCollectRarityParameterStatusesTask(const TSharedPtr<FUserDomain>& Self, TFunction<void(TArray<Gs2::Enchant::Model::FRarityParameterStatusPtr>)> OnCollected,const TOptional<FString> ParameterName,const TOptional<FString> TimeOffsetToken) : Self(Self), OnCollected(OnCollected), QueryParameterName(ParameterName), QueryTimeOffsetToken(TimeOffsetToken) {}
+        FCollectRarityParameterStatusesTask(const FCollectRarityParameterStatusesTask& From) : TGs2Future(From), Self(From.Self), OnCollected(From.OnCollected), QueryParameterName(From.QueryParameterName), QueryTimeOffsetToken(From.QueryTimeOffsetToken) {}
+        virtual Gs2::Core::Model::FGs2ErrorPtr Action(TSharedPtr<TSharedPtr<TArray<Gs2::Enchant::Model::FRarityParameterStatusPtr>>> Result) override
+        {
+            TArray<Gs2::Enchant::Model::FRarityParameterStatusPtr> Items;
+            auto Iterator = Self->RarityParameterStatuses(QueryParameterName, QueryTimeOffsetToken)->begin();
+            while (Iterator.HasNext())
+            {
+                if (Iterator.IsError()) return Iterator.Error();
+                if (Iterator.IsCurrentValid()) Items.Add(Iterator.Current());
+                ++Iterator;
+            }
+            if (Iterator.IsError()) return Iterator.Error();
+            *Result = MakeShared<TArray<Gs2::Enchant::Model::FRarityParameterStatusPtr>>(Items);
+            if (OnCollected) OnCollected(Items);
+            return nullptr;
+        }
+    };
+
+    Gs2::Core::Domain::CallbackID FUserDomain::SubscribeRarityParameterStatuses(
+        TFunction<void(TArray<Gs2::Enchant::Model::FRarityParameterStatusPtr>)> Callback,const TOptional<FString> ParameterName,const TOptional<FString> TimeOffsetToken
+    )
+    {
+        const TWeakPtr<Gs2::Core::Domain::FGs2> WeakGs2 = this->Gs2;
+        const TWeakPtr<Enchant::Domain::FGs2EnchantDomain> WeakService = this->Service;
+        const auto QueryNamespaceName = NamespaceName;
+        const auto QueryUserId = UserId;
+        const auto QueryParameterName = ParameterName;
+        const auto QueryTimeOffsetToken = TimeOffsetToken;
+        const auto Parent = Gs2::Enchant::Model::Cache::FRarityParameterStatusCache::CreateCacheParentKey(
+        NamespaceName,
+        UserId,
+        TOptional<int32>()
+    );
+        return Gs2->Cache->ListSubscribeTyped(
+            Gs2::Enchant::Model::FRarityParameterStatus::TypeName,
+            Parent,
+            [Callback, WeakGs2](const TArray<FGs2ObjectPtr>& Values)
+            {
+                if (!WeakGs2.Pin().IsValid()) return;
+                TArray<Gs2::Enchant::Model::FRarityParameterStatusPtr> TypedValues;
+                for (const auto& Value : Values) if (Value.IsValid()) TypedValues.Add(StaticCastSharedPtr<Gs2::Enchant::Model::FRarityParameterStatus>(Value));
+                Callback(TypedValues);
+            },
+            [WeakGs2, WeakService, Callback, QueryNamespaceName, QueryUserId, QueryParameterName, QueryTimeOffsetToken]()
+            {
+                const auto Owner = WeakGs2.Pin();
+                if (!Owner.IsValid()) return;
+                const auto Domain = MakeShared<FUserDomain>(Owner, WeakService.Pin(), QueryNamespaceName, QueryUserId);
+                const auto Task = Gs2::Core::Util::New<FAsyncTask<FCollectRarityParameterStatusesTask>>(Domain, Callback, QueryParameterName, QueryTimeOffsetToken);
+                Task->StartBackgroundTask();
+            }
+        );
+    }
+
+    void FUserDomain::InvalidateRarityParameterStatuses(const TOptional<FString> ParameterName,const TOptional<FString> TimeOffsetToken)
+    {
+        Gs2->Cache->ClearListCache(
+            Gs2::Enchant::Model::FRarityParameterStatus::TypeName,
+            Gs2::Enchant::Model::Cache::FRarityParameterStatusCache::CreateCacheParentKey(
+        NamespaceName,
+        UserId,
+        TOptional<int32>()
+    )
+        );
+    }
+
+    FUserDomain::FSubscribeRarityParameterStatusesWithInitialCallTask::FSubscribeRarityParameterStatusesWithInitialCallTask(const TSharedPtr<FUserDomain>& Self, TFunction<void(TArray<Gs2::Enchant::Model::FRarityParameterStatusPtr>)> Callback,const TOptional<FString> ParameterName,const TOptional<FString> TimeOffsetToken) : Self(Self), Callback(Callback), QueryParameterName(ParameterName), QueryTimeOffsetToken(TimeOffsetToken) {}
+    FUserDomain::FSubscribeRarityParameterStatusesWithInitialCallTask::FSubscribeRarityParameterStatusesWithInitialCallTask(const FSubscribeRarityParameterStatusesWithInitialCallTask& From) : TGs2Future(From), Self(From.Self), Callback(From.Callback), QueryParameterName(From.QueryParameterName), QueryTimeOffsetToken(From.QueryTimeOffsetToken) {}
+    Gs2::Core::Model::FGs2ErrorPtr FUserDomain::FSubscribeRarityParameterStatusesWithInitialCallTask::Action(TSharedPtr<TSharedPtr<Gs2::Core::Domain::CallbackID>> Result)
+    {
+        const auto Task = Gs2::Core::Util::New<FAsyncTask<FCollectRarityParameterStatusesTask>>(Self, TFunction<void(TArray<Gs2::Enchant::Model::FRarityParameterStatusPtr>)>(), QueryParameterName, QueryTimeOffsetToken);
+        Task->StartSynchronousTask(); Task->EnsureCompletion();
+        if (Task->GetTask().IsError()) return Task->GetTask().Error();
+        const auto Values = Task->GetTask().Result();
+        const auto CallbackId = Self->SubscribeRarityParameterStatuses(Callback, QueryParameterName, QueryTimeOffsetToken);
+        Callback(*Values); *Result = MakeShared<Gs2::Core::Domain::CallbackID>(CallbackId);
+        return nullptr;
+    }
+    TSharedPtr<FAsyncTask<FUserDomain::FSubscribeRarityParameterStatusesWithInitialCallTask>> FUserDomain::SubscribeRarityParameterStatusesWithInitialCall(TFunction<void(TArray<Gs2::Enchant::Model::FRarityParameterStatusPtr>)> Callback,const TOptional<FString> ParameterName,const TOptional<FString> TimeOffsetToken)
+    {
+        return Gs2::Core::Util::New<FAsyncTask<FSubscribeRarityParameterStatusesWithInitialCallTask>>(this->AsShared(), Callback, ParameterName, TimeOffsetToken);
     }
 
     TSharedPtr<Gs2::Enchant::Domain::Model::FRarityParameterStatusDomain> FUserDomain::RarityParameterStatus(
@@ -222,4 +406,3 @@ namespace Gs2::Enchant::Domain::Model
 #elif defined(__clang__)
 #pragma clang diagnostic pop
 #endif
-

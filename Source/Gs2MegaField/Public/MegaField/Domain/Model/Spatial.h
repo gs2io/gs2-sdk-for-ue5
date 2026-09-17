@@ -83,6 +83,8 @@ namespace Gs2::MegaField::Domain::Model
             const FSpatialDomain& From
         );
 
+
+
         class GS2MEGAFIELD_API FPutPositionTask final :
             public Gs2::Core::Util::TGs2Future<Gs2::MegaField::Domain::Model::FSpatialDomain>,
             public TSharedFromThis<FPutPositionTask>
@@ -108,6 +110,8 @@ namespace Gs2::MegaField::Domain::Model
         TSharedPtr<FAsyncTask<FPutPositionTask>> PutPosition(
             Request::FPutPositionByUserIdRequestPtr Request
         );
+
+
 
         class GS2MEGAFIELD_API FActionTask final :
             public Gs2::Core::Util::TGs2Future<TArray<TSharedPtr<Gs2::MegaField::Domain::Model::FSpatialDomain>>>,
@@ -170,7 +174,34 @@ namespace Gs2::MegaField::Domain::Model
 
         TSharedPtr<FAsyncTask<FModelTask>> Model();
 
+        void Invalidate();
+
         Gs2::Core::Domain::CallbackID Subscribe(
+            TFunction<void(Gs2::MegaField::Model::FSpatialPtr)> Callback
+        );
+
+        class GS2MEGAFIELD_API FSubscribeWithInitialCallTask final :
+            public Gs2::Core::Util::TGs2Future<Gs2::Core::Domain::CallbackID>,
+            public TSharedFromThis<FSubscribeWithInitialCallTask>
+        {
+            const TSharedPtr<FSpatialDomain> Self;
+            const TFunction<void(Gs2::MegaField::Model::FSpatialPtr)> Callback;
+        public:
+            FSubscribeWithInitialCallTask(
+                const TSharedPtr<FSpatialDomain>& Self,
+                TFunction<void(Gs2::MegaField::Model::FSpatialPtr)> Callback
+            );
+
+            FSubscribeWithInitialCallTask(
+                const FSubscribeWithInitialCallTask& From
+            );
+
+            virtual Gs2::Core::Model::FGs2ErrorPtr Action(
+                TSharedPtr<TSharedPtr<Gs2::Core::Domain::CallbackID>> Result
+            ) override;
+        };
+
+        TSharedPtr<FAsyncTask<FSubscribeWithInitialCallTask>> SubscribeWithInitialCall(
             TFunction<void(Gs2::MegaField::Model::FSpatialPtr)> Callback
         );
 

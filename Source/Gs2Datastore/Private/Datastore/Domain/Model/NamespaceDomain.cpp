@@ -30,6 +30,9 @@
 #include "Datastore/Domain/Model/DataObjectHistoryAccessToken.h"
 #include "Datastore/Domain/Model/User.h"
 #include "Datastore/Domain/Model/UserAccessToken.h"
+#include "Datastore/Model/Cache/Namespace.h"
+#include "Datastore/Model/Cache/DataObject.h"
+#include "Datastore/Model/Cache/DataObjectHistory.h"
 
 #include "Core/Domain/Gs2.h"
 #include "Core/Domain/Transaction/JobQueueJobDomainFactory.h"
@@ -96,6 +99,7 @@ namespace Gs2::Datastore::Domain::Model
         }
         const auto ResultModel = Future->GetTask().Result();
         Future->EnsureCompletion();
+
         const auto Domain = Self;
         if (ResultModel != nullptr)
         {
@@ -145,6 +149,19 @@ namespace Gs2::Datastore::Domain::Model
         }
         const auto ResultModel = Future->GetTask().Result();
         Future->EnsureCompletion();
+
+            if (ResultModel.IsValid() && ResultModel->GetItem() != nullptr)
+            {
+
+
+        Gs2::Datastore::Model::Cache::FNamespaceCache::Put(
+            Self->Gs2->Cache,
+
+            Request->GetNamespaceName(),
+            TOptional<int32>(),
+            ResultModel->GetItem()
+        );
+            }
         *Result = ResultModel->GetItem();
         return nullptr;
     }
@@ -186,19 +203,19 @@ namespace Gs2::Datastore::Domain::Model
         }
         const auto ResultModel = Future->GetTask().Result();
         Future->EnsureCompletion();
-        if (ResultModel->GetItem() != nullptr)
-        {
-            const auto Key = Gs2::Datastore::Domain::Model::FNamespaceDomain::CreateCacheKey(
-                ResultModel->GetItem()->GetName()
-            );
-            Self->Gs2->Cache->Put(
-                Gs2::Datastore::Model::FNamespace::TypeName,
-                Self->ParentKey,
-                Key,
-                ResultModel->GetItem(),
-                FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
-            );
-        }
+
+            if (ResultModel.IsValid() && ResultModel->GetItem() != nullptr)
+            {
+
+
+        Gs2::Datastore::Model::Cache::FNamespaceCache::Put(
+            Self->Gs2->Cache,
+
+            Request->GetNamespaceName(),
+            TOptional<int32>(),
+            ResultModel->GetItem()
+        );
+            }
         auto Domain = Self;
 
         *Result = Domain;
@@ -238,21 +255,24 @@ namespace Gs2::Datastore::Domain::Model
         Future->StartSynchronousTask();
         if (Future->GetTask().IsError())
         {
-            return Future->GetTask().Error();
+            const auto Error = Future->GetTask().Error();
+            if (Error.IsValid() && Error->IsChildOf(Gs2::Core::Model::FNotFoundError::Class))
+            {
+                *Result = Self;
+                return nullptr;
+            }
+            return Error;
         }
         const auto ResultModel = Future->GetTask().Result();
         Future->EnsureCompletion();
-        if (ResultModel->GetItem() != nullptr)
-        {
-            const auto Key = Gs2::Datastore::Domain::Model::FNamespaceDomain::CreateCacheKey(
-                ResultModel->GetItem()->GetName()
-            );
-            Self->Gs2->Cache->Delete(
-                Gs2::Datastore::Model::FNamespace::TypeName,
-                Self->ParentKey,
-                Key
-            );
-        }
+
+
+              Gs2::Datastore::Model::Cache::FNamespaceCache::Delete(
+            Self->Gs2->Cache,
+
+            Request->GetNamespaceName(),
+            TOptional<int32>()
+        );
         auto Domain = Self;
 
         *Result = Domain;
@@ -296,19 +316,26 @@ namespace Gs2::Datastore::Domain::Model
         }
         const auto ResultModel = Future->GetTask().Result();
         Future->EnsureCompletion();
-        if (ResultModel->GetItem() != nullptr)
-        {
-            const auto Key = Gs2::Datastore::Domain::Model::FDataObjectDomain::CreateCacheKey(
-                ResultModel->GetItem()->GetName()
-            );
-            Self->Gs2->Cache->Put(
-                Gs2::Datastore::Model::FDataObject::TypeName,
-                Self->ParentKey,
-                Key,
-                ResultModel->GetItem(),
-                FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
-            );
-        }
+
+            if (ResultModel.IsValid() && ResultModel->GetItem() != nullptr)
+            {
+
+        if (!ResultModel.IsValid() || !((ResultModel.IsValid() && ResultModel->GetItem().IsValid() ? ResultModel->GetItem()->GetUserId() : TOptional<FString>())).IsSet())
+            {
+              const auto Details = MakeShared<TArray<TSharedPtr<Gs2::Core::Model::FGs2ErrorDetail>>>();
+                Details->Add(MakeShared<Gs2::Core::Model::FGs2ErrorDetail>(TEXT("userId"), TEXT("userId is invalid."), TEXT("invalid_response")));
+                return MakeShared<Gs2::Core::Model::FUnknownError>(Details);
+              }
+        Gs2::Datastore::Model::Cache::FDataObjectCache::Put(
+            Self->Gs2->Cache,
+
+            Request->GetNamespaceName(),
+            (ResultModel.IsValid() && ResultModel->GetItem().IsValid() ? ResultModel->GetItem()->GetUserId() : TOptional<FString>()),
+            ResultModel->GetItem()->GetName(),
+            TOptional<int32>(),
+            ResultModel->GetItem()
+        );
+            }
         auto Domain = MakeShared<Gs2::Datastore::Domain::Model::FDataObjectDomain>(
             Self->Gs2,
             Self->Service,
@@ -387,72 +414,151 @@ namespace Gs2::Datastore::Domain::Model
         TSharedPtr<TSharedPtr<Gs2::Datastore::Model::FNamespace>> Result
     )
     {
-        const auto ParentKey = FString("datastore:Namespace");
-        // ReSharper disable once CppLocalVariableMayBeConst
-        TSharedPtr<Gs2::Datastore::Model::FNamespace> Value;
-        auto bCacheHit = Self->Gs2->Cache->TryGet<Gs2::Datastore::Model::FNamespace>(
-            ParentKey,
-            Gs2::Datastore::Domain::Model::FNamespaceDomain::CreateCacheKey(
-                Self->NamespaceName
-            ),
-            &Value
+        const auto CacheParentKey = Gs2::Datastore::Model::Cache::FNamespaceCache::CreateCacheParentKey(
+
+            TOptional<int32>()
         );
-        if (!bCacheHit) {
-            const auto Future = Self->Get(
-                MakeShared<Gs2::Datastore::Request::FGetNamespaceRequest>()
-            );
-            Future->StartSynchronousTask();
-            if (Future->GetTask().IsError())
+        const auto CacheKey = Gs2::Datastore::Model::Cache::FNamespaceCache::CreateCacheKey(
+
+            Self->NamespaceName
+        );
+        return Self->Gs2->Cache->ExecuteWithKeyLock(
+            Gs2::Datastore::Model::FNamespace::TypeName,
+            CacheParentKey,
+            CacheKey,
+            [Self = Self, Result]() -> Gs2::Core::Model::FGs2ErrorPtr
             {
-                if (Future->GetTask().Error()->Type() != Gs2::Core::Model::FNotFoundError::TypeString)
-                {
-                    return Future->GetTask().Error();
-                }
+                Gs2::Datastore::Model::FNamespacePtr Value;
+                const auto CacheHit = Gs2::Datastore::Model::Cache::FNamespaceCache::TryGet(
+                    Self->Gs2->Cache,
 
-                const auto Key = Gs2::Datastore::Domain::Model::FNamespaceDomain::CreateCacheKey(
-                    Self->NamespaceName
+                    Self->NamespaceName,
+                    TOptional<int32>(),
+                    &Value
                 );
-                Self->Gs2->Cache->Put(
-                    Gs2::Datastore::Model::FNamespace::TypeName,
-                    ParentKey,
-                    Key,
-                    nullptr,
-                    FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
-                );
-
-                if (Future->GetTask().Error()->Detail(0)->GetComponent() != "namespace")
+                if (CacheHit)
                 {
-                    return Future->GetTask().Error();
+                    *Result = Value;
+                    return nullptr;
                 }
-            }
-            else
-            {
-                Value = Future->GetTask().Result();
-            }
-            Future->EnsureCompletion();
-        }
-        *Result = Value;
+                const auto Error = Gs2::Datastore::Model::Cache::FNamespaceCache::Fetch(
+                    Self->Gs2->Cache,
 
-        return nullptr;
+                    Self->NamespaceName,
+                    TOptional<int32>(),
+                    [Self](Gs2::Datastore::Model::FNamespacePtr* OutItem) -> Gs2::Core::Model::FGs2ErrorPtr
+                    {
+                        const auto Future = Self->Get(
+                            MakeShared<Gs2::Datastore::Request::FGetNamespaceRequest>()
+                        );
+                        Future->StartSynchronousTask();
+                        if (Future->GetTask().IsError()) return Future->GetTask().Error();
+                        *OutItem = Future->GetTask().Result();
+                        Future->EnsureCompletion();
+                        return nullptr;
+                    },
+                    &Value
+                );
+                if (Error.IsValid()) return Error;
+                *Result = Value;
+                return nullptr;
+            }
+        );
     }
 
     TSharedPtr<FAsyncTask<FNamespaceDomain::FModelTask>> FNamespaceDomain::Model() {
         return Gs2::Core::Util::New<FAsyncTask<FNamespaceDomain::FModelTask>>(this->AsShared());
     }
 
+    void FNamespaceDomain::Invalidate()
+    {
+        Gs2::Datastore::Model::Cache::FNamespaceCache::Delete(
+            Gs2->Cache,
+
+            NamespaceName,
+            TOptional<int32>()
+        );
+    }
+
+    FNamespaceDomain::FSubscribeWithInitialCallTask::FSubscribeWithInitialCallTask(
+        const TSharedPtr<FNamespaceDomain>& Self,
+        TFunction<void(Gs2::Datastore::Model::FNamespacePtr)> Callback
+    ):
+        Self(Self),
+        Callback(Callback)
+    {
+    }
+
+    FNamespaceDomain::FSubscribeWithInitialCallTask::FSubscribeWithInitialCallTask(
+        const FSubscribeWithInitialCallTask& From
+    ):
+        TGs2Future(From),
+        Self(From.Self),
+        Callback(From.Callback)
+    {
+    }
+
+    Gs2::Core::Model::FGs2ErrorPtr FNamespaceDomain::FSubscribeWithInitialCallTask::Action(
+        TSharedPtr<TSharedPtr<Gs2::Core::Domain::CallbackID>> Result
+    )
+    {
+        const auto Task = Self->Model();
+        Task->StartSynchronousTask();
+        Task->EnsureCompletion();
+        if (Task->GetTask().IsError()) return Task->GetTask().Error();
+        const auto Item = Task->GetTask().Result();
+        const auto CallbackId = Self->Subscribe(Callback);
+        Callback(Item);
+        *Result = MakeShared<Gs2::Core::Domain::CallbackID>(CallbackId);
+        return nullptr;
+    }
+
+    TSharedPtr<FAsyncTask<FNamespaceDomain::FSubscribeWithInitialCallTask>> FNamespaceDomain::SubscribeWithInitialCall(
+        TFunction<void(Gs2::Datastore::Model::FNamespacePtr)> Callback
+    )
+    {
+        return Gs2::Core::Util::New<FAsyncTask<FSubscribeWithInitialCallTask>>(this->AsShared(), Callback);
+    }
+
     Gs2::Core::Domain::CallbackID FNamespaceDomain::Subscribe(
         TFunction<void(Gs2::Datastore::Model::FNamespacePtr)> Callback
     )
     {
+        const auto SubscriptionParentKey = Gs2::Datastore::Model::Cache::FNamespaceCache::CreateCacheParentKey(
+
+            TOptional<int32>()
+        );
+        const auto SubscriptionCacheKey = Gs2::Datastore::Model::Cache::FNamespaceCache::CreateCacheKey(
+
+            NamespaceName
+        );
+        const TWeakPtr<Gs2::Core::Domain::FGs2> WeakGs2 = Gs2;
+        const TWeakPtr<Datastore::Domain::FGs2DatastoreDomain> WeakService = Service;
+        const FString RegisteredParentKey = SubscriptionParentKey;
+        const TOptional<FString> QueryNamespaceName = NamespaceName;
         return Gs2->Cache->Subscribe(
             Gs2::Datastore::Model::FNamespace::TypeName,
-            ParentKey,
-            Gs2::Datastore::Domain::Model::FNamespaceDomain::CreateCacheKey(
-                NamespaceName
-            ),
+            SubscriptionParentKey,
+            SubscriptionCacheKey,
             [Callback](TSharedPtr<FGs2Object> obj)
             {
                 Callback(StaticCastSharedPtr<Gs2::Datastore::Model::FNamespace>(obj));
+            },
+            [WeakGs2, WeakService, RegisteredParentKey, QueryNamespaceName]()
+            {
+                const auto Owner = WeakGs2.Pin();
+                if (!Owner.IsValid())
+                {
+                    return;
+                }
+                const auto Domain = MakeShared<FNamespaceDomain>(
+                    Owner,
+                    WeakService.Pin(),
+                    QueryNamespaceName
+                );
+                Domain->ParentKey = RegisteredParentKey;
+                const auto Task = Domain->Model();
+                Task->StartBackgroundTask();
             }
         );
     }
@@ -461,12 +567,18 @@ namespace Gs2::Datastore::Domain::Model
         Gs2::Core::Domain::CallbackID CallbackID
     )
     {
+        const auto SubscriptionParentKey = Gs2::Datastore::Model::Cache::FNamespaceCache::CreateCacheParentKey(
+
+            TOptional<int32>()
+        );
+        const auto SubscriptionCacheKey = Gs2::Datastore::Model::Cache::FNamespaceCache::CreateCacheKey(
+
+            NamespaceName
+        );
         Gs2->Cache->Unsubscribe(
             Gs2::Datastore::Model::FNamespace::TypeName,
-            ParentKey,
-            Gs2::Datastore::Domain::Model::FNamespaceDomain::CreateCacheKey(
-                NamespaceName
-            ),
+            SubscriptionParentKey,
+            SubscriptionCacheKey,
             CallbackID
         );
     }
@@ -477,4 +589,3 @@ namespace Gs2::Datastore::Domain::Model
 #elif defined(__clang__)
 #pragma clang diagnostic pop
 #endif
-

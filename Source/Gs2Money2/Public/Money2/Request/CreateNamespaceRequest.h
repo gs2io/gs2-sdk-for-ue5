@@ -19,6 +19,7 @@
 #include "CoreMinimal.h"
 #include "Dom/JsonObject.h"
 #include "../Model/TransactionSetting.h"
+#include "../Model/TransactionSettingV2.h"
 #include "../Model/PlatformSetting.h"
 #include "../Model/ScriptSetting.h"
 #include "../Model/NotificationSetting.h"
@@ -35,6 +36,7 @@ namespace Gs2::Money2::Request
         TOptional<FString> CurrencyUsagePriorityValue;
         TOptional<FString> DescriptionValue;
         TSharedPtr<Model::FTransactionSetting> TransactionSettingValue;
+        TSharedPtr<Model::FTransactionSettingV2> TransactionSettingV2Value;
         TOptional<bool> SharedFreeCurrencyValue;
         TSharedPtr<Model::FPlatformSetting> PlatformSettingValue;
         TSharedPtr<Model::FScriptSetting> DepositBalanceScriptValue;
@@ -60,6 +62,7 @@ namespace Gs2::Money2::Request
         TSharedPtr<FCreateNamespaceRequest> WithCurrencyUsagePriority(const TOptional<FString> CurrencyUsagePriority);
         TSharedPtr<FCreateNamespaceRequest> WithDescription(const TOptional<FString> Description);
         TSharedPtr<FCreateNamespaceRequest> WithTransactionSetting(const TSharedPtr<Model::FTransactionSetting> TransactionSetting);
+        TSharedPtr<FCreateNamespaceRequest> WithTransactionSettingV2(const TSharedPtr<Model::FTransactionSettingV2> TransactionSettingV2);
         TSharedPtr<FCreateNamespaceRequest> WithSharedFreeCurrency(const TOptional<bool> SharedFreeCurrency);
         TSharedPtr<FCreateNamespaceRequest> WithPlatformSetting(const TSharedPtr<Model::FPlatformSetting> PlatformSetting);
         TSharedPtr<FCreateNamespaceRequest> WithDepositBalanceScript(const TSharedPtr<Model::FScriptSetting> DepositBalanceScript);
@@ -77,6 +80,7 @@ namespace Gs2::Money2::Request
         TOptional<FString> GetCurrencyUsagePriority() const;
         TOptional<FString> GetDescription() const;
         TSharedPtr<Model::FTransactionSetting> GetTransactionSetting() const;
+        TSharedPtr<Model::FTransactionSettingV2> GetTransactionSettingV2() const;
         TOptional<bool> GetSharedFreeCurrency() const;
         FString GetSharedFreeCurrencyString() const;
         TSharedPtr<Model::FPlatformSetting> GetPlatformSetting() const;

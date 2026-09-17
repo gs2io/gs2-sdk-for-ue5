@@ -22,28 +22,11 @@
 
 namespace Gs2::Core::Domain
 {
-	TMap<FString, FDateTime> FManualJobQueueAccessTokenDomain::Handled;
-	
 	FTransactionAccessTokenDomainPtr FManualJobQueueAccessTokenDomain::HandleResult(
 		const Gs2::JobQueue::Model::FJobPtr& Job,
 		const Gs2::JobQueue::Model::FJobResultBodyPtr& Result
 	)
 	{
-		auto bSkipCallback = false;
-		if (Handled.Contains(JobName)) {
-			// TODO: expire handled
-		}
-		else {
-			Handled.Add(JobName, FDateTime::Now() + FTimespan::FromMinutes(3));
-		}
-            
-		if (!bSkipCallback) {
-			Gs2->JobQueueDomain->JobQueueExecutedEventHandler(
-				Job,
-				Result
-			);
-		}
-            
 		if (!Result || !Result->GetResult().IsSet())
 		{
 			return nullptr;
@@ -77,6 +60,7 @@ namespace Gs2::Core::Domain
 				Gs2,
 				NewJobQueueDomain,
 				NewTransactionDomain,
+				Dispatch,
 				AccessToken,
 				NextTransactions
 			);
@@ -98,6 +82,9 @@ namespace Gs2::Core::Domain
 			bool bAtomicCommit,
 			Gs2::Core::Model::FTransactionResultPtr TransactionResult
 		)>& NewTransactionDomain,
+		const TFunction<Gs2::Core::Model::FGs2ErrorPtr(
+			const Gs2::Auth::Model::FAccessTokenPtr& AccessToken
+		)>& Dispatch,
 		const Gs2::Auth::Model::FAccessTokenPtr& AccessToken,
 		const FString NamespaceName,
 		const FString JobName
@@ -106,6 +93,7 @@ namespace Gs2::Core::Domain
 			Gs2,
 			NewJobQueueDomain,
 			NewTransactionDomain,
+			Dispatch,
 			AccessToken,
 			nullptr
 		),
@@ -122,6 +110,7 @@ namespace Gs2::Core::Domain
 			From.Gs2,
 			From.NewJobQueueDomain,
 			From.NewTransactionDomain,
+			From.Dispatch,
 			From.AccessToken,
 			nullptr
 		),
@@ -149,25 +138,40 @@ namespace Gs2::Core::Domain
 			return Future->GetTask().Error();
 		}
 		const auto FutureResult = Future->GetTask().Result();
-		if (FutureResult.IsValid() && FutureResult->GetIsLastJob().GetValue()) {
+		if (!FutureResult.IsValid()) {
 			return nullptr;
 		}
-		const auto Future2 = FutureResult->Model();
-		Future2->StartSynchronousTask();
-		if (Future2->GetTask().IsError())
-		{
-			return Future2->GetTask().Error();
-		}
-		auto Job = Future2->GetTask().Result();
+		auto Job = FutureResult->Item;
 		if (!Job.IsValid()) {
 			return nullptr;
 		}
+		const auto JobResult = FutureResult->GetResult();
+		if (!JobResult.IsValid() || !JobResult->GetResult().IsSet()) {
+			return nullptr;
+		}
+		const auto StatusCode = JobResult->GetStatusCode();
+		if (!StatusCode.IsSet() || StatusCode.Get(0) / 100 != 2) {
+			return Gs2::Core::Model::FGs2Error::FromResponse(
+				StatusCode.Get(0), JobResult->GetResult().Get(FString())
+			);
+		}
 		if (Job->GetName() != JobName) {
-			HandleResult(Job, FutureResult->GetResult());
+			const auto Transaction = HandleResult(Job, JobResult);
+			if (Transaction.IsValid()) {
+				const auto Future3 = Transaction->Wait(true);
+				Future3->StartSynchronousTask();
+				if (Future3->GetTask().IsError())
+				{
+					return Future3->GetTask().Error();
+				}
+			}
+			if (FutureResult->GetIsLastJob().Get(true)) {
+				return nullptr;
+			}
 			goto RETRY;
 		}
 
-		const auto Transaction = HandleResult(Job, FutureResult->GetResult());
+		const auto Transaction = HandleResult(Job, JobResult);
 		if (All && Transaction.IsValid()) {
 			const auto Future3 = Transaction->Wait(true);
 			Future3->StartSynchronousTask();
@@ -189,5 +193,10 @@ namespace Gs2::Core::Domain
 		) {
 			return WaitImpl(All, Result);
 		});
+	}
+
+	TOptional<FString> FManualJobQueueAccessTokenDomain::GetJobName() const
+	{
+		return JobName;
 	}
 }

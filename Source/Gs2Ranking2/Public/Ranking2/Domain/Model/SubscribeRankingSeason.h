@@ -134,6 +134,8 @@ namespace Gs2::Ranking2::Domain::Model
             const FSubscribeRankingSeasonDomain& From
         );
 
+
+
         class GS2RANKING2_API FPutSubscribeRankingScoreTask final :
             public Gs2::Core::Util::TGs2Future<Gs2::Ranking2::Domain::Model::FSubscribeRankingScoreDomain>,
             public TSharedFromThis<FPutSubscribeRankingScoreTask>
@@ -166,8 +168,33 @@ namespace Gs2::Ranking2::Domain::Model
 
         Gs2::Core::Domain::CallbackID SubscribeSubscribeRankingScores(
             TFunction<void()> Callback
+
         );
 
+        class FCollectSubscribeRankingScoresTask;
+
+        Gs2::Core::Domain::CallbackID SubscribeSubscribeRankingScores(
+            TFunction<void(TArray<Gs2::Ranking2::Model::FSubscribeRankingScorePtr>)> Callback,const TOptional<FString> TimeOffsetToken = TOptional<FString>()
+        );
+
+        void InvalidateSubscribeRankingScores(const TOptional<FString> TimeOffsetToken = TOptional<FString>());
+
+        class GS2RANKING2_API FSubscribeSubscribeRankingScoresWithInitialCallTask final :
+            public Gs2::Core::Util::TGs2Future<Gs2::Core::Domain::CallbackID>,
+            public TSharedFromThis<FSubscribeSubscribeRankingScoresWithInitialCallTask>
+        {
+            const TSharedPtr<FSubscribeRankingSeasonDomain> Self;
+            const TFunction<void(TArray<Gs2::Ranking2::Model::FSubscribeRankingScorePtr>)> Callback;
+        const TOptional<FString> QueryTimeOffsetToken;
+        public:
+            FSubscribeSubscribeRankingScoresWithInitialCallTask(const TSharedPtr<FSubscribeRankingSeasonDomain>& Self, TFunction<void(TArray<Gs2::Ranking2::Model::FSubscribeRankingScorePtr>)> Callback,const TOptional<FString> TimeOffsetToken);
+            FSubscribeSubscribeRankingScoresWithInitialCallTask(const FSubscribeSubscribeRankingScoresWithInitialCallTask& From);
+            virtual Gs2::Core::Model::FGs2ErrorPtr Action(TSharedPtr<TSharedPtr<Gs2::Core::Domain::CallbackID>> Result) override;
+        };
+
+        TSharedPtr<FAsyncTask<FSubscribeSubscribeRankingScoresWithInitialCallTask>> SubscribeSubscribeRankingScoresWithInitialCall(
+            TFunction<void(TArray<Gs2::Ranking2::Model::FSubscribeRankingScorePtr>)> Callback,const TOptional<FString> TimeOffsetToken = TOptional<FString>()
+        );
         void UnsubscribeSubscribeRankingScores(
             Gs2::Core::Domain::CallbackID CallbackID
         );
@@ -181,8 +208,33 @@ namespace Gs2::Ranking2::Domain::Model
 
         Gs2::Core::Domain::CallbackID SubscribeSubscribeRankings(
             TFunction<void()> Callback
+
         );
 
+        class FCollectSubscribeRankingsTask;
+
+        Gs2::Core::Domain::CallbackID SubscribeSubscribeRankings(
+            TFunction<void(TArray<Gs2::Ranking2::Model::FSubscribeRankingDataPtr>)> Callback,const TOptional<FString> TimeOffsetToken = TOptional<FString>()
+        );
+
+        void InvalidateSubscribeRankings(const TOptional<FString> TimeOffsetToken = TOptional<FString>());
+
+        class GS2RANKING2_API FSubscribeSubscribeRankingsWithInitialCallTask final :
+            public Gs2::Core::Util::TGs2Future<Gs2::Core::Domain::CallbackID>,
+            public TSharedFromThis<FSubscribeSubscribeRankingsWithInitialCallTask>
+        {
+            const TSharedPtr<FSubscribeRankingSeasonDomain> Self;
+            const TFunction<void(TArray<Gs2::Ranking2::Model::FSubscribeRankingDataPtr>)> Callback;
+        const TOptional<FString> QueryTimeOffsetToken;
+        public:
+            FSubscribeSubscribeRankingsWithInitialCallTask(const TSharedPtr<FSubscribeRankingSeasonDomain>& Self, TFunction<void(TArray<Gs2::Ranking2::Model::FSubscribeRankingDataPtr>)> Callback,const TOptional<FString> TimeOffsetToken);
+            FSubscribeSubscribeRankingsWithInitialCallTask(const FSubscribeSubscribeRankingsWithInitialCallTask& From);
+            virtual Gs2::Core::Model::FGs2ErrorPtr Action(TSharedPtr<TSharedPtr<Gs2::Core::Domain::CallbackID>> Result) override;
+        };
+
+        TSharedPtr<FAsyncTask<FSubscribeSubscribeRankingsWithInitialCallTask>> SubscribeSubscribeRankingsWithInitialCall(
+            TFunction<void(TArray<Gs2::Ranking2::Model::FSubscribeRankingDataPtr>)> Callback,const TOptional<FString> TimeOffsetToken = TOptional<FString>()
+        );
         void UnsubscribeSubscribeRankings(
             Gs2::Core::Domain::CallbackID CallbackID
         );

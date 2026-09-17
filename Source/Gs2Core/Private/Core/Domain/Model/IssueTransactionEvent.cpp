@@ -23,14 +23,28 @@ namespace Gs2::Core::Domain::Model
         const TSharedPtr<TArray<Gs2::Core::Model::FConsumeActionPtr>>& ConsumeActions,
         const TSharedPtr<TArray<Gs2::Core::Model::FAcquireActionPtr>>& AcquireActions,
         const TBigInt<1024, false>& Rate
-    ): AccessToken(AccessToken), ConsumeActions(ConsumeActions), AcquireActions(AcquireActions), Rate(Rate)
+    ): AccessToken(AccessToken), ConsumeActions(ConsumeActions), AcquireActions(AcquireActions), Rate(Rate),
+       VerifyAction(nullptr), InverseVerify(false), Error(nullptr), Commit(nullptr), PreparedCommit(nullptr)
+    {
+
+    }
+
+    FIssueTransactionEvent::FIssueTransactionEvent(
+        const Gs2::Auth::Model::FAccessTokenPtr& AccessToken,
+        const Gs2::Core::Model::FVerifyActionPtr& VerifyAction,
+        const TBigInt<1024, false>& Rate,
+        const bool InverseVerify
+    ): AccessToken(AccessToken), ConsumeActions(nullptr), AcquireActions(nullptr), Rate(Rate),
+       VerifyAction(VerifyAction), InverseVerify(InverseVerify), Error(nullptr), Commit(nullptr), PreparedCommit(nullptr)
     {
 
     }
 
     FIssueTransactionEvent::FIssueTransactionEvent(
         const FIssueTransactionEvent& From
-    ): AccessToken(From.AccessToken), ConsumeActions(From.ConsumeActions), AcquireActions(From.AcquireActions), Rate(From.Rate)
+    ): AccessToken(From.AccessToken), ConsumeActions(From.ConsumeActions), AcquireActions(From.AcquireActions), Rate(From.Rate),
+       VerifyAction(From.VerifyAction), InverseVerify(From.InverseVerify), Error(From.Error), Commit(From.Commit),
+       PreparedCommit(From.PreparedCommit)
     {
             
     }
@@ -53,5 +67,47 @@ namespace Gs2::Core::Domain::Model
     TBigInt<1024, false> FIssueTransactionEvent::GetRate() const
     {
         return Rate;
+    }
+
+    Gs2::Core::Model::FVerifyActionPtr FIssueTransactionEvent::GetVerifyAction() const
+    {
+        return VerifyAction;
+    }
+
+    bool FIssueTransactionEvent::IsInverseVerify() const
+    {
+        return InverseVerify;
+    }
+
+    Gs2::Core::Model::FGs2ErrorPtr FIssueTransactionEvent::GetError() const
+    {
+        return Error;
+    }
+
+    void FIssueTransactionEvent::SetError(const Gs2::Core::Model::FGs2ErrorPtr& InError)
+    {
+        Error = InError;
+    }
+
+    TSharedPtr<TFunction<void()>> FIssueTransactionEvent::GetCommit() const
+    {
+        return Commit;
+    }
+
+    void FIssueTransactionEvent::SetCommit(const TSharedPtr<TFunction<void()>>& InCommit)
+    {
+        Commit = InCommit;
+    }
+
+    TSharedPtr<Gs2::Core::Domain::SpeculativeExecutor::FPreparedSpeculativeCommit> FIssueTransactionEvent::GetPreparedCommit() const
+    {
+        return PreparedCommit;
+    }
+
+    void FIssueTransactionEvent::SetPreparedCommit(
+        const TSharedPtr<Gs2::Core::Domain::SpeculativeExecutor::FPreparedSpeculativeCommit>& InPreparedCommit
+    )
+    {
+        PreparedCommit = InPreparedCommit;
     }
 }

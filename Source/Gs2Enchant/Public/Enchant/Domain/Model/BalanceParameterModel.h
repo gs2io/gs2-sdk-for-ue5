@@ -85,6 +85,8 @@ namespace Gs2::Enchant::Domain::Model
             const FBalanceParameterModelDomain& From
         );
 
+
+
         class GS2ENCHANT_API FGetTask final :
             public Gs2::Core::Util::TGs2Future<Gs2::Enchant::Model::FBalanceParameterModel>,
             public TSharedFromThis<FGetTask>
@@ -143,7 +145,34 @@ namespace Gs2::Enchant::Domain::Model
 
         TSharedPtr<FAsyncTask<FModelTask>> Model();
 
+        void Invalidate();
+
         Gs2::Core::Domain::CallbackID Subscribe(
+            TFunction<void(Gs2::Enchant::Model::FBalanceParameterModelPtr)> Callback
+        );
+
+        class GS2ENCHANT_API FSubscribeWithInitialCallTask final :
+            public Gs2::Core::Util::TGs2Future<Gs2::Core::Domain::CallbackID>,
+            public TSharedFromThis<FSubscribeWithInitialCallTask>
+        {
+            const TSharedPtr<FBalanceParameterModelDomain> Self;
+            const TFunction<void(Gs2::Enchant::Model::FBalanceParameterModelPtr)> Callback;
+        public:
+            FSubscribeWithInitialCallTask(
+                const TSharedPtr<FBalanceParameterModelDomain>& Self,
+                TFunction<void(Gs2::Enchant::Model::FBalanceParameterModelPtr)> Callback
+            );
+
+            FSubscribeWithInitialCallTask(
+                const FSubscribeWithInitialCallTask& From
+            );
+
+            virtual Gs2::Core::Model::FGs2ErrorPtr Action(
+                TSharedPtr<TSharedPtr<Gs2::Core::Domain::CallbackID>> Result
+            ) override;
+        };
+
+        TSharedPtr<FAsyncTask<FSubscribeWithInitialCallTask>> SubscribeWithInitialCall(
             TFunction<void(Gs2::Enchant::Model::FBalanceParameterModelPtr)> Callback
         );
 

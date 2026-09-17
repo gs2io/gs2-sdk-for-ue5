@@ -25,6 +25,7 @@
 #include "Script/Domain/Model/Script.h"
 #include "Script/Domain/Model/Namespace.h"
 #include "Script/Domain/Model/Script.h"
+#include "Script/Model/Cache/Script.h"
 
 #include "Core/Domain/Gs2.h"
 #include "Core/Domain/Transaction/JobQueueJobDomainFactory.h"
@@ -98,6 +99,20 @@ namespace Gs2::Script::Domain::Model
         }
         const auto ResultModel = Future->GetTask().Result();
         Future->EnsureCompletion();
+
+            if (ResultModel.IsValid() && ResultModel->GetItem() != nullptr)
+            {
+
+
+        Gs2::Script::Model::Cache::FScriptCache::Put(
+            Self->Gs2->Cache,
+
+            Request->GetNamespaceName(),
+            Request->GetScriptName(),
+            TOptional<int32>(),
+            ResultModel->GetItem()
+        );
+            }
         *Result = ResultModel->GetItem();
         return nullptr;
     }
@@ -140,19 +155,20 @@ namespace Gs2::Script::Domain::Model
         }
         const auto ResultModel = Future->GetTask().Result();
         Future->EnsureCompletion();
-        if (ResultModel->GetItem() != nullptr)
-        {
-            const auto Key = Gs2::Script::Domain::Model::FScriptDomain::CreateCacheKey(
-                ResultModel->GetItem()->GetName()
-            );
-            Self->Gs2->Cache->Put(
-                Gs2::Script::Model::FScript::TypeName,
-                Self->ParentKey,
-                Key,
-                ResultModel->GetItem(),
-                FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
-            );
-        }
+
+            if (ResultModel.IsValid() && ResultModel->GetItem() != nullptr)
+            {
+
+
+        Gs2::Script::Model::Cache::FScriptCache::Put(
+            Self->Gs2->Cache,
+
+            Request->GetNamespaceName(),
+            Request->GetScriptName(),
+            TOptional<int32>(),
+            ResultModel->GetItem()
+        );
+            }
         auto Domain = Self;
 
         *Result = Domain;
@@ -197,19 +213,20 @@ namespace Gs2::Script::Domain::Model
         }
         const auto ResultModel = Future->GetTask().Result();
         Future->EnsureCompletion();
-        if (ResultModel->GetItem() != nullptr)
-        {
-            const auto Key = Gs2::Script::Domain::Model::FScriptDomain::CreateCacheKey(
-                ResultModel->GetItem()->GetName()
-            );
-            Self->Gs2->Cache->Put(
-                Gs2::Script::Model::FScript::TypeName,
-                Self->ParentKey,
-                Key,
-                ResultModel->GetItem(),
-                FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
-            );
-        }
+
+            if (ResultModel.IsValid() && ResultModel->GetItem() != nullptr)
+            {
+
+
+        Gs2::Script::Model::Cache::FScriptCache::Put(
+            Self->Gs2->Cache,
+
+            Request->GetNamespaceName(),
+            Request->GetScriptName(),
+            TOptional<int32>(),
+            ResultModel->GetItem()
+        );
+            }
         auto Domain = Self;
 
         *Result = Domain;
@@ -250,21 +267,25 @@ namespace Gs2::Script::Domain::Model
         Future->StartSynchronousTask();
         if (Future->GetTask().IsError())
         {
-            return Future->GetTask().Error();
+            const auto Error = Future->GetTask().Error();
+            if (Error.IsValid() && Error->IsChildOf(Gs2::Core::Model::FNotFoundError::Class))
+            {
+                *Result = Self;
+                return nullptr;
+            }
+            return Error;
         }
         const auto ResultModel = Future->GetTask().Result();
         Future->EnsureCompletion();
-        if (ResultModel->GetItem() != nullptr)
-        {
-            const auto Key = Gs2::Script::Domain::Model::FScriptDomain::CreateCacheKey(
-                ResultModel->GetItem()->GetName()
-            );
-            Self->Gs2->Cache->Delete(
-                Gs2::Script::Model::FScript::TypeName,
-                Self->ParentKey,
-                Key
-            );
-        }
+
+
+              Gs2::Script::Model::Cache::FScriptCache::Delete(
+            Self->Gs2->Cache,
+
+            Request->GetNamespaceName(),
+            Request->GetScriptName(),
+            TOptional<int32>()
+        );
         auto Domain = Self;
 
         *Result = Domain;
@@ -315,71 +336,158 @@ namespace Gs2::Script::Domain::Model
         TSharedPtr<TSharedPtr<Gs2::Script::Model::FScript>> Result
     )
     {
-        // ReSharper disable once CppLocalVariableMayBeConst
-        TSharedPtr<Gs2::Script::Model::FScript> Value;
-        auto bCacheHit = Self->Gs2->Cache->TryGet<Gs2::Script::Model::FScript>(
-            Self->ParentKey,
-            Gs2::Script::Domain::Model::FScriptDomain::CreateCacheKey(
-                Self->ScriptName
-            ),
-            &Value
+        const auto CacheParentKey = Gs2::Script::Model::Cache::FScriptCache::CreateCacheParentKey(
+
+            Self->NamespaceName,
+            TOptional<int32>()
         );
-        if (!bCacheHit) {
-            const auto Future = Self->Get(
-                MakeShared<Gs2::Script::Request::FGetScriptRequest>()
-            );
-            Future->StartSynchronousTask();
-            if (Future->GetTask().IsError())
+        const auto CacheKey = Gs2::Script::Model::Cache::FScriptCache::CreateCacheKey(
+
+            Self->ScriptName
+        );
+        return Self->Gs2->Cache->ExecuteWithKeyLock(
+            Gs2::Script::Model::FScript::TypeName,
+            CacheParentKey,
+            CacheKey,
+            [Self = Self, Result]() -> Gs2::Core::Model::FGs2ErrorPtr
             {
-                if (Future->GetTask().Error()->Type() != Gs2::Core::Model::FNotFoundError::TypeString)
-                {
-                    return Future->GetTask().Error();
-                }
+                Gs2::Script::Model::FScriptPtr Value;
+                const auto CacheHit = Gs2::Script::Model::Cache::FScriptCache::TryGet(
+                    Self->Gs2->Cache,
 
-                const auto Key = Gs2::Script::Domain::Model::FScriptDomain::CreateCacheKey(
-                    Self->ScriptName
+                    Self->NamespaceName,
+                    Self->ScriptName,
+                    TOptional<int32>(),
+                    &Value
                 );
-                Self->Gs2->Cache->Put(
-                    Gs2::Script::Model::FScript::TypeName,
-                    Self->ParentKey,
-                    Key,
-                    nullptr,
-                    FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
-                );
-
-                if (Future->GetTask().Error()->Detail(0)->GetComponent() != "script")
+                if (CacheHit)
                 {
-                    return Future->GetTask().Error();
+                    *Result = Value;
+                    return nullptr;
                 }
-            }
-            else
-            {
-                Value = Future->GetTask().Result();
-            }
-            Future->EnsureCompletion();
-        }
-        *Result = Value;
+                const auto Error = Gs2::Script::Model::Cache::FScriptCache::Fetch(
+                    Self->Gs2->Cache,
 
-        return nullptr;
+                    Self->NamespaceName,
+                    Self->ScriptName,
+                    TOptional<int32>(),
+                    [Self](Gs2::Script::Model::FScriptPtr* OutItem) -> Gs2::Core::Model::FGs2ErrorPtr
+                    {
+                        const auto Future = Self->Get(
+                            MakeShared<Gs2::Script::Request::FGetScriptRequest>()
+                        );
+                        Future->StartSynchronousTask();
+                        if (Future->GetTask().IsError()) return Future->GetTask().Error();
+                        *OutItem = Future->GetTask().Result();
+                        Future->EnsureCompletion();
+                        return nullptr;
+                    },
+                    &Value
+                );
+                if (Error.IsValid()) return Error;
+                *Result = Value;
+                return nullptr;
+            }
+        );
     }
 
     TSharedPtr<FAsyncTask<FScriptDomain::FModelTask>> FScriptDomain::Model() {
         return Gs2::Core::Util::New<FAsyncTask<FScriptDomain::FModelTask>>(this->AsShared());
     }
 
+    void FScriptDomain::Invalidate()
+    {
+        Gs2::Script::Model::Cache::FScriptCache::Delete(
+            Gs2->Cache,
+
+            NamespaceName,
+            ScriptName,
+            TOptional<int32>()
+        );
+    }
+
+    FScriptDomain::FSubscribeWithInitialCallTask::FSubscribeWithInitialCallTask(
+        const TSharedPtr<FScriptDomain>& Self,
+        TFunction<void(Gs2::Script::Model::FScriptPtr)> Callback
+    ):
+        Self(Self),
+        Callback(Callback)
+    {
+    }
+
+    FScriptDomain::FSubscribeWithInitialCallTask::FSubscribeWithInitialCallTask(
+        const FSubscribeWithInitialCallTask& From
+    ):
+        TGs2Future(From),
+        Self(From.Self),
+        Callback(From.Callback)
+    {
+    }
+
+    Gs2::Core::Model::FGs2ErrorPtr FScriptDomain::FSubscribeWithInitialCallTask::Action(
+        TSharedPtr<TSharedPtr<Gs2::Core::Domain::CallbackID>> Result
+    )
+    {
+        const auto Task = Self->Model();
+        Task->StartSynchronousTask();
+        Task->EnsureCompletion();
+        if (Task->GetTask().IsError()) return Task->GetTask().Error();
+        const auto Item = Task->GetTask().Result();
+        const auto CallbackId = Self->Subscribe(Callback);
+        Callback(Item);
+        *Result = MakeShared<Gs2::Core::Domain::CallbackID>(CallbackId);
+        return nullptr;
+    }
+
+    TSharedPtr<FAsyncTask<FScriptDomain::FSubscribeWithInitialCallTask>> FScriptDomain::SubscribeWithInitialCall(
+        TFunction<void(Gs2::Script::Model::FScriptPtr)> Callback
+    )
+    {
+        return Gs2::Core::Util::New<FAsyncTask<FSubscribeWithInitialCallTask>>(this->AsShared(), Callback);
+    }
+
     Gs2::Core::Domain::CallbackID FScriptDomain::Subscribe(
         TFunction<void(Gs2::Script::Model::FScriptPtr)> Callback
     )
     {
+        const auto SubscriptionParentKey = Gs2::Script::Model::Cache::FScriptCache::CreateCacheParentKey(
+
+            NamespaceName,
+            TOptional<int32>()
+        );
+        const auto SubscriptionCacheKey = Gs2::Script::Model::Cache::FScriptCache::CreateCacheKey(
+
+            ScriptName
+        );
+        const TWeakPtr<Gs2::Core::Domain::FGs2> WeakGs2 = Gs2;
+        const TWeakPtr<Script::Domain::FGs2ScriptDomain> WeakService = Service;
+        const FString RegisteredParentKey = SubscriptionParentKey;
+        const TOptional<FString> QueryNamespaceName = NamespaceName;
+        const TOptional<FString> QueryScriptName = ScriptName;
         return Gs2->Cache->Subscribe(
             Gs2::Script::Model::FScript::TypeName,
-            ParentKey,
-            Gs2::Script::Domain::Model::FScriptDomain::CreateCacheKey(
-                ScriptName
-            ),
+            SubscriptionParentKey,
+            SubscriptionCacheKey,
             [Callback](TSharedPtr<FGs2Object> obj)
             {
                 Callback(StaticCastSharedPtr<Gs2::Script::Model::FScript>(obj));
+            },
+            [WeakGs2, WeakService, RegisteredParentKey, QueryNamespaceName, QueryScriptName]()
+            {
+                const auto Owner = WeakGs2.Pin();
+                if (!Owner.IsValid())
+                {
+                    return;
+                }
+                const auto Domain = MakeShared<FScriptDomain>(
+                    Owner,
+                    WeakService.Pin(),
+                    QueryNamespaceName,
+                    QueryScriptName
+                );
+                Domain->ParentKey = RegisteredParentKey;
+                const auto Task = Domain->Model();
+                Task->StartBackgroundTask();
             }
         );
     }
@@ -388,12 +496,19 @@ namespace Gs2::Script::Domain::Model
         Gs2::Core::Domain::CallbackID CallbackID
     )
     {
+        const auto SubscriptionParentKey = Gs2::Script::Model::Cache::FScriptCache::CreateCacheParentKey(
+
+            NamespaceName,
+            TOptional<int32>()
+        );
+        const auto SubscriptionCacheKey = Gs2::Script::Model::Cache::FScriptCache::CreateCacheKey(
+
+            ScriptName
+        );
         Gs2->Cache->Unsubscribe(
             Gs2::Script::Model::FScript::TypeName,
-            ParentKey,
-            Gs2::Script::Domain::Model::FScriptDomain::CreateCacheKey(
-                ScriptName
-            ),
+            SubscriptionParentKey,
+            SubscriptionCacheKey,
             CallbackID
         );
     }
@@ -404,4 +519,3 @@ namespace Gs2::Script::Domain::Model
 #elif defined(__clang__)
 #pragma clang diagnostic pop
 #endif
-

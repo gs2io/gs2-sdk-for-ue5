@@ -109,6 +109,8 @@ namespace Gs2::Account::Domain::Model
             const FAccountDomain& From
         );
 
+
+
         class GS2ACCOUNT_API FUpdateTimeOffsetTask final :
             public Gs2::Core::Util::TGs2Future<Gs2::Account::Domain::Model::FAccountDomain>,
             public TSharedFromThis<FUpdateTimeOffsetTask>
@@ -134,6 +136,8 @@ namespace Gs2::Account::Domain::Model
         TSharedPtr<FAsyncTask<FUpdateTimeOffsetTask>> UpdateTimeOffset(
             Request::FUpdateTimeOffsetRequestPtr Request
         );
+
+
 
         class GS2ACCOUNT_API FUpdateBannedTask final :
             public Gs2::Core::Util::TGs2Future<Gs2::Account::Domain::Model::FAccountDomain>,
@@ -161,6 +165,8 @@ namespace Gs2::Account::Domain::Model
             Request::FUpdateBannedRequestPtr Request
         );
 
+
+
         class GS2ACCOUNT_API FAddBanTask final :
             public Gs2::Core::Util::TGs2Future<Gs2::Account::Domain::Model::FAccountDomain>,
             public TSharedFromThis<FAddBanTask>
@@ -186,6 +192,8 @@ namespace Gs2::Account::Domain::Model
         TSharedPtr<FAsyncTask<FAddBanTask>> AddBan(
             Request::FAddBanRequestPtr Request
         );
+
+
 
         class GS2ACCOUNT_API FRemoveBanTask final :
             public Gs2::Core::Util::TGs2Future<Gs2::Account::Domain::Model::FAccountDomain>,
@@ -213,6 +221,8 @@ namespace Gs2::Account::Domain::Model
             Request::FRemoveBanRequestPtr Request
         );
 
+
+
         class GS2ACCOUNT_API FGetTask final :
             public Gs2::Core::Util::TGs2Future<Gs2::Account::Model::FAccount>,
             public TSharedFromThis<FGetTask>
@@ -238,6 +248,8 @@ namespace Gs2::Account::Domain::Model
         TSharedPtr<FAsyncTask<FGetTask>> Get(
             Request::FGetAccountRequestPtr Request
         );
+
+
 
         class GS2ACCOUNT_API FDeleteTask final :
             public Gs2::Core::Util::TGs2Future<Gs2::Account::Domain::Model::FAccountDomain>,
@@ -265,6 +277,8 @@ namespace Gs2::Account::Domain::Model
             Request::FDeleteAccountRequestPtr Request
         );
 
+
+
         class GS2ACCOUNT_API FAuthenticationTask final :
             public Gs2::Core::Util::TGs2Future<Gs2::Account::Domain::Model::FAccountDomain>,
             public TSharedFromThis<FAuthenticationTask>
@@ -290,6 +304,8 @@ namespace Gs2::Account::Domain::Model
         TSharedPtr<FAsyncTask<FAuthenticationTask>> Authentication(
             Request::FAuthenticationRequestPtr Request
         );
+
+
 
         class GS2ACCOUNT_API FCreateTakeOverOpenIdConnectAndTask final :
             public Gs2::Core::Util::TGs2Future<Gs2::Account::Domain::Model::FTakeOverDomain>,
@@ -317,6 +333,8 @@ namespace Gs2::Account::Domain::Model
             Request::FCreateTakeOverOpenIdConnectAndByUserIdRequestPtr Request
         );
 
+
+
         class GS2ACCOUNT_API FDeleteTakeOverByUserIdentifierTask final :
             public Gs2::Core::Util::TGs2Future<Gs2::Account::Domain::Model::FTakeOverDomain>,
             public TSharedFromThis<FDeleteTakeOverByUserIdentifierTask>
@@ -342,6 +360,8 @@ namespace Gs2::Account::Domain::Model
         TSharedPtr<FAsyncTask<FDeleteTakeOverByUserIdentifierTask>> DeleteTakeOverByUserIdentifier(
             Request::FDeleteTakeOverByUserIdentifierRequestPtr Request
         );
+
+
 
         class GS2ACCOUNT_API FDeleteTakeOverTask final :
             public Gs2::Core::Util::TGs2Future<Gs2::Account::Domain::Model::FTakeOverDomain>,
@@ -369,6 +389,8 @@ namespace Gs2::Account::Domain::Model
             Request::FDeleteTakeOverByUserIdRequestPtr Request
         );
 
+
+
         class GS2ACCOUNT_API FGetAuthorizationUrlTask final :
             public Gs2::Core::Util::TGs2Future<Gs2::Account::Domain::Model::FAccountDomain>,
             public TSharedFromThis<FGetAuthorizationUrlTask>
@@ -395,6 +417,8 @@ namespace Gs2::Account::Domain::Model
             Request::FGetAuthorizationUrlRequestPtr Request
         );
 
+
+
         class GS2ACCOUNT_API FDeleteDataOwnerTask final :
             public Gs2::Core::Util::TGs2Future<Gs2::Account::Domain::Model::FDataOwnerDomain>,
             public TSharedFromThis<FDeleteDataOwnerTask>
@@ -420,6 +444,8 @@ namespace Gs2::Account::Domain::Model
         TSharedPtr<FAsyncTask<FDeleteDataOwnerTask>> DeleteDataOwner(
             Request::FDeleteDataOwnerByUserIdRequestPtr Request
         );
+
+
 
         class GS2ACCOUNT_API FDeletePlatformIdTask final :
             public Gs2::Core::Util::TGs2Future<Gs2::Account::Domain::Model::FPlatformIdDomain>,
@@ -453,8 +479,33 @@ namespace Gs2::Account::Domain::Model
 
         Gs2::Core::Domain::CallbackID SubscribeTakeOvers(
             TFunction<void()> Callback
+
         );
 
+        class FCollectTakeOversTask;
+
+        Gs2::Core::Domain::CallbackID SubscribeTakeOvers(
+            TFunction<void(TArray<Gs2::Account::Model::FTakeOverPtr>)> Callback,const TOptional<FString> TimeOffsetToken = TOptional<FString>()
+        );
+
+        void InvalidateTakeOvers(const TOptional<FString> TimeOffsetToken = TOptional<FString>());
+
+        class GS2ACCOUNT_API FSubscribeTakeOversWithInitialCallTask final :
+            public Gs2::Core::Util::TGs2Future<Gs2::Core::Domain::CallbackID>,
+            public TSharedFromThis<FSubscribeTakeOversWithInitialCallTask>
+        {
+            const TSharedPtr<FAccountDomain> Self;
+            const TFunction<void(TArray<Gs2::Account::Model::FTakeOverPtr>)> Callback;
+        const TOptional<FString> QueryTimeOffsetToken;
+        public:
+            FSubscribeTakeOversWithInitialCallTask(const TSharedPtr<FAccountDomain>& Self, TFunction<void(TArray<Gs2::Account::Model::FTakeOverPtr>)> Callback,const TOptional<FString> TimeOffsetToken);
+            FSubscribeTakeOversWithInitialCallTask(const FSubscribeTakeOversWithInitialCallTask& From);
+            virtual Gs2::Core::Model::FGs2ErrorPtr Action(TSharedPtr<TSharedPtr<Gs2::Core::Domain::CallbackID>> Result) override;
+        };
+
+        TSharedPtr<FAsyncTask<FSubscribeTakeOversWithInitialCallTask>> SubscribeTakeOversWithInitialCall(
+            TFunction<void(TArray<Gs2::Account::Model::FTakeOverPtr>)> Callback,const TOptional<FString> TimeOffsetToken = TOptional<FString>()
+        );
         void UnsubscribeTakeOvers(
             Gs2::Core::Domain::CallbackID CallbackID
         );
@@ -472,8 +523,33 @@ namespace Gs2::Account::Domain::Model
 
         Gs2::Core::Domain::CallbackID SubscribePlatformIds(
             TFunction<void()> Callback
+
         );
 
+        class FCollectPlatformIdsTask;
+
+        Gs2::Core::Domain::CallbackID SubscribePlatformIds(
+            TFunction<void(TArray<Gs2::Account::Model::FPlatformIdPtr>)> Callback,const TOptional<FString> TimeOffsetToken = TOptional<FString>()
+        );
+
+        void InvalidatePlatformIds(const TOptional<FString> TimeOffsetToken = TOptional<FString>());
+
+        class GS2ACCOUNT_API FSubscribePlatformIdsWithInitialCallTask final :
+            public Gs2::Core::Util::TGs2Future<Gs2::Core::Domain::CallbackID>,
+            public TSharedFromThis<FSubscribePlatformIdsWithInitialCallTask>
+        {
+            const TSharedPtr<FAccountDomain> Self;
+            const TFunction<void(TArray<Gs2::Account::Model::FPlatformIdPtr>)> Callback;
+        const TOptional<FString> QueryTimeOffsetToken;
+        public:
+            FSubscribePlatformIdsWithInitialCallTask(const TSharedPtr<FAccountDomain>& Self, TFunction<void(TArray<Gs2::Account::Model::FPlatformIdPtr>)> Callback,const TOptional<FString> TimeOffsetToken);
+            FSubscribePlatformIdsWithInitialCallTask(const FSubscribePlatformIdsWithInitialCallTask& From);
+            virtual Gs2::Core::Model::FGs2ErrorPtr Action(TSharedPtr<TSharedPtr<Gs2::Core::Domain::CallbackID>> Result) override;
+        };
+
+        TSharedPtr<FAsyncTask<FSubscribePlatformIdsWithInitialCallTask>> SubscribePlatformIdsWithInitialCall(
+            TFunction<void(TArray<Gs2::Account::Model::FPlatformIdPtr>)> Callback,const TOptional<FString> TimeOffsetToken = TOptional<FString>()
+        );
         void UnsubscribePlatformIds(
             Gs2::Core::Domain::CallbackID CallbackID
         );

@@ -91,6 +91,8 @@ namespace Gs2::Enhance::Domain::Model
             const FProgressDomain& From
         );
 
+
+
         class GS2ENHANCE_API FCreateTask final :
             public Gs2::Core::Util::TGs2Future<Gs2::Enhance::Domain::Model::FProgressDomain>,
             public TSharedFromThis<FCreateTask>
@@ -116,6 +118,8 @@ namespace Gs2::Enhance::Domain::Model
         TSharedPtr<FAsyncTask<FCreateTask>> Create(
             Request::FCreateProgressByUserIdRequestPtr Request
         );
+
+
 
         class GS2ENHANCE_API FGetTask final :
             public Gs2::Core::Util::TGs2Future<Gs2::Enhance::Model::FProgress>,
@@ -143,6 +147,8 @@ namespace Gs2::Enhance::Domain::Model
             Request::FGetProgressByUserIdRequestPtr Request
         );
 
+
+
         class GS2ENHANCE_API FStartTask final :
             public Gs2::Core::Util::TGs2Future<Gs2::Core::Domain::FTransactionDomain>,
             public TSharedFromThis<FStartTask>
@@ -169,6 +175,8 @@ namespace Gs2::Enhance::Domain::Model
             Request::FStartByUserIdRequestPtr Request
         );
 
+
+
         class GS2ENHANCE_API FEndTask final :
             public Gs2::Core::Util::TGs2Future<Gs2::Core::Domain::FTransactionDomain>,
             public TSharedFromThis<FEndTask>
@@ -194,6 +202,8 @@ namespace Gs2::Enhance::Domain::Model
         TSharedPtr<FAsyncTask<FEndTask>> End(
             Request::FEndByUserIdRequestPtr Request
         );
+
+
 
         class GS2ENHANCE_API FDeleteTask final :
             public Gs2::Core::Util::TGs2Future<Gs2::Enhance::Domain::Model::FProgressDomain>,
@@ -252,7 +262,34 @@ namespace Gs2::Enhance::Domain::Model
 
         TSharedPtr<FAsyncTask<FModelTask>> Model();
 
+        void Invalidate();
+
         Gs2::Core::Domain::CallbackID Subscribe(
+            TFunction<void(Gs2::Enhance::Model::FProgressPtr)> Callback
+        );
+
+        class GS2ENHANCE_API FSubscribeWithInitialCallTask final :
+            public Gs2::Core::Util::TGs2Future<Gs2::Core::Domain::CallbackID>,
+            public TSharedFromThis<FSubscribeWithInitialCallTask>
+        {
+            const TSharedPtr<FProgressDomain> Self;
+            const TFunction<void(Gs2::Enhance::Model::FProgressPtr)> Callback;
+        public:
+            FSubscribeWithInitialCallTask(
+                const TSharedPtr<FProgressDomain>& Self,
+                TFunction<void(Gs2::Enhance::Model::FProgressPtr)> Callback
+            );
+
+            FSubscribeWithInitialCallTask(
+                const FSubscribeWithInitialCallTask& From
+            );
+
+            virtual Gs2::Core::Model::FGs2ErrorPtr Action(
+                TSharedPtr<TSharedPtr<Gs2::Core::Domain::CallbackID>> Result
+            ) override;
+        };
+
+        TSharedPtr<FAsyncTask<FSubscribeWithInitialCallTask>> SubscribeWithInitialCall(
             TFunction<void(Gs2::Enhance::Model::FProgressPtr)> Callback
         );
 

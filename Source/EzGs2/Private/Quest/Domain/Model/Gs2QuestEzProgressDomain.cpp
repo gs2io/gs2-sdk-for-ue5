@@ -82,7 +82,7 @@ namespace Gs2::UE5::Quest::Domain::Model
     Gs2::Core::Domain::CallbackID FEzProgressDomain::Subscribe(TFunction<void(Gs2::UE5::Quest::Model::FEzProgressPtr)> Callback)
     {
         return Domain->Subscribe(
-            [&](Gs2::Quest::Model::FProgressPtr Item)
+            [Callback](Gs2::Quest::Model::FProgressPtr Item)
             {
                 Callback(Gs2::UE5::Quest::Model::FEzProgress::FromModel(Item));
             }

@@ -27,10 +27,26 @@
 #include "Exchange/Domain/SpeculativeExecutor/Consume/DeleteAwaitByUserIdSpeculativeExecutor.h"
 #include "Exchange/Domain/Gs2Exchange.h"
 
+#include "Auth/Model/AccessToken.h"
 #include "Core/Domain/Gs2.h"
+#include "Core/Domain/SpeculativeExecutor/PreparedSpeculativeCommit.h"
+#include "Exchange/Model/Cache/Await.h"
+#include "Serialization/JsonSerializer.h"
+#include "Serialization/JsonWriter.h"
 
 namespace Gs2::Exchange::Domain::SpeculativeExecutor
 {
+
+    namespace
+    {
+        FString SerializeDeleteAwaitSnapshot(const TSharedPtr<FJsonObject>& Object)
+        {
+            FString Body;
+            const TSharedRef<TJsonWriter<TCHAR>> Writer = TJsonWriterFactory<TCHAR>::Create(&Body);
+            FJsonSerializer::Serialize(Object.ToSharedRef(), Writer);
+            return Body;
+        }
+    }
 
     FString FDeleteAwaitByUserIdSpeculativeExecutor::Action()
     {
@@ -73,29 +89,68 @@ namespace Gs2::Exchange::Domain::SpeculativeExecutor
     }
 
     Gs2::Core::Model::FGs2ErrorPtr FDeleteAwaitByUserIdSpeculativeExecutor::FCommitTask::Action(
-        TSharedPtr<TSharedPtr<TFunction<void()>>> Result
+        TSharedPtr<TSharedPtr<Gs2::Core::Domain::SpeculativeExecutor::FPreparedSpeculativeCommit>> Result
     )
     {
-        const auto ParentKey = Model::FUserDomain::CreateCacheParentKey(
-            Request->GetNamespaceName(),
-            AccessToken->GetUserId(),
-            FString("Await")
-        );
-        const auto Key = Model::FAwaitDomain::CreateCacheKey(
-            Request->GetAwaitName()
-        );
-
-        *Result = MakeShared<TFunction<void()>>([&]()
+        if (!Domain.IsValid() || !Domain->RestSession.IsValid() ||
+            !AccessToken.IsValid() || !Request.IsValid())
         {
-            Domain->Cache->Put(
-                Exchange::Model::FAwait::TypeName,
-                ParentKey,
-                Key,
-                nullptr,
-                FDateTime::Now() + FTimespan::FromSeconds(10)
-            );
+            *Result = nullptr;
             return nullptr;
-        });
+        }
+        const auto PreparedRequest = MakeShared<Gs2::Exchange::Request::FDeleteAwaitByUserIdRequest>(*Request);
+        const auto PreparedAccessToken = MakeShared<Gs2::Auth::Model::FAccessToken>(*AccessToken);
+        if (PreparedRequest->GetUserId().IsSet() && *PreparedRequest->GetUserId() == TEXT("#{userId}"))
+        {
+            PreparedRequest->WithUserId(PreparedAccessToken->GetUserId());
+        }
+        if (!PreparedAccessToken->GetUserId().IsSet() || PreparedAccessToken->GetUserId()->IsEmpty() ||
+            !PreparedRequest->GetUserId().IsSet() || *PreparedRequest->GetUserId() != *PreparedAccessToken->GetUserId() ||
+            !PreparedRequest->GetNamespaceName().IsSet() || PreparedRequest->GetNamespaceName()->IsEmpty() ||
+            !PreparedRequest->GetAwaitName().IsSet() || PreparedRequest->GetAwaitName()->IsEmpty())
+        {
+            *Result = nullptr;
+            return nullptr;
+        }
+        const auto NamespaceName = PreparedRequest->GetNamespaceName();
+        const auto UserId = PreparedAccessToken->GetUserId();
+        const auto AwaitName = PreparedRequest->GetAwaitName();
+        const auto TimeOffset = PreparedAccessToken->GetTimeOffset();
+        const FString ExpectedId = FString::Printf(
+            TEXT("grn:gs2:%s:%s:exchange:%s:user:%s:await:%s"),
+            *Domain->RestSession->RegionName(), *Domain->RestSession->OwnerId(),
+            **NamespaceName, **UserId, **AwaitName);
+        Gs2::Exchange::Model::FAwaitPtr Item;
+        const bool Found = Gs2::Exchange::Model::Cache::FAwaitCache::TryGet(
+            Domain->Cache, NamespaceName, UserId, AwaitName, TimeOffset, &Item);
+        if (!Found || !Item.IsValid() || !Item->GetAwaitId().IsSet() ||
+            *Item->GetAwaitId() != ExpectedId || !Item->GetUserId().IsSet() ||
+            *Item->GetUserId() != *UserId || !Item->GetName().IsSet() ||
+            *Item->GetName() != *AwaitName)
+        {
+            *Result = nullptr;
+            return nullptr;
+        }
+        const FString Snapshot = SerializeDeleteAwaitSnapshot(Item->ToJson());
+        *Result = Gs2::Core::Domain::SpeculativeExecutor::FPreparedSpeculativeCommit::WrapLegacy(
+            MakeShared<TFunction<void()>>([DomainCopy = Domain, PreparedRequest,
+                                           PreparedAccessToken, Snapshot]()
+        {
+            Gs2::Exchange::Model::FAwaitPtr Current;
+            const bool FoundCurrent = Gs2::Exchange::Model::Cache::FAwaitCache::TryGet(
+                DomainCopy->Cache, PreparedRequest->GetNamespaceName(),
+                PreparedAccessToken->GetUserId(), PreparedRequest->GetAwaitName(),
+                PreparedAccessToken->GetTimeOffset(), &Current);
+            if (!FoundCurrent || !Current.IsValid() ||
+                SerializeDeleteAwaitSnapshot(Current->ToJson()) != Snapshot)
+            {
+                return;
+            }
+            Gs2::Exchange::Model::Cache::FAwaitCache::Put(
+                DomainCopy->Cache, PreparedRequest->GetNamespaceName(),
+                PreparedAccessToken->GetUserId(), PreparedRequest->GetAwaitName(),
+                PreparedAccessToken->GetTimeOffset(), nullptr);
+        }));
         return nullptr;
     }
 

@@ -108,6 +108,8 @@ namespace Gs2::Account::Domain::Model
             const FAccountAccessTokenDomain& From
         );
 
+
+
         class GS2ACCOUNT_API FDeleteTakeOverTask final :
             public Gs2::Core::Util::TGs2Future<Gs2::Account::Domain::Model::FTakeOverAccessTokenDomain>,
             public TSharedFromThis<FDeleteTakeOverTask>
@@ -141,6 +143,30 @@ namespace Gs2::Account::Domain::Model
             TFunction<void()> Callback
         );
 
+        class FCollectTakeOversTask;
+
+        Gs2::Core::Domain::CallbackID SubscribeTakeOvers(
+            TFunction<void(TArray<Gs2::Account::Model::FTakeOverPtr>)> Callback
+        );
+
+        void InvalidateTakeOvers();
+
+        class GS2ACCOUNT_API FSubscribeTakeOversWithInitialCallTask final :
+            public Gs2::Core::Util::TGs2Future<Gs2::Core::Domain::CallbackID>,
+            public TSharedFromThis<FSubscribeTakeOversWithInitialCallTask>
+        {
+            const TSharedPtr<FAccountAccessTokenDomain> Self;
+            const TFunction<void(TArray<Gs2::Account::Model::FTakeOverPtr>)> Callback;
+
+        public:
+            FSubscribeTakeOversWithInitialCallTask(const TSharedPtr<FAccountAccessTokenDomain>& Self, TFunction<void(TArray<Gs2::Account::Model::FTakeOverPtr>)> Callback);
+            FSubscribeTakeOversWithInitialCallTask(const FSubscribeTakeOversWithInitialCallTask& From);
+            virtual Gs2::Core::Model::FGs2ErrorPtr Action(TSharedPtr<TSharedPtr<Gs2::Core::Domain::CallbackID>> Result) override;
+        };
+
+        TSharedPtr<FAsyncTask<FSubscribeTakeOversWithInitialCallTask>> SubscribeTakeOversWithInitialCall(
+            TFunction<void(TArray<Gs2::Account::Model::FTakeOverPtr>)> Callback
+        );
         void UnsubscribeTakeOvers(
             Gs2::Core::Domain::CallbackID CallbackID
         );
@@ -159,6 +185,30 @@ namespace Gs2::Account::Domain::Model
             TFunction<void()> Callback
         );
 
+        class FCollectPlatformIdsTask;
+
+        Gs2::Core::Domain::CallbackID SubscribePlatformIds(
+            TFunction<void(TArray<Gs2::Account::Model::FPlatformIdPtr>)> Callback
+        );
+
+        void InvalidatePlatformIds();
+
+        class GS2ACCOUNT_API FSubscribePlatformIdsWithInitialCallTask final :
+            public Gs2::Core::Util::TGs2Future<Gs2::Core::Domain::CallbackID>,
+            public TSharedFromThis<FSubscribePlatformIdsWithInitialCallTask>
+        {
+            const TSharedPtr<FAccountAccessTokenDomain> Self;
+            const TFunction<void(TArray<Gs2::Account::Model::FPlatformIdPtr>)> Callback;
+
+        public:
+            FSubscribePlatformIdsWithInitialCallTask(const TSharedPtr<FAccountAccessTokenDomain>& Self, TFunction<void(TArray<Gs2::Account::Model::FPlatformIdPtr>)> Callback);
+            FSubscribePlatformIdsWithInitialCallTask(const FSubscribePlatformIdsWithInitialCallTask& From);
+            virtual Gs2::Core::Model::FGs2ErrorPtr Action(TSharedPtr<TSharedPtr<Gs2::Core::Domain::CallbackID>> Result) override;
+        };
+
+        TSharedPtr<FAsyncTask<FSubscribePlatformIdsWithInitialCallTask>> SubscribePlatformIdsWithInitialCall(
+            TFunction<void(TArray<Gs2::Account::Model::FPlatformIdPtr>)> Callback
+        );
         void UnsubscribePlatformIds(
             Gs2::Core::Domain::CallbackID CallbackID
         );

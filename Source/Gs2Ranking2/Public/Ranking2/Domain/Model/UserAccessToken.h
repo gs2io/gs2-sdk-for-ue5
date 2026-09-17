@@ -139,13 +139,36 @@ namespace Gs2::Ranking2::Domain::Model
         ) const;
 
         Gs2::Core::Domain::CallbackID SubscribeSubscribes(
-            const FString RankingName,
-            TFunction<void()> Callback
+             const FString RankingName, TFunction<void()> Callback
         );
 
+        class FCollectSubscribesTask;
+
+        Gs2::Core::Domain::CallbackID SubscribeSubscribes(
+            TFunction<void(TArray<Gs2::Ranking2::Model::FSubscribeUserPtr>)> Callback,const FString RankingName
+        );
+
+        void InvalidateSubscribes(const FString RankingName);
+
+        class GS2RANKING2_API FSubscribeSubscribesWithInitialCallTask final :
+            public Gs2::Core::Util::TGs2Future<Gs2::Core::Domain::CallbackID>,
+            public TSharedFromThis<FSubscribeSubscribesWithInitialCallTask>
+        {
+            const TSharedPtr<FUserAccessTokenDomain> Self;
+            const TFunction<void(TArray<Gs2::Ranking2::Model::FSubscribeUserPtr>)> Callback;
+        const FString QueryRankingName;
+        public:
+            FSubscribeSubscribesWithInitialCallTask(const TSharedPtr<FUserAccessTokenDomain>& Self, TFunction<void(TArray<Gs2::Ranking2::Model::FSubscribeUserPtr>)> Callback,const FString RankingName);
+            FSubscribeSubscribesWithInitialCallTask(const FSubscribeSubscribesWithInitialCallTask& From);
+            virtual Gs2::Core::Model::FGs2ErrorPtr Action(TSharedPtr<TSharedPtr<Gs2::Core::Domain::CallbackID>> Result) override;
+        };
+
+        TSharedPtr<FAsyncTask<FSubscribeSubscribesWithInitialCallTask>> SubscribeSubscribesWithInitialCall(
+            TFunction<void(TArray<Gs2::Ranking2::Model::FSubscribeUserPtr>)> Callback,const FString RankingName
+        );
         void UnsubscribeSubscribes(
-            const FString RankingName,
-            Gs2::Core::Domain::CallbackID CallbackID
+            const FString RankingName
+            , Gs2::Core::Domain::CallbackID CallbackID
         );
 
         TSharedPtr<Gs2::Ranking2::Domain::Model::FSubscribeAccessTokenDomain> Subscribe(

@@ -1,3 +1,4 @@
+
 /*
  * Copyright 2016 Game Server Services, Inc. or its affiliates. All Rights
  * Reserved.
@@ -29,6 +30,8 @@
 #include "Version/Domain/Model/User.h"
 
 #include "Core/Domain/Gs2.h"
+
+#include "Version/Model/Cache/AcceptVersion.h"
 
 namespace Gs2::Version::Domain::Iterator
 {
@@ -78,7 +81,7 @@ namespace Gs2::Version::Domain::Iterator
 
     FDescribeAcceptVersionsIterator::FIterator& FDescribeAcceptVersionsIterator::FIterator::operator++()
     {
-        
+
 
         if (bEnd) return *this;
 
@@ -88,16 +91,17 @@ namespace Gs2::Version::Domain::Iterator
             return *this;
         }
 
-        if (RangeIteratorOpt) ++*RangeIteratorOpt;
+        if (RangeIteratorOpt && *RangeIteratorOpt) ++*RangeIteratorOpt;
 
+        // Keep the previous page alive until its iterator has been replaced.
+        const auto PreviousRange = Range;
         if (!RangeIteratorOpt || (!*RangeIteratorOpt && !bLast))
         {
-            const auto ListParentKey = Gs2::Version::Domain::Model::FUserDomain::CreateCacheParentKey(
+            const auto ListParentKey = Gs2::Version::Model::Cache::FAcceptVersionCache::CreateCacheParentKey(
                 Self->NamespaceName,
-                Self->UserId(),
-                "AcceptVersion"
+                Self->AccessToken.IsValid() ? Self->AccessToken->GetUserId() : TOptional<FString>(),
+                Self->AccessToken.IsValid() ? Self->AccessToken->GetTimeOffset() : TOptional<int32>()
             );
-
             if (!RangeIteratorOpt)
             {
                 Range = Self->Gs2->Cache->TryGetList<Gs2::Version::Model::FAcceptVersion>(ListParentKey);
@@ -111,15 +115,15 @@ namespace Gs2::Version::Domain::Iterator
                     return *this;
                 }
             }
-
-            const auto Future = Self->Client->DescribeAcceptVersions(
+            const auto Request =
                 MakeShared<Gs2::Version::Request::FDescribeAcceptVersionsRequest>()
                     ->WithContextStack(Self->Gs2->DefaultContextStack)
                     ->WithNamespaceName(Self->NamespaceName)
                     ->WithAccessToken(Self->AccessToken == nullptr ? TOptional<FString>() : Self->AccessToken->GetToken())
                     ->WithPageToken(PageToken)
                     ->WithLimit(FetchSize)
-            );
+            ;
+            const auto Future = Self->Client->DescribeAcceptVersions(Request);
             Future->StartSynchronousTask();
             if (Future->GetTask().IsError())
             {
@@ -133,18 +137,23 @@ namespace Gs2::Version::Domain::Iterator
             }
             const auto R = Future->GetTask().Result();
             Future->EnsureCompletion();
-            Range = R->GetItems();
-            for (auto Item : *R->GetItems())
+            Range = R->GetItems().IsValid() ? R->GetItems() : MakeShared<TArray<Gs2::Version::Model::FAcceptVersionPtr>>();
+            const auto CacheOwnerSnapshotUserId = Self->AccessToken.IsValid() ? Self->UserId() : TOptional<FString>();
+            const auto CacheOwnerSnapshotTimeOffset = Self->AccessToken.IsValid() ? Self->AccessToken->GetTimeOffset() : TOptional<int32>();
+            const auto ResultModel = R;
+
+
+            if (Range.IsValid())
             {
-                Self->Gs2->Cache->Put(
-                    Gs2::Version::Model::FAcceptVersion::TypeName,
-                    ListParentKey,
-                    Gs2::Version::Domain::Model::FAcceptVersionDomain::CreateCacheKey(
-                        Item->GetVersionName()
-                    ),
-                    Item,
-                    FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
-                );
+                for (const auto& Item : *Range)
+                {
+                    if (!Item.IsValid()) continue;
+                    Gs2::Version::Model::Cache::FAcceptVersionCache::Put(
+                        Self->Gs2->Cache,
+                        Request->GetNamespaceName(), CacheOwnerSnapshotUserId, Item->GetVersionName(),
+                        CacheOwnerSnapshotTimeOffset, Item
+                    );
+                }
             }
             if (Range)
             {
@@ -155,7 +164,11 @@ namespace Gs2::Version::Domain::Iterator
             if (bLast) {
                 Self->Gs2->Cache->SetListCached(
                     Gs2::Version::Model::FAcceptVersion::TypeName,
-                    ListParentKey
+                    Gs2::Version::Model::Cache::FAcceptVersionCache::CreateCacheParentKey(
+                        Self->NamespaceName,
+                        Self->AccessToken.IsValid() ? Self->AccessToken->GetUserId() : TOptional<FString>(),
+                        Self->AccessToken.IsValid() ? Self->AccessToken->GetTimeOffset() : TOptional<int32>()
+                    )
                 );
             }
         }

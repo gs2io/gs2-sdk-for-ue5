@@ -1,3 +1,4 @@
+
 /*
  * Copyright 2016 Game Server Services, Inc. or its affiliates. All Rights
  * Reserved.
@@ -29,6 +30,11 @@
 #include "Inventory/Domain/Model/ItemSet.h"
 
 #include "Core/Domain/Gs2.h"
+
+#include "Inventory/Model/Cache/ReferenceOf.h"
+#include "Inventory/Model/Cache/ItemSet.h"
+#include "Inventory/Model/Cache/ItemModel.h"
+#include "Inventory/Model/Cache/Inventory.h"
 
 namespace Gs2::Inventory::Domain::Iterator
 {
@@ -69,10 +75,11 @@ namespace Gs2::Inventory::Domain::Iterator
     {
     }
 
-    Gs2::Core::Model::FGs2ErrorPtr FDescribeReferenceOfByUserIdIterator::FIteratorNextTask::Action(TSharedPtr<TSharedPtr<Inventory::Model::FReferenceOfEntry>> Result)
+    Gs2::Core::Model::FGs2ErrorPtr FDescribeReferenceOfByUserIdIterator::FIteratorNextTask::Action(TSharedPtr<TSharedPtr<FString>> Result)
     {
         ++Iterator;
-        *Result = Iterator->Current();
+        if (!Iterator.IsCurrentValid()) { *Result = nullptr; return Iterator.Error(); }
+        *Result = MakeShared<FString>(Iterator->Current());
         return Iterator.Error();
     }
 
@@ -89,7 +96,7 @@ namespace Gs2::Inventory::Domain::Iterator
 
     FDescribeReferenceOfByUserIdIterator::FIterator& FDescribeReferenceOfByUserIdIterator::FIterator::operator++()
     {
-        
+
 
         if (bEnd) return *this;
 
@@ -99,15 +106,32 @@ namespace Gs2::Inventory::Domain::Iterator
             return *this;
         }
 
-        if (RangeIteratorOpt) ++*RangeIteratorOpt;
+        if (RangeIteratorOpt && *RangeIteratorOpt) ++*RangeIteratorOpt;
 
+        // Keep the previous page alive until its iterator has been replaced.
+        const auto PreviousRange = Range;
         if (!RangeIteratorOpt || (!*RangeIteratorOpt && !bLast))
         {
-            const auto ListParentKey = "inventory:String";
+            const auto ListParentKey = Gs2::Inventory::Model::Cache::FReferenceOfCache::CreateCacheParentKey(
 
+                Self->NamespaceName,
+                Self->UserId,
+                Self->InventoryName,
+                Self->ItemName,
+                Self->ItemSetName,
+                TOptional<int32>()
+            );
             if (!RangeIteratorOpt)
             {
-                Range = Self->Gs2->Cache->TryGetList<Gs2::Inventory::Model::FReferenceOfEntry>(ListParentKey);
+                auto CachedValues = Self->Gs2->Cache->TryGetList<Gs2::Inventory::Model::FReferenceOf>(ListParentKey);
+                if (CachedValues)
+                {
+                    Range = MakeShared<TArray<FString>>();
+                    for (const auto& Item : *CachedValues)
+                    {
+                        if (Item.IsValid() && Item->GetName().IsSet()) Range->Add(Item->GetName().Get(FString()));
+                    }
+                }
 
                 if (Range)
                 {
@@ -117,7 +141,6 @@ namespace Gs2::Inventory::Domain::Iterator
                     return *this;
                 }
             }
-
             const auto Future = Self->Client->DescribeReferenceOfByUserId(
                 MakeShared<Gs2::Inventory::Request::FDescribeReferenceOfByUserIdRequest>()
                     ->WithContextStack(Self->Gs2->DefaultContextStack)
@@ -139,25 +162,23 @@ namespace Gs2::Inventory::Domain::Iterator
                 ErrorValue = nullptr;
             }
             const auto R = Future->GetTask().Result();
+            const auto ResultModel = R;
             Future->EnsureCompletion();
-            if (!Range.IsValid())
+            Range = R->GetItems().IsValid() ? R->GetItems() : MakeShared<TArray<FString>>();
+            for (const auto& Item : *Range)
             {
-                Range = MakeShared<TArray<Inventory::Model::FReferenceOfEntryPtr>>();
-            }
-            for (auto Item : *R->GetItems())
-            {
-                Range->Add(MakeShared<Inventory::Model::FReferenceOfEntry>(Item));
-            }
-            for (auto Item : *R->GetItems())
-            {
-                Self->Gs2->Cache->Put(
-                    Gs2::Inventory::Model::FReferenceOfEntry::TypeName,
-                    ListParentKey,
-                    Gs2::Inventory::Domain::Model::FReferenceOfDomain::CreateCacheKey(
-                        Item
-                    ),
-                    MakeShared<Inventory::Model::FReferenceOfEntry>(Item),
-                    FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
+                Gs2::Inventory::Model::Cache::FReferenceOfCache::Put(
+                    Self->Gs2->Cache,
+
+                    Self->NamespaceName,
+                    Self->UserId,
+                    Self->InventoryName,
+                    Self->ItemName,
+                    Self->ItemSetName,
+                    Item,
+                    TOptional<int32>(),
+                    MakeShared<Gs2::Inventory::Model::FReferenceOf>()
+                        ->WithName(Item)
                 );
             }
             if (Range)
@@ -167,7 +188,7 @@ namespace Gs2::Inventory::Domain::Iterator
             bLast = true;
             if (bLast) {
                 Self->Gs2->Cache->SetListCached(
-                    Gs2::Inventory::Model::FReferenceOfEntry::TypeName,
+                    Gs2::Inventory::Model::FReferenceOf::TypeName,
                     ListParentKey
                 );
             }

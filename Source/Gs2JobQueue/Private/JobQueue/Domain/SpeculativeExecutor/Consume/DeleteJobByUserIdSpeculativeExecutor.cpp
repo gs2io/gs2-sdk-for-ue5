@@ -29,9 +29,25 @@
 
 
 #include "Core/Domain/Gs2.h"
+#include "Core/Domain/SpeculativeExecutor/PreparedSpeculativeCommit.h"
+#include "Auth/Model/AccessToken.h"
+#include "JobQueue/Model/Cache/Job.h"
+#include "Serialization/JsonSerializer.h"
+#include "Serialization/JsonWriter.h"
 
 namespace Gs2::JobQueue::Domain::SpeculativeExecutor
 {
+
+    namespace
+    {
+        FString DeleteJobSnapshot(const Gs2::JobQueue::Model::FJobPtr& Item)
+        {
+            FString Value;
+            auto Writer = TJsonWriterFactory<TCHAR, TCondensedJsonPrintPolicy<TCHAR>>::Create(&Value);
+            FJsonSerializer::Serialize(Item->ToJson().ToSharedRef(), Writer);
+            return Value;
+        }
+    }
 
     FString FDeleteJobByUserIdSpeculativeExecutor::Action()
     {
@@ -74,29 +90,30 @@ namespace Gs2::JobQueue::Domain::SpeculativeExecutor
     }
 
     Gs2::Core::Model::FGs2ErrorPtr FDeleteJobByUserIdSpeculativeExecutor::FCommitTask::Action(
-        TSharedPtr<TSharedPtr<TFunction<void()>>> Result
+        TSharedPtr<TSharedPtr<Gs2::Core::Domain::SpeculativeExecutor::FPreparedSpeculativeCommit>> Result
     )
     {
-        const auto ParentKey = Model::FUserDomain::CreateCacheParentKey(
-            Request->GetNamespaceName(),
-            AccessToken->GetUserId(),
-            FString("Job")
-        );
-        const auto Key = Model::FJobDomain::CreateCacheKey(
-            Request->GetJobName()
-        );
-
-        *Result = MakeShared<TFunction<void()>>([&]()
+        *Result = nullptr;
+        if (!Domain.IsValid() || !Domain->RestSession.IsValid() || !AccessToken.IsValid() || !Request.IsValid() || !AccessToken->GetUserId().IsSet() || AccessToken->GetUserId().Get(FString()).IsEmpty()) return nullptr;
+        const auto Token = MakeShared<Gs2::Auth::Model::FAccessToken>(*AccessToken);
+        const auto Prepared = MakeShared<Gs2::JobQueue::Request::FDeleteJobByUserIdRequest>(*Request);
+        if (Prepared->GetUserId().IsSet() && Prepared->GetUserId().Get(FString()) == TEXT("#{userId}")) Prepared->WithUserId(Token->GetUserId());
+        if (!Prepared->GetUserId().IsSet() || Prepared->GetUserId().Get(FString()) != Token->GetUserId().Get(FString())) return nullptr;
+        const auto NamespaceName = Prepared->GetNamespaceName();
+        const auto JobName = Prepared->GetJobName();
+        const auto UserId = Token->GetUserId();
+        const auto TimeOffset = Token->GetTimeOffset();
+        const auto ExpectedId = FString::Printf(TEXT("grn:gs2:%s:%s:queue:%s:user:%s:job:%s"), *Domain->RestSession->RegionName(), *Domain->RestSession->OwnerId(), *NamespaceName.Get(FString()), *UserId.Get(FString()), *JobName.Get(FString()));
+        Gs2::JobQueue::Model::FJobPtr Expected;
+        if (!Gs2::JobQueue::Model::Cache::FJobCache::TryGet(Domain->Cache, NamespaceName, UserId, JobName, TimeOffset, &Expected) || !Expected.IsValid() || Expected->GetJobId().Get(FString()) != ExpectedId || Expected->GetUserId().Get(FString()) != UserId.Get(FString()) || Expected->GetName().Get(FString()) != JobName.Get(FString())) return nullptr;
+        const auto Snapshot = DeleteJobSnapshot(Expected);
+        *Result = Gs2::Core::Domain::SpeculativeExecutor::FPreparedSpeculativeCommit::WrapLegacy(MakeShared<TFunction<void()>>(
+            [DomainCopy = Domain, NamespaceName, JobName, UserId, TimeOffset, ExpectedId, Snapshot]()
         {
-            Domain->Cache->Put(
-                JobQueue::Model::FJob::TypeName,
-                ParentKey,
-                Key,
-                nullptr,
-                FDateTime::Now() + FTimespan::FromSeconds(10)
-            );
-            return nullptr;
-        });
+            Gs2::JobQueue::Model::FJobPtr Live;
+            if (!Gs2::JobQueue::Model::Cache::FJobCache::TryGet(DomainCopy->Cache, NamespaceName, UserId, JobName, TimeOffset, &Live) || !Live.IsValid() || Live->GetJobId().Get(FString()) != ExpectedId || Live->GetUserId().Get(FString()) != UserId.Get(FString()) || Live->GetName().Get(FString()) != JobName.Get(FString()) || DeleteJobSnapshot(Live) != Snapshot) return;
+            Gs2::JobQueue::Model::Cache::FJobCache::Put(DomainCopy->Cache, NamespaceName, UserId, JobName, TimeOffset, nullptr);
+        }));
         return nullptr;
     }
 

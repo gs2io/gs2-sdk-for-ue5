@@ -63,7 +63,8 @@ namespace Gs2::UE5::Showcase::Domain::Model
         );
     }
 
-    void FEzRandomShowcaseGameSessionDomain::UnsubscribeRandomDisplayItems(Gs2::Core::Domain::CallbackID CallbackId)
+    void FEzRandomShowcaseGameSessionDomain::UnsubscribeRandomDisplayItems(
+            Gs2::Core::Domain::CallbackID CallbackId)
     {
         Domain->UnsubscribeRandomDisplayItems(
             CallbackId

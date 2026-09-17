@@ -41,6 +41,7 @@
 #include "Showcase/Domain/Model/RandomShowcaseStatusAccessToken.h"
 #include "Showcase/Domain/Model/RandomDisplayItem.h"
 #include "Showcase/Domain/Model/RandomDisplayItemAccessToken.h"
+#include "Showcase/Model/Cache/DisplayItemMaster.h"
 
 #include "Core/Domain/Gs2.h"
 #include "Core/Domain/Transaction/JobQueueJobDomainFactory.h"
@@ -113,35 +114,132 @@ namespace Gs2::Showcase::Domain::Model
         TSharedPtr<TSharedPtr<Gs2::Showcase::Model::FDisplayItemMaster>> Result
     )
     {
-        // ReSharper disable once CppLocalVariableMayBeConst
-        TSharedPtr<Gs2::Showcase::Model::FDisplayItemMaster> Value;
-        auto bCacheHit = Self->Gs2->Cache->TryGet<Gs2::Showcase::Model::FDisplayItemMaster>(
-            Self->ParentKey,
-            Gs2::Showcase::Domain::Model::FDisplayItemMasterDomain::CreateCacheKey(
-            ),
-            &Value
-        );
-        *Result = Value;
+        const auto CacheParentKey = Gs2::Showcase::Model::Cache::FDisplayItemMasterCache::CreateCacheParentKey(
 
-        return nullptr;
+            Self->NamespaceName,
+            TOptional<int32>()
+        );
+        const auto CacheKey = Gs2::Showcase::Model::Cache::FDisplayItemMasterCache::CreateCacheKey(
+
+        );
+        return Self->Gs2->Cache->ExecuteWithKeyLock(
+            Gs2::Showcase::Model::FDisplayItemMaster::TypeName,
+            CacheParentKey,
+            CacheKey,
+            [Self = Self, Result]() -> Gs2::Core::Model::FGs2ErrorPtr
+            {
+                Gs2::Showcase::Model::FDisplayItemMasterPtr Value;
+                const auto CacheHit = Gs2::Showcase::Model::Cache::FDisplayItemMasterCache::TryGet(
+                    Self->Gs2->Cache,
+
+                    Self->NamespaceName,
+                    TOptional<int32>(),
+                    &Value
+                );
+                if (CacheHit)
+                {
+                    *Result = Value;
+                    return nullptr;
+                }
+                *Result = Value;
+                return nullptr;
+            }
+        );
     }
 
     TSharedPtr<FAsyncTask<FDisplayItemMasterDomain::FModelTask>> FDisplayItemMasterDomain::Model() {
         return Gs2::Core::Util::New<FAsyncTask<FDisplayItemMasterDomain::FModelTask>>(this->AsShared());
     }
 
+    void FDisplayItemMasterDomain::Invalidate()
+    {
+        Gs2::Showcase::Model::Cache::FDisplayItemMasterCache::Delete(
+            Gs2->Cache,
+
+            NamespaceName,
+            TOptional<int32>()
+        );
+    }
+
+    FDisplayItemMasterDomain::FSubscribeWithInitialCallTask::FSubscribeWithInitialCallTask(
+        const TSharedPtr<FDisplayItemMasterDomain>& Self,
+        TFunction<void(Gs2::Showcase::Model::FDisplayItemMasterPtr)> Callback
+    ):
+        Self(Self),
+        Callback(Callback)
+    {
+    }
+
+    FDisplayItemMasterDomain::FSubscribeWithInitialCallTask::FSubscribeWithInitialCallTask(
+        const FSubscribeWithInitialCallTask& From
+    ):
+        TGs2Future(From),
+        Self(From.Self),
+        Callback(From.Callback)
+    {
+    }
+
+    Gs2::Core::Model::FGs2ErrorPtr FDisplayItemMasterDomain::FSubscribeWithInitialCallTask::Action(
+        TSharedPtr<TSharedPtr<Gs2::Core::Domain::CallbackID>> Result
+    )
+    {
+        const auto Task = Self->Model();
+        Task->StartSynchronousTask();
+        Task->EnsureCompletion();
+        if (Task->GetTask().IsError()) return Task->GetTask().Error();
+        const auto Item = Task->GetTask().Result();
+        const auto CallbackId = Self->Subscribe(Callback);
+        Callback(Item);
+        *Result = MakeShared<Gs2::Core::Domain::CallbackID>(CallbackId);
+        return nullptr;
+    }
+
+    TSharedPtr<FAsyncTask<FDisplayItemMasterDomain::FSubscribeWithInitialCallTask>> FDisplayItemMasterDomain::SubscribeWithInitialCall(
+        TFunction<void(Gs2::Showcase::Model::FDisplayItemMasterPtr)> Callback
+    )
+    {
+        return Gs2::Core::Util::New<FAsyncTask<FSubscribeWithInitialCallTask>>(this->AsShared(), Callback);
+    }
+
     Gs2::Core::Domain::CallbackID FDisplayItemMasterDomain::Subscribe(
         TFunction<void(Gs2::Showcase::Model::FDisplayItemMasterPtr)> Callback
     )
     {
+        const auto SubscriptionParentKey = Gs2::Showcase::Model::Cache::FDisplayItemMasterCache::CreateCacheParentKey(
+
+            NamespaceName,
+            TOptional<int32>()
+        );
+        const auto SubscriptionCacheKey = Gs2::Showcase::Model::Cache::FDisplayItemMasterCache::CreateCacheKey(
+
+        );
+        const TWeakPtr<Gs2::Core::Domain::FGs2> WeakGs2 = Gs2;
+        const TWeakPtr<Showcase::Domain::FGs2ShowcaseDomain> WeakService = Service;
+        const FString RegisteredParentKey = SubscriptionParentKey;
+        const TOptional<FString> QueryNamespaceName = NamespaceName;
         return Gs2->Cache->Subscribe(
             Gs2::Showcase::Model::FDisplayItemMaster::TypeName,
-            ParentKey,
-            Gs2::Showcase::Domain::Model::FDisplayItemMasterDomain::CreateCacheKey(
-            ),
+            SubscriptionParentKey,
+            SubscriptionCacheKey,
             [Callback](TSharedPtr<FGs2Object> obj)
             {
                 Callback(StaticCastSharedPtr<Gs2::Showcase::Model::FDisplayItemMaster>(obj));
+            },
+            [WeakGs2, WeakService, RegisteredParentKey, QueryNamespaceName]()
+            {
+                const auto Owner = WeakGs2.Pin();
+                if (!Owner.IsValid())
+                {
+                    return;
+                }
+                const auto Domain = MakeShared<FDisplayItemMasterDomain>(
+                    Owner,
+                    WeakService.Pin(),
+                    QueryNamespaceName
+                );
+                Domain->ParentKey = RegisteredParentKey;
+                const auto Task = Domain->Model();
+                Task->StartBackgroundTask();
             }
         );
     }
@@ -150,11 +248,18 @@ namespace Gs2::Showcase::Domain::Model
         Gs2::Core::Domain::CallbackID CallbackID
     )
     {
+        const auto SubscriptionParentKey = Gs2::Showcase::Model::Cache::FDisplayItemMasterCache::CreateCacheParentKey(
+
+            NamespaceName,
+            TOptional<int32>()
+        );
+        const auto SubscriptionCacheKey = Gs2::Showcase::Model::Cache::FDisplayItemMasterCache::CreateCacheKey(
+
+        );
         Gs2->Cache->Unsubscribe(
             Gs2::Showcase::Model::FDisplayItemMaster::TypeName,
-            ParentKey,
-            Gs2::Showcase::Domain::Model::FDisplayItemMasterDomain::CreateCacheKey(
-            ),
+            SubscriptionParentKey,
+            SubscriptionCacheKey,
             CallbackID
         );
     }
@@ -165,4 +270,3 @@ namespace Gs2::Showcase::Domain::Model
 #elif defined(__clang__)
 #pragma clang diagnostic pop
 #endif
-

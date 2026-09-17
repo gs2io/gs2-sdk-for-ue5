@@ -43,6 +43,7 @@ namespace Gs2::Guild::Domain::Iterator
         const TSharedPtr<TArray<int32>> Attributes5;
         const TSharedPtr<TArray<FString>> JoinPolicies;
         const TOptional<bool> IncludeFullMembersGuild;
+        const TOptional<FString> OrderBy;
         const TOptional<FString> TimeOffsetToken;
 
     public:
@@ -60,6 +61,7 @@ namespace Gs2::Guild::Domain::Iterator
             const TSharedPtr<TArray<int32>> Attributes5 = nullptr,
             const TSharedPtr<TArray<FString>> JoinPolicies = nullptr,
             const TOptional<bool> IncludeFullMembersGuild = TOptional<bool>(),
+            const TOptional<FString> OrderBy = TOptional<FString>(),
             const TOptional<FString> TimeOffsetToken = TOptional<FString>()
         );
         

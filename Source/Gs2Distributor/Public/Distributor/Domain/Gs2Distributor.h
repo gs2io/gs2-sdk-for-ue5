@@ -88,6 +88,8 @@ namespace Gs2::Distributor::Domain
             const FGs2DistributorDomain& From
         );
 
+
+
         class GS2DISTRIBUTOR_API FCreateNamespaceTask final :
             public Gs2::Core::Util::TGs2Future<Gs2::Distributor::Domain::Model::FNamespaceDomain>,
             public TSharedFromThis<FCreateNamespaceTask>
@@ -122,6 +124,30 @@ namespace Gs2::Distributor::Domain
             TFunction<void()> Callback
         );
 
+        class FCollectNamespacesTask;
+
+        Gs2::Core::Domain::CallbackID SubscribeNamespaces(
+            TFunction<void(TArray<Gs2::Distributor::Model::FNamespacePtr>)> Callback,const TOptional<FString> NamePrefix = TOptional<FString>()
+        );
+
+        void InvalidateNamespaces(const TOptional<FString> NamePrefix = TOptional<FString>());
+
+        class GS2DISTRIBUTOR_API FSubscribeNamespacesWithInitialCallTask final :
+            public Gs2::Core::Util::TGs2Future<Gs2::Core::Domain::CallbackID>,
+            public TSharedFromThis<FSubscribeNamespacesWithInitialCallTask>
+        {
+            const TSharedPtr<FGs2DistributorDomain> Self;
+            const TFunction<void(TArray<Gs2::Distributor::Model::FNamespacePtr>)> Callback;
+        const TOptional<FString> QueryNamePrefix;
+        public:
+            FSubscribeNamespacesWithInitialCallTask(const TSharedPtr<FGs2DistributorDomain>& Self, TFunction<void(TArray<Gs2::Distributor::Model::FNamespacePtr>)> Callback,const TOptional<FString> NamePrefix);
+            FSubscribeNamespacesWithInitialCallTask(const FSubscribeNamespacesWithInitialCallTask& From);
+            virtual Gs2::Core::Model::FGs2ErrorPtr Action(TSharedPtr<TSharedPtr<Gs2::Core::Domain::CallbackID>> Result) override;
+        };
+
+        TSharedPtr<FAsyncTask<FSubscribeNamespacesWithInitialCallTask>> SubscribeNamespacesWithInitialCall(
+            TFunction<void(TArray<Gs2::Distributor::Model::FNamespacePtr>)> Callback,const TOptional<FString> NamePrefix = TOptional<FString>()
+        );
         void UnsubscribeNamespaces(
             Gs2::Core::Domain::CallbackID CallbackID
         );
@@ -133,19 +159,22 @@ namespace Gs2::Distributor::Domain
         void UpdateCacheFromStampSheet(
             const FString Method,
             const FString Request,
-            const FString Result
+            const FString Result,
+            const TOptional<int32> TimeOffset = TOptional<int32>()
         );
 
         void UpdateCacheFromStampTask(
             const FString Method,
             const FString Request,
-            const FString Result
+            const FString Result,
+            const TOptional<int32> TimeOffset = TOptional<int32>()
         );
 
         void UpdateCacheFromJobResult(
             const FString Method,
             const Gs2::JobQueue::Model::FJobPtr Job,
-            const Gs2::JobQueue::Model::FJobResultBodyPtr Result
+            const Gs2::JobQueue::Model::FJobResultBodyPtr Result,
+            const TOptional<int32> TimeOffset = TOptional<int32>()
         );
         FAutoRunStampSheetNotificationEvent& OnAutoRunStampSheetNotification();
         FAutoRunTransactionNotificationEvent& OnAutoRunTransactionNotification();

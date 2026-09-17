@@ -129,18 +129,27 @@ namespace Gs2::Lottery::Domain::Model
         TSharedPtr<TSharedPtr<Gs2::Lottery::Model::FProbability>> Result
     )
     {
-        // ReSharper disable once CppLocalVariableMayBeConst
-        TSharedPtr<Gs2::Lottery::Model::FProbability> Value;
-        auto bCacheHit = Self->Gs2->Cache->TryGet<Gs2::Lottery::Model::FProbability>(
-            Self->ParentKey,
-            Gs2::Lottery::Domain::Model::FProbabilityDomain::CreateCacheKey(
-                Self->PrizeId
-            ),
-            &Value
+        const FString CacheKey = Gs2::Lottery::Domain::Model::FProbabilityDomain::CreateCacheKey(
+            Self->PrizeId
         );
-        *Result = Value;
+        return Self->Gs2->Cache->ExecuteWithKeyLock(
+            Gs2::Lottery::Model::FProbability::TypeName,
+            Self->ParentKey,
+            CacheKey,
+            [this, Result, CacheKey]() -> Gs2::Core::Model::FGs2ErrorPtr
+            {
+                // ReSharper disable once CppLocalVariableMayBeConst
+                TSharedPtr<Gs2::Lottery::Model::FProbability> Value;
+                auto bCacheHit = Self->Gs2->Cache->TryGet<Gs2::Lottery::Model::FProbability>(
+                    Self->ParentKey,
+                    CacheKey,
+                    &Value
+                );
+                *Result = Value;
 
-        return nullptr;
+                return nullptr;
+            }
+        );
     }
 
     TSharedPtr<FAsyncTask<FProbabilityDomain::FModelTask>> FProbabilityDomain::Model() {

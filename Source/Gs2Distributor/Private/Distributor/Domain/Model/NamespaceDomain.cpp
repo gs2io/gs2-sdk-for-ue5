@@ -38,6 +38,8 @@
 #include "Distributor/Domain/Model/TransactionResult.h"
 #include "Distributor/Domain/Model/TransactionResultAccessToken.h"
 
+#include "Distributor/Model/Cache/DistributorModelMaster.h"
+#include "Distributor/Model/Cache/DistributorModel.h"
 #include "Core/Domain/Gs2.h"
 #include "Core/Domain/Transaction/JobQueueJobDomainFactory.h"
 #include "Core/Domain/Transaction/InternalTransactionDomainFactory.h"
@@ -420,26 +422,110 @@ namespace Gs2::Distributor::Domain::Model
     {
         return Gs2->Cache->ListSubscribe(
             Gs2::Distributor::Model::FDistributorModel::TypeName,
-            Gs2::Distributor::Domain::Model::FNamespaceDomain::CreateCacheParentKey(
+            Gs2::Distributor::Model::Cache::FDistributorModelCache::CreateCacheParentKey(
                 NamespaceName,
-                "DistributorModel"
+                TOptional<int32>()
             ),
+            Callback,
             Callback
         );
     }
-
     void FNamespaceDomain::UnsubscribeDistributorModels(
         Gs2::Core::Domain::CallbackID CallbackID
     )
     {
         Gs2->Cache->ListUnsubscribe(
             Gs2::Distributor::Model::FDistributorModel::TypeName,
-            Gs2::Distributor::Domain::Model::FNamespaceDomain::CreateCacheParentKey(
+            Gs2::Distributor::Model::Cache::FDistributorModelCache::CreateCacheParentKey(
                 NamespaceName,
-                "DistributorModel"
+                TOptional<int32>()
             ),
             CallbackID
         );
+    }
+    class FNamespaceDomain::FCollectDistributorModelsTask : public Gs2::Core::Util::TGs2Future<TArray<Gs2::Distributor::Model::FDistributorModelPtr>>, public TSharedFromThis<FCollectDistributorModelsTask>
+    {
+        const TSharedPtr<FNamespaceDomain> Self;
+        const TFunction<void(TArray<Gs2::Distributor::Model::FDistributorModelPtr>)> OnCollected;
+
+    public:
+        explicit FCollectDistributorModelsTask(const TSharedPtr<FNamespaceDomain>& Self, TFunction<void(TArray<Gs2::Distributor::Model::FDistributorModelPtr>)> OnCollected) : Self(Self), OnCollected(OnCollected) {}
+        FCollectDistributorModelsTask(const FCollectDistributorModelsTask& From) : TGs2Future(From), Self(From.Self), OnCollected(From.OnCollected) {}
+        virtual Gs2::Core::Model::FGs2ErrorPtr Action(TSharedPtr<TSharedPtr<TArray<Gs2::Distributor::Model::FDistributorModelPtr>>> Result) override
+        {
+            TArray<Gs2::Distributor::Model::FDistributorModelPtr> Items;
+            auto Iterator = Self->DistributorModels()->begin();
+            while (Iterator.HasNext())
+            {
+                if (Iterator.IsError()) return Iterator.Error();
+                if (Iterator.IsCurrentValid()) Items.Add(Iterator.Current());
+                ++Iterator;
+            }
+            if (Iterator.IsError()) return Iterator.Error();
+            *Result = MakeShared<TArray<Gs2::Distributor::Model::FDistributorModelPtr>>(Items);
+            if (OnCollected) OnCollected(Items);
+            return nullptr;
+        }
+    };
+
+    Gs2::Core::Domain::CallbackID FNamespaceDomain::SubscribeDistributorModels(
+        TFunction<void(TArray<Gs2::Distributor::Model::FDistributorModelPtr>)> Callback
+    )
+    {
+        const TWeakPtr<Gs2::Core::Domain::FGs2> WeakGs2 = this->Gs2;
+        const TWeakPtr<Distributor::Domain::FGs2DistributorDomain> WeakService = this->Service;
+        const auto QueryNamespaceName = NamespaceName;
+        const auto Parent = Gs2::Distributor::Model::Cache::FDistributorModelCache::CreateCacheParentKey(
+        NamespaceName,
+        TOptional<int32>()
+    );
+        return Gs2->Cache->ListSubscribeTyped(
+            Gs2::Distributor::Model::FDistributorModel::TypeName,
+            Parent,
+            [Callback, WeakGs2](const TArray<FGs2ObjectPtr>& Values)
+            {
+                if (!WeakGs2.Pin().IsValid()) return;
+                TArray<Gs2::Distributor::Model::FDistributorModelPtr> TypedValues;
+                for (const auto& Value : Values) if (Value.IsValid()) TypedValues.Add(StaticCastSharedPtr<Gs2::Distributor::Model::FDistributorModel>(Value));
+                Callback(TypedValues);
+            },
+            [WeakGs2, WeakService, Callback, QueryNamespaceName]()
+            {
+                const auto Owner = WeakGs2.Pin();
+                if (!Owner.IsValid()) return;
+                const auto Domain = MakeShared<FNamespaceDomain>(Owner, WeakService.Pin(), QueryNamespaceName);
+                const auto Task = Gs2::Core::Util::New<FAsyncTask<FCollectDistributorModelsTask>>(Domain, Callback);
+                Task->StartBackgroundTask();
+            }
+        );
+    }
+
+    void FNamespaceDomain::InvalidateDistributorModels()
+    {
+        Gs2->Cache->ClearListCache(
+            Gs2::Distributor::Model::FDistributorModel::TypeName,
+            Gs2::Distributor::Model::Cache::FDistributorModelCache::CreateCacheParentKey(
+        NamespaceName,
+        TOptional<int32>()
+    )
+        );
+    }
+
+    FNamespaceDomain::FSubscribeDistributorModelsWithInitialCallTask::FSubscribeDistributorModelsWithInitialCallTask(const TSharedPtr<FNamespaceDomain>& Self, TFunction<void(TArray<Gs2::Distributor::Model::FDistributorModelPtr>)> Callback) : Self(Self), Callback(Callback) {}
+    FNamespaceDomain::FSubscribeDistributorModelsWithInitialCallTask::FSubscribeDistributorModelsWithInitialCallTask(const FSubscribeDistributorModelsWithInitialCallTask& From) : TGs2Future(From), Self(From.Self), Callback(From.Callback) {}
+    Gs2::Core::Model::FGs2ErrorPtr FNamespaceDomain::FSubscribeDistributorModelsWithInitialCallTask::Action(TSharedPtr<TSharedPtr<Gs2::Core::Domain::CallbackID>> Result)
+    {
+        const auto Task = Gs2::Core::Util::New<FAsyncTask<FCollectDistributorModelsTask>>(Self, TFunction<void(TArray<Gs2::Distributor::Model::FDistributorModelPtr>)>());
+        Task->StartSynchronousTask(); Task->EnsureCompletion();
+        if (Task->GetTask().IsError()) return Task->GetTask().Error();
+        const auto Values = Task->GetTask().Result();
+        const auto CallbackId = Self->SubscribeDistributorModels(Callback);
+        Callback(*Values); *Result = MakeShared<Gs2::Core::Domain::CallbackID>(CallbackId);
+        return nullptr;
+    }
+    TSharedPtr<FAsyncTask<FNamespaceDomain::FSubscribeDistributorModelsWithInitialCallTask>> FNamespaceDomain::SubscribeDistributorModelsWithInitialCall(TFunction<void(TArray<Gs2::Distributor::Model::FDistributorModelPtr>)> Callback)
+    {
+        return Gs2::Core::Util::New<FAsyncTask<FSubscribeDistributorModelsWithInitialCallTask>>(this->AsShared(), Callback);
     }
 
     TSharedPtr<Gs2::Distributor::Domain::Model::FDistributorModelDomain> FNamespaceDomain::DistributorModel(
@@ -482,26 +568,111 @@ namespace Gs2::Distributor::Domain::Model
     {
         return Gs2->Cache->ListSubscribe(
             Gs2::Distributor::Model::FDistributorModelMaster::TypeName,
-            Gs2::Distributor::Domain::Model::FNamespaceDomain::CreateCacheParentKey(
+            Gs2::Distributor::Model::Cache::FDistributorModelMasterCache::CreateCacheParentKey(
                 NamespaceName,
-                "DistributorModelMaster"
+                TOptional<int32>()
             ),
+            Callback,
             Callback
         );
     }
-
     void FNamespaceDomain::UnsubscribeDistributorModelMasters(
         Gs2::Core::Domain::CallbackID CallbackID
     )
     {
         Gs2->Cache->ListUnsubscribe(
             Gs2::Distributor::Model::FDistributorModelMaster::TypeName,
-            Gs2::Distributor::Domain::Model::FNamespaceDomain::CreateCacheParentKey(
+            Gs2::Distributor::Model::Cache::FDistributorModelMasterCache::CreateCacheParentKey(
                 NamespaceName,
-                "DistributorModelMaster"
+                TOptional<int32>()
             ),
             CallbackID
         );
+    }
+    class FNamespaceDomain::FCollectDistributorModelMastersTask : public Gs2::Core::Util::TGs2Future<TArray<Gs2::Distributor::Model::FDistributorModelMasterPtr>>, public TSharedFromThis<FCollectDistributorModelMastersTask>
+    {
+        const TSharedPtr<FNamespaceDomain> Self;
+        const TFunction<void(TArray<Gs2::Distributor::Model::FDistributorModelMasterPtr>)> OnCollected;
+    const TOptional<FString> QueryNamePrefix;
+    public:
+        explicit FCollectDistributorModelMastersTask(const TSharedPtr<FNamespaceDomain>& Self, TFunction<void(TArray<Gs2::Distributor::Model::FDistributorModelMasterPtr>)> OnCollected,const TOptional<FString> NamePrefix) : Self(Self), OnCollected(OnCollected), QueryNamePrefix(NamePrefix) {}
+        FCollectDistributorModelMastersTask(const FCollectDistributorModelMastersTask& From) : TGs2Future(From), Self(From.Self), OnCollected(From.OnCollected), QueryNamePrefix(From.QueryNamePrefix) {}
+        virtual Gs2::Core::Model::FGs2ErrorPtr Action(TSharedPtr<TSharedPtr<TArray<Gs2::Distributor::Model::FDistributorModelMasterPtr>>> Result) override
+        {
+            TArray<Gs2::Distributor::Model::FDistributorModelMasterPtr> Items;
+            auto Iterator = Self->DistributorModelMasters(QueryNamePrefix)->begin();
+            while (Iterator.HasNext())
+            {
+                if (Iterator.IsError()) return Iterator.Error();
+                if (Iterator.IsCurrentValid()) Items.Add(Iterator.Current());
+                ++Iterator;
+            }
+            if (Iterator.IsError()) return Iterator.Error();
+            *Result = MakeShared<TArray<Gs2::Distributor::Model::FDistributorModelMasterPtr>>(Items);
+            if (OnCollected) OnCollected(Items);
+            return nullptr;
+        }
+    };
+
+    Gs2::Core::Domain::CallbackID FNamespaceDomain::SubscribeDistributorModelMasters(
+        TFunction<void(TArray<Gs2::Distributor::Model::FDistributorModelMasterPtr>)> Callback,const TOptional<FString> NamePrefix
+    )
+    {
+        const TWeakPtr<Gs2::Core::Domain::FGs2> WeakGs2 = this->Gs2;
+        const TWeakPtr<Distributor::Domain::FGs2DistributorDomain> WeakService = this->Service;
+        const auto QueryNamespaceName = NamespaceName;
+        const auto QueryNamePrefix = NamePrefix;
+        const auto Parent = Gs2::Distributor::Model::Cache::FDistributorModelMasterCache::CreateCacheParentKey(
+        NamespaceName,
+        TOptional<int32>()
+    );
+        return Gs2->Cache->ListSubscribeTyped(
+            Gs2::Distributor::Model::FDistributorModelMaster::TypeName,
+            Parent,
+            [Callback, WeakGs2](const TArray<FGs2ObjectPtr>& Values)
+            {
+                if (!WeakGs2.Pin().IsValid()) return;
+                TArray<Gs2::Distributor::Model::FDistributorModelMasterPtr> TypedValues;
+                for (const auto& Value : Values) if (Value.IsValid()) TypedValues.Add(StaticCastSharedPtr<Gs2::Distributor::Model::FDistributorModelMaster>(Value));
+                Callback(TypedValues);
+            },
+            [WeakGs2, WeakService, Callback, QueryNamespaceName, QueryNamePrefix]()
+            {
+                const auto Owner = WeakGs2.Pin();
+                if (!Owner.IsValid()) return;
+                const auto Domain = MakeShared<FNamespaceDomain>(Owner, WeakService.Pin(), QueryNamespaceName);
+                const auto Task = Gs2::Core::Util::New<FAsyncTask<FCollectDistributorModelMastersTask>>(Domain, Callback, QueryNamePrefix);
+                Task->StartBackgroundTask();
+            }
+        );
+    }
+
+    void FNamespaceDomain::InvalidateDistributorModelMasters(const TOptional<FString> NamePrefix)
+    {
+        Gs2->Cache->ClearListCache(
+            Gs2::Distributor::Model::FDistributorModelMaster::TypeName,
+            Gs2::Distributor::Model::Cache::FDistributorModelMasterCache::CreateCacheParentKey(
+        NamespaceName,
+        TOptional<int32>()
+    )
+        );
+    }
+
+    FNamespaceDomain::FSubscribeDistributorModelMastersWithInitialCallTask::FSubscribeDistributorModelMastersWithInitialCallTask(const TSharedPtr<FNamespaceDomain>& Self, TFunction<void(TArray<Gs2::Distributor::Model::FDistributorModelMasterPtr>)> Callback,const TOptional<FString> NamePrefix) : Self(Self), Callback(Callback), QueryNamePrefix(NamePrefix) {}
+    FNamespaceDomain::FSubscribeDistributorModelMastersWithInitialCallTask::FSubscribeDistributorModelMastersWithInitialCallTask(const FSubscribeDistributorModelMastersWithInitialCallTask& From) : TGs2Future(From), Self(From.Self), Callback(From.Callback), QueryNamePrefix(From.QueryNamePrefix) {}
+    Gs2::Core::Model::FGs2ErrorPtr FNamespaceDomain::FSubscribeDistributorModelMastersWithInitialCallTask::Action(TSharedPtr<TSharedPtr<Gs2::Core::Domain::CallbackID>> Result)
+    {
+        const auto Task = Gs2::Core::Util::New<FAsyncTask<FCollectDistributorModelMastersTask>>(Self, TFunction<void(TArray<Gs2::Distributor::Model::FDistributorModelMasterPtr>)>(), QueryNamePrefix);
+        Task->StartSynchronousTask(); Task->EnsureCompletion();
+        if (Task->GetTask().IsError()) return Task->GetTask().Error();
+        const auto Values = Task->GetTask().Result();
+        const auto CallbackId = Self->SubscribeDistributorModelMasters(Callback, QueryNamePrefix);
+        Callback(*Values); *Result = MakeShared<Gs2::Core::Domain::CallbackID>(CallbackId);
+        return nullptr;
+    }
+    TSharedPtr<FAsyncTask<FNamespaceDomain::FSubscribeDistributorModelMastersWithInitialCallTask>> FNamespaceDomain::SubscribeDistributorModelMastersWithInitialCall(TFunction<void(TArray<Gs2::Distributor::Model::FDistributorModelMasterPtr>)> Callback,const TOptional<FString> NamePrefix)
+    {
+        return Gs2::Core::Util::New<FAsyncTask<FSubscribeDistributorModelMastersWithInitialCallTask>>(this->AsShared(), Callback, NamePrefix);
     }
 
     TSharedPtr<Gs2::Distributor::Domain::Model::FDistributorModelMasterDomain> FNamespaceDomain::DistributorModelMaster(
@@ -587,62 +758,79 @@ namespace Gs2::Distributor::Domain::Model
     )
     {
         const auto ParentKey = FString("distributor:Namespace");
-        // ReSharper disable once CppLocalVariableMayBeConst
-        TSharedPtr<Gs2::Distributor::Model::FNamespace> Value;
-        auto bCacheHit = Self->Gs2->Cache->TryGet<Gs2::Distributor::Model::FNamespace>(
-            ParentKey,
-            Gs2::Distributor::Domain::Model::FNamespaceDomain::CreateCacheKey(
-                Self->NamespaceName
-            ),
-            &Value
+        const FString CacheKey = Gs2::Distributor::Domain::Model::FNamespaceDomain::CreateCacheKey(
+            Self->NamespaceName
         );
-        if (!bCacheHit) {
-            const auto Future = Self->Get(
-                MakeShared<Gs2::Distributor::Request::FGetNamespaceRequest>()
-            );
-            Future->StartSynchronousTask();
-            if (Future->GetTask().IsError())
+        return Self->Gs2->Cache->ExecuteWithKeyLock(
+            Gs2::Distributor::Model::FNamespace::TypeName,
+            ParentKey,
+            CacheKey,
+            [this, Result, CacheKey, ParentKey]() -> Gs2::Core::Model::FGs2ErrorPtr
             {
-                if (Future->GetTask().Error()->Type() != Gs2::Core::Model::FNotFoundError::TypeString)
-                {
-                    return Future->GetTask().Error();
-                }
-
-                const auto Key = Gs2::Distributor::Domain::Model::FNamespaceDomain::CreateCacheKey(
-                    Self->NamespaceName
-                );
-                Self->Gs2->Cache->Put(
-                    Gs2::Distributor::Model::FNamespace::TypeName,
+                // ReSharper disable once CppLocalVariableMayBeConst
+                TSharedPtr<Gs2::Distributor::Model::FNamespace> Value;
+                auto bCacheHit = Self->Gs2->Cache->TryGet<Gs2::Distributor::Model::FNamespace>(
                     ParentKey,
-                    Key,
-                    nullptr,
-                    FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
+                    CacheKey,
+                    &Value
                 );
+                if (!bCacheHit) {
+                    const auto Future = Self->Get(
+                        MakeShared<Gs2::Distributor::Request::FGetNamespaceRequest>()
+                    );
+                    Future->StartSynchronousTask();
+                    if (Future->GetTask().IsError())
+                    {
+                        const auto Error = Future->GetTask().Error();
+                        if (!Error.IsValid() || Error->Type() != Gs2::Core::Model::FNotFoundError::TypeString)
+                        {
+                            return Error;
+                        }
+                        Self->Gs2->Cache->Put(
+                            Gs2::Distributor::Model::FNamespace::TypeName,
+                            ParentKey,
+                            CacheKey,
+                            nullptr,
+                            FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
+                        );
 
-                if (Future->GetTask().Error()->Detail(0)->GetComponent() != "namespace")
-                {
-                    return Future->GetTask().Error();
+                        if (!Error->GetErrors().IsValid() || Error->Count() == 0 || !Error->Detail(0).IsValid() || Error->Detail(0)->GetComponent() != "namespace")
+                        {
+                            return Error;
+                        }
+                    }
+                    else
+                    {
+                        Value = Future->GetTask().Result();
+                    }
+                    Future->EnsureCompletion();
                 }
-            }
-            else
-            {
-                Value = Future->GetTask().Result();
-                if (Value.IsValid())
+                if (!bCacheHit)
                 {
-                    Self->Gs2->Cache->Put(
+                    FGs2ObjectPtr ExistingObject;
+                    const bool Existing = Self->Gs2->Cache->TryGet(
                         Gs2::Distributor::Model::FNamespace::TypeName,
                         ParentKey,
-                        FNamespaceDomain::CreateCacheKey(Self->NamespaceName),
-                        Value,
-                        FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
+                        CacheKey,
+                        &ExistingObject
                     );
+                    if (!Existing || ExistingObject != Value)
+                    {
+                        Self->Gs2->Cache->Put(
+                            Gs2::Distributor::Model::FNamespace::TypeName,
+                            ParentKey,
+                            CacheKey,
+                            Value,
+                            FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
+                        );
+                    }
                 }
-            }
-            Future->EnsureCompletion();
-        }
-        *Result = Value;
 
-        return nullptr;
+                *Result = Value;
+
+                return nullptr;
+            }
+        );
     }
 
     TSharedPtr<FAsyncTask<FNamespaceDomain::FModelTask>> FNamespaceDomain::Model() {
@@ -653,6 +841,11 @@ namespace Gs2::Distributor::Domain::Model
         TFunction<void(Gs2::Distributor::Model::FNamespacePtr)> Callback
     )
     {
+        const TWeakPtr<Gs2::Core::Domain::FGs2> WeakGs2 = Gs2;
+        const TWeakPtr<Distributor::Domain::FGs2DistributorDomain> WeakService = Service;
+        const FString RegisteredParentKey = ParentKey;
+        const TOptional<FString> QueryNamespaceName = NamespaceName;
+
         return Gs2->Cache->Subscribe(
             Gs2::Distributor::Model::FNamespace::TypeName,
             ParentKey,
@@ -662,6 +855,22 @@ namespace Gs2::Distributor::Domain::Model
             [Callback](TSharedPtr<FGs2Object> obj)
             {
                 Callback(StaticCastSharedPtr<Gs2::Distributor::Model::FNamespace>(obj));
+            },
+            [WeakGs2, WeakService, RegisteredParentKey, QueryNamespaceName]()
+            {
+                const auto Owner = WeakGs2.Pin();
+                if (!Owner.IsValid())
+                {
+                    return;
+                }
+                const auto Domain = MakeShared<FNamespaceDomain>(
+                    Owner,
+                    WeakService.Pin(),
+                    QueryNamespaceName
+                );
+                Domain->ParentKey = RegisteredParentKey;
+                const auto Task = Domain->Model();
+                Task->StartBackgroundTask();
             }
         );
     }

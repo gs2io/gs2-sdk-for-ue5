@@ -19,6 +19,7 @@
 #include "CoreMinimal.h"
 #include "Core/Gs2Object.h"
 #include "TransactionSetting.h"
+#include "TransactionSettingV2.h"
 #include "ScriptSetting.h"
 #include "NotificationSetting.h"
 #include "LogSetting.h"
@@ -31,6 +32,7 @@ namespace Gs2::Matchmaking::Model
         TOptional<FString> NameValue;
         TOptional<FString> DescriptionValue;
         TSharedPtr<FTransactionSetting> TransactionSettingValue;
+        TSharedPtr<FTransactionSettingV2> TransactionSettingV2Value;
         TOptional<bool> EnableRatingValue;
         TOptional<FString> EnableDisconnectDetectionValue;
         TOptional<int32> DisconnectDetectionTimeoutSecondsValue;
@@ -64,6 +66,7 @@ namespace Gs2::Matchmaking::Model
         TSharedPtr<FNamespace> WithName(const TOptional<FString> Name);
         TSharedPtr<FNamespace> WithDescription(const TOptional<FString> Description);
         TSharedPtr<FNamespace> WithTransactionSetting(const TSharedPtr<FTransactionSetting> TransactionSetting);
+        TSharedPtr<FNamespace> WithTransactionSettingV2(const TSharedPtr<FTransactionSettingV2> TransactionSettingV2);
         TSharedPtr<FNamespace> WithEnableRating(const TOptional<bool> EnableRating);
         TSharedPtr<FNamespace> WithEnableDisconnectDetection(const TOptional<FString> EnableDisconnectDetection);
         TSharedPtr<FNamespace> WithDisconnectDetectionTimeoutSeconds(const TOptional<int32> DisconnectDetectionTimeoutSeconds);
@@ -90,6 +93,7 @@ namespace Gs2::Matchmaking::Model
         TOptional<FString> GetName() const;
         TOptional<FString> GetDescription() const;
         TSharedPtr<FTransactionSetting> GetTransactionSetting() const;
+        TSharedPtr<FTransactionSettingV2> GetTransactionSettingV2() const;
         TOptional<bool> GetEnableRating() const;
         FString GetEnableRatingString() const;
         TOptional<FString> GetEnableDisconnectDetection() const;

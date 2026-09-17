@@ -130,6 +130,8 @@ namespace Gs2::Inventory::Domain::Model
             const FReferenceOfAccessTokenDomain& From
         );
 
+
+
         class GS2INVENTORY_API FGetTask final :
             public Gs2::Core::Util::TGs2Future<FString>,
             public TSharedFromThis<FGetTask>
@@ -156,6 +158,8 @@ namespace Gs2::Inventory::Domain::Model
             Request::FGetReferenceOfRequestPtr Request
         );
 
+
+
         class GS2INVENTORY_API FVerifyTask final :
             public Gs2::Core::Util::TGs2Future<FReferenceOfAccessTokenDomain>,
             public TSharedFromThis<FVerifyTask>
@@ -181,6 +185,8 @@ namespace Gs2::Inventory::Domain::Model
         TSharedPtr<FAsyncTask<FVerifyTask>> Verify(
             Request::FVerifyReferenceOfRequestPtr Request
         );
+
+
 
         class GS2INVENTORY_API FDeleteTask final :
             public Gs2::Core::Util::TGs2Future<FReferenceOfAccessTokenDomain>,

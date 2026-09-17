@@ -27,9 +27,29 @@
 #include "Exchange/Domain/SpeculativeExecutor/Transaction/ExchangeByUserIdSpeculativeExecutor.h"
 
 #include "Core/Domain/Gs2.h"
+#include "Auth/Model/AccessToken.h"
+#include "Core/Domain/SpeculativeExecutor/ActionConfig.h"
+#include "Core/Domain/Model/IssueTransactionEvent.h"
+#include "Core/Domain/SpeculativeExecutor/PreparedSpeculativeCommit.h"
+#include "Exchange/Model/Cache/RateModel.h"
+#include "Exchange/Model/RateModel.h"
+#include "Serialization/JsonSerializer.h"
+#include "Serialization/JsonWriter.h"
 
 namespace Gs2::Exchange::Domain::Transaction::SpeculativeExecutor
 {
+    namespace
+    {
+        FString SerializeExchangeSnapshot(const TSharedPtr<FJsonObject>& Object)
+        {
+            if (!Object.IsValid()) return FString();
+            FString Body;
+            const TSharedRef<TJsonWriter<TCHAR>> Writer = TJsonWriterFactory<TCHAR>::Create(&Body);
+            FJsonSerializer::Serialize(Object.ToSharedRef(), Writer);
+            return Body;
+        }
+    }
+
     FString FExchangeByUserIdSpeculativeExecutor::Action() {
         return "Gs2Exchange:ExchangeByUserId";
     }
@@ -58,35 +78,136 @@ namespace Gs2::Exchange::Domain::Transaction::SpeculativeExecutor
     }
 
     Gs2::Core::Model::FGs2ErrorPtr FExchangeByUserIdSpeculativeExecutor::FCommitTask::Action(
-        TSharedPtr<TSharedPtr<TFunction<void()>>> Result)
+        TSharedPtr<TSharedPtr<Gs2::Core::Domain::SpeculativeExecutor::FPreparedSpeculativeCommit>> Result)
     {
-        const auto Future = Domain->Exchange->Namespace(
-                Request->GetNamespaceName().IsSet() ? *Request->GetNamespaceName() : ""
-            )->RateModel(
-                Request->GetRateName().IsSet() ? *Request->GetRateName() : ""
-            )->Model();
-        Future->StartSynchronousTask();
-        if (Future->GetTask().IsError())
+        if (!Result.IsValid() || !Domain.IsValid() || !Domain->RestSession.IsValid() ||
+            !AccessToken.IsValid() || !Request.IsValid())
         {
-            return Future->GetTask().Error();
+            if (Result.IsValid()) *Result = nullptr;
+            return nullptr;
         }
-        const auto Item = Future->GetTask().Result();
-
-        if (!Item.IsValid())
+        const auto PreparedAccessToken = MakeShared<Gs2::Auth::Model::FAccessToken>(*AccessToken);
+        const auto PreparedRequest = Gs2::Exchange::Request::FExchangeByUserIdRequest::FromJson(Request->ToJson());
+        if (!PreparedRequest.IsValid() || !PreparedAccessToken->GetUserId().IsSet() ||
+            PreparedAccessToken->GetUserId()->IsEmpty())
         {
-            *Result = MakeShared<TFunction<void()>>([]{});
+            *Result = nullptr;
+            return nullptr;
+        }
+        if (PreparedRequest->GetUserId().IsSet() && *PreparedRequest->GetUserId() == TEXT("#{userId}"))
+        {
+            PreparedRequest->WithUserId(PreparedAccessToken->GetUserId());
+        }
+        if (!PreparedRequest->GetUserId().IsSet() ||
+            *PreparedRequest->GetUserId() != *PreparedAccessToken->GetUserId() ||
+            !PreparedRequest->GetCount().IsSet())
+        {
+            *Result = nullptr;
+            return nullptr;
+        }
+        const auto NamespaceName = PreparedRequest->GetNamespaceName();
+        const auto RateName = PreparedRequest->GetRateName();
+        Gs2::Exchange::Model::FRateModelPtr RateModel;
+        const bool RateFound = Gs2::Exchange::Model::Cache::FRateModelCache::TryGet(
+            Domain->Cache, NamespaceName, RateName, TOptional<int32>(), &RateModel);
+        const FString ExpectedRateId = FString::Printf(
+            TEXT("grn:gs2:%s:%s:exchange:%s:model:%s"),
+            *Domain->RestSession->RegionName(), *Domain->RestSession->OwnerId(),
+            *NamespaceName.Get(FString()), *RateName.Get(FString()));
+        if (!RateFound || !RateModel.IsValid() || !RateModel->GetRateModelId().IsSet() ||
+            *RateModel->GetRateModelId() != ExpectedRateId || !RateModel->GetName().IsSet() ||
+            *RateModel->GetName() != *RateName.Get(FString()) || !RateModel->GetTimingType().IsSet() ||
+            (*RateModel->GetTimingType() != TEXT("immediate") &&
+             *RateModel->GetTimingType() != TEXT("await")))
+        {
+            *Result = nullptr;
             return nullptr;
         }
 
-        Service->OnIssueTransaction.Broadcast(
-            MakeShared<Gs2::Core::Domain::Model::FIssueTransactionEvent>(
-                AccessToken,
-                Item->GetConsumeActions(),
-                Item->GetAcquireActions(),
-                Request->GetCount().IsSet() ? *Request->GetCount() : 1.0
-            )
-        );
-
+        const auto ConsumeActions = MakeShared<TArray<Gs2::Core::Model::FConsumeActionPtr>>();
+        const auto AcquireActions = MakeShared<TArray<Gs2::Core::Model::FAcquireActionPtr>>();
+        if (const auto Sources = RateModel->GetConsumeActions(); Sources.IsValid())
+        {
+            for (const auto& SourceAction : *Sources)
+            {
+                Gs2::Core::Model::FConsumeActionPtr Action;
+                if (SourceAction.IsValid()) Action = MakeShared<Gs2::Core::Model::FConsumeAction>(*SourceAction);
+                Action = Gs2::Core::Domain::SpeculativeExecutor::ApplyConfig(
+                    Gs2::Core::Model::FConsumeActionPtr(Action),
+                    TOptional<FString>(TEXT("userId")),
+                    TOptional<FString>(PreparedAccessToken->GetUserId()));
+                if (const auto Config = PreparedRequest->GetConfig(); Config.IsValid())
+                {
+                    for (const auto& Entry : *Config)
+                    {
+                        if (Entry.IsValid() && Entry->GetValue().IsSet())
+                        {
+                            Action = Gs2::Core::Domain::SpeculativeExecutor::ApplyConfig(
+                                Gs2::Core::Model::FConsumeActionPtr(Action),
+                                TOptional<FString>(Entry->GetKey()), TOptional<FString>(Entry->GetValue()));
+                        }
+                    }
+                }
+                if (Action.IsValid()) ConsumeActions->Add(Action);
+            }
+        }
+        if (*RateModel->GetTimingType() != TEXT("await"))
+        {
+            if (const auto Sources = RateModel->GetAcquireActions(); Sources.IsValid())
+            {
+                for (const auto& SourceAction : *Sources)
+                {
+                    if (!SourceAction.IsValid() || (SourceAction->GetAction().IsSet() &&
+                        *SourceAction->GetAction() == FExchangeByUserIdSpeculativeExecutor::Action())) continue;
+                    Gs2::Core::Model::FAcquireActionPtr Action =
+                        MakeShared<Gs2::Core::Model::FAcquireAction>(*SourceAction);
+                    Action = Gs2::Core::Domain::SpeculativeExecutor::ApplyConfig(
+                        Gs2::Core::Model::FAcquireActionPtr(Action),
+                        TOptional<FString>(TEXT("userId")),
+                        TOptional<FString>(PreparedAccessToken->GetUserId()));
+                    if (const auto Config = PreparedRequest->GetConfig(); Config.IsValid())
+                    {
+                        for (const auto& Entry : *Config)
+                        {
+                            if (Entry.IsValid() && Entry->GetValue().IsSet())
+                            {
+                                Action = Gs2::Core::Domain::SpeculativeExecutor::ApplyConfig(
+                                    Gs2::Core::Model::FAcquireActionPtr(Action),
+                                    TOptional<FString>(Entry->GetKey()), TOptional<FString>(Entry->GetValue()));
+                            }
+                        }
+                    }
+                    if (Action.IsValid()) AcquireActions->Add(Action);
+                }
+            }
+        }
+        if (ConsumeActions->Num() == 0 && AcquireActions->Num() == 0)
+        {
+            *Result = nullptr;
+            return nullptr;
+        }
+        const auto Event = MakeShared<Gs2::Core::Domain::Model::FIssueTransactionEvent>(
+            PreparedAccessToken, ConsumeActions, AcquireActions,
+            TBigInt<1024, false>(PreparedRequest->GetCount().GetValue()));
+        Service->OnIssueTransaction.Broadcast(Event);
+        if (Event->GetError().IsValid()) return Event->GetError();
+        const auto Commit = Event->GetCommit();
+        if (!Commit.IsValid())
+        {
+            *Result = nullptr;
+            return nullptr;
+        }
+        const FString Snapshot = SerializeExchangeSnapshot(RateModel->ToJson());
+        const auto PreparedCommit = Gs2::Core::Domain::SpeculativeExecutor::FPreparedSpeculativeCommit::WrapLegacy(Commit);
+        *Result = Gs2::Core::Domain::SpeculativeExecutor::FPreparedSpeculativeCommit::CreateGuarded(
+            MakeShared<TFunction<void()>>([PreparedCommit]() { PreparedCommit->InvokeLegacy(); }),
+            [DomainCopy = Domain, NamespaceName, RateName, Snapshot]()
+            {
+                Gs2::Exchange::Model::FRateModelPtr Live;
+                const bool Found = Gs2::Exchange::Model::Cache::FRateModelCache::TryGet(
+                    DomainCopy->Cache, NamespaceName, RateName, TOptional<int32>(), &Live);
+                return Found && Live.IsValid() && SerializeExchangeSnapshot(Live->ToJson()) == Snapshot;
+            });
         return nullptr;
     }
 

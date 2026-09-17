@@ -75,7 +75,8 @@ namespace Gs2::UE5::SkillTree::Domain::Model
         );
     }
 
-    void FEzNamespaceDomain::UnsubscribeNodeModels(Gs2::Core::Domain::CallbackID CallbackId)
+    void FEzNamespaceDomain::UnsubscribeNodeModels(
+            Gs2::Core::Domain::CallbackID CallbackId)
     {
         Domain->UnsubscribeNodeModels(
             CallbackId

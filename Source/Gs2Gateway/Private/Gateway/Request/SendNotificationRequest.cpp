@@ -25,6 +25,7 @@ namespace Gs2::Gateway::Request
         PayloadValue(TOptional<FString>()),
         EnableTransferMobileNotificationValue(TOptional<bool>()),
         SoundValue(TOptional<FString>()),
+        MobileNotificationMessagesValue(nullptr),
         TimeOffsetTokenValue(TOptional<FString>())
     {
     }
@@ -38,6 +39,7 @@ namespace Gs2::Gateway::Request
         PayloadValue(From.PayloadValue),
         EnableTransferMobileNotificationValue(From.EnableTransferMobileNotificationValue),
         SoundValue(From.SoundValue),
+        MobileNotificationMessagesValue(From.MobileNotificationMessagesValue),
         TimeOffsetTokenValue(From.TimeOffsetTokenValue)
     {
     }
@@ -95,6 +97,14 @@ namespace Gs2::Gateway::Request
     )
     {
         this->SoundValue = Sound;
+        return SharedThis(this);
+    }
+
+    TSharedPtr<FSendNotificationRequest> FSendNotificationRequest::WithMobileNotificationMessages(
+        const TSharedPtr<TArray<TSharedPtr<Model::FMobileNotificationMessage>>> MobileNotificationMessages
+    )
+    {
+        this->MobileNotificationMessagesValue = MobileNotificationMessages;
         return SharedThis(this);
     }
 
@@ -156,6 +166,15 @@ namespace Gs2::Gateway::Request
     TOptional<FString> FSendNotificationRequest::GetSound() const
     {
         return SoundValue;
+    }
+
+    TSharedPtr<TArray<TSharedPtr<Model::FMobileNotificationMessage>>> FSendNotificationRequest::GetMobileNotificationMessages() const
+    {
+        if (!MobileNotificationMessagesValue.IsValid())
+        {
+            return nullptr;
+        }
+        return MobileNotificationMessagesValue;
     }
 
     TOptional<FString> FSendNotificationRequest::GetTimeOffsetToken() const
@@ -229,6 +248,18 @@ namespace Gs2::Gateway::Request
                   }
                   return TOptional<FString>();
               }() : TOptional<FString>())
+          ->WithMobileNotificationMessages(Data->HasField(ANSI_TO_TCHAR("mobileNotificationMessages")) ? [Data]() -> TSharedPtr<TArray<Model::FMobileNotificationMessagePtr>>
+              {
+                  auto v = MakeShared<TArray<Model::FMobileNotificationMessagePtr>>();
+                  if (!Data->HasTypedField<EJson::Null>(ANSI_TO_TCHAR("mobileNotificationMessages")) && Data->HasTypedField<EJson::Array>(ANSI_TO_TCHAR("mobileNotificationMessages")))
+                  {
+                      for (auto JsonObjectValue : Data->GetArrayField(ANSI_TO_TCHAR("mobileNotificationMessages")))
+                      {
+                          v->Add(Model::FMobileNotificationMessage::FromJson(JsonObjectValue->AsObject()));
+                      }
+                  }
+                  return v;
+              }() : MakeShared<TArray<Model::FMobileNotificationMessagePtr>>())
             ->WithTimeOffsetToken(Data->HasField(ANSI_TO_TCHAR("timeOffsetToken")) ? [Data]() -> TOptional<FString>
               {
                   FString v("");
@@ -271,6 +302,15 @@ namespace Gs2::Gateway::Request
         if (SoundValue.IsSet())
         {
             JsonRootObject->SetStringField(TEXT("sound"), SoundValue.GetValue());
+        }
+        if (MobileNotificationMessagesValue != nullptr && MobileNotificationMessagesValue.IsValid())
+        {
+            TArray<TSharedPtr<FJsonValue>> v;
+            for (auto JsonObjectValue : *MobileNotificationMessagesValue)
+            {
+                v.Add(MakeShared<FJsonValueObject>(JsonObjectValue->ToJson()));
+            }
+            JsonRootObject->SetArrayField(TEXT("mobileNotificationMessages"), v);
         }
         if (TimeOffsetTokenValue.IsSet())
         {

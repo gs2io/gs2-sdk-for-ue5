@@ -85,6 +85,8 @@ namespace Gs2::Limit::Domain::Model
             const FCurrentLimitMasterDomain& From
         );
 
+
+
         class GS2LIMIT_API FExportMasterTask final :
             public Gs2::Core::Util::TGs2Future<Gs2::Limit::Domain::Model::FCurrentLimitMasterDomain>,
             public TSharedFromThis<FExportMasterTask>
@@ -110,6 +112,8 @@ namespace Gs2::Limit::Domain::Model
         TSharedPtr<FAsyncTask<FExportMasterTask>> ExportMaster(
             Request::FExportMasterRequestPtr Request
         );
+
+
 
         class GS2LIMIT_API FGetTask final :
             public Gs2::Core::Util::TGs2Future<Gs2::Limit::Model::FCurrentLimitMaster>,
@@ -137,6 +141,8 @@ namespace Gs2::Limit::Domain::Model
             Request::FGetCurrentLimitMasterRequestPtr Request
         );
 
+
+
         class GS2LIMIT_API FPreUpdateTask final :
             public Gs2::Core::Util::TGs2Future<Gs2::Limit::Domain::Model::FCurrentLimitMasterDomain>,
             public TSharedFromThis<FPreUpdateTask>
@@ -163,6 +169,8 @@ namespace Gs2::Limit::Domain::Model
             Request::FPreUpdateCurrentLimitMasterRequestPtr Request
         );
 
+
+
         class GS2LIMIT_API FUpdateTask final :
             public Gs2::Core::Util::TGs2Future<Gs2::Limit::Domain::Model::FCurrentLimitMasterDomain>,
             public TSharedFromThis<FUpdateTask>
@@ -188,6 +196,8 @@ namespace Gs2::Limit::Domain::Model
         TSharedPtr<FAsyncTask<FUpdateTask>> Update(
             Request::FUpdateCurrentLimitMasterRequestPtr Request
         );
+
+
 
         class GS2LIMIT_API FUpdateFromGitHubTask final :
             public Gs2::Core::Util::TGs2Future<Gs2::Limit::Domain::Model::FCurrentLimitMasterDomain>,
@@ -245,7 +255,34 @@ namespace Gs2::Limit::Domain::Model
 
         TSharedPtr<FAsyncTask<FModelTask>> Model();
 
+        void Invalidate();
+
         Gs2::Core::Domain::CallbackID Subscribe(
+            TFunction<void(Gs2::Limit::Model::FCurrentLimitMasterPtr)> Callback
+        );
+
+        class GS2LIMIT_API FSubscribeWithInitialCallTask final :
+            public Gs2::Core::Util::TGs2Future<Gs2::Core::Domain::CallbackID>,
+            public TSharedFromThis<FSubscribeWithInitialCallTask>
+        {
+            const TSharedPtr<FCurrentLimitMasterDomain> Self;
+            const TFunction<void(Gs2::Limit::Model::FCurrentLimitMasterPtr)> Callback;
+        public:
+            FSubscribeWithInitialCallTask(
+                const TSharedPtr<FCurrentLimitMasterDomain>& Self,
+                TFunction<void(Gs2::Limit::Model::FCurrentLimitMasterPtr)> Callback
+            );
+
+            FSubscribeWithInitialCallTask(
+                const FSubscribeWithInitialCallTask& From
+            );
+
+            virtual Gs2::Core::Model::FGs2ErrorPtr Action(
+                TSharedPtr<TSharedPtr<Gs2::Core::Domain::CallbackID>> Result
+            ) override;
+        };
+
+        TSharedPtr<FAsyncTask<FSubscribeWithInitialCallTask>> SubscribeWithInitialCall(
             TFunction<void(Gs2::Limit::Model::FCurrentLimitMasterPtr)> Callback
         );
 

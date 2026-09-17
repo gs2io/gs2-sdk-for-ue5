@@ -86,6 +86,8 @@ namespace Gs2::News::Domain::Model
             const FNamespaceDomain& From
         );
 
+
+
         class GS2NEWS_API FGetStatusTask final :
             public Gs2::Core::Util::TGs2Future<Gs2::News::Domain::Model::FNamespaceDomain>,
             public TSharedFromThis<FGetStatusTask>
@@ -111,6 +113,8 @@ namespace Gs2::News::Domain::Model
         TSharedPtr<FAsyncTask<FGetStatusTask>> GetStatus(
             Request::FGetNamespaceStatusRequestPtr Request
         );
+
+
 
         class GS2NEWS_API FGetTask final :
             public Gs2::Core::Util::TGs2Future<Gs2::News::Model::FNamespace>,
@@ -138,6 +142,8 @@ namespace Gs2::News::Domain::Model
             Request::FGetNamespaceRequestPtr Request
         );
 
+
+
         class GS2NEWS_API FUpdateTask final :
             public Gs2::Core::Util::TGs2Future<Gs2::News::Domain::Model::FNamespaceDomain>,
             public TSharedFromThis<FUpdateTask>
@@ -163,6 +169,8 @@ namespace Gs2::News::Domain::Model
         TSharedPtr<FAsyncTask<FUpdateTask>> Update(
             Request::FUpdateNamespaceRequestPtr Request
         );
+
+
 
         class GS2NEWS_API FDeleteTask final :
             public Gs2::Core::Util::TGs2Future<Gs2::News::Domain::Model::FNamespaceDomain>,
@@ -198,8 +206,33 @@ namespace Gs2::News::Domain::Model
 
         Gs2::Core::Domain::CallbackID SubscribeProgresses(
             TFunction<void()> Callback
+
         );
 
+        class FCollectProgressesTask;
+
+        Gs2::Core::Domain::CallbackID SubscribeProgresses(
+            TFunction<void(TArray<Gs2::News::Model::FProgressPtr>)> Callback
+        );
+
+        void InvalidateProgresses();
+
+        class GS2NEWS_API FSubscribeProgressesWithInitialCallTask final :
+            public Gs2::Core::Util::TGs2Future<Gs2::Core::Domain::CallbackID>,
+            public TSharedFromThis<FSubscribeProgressesWithInitialCallTask>
+        {
+            const TSharedPtr<FNamespaceDomain> Self;
+            const TFunction<void(TArray<Gs2::News::Model::FProgressPtr>)> Callback;
+
+        public:
+            FSubscribeProgressesWithInitialCallTask(const TSharedPtr<FNamespaceDomain>& Self, TFunction<void(TArray<Gs2::News::Model::FProgressPtr>)> Callback);
+            FSubscribeProgressesWithInitialCallTask(const FSubscribeProgressesWithInitialCallTask& From);
+            virtual Gs2::Core::Model::FGs2ErrorPtr Action(TSharedPtr<TSharedPtr<Gs2::Core::Domain::CallbackID>> Result) override;
+        };
+
+        TSharedPtr<FAsyncTask<FSubscribeProgressesWithInitialCallTask>> SubscribeProgressesWithInitialCall(
+            TFunction<void(TArray<Gs2::News::Model::FProgressPtr>)> Callback
+        );
         void UnsubscribeProgresses(
             Gs2::Core::Domain::CallbackID CallbackID
         );
@@ -247,7 +280,34 @@ namespace Gs2::News::Domain::Model
 
         TSharedPtr<FAsyncTask<FModelTask>> Model();
 
+        void Invalidate();
+
         Gs2::Core::Domain::CallbackID Subscribe(
+            TFunction<void(Gs2::News::Model::FNamespacePtr)> Callback
+        );
+
+        class GS2NEWS_API FSubscribeWithInitialCallTask final :
+            public Gs2::Core::Util::TGs2Future<Gs2::Core::Domain::CallbackID>,
+            public TSharedFromThis<FSubscribeWithInitialCallTask>
+        {
+            const TSharedPtr<FNamespaceDomain> Self;
+            const TFunction<void(Gs2::News::Model::FNamespacePtr)> Callback;
+        public:
+            FSubscribeWithInitialCallTask(
+                const TSharedPtr<FNamespaceDomain>& Self,
+                TFunction<void(Gs2::News::Model::FNamespacePtr)> Callback
+            );
+
+            FSubscribeWithInitialCallTask(
+                const FSubscribeWithInitialCallTask& From
+            );
+
+            virtual Gs2::Core::Model::FGs2ErrorPtr Action(
+                TSharedPtr<TSharedPtr<Gs2::Core::Domain::CallbackID>> Result
+            ) override;
+        };
+
+        TSharedPtr<FAsyncTask<FSubscribeWithInitialCallTask>> SubscribeWithInitialCall(
             TFunction<void(Gs2::News::Model::FNamespacePtr)> Callback
         );
 

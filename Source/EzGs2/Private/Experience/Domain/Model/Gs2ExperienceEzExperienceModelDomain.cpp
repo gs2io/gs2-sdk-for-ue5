@@ -82,7 +82,7 @@ namespace Gs2::UE5::Experience::Domain::Model
     Gs2::Core::Domain::CallbackID FEzExperienceModelDomain::Subscribe(TFunction<void(Gs2::UE5::Experience::Model::FEzExperienceModelPtr)> Callback)
     {
         return Domain->Subscribe(
-            [&](Gs2::Experience::Model::FExperienceModelPtr Item)
+            [Callback](Gs2::Experience::Model::FExperienceModelPtr Item)
             {
                 Callback(Gs2::UE5::Experience::Model::FEzExperienceModel::FromModel(Item));
             }

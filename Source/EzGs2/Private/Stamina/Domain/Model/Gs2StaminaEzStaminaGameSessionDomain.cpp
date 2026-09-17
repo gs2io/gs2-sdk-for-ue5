@@ -384,7 +384,7 @@ namespace Gs2::UE5::Stamina::Domain::Model
     Gs2::Core::Domain::CallbackID FEzStaminaGameSessionDomain::Subscribe(TFunction<void(Gs2::UE5::Stamina::Model::FEzStaminaPtr)> Callback)
     {
         return Domain->Subscribe(
-            [&](Gs2::Stamina::Model::FStaminaPtr Item)
+            [Callback](Gs2::Stamina::Model::FStaminaPtr Item)
             {
                 Callback(Gs2::UE5::Stamina::Model::FEzStamina::FromModel(Item));
             }

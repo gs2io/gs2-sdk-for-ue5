@@ -143,6 +143,8 @@ namespace Gs2::Inventory::Domain::Model
             const FItemSetDomain& From
         );
 
+
+
         class GS2INVENTORY_API FGetTask final :
             public Gs2::Core::Util::TGs2Future<TArray<TSharedPtr<Gs2::Inventory::Model::FItemSet>>>,
             public TSharedFromThis<FGetTask>
@@ -168,6 +170,8 @@ namespace Gs2::Inventory::Domain::Model
         TSharedPtr<FAsyncTask<FGetTask>> Get(
             Request::FGetItemSetByUserIdRequestPtr Request
         );
+
+
 
         class GS2INVENTORY_API FGetItemWithSignatureTask final :
             public Gs2::Core::Util::TGs2Future<Gs2::Inventory::Domain::Model::FItemSetDomain>,
@@ -195,6 +199,8 @@ namespace Gs2::Inventory::Domain::Model
             Request::FGetItemWithSignatureByUserIdRequestPtr Request
         );
 
+
+
         class GS2INVENTORY_API FAcquireTask final :
             public Gs2::Core::Util::TGs2Future<Gs2::Inventory::Domain::Model::FItemSetDomain>,
             public TSharedFromThis<FAcquireTask>
@@ -220,6 +226,8 @@ namespace Gs2::Inventory::Domain::Model
         TSharedPtr<FAsyncTask<FAcquireTask>> Acquire(
             Request::FAcquireItemSetByUserIdRequestPtr Request
         );
+
+
 
         class GS2INVENTORY_API FConsumeTask final :
             public Gs2::Core::Util::TGs2Future<Gs2::Inventory::Domain::Model::FItemSetDomain>,
@@ -247,6 +255,8 @@ namespace Gs2::Inventory::Domain::Model
             Request::FConsumeItemSetByUserIdRequestPtr Request
         );
 
+
+
         class GS2INVENTORY_API FDeleteTask final :
             public Gs2::Core::Util::TGs2Future<Gs2::Inventory::Domain::Model::FItemSetDomain>,
             public TSharedFromThis<FDeleteTask>
@@ -273,6 +283,8 @@ namespace Gs2::Inventory::Domain::Model
             Request::FDeleteItemSetByUserIdRequestPtr Request
         );
 
+
+
         class GS2INVENTORY_API FVerifyTask final :
             public Gs2::Core::Util::TGs2Future<Gs2::Inventory::Domain::Model::FItemSetDomain>,
             public TSharedFromThis<FVerifyTask>
@@ -298,6 +310,8 @@ namespace Gs2::Inventory::Domain::Model
         TSharedPtr<FAsyncTask<FVerifyTask>> Verify(
             Request::FVerifyItemSetByUserIdRequestPtr Request
         );
+
+
 
         class GS2INVENTORY_API FAddReferenceOfTask final :
             public Gs2::Core::Util::TGs2Future<Gs2::Inventory::Domain::Model::FReferenceOfDomain>,

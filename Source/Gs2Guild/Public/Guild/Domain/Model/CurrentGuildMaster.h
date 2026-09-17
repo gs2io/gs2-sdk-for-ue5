@@ -101,6 +101,8 @@ namespace Gs2::Guild::Domain::Model
             const FCurrentGuildMasterDomain& From
         );
 
+
+
         class GS2GUILD_API FExportMasterTask final :
             public Gs2::Core::Util::TGs2Future<Gs2::Guild::Domain::Model::FCurrentGuildMasterDomain>,
             public TSharedFromThis<FExportMasterTask>
@@ -126,6 +128,8 @@ namespace Gs2::Guild::Domain::Model
         TSharedPtr<FAsyncTask<FExportMasterTask>> ExportMaster(
             Request::FExportMasterRequestPtr Request
         );
+
+
 
         class GS2GUILD_API FGetTask final :
             public Gs2::Core::Util::TGs2Future<Gs2::Guild::Model::FCurrentGuildMaster>,
@@ -153,6 +157,8 @@ namespace Gs2::Guild::Domain::Model
             Request::FGetCurrentGuildMasterRequestPtr Request
         );
 
+
+
         class GS2GUILD_API FPreUpdateTask final :
             public Gs2::Core::Util::TGs2Future<Gs2::Guild::Domain::Model::FCurrentGuildMasterDomain>,
             public TSharedFromThis<FPreUpdateTask>
@@ -179,6 +185,8 @@ namespace Gs2::Guild::Domain::Model
             Request::FPreUpdateCurrentGuildMasterRequestPtr Request
         );
 
+
+
         class GS2GUILD_API FUpdateTask final :
             public Gs2::Core::Util::TGs2Future<Gs2::Guild::Domain::Model::FCurrentGuildMasterDomain>,
             public TSharedFromThis<FUpdateTask>
@@ -204,6 +212,8 @@ namespace Gs2::Guild::Domain::Model
         TSharedPtr<FAsyncTask<FUpdateTask>> Update(
             Request::FUpdateCurrentGuildMasterRequestPtr Request
         );
+
+
 
         class GS2GUILD_API FUpdateFromGitHubTask final :
             public Gs2::Core::Util::TGs2Future<Gs2::Guild::Domain::Model::FCurrentGuildMasterDomain>,
@@ -261,7 +271,34 @@ namespace Gs2::Guild::Domain::Model
 
         TSharedPtr<FAsyncTask<FModelTask>> Model();
 
+        void Invalidate();
+
         Gs2::Core::Domain::CallbackID Subscribe(
+            TFunction<void(Gs2::Guild::Model::FCurrentGuildMasterPtr)> Callback
+        );
+
+        class GS2GUILD_API FSubscribeWithInitialCallTask final :
+            public Gs2::Core::Util::TGs2Future<Gs2::Core::Domain::CallbackID>,
+            public TSharedFromThis<FSubscribeWithInitialCallTask>
+        {
+            const TSharedPtr<FCurrentGuildMasterDomain> Self;
+            const TFunction<void(Gs2::Guild::Model::FCurrentGuildMasterPtr)> Callback;
+        public:
+            FSubscribeWithInitialCallTask(
+                const TSharedPtr<FCurrentGuildMasterDomain>& Self,
+                TFunction<void(Gs2::Guild::Model::FCurrentGuildMasterPtr)> Callback
+            );
+
+            FSubscribeWithInitialCallTask(
+                const FSubscribeWithInitialCallTask& From
+            );
+
+            virtual Gs2::Core::Model::FGs2ErrorPtr Action(
+                TSharedPtr<TSharedPtr<Gs2::Core::Domain::CallbackID>> Result
+            ) override;
+        };
+
+        TSharedPtr<FAsyncTask<FSubscribeWithInitialCallTask>> SubscribeWithInitialCall(
             TFunction<void(Gs2::Guild::Model::FCurrentGuildMasterPtr)> Callback
         );
 

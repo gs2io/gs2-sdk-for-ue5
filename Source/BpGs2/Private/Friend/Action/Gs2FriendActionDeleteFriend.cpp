@@ -12,8 +12,6 @@
  * on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either
  * express or implied. See the License for the specific language governing
  * permissions and limitations under the License.
- *
- * deny overwrite
  */
 
 #include "Friend/Action/Gs2FriendActionDeleteFriend.h"
@@ -28,27 +26,30 @@ UGs2FriendDeleteFriendAsyncFunction::UGs2FriendDeleteFriendAsyncFunction(
 
 UGs2FriendDeleteFriendAsyncFunction* UGs2FriendDeleteFriendAsyncFunction::DeleteFriend(
     UObject* WorldContextObject,
-    FGs2FriendOwnFriendUser FriendUser
+    FGs2FriendOwnFriend Friend,
+    FString TargetUserId
 )
 {
     UGs2FriendDeleteFriendAsyncFunction* Action = NewObject<UGs2FriendDeleteFriendAsyncFunction>();
     Action->RegisterWithGameInstance(WorldContextObject);
-    if (FriendUser.Value == nullptr) {
-        UE_LOG(BpGs2Log, Error, TEXT("[UGs2FriendDeleteFriendAsyncFunction::DeleteFriend] FriendUser parameter specification is missing."))
+    if (Friend.Value == nullptr) {
+        UE_LOG(BpGs2Log, Error, TEXT("[UGs2FriendDeleteFriendAsyncFunction::DeleteFriend] Friend parameter specification is missing."))
         return Action;
     }
-    Action->FriendUser = FriendUser;
+    Action->Friend = Friend;
+    Action->TargetUserId = TargetUserId;
     return Action;
 }
 
 void UGs2FriendDeleteFriendAsyncFunction::Activate()
 {
-    if (FriendUser.Value == nullptr) {
-        UE_LOG(BpGs2Log, Error, TEXT("[UGs2FriendDeleteFriendAsyncFunction] FriendUser parameter specification is missing."))
+    if (Friend.Value == nullptr) {
+        UE_LOG(BpGs2Log, Error, TEXT("[UGs2FriendDeleteFriendAsyncFunction] Friend parameter specification is missing."))
         return;
     }
 
-    auto Future = FriendUser.Value->DeleteFriend(
+    auto Future = Friend.Value->DeleteFriend(
+        TargetUserId
     );
     Future->GetTask().OnSuccessDelegate().BindLambda([&](auto Result)
     {

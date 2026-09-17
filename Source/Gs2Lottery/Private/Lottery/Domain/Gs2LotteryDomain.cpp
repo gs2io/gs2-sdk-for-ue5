@@ -39,6 +39,19 @@
 #include "Lottery/Domain/Model/BoxItems.h"
 #include "Lottery/Domain/Model/User.h"
 #include "Lottery/Domain/Model/UserAccessToken.h"
+#include "Lottery/Model/Cache/DrawnPrize.h"
+#include "Lottery/Model/Cache/BoxItems.h"
+
+#include "Lottery/Model/Cache/Namespace.h"
+#include "Lottery/Model/Cache/PrizeTableMaster.h"
+#include "Lottery/Model/Cache/LotteryModelMaster.h"
+#include "Lottery/Model/Cache/CurrentLotteryMaster.h"
+#include "Lottery/Model/Cache/PrizeTable.h"
+#include "Lottery/Model/Cache/PrizeLimit.h"
+#include "Lottery/Model/Cache/LotteryModel.h"
+#include "Lottery/Model/Cache/DrawnPrize.h"
+#include "Lottery/Model/Cache/BoxItems.h"
+
 #include "Core/Domain/Gs2.h"
 
 namespace Gs2::Lottery::Domain
@@ -423,6 +436,7 @@ namespace Gs2::Lottery::Domain
         return Gs2->Cache->ListSubscribe(
             Gs2::Lottery::Model::FNamespace::TypeName,
             "lottery:Namespace",
+            Callback,
             Callback
         );
     }
@@ -456,7 +470,8 @@ namespace Gs2::Lottery::Domain
     void FGs2LotteryDomain::UpdateCacheFromStampSheet(
         const FString Method,
         const FString Request,
-        const FString Result
+        const FString Result,
+        const TOptional<int32> TimeOffset
     ) {
         if (Method == "DrawByUserId") {
             TSharedPtr<FJsonObject> RequestModelJson;
@@ -473,7 +488,25 @@ namespace Gs2::Lottery::Domain
             }
             const auto RequestModel = Gs2::Lottery::Request::FDrawByUserIdRequest::FromJson(RequestModelJson);
             const auto ResultModel = Gs2::Lottery::Result::FDrawByUserIdResult::FromJson(ResultModelJson);
-            
+
+            if (ResultModel->GetBoxItems() != nullptr)
+            {
+                const auto ParentKey = Gs2::Lottery::Domain::Model::FUserDomain::CreateCacheParentKey(
+                    RequestModel->GetNamespaceName(),
+                    RequestModel->GetUserId(),
+                    "BoxItems"
+                );
+                const auto Key = Gs2::Lottery::Domain::Model::FBoxItemsDomain::CreateCacheKey(
+                    ResultModel->GetBoxItems()->GetPrizeTableName()
+                );
+                Gs2->Cache->Put(
+                    Gs2::Lottery::Model::FBoxItems::TypeName,
+                    ParentKey,
+                    Key,
+                    ResultModel->GetBoxItems(),
+                    FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
+                );
+            }
             DrawnResultEvent.Broadcast(
                 RequestModel->GetNamespaceName(),
                 RequestModel->GetLotteryName(),
@@ -495,7 +528,25 @@ namespace Gs2::Lottery::Domain
             }
             const auto RequestModel = Gs2::Lottery::Request::FResetBoxByUserIdRequest::FromJson(RequestModelJson);
             const auto ResultModel = Gs2::Lottery::Result::FResetBoxByUserIdResult::FromJson(ResultModelJson);
-            
+
+            if (ResultModel->GetItem() != nullptr)
+            {
+                const auto ParentKey = Gs2::Lottery::Domain::Model::FUserDomain::CreateCacheParentKey(
+                    RequestModel->GetNamespaceName(),
+                    RequestModel->GetUserId(),
+                    "BoxItems"
+                );
+                const auto Key = Gs2::Lottery::Domain::Model::FBoxItemsDomain::CreateCacheKey(
+                    ResultModel->GetItem()->GetPrizeTableName()
+                );
+                Gs2->Cache->Put(
+                    Gs2::Lottery::Model::FBoxItems::TypeName,
+                    ParentKey,
+                    Key,
+                    ResultModel->GetItem(),
+                    FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
+                );
+            }
             {
                 const auto ParentKey = Gs2::Lottery::Domain::Model::FUserDomain::CreateCacheParentKey(
                     RequestModel->GetNamespaceName(),
@@ -521,14 +572,16 @@ namespace Gs2::Lottery::Domain
     void FGs2LotteryDomain::UpdateCacheFromStampTask(
         const FString Method,
         const FString Request,
-        const FString Result
+        const FString Result,
+        const TOptional<int32> TimeOffset
     ) {
     }
 
     void FGs2LotteryDomain::UpdateCacheFromJobResult(
         const FString Method,
         const Gs2::JobQueue::Model::FJobPtr Job,
-        const Gs2::JobQueue::Model::FJobResultBodyPtr Result
+        const Gs2::JobQueue::Model::FJobResultBodyPtr Result,
+        const TOptional<int32> TimeOffset
     ) {
         if (Method == "draw_by_user_id") {
             TSharedPtr<FJsonObject> RequestModelJson;
@@ -553,7 +606,25 @@ namespace Gs2::Lottery::Domain
             }
             const auto RequestModel = Gs2::Lottery::Request::FDrawByUserIdRequest::FromJson(RequestModelJson);
             const auto ResultModel = Gs2::Lottery::Result::FDrawByUserIdResult::FromJson(ResultModelJson);
-            
+
+            if (ResultModel->GetBoxItems() != nullptr)
+            {
+                const auto ParentKey = Gs2::Lottery::Domain::Model::FUserDomain::CreateCacheParentKey(
+                    RequestModel->GetNamespaceName(),
+                    RequestModel->GetUserId(),
+                    "BoxItems"
+                );
+                const auto Key = Gs2::Lottery::Domain::Model::FBoxItemsDomain::CreateCacheKey(
+                    ResultModel->GetBoxItems()->GetPrizeTableName()
+                );
+                Gs2->Cache->Put(
+                    Gs2::Lottery::Model::FBoxItems::TypeName,
+                    ParentKey,
+                    Key,
+                    ResultModel->GetBoxItems(),
+                    FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
+                );
+            }
             DrawnResultEvent.Broadcast(
                 RequestModel->GetNamespaceName(),
                 RequestModel->GetLotteryName(),
@@ -583,7 +654,25 @@ namespace Gs2::Lottery::Domain
             }
             const auto RequestModel = Gs2::Lottery::Request::FResetBoxByUserIdRequest::FromJson(RequestModelJson);
             const auto ResultModel = Gs2::Lottery::Result::FResetBoxByUserIdResult::FromJson(ResultModelJson);
-            
+
+            if (ResultModel->GetItem() != nullptr)
+            {
+                const auto ParentKey = Gs2::Lottery::Domain::Model::FUserDomain::CreateCacheParentKey(
+                    RequestModel->GetNamespaceName(),
+                    RequestModel->GetUserId(),
+                    "BoxItems"
+                );
+                const auto Key = Gs2::Lottery::Domain::Model::FBoxItemsDomain::CreateCacheKey(
+                    ResultModel->GetItem()->GetPrizeTableName()
+                );
+                Gs2->Cache->Put(
+                    Gs2::Lottery::Model::FBoxItems::TypeName,
+                    ParentKey,
+                    Key,
+                    ResultModel->GetItem(),
+                    FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
+                );
+            }
             {
                 const auto ParentKey = Gs2::Lottery::Domain::Model::FUserDomain::CreateCacheParentKey(
                     RequestModel->GetNamespaceName(),
@@ -618,4 +707,3 @@ namespace Gs2::Lottery::Domain
 #elif defined(__clang__)
 #pragma clang diagnostic pop
 #endif
-

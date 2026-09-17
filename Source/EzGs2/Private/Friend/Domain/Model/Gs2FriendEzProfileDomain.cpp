@@ -82,7 +82,7 @@ namespace Gs2::UE5::Friend::Domain::Model
     Gs2::Core::Domain::CallbackID FEzProfileDomain::Subscribe(TFunction<void(Gs2::UE5::Friend::Model::FEzProfilePtr)> Callback)
     {
         return Domain->Subscribe(
-            [&](Gs2::Friend::Model::FProfilePtr Item)
+            [Callback](Gs2::Friend::Model::FProfilePtr Item)
             {
                 Callback(Gs2::UE5::Friend::Model::FEzProfile::FromModel(Item));
             }

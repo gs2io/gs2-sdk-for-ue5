@@ -210,7 +210,11 @@ namespace Gs2::Inventory::Domain::Model
                 );
             }
         }
-        *Result = MakeShared<FString>(*ResultModel->GetItem());
+        *Result = nullptr;
+        if (ResultModel.IsValid() && ResultModel->GetItem().IsSet())
+        {
+            *Result = MakeShared<FString>(*ResultModel->GetItem());
+        }
         return nullptr;
     }
 
@@ -488,68 +492,68 @@ namespace Gs2::Inventory::Domain::Model
             Self->ItemSetName,
             "ReferenceOf"
         );
-        // ReSharper disable once CppLocalVariableMayBeConst
-        Gs2::Inventory::Model::FReferenceOfPtr Value;
-        const auto bCacheHit = Self->Gs2->Cache->TryGet<Gs2::Inventory::Model::FReferenceOf>(
-            ParentKey,
-            Gs2::Inventory::Domain::Model::FReferenceOfDomain::CreateCacheKey(
-                Self->ReferenceOf
-            ),
-            &Value
+
+        const FString CacheKey = Gs2::Inventory::Domain::Model::FReferenceOfDomain::CreateCacheKey(
+            Self->ReferenceOf
         );
-        if (!bCacheHit) {
-            const auto Future = Self->Get(
-                MakeShared<Gs2::Inventory::Request::FGetReferenceOfRequest>()
-            );
-            Future->StartSynchronousTask();
-            if (Future->GetTask().IsError())
+        return Self->Gs2->Cache->ExecuteWithKeyLock(
+            Gs2::Inventory::Model::FReferenceOf::TypeName,
+            ParentKey,
+            CacheKey,
+            [this, Result, ParentKey, CacheKey]() -> Gs2::Core::Model::FGs2ErrorPtr
             {
-                if (Future->GetTask().Error()->Type() != Gs2::Core::Model::FNotFoundError::TypeString)
-                {
-                    return Future->GetTask().Error();
-                }
-
-                const auto Key = Gs2::Inventory::Domain::Model::FReferenceOfDomain::CreateCacheKey(
-                    Self->ReferenceOf
+                Gs2::Inventory::Model::FReferenceOfPtr Value;
+                auto bCacheHit = Self->Gs2->Cache->TryGet<Gs2::Inventory::Model::FReferenceOf>(
+                    ParentKey, CacheKey, &Value
                 );
-                Self->Gs2->Cache->Put(
-                    Gs2::Inventory::Model::FReferenceOf::TypeName,
-                    ParentKey,
-                    Key,
-                    nullptr,
-                    FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
-                );
-
-                if (Future->GetTask().Error()->Detail(0)->GetComponent() != "referenceOf")
+                if (!bCacheHit)
                 {
-                    return Future->GetTask().Error();
-                }
-            }
-            else
-            {
-                const auto ResultRef = Future->GetTask().Result();
-                if (ResultRef.IsValid())
-                {
-                    Value = MakeShared<Gs2::Inventory::Model::FReferenceOf>()->WithName(*ResultRef);
+                    const auto Future = Self->Get(MakeShared<Gs2::Inventory::Request::FGetReferenceOfRequest>());
+                    Future->StartSynchronousTask();
+                    if (Future->GetTask().IsError())
+                    {
+                        const auto Error = Future->GetTask().Error();
+                        if (!Error.IsValid() || Error->Type() != Gs2::Core::Model::FNotFoundError::TypeString)
+                        {
+                            return Error;
+                        }
+                        Self->Gs2->Cache->Put(
+                            Gs2::Inventory::Model::FReferenceOf::TypeName,
+                            ParentKey,
+                            CacheKey,
+                            nullptr,
+                            FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
+                        );
+                        if (!Error->GetErrors().IsValid() || Error->Count() == 0 || !Error->Detail(0).IsValid() || Error->Detail(0)->GetComponent() != "referenceOf")
+                        {
+                            return Error;
+                        }
+                        *Result = nullptr;
+                        return nullptr;
+                    }
+                    const auto ResultString = Future->GetTask().Result();
+                    Future->EnsureCompletion();
+                    Value = MakeShared<Gs2::Inventory::Model::FReferenceOf>();
+                    if (ResultString.IsValid())
+                    {
+                        Value->WithName(*ResultString);
+                    }
                     Self->Gs2->Cache->Put(
                         Gs2::Inventory::Model::FReferenceOf::TypeName,
                         ParentKey,
-                        FReferenceOfDomain::CreateCacheKey(
-                            Self->ReferenceOf
-                        ),
+                        CacheKey,
                         Value,
                         FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
                     );
                 }
+                *Result = nullptr;
+                if (Value.IsValid() && Value->GetName().IsSet())
+                {
+                    *Result = MakeShared<FString>(*Value->GetName());
+                }
+                return nullptr;
             }
-            Future->EnsureCompletion();
-        }
-        if (Value.IsValid())
-        {
-            *Result = MakeShared<FString>(*Value->GetName());
-        }
-
-        return nullptr;
+        );
     }
 
     TSharedPtr<FAsyncTask<FReferenceOfAccessTokenDomain::FModelTask>> FReferenceOfAccessTokenDomain::Model() {

@@ -25,6 +25,7 @@
 #endif
 
 #include "Account/Domain/Model/PlatformIdAccessToken.h"
+#include "Account/Model/Cache/PlatformId.h"
 #include "Account/Domain/Model/PlatformId.h"
 #include "Account/Domain/Model/Namespace.h"
 #include "Account/Domain/Model/Account.h"
@@ -103,6 +104,8 @@ namespace Gs2::Account::Domain::Model
             ->WithNamespaceName(Self->NamespaceName)
             ->WithAccessToken(Self->AccessToken->GetToken())
             ->WithType(Self->Type);
+        const auto CacheOwnerUserId = Self->UserId();
+        const auto CacheOwnerTimeOffset = Self->AccessToken.IsValid() ? Self->AccessToken->GetTimeOffset() : TOptional<int32>();
         const auto Future = Self->Client->GetPlatformId(
             Request
         );
@@ -115,6 +118,17 @@ namespace Gs2::Account::Domain::Model
         const auto ResultModel = Future->GetTask().Result();
         Future->EnsureCompletion();
         if (ResultModel != nullptr) {
+            if (ResultModel->GetItem() != nullptr)
+            {
+                Gs2::Account::Model::Cache::FPlatformIdCache::Put(
+                    Self->Gs2->Cache,
+                    Request->GetNamespaceName(),
+                    CacheOwnerUserId,
+                    ResultModel->GetItem()->GetType(),
+                    CacheOwnerTimeOffset,
+                    ResultModel->GetItem()
+                );
+            }
             *Result = ResultModel->GetItem();
         }
         return nullptr;
@@ -149,6 +163,8 @@ namespace Gs2::Account::Domain::Model
             ->WithNamespaceName(Self->NamespaceName)
             ->WithAccessToken(Self->AccessToken->GetToken())
             ->WithType(Self->Type);
+        const auto CacheOwnerUserId = Self->UserId();
+        const auto CacheOwnerTimeOffset = Self->AccessToken.IsValid() ? Self->AccessToken->GetTimeOffset() : TOptional<int32>();
         const auto Future = Self->Client->CreatePlatformId(
             Request
         );
@@ -164,20 +180,13 @@ namespace Gs2::Account::Domain::Model
             
             if (ResultModel->GetItem() != nullptr)
             {
-                const auto ParentKey = Gs2::Account::Domain::Model::FAccountDomain::CreateCacheParentKey(
-                    Self->NamespaceName,
-                    Self->UserId(),
-                    "PlatformId"
-                );
-                const auto Key = Gs2::Account::Domain::Model::FPlatformIdDomain::CreateCacheKey(
-                    ResultModel->GetItem()->GetType()
-                );
-                Self->Gs2->Cache->Put(
-                    Gs2::Account::Model::FPlatformId::TypeName,
-                    ParentKey,
-                    Key,
-                    ResultModel->GetItem(),
-                    FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
+                Gs2::Account::Model::Cache::FPlatformIdCache::Put(
+                    Self->Gs2->Cache,
+                    Request->GetNamespaceName(),
+                    CacheOwnerUserId,
+                    ResultModel->GetItem()->GetType(),
+                    CacheOwnerTimeOffset,
+                    ResultModel->GetItem()
                 );
             }
         }
@@ -262,6 +271,8 @@ namespace Gs2::Account::Domain::Model
             ->WithNamespaceName(Self->NamespaceName)
             ->WithAccessToken(Self->AccessToken->GetToken())
             ->WithType(Self->Type);
+        const auto CacheOwnerUserId = Self->UserId();
+        const auto CacheOwnerTimeOffset = Self->AccessToken.IsValid() ? Self->AccessToken->GetTimeOffset() : TOptional<int32>();
         const auto Future = Self->Client->DeletePlatformId(
             Request
         );
@@ -277,15 +288,13 @@ namespace Gs2::Account::Domain::Model
             
             if (ResultModel->GetItem() != nullptr)
             {
-                const auto ParentKey = Gs2::Account::Domain::Model::FAccountDomain::CreateCacheParentKey(
-                    Self->NamespaceName,
-                    Self->UserId(),
-                    "PlatformId"
+                Gs2::Account::Model::Cache::FPlatformIdCache::Delete(
+                    Self->Gs2->Cache,
+                    Request->GetNamespaceName(),
+                    CacheOwnerUserId,
+                    ResultModel->GetItem()->GetType(),
+                    CacheOwnerTimeOffset
                 );
-                const auto Key = Gs2::Account::Domain::Model::FPlatformIdDomain::CreateCacheKey(
-                    ResultModel->GetItem()->GetType()
-                );
-                Self->Gs2->Cache->Delete(Gs2::Account::Model::FPlatformId::TypeName, ParentKey, Key);
             }
         }
         auto Domain = Self;
@@ -344,55 +353,61 @@ namespace Gs2::Account::Domain::Model
         TSharedPtr<TSharedPtr<Gs2::Account::Model::FPlatformId>> Result
     )
     {
-        // ReSharper disable once CppLocalVariableMayBeConst
-        TSharedPtr<Gs2::Account::Model::FPlatformId> Value;
-        auto bCacheHit = Self->Gs2->Cache->TryGet<Gs2::Account::Model::FPlatformId>(
-            Self->ParentKey,
-            Gs2::Account::Domain::Model::FPlatformIdDomain::CreateCacheKey(
-                Self->Type
-            ),
-            &Value
+        const auto CacheParentKey = Gs2::Account::Model::Cache::FPlatformIdCache::CreateCacheParentKey(
+            Self->NamespaceName,
+            Self->AccessToken.IsValid() ? Self->UserId() : TOptional<FString>(),
+            Self->AccessToken.IsValid() ? Self->AccessToken->GetTimeOffset() : TOptional<int32>()
         );
-        if (!bCacheHit) {
-            const auto Future = Self->Get(
-                MakeShared<Gs2::Account::Request::FGetPlatformIdRequest>()
-            );
-            Future->StartSynchronousTask();
-            if (Future->GetTask().IsError())
+        const auto CacheKey = Gs2::Account::Model::Cache::FPlatformIdCache::CreateCacheKey(
+            Self->Type
+        );
+        return Self->Gs2->Cache->ExecuteWithKeyLock(
+            Gs2::Account::Model::FPlatformId::TypeName,
+            CacheParentKey,
+            CacheKey,
+            [this, Result, CacheParentKey, CacheKey]() -> Gs2::Core::Model::FGs2ErrorPtr
             {
-                if (Future->GetTask().Error()->Type() != Gs2::Core::Model::FNotFoundError::TypeString)
-                {
-                    return Future->GetTask().Error();
-                }
-
-                const auto Key = Gs2::Account::Domain::Model::FPlatformIdDomain::CreateCacheKey(
-                    Self->Type
+                Gs2::Account::Model::FPlatformIdPtr Value;
+                const auto CacheHit = Gs2::Account::Model::Cache::FPlatformIdCache::TryGet(
+                    Self->Gs2->Cache,
+                    Self->NamespaceName,
+                    Self->AccessToken.IsValid() ? Self->UserId() : TOptional<FString>(),
+                    Self->Type,
+                    Self->AccessToken.IsValid() ? Self->AccessToken->GetTimeOffset() : TOptional<int32>(),
+                    &Value
                 );
-                Self->Gs2->Cache->Put(
-                    Gs2::Account::Model::FPlatformId::TypeName,
-                    Self->ParentKey,
-                    Key,
-                    nullptr,
-                    FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
-                );
-
-                if (Future->GetTask().Error()->Detail(0)->GetComponent() != "platformId")
+                if (CacheHit)
                 {
-                    return Future->GetTask().Error();
+                    *Result = Value;
+                    return nullptr;
                 }
+                const auto Error = Gs2::Account::Model::Cache::FPlatformIdCache::Fetch(
+                    Self->Gs2->Cache,
+                    Self->NamespaceName,
+                    Self->AccessToken.IsValid() ? Self->UserId() : TOptional<FString>(),
+                    Self->Type,
+                    Self->AccessToken.IsValid() ? Self->AccessToken->GetTimeOffset() : TOptional<int32>(),
+                    [Self = Self](Gs2::Account::Model::FPlatformIdPtr* OutItem) -> Gs2::Core::Model::FGs2ErrorPtr
+                    {
+                        const auto Future = Self->Get(
+                            MakeShared<Gs2::Account::Request::FGetPlatformIdRequest>()
+                        );
+                        Future->StartSynchronousTask();
+                        if (Future->GetTask().IsError())
+                        {
+                            return Future->GetTask().Error();
+                        }
+                        *OutItem = Future->GetTask().Result();
+                        Future->EnsureCompletion();
+                        return nullptr;
+                    },
+                    &Value
+                );
+                if (Error.IsValid()) return Error;
+                *Result = Value;
+                return nullptr;
             }
-            Self->Gs2->Cache->TryGet<Gs2::Account::Model::FPlatformId>(
-                Self->ParentKey,
-                Gs2::Account::Domain::Model::FPlatformIdDomain::CreateCacheKey(
-                    Self->Type
-                ),
-                &Value
-            );
-            Future->EnsureCompletion();
-        }
-        *Result = Value;
-
-        return nullptr;
+        );
     }
 
     TSharedPtr<FAsyncTask<FPlatformIdAccessTokenDomain::FModelTask>> FPlatformIdAccessTokenDomain::Model() {
@@ -403,15 +418,52 @@ namespace Gs2::Account::Domain::Model
         TFunction<void(Gs2::Account::Model::FPlatformIdPtr)> Callback
     )
     {
+        const TWeakPtr<Gs2::Core::Domain::FGs2> WeakGs2 = Gs2;
+        const TWeakPtr<Account::Domain::FGs2AccountDomain> WeakService = Service;
+        const FString RegisteredParentKey = ParentKey;
+        const TOptional<FString> QueryNamespaceName = NamespaceName;
+        const TOptional<int32> QueryType = Type;
+        const auto SourceToken = AccessToken;
+        const TOptional<FString> RegisteredUserId = SourceToken.IsValid()
+            ? TOptional<FString>(SourceToken->GetUserId())
+            : TOptional<FString>();
+        const int32 RegisteredTimeOffset = SourceToken.IsValid() ? SourceToken->GetTimeOffset().Get(0) : 0;
+        const auto OwnerSubscriptionParentKey = Gs2::Account::Model::Cache::FPlatformIdCache::CreateCacheParentKey(
+            NamespaceName,
+            AccessToken.IsValid() ? UserId() : TOptional<FString>(),
+            AccessToken.IsValid() ? AccessToken->GetTimeOffset() : TOptional<int32>()
+        );
+        const auto OwnerSubscriptionKey = Gs2::Account::Model::Cache::FPlatformIdCache::CreateCacheKey(Type);
         return Gs2->Cache->Subscribe(
             Gs2::Account::Model::FPlatformId::TypeName,
-            ParentKey,
-            Gs2::Account::Domain::Model::FPlatformIdDomain::CreateCacheKey(
-                Type
-            ),
+            OwnerSubscriptionParentKey,
+            OwnerSubscriptionKey,
             [Callback](TSharedPtr<FGs2Object> obj)
             {
                 Callback(StaticCastSharedPtr<Gs2::Account::Model::FPlatformId>(obj));
+            },
+            [WeakGs2, WeakService, RegisteredParentKey, QueryNamespaceName, QueryType, SourceToken, RegisteredUserId, RegisteredTimeOffset]()
+            {
+                const auto Owner = WeakGs2.Pin();
+                if (!Owner.IsValid() || !SourceToken.IsValid() || !RegisteredUserId.IsSet())
+                {
+                    return;
+                }
+                const auto TokenSnapshot = MakeShared<Gs2::Auth::Model::FAccessToken>(*SourceToken);
+                if (TokenSnapshot->GetUserId() != RegisteredUserId || TokenSnapshot->GetTimeOffset().Get(0) != RegisteredTimeOffset)
+                {
+                    return;
+                }
+                const auto Domain = MakeShared<FPlatformIdAccessTokenDomain>(
+                    Owner,
+                    WeakService.Pin(),
+                    QueryNamespaceName,
+                    TokenSnapshot,
+                    QueryType
+                );
+                Domain->ParentKey = RegisteredParentKey;
+                const auto Task = Domain->Model();
+                Task->StartBackgroundTask();
             }
         );
     }
@@ -420,12 +472,16 @@ namespace Gs2::Account::Domain::Model
         Gs2::Core::Domain::CallbackID CallbackID
     )
     {
+        const auto OwnerSubscriptionParentKey = Gs2::Account::Model::Cache::FPlatformIdCache::CreateCacheParentKey(
+            NamespaceName,
+            AccessToken.IsValid() ? UserId() : TOptional<FString>(),
+            AccessToken.IsValid() ? AccessToken->GetTimeOffset() : TOptional<int32>()
+        );
+        const auto OwnerSubscriptionKey = Gs2::Account::Model::Cache::FPlatformIdCache::CreateCacheKey(Type);
         Gs2->Cache->Unsubscribe(
             Gs2::Account::Model::FPlatformId::TypeName,
-            ParentKey,
-            Gs2::Account::Domain::Model::FPlatformIdDomain::CreateCacheKey(
-                Type
-            ),
+            OwnerSubscriptionParentKey,
+            OwnerSubscriptionKey,
             CallbackID
         );
     }
@@ -436,4 +492,3 @@ namespace Gs2::Account::Domain::Model
 #elif defined(__clang__)
 #pragma clang diagnostic pop
 #endif
-

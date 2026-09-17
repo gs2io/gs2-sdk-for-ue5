@@ -93,6 +93,8 @@ namespace Gs2::Mission::Domain::Model
             const FCompleteAccessTokenDomain& From
         );
 
+
+
         class GS2MISSION_API FCompleteTask final :
             public Gs2::Core::Util::TGs2Future<Gs2::Core::Domain::FTransactionAccessTokenDomain>,
             public TSharedFromThis<FCompleteTask>
@@ -121,6 +123,8 @@ namespace Gs2::Mission::Domain::Model
             Request::FCompleteRequestPtr Request,
             bool SpeculativeExecute = true
         );
+
+
 
         class GS2MISSION_API FBatchTask final :
             public Gs2::Core::Util::TGs2Future<Gs2::Core::Domain::FTransactionAccessTokenDomain>,
@@ -151,6 +155,8 @@ namespace Gs2::Mission::Domain::Model
             bool SpeculativeExecute = true
         );
 
+
+
         class GS2MISSION_API FGetTask final :
             public Gs2::Core::Util::TGs2Future<Gs2::Mission::Model::FComplete>,
             public TSharedFromThis<FGetTask>
@@ -177,6 +183,8 @@ namespace Gs2::Mission::Domain::Model
             Request::FGetCompleteRequestPtr Request
         );
 
+
+
         class GS2MISSION_API FEvaluateTask final :
             public Gs2::Core::Util::TGs2Future<Gs2::Mission::Domain::Model::FCompleteAccessTokenDomain>,
             public TSharedFromThis<FEvaluateTask>
@@ -202,6 +210,8 @@ namespace Gs2::Mission::Domain::Model
         TSharedPtr<FAsyncTask<FEvaluateTask>> Evaluate(
             Request::FEvaluateCompleteRequestPtr Request
         );
+
+
 
         class GS2MISSION_API FVerifyTask final :
             public Gs2::Core::Util::TGs2Future<Gs2::Mission::Domain::Model::FCompleteAccessTokenDomain>,
@@ -262,7 +272,34 @@ namespace Gs2::Mission::Domain::Model
 
         TSharedPtr<FAsyncTask<FModelTask>> Model();
 
+        void Invalidate();
+
         Gs2::Core::Domain::CallbackID Subscribe(
+            TFunction<void(Gs2::Mission::Model::FCompletePtr)> Callback
+        );
+
+        class GS2MISSION_API FSubscribeWithInitialCallTask final :
+            public Gs2::Core::Util::TGs2Future<Gs2::Core::Domain::CallbackID>,
+            public TSharedFromThis<FSubscribeWithInitialCallTask>
+        {
+            const TSharedPtr<FCompleteAccessTokenDomain> Self;
+            const TFunction<void(Gs2::Mission::Model::FCompletePtr)> Callback;
+        public:
+            FSubscribeWithInitialCallTask(
+                const TSharedPtr<FCompleteAccessTokenDomain>& Self,
+                TFunction<void(Gs2::Mission::Model::FCompletePtr)> Callback
+            );
+
+            FSubscribeWithInitialCallTask(
+                const FSubscribeWithInitialCallTask& From
+            );
+
+            virtual Gs2::Core::Model::FGs2ErrorPtr Action(
+                TSharedPtr<TSharedPtr<Gs2::Core::Domain::CallbackID>> Result
+            ) override;
+        };
+
+        TSharedPtr<FAsyncTask<FSubscribeWithInitialCallTask>> SubscribeWithInitialCall(
             TFunction<void(Gs2::Mission::Model::FCompletePtr)> Callback
         );
 

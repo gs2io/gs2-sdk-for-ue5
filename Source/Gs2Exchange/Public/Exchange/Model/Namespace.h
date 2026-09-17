@@ -19,6 +19,7 @@
 #include "CoreMinimal.h"
 #include "Core/Gs2Object.h"
 #include "TransactionSetting.h"
+#include "TransactionSettingV2.h"
 #include "ScriptSetting.h"
 #include "LogSetting.h"
 
@@ -32,6 +33,7 @@ namespace Gs2::Exchange::Model
         TOptional<bool> EnableDirectExchangeValue;
         TOptional<bool> EnableAwaitExchangeValue;
         TSharedPtr<FTransactionSetting> TransactionSettingValue;
+        TSharedPtr<FTransactionSettingV2> TransactionSettingV2Value;
         TSharedPtr<FScriptSetting> ExchangeScriptValue;
         TSharedPtr<FScriptSetting> IncrementalExchangeScriptValue;
         TSharedPtr<FScriptSetting> AcquireAwaitScriptValue;
@@ -55,6 +57,7 @@ namespace Gs2::Exchange::Model
         TSharedPtr<FNamespace> WithEnableDirectExchange(const TOptional<bool> EnableDirectExchange);
         TSharedPtr<FNamespace> WithEnableAwaitExchange(const TOptional<bool> EnableAwaitExchange);
         TSharedPtr<FNamespace> WithTransactionSetting(const TSharedPtr<FTransactionSetting> TransactionSetting);
+        TSharedPtr<FNamespace> WithTransactionSettingV2(const TSharedPtr<FTransactionSettingV2> TransactionSettingV2);
         TSharedPtr<FNamespace> WithExchangeScript(const TSharedPtr<FScriptSetting> ExchangeScript);
         TSharedPtr<FNamespace> WithIncrementalExchangeScript(const TSharedPtr<FScriptSetting> IncrementalExchangeScript);
         TSharedPtr<FNamespace> WithAcquireAwaitScript(const TSharedPtr<FScriptSetting> AcquireAwaitScript);
@@ -73,6 +76,7 @@ namespace Gs2::Exchange::Model
         TOptional<bool> GetEnableAwaitExchange() const;
         FString GetEnableAwaitExchangeString() const;
         TSharedPtr<FTransactionSetting> GetTransactionSetting() const;
+        TSharedPtr<FTransactionSettingV2> GetTransactionSettingV2() const;
         TSharedPtr<FScriptSetting> GetExchangeScript() const;
         TSharedPtr<FScriptSetting> GetIncrementalExchangeScript() const;
         TSharedPtr<FScriptSetting> GetAcquireAwaitScript() const;

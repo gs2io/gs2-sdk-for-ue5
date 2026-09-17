@@ -82,7 +82,7 @@ namespace Gs2::UE5::SkillTree::Domain::Model
     Gs2::Core::Domain::CallbackID FEzNodeModelDomain::Subscribe(TFunction<void(Gs2::UE5::SkillTree::Model::FEzNodeModelPtr)> Callback)
     {
         return Domain->Subscribe(
-            [&](Gs2::SkillTree::Model::FNodeModelPtr Item)
+            [Callback](Gs2::SkillTree::Model::FNodeModelPtr Item)
             {
                 Callback(Gs2::UE5::SkillTree::Model::FEzNodeModel::FromModel(Item));
             }

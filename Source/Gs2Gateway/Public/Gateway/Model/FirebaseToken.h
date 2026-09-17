@@ -26,6 +26,7 @@ namespace Gs2::Gateway::Model
         TOptional<FString> FirebaseTokenIdValue;
         TOptional<FString> UserIdValue;
         TOptional<FString> TokenValue;
+        TOptional<FString> LocaleValue;
         TOptional<int64> CreatedAtValue;
         TOptional<int64> UpdatedAtValue;
         TOptional<int64> RevisionValue;
@@ -40,6 +41,7 @@ namespace Gs2::Gateway::Model
         TSharedPtr<FFirebaseToken> WithFirebaseTokenId(const TOptional<FString> FirebaseTokenId);
         TSharedPtr<FFirebaseToken> WithUserId(const TOptional<FString> UserId);
         TSharedPtr<FFirebaseToken> WithToken(const TOptional<FString> Token);
+        TSharedPtr<FFirebaseToken> WithLocale(const TOptional<FString> Locale);
         TSharedPtr<FFirebaseToken> WithCreatedAt(const TOptional<int64> CreatedAt);
         TSharedPtr<FFirebaseToken> WithUpdatedAt(const TOptional<int64> UpdatedAt);
         TSharedPtr<FFirebaseToken> WithRevision(const TOptional<int64> Revision);
@@ -47,6 +49,7 @@ namespace Gs2::Gateway::Model
         TOptional<FString> GetFirebaseTokenId() const;
         TOptional<FString> GetUserId() const;
         TOptional<FString> GetToken() const;
+        TOptional<FString> GetLocale() const;
         TOptional<int64> GetCreatedAt() const;
         FString GetCreatedAtString() const;
         TOptional<int64> GetUpdatedAt() const;

@@ -102,17 +102,26 @@ namespace Gs2::Lottery::Domain::Model
         TSharedPtr<TSharedPtr<Gs2::Lottery::Model::FBoxItem>> Result
     )
     {
-        // ReSharper disable once CppLocalVariableMayBeConst
-        TSharedPtr<Gs2::Lottery::Model::FBoxItem> Value;
-        auto bCacheHit = Self->Gs2->Cache->TryGet<Gs2::Lottery::Model::FBoxItem>(
-            Self->ParentKey,
-            Gs2::Lottery::Domain::Model::FBoxItemDomain::CreateCacheKey(
-            ),
-            &Value
+        const FString CacheKey = Gs2::Lottery::Domain::Model::FBoxItemDomain::CreateCacheKey(
         );
-        *Result = Value;
+        return Self->Gs2->Cache->ExecuteWithKeyLock(
+            Gs2::Lottery::Model::FBoxItem::TypeName,
+            Self->ParentKey,
+            CacheKey,
+            [this, Result, CacheKey]() -> Gs2::Core::Model::FGs2ErrorPtr
+            {
+                // ReSharper disable once CppLocalVariableMayBeConst
+                TSharedPtr<Gs2::Lottery::Model::FBoxItem> Value;
+                auto bCacheHit = Self->Gs2->Cache->TryGet<Gs2::Lottery::Model::FBoxItem>(
+                    Self->ParentKey,
+                    CacheKey,
+                    &Value
+                );
+                *Result = Value;
 
-        return nullptr;
+                return nullptr;
+            }
+        );
     }
 
     TSharedPtr<FAsyncTask<FBoxItemDomain::FModelTask>> FBoxItemDomain::Model() {

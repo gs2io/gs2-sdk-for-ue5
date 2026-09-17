@@ -35,6 +35,7 @@
 #include "Account/Domain/Model/TakeOverTypeModel.h"
 #include "Account/Domain/Model/TakeOverTypeModelMaster.h"
 #include "Account/Domain/Model/CurrentModelMaster.h"
+#include "Account/Model/Cache/BanStatus.h"
 
 #include "Core/Domain/Gs2.h"
 #include "Core/Domain/Transaction/JobQueueJobDomainFactory.h"
@@ -106,37 +107,132 @@ namespace Gs2::Account::Domain::Model
         TSharedPtr<TSharedPtr<Gs2::Account::Model::FBanStatus>> Result
     )
     {
-        // ReSharper disable once CppLocalVariableMayBeConst
-        TSharedPtr<Gs2::Account::Model::FBanStatus> Value;
-        auto bCacheHit = Self->Gs2->Cache->TryGet<Gs2::Account::Model::FBanStatus>(
-            Self->ParentKey,
-            Gs2::Account::Domain::Model::FBanStatusDomain::CreateCacheKey(
-                Self->Name
-            ),
-            &Value
-        );
-        *Result = Value;
+        const auto CacheParentKey = Gs2::Account::Model::Cache::FBanStatusCache::CreateCacheParentKey(
 
-        return nullptr;
+            TOptional<int32>()
+        );
+        const auto CacheKey = Gs2::Account::Model::Cache::FBanStatusCache::CreateCacheKey(
+
+            Self->Name
+        );
+        return Self->Gs2->Cache->ExecuteWithKeyLock(
+            Gs2::Account::Model::FBanStatus::TypeName,
+            CacheParentKey,
+            CacheKey,
+            [Self = Self, Result]() -> Gs2::Core::Model::FGs2ErrorPtr
+            {
+                Gs2::Account::Model::FBanStatusPtr Value;
+                const auto CacheHit = Gs2::Account::Model::Cache::FBanStatusCache::TryGet(
+                    Self->Gs2->Cache,
+
+                    Self->Name,
+                    TOptional<int32>(),
+                    &Value
+                );
+                if (CacheHit)
+                {
+                    *Result = Value;
+                    return nullptr;
+                }
+                *Result = Value;
+                return nullptr;
+            }
+        );
     }
 
     TSharedPtr<FAsyncTask<FBanStatusDomain::FModelTask>> FBanStatusDomain::Model() {
         return Gs2::Core::Util::New<FAsyncTask<FBanStatusDomain::FModelTask>>(this->AsShared());
     }
 
+    void FBanStatusDomain::Invalidate()
+    {
+        Gs2::Account::Model::Cache::FBanStatusCache::Delete(
+            Gs2->Cache,
+
+            Name,
+            TOptional<int32>()
+        );
+    }
+
+    FBanStatusDomain::FSubscribeWithInitialCallTask::FSubscribeWithInitialCallTask(
+        const TSharedPtr<FBanStatusDomain>& Self,
+        TFunction<void(Gs2::Account::Model::FBanStatusPtr)> Callback
+    ):
+        Self(Self),
+        Callback(Callback)
+    {
+    }
+
+    FBanStatusDomain::FSubscribeWithInitialCallTask::FSubscribeWithInitialCallTask(
+        const FSubscribeWithInitialCallTask& From
+    ):
+        TGs2Future(From),
+        Self(From.Self),
+        Callback(From.Callback)
+    {
+    }
+
+    Gs2::Core::Model::FGs2ErrorPtr FBanStatusDomain::FSubscribeWithInitialCallTask::Action(
+        TSharedPtr<TSharedPtr<Gs2::Core::Domain::CallbackID>> Result
+    )
+    {
+        const auto Task = Self->Model();
+        Task->StartSynchronousTask();
+        Task->EnsureCompletion();
+        if (Task->GetTask().IsError()) return Task->GetTask().Error();
+        const auto Item = Task->GetTask().Result();
+        const auto CallbackId = Self->Subscribe(Callback);
+        Callback(Item);
+        *Result = MakeShared<Gs2::Core::Domain::CallbackID>(CallbackId);
+        return nullptr;
+    }
+
+    TSharedPtr<FAsyncTask<FBanStatusDomain::FSubscribeWithInitialCallTask>> FBanStatusDomain::SubscribeWithInitialCall(
+        TFunction<void(Gs2::Account::Model::FBanStatusPtr)> Callback
+    )
+    {
+        return Gs2::Core::Util::New<FAsyncTask<FSubscribeWithInitialCallTask>>(this->AsShared(), Callback);
+    }
+
     Gs2::Core::Domain::CallbackID FBanStatusDomain::Subscribe(
         TFunction<void(Gs2::Account::Model::FBanStatusPtr)> Callback
     )
     {
+        const auto SubscriptionParentKey = Gs2::Account::Model::Cache::FBanStatusCache::CreateCacheParentKey(
+
+            TOptional<int32>()
+        );
+        const auto SubscriptionCacheKey = Gs2::Account::Model::Cache::FBanStatusCache::CreateCacheKey(
+
+            Name
+        );
+        const TWeakPtr<Gs2::Core::Domain::FGs2> WeakGs2 = Gs2;
+        const TWeakPtr<Account::Domain::FGs2AccountDomain> WeakService = Service;
+        const FString RegisteredParentKey = SubscriptionParentKey;
+        const TOptional<FString> QueryName = Name;
         return Gs2->Cache->Subscribe(
             Gs2::Account::Model::FBanStatus::TypeName,
-            ParentKey,
-            Gs2::Account::Domain::Model::FBanStatusDomain::CreateCacheKey(
-                Name
-            ),
+            SubscriptionParentKey,
+            SubscriptionCacheKey,
             [Callback](TSharedPtr<FGs2Object> obj)
             {
                 Callback(StaticCastSharedPtr<Gs2::Account::Model::FBanStatus>(obj));
+            },
+            [WeakGs2, WeakService, RegisteredParentKey, QueryName]()
+            {
+                const auto Owner = WeakGs2.Pin();
+                if (!Owner.IsValid())
+                {
+                    return;
+                }
+                const auto Domain = MakeShared<FBanStatusDomain>(
+                    Owner,
+                    WeakService.Pin(),
+                    QueryName
+                );
+                Domain->ParentKey = RegisteredParentKey;
+                const auto Task = Domain->Model();
+                Task->StartBackgroundTask();
             }
         );
     }
@@ -145,12 +241,18 @@ namespace Gs2::Account::Domain::Model
         Gs2::Core::Domain::CallbackID CallbackID
     )
     {
+        const auto SubscriptionParentKey = Gs2::Account::Model::Cache::FBanStatusCache::CreateCacheParentKey(
+
+            TOptional<int32>()
+        );
+        const auto SubscriptionCacheKey = Gs2::Account::Model::Cache::FBanStatusCache::CreateCacheKey(
+
+            Name
+        );
         Gs2->Cache->Unsubscribe(
             Gs2::Account::Model::FBanStatus::TypeName,
-            ParentKey,
-            Gs2::Account::Domain::Model::FBanStatusDomain::CreateCacheKey(
-                Name
-            ),
+            SubscriptionParentKey,
+            SubscriptionCacheKey,
             CallbackID
         );
     }
@@ -161,4 +263,3 @@ namespace Gs2::Account::Domain::Model
 #elif defined(__clang__)
 #pragma clang diagnostic pop
 #endif
-

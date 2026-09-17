@@ -133,6 +133,8 @@ namespace Gs2::Ranking2::Domain::Model
             const FClusterRankingScoreAccessTokenDomain& From
         );
 
+
+
         class GS2RANKING2_API FGetTask final :
             public Gs2::Core::Util::TGs2Future<Gs2::Ranking2::Model::FClusterRankingScore>,
             public TSharedFromThis<FGetTask>
@@ -158,6 +160,8 @@ namespace Gs2::Ranking2::Domain::Model
         TSharedPtr<FAsyncTask<FGetTask>> Get(
             Request::FGetClusterRankingScoreRequestPtr Request
         );
+
+
 
         class GS2RANKING2_API FVerifyTask final :
             public Gs2::Core::Util::TGs2Future<Gs2::Ranking2::Domain::Model::FClusterRankingScoreAccessTokenDomain>,
@@ -222,7 +226,34 @@ namespace Gs2::Ranking2::Domain::Model
 
         TSharedPtr<FAsyncTask<FModelTask>> Model();
 
+        void Invalidate();
+
         Gs2::Core::Domain::CallbackID Subscribe(
+            TFunction<void(Gs2::Ranking2::Model::FClusterRankingScorePtr)> Callback
+        );
+
+        class GS2RANKING2_API FSubscribeWithInitialCallTask final :
+            public Gs2::Core::Util::TGs2Future<Gs2::Core::Domain::CallbackID>,
+            public TSharedFromThis<FSubscribeWithInitialCallTask>
+        {
+            const TSharedPtr<FClusterRankingScoreAccessTokenDomain> Self;
+            const TFunction<void(Gs2::Ranking2::Model::FClusterRankingScorePtr)> Callback;
+        public:
+            FSubscribeWithInitialCallTask(
+                const TSharedPtr<FClusterRankingScoreAccessTokenDomain>& Self,
+                TFunction<void(Gs2::Ranking2::Model::FClusterRankingScorePtr)> Callback
+            );
+
+            FSubscribeWithInitialCallTask(
+                const FSubscribeWithInitialCallTask& From
+            );
+
+            virtual Gs2::Core::Model::FGs2ErrorPtr Action(
+                TSharedPtr<TSharedPtr<Gs2::Core::Domain::CallbackID>> Result
+            ) override;
+        };
+
+        TSharedPtr<FAsyncTask<FSubscribeWithInitialCallTask>> SubscribeWithInitialCall(
             TFunction<void(Gs2::Ranking2::Model::FClusterRankingScorePtr)> Callback
         );
 

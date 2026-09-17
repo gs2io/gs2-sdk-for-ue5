@@ -82,7 +82,7 @@ namespace Gs2::UE5::Buff::Domain::Model
     Gs2::Core::Domain::CallbackID FEzBuffEntryModelDomain::Subscribe(TFunction<void(Gs2::UE5::Buff::Model::FEzBuffEntryModelPtr)> Callback)
     {
         return Domain->Subscribe(
-            [&](Gs2::Buff::Model::FBuffEntryModelPtr Item)
+            [Callback](Gs2::Buff::Model::FBuffEntryModelPtr Item)
             {
                 Callback(Gs2::UE5::Buff::Model::FEzBuffEntryModel::FromModel(Item));
             }

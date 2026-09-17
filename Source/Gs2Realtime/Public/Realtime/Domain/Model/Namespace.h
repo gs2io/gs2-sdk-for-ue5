@@ -81,6 +81,8 @@ namespace Gs2::Realtime::Domain::Model
             const FNamespaceDomain& From
         );
 
+
+
         class GS2REALTIME_API FGetStatusTask final :
             public Gs2::Core::Util::TGs2Future<Gs2::Realtime::Domain::Model::FNamespaceDomain>,
             public TSharedFromThis<FGetStatusTask>
@@ -106,6 +108,8 @@ namespace Gs2::Realtime::Domain::Model
         TSharedPtr<FAsyncTask<FGetStatusTask>> GetStatus(
             Request::FGetNamespaceStatusRequestPtr Request
         );
+
+
 
         class GS2REALTIME_API FGetTask final :
             public Gs2::Core::Util::TGs2Future<Gs2::Realtime::Model::FNamespace>,
@@ -133,6 +137,8 @@ namespace Gs2::Realtime::Domain::Model
             Request::FGetNamespaceRequestPtr Request
         );
 
+
+
         class GS2REALTIME_API FUpdateTask final :
             public Gs2::Core::Util::TGs2Future<Gs2::Realtime::Domain::Model::FNamespaceDomain>,
             public TSharedFromThis<FUpdateTask>
@@ -159,6 +165,8 @@ namespace Gs2::Realtime::Domain::Model
             Request::FUpdateNamespaceRequestPtr Request
         );
 
+
+
         class GS2REALTIME_API FDeleteTask final :
             public Gs2::Core::Util::TGs2Future<Gs2::Realtime::Domain::Model::FNamespaceDomain>,
             public TSharedFromThis<FDeleteTask>
@@ -184,6 +192,8 @@ namespace Gs2::Realtime::Domain::Model
         TSharedPtr<FAsyncTask<FDeleteTask>> Delete(
             Request::FDeleteNamespaceRequestPtr Request
         );
+
+
 
         class GS2REALTIME_API FWantRoomTask final :
             public Gs2::Core::Util::TGs2Future<Gs2::Realtime::Domain::Model::FRoomDomain>,
@@ -216,8 +226,33 @@ namespace Gs2::Realtime::Domain::Model
 
         Gs2::Core::Domain::CallbackID SubscribeRooms(
             TFunction<void()> Callback
+
         );
 
+        class FCollectRoomsTask;
+
+        Gs2::Core::Domain::CallbackID SubscribeRooms(
+            TFunction<void(TArray<Gs2::Realtime::Model::FRoomPtr>)> Callback
+        );
+
+        void InvalidateRooms();
+
+        class GS2REALTIME_API FSubscribeRoomsWithInitialCallTask final :
+            public Gs2::Core::Util::TGs2Future<Gs2::Core::Domain::CallbackID>,
+            public TSharedFromThis<FSubscribeRoomsWithInitialCallTask>
+        {
+            const TSharedPtr<FNamespaceDomain> Self;
+            const TFunction<void(TArray<Gs2::Realtime::Model::FRoomPtr>)> Callback;
+
+        public:
+            FSubscribeRoomsWithInitialCallTask(const TSharedPtr<FNamespaceDomain>& Self, TFunction<void(TArray<Gs2::Realtime::Model::FRoomPtr>)> Callback);
+            FSubscribeRoomsWithInitialCallTask(const FSubscribeRoomsWithInitialCallTask& From);
+            virtual Gs2::Core::Model::FGs2ErrorPtr Action(TSharedPtr<TSharedPtr<Gs2::Core::Domain::CallbackID>> Result) override;
+        };
+
+        TSharedPtr<FAsyncTask<FSubscribeRoomsWithInitialCallTask>> SubscribeRoomsWithInitialCall(
+            TFunction<void(TArray<Gs2::Realtime::Model::FRoomPtr>)> Callback
+        );
         void UnsubscribeRooms(
             Gs2::Core::Domain::CallbackID CallbackID
         );
@@ -257,7 +292,34 @@ namespace Gs2::Realtime::Domain::Model
 
         TSharedPtr<FAsyncTask<FModelTask>> Model();
 
+        void Invalidate();
+
         Gs2::Core::Domain::CallbackID Subscribe(
+            TFunction<void(Gs2::Realtime::Model::FNamespacePtr)> Callback
+        );
+
+        class GS2REALTIME_API FSubscribeWithInitialCallTask final :
+            public Gs2::Core::Util::TGs2Future<Gs2::Core::Domain::CallbackID>,
+            public TSharedFromThis<FSubscribeWithInitialCallTask>
+        {
+            const TSharedPtr<FNamespaceDomain> Self;
+            const TFunction<void(Gs2::Realtime::Model::FNamespacePtr)> Callback;
+        public:
+            FSubscribeWithInitialCallTask(
+                const TSharedPtr<FNamespaceDomain>& Self,
+                TFunction<void(Gs2::Realtime::Model::FNamespacePtr)> Callback
+            );
+
+            FSubscribeWithInitialCallTask(
+                const FSubscribeWithInitialCallTask& From
+            );
+
+            virtual Gs2::Core::Model::FGs2ErrorPtr Action(
+                TSharedPtr<TSharedPtr<Gs2::Core::Domain::CallbackID>> Result
+            ) override;
+        };
+
+        TSharedPtr<FAsyncTask<FSubscribeWithInitialCallTask>> SubscribeWithInitialCall(
             TFunction<void(Gs2::Realtime::Model::FNamespacePtr)> Callback
         );
 

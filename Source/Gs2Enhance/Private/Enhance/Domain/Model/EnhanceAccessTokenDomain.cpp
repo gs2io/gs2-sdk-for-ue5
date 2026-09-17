@@ -38,6 +38,8 @@
 #include "Enhance/Domain/Model/UserAccessToken.h"
 #include "Enhance/Domain/SpeculativeExecutor/Transaction/DirectEnhanceByUserIdSpeculativeExecutor.h"
 #include "Enhance/Domain/SpeculativeExecutor/Transaction/UnleashByUserIdSpeculativeExecutor.h"
+#include "Enhance/Model/Cache/RateModel.h"
+#include "Enhance/Model/Cache/UnleashRateModel.h"
 
 #include "Core/Domain/Gs2.h"
 #include "Core/Domain/Transaction/JobQueueJobDomainFactory.h"
@@ -103,6 +105,7 @@ namespace Gs2::Enhance::Domain::Model
             ->WithContextStack((!Request->GetContextStack().IsSet() || Request->GetContextStack()->IsEmpty()) ? Self->Gs2->DefaultContextStack : Request->GetContextStack())
             ->WithNamespaceName(Self->NamespaceName)
             ->WithAccessToken(Self->AccessToken->GetToken());
+        const auto CacheOwnerSnapshotTimeOffset = Self->AccessToken.IsValid() ? Self->AccessToken->GetTimeOffset() : TOptional<int32>();
         const auto Future = Self->Client->DirectEnhance(
             Request
         );
@@ -113,6 +116,20 @@ namespace Gs2::Enhance::Domain::Model
         }
         const auto ResultModel = Future->GetTask().Result();
         Future->EnsureCompletion();
+
+            if (ResultModel.IsValid() && ResultModel->GetItem() != nullptr)
+            {
+
+
+        Gs2::Enhance::Model::Cache::FRateModelCache::Put(
+            Self->Gs2->Cache,
+
+            Request->GetNamespaceName(),
+            Request->GetRateName(),
+            CacheOwnerSnapshotTimeOffset,
+            ResultModel->GetItem()
+        );
+            }
         Self->BonusRate = ResultModel->GetBonusRate();
         const auto Transaction = Gs2::Core::Domain::Internal::FTransactionDomainFactory::ToTransaction(
             Self->Gs2,
@@ -164,6 +181,7 @@ namespace Gs2::Enhance::Domain::Model
             ->WithContextStack((!Request->GetContextStack().IsSet() || Request->GetContextStack()->IsEmpty()) ? Self->Gs2->DefaultContextStack : Request->GetContextStack())
             ->WithNamespaceName(Self->NamespaceName)
             ->WithAccessToken(Self->AccessToken->GetToken());
+        const auto CacheOwnerSnapshotTimeOffset = Self->AccessToken.IsValid() ? Self->AccessToken->GetTimeOffset() : TOptional<int32>();
         const auto Future = Self->Client->Unleash(
             Request
         );
@@ -174,6 +192,20 @@ namespace Gs2::Enhance::Domain::Model
         }
         const auto ResultModel = Future->GetTask().Result();
         Future->EnsureCompletion();
+
+            if (ResultModel.IsValid() && ResultModel->GetItem() != nullptr)
+            {
+
+
+        Gs2::Enhance::Model::Cache::FUnleashRateModelCache::Put(
+            Self->Gs2->Cache,
+
+            Request->GetNamespaceName(),
+            Request->GetRateName(),
+            CacheOwnerSnapshotTimeOffset,
+            ResultModel->GetItem()
+        );
+            }
         const auto Transaction = Gs2::Core::Domain::Internal::FTransactionDomainFactory::ToTransaction(
             Self->Gs2,
             Self->AccessToken,
@@ -225,4 +257,3 @@ namespace Gs2::Enhance::Domain::Model
 #elif defined(__clang__)
 #pragma clang diagnostic pop
 #endif
-

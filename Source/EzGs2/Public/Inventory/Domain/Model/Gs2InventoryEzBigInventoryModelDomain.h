@@ -61,7 +61,8 @@ namespace Gs2::UE5::Inventory::Domain::Model
 
         Gs2::Core::Domain::CallbackID SubscribeBigItemModels(TFunction<void()> Callback);
 
-        void UnsubscribeBigItemModels(Gs2::Core::Domain::CallbackID CallbackId);
+        void UnsubscribeBigItemModels(
+                Gs2::Core::Domain::CallbackID CallbackId);
 
         Gs2::UE5::Inventory::Domain::Model::FEzBigItemModelDomainPtr BigItemModel(
             const FString ItemName

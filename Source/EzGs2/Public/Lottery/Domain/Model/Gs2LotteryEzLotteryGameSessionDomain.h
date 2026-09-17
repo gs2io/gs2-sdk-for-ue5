@@ -63,7 +63,8 @@ namespace Gs2::UE5::Lottery::Domain::Model
 
         Gs2::Core::Domain::CallbackID SubscribeProbabilities(TFunction<void()> Callback);
 
-        void UnsubscribeProbabilities(Gs2::Core::Domain::CallbackID CallbackId);
+        void UnsubscribeProbabilities(
+                Gs2::Core::Domain::CallbackID CallbackId);
 
     };
     typedef TSharedPtr<FEzLotteryGameSessionDomain> FEzLotteryGameSessionDomainPtr;

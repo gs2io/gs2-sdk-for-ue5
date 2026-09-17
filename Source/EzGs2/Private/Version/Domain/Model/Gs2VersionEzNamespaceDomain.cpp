@@ -75,7 +75,8 @@ namespace Gs2::UE5::Version::Domain::Model
         );
     }
 
-    void FEzNamespaceDomain::UnsubscribeVersionModels(Gs2::Core::Domain::CallbackID CallbackId)
+    void FEzNamespaceDomain::UnsubscribeVersionModels(
+            Gs2::Core::Domain::CallbackID CallbackId)
     {
         Domain->UnsubscribeVersionModels(
             CallbackId

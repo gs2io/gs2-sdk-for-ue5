@@ -97,6 +97,8 @@ namespace Gs2::Guild::Domain::Model
             const FJoinedGuildDomain& From
         );
 
+
+
         class GS2GUILD_API FGetTask final :
             public Gs2::Core::Util::TGs2Future<Gs2::Guild::Model::FJoinedGuild>,
             public TSharedFromThis<FGetTask>
@@ -123,6 +125,8 @@ namespace Gs2::Guild::Domain::Model
             Request::FGetJoinedGuildByUserIdRequestPtr Request
         );
 
+
+
         class GS2GUILD_API FUpdateMemberMetadataTask final :
             public Gs2::Core::Util::TGs2Future<Gs2::Guild::Domain::Model::FGuildDomain>,
             public TSharedFromThis<FUpdateMemberMetadataTask>
@@ -148,6 +152,8 @@ namespace Gs2::Guild::Domain::Model
         TSharedPtr<FAsyncTask<FUpdateMemberMetadataTask>> UpdateMemberMetadata(
             Request::FUpdateMemberMetadataByUserIdRequestPtr Request
         );
+
+
 
         class GS2GUILD_API FWithdrawalTask final :
             public Gs2::Core::Util::TGs2Future<Gs2::Guild::Domain::Model::FJoinedGuildDomain>,

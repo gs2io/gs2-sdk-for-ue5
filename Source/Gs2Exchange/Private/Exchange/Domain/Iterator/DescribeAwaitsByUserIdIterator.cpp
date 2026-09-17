@@ -1,3 +1,4 @@
+
 /*
  * Copyright 2016 Game Server Services, Inc. or its affiliates. All Rights
  * Reserved.
@@ -29,6 +30,8 @@
 #include "Exchange/Domain/Model/User.h"
 
 #include "Core/Domain/Gs2.h"
+
+#include "Exchange/Model/Cache/Await.h"
 
 namespace Gs2::Exchange::Domain::Iterator
 {
@@ -84,7 +87,7 @@ namespace Gs2::Exchange::Domain::Iterator
 
     FDescribeAwaitsByUserIdIterator::FIterator& FDescribeAwaitsByUserIdIterator::FIterator::operator++()
     {
-        
+
 
         if (bEnd) return *this;
 
@@ -94,16 +97,17 @@ namespace Gs2::Exchange::Domain::Iterator
             return *this;
         }
 
-        if (RangeIteratorOpt) ++*RangeIteratorOpt;
+        if (RangeIteratorOpt && *RangeIteratorOpt) ++*RangeIteratorOpt;
 
+        // Keep the previous page alive until its iterator has been replaced.
+        const auto PreviousRange = Range;
         if (!RangeIteratorOpt || (!*RangeIteratorOpt && !bLast))
         {
-            const auto ListParentKey = Gs2::Exchange::Domain::Model::FUserDomain::CreateCacheParentKey(
+            const auto ListParentKey = Gs2::Exchange::Model::Cache::FAwaitCache::CreateCacheParentKey(
                 Self->NamespaceName,
                 Self->UserId,
-                "Await"
+                TOptional<int32>()
             );
-
             if (!RangeIteratorOpt)
             {
                 Range = Self->Gs2->Cache->TryGetList<Gs2::Exchange::Model::FAwait>(ListParentKey);
@@ -118,15 +122,15 @@ namespace Gs2::Exchange::Domain::Iterator
                     return *this;
                 }
             }
-
-            const auto Future = Self->Client->DescribeAwaitsByUserId(
+            const auto Request =
                 MakeShared<Gs2::Exchange::Request::FDescribeAwaitsByUserIdRequest>()
                     ->WithContextStack(Self->Gs2->DefaultContextStack)
                     ->WithNamespaceName(Self->NamespaceName)
                     ->WithUserId(Self->UserId)
                     ->WithPageToken(PageToken)
                     ->WithLimit(FetchSize)
-            );
+            ;
+            const auto Future = Self->Client->DescribeAwaitsByUserId(Request);
             Future->StartSynchronousTask();
             if (Future->GetTask().IsError())
             {
@@ -140,18 +144,21 @@ namespace Gs2::Exchange::Domain::Iterator
             }
             const auto R = Future->GetTask().Result();
             Future->EnsureCompletion();
-            Range = R->GetItems();
-            for (auto Item : *R->GetItems())
+            Range = R->GetItems().IsValid() ? R->GetItems() : MakeShared<TArray<Gs2::Exchange::Model::FAwaitPtr>>();
+            const auto ResultModel = R;
+
+
+            if (Range.IsValid())
             {
-                Self->Gs2->Cache->Put(
-                    Gs2::Exchange::Model::FAwait::TypeName,
-                    ListParentKey,
-                    Gs2::Exchange::Domain::Model::FAwaitDomain::CreateCacheKey(
-                        Item->GetName()
-                    ),
-                    Item,
-                    FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
-                );
+                for (const auto& Item : *Range)
+                {
+                    if (!Item.IsValid()) continue;
+                    Gs2::Exchange::Model::Cache::FAwaitCache::Put(
+                        Self->Gs2->Cache,
+                        Request->GetNamespaceName(), Request->GetUserId(), Item->GetName(),
+                        TOptional<int32>(), Item
+                    );
+                }
             }
             if (Range)
             {

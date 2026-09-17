@@ -19,6 +19,7 @@
 #include "CoreMinimal.h"
 #include "Dom/JsonObject.h"
 #include "../Model/TransactionSetting.h"
+#include "../Model/TransactionSettingV2.h"
 #include "../Model/ScriptSetting.h"
 #include "../Model/LogSetting.h"
 
@@ -32,6 +33,7 @@ namespace Gs2::Account::Request
         TOptional<FString> NameValue;
         TOptional<FString> DescriptionValue;
         TSharedPtr<Model::FTransactionSetting> TransactionSettingValue;
+        TSharedPtr<Model::FTransactionSettingV2> TransactionSettingV2Value;
         TOptional<bool> ChangePasswordIfTakeOverValue;
         TOptional<bool> DifferentUserIdForLoginAndDataRetentionValue;
         TSharedPtr<Model::FScriptSetting> CreateAccountScriptValue;
@@ -54,6 +56,7 @@ namespace Gs2::Account::Request
         TSharedPtr<FCreateNamespaceRequest> WithName(const TOptional<FString> Name);
         TSharedPtr<FCreateNamespaceRequest> WithDescription(const TOptional<FString> Description);
         TSharedPtr<FCreateNamespaceRequest> WithTransactionSetting(const TSharedPtr<Model::FTransactionSetting> TransactionSetting);
+        TSharedPtr<FCreateNamespaceRequest> WithTransactionSettingV2(const TSharedPtr<Model::FTransactionSettingV2> TransactionSettingV2);
         TSharedPtr<FCreateNamespaceRequest> WithChangePasswordIfTakeOver(const TOptional<bool> ChangePasswordIfTakeOver);
         TSharedPtr<FCreateNamespaceRequest> WithDifferentUserIdForLoginAndDataRetention(const TOptional<bool> DifferentUserIdForLoginAndDataRetention);
         TSharedPtr<FCreateNamespaceRequest> WithCreateAccountScript(const TSharedPtr<Model::FScriptSetting> CreateAccountScript);
@@ -68,6 +71,7 @@ namespace Gs2::Account::Request
         TOptional<FString> GetName() const;
         TOptional<FString> GetDescription() const;
         TSharedPtr<Model::FTransactionSetting> GetTransactionSetting() const;
+        TSharedPtr<Model::FTransactionSettingV2> GetTransactionSettingV2() const;
         TOptional<bool> GetChangePasswordIfTakeOver() const;
         FString GetChangePasswordIfTakeOverString() const;
         TOptional<bool> GetDifferentUserIdForLoginAndDataRetention() const;

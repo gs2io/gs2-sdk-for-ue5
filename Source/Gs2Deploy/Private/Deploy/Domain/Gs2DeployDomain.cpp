@@ -29,6 +29,12 @@
 #include "Deploy/Domain/Model/Resource.h"
 #include "Deploy/Domain/Model/Event.h"
 #include "Deploy/Domain/Model/Output.h"
+
+#include "Deploy/Model/Cache/Stack.h"
+#include "Deploy/Model/Cache/Resource.h"
+#include "Deploy/Model/Cache/Event.h"
+#include "Deploy/Model/Cache/Output.h"
+
 #include "Core/Domain/Gs2.h"
 
 namespace Gs2::Deploy::Domain
@@ -82,6 +88,7 @@ namespace Gs2::Deploy::Domain
         }
         const auto ResultModel = Future->GetTask().Result();
         Future->EnsureCompletion();
+
         const auto Domain = Self;
         if (ResultModel != nullptr)
         {
@@ -132,6 +139,19 @@ namespace Gs2::Deploy::Domain
         }
         const auto ResultModel = Future->GetTask().Result();
         Future->EnsureCompletion();
+
+            if (ResultModel.IsValid() && ResultModel->GetItem() != nullptr)
+            {
+
+
+        Gs2::Deploy::Model::Cache::FStackCache::Put(
+            Self->Gs2->Cache,
+
+            ResultModel->GetItem()->GetName(),
+            TOptional<int32>(),
+            ResultModel->GetItem()
+        );
+            }
         auto Domain = MakeShared<Gs2::Deploy::Domain::Model::FStackDomain>(
             Self->Gs2,
             Self,
@@ -175,6 +195,19 @@ namespace Gs2::Deploy::Domain
         }
         const auto ResultModel = Future->GetTask().Result();
         Future->EnsureCompletion();
+
+            if (ResultModel.IsValid() && ResultModel->GetItem() != nullptr)
+            {
+
+
+        Gs2::Deploy::Model::Cache::FStackCache::Put(
+            Self->Gs2->Cache,
+
+            ResultModel->GetItem()->GetName(),
+            TOptional<int32>(),
+            ResultModel->GetItem()
+        );
+            }
         auto Domain = MakeShared<Gs2::Deploy::Domain::Model::FStackDomain>(
             Self->Gs2,
             Self,
@@ -218,6 +251,7 @@ namespace Gs2::Deploy::Domain
         }
         const auto ResultModel = Future->GetTask().Result();
         Future->EnsureCompletion();
+
         const auto Domain = Self;
         if (ResultModel != nullptr)
         {
@@ -268,6 +302,7 @@ namespace Gs2::Deploy::Domain
         }
         const auto ResultModel = Future->GetTask().Result();
         Future->EnsureCompletion();
+
         const auto Domain = Self;
         *Result = Domain;
         return nullptr;
@@ -292,24 +327,110 @@ namespace Gs2::Deploy::Domain
 
     Gs2::Core::Domain::CallbackID FGs2DeployDomain::SubscribeStacks(
     TFunction<void()> Callback
+
     )
     {
         return Gs2->Cache->ListSubscribe(
             Gs2::Deploy::Model::FStack::TypeName,
-            "deploy:Stack",
+            Gs2::Deploy::Model::Cache::FStackCache::CreateCacheParentKey(
+                TOptional<int32>()
+            ),
+            Callback,
             Callback
         );
     }
-
     void FGs2DeployDomain::UnsubscribeStacks(
         Gs2::Core::Domain::CallbackID CallbackID
     )
     {
         Gs2->Cache->ListUnsubscribe(
             Gs2::Deploy::Model::FStack::TypeName,
-            "deploy:Stack",
+            Gs2::Deploy::Model::Cache::FStackCache::CreateCacheParentKey(
+                TOptional<int32>()
+            ),
             CallbackID
         );
+    }
+    class FGs2DeployDomain::FCollectStacksTask : public Gs2::Core::Util::TGs2Future<TArray<Gs2::Deploy::Model::FStackPtr>>, public TSharedFromThis<FCollectStacksTask>
+    {
+        const TSharedPtr<FGs2DeployDomain> Self;
+        const TFunction<void(TArray<Gs2::Deploy::Model::FStackPtr>)> OnCollected;
+    const TOptional<FString> QueryNamePrefix;
+    public:
+        explicit FCollectStacksTask(const TSharedPtr<FGs2DeployDomain>& Self, TFunction<void(TArray<Gs2::Deploy::Model::FStackPtr>)> OnCollected,const TOptional<FString> NamePrefix) : Self(Self), OnCollected(OnCollected), QueryNamePrefix(NamePrefix) {}
+        FCollectStacksTask(const FCollectStacksTask& From) : TGs2Future(From), Self(From.Self), OnCollected(From.OnCollected), QueryNamePrefix(From.QueryNamePrefix) {}
+        virtual Gs2::Core::Model::FGs2ErrorPtr Action(TSharedPtr<TSharedPtr<TArray<Gs2::Deploy::Model::FStackPtr>>> Result) override
+        {
+            TArray<Gs2::Deploy::Model::FStackPtr> Items;
+            auto Iterator = Self->Stacks(QueryNamePrefix)->begin();
+            while (Iterator.HasNext())
+            {
+                if (Iterator.IsError()) return Iterator.Error();
+                if (Iterator.IsCurrentValid()) Items.Add(Iterator.Current());
+                ++Iterator;
+            }
+            if (Iterator.IsError()) return Iterator.Error();
+            *Result = MakeShared<TArray<Gs2::Deploy::Model::FStackPtr>>(Items);
+            if (OnCollected) OnCollected(Items);
+            return nullptr;
+        }
+    };
+
+    Gs2::Core::Domain::CallbackID FGs2DeployDomain::SubscribeStacks(
+        TFunction<void(TArray<Gs2::Deploy::Model::FStackPtr>)> Callback,const TOptional<FString> NamePrefix
+    )
+    {
+        const TWeakPtr<Gs2::Core::Domain::FGs2> WeakGs2 = this->Gs2;
+        const auto QueryNamePrefix = NamePrefix;
+        const auto Parent = Gs2::Deploy::Model::Cache::FStackCache::CreateCacheParentKey(
+        TOptional<int32>()
+    );
+        return Gs2->Cache->ListSubscribeTyped(
+            Gs2::Deploy::Model::FStack::TypeName,
+            Parent,
+            [Callback, WeakGs2](const TArray<FGs2ObjectPtr>& Values)
+            {
+                if (!WeakGs2.Pin().IsValid()) return;
+                TArray<Gs2::Deploy::Model::FStackPtr> TypedValues;
+                for (const auto& Value : Values) if (Value.IsValid()) TypedValues.Add(StaticCastSharedPtr<Gs2::Deploy::Model::FStack>(Value));
+                Callback(TypedValues);
+            },
+            [WeakGs2, Callback, QueryNamePrefix]()
+            {
+                const auto Owner = WeakGs2.Pin();
+                if (!Owner.IsValid()) return;
+                const auto Domain = MakeShared<FGs2DeployDomain>(Owner);
+                const auto Task = Gs2::Core::Util::New<FAsyncTask<FCollectStacksTask>>(Domain, Callback, QueryNamePrefix);
+                Task->StartBackgroundTask();
+            }
+        );
+    }
+
+    void FGs2DeployDomain::InvalidateStacks(const TOptional<FString> NamePrefix)
+    {
+        Gs2->Cache->ClearListCache(
+            Gs2::Deploy::Model::FStack::TypeName,
+            Gs2::Deploy::Model::Cache::FStackCache::CreateCacheParentKey(
+        TOptional<int32>()
+    )
+        );
+    }
+
+    FGs2DeployDomain::FSubscribeStacksWithInitialCallTask::FSubscribeStacksWithInitialCallTask(const TSharedPtr<FGs2DeployDomain>& Self, TFunction<void(TArray<Gs2::Deploy::Model::FStackPtr>)> Callback,const TOptional<FString> NamePrefix) : Self(Self), Callback(Callback), QueryNamePrefix(NamePrefix) {}
+    FGs2DeployDomain::FSubscribeStacksWithInitialCallTask::FSubscribeStacksWithInitialCallTask(const FSubscribeStacksWithInitialCallTask& From) : TGs2Future(From), Self(From.Self), Callback(From.Callback), QueryNamePrefix(From.QueryNamePrefix) {}
+    Gs2::Core::Model::FGs2ErrorPtr FGs2DeployDomain::FSubscribeStacksWithInitialCallTask::Action(TSharedPtr<TSharedPtr<Gs2::Core::Domain::CallbackID>> Result)
+    {
+        const auto Task = Gs2::Core::Util::New<FAsyncTask<FCollectStacksTask>>(Self, TFunction<void(TArray<Gs2::Deploy::Model::FStackPtr>)>(), QueryNamePrefix);
+        Task->StartSynchronousTask(); Task->EnsureCompletion();
+        if (Task->GetTask().IsError()) return Task->GetTask().Error();
+        const auto Values = Task->GetTask().Result();
+        const auto CallbackId = Self->SubscribeStacks(Callback, QueryNamePrefix);
+        Callback(*Values); *Result = MakeShared<Gs2::Core::Domain::CallbackID>(CallbackId);
+        return nullptr;
+    }
+    TSharedPtr<FAsyncTask<FGs2DeployDomain::FSubscribeStacksWithInitialCallTask>> FGs2DeployDomain::SubscribeStacksWithInitialCall(TFunction<void(TArray<Gs2::Deploy::Model::FStackPtr>)> Callback,const TOptional<FString> NamePrefix)
+    {
+        return Gs2::Core::Util::New<FAsyncTask<FSubscribeStacksWithInitialCallTask>>(this->AsShared(), Callback, NamePrefix);
     }
 
     TSharedPtr<Gs2::Deploy::Domain::Model::FStackDomain> FGs2DeployDomain::Stack(
@@ -326,21 +447,24 @@ namespace Gs2::Deploy::Domain
     void FGs2DeployDomain::UpdateCacheFromStampSheet(
         const FString Method,
         const FString Request,
-        const FString Result
+        const FString Result,
+        const TOptional<int32> TimeOffset
     ) {
     }
 
     void FGs2DeployDomain::UpdateCacheFromStampTask(
         const FString Method,
         const FString Request,
-        const FString Result
+        const FString Result,
+        const TOptional<int32> TimeOffset
     ) {
     }
 
     void FGs2DeployDomain::UpdateCacheFromJobResult(
         const FString Method,
         const Gs2::JobQueue::Model::FJobPtr Job,
-        const Gs2::JobQueue::Model::FJobResultBodyPtr Result
+        const Gs2::JobQueue::Model::FJobResultBodyPtr Result,
+        const TOptional<int32> TimeOffset
     ) {
     }
 
@@ -356,4 +480,3 @@ namespace Gs2::Deploy::Domain
 #elif defined(__clang__)
 #pragma clang diagnostic pop
 #endif
-

@@ -33,6 +33,7 @@
 #include "SeasonRating/Domain/Model/Vote.h"
 #include "SeasonRating/Domain/Model/User.h"
 #include "SeasonRating/Domain/Model/UserAccessToken.h"
+#include "SeasonRating/Model/Cache/Vote.h"
 
 #include "Core/Domain/Gs2.h"
 #include "Core/Domain/Transaction/JobQueueJobDomainFactory.h"
@@ -110,6 +111,7 @@ namespace Gs2::SeasonRating::Domain::Model
         }
         const auto ResultModel = Future->GetTask().Result();
         Future->EnsureCompletion();
+
         const auto Domain = Self;
         *Result = Domain;
         return nullptr;
@@ -141,7 +143,7 @@ namespace Gs2::SeasonRating::Domain::Model
     )
     {
         return FString("") +
-            (SeasonName.IsSet() ? *SeasonName : "null") + ":" + 
+            (SeasonName.IsSet() ? *SeasonName : "null") + ":" +
             (SessionName.IsSet() ? *SessionName : "null");
     }
 
@@ -163,39 +165,144 @@ namespace Gs2::SeasonRating::Domain::Model
         TSharedPtr<TSharedPtr<Gs2::SeasonRating::Model::FVote>> Result
     )
     {
-        // ReSharper disable once CppLocalVariableMayBeConst
-        TSharedPtr<Gs2::SeasonRating::Model::FVote> Value;
-        auto bCacheHit = Self->Gs2->Cache->TryGet<Gs2::SeasonRating::Model::FVote>(
-            Self->ParentKey,
-            Gs2::SeasonRating::Domain::Model::FVoteDomain::CreateCacheKey(
-                Self->SeasonName,
-                Self->SessionName
-            ),
-            &Value
-        );
-        *Result = Value;
+        const auto CacheParentKey = Gs2::SeasonRating::Model::Cache::FVoteCache::CreateCacheParentKey(
 
-        return nullptr;
+            Self->NamespaceName,
+            TOptional<int32>()
+        );
+        const auto CacheKey = Gs2::SeasonRating::Model::Cache::FVoteCache::CreateCacheKey(
+
+            Self->SeasonName,
+            Self->SessionName
+        );
+        return Self->Gs2->Cache->ExecuteWithKeyLock(
+            Gs2::SeasonRating::Model::FVote::TypeName,
+            CacheParentKey,
+            CacheKey,
+            [Self = Self, Result]() -> Gs2::Core::Model::FGs2ErrorPtr
+            {
+                Gs2::SeasonRating::Model::FVotePtr Value;
+                const auto CacheHit = Gs2::SeasonRating::Model::Cache::FVoteCache::TryGet(
+                    Self->Gs2->Cache,
+
+                    Self->NamespaceName,
+                    Self->SeasonName,
+                    Self->SessionName,
+                    TOptional<int32>(),
+                    &Value
+                );
+                if (CacheHit)
+                {
+                    *Result = Value;
+                    return nullptr;
+                }
+                *Result = Value;
+                return nullptr;
+            }
+        );
     }
 
     TSharedPtr<FAsyncTask<FVoteDomain::FModelTask>> FVoteDomain::Model() {
         return Gs2::Core::Util::New<FAsyncTask<FVoteDomain::FModelTask>>(this->AsShared());
     }
 
+    void FVoteDomain::Invalidate()
+    {
+        Gs2::SeasonRating::Model::Cache::FVoteCache::Delete(
+            Gs2->Cache,
+
+            NamespaceName,
+            SeasonName,
+            SessionName,
+            TOptional<int32>()
+        );
+    }
+
+    FVoteDomain::FSubscribeWithInitialCallTask::FSubscribeWithInitialCallTask(
+        const TSharedPtr<FVoteDomain>& Self,
+        TFunction<void(Gs2::SeasonRating::Model::FVotePtr)> Callback
+    ):
+        Self(Self),
+        Callback(Callback)
+    {
+    }
+
+    FVoteDomain::FSubscribeWithInitialCallTask::FSubscribeWithInitialCallTask(
+        const FSubscribeWithInitialCallTask& From
+    ):
+        TGs2Future(From),
+        Self(From.Self),
+        Callback(From.Callback)
+    {
+    }
+
+    Gs2::Core::Model::FGs2ErrorPtr FVoteDomain::FSubscribeWithInitialCallTask::Action(
+        TSharedPtr<TSharedPtr<Gs2::Core::Domain::CallbackID>> Result
+    )
+    {
+        const auto Task = Self->Model();
+        Task->StartSynchronousTask();
+        Task->EnsureCompletion();
+        if (Task->GetTask().IsError()) return Task->GetTask().Error();
+        const auto Item = Task->GetTask().Result();
+        const auto CallbackId = Self->Subscribe(Callback);
+        Callback(Item);
+        *Result = MakeShared<Gs2::Core::Domain::CallbackID>(CallbackId);
+        return nullptr;
+    }
+
+    TSharedPtr<FAsyncTask<FVoteDomain::FSubscribeWithInitialCallTask>> FVoteDomain::SubscribeWithInitialCall(
+        TFunction<void(Gs2::SeasonRating::Model::FVotePtr)> Callback
+    )
+    {
+        return Gs2::Core::Util::New<FAsyncTask<FSubscribeWithInitialCallTask>>(this->AsShared(), Callback);
+    }
+
     Gs2::Core::Domain::CallbackID FVoteDomain::Subscribe(
         TFunction<void(Gs2::SeasonRating::Model::FVotePtr)> Callback
     )
     {
+        const auto SubscriptionParentKey = Gs2::SeasonRating::Model::Cache::FVoteCache::CreateCacheParentKey(
+
+            NamespaceName,
+            TOptional<int32>()
+        );
+        const auto SubscriptionCacheKey = Gs2::SeasonRating::Model::Cache::FVoteCache::CreateCacheKey(
+
+            SeasonName,
+            SessionName
+        );
+        const TWeakPtr<Gs2::Core::Domain::FGs2> WeakGs2 = Gs2;
+        const TWeakPtr<SeasonRating::Domain::FGs2SeasonRatingDomain> WeakService = Service;
+        const FString RegisteredParentKey = SubscriptionParentKey;
+        const TOptional<FString> QueryNamespaceName = NamespaceName;
+        const TOptional<FString> QuerySeasonName = SeasonName;
+        const TOptional<FString> QuerySessionName = SessionName;
         return Gs2->Cache->Subscribe(
             Gs2::SeasonRating::Model::FVote::TypeName,
-            ParentKey,
-            Gs2::SeasonRating::Domain::Model::FVoteDomain::CreateCacheKey(
-                SeasonName,
-                SessionName
-            ),
+            SubscriptionParentKey,
+            SubscriptionCacheKey,
             [Callback](TSharedPtr<FGs2Object> obj)
             {
                 Callback(StaticCastSharedPtr<Gs2::SeasonRating::Model::FVote>(obj));
+            },
+            [WeakGs2, WeakService, RegisteredParentKey, QueryNamespaceName, QuerySeasonName, QuerySessionName]()
+            {
+                const auto Owner = WeakGs2.Pin();
+                if (!Owner.IsValid())
+                {
+                    return;
+                }
+                const auto Domain = MakeShared<FVoteDomain>(
+                    Owner,
+                    WeakService.Pin(),
+                    QueryNamespaceName,
+                    QuerySeasonName,
+                    QuerySessionName
+                );
+                Domain->ParentKey = RegisteredParentKey;
+                const auto Task = Domain->Model();
+                Task->StartBackgroundTask();
             }
         );
     }
@@ -204,13 +311,20 @@ namespace Gs2::SeasonRating::Domain::Model
         Gs2::Core::Domain::CallbackID CallbackID
     )
     {
+        const auto SubscriptionParentKey = Gs2::SeasonRating::Model::Cache::FVoteCache::CreateCacheParentKey(
+
+            NamespaceName,
+            TOptional<int32>()
+        );
+        const auto SubscriptionCacheKey = Gs2::SeasonRating::Model::Cache::FVoteCache::CreateCacheKey(
+
+            SeasonName,
+            SessionName
+        );
         Gs2->Cache->Unsubscribe(
             Gs2::SeasonRating::Model::FVote::TypeName,
-            ParentKey,
-            Gs2::SeasonRating::Domain::Model::FVoteDomain::CreateCacheKey(
-                SeasonName,
-                SessionName
-            ),
+            SubscriptionParentKey,
+            SubscriptionCacheKey,
             CallbackID
         );
     }
@@ -221,4 +335,3 @@ namespace Gs2::SeasonRating::Domain::Model
 #elif defined(__clang__)
 #pragma clang diagnostic pop
 #endif
-

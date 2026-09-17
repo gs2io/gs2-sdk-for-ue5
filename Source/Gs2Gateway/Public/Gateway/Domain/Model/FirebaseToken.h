@@ -76,6 +76,8 @@ namespace Gs2::Gateway::Domain::Model
             const FFirebaseTokenDomain& From
         );
 
+
+
         class GS2GATEWAY_API FSetTask final :
             public Gs2::Core::Util::TGs2Future<Gs2::Gateway::Domain::Model::FFirebaseTokenDomain>,
             public TSharedFromThis<FSetTask>
@@ -101,6 +103,8 @@ namespace Gs2::Gateway::Domain::Model
         TSharedPtr<FAsyncTask<FSetTask>> Set(
             Request::FSetFirebaseTokenByUserIdRequestPtr Request
         );
+
+
 
         class GS2GATEWAY_API FGetTask final :
             public Gs2::Core::Util::TGs2Future<Gs2::Gateway::Model::FFirebaseToken>,
@@ -128,6 +132,8 @@ namespace Gs2::Gateway::Domain::Model
             Request::FGetFirebaseTokenByUserIdRequestPtr Request
         );
 
+
+
         class GS2GATEWAY_API FDeleteTask final :
             public Gs2::Core::Util::TGs2Future<Gs2::Gateway::Domain::Model::FFirebaseTokenDomain>,
             public TSharedFromThis<FDeleteTask>
@@ -153,6 +159,8 @@ namespace Gs2::Gateway::Domain::Model
         TSharedPtr<FAsyncTask<FDeleteTask>> Delete(
             Request::FDeleteFirebaseTokenByUserIdRequestPtr Request
         );
+
+
 
         class GS2GATEWAY_API FSendMobileNotificationTask final :
             public Gs2::Core::Util::TGs2Future<Gs2::Gateway::Domain::Model::FFirebaseTokenDomain>,
@@ -211,7 +219,34 @@ namespace Gs2::Gateway::Domain::Model
 
         TSharedPtr<FAsyncTask<FModelTask>> Model();
 
+        void Invalidate();
+
         Gs2::Core::Domain::CallbackID Subscribe(
+            TFunction<void(Gs2::Gateway::Model::FFirebaseTokenPtr)> Callback
+        );
+
+        class GS2GATEWAY_API FSubscribeWithInitialCallTask final :
+            public Gs2::Core::Util::TGs2Future<Gs2::Core::Domain::CallbackID>,
+            public TSharedFromThis<FSubscribeWithInitialCallTask>
+        {
+            const TSharedPtr<FFirebaseTokenDomain> Self;
+            const TFunction<void(Gs2::Gateway::Model::FFirebaseTokenPtr)> Callback;
+        public:
+            FSubscribeWithInitialCallTask(
+                const TSharedPtr<FFirebaseTokenDomain>& Self,
+                TFunction<void(Gs2::Gateway::Model::FFirebaseTokenPtr)> Callback
+            );
+
+            FSubscribeWithInitialCallTask(
+                const FSubscribeWithInitialCallTask& From
+            );
+
+            virtual Gs2::Core::Model::FGs2ErrorPtr Action(
+                TSharedPtr<TSharedPtr<Gs2::Core::Domain::CallbackID>> Result
+            ) override;
+        };
+
+        TSharedPtr<FAsyncTask<FSubscribeWithInitialCallTask>> SubscribeWithInitialCall(
             TFunction<void(Gs2::Gateway::Model::FFirebaseTokenPtr)> Callback
         );
 

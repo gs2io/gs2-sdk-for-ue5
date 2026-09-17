@@ -23,6 +23,9 @@
 #endif
 
 #include "Schedule/Domain/Model/UserAccessToken.h"
+
+// deny overwrite
+
 #include "Schedule/Domain/Model/User.h"
 #include "Schedule/Domain/Model/Namespace.h"
 #include "Schedule/Domain/Model/EventMaster.h"
@@ -33,6 +36,8 @@
 #include "Schedule/Domain/Model/User.h"
 #include "Schedule/Domain/Model/UserAccessToken.h"
 #include "Schedule/Domain/Model/CurrentEventMaster.h"
+#include "Schedule/Model/Cache/Trigger.h"
+#include "Schedule/Model/Cache/Event.h"
 
 #include "Core/Domain/Gs2.h"
 #include "Core/Domain/Transaction/JobQueueJobDomainFactory.h"
@@ -87,32 +92,124 @@ namespace Gs2::Schedule::Domain::Model
 
     Gs2::Core::Domain::CallbackID FUserAccessTokenDomain::SubscribeTriggers(
     TFunction<void()> Callback
+
     )
     {
         return Gs2->Cache->ListSubscribe(
             Gs2::Schedule::Model::FTrigger::TypeName,
-            Gs2::Schedule::Domain::Model::FUserDomain::CreateCacheParentKey(
+            Gs2::Schedule::Model::Cache::FTriggerCache::CreateCacheParentKey(
                 NamespaceName,
-                UserId(),
-                "Trigger"
+                AccessToken.IsValid() ? AccessToken->GetUserId() : TOptional<FString>(),
+                AccessToken.IsValid() ? AccessToken->GetTimeOffset() : TOptional<int32>()
             ),
+            Callback,
             Callback
         );
     }
-
     void FUserAccessTokenDomain::UnsubscribeTriggers(
         Gs2::Core::Domain::CallbackID CallbackID
     )
     {
         Gs2->Cache->ListUnsubscribe(
             Gs2::Schedule::Model::FTrigger::TypeName,
-            Gs2::Schedule::Domain::Model::FUserDomain::CreateCacheParentKey(
+            Gs2::Schedule::Model::Cache::FTriggerCache::CreateCacheParentKey(
                 NamespaceName,
-                UserId(),
-                "Trigger"
+                AccessToken.IsValid() ? AccessToken->GetUserId() : TOptional<FString>(),
+                AccessToken.IsValid() ? AccessToken->GetTimeOffset() : TOptional<int32>()
             ),
             CallbackID
         );
+    }
+    class FUserAccessTokenDomain::FCollectTriggersTask : public Gs2::Core::Util::TGs2Future<TArray<Gs2::Schedule::Model::FTriggerPtr>>, public TSharedFromThis<FCollectTriggersTask>
+    {
+        const TSharedPtr<FUserAccessTokenDomain> Self;
+        const TFunction<void(TArray<Gs2::Schedule::Model::FTriggerPtr>)> OnCollected;
+
+    public:
+        explicit FCollectTriggersTask(const TSharedPtr<FUserAccessTokenDomain>& Self, TFunction<void(TArray<Gs2::Schedule::Model::FTriggerPtr>)> OnCollected) : Self(Self), OnCollected(OnCollected) {}
+        FCollectTriggersTask(const FCollectTriggersTask& From) : TGs2Future(From), Self(From.Self), OnCollected(From.OnCollected) {}
+        virtual Gs2::Core::Model::FGs2ErrorPtr Action(TSharedPtr<TSharedPtr<TArray<Gs2::Schedule::Model::FTriggerPtr>>> Result) override
+        {
+            TArray<Gs2::Schedule::Model::FTriggerPtr> Items;
+            auto Iterator = Self->Triggers()->begin();
+            while (Iterator.HasNext())
+            {
+                if (Iterator.IsError()) return Iterator.Error();
+                if (Iterator.IsCurrentValid()) Items.Add(Iterator.Current());
+                ++Iterator;
+            }
+            if (Iterator.IsError()) return Iterator.Error();
+            *Result = MakeShared<TArray<Gs2::Schedule::Model::FTriggerPtr>>(Items);
+            if (OnCollected) OnCollected(Items);
+            return nullptr;
+        }
+    };
+
+    Gs2::Core::Domain::CallbackID FUserAccessTokenDomain::SubscribeTriggers(
+        TFunction<void(TArray<Gs2::Schedule::Model::FTriggerPtr>)> Callback
+    )
+    {
+        const TWeakPtr<Gs2::Core::Domain::FGs2> WeakGs2 = this->Gs2;
+        const TWeakPtr<Schedule::Domain::FGs2ScheduleDomain> WeakService = this->Service;
+        const auto SourceToken = this->AccessToken;
+        const TOptional<FString> RegisteredUserId = SourceToken.IsValid() ? TOptional<FString>(SourceToken->GetUserId()) : TOptional<FString>();
+        const int32 RegisteredTimeOffset = SourceToken.IsValid() ? SourceToken->GetTimeOffset().Get(0) : 0;
+        const auto QueryNamespaceName = NamespaceName;
+        const auto Parent = Gs2::Schedule::Model::Cache::FTriggerCache::CreateCacheParentKey(
+        NamespaceName,
+        AccessToken.IsValid() ? AccessToken->GetUserId() : TOptional<FString>(),
+        AccessToken.IsValid() ? AccessToken->GetTimeOffset() : TOptional<int32>()
+    );
+        return Gs2->Cache->ListSubscribeTyped(
+            Gs2::Schedule::Model::FTrigger::TypeName,
+            Parent,
+            [Callback, WeakGs2](const TArray<FGs2ObjectPtr>& Values)
+            {
+                if (!WeakGs2.Pin().IsValid()) return;
+                TArray<Gs2::Schedule::Model::FTriggerPtr> TypedValues;
+                for (const auto& Value : Values) if (Value.IsValid()) TypedValues.Add(StaticCastSharedPtr<Gs2::Schedule::Model::FTrigger>(Value));
+                Callback(TypedValues);
+            },
+            [WeakGs2, WeakService, Callback, QueryNamespaceName, SourceToken, RegisteredUserId, RegisteredTimeOffset]()
+            {
+                const auto Owner = WeakGs2.Pin();
+                if (!Owner.IsValid() || !SourceToken.IsValid() || !RegisteredUserId.IsSet()) return;
+                const auto TokenSnapshot = MakeShared<Gs2::Auth::Model::FAccessToken>(*SourceToken);
+                if (TokenSnapshot->GetUserId() != RegisteredUserId || TokenSnapshot->GetTimeOffset().Get(0) != RegisteredTimeOffset) return;
+                const auto Domain = MakeShared<FUserAccessTokenDomain>(Owner, WeakService.Pin(), QueryNamespaceName, TokenSnapshot);
+                const auto Task = Gs2::Core::Util::New<FAsyncTask<FCollectTriggersTask>>(Domain, Callback);
+                Task->StartBackgroundTask();
+            }
+        );
+    }
+
+    void FUserAccessTokenDomain::InvalidateTriggers()
+    {
+        Gs2->Cache->ClearListCache(
+            Gs2::Schedule::Model::FTrigger::TypeName,
+            Gs2::Schedule::Model::Cache::FTriggerCache::CreateCacheParentKey(
+        NamespaceName,
+        AccessToken.IsValid() ? AccessToken->GetUserId() : TOptional<FString>(),
+        AccessToken.IsValid() ? AccessToken->GetTimeOffset() : TOptional<int32>()
+    )
+        );
+    }
+
+    FUserAccessTokenDomain::FSubscribeTriggersWithInitialCallTask::FSubscribeTriggersWithInitialCallTask(const TSharedPtr<FUserAccessTokenDomain>& Self, TFunction<void(TArray<Gs2::Schedule::Model::FTriggerPtr>)> Callback) : Self(Self), Callback(Callback) {}
+    FUserAccessTokenDomain::FSubscribeTriggersWithInitialCallTask::FSubscribeTriggersWithInitialCallTask(const FSubscribeTriggersWithInitialCallTask& From) : TGs2Future(From), Self(From.Self), Callback(From.Callback) {}
+    Gs2::Core::Model::FGs2ErrorPtr FUserAccessTokenDomain::FSubscribeTriggersWithInitialCallTask::Action(TSharedPtr<TSharedPtr<Gs2::Core::Domain::CallbackID>> Result)
+    {
+        const auto Task = Gs2::Core::Util::New<FAsyncTask<FCollectTriggersTask>>(Self, TFunction<void(TArray<Gs2::Schedule::Model::FTriggerPtr>)>());
+        Task->StartSynchronousTask(); Task->EnsureCompletion();
+        if (Task->GetTask().IsError()) return Task->GetTask().Error();
+        const auto Values = Task->GetTask().Result();
+        const auto CallbackId = Self->SubscribeTriggers(Callback);
+        Callback(*Values); *Result = MakeShared<Gs2::Core::Domain::CallbackID>(CallbackId);
+        return nullptr;
+    }
+    TSharedPtr<FAsyncTask<FUserAccessTokenDomain::FSubscribeTriggersWithInitialCallTask>> FUserAccessTokenDomain::SubscribeTriggersWithInitialCall(TFunction<void(TArray<Gs2::Schedule::Model::FTriggerPtr>)> Callback)
+    {
+        return Gs2::Core::Util::New<FAsyncTask<FSubscribeTriggersWithInitialCallTask>>(this->AsShared(), Callback);
     }
 
     TSharedPtr<Gs2::Schedule::Domain::Model::FTriggerAccessTokenDomain> FUserAccessTokenDomain::Trigger(
@@ -141,32 +238,147 @@ namespace Gs2::Schedule::Domain::Model
 
     Gs2::Core::Domain::CallbackID FUserAccessTokenDomain::SubscribeEvents(
     TFunction<void()> Callback
+
     )
     {
         return Gs2->Cache->ListSubscribe(
             Gs2::Schedule::Model::FEvent::TypeName,
-            Gs2::Schedule::Domain::Model::FUserDomain::CreateCacheParentKey(
+            Gs2::Schedule::Model::Cache::FEventCache::CreateCacheParentKey(
                 NamespaceName,
-                UserId(),
-                "Event"
+                AccessToken.IsValid() ? AccessToken->GetUserId() : TOptional<FString>(),
+                TOptional<bool>(true),
+                AccessToken.IsValid() ? AccessToken->GetTimeOffset() : TOptional<int32>()
             ),
+            Callback,
             Callback
         );
     }
-
     void FUserAccessTokenDomain::UnsubscribeEvents(
         Gs2::Core::Domain::CallbackID CallbackID
     )
     {
         Gs2->Cache->ListUnsubscribe(
             Gs2::Schedule::Model::FEvent::TypeName,
-            Gs2::Schedule::Domain::Model::FUserDomain::CreateCacheParentKey(
+            Gs2::Schedule::Model::Cache::FEventCache::CreateCacheParentKey(
                 NamespaceName,
-                UserId(),
-                "Event"
+                AccessToken.IsValid() ? AccessToken->GetUserId() : TOptional<FString>(),
+                TOptional<bool>(true),
+                AccessToken.IsValid() ? AccessToken->GetTimeOffset() : TOptional<int32>()
             ),
             CallbackID
         );
+        Gs2->Cache->ListUnsubscribe(
+            Gs2::Schedule::Model::FEvent::TypeName,
+            Gs2::Schedule::Model::Cache::FEventCache::CreateCacheParentKey(
+                NamespaceName,
+                AccessToken.IsValid() ? AccessToken->GetUserId() : TOptional<FString>(),
+                TOptional<bool>(false),
+                AccessToken.IsValid() ? AccessToken->GetTimeOffset() : TOptional<int32>()
+            ),
+            CallbackID
+        );
+    }
+    class FUserAccessTokenDomain::FCollectEventsTask : public Gs2::Core::Util::TGs2Future<TArray<Gs2::Schedule::Model::FEventPtr>>, public TSharedFromThis<FCollectEventsTask>
+    {
+        const TSharedPtr<FUserAccessTokenDomain> Self;
+        const TFunction<void(TArray<Gs2::Schedule::Model::FEventPtr>)> OnCollected;
+
+    public:
+        explicit FCollectEventsTask(const TSharedPtr<FUserAccessTokenDomain>& Self, TFunction<void(TArray<Gs2::Schedule::Model::FEventPtr>)> OnCollected) : Self(Self), OnCollected(OnCollected) {}
+        FCollectEventsTask(const FCollectEventsTask& From) : TGs2Future(From), Self(From.Self), OnCollected(From.OnCollected) {}
+        virtual Gs2::Core::Model::FGs2ErrorPtr Action(TSharedPtr<TSharedPtr<TArray<Gs2::Schedule::Model::FEventPtr>>> Result) override
+        {
+            TArray<Gs2::Schedule::Model::FEventPtr> Items;
+            auto Iterator = Self->Events()->begin();
+            while (Iterator.HasNext())
+            {
+                if (Iterator.IsError()) return Iterator.Error();
+                if (Iterator.IsCurrentValid()) Items.Add(Iterator.Current());
+                ++Iterator;
+            }
+            if (Iterator.IsError()) return Iterator.Error();
+            *Result = MakeShared<TArray<Gs2::Schedule::Model::FEventPtr>>(Items);
+            if (OnCollected) OnCollected(Items);
+            return nullptr;
+        }
+    };
+
+    Gs2::Core::Domain::CallbackID FUserAccessTokenDomain::SubscribeEvents(
+        TFunction<void(TArray<Gs2::Schedule::Model::FEventPtr>)> Callback
+    )
+    {
+        const TWeakPtr<Gs2::Core::Domain::FGs2> WeakGs2 = this->Gs2;
+        const TWeakPtr<Schedule::Domain::FGs2ScheduleDomain> WeakService = this->Service;
+        const auto SourceToken = this->AccessToken;
+        const TOptional<FString> RegisteredUserId = SourceToken.IsValid() ? TOptional<FString>(SourceToken->GetUserId()) : TOptional<FString>();
+        const int32 RegisteredTimeOffset = SourceToken.IsValid() ? SourceToken->GetTimeOffset().Get(0) : 0;
+        const auto QueryNamespaceName = NamespaceName;
+        const auto Parent = Gs2::Schedule::Model::Cache::FEventCache::CreateCacheParentKey(
+        NamespaceName,
+        AccessToken.IsValid() ? AccessToken->GetUserId() : TOptional<FString>(),
+        TOptional<bool>(true),
+        AccessToken.IsValid() ? AccessToken->GetTimeOffset() : TOptional<int32>()
+    );
+        return Gs2->Cache->ListSubscribeTyped(
+            Gs2::Schedule::Model::FEvent::TypeName,
+            Parent,
+            [Callback, WeakGs2](const TArray<FGs2ObjectPtr>& Values)
+            {
+                if (!WeakGs2.Pin().IsValid()) return;
+                TArray<Gs2::Schedule::Model::FEventPtr> TypedValues;
+                for (const auto& Value : Values) if (Value.IsValid()) TypedValues.Add(StaticCastSharedPtr<Gs2::Schedule::Model::FEvent>(Value));
+                Callback(TypedValues);
+            },
+            [WeakGs2, WeakService, Callback, QueryNamespaceName, SourceToken, RegisteredUserId, RegisteredTimeOffset]()
+            {
+                const auto Owner = WeakGs2.Pin();
+                if (!Owner.IsValid() || !SourceToken.IsValid() || !RegisteredUserId.IsSet()) return;
+                const auto TokenSnapshot = MakeShared<Gs2::Auth::Model::FAccessToken>(*SourceToken);
+                if (TokenSnapshot->GetUserId() != RegisteredUserId || TokenSnapshot->GetTimeOffset().Get(0) != RegisteredTimeOffset) return;
+                const auto Domain = MakeShared<FUserAccessTokenDomain>(Owner, WeakService.Pin(), QueryNamespaceName, TokenSnapshot);
+                const auto Task = Gs2::Core::Util::New<FAsyncTask<FCollectEventsTask>>(Domain, Callback);
+                Task->StartBackgroundTask();
+            }
+        );
+    }
+
+    void FUserAccessTokenDomain::InvalidateEvents()
+    {
+        Gs2->Cache->ClearListCache(
+            Gs2::Schedule::Model::FEvent::TypeName,
+            Gs2::Schedule::Model::Cache::FEventCache::CreateCacheParentKey(
+        NamespaceName,
+        AccessToken.IsValid() ? AccessToken->GetUserId() : TOptional<FString>(),
+        TOptional<bool>(true),
+        AccessToken.IsValid() ? AccessToken->GetTimeOffset() : TOptional<int32>()
+    )
+        );
+        Gs2->Cache->ClearListCache(
+            Gs2::Schedule::Model::FEvent::TypeName,
+            Gs2::Schedule::Model::Cache::FEventCache::CreateCacheParentKey(
+                NamespaceName,
+                AccessToken.IsValid() ? AccessToken->GetUserId() : TOptional<FString>(),
+                TOptional<bool>(false),
+                AccessToken.IsValid() ? AccessToken->GetTimeOffset() : TOptional<int32>()
+            )
+        );
+    }
+
+    FUserAccessTokenDomain::FSubscribeEventsWithInitialCallTask::FSubscribeEventsWithInitialCallTask(const TSharedPtr<FUserAccessTokenDomain>& Self, TFunction<void(TArray<Gs2::Schedule::Model::FEventPtr>)> Callback) : Self(Self), Callback(Callback) {}
+    FUserAccessTokenDomain::FSubscribeEventsWithInitialCallTask::FSubscribeEventsWithInitialCallTask(const FSubscribeEventsWithInitialCallTask& From) : TGs2Future(From), Self(From.Self), Callback(From.Callback) {}
+    Gs2::Core::Model::FGs2ErrorPtr FUserAccessTokenDomain::FSubscribeEventsWithInitialCallTask::Action(TSharedPtr<TSharedPtr<Gs2::Core::Domain::CallbackID>> Result)
+    {
+        const auto Task = Gs2::Core::Util::New<FAsyncTask<FCollectEventsTask>>(Self, TFunction<void(TArray<Gs2::Schedule::Model::FEventPtr>)>());
+        Task->StartSynchronousTask(); Task->EnsureCompletion();
+        if (Task->GetTask().IsError()) return Task->GetTask().Error();
+        const auto Values = Task->GetTask().Result();
+        const auto CallbackId = Self->SubscribeEvents(Callback);
+        Callback(*Values); *Result = MakeShared<Gs2::Core::Domain::CallbackID>(CallbackId);
+        return nullptr;
+    }
+    TSharedPtr<FAsyncTask<FUserAccessTokenDomain::FSubscribeEventsWithInitialCallTask>> FUserAccessTokenDomain::SubscribeEventsWithInitialCall(TFunction<void(TArray<Gs2::Schedule::Model::FEventPtr>)> Callback)
+    {
+        return Gs2::Core::Util::New<FAsyncTask<FSubscribeEventsWithInitialCallTask>>(this->AsShared(), Callback);
     }
 
     TSharedPtr<Gs2::Schedule::Domain::Model::FEventAccessTokenDomain> FUserAccessTokenDomain::Event(
@@ -208,4 +420,3 @@ namespace Gs2::Schedule::Domain::Model
 #elif defined(__clang__)
 #pragma clang diagnostic pop
 #endif
-

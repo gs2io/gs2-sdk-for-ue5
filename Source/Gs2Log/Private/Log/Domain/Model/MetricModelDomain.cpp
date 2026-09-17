@@ -38,6 +38,7 @@
 #include "Log/Domain/Model/Dashboard.h"
 #include "Log/Domain/Model/LogEntry.h"
 #include "Log/Domain/Model/MetricModel.h"
+#include "Log/Model/Cache/MetricModel.h"
 
 #include "Core/Domain/Gs2.h"
 #include "Core/Domain/Transaction/JobQueueJobDomainFactory.h"
@@ -117,37 +118,138 @@ namespace Gs2::Log::Domain::Model
         TSharedPtr<TSharedPtr<Gs2::Log::Model::FMetricModel>> Result
     )
     {
-        // ReSharper disable once CppLocalVariableMayBeConst
-        TSharedPtr<Gs2::Log::Model::FMetricModel> Value;
-        auto bCacheHit = Self->Gs2->Cache->TryGet<Gs2::Log::Model::FMetricModel>(
-            Self->ParentKey,
-            Gs2::Log::Domain::Model::FMetricModelDomain::CreateCacheKey(
-                Self->Name
-            ),
-            &Value
-        );
-        *Result = Value;
+        const auto CacheParentKey = Gs2::Log::Model::Cache::FMetricModelCache::CreateCacheParentKey(
 
-        return nullptr;
+            Self->NamespaceName,
+            TOptional<int32>()
+        );
+        const auto CacheKey = Gs2::Log::Model::Cache::FMetricModelCache::CreateCacheKey(
+
+            Self->Name
+        );
+        return Self->Gs2->Cache->ExecuteWithKeyLock(
+            Gs2::Log::Model::FMetricModel::TypeName,
+            CacheParentKey,
+            CacheKey,
+            [Self = Self, Result]() -> Gs2::Core::Model::FGs2ErrorPtr
+            {
+                Gs2::Log::Model::FMetricModelPtr Value;
+                const auto CacheHit = Gs2::Log::Model::Cache::FMetricModelCache::TryGet(
+                    Self->Gs2->Cache,
+
+                    Self->NamespaceName,
+                    Self->Name,
+                    TOptional<int32>(),
+                    &Value
+                );
+                if (CacheHit)
+                {
+                    *Result = Value;
+                    return nullptr;
+                }
+                *Result = Value;
+                return nullptr;
+            }
+        );
     }
 
     TSharedPtr<FAsyncTask<FMetricModelDomain::FModelTask>> FMetricModelDomain::Model() {
         return Gs2::Core::Util::New<FAsyncTask<FMetricModelDomain::FModelTask>>(this->AsShared());
     }
 
+    void FMetricModelDomain::Invalidate()
+    {
+        Gs2::Log::Model::Cache::FMetricModelCache::Delete(
+            Gs2->Cache,
+
+            NamespaceName,
+            Name,
+            TOptional<int32>()
+        );
+    }
+
+    FMetricModelDomain::FSubscribeWithInitialCallTask::FSubscribeWithInitialCallTask(
+        const TSharedPtr<FMetricModelDomain>& Self,
+        TFunction<void(Gs2::Log::Model::FMetricModelPtr)> Callback
+    ):
+        Self(Self),
+        Callback(Callback)
+    {
+    }
+
+    FMetricModelDomain::FSubscribeWithInitialCallTask::FSubscribeWithInitialCallTask(
+        const FSubscribeWithInitialCallTask& From
+    ):
+        TGs2Future(From),
+        Self(From.Self),
+        Callback(From.Callback)
+    {
+    }
+
+    Gs2::Core::Model::FGs2ErrorPtr FMetricModelDomain::FSubscribeWithInitialCallTask::Action(
+        TSharedPtr<TSharedPtr<Gs2::Core::Domain::CallbackID>> Result
+    )
+    {
+        const auto Task = Self->Model();
+        Task->StartSynchronousTask();
+        Task->EnsureCompletion();
+        if (Task->GetTask().IsError()) return Task->GetTask().Error();
+        const auto Item = Task->GetTask().Result();
+        const auto CallbackId = Self->Subscribe(Callback);
+        Callback(Item);
+        *Result = MakeShared<Gs2::Core::Domain::CallbackID>(CallbackId);
+        return nullptr;
+    }
+
+    TSharedPtr<FAsyncTask<FMetricModelDomain::FSubscribeWithInitialCallTask>> FMetricModelDomain::SubscribeWithInitialCall(
+        TFunction<void(Gs2::Log::Model::FMetricModelPtr)> Callback
+    )
+    {
+        return Gs2::Core::Util::New<FAsyncTask<FSubscribeWithInitialCallTask>>(this->AsShared(), Callback);
+    }
+
     Gs2::Core::Domain::CallbackID FMetricModelDomain::Subscribe(
         TFunction<void(Gs2::Log::Model::FMetricModelPtr)> Callback
     )
     {
+        const auto SubscriptionParentKey = Gs2::Log::Model::Cache::FMetricModelCache::CreateCacheParentKey(
+
+            NamespaceName,
+            TOptional<int32>()
+        );
+        const auto SubscriptionCacheKey = Gs2::Log::Model::Cache::FMetricModelCache::CreateCacheKey(
+
+            Name
+        );
+        const TWeakPtr<Gs2::Core::Domain::FGs2> WeakGs2 = Gs2;
+        const TWeakPtr<Log::Domain::FGs2LogDomain> WeakService = Service;
+        const FString RegisteredParentKey = SubscriptionParentKey;
+        const TOptional<FString> QueryNamespaceName = NamespaceName;
+        const TOptional<FString> QueryName = Name;
         return Gs2->Cache->Subscribe(
             Gs2::Log::Model::FMetricModel::TypeName,
-            ParentKey,
-            Gs2::Log::Domain::Model::FMetricModelDomain::CreateCacheKey(
-                Name
-            ),
+            SubscriptionParentKey,
+            SubscriptionCacheKey,
             [Callback](TSharedPtr<FGs2Object> obj)
             {
                 Callback(StaticCastSharedPtr<Gs2::Log::Model::FMetricModel>(obj));
+            },
+            [WeakGs2, WeakService, RegisteredParentKey, QueryNamespaceName, QueryName]()
+            {
+                const auto Owner = WeakGs2.Pin();
+                if (!Owner.IsValid())
+                {
+                    return;
+                }
+                const auto Domain = MakeShared<FMetricModelDomain>(
+                    Owner,
+                    WeakService.Pin(),
+                    QueryNamespaceName,
+                    QueryName
+                );
+                Domain->ParentKey = RegisteredParentKey;
+                const auto Task = Domain->Model();
+                Task->StartBackgroundTask();
             }
         );
     }
@@ -156,12 +258,19 @@ namespace Gs2::Log::Domain::Model
         Gs2::Core::Domain::CallbackID CallbackID
     )
     {
+        const auto SubscriptionParentKey = Gs2::Log::Model::Cache::FMetricModelCache::CreateCacheParentKey(
+
+            NamespaceName,
+            TOptional<int32>()
+        );
+        const auto SubscriptionCacheKey = Gs2::Log::Model::Cache::FMetricModelCache::CreateCacheKey(
+
+            Name
+        );
         Gs2->Cache->Unsubscribe(
             Gs2::Log::Model::FMetricModel::TypeName,
-            ParentKey,
-            Gs2::Log::Domain::Model::FMetricModelDomain::CreateCacheKey(
-                Name
-            ),
+            SubscriptionParentKey,
+            SubscriptionCacheKey,
             CallbackID
         );
     }
@@ -172,4 +281,3 @@ namespace Gs2::Log::Domain::Model
 #elif defined(__clang__)
 #pragma clang diagnostic pop
 #endif
-

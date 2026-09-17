@@ -81,6 +81,8 @@ namespace Gs2::Auth::Domain::Model
             const FAccessTokenDomain& From
         );
 
+
+
         class GS2AUTH_API FLoginTask final :
             public Gs2::Core::Util::TGs2Future<Gs2::Auth::Domain::Model::FAccessTokenDomain>,
             public TSharedFromThis<FLoginTask>
@@ -106,6 +108,8 @@ namespace Gs2::Auth::Domain::Model
         TSharedPtr<FAsyncTask<FLoginTask>> Login(
             Request::FLoginRequestPtr Request
         );
+
+
 
         class GS2AUTH_API FLoginBySignatureTask final :
             public Gs2::Core::Util::TGs2Future<Gs2::Auth::Domain::Model::FAccessTokenDomain>,
@@ -133,6 +137,8 @@ namespace Gs2::Auth::Domain::Model
             Request::FLoginBySignatureRequestPtr Request
         );
 
+
+
         class GS2AUTH_API FFederationTask final :
             public Gs2::Core::Util::TGs2Future<Gs2::Auth::Domain::Model::FAccessTokenDomain>,
             public TSharedFromThis<FFederationTask>
@@ -158,6 +164,8 @@ namespace Gs2::Auth::Domain::Model
         TSharedPtr<FAsyncTask<FFederationTask>> Federation(
             Request::FFederationRequestPtr Request
         );
+
+
 
         class GS2AUTH_API FIssueTimeOffsetTokenTask final :
             public Gs2::Core::Util::TGs2Future<Gs2::Auth::Domain::Model::FAccessTokenDomain>,

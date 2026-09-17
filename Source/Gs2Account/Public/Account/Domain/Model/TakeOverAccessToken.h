@@ -100,6 +100,8 @@ namespace Gs2::Account::Domain::Model
             const FTakeOverAccessTokenDomain& From
         );
 
+
+
         class GS2ACCOUNT_API FCreateTask final :
             public Gs2::Core::Util::TGs2Future<Gs2::Account::Domain::Model::FTakeOverAccessTokenDomain>,
             public TSharedFromThis<FCreateTask>
@@ -125,6 +127,8 @@ namespace Gs2::Account::Domain::Model
         TSharedPtr<FAsyncTask<FCreateTask>> Create(
             Request::FCreateTakeOverRequestPtr Request
         );
+
+
 
         class GS2ACCOUNT_API FCreateOpenIdConnectTask final :
             public Gs2::Core::Util::TGs2Future<Gs2::Account::Domain::Model::FTakeOverAccessTokenDomain>,
@@ -152,6 +156,8 @@ namespace Gs2::Account::Domain::Model
             Request::FCreateTakeOverOpenIdConnectRequestPtr Request
         );
 
+
+
         class GS2ACCOUNT_API FGetTask final :
             public Gs2::Core::Util::TGs2Future<Gs2::Account::Model::FTakeOver>,
             public TSharedFromThis<FGetTask>
@@ -177,6 +183,8 @@ namespace Gs2::Account::Domain::Model
         TSharedPtr<FAsyncTask<FGetTask>> Get(
             Request::FGetTakeOverRequestPtr Request
         );
+
+
 
         class GS2ACCOUNT_API FUpdateTask final :
             public Gs2::Core::Util::TGs2Future<Gs2::Account::Domain::Model::FTakeOverAccessTokenDomain>,

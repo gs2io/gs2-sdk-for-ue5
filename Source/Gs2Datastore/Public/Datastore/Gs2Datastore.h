@@ -23,6 +23,7 @@
 #include "Model/DataObjectHistory.h"
 #include "Model/LogSetting.h"
 #include "Model/TransactionSetting.h"
+#include "Model/TransactionSettingV2.h"
 
 // DescribeNamespaces
 #include "Request/DescribeNamespacesRequest.h"

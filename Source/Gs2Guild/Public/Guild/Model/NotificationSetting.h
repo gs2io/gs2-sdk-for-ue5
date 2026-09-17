@@ -18,6 +18,7 @@
 
 #include "CoreMinimal.h"
 #include "Core/Gs2Object.h"
+#include "MobileNotificationMessage.h"
 
 namespace Gs2::Guild::Model
 {
@@ -26,6 +27,7 @@ namespace Gs2::Guild::Model
         TOptional<FString> GatewayNamespaceIdValue;
         TOptional<bool> EnableTransferMobileNotificationValue;
         TOptional<FString> SoundValue;
+        TSharedPtr<TArray<TSharedPtr<FMobileNotificationMessage>>> MobileNotificationMessagesValue;
         TOptional<FString> EnableValue;
 
     public:
@@ -38,12 +40,14 @@ namespace Gs2::Guild::Model
         TSharedPtr<FNotificationSetting> WithGatewayNamespaceId(const TOptional<FString> GatewayNamespaceId);
         TSharedPtr<FNotificationSetting> WithEnableTransferMobileNotification(const TOptional<bool> EnableTransferMobileNotification);
         TSharedPtr<FNotificationSetting> WithSound(const TOptional<FString> Sound);
+        TSharedPtr<FNotificationSetting> WithMobileNotificationMessages(const TSharedPtr<TArray<TSharedPtr<FMobileNotificationMessage>>> MobileNotificationMessages);
         TSharedPtr<FNotificationSetting> WithEnable(const TOptional<FString> Enable);
 
         TOptional<FString> GetGatewayNamespaceId() const;
         TOptional<bool> GetEnableTransferMobileNotification() const;
         FString GetEnableTransferMobileNotificationString() const;
         TOptional<FString> GetSound() const;
+        TSharedPtr<TArray<TSharedPtr<FMobileNotificationMessage>>> GetMobileNotificationMessages() const;
         TOptional<FString> GetEnable() const;
 
 

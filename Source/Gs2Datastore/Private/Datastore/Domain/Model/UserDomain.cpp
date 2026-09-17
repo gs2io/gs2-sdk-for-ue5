@@ -30,6 +30,9 @@
 #include "Datastore/Domain/Model/DataObjectHistoryAccessToken.h"
 #include "Datastore/Domain/Model/User.h"
 #include "Datastore/Domain/Model/UserAccessToken.h"
+#include "Datastore/Model/Cache/DataObject.h"
+#include "Datastore/Model/Cache/Namespace.h"
+#include "Datastore/Model/Cache/DataObjectHistory.h"
 
 #include "Core/Domain/Gs2.h"
 #include "Core/Domain/Transaction/JobQueueJobDomainFactory.h"
@@ -103,19 +106,26 @@ namespace Gs2::Datastore::Domain::Model
         }
         const auto ResultModel = Future->GetTask().Result();
         Future->EnsureCompletion();
-        if (ResultModel->GetItem() != nullptr)
-        {
-            const auto Key = Gs2::Datastore::Domain::Model::FDataObjectDomain::CreateCacheKey(
-                ResultModel->GetItem()->GetName()
-            );
-            Self->Gs2->Cache->Put(
-                Gs2::Datastore::Model::FDataObject::TypeName,
-                Self->ParentKey,
-                Key,
-                ResultModel->GetItem(),
-                FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
-            );
-        }
+
+            if (ResultModel.IsValid() && ResultModel->GetItem() != nullptr)
+            {
+
+        if (!ResultModel.IsValid() || !((ResultModel.IsValid() && ResultModel->GetItem().IsValid() ? ResultModel->GetItem()->GetUserId() : TOptional<FString>())).IsSet())
+            {
+              const auto Details = MakeShared<TArray<TSharedPtr<Gs2::Core::Model::FGs2ErrorDetail>>>();
+                Details->Add(MakeShared<Gs2::Core::Model::FGs2ErrorDetail>(TEXT("userId"), TEXT("userId is invalid."), TEXT("invalid_response")));
+                return MakeShared<Gs2::Core::Model::FUnknownError>(Details);
+              }
+        Gs2::Datastore::Model::Cache::FDataObjectCache::Put(
+            Self->Gs2->Cache,
+
+            Request->GetNamespaceName(),
+            (ResultModel.IsValid() && ResultModel->GetItem().IsValid() ? ResultModel->GetItem()->GetUserId() : TOptional<FString>()),
+            ResultModel->GetItem()->GetName(),
+            TOptional<int32>(),
+            ResultModel->GetItem()
+        );
+            }
         auto Domain = MakeShared<Gs2::Datastore::Domain::Model::FDataObjectDomain>(
             Self->Gs2,
             Self->Service,
@@ -173,19 +183,26 @@ namespace Gs2::Datastore::Domain::Model
         }
         const auto ResultModel = Future->GetTask().Result();
         Future->EnsureCompletion();
-        if (ResultModel->GetItem() != nullptr)
-        {
-            const auto Key = Gs2::Datastore::Domain::Model::FDataObjectDomain::CreateCacheKey(
-                ResultModel->GetItem()->GetName()
-            );
-            Self->Gs2->Cache->Put(
-                Gs2::Datastore::Model::FDataObject::TypeName,
-                Self->ParentKey,
-                Key,
-                ResultModel->GetItem(),
-                FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
-            );
-        }
+
+            if (ResultModel.IsValid() && ResultModel->GetItem() != nullptr)
+            {
+
+        if (!ResultModel.IsValid() || !((ResultModel.IsValid() && ResultModel->GetItem().IsValid() ? ResultModel->GetItem()->GetUserId() : TOptional<FString>())).IsSet())
+            {
+              const auto Details = MakeShared<TArray<TSharedPtr<Gs2::Core::Model::FGs2ErrorDetail>>>();
+                Details->Add(MakeShared<Gs2::Core::Model::FGs2ErrorDetail>(TEXT("userId"), TEXT("userId is invalid."), TEXT("invalid_response")));
+                return MakeShared<Gs2::Core::Model::FUnknownError>(Details);
+              }
+        Gs2::Datastore::Model::Cache::FDataObjectCache::Put(
+            Self->Gs2->Cache,
+
+            Request->GetNamespaceName(),
+            (ResultModel.IsValid() && ResultModel->GetItem().IsValid() ? ResultModel->GetItem()->GetUserId() : TOptional<FString>()),
+            ResultModel->GetItem()->GetName(),
+            TOptional<int32>(),
+            ResultModel->GetItem()
+        );
+            }
         auto Domain = MakeShared<Gs2::Datastore::Domain::Model::FDataObjectDomain>(
             Self->Gs2,
             Self->Service,
@@ -247,19 +264,26 @@ namespace Gs2::Datastore::Domain::Model
         }
         const auto ResultModel = Future->GetTask().Result();
         Future->EnsureCompletion();
-        if (ResultModel->GetItem() != nullptr)
-        {
-            const auto Key = Gs2::Datastore::Domain::Model::FDataObjectDomain::CreateCacheKey(
-                ResultModel->GetItem()->GetName()
-            );
-            Self->Gs2->Cache->Put(
-                Gs2::Datastore::Model::FDataObject::TypeName,
-                Self->ParentKey,
-                Key,
-                ResultModel->GetItem(),
-                FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
-            );
-        }
+
+            if (ResultModel.IsValid() && ResultModel->GetItem() != nullptr)
+            {
+
+        if (!ResultModel.IsValid() || !((ResultModel.IsValid() && ResultModel->GetItem().IsValid() ? ResultModel->GetItem()->GetUserId() : TOptional<FString>())).IsSet())
+            {
+              const auto Details = MakeShared<TArray<TSharedPtr<Gs2::Core::Model::FGs2ErrorDetail>>>();
+                Details->Add(MakeShared<Gs2::Core::Model::FGs2ErrorDetail>(TEXT("userId"), TEXT("userId is invalid."), TEXT("invalid_response")));
+                return MakeShared<Gs2::Core::Model::FUnknownError>(Details);
+              }
+        Gs2::Datastore::Model::Cache::FDataObjectCache::Put(
+            Self->Gs2->Cache,
+
+            Request->GetNamespaceName(),
+            (ResultModel.IsValid() && ResultModel->GetItem().IsValid() ? ResultModel->GetItem()->GetUserId() : TOptional<FString>()),
+            ResultModel->GetItem()->GetName(),
+            TOptional<int32>(),
+            ResultModel->GetItem()
+        );
+            }
         auto Domain = MakeShared<Gs2::Datastore::Domain::Model::FDataObjectDomain>(
             Self->Gs2,
             Self->Service,
@@ -306,32 +330,122 @@ namespace Gs2::Datastore::Domain::Model
 
     Gs2::Core::Domain::CallbackID FUserDomain::SubscribeDataObjects(
     TFunction<void()> Callback
+
     )
     {
         return Gs2->Cache->ListSubscribe(
             Gs2::Datastore::Model::FDataObject::TypeName,
-            Gs2::Datastore::Domain::Model::FUserDomain::CreateCacheParentKey(
+            Gs2::Datastore::Model::Cache::FDataObjectCache::CreateCacheParentKey(
                 NamespaceName,
                 UserId,
-                "DataObject"
+                TOptional<int32>()
             ),
+            Callback,
             Callback
         );
     }
-
     void FUserDomain::UnsubscribeDataObjects(
         Gs2::Core::Domain::CallbackID CallbackID
     )
     {
         Gs2->Cache->ListUnsubscribe(
             Gs2::Datastore::Model::FDataObject::TypeName,
-            Gs2::Datastore::Domain::Model::FUserDomain::CreateCacheParentKey(
+            Gs2::Datastore::Model::Cache::FDataObjectCache::CreateCacheParentKey(
                 NamespaceName,
                 UserId,
-                "DataObject"
+                TOptional<int32>()
             ),
             CallbackID
         );
+    }
+    class FUserDomain::FCollectDataObjectsTask : public Gs2::Core::Util::TGs2Future<TArray<Gs2::Datastore::Model::FDataObjectPtr>>, public TSharedFromThis<FCollectDataObjectsTask>
+    {
+        const TSharedPtr<FUserDomain> Self;
+        const TFunction<void(TArray<Gs2::Datastore::Model::FDataObjectPtr>)> OnCollected;
+    const TOptional<FString> QueryStatus;const TOptional<FString> QueryTimeOffsetToken;
+    public:
+        explicit FCollectDataObjectsTask(const TSharedPtr<FUserDomain>& Self, TFunction<void(TArray<Gs2::Datastore::Model::FDataObjectPtr>)> OnCollected,const TOptional<FString> Status,const TOptional<FString> TimeOffsetToken) : Self(Self), OnCollected(OnCollected), QueryStatus(Status), QueryTimeOffsetToken(TimeOffsetToken) {}
+        FCollectDataObjectsTask(const FCollectDataObjectsTask& From) : TGs2Future(From), Self(From.Self), OnCollected(From.OnCollected), QueryStatus(From.QueryStatus), QueryTimeOffsetToken(From.QueryTimeOffsetToken) {}
+        virtual Gs2::Core::Model::FGs2ErrorPtr Action(TSharedPtr<TSharedPtr<TArray<Gs2::Datastore::Model::FDataObjectPtr>>> Result) override
+        {
+            TArray<Gs2::Datastore::Model::FDataObjectPtr> Items;
+            auto Iterator = Self->DataObjects(QueryStatus, QueryTimeOffsetToken)->begin();
+            while (Iterator.HasNext())
+            {
+                if (Iterator.IsError()) return Iterator.Error();
+                if (Iterator.IsCurrentValid()) Items.Add(Iterator.Current());
+                ++Iterator;
+            }
+            if (Iterator.IsError()) return Iterator.Error();
+            *Result = MakeShared<TArray<Gs2::Datastore::Model::FDataObjectPtr>>(Items);
+            if (OnCollected) OnCollected(Items);
+            return nullptr;
+        }
+    };
+
+    Gs2::Core::Domain::CallbackID FUserDomain::SubscribeDataObjects(
+        TFunction<void(TArray<Gs2::Datastore::Model::FDataObjectPtr>)> Callback,const TOptional<FString> Status,const TOptional<FString> TimeOffsetToken
+    )
+    {
+        const TWeakPtr<Gs2::Core::Domain::FGs2> WeakGs2 = this->Gs2;
+        const TWeakPtr<Datastore::Domain::FGs2DatastoreDomain> WeakService = this->Service;
+        const auto QueryNamespaceName = NamespaceName;
+        const auto QueryUserId = UserId;
+        const auto QueryStatus = Status;
+        const auto QueryTimeOffsetToken = TimeOffsetToken;
+        const auto Parent = Gs2::Datastore::Model::Cache::FDataObjectCache::CreateCacheParentKey(
+        NamespaceName,
+        UserId,
+        TOptional<int32>()
+    );
+        return Gs2->Cache->ListSubscribeTyped(
+            Gs2::Datastore::Model::FDataObject::TypeName,
+            Parent,
+            [Callback, WeakGs2](const TArray<FGs2ObjectPtr>& Values)
+            {
+                if (!WeakGs2.Pin().IsValid()) return;
+                TArray<Gs2::Datastore::Model::FDataObjectPtr> TypedValues;
+                for (const auto& Value : Values) if (Value.IsValid()) TypedValues.Add(StaticCastSharedPtr<Gs2::Datastore::Model::FDataObject>(Value));
+                Callback(TypedValues);
+            },
+            [WeakGs2, WeakService, Callback, QueryNamespaceName, QueryUserId, QueryStatus, QueryTimeOffsetToken]()
+            {
+                const auto Owner = WeakGs2.Pin();
+                if (!Owner.IsValid()) return;
+                const auto Domain = MakeShared<FUserDomain>(Owner, WeakService.Pin(), QueryNamespaceName, QueryUserId);
+                const auto Task = Gs2::Core::Util::New<FAsyncTask<FCollectDataObjectsTask>>(Domain, Callback, QueryStatus, QueryTimeOffsetToken);
+                Task->StartBackgroundTask();
+            }
+        );
+    }
+
+    void FUserDomain::InvalidateDataObjects(const TOptional<FString> Status,const TOptional<FString> TimeOffsetToken)
+    {
+        Gs2->Cache->ClearListCache(
+            Gs2::Datastore::Model::FDataObject::TypeName,
+            Gs2::Datastore::Model::Cache::FDataObjectCache::CreateCacheParentKey(
+        NamespaceName,
+        UserId,
+        TOptional<int32>()
+    )
+        );
+    }
+
+    FUserDomain::FSubscribeDataObjectsWithInitialCallTask::FSubscribeDataObjectsWithInitialCallTask(const TSharedPtr<FUserDomain>& Self, TFunction<void(TArray<Gs2::Datastore::Model::FDataObjectPtr>)> Callback,const TOptional<FString> Status,const TOptional<FString> TimeOffsetToken) : Self(Self), Callback(Callback), QueryStatus(Status), QueryTimeOffsetToken(TimeOffsetToken) {}
+    FUserDomain::FSubscribeDataObjectsWithInitialCallTask::FSubscribeDataObjectsWithInitialCallTask(const FSubscribeDataObjectsWithInitialCallTask& From) : TGs2Future(From), Self(From.Self), Callback(From.Callback), QueryStatus(From.QueryStatus), QueryTimeOffsetToken(From.QueryTimeOffsetToken) {}
+    Gs2::Core::Model::FGs2ErrorPtr FUserDomain::FSubscribeDataObjectsWithInitialCallTask::Action(TSharedPtr<TSharedPtr<Gs2::Core::Domain::CallbackID>> Result)
+    {
+        const auto Task = Gs2::Core::Util::New<FAsyncTask<FCollectDataObjectsTask>>(Self, TFunction<void(TArray<Gs2::Datastore::Model::FDataObjectPtr>)>(), QueryStatus, QueryTimeOffsetToken);
+        Task->StartSynchronousTask(); Task->EnsureCompletion();
+        if (Task->GetTask().IsError()) return Task->GetTask().Error();
+        const auto Values = Task->GetTask().Result();
+        const auto CallbackId = Self->SubscribeDataObjects(Callback, QueryStatus, QueryTimeOffsetToken);
+        Callback(*Values); *Result = MakeShared<Gs2::Core::Domain::CallbackID>(CallbackId);
+        return nullptr;
+    }
+    TSharedPtr<FAsyncTask<FUserDomain::FSubscribeDataObjectsWithInitialCallTask>> FUserDomain::SubscribeDataObjectsWithInitialCall(TFunction<void(TArray<Gs2::Datastore::Model::FDataObjectPtr>)> Callback,const TOptional<FString> Status,const TOptional<FString> TimeOffsetToken)
+    {
+        return Gs2::Core::Util::New<FAsyncTask<FSubscribeDataObjectsWithInitialCallTask>>(this->AsShared(), Callback, Status, TimeOffsetToken);
     }
 
     TSharedPtr<Gs2::Datastore::Domain::Model::FDataObjectDomain> FUserDomain::DataObject(
@@ -373,4 +487,3 @@ namespace Gs2::Datastore::Domain::Model
 #elif defined(__clang__)
 #pragma clang diagnostic pop
 #endif
-

@@ -64,7 +64,8 @@ namespace Gs2::UE5::Exchange::Domain::Model
 
         Gs2::Core::Domain::CallbackID SubscribeAwaits(TFunction<void()> Callback);
 
-        void UnsubscribeAwaits(Gs2::Core::Domain::CallbackID CallbackId);
+        void UnsubscribeAwaits(
+                Gs2::Core::Domain::CallbackID CallbackId);
 
         Gs2::UE5::Exchange::Domain::Model::FEzExchangeGameSessionDomainPtr Exchange(
         ) const;

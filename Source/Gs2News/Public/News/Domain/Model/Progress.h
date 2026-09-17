@@ -83,6 +83,8 @@ namespace Gs2::News::Domain::Model
             const FProgressDomain& From
         );
 
+
+
         class GS2NEWS_API FGetTask final :
             public Gs2::Core::Util::TGs2Future<Gs2::News::Model::FProgress>,
             public TSharedFromThis<FGetTask>
@@ -114,8 +116,33 @@ namespace Gs2::News::Domain::Model
 
         Gs2::Core::Domain::CallbackID SubscribeOutputs(
             TFunction<void()> Callback
+
         );
 
+        class FCollectOutputsTask;
+
+        Gs2::Core::Domain::CallbackID SubscribeOutputs(
+            TFunction<void(TArray<Gs2::News::Model::FOutputPtr>)> Callback
+        );
+
+        void InvalidateOutputs();
+
+        class GS2NEWS_API FSubscribeOutputsWithInitialCallTask final :
+            public Gs2::Core::Util::TGs2Future<Gs2::Core::Domain::CallbackID>,
+            public TSharedFromThis<FSubscribeOutputsWithInitialCallTask>
+        {
+            const TSharedPtr<FProgressDomain> Self;
+            const TFunction<void(TArray<Gs2::News::Model::FOutputPtr>)> Callback;
+
+        public:
+            FSubscribeOutputsWithInitialCallTask(const TSharedPtr<FProgressDomain>& Self, TFunction<void(TArray<Gs2::News::Model::FOutputPtr>)> Callback);
+            FSubscribeOutputsWithInitialCallTask(const FSubscribeOutputsWithInitialCallTask& From);
+            virtual Gs2::Core::Model::FGs2ErrorPtr Action(TSharedPtr<TSharedPtr<Gs2::Core::Domain::CallbackID>> Result) override;
+        };
+
+        TSharedPtr<FAsyncTask<FSubscribeOutputsWithInitialCallTask>> SubscribeOutputsWithInitialCall(
+            TFunction<void(TArray<Gs2::News::Model::FOutputPtr>)> Callback
+        );
         void UnsubscribeOutputs(
             Gs2::Core::Domain::CallbackID CallbackID
         );
@@ -156,7 +183,34 @@ namespace Gs2::News::Domain::Model
 
         TSharedPtr<FAsyncTask<FModelTask>> Model();
 
+        void Invalidate();
+
         Gs2::Core::Domain::CallbackID Subscribe(
+            TFunction<void(Gs2::News::Model::FProgressPtr)> Callback
+        );
+
+        class GS2NEWS_API FSubscribeWithInitialCallTask final :
+            public Gs2::Core::Util::TGs2Future<Gs2::Core::Domain::CallbackID>,
+            public TSharedFromThis<FSubscribeWithInitialCallTask>
+        {
+            const TSharedPtr<FProgressDomain> Self;
+            const TFunction<void(Gs2::News::Model::FProgressPtr)> Callback;
+        public:
+            FSubscribeWithInitialCallTask(
+                const TSharedPtr<FProgressDomain>& Self,
+                TFunction<void(Gs2::News::Model::FProgressPtr)> Callback
+            );
+
+            FSubscribeWithInitialCallTask(
+                const FSubscribeWithInitialCallTask& From
+            );
+
+            virtual Gs2::Core::Model::FGs2ErrorPtr Action(
+                TSharedPtr<TSharedPtr<Gs2::Core::Domain::CallbackID>> Result
+            ) override;
+        };
+
+        TSharedPtr<FAsyncTask<FSubscribeWithInitialCallTask>> SubscribeWithInitialCall(
             TFunction<void(Gs2::News::Model::FProgressPtr)> Callback
         );
 

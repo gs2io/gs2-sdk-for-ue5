@@ -101,6 +101,8 @@ namespace Gs2::Friend::Domain::Model
             const FFriendUserDomain& From
         );
 
+
+
         class GS2FRIEND_API FGetTask final :
             public Gs2::Core::Util::TGs2Future<Gs2::Friend::Model::FFriendUser>,
             public TSharedFromThis<FGetTask>
@@ -161,7 +163,34 @@ namespace Gs2::Friend::Domain::Model
 
         TSharedPtr<FAsyncTask<FModelTask>> Model();
 
+        void Invalidate();
+
         Gs2::Core::Domain::CallbackID Subscribe(
+            TFunction<void(Gs2::Friend::Model::FFriendUserPtr)> Callback
+        );
+
+        class GS2FRIEND_API FSubscribeWithInitialCallTask final :
+            public Gs2::Core::Util::TGs2Future<Gs2::Core::Domain::CallbackID>,
+            public TSharedFromThis<FSubscribeWithInitialCallTask>
+        {
+            const TSharedPtr<FFriendUserDomain> Self;
+            const TFunction<void(Gs2::Friend::Model::FFriendUserPtr)> Callback;
+        public:
+            FSubscribeWithInitialCallTask(
+                const TSharedPtr<FFriendUserDomain>& Self,
+                TFunction<void(Gs2::Friend::Model::FFriendUserPtr)> Callback
+            );
+
+            FSubscribeWithInitialCallTask(
+                const FSubscribeWithInitialCallTask& From
+            );
+
+            virtual Gs2::Core::Model::FGs2ErrorPtr Action(
+                TSharedPtr<TSharedPtr<Gs2::Core::Domain::CallbackID>> Result
+            ) override;
+        };
+
+        TSharedPtr<FAsyncTask<FSubscribeWithInitialCallTask>> SubscribeWithInitialCall(
             TFunction<void(Gs2::Friend::Model::FFriendUserPtr)> Callback
         );
 

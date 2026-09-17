@@ -79,6 +79,8 @@ namespace Gs2::LoginReward::Domain::Model
             const FBonusDomain& From
         );
 
+
+
         class GS2LOGINREWARD_API FReceiveTask final :
             public Gs2::Core::Util::TGs2Future<Gs2::Core::Domain::FTransactionDomain>,
             public TSharedFromThis<FReceiveTask>
@@ -104,6 +106,8 @@ namespace Gs2::LoginReward::Domain::Model
         TSharedPtr<FAsyncTask<FReceiveTask>> Receive(
             Request::FReceiveByUserIdRequestPtr Request
         );
+
+
 
         class GS2LOGINREWARD_API FMissedReceiveTask final :
             public Gs2::Core::Util::TGs2Future<Gs2::Core::Domain::FTransactionDomain>,

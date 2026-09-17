@@ -202,6 +202,7 @@ namespace Gs2::Ranking2::Domain::Model
                 Season,
                 "SubscribeRankingScore"
             ),
+            Callback,
             Callback
         );
     }
@@ -260,6 +261,7 @@ namespace Gs2::Ranking2::Domain::Model
                 Season,
                 "SubscribeRankingData"
             ),
+            Callback,
             Callback
         );
     }

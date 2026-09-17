@@ -68,7 +68,8 @@ namespace Gs2::UE5::Inventory::Domain::Model
         );
     }
 
-    void FEzBigInventoryGameSessionDomain::UnsubscribeBigItems(Gs2::Core::Domain::CallbackID CallbackId)
+    void FEzBigInventoryGameSessionDomain::UnsubscribeBigItems(
+            Gs2::Core::Domain::CallbackID CallbackId)
     {
         Domain->UnsubscribeBigItems(
             CallbackId

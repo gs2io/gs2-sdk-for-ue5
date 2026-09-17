@@ -49,6 +49,9 @@ namespace Gs2::Core::Domain
 				bool bAtomicCommit,
 				Gs2::Core::Model::FTransactionResultPtr TransactionResult
 			)>& NewTransactionDomain,
+			const TFunction<Gs2::Core::Model::FGs2ErrorPtr(
+				const Gs2::Auth::Model::FAccessTokenPtr& AccessToken
+			)>& Dispatch,
 			const Gs2::Auth::Model::FAccessTokenPtr& AccessToken,
 			const FString NamespaceName,
 			const FString JobName
@@ -58,6 +61,8 @@ namespace Gs2::Core::Domain
 		);
 
 	    virtual ~FAutoJobQueueAccessTokenDomain() override = default;
+
+		virtual TOptional<FString> GetJobName() const override;
 
 		Gs2::Core::Model::FGs2ErrorPtr WaitImpl(
 			const bool All,

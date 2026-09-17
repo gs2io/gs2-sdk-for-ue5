@@ -33,6 +33,7 @@
 #include "LoginReward/Domain/Model/BonusAccessToken.h"
 #include "LoginReward/Domain/Model/ReceiveStatus.h"
 #include "LoginReward/Domain/Model/ReceiveStatusAccessToken.h"
+#include "LoginReward/Model/Cache/BonusModelMaster.h"
 
 #include "Core/Domain/Gs2.h"
 #include "Core/Domain/Transaction/JobQueueJobDomainFactory.h"
@@ -106,6 +107,20 @@ namespace Gs2::LoginReward::Domain::Model
         }
         const auto ResultModel = Future->GetTask().Result();
         Future->EnsureCompletion();
+
+            if (ResultModel.IsValid() && ResultModel->GetItem() != nullptr)
+            {
+
+
+        Gs2::LoginReward::Model::Cache::FBonusModelMasterCache::Put(
+            Self->Gs2->Cache,
+
+            Request->GetNamespaceName(),
+            Request->GetBonusModelName(),
+            TOptional<int32>(),
+            ResultModel->GetItem()
+        );
+            }
         *Result = ResultModel->GetItem();
         return nullptr;
     }
@@ -148,19 +163,20 @@ namespace Gs2::LoginReward::Domain::Model
         }
         const auto ResultModel = Future->GetTask().Result();
         Future->EnsureCompletion();
-        if (ResultModel->GetItem() != nullptr)
-        {
-            const auto Key = Gs2::LoginReward::Domain::Model::FBonusModelMasterDomain::CreateCacheKey(
-                ResultModel->GetItem()->GetName()
-            );
-            Self->Gs2->Cache->Put(
-                Gs2::LoginReward::Model::FBonusModelMaster::TypeName,
-                Self->ParentKey,
-                Key,
-                ResultModel->GetItem(),
-                FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
-            );
-        }
+
+            if (ResultModel.IsValid() && ResultModel->GetItem() != nullptr)
+            {
+
+
+        Gs2::LoginReward::Model::Cache::FBonusModelMasterCache::Put(
+            Self->Gs2->Cache,
+
+            Request->GetNamespaceName(),
+            Request->GetBonusModelName(),
+            TOptional<int32>(),
+            ResultModel->GetItem()
+        );
+            }
         auto Domain = Self;
 
         *Result = Domain;
@@ -201,21 +217,25 @@ namespace Gs2::LoginReward::Domain::Model
         Future->StartSynchronousTask();
         if (Future->GetTask().IsError())
         {
-            return Future->GetTask().Error();
+            const auto Error = Future->GetTask().Error();
+            if (Error.IsValid() && Error->IsChildOf(Gs2::Core::Model::FNotFoundError::Class))
+            {
+                *Result = Self;
+                return nullptr;
+            }
+            return Error;
         }
         const auto ResultModel = Future->GetTask().Result();
         Future->EnsureCompletion();
-        if (ResultModel->GetItem() != nullptr)
-        {
-            const auto Key = Gs2::LoginReward::Domain::Model::FBonusModelMasterDomain::CreateCacheKey(
-                ResultModel->GetItem()->GetName()
-            );
-            Self->Gs2->Cache->Delete(
-                Gs2::LoginReward::Model::FBonusModelMaster::TypeName,
-                Self->ParentKey,
-                Key
-            );
-        }
+
+
+              Gs2::LoginReward::Model::Cache::FBonusModelMasterCache::Delete(
+            Self->Gs2->Cache,
+
+            Request->GetNamespaceName(),
+            Request->GetBonusModelName(),
+            TOptional<int32>()
+        );
         auto Domain = Self;
 
         *Result = Domain;
@@ -266,71 +286,158 @@ namespace Gs2::LoginReward::Domain::Model
         TSharedPtr<TSharedPtr<Gs2::LoginReward::Model::FBonusModelMaster>> Result
     )
     {
-        // ReSharper disable once CppLocalVariableMayBeConst
-        TSharedPtr<Gs2::LoginReward::Model::FBonusModelMaster> Value;
-        auto bCacheHit = Self->Gs2->Cache->TryGet<Gs2::LoginReward::Model::FBonusModelMaster>(
-            Self->ParentKey,
-            Gs2::LoginReward::Domain::Model::FBonusModelMasterDomain::CreateCacheKey(
-                Self->BonusModelName
-            ),
-            &Value
+        const auto CacheParentKey = Gs2::LoginReward::Model::Cache::FBonusModelMasterCache::CreateCacheParentKey(
+
+            Self->NamespaceName,
+            TOptional<int32>()
         );
-        if (!bCacheHit) {
-            const auto Future = Self->Get(
-                MakeShared<Gs2::LoginReward::Request::FGetBonusModelMasterRequest>()
-            );
-            Future->StartSynchronousTask();
-            if (Future->GetTask().IsError())
+        const auto CacheKey = Gs2::LoginReward::Model::Cache::FBonusModelMasterCache::CreateCacheKey(
+
+            Self->BonusModelName
+        );
+        return Self->Gs2->Cache->ExecuteWithKeyLock(
+            Gs2::LoginReward::Model::FBonusModelMaster::TypeName,
+            CacheParentKey,
+            CacheKey,
+            [Self = Self, Result]() -> Gs2::Core::Model::FGs2ErrorPtr
             {
-                if (Future->GetTask().Error()->Type() != Gs2::Core::Model::FNotFoundError::TypeString)
-                {
-                    return Future->GetTask().Error();
-                }
+                Gs2::LoginReward::Model::FBonusModelMasterPtr Value;
+                const auto CacheHit = Gs2::LoginReward::Model::Cache::FBonusModelMasterCache::TryGet(
+                    Self->Gs2->Cache,
 
-                const auto Key = Gs2::LoginReward::Domain::Model::FBonusModelMasterDomain::CreateCacheKey(
-                    Self->BonusModelName
+                    Self->NamespaceName,
+                    Self->BonusModelName,
+                    TOptional<int32>(),
+                    &Value
                 );
-                Self->Gs2->Cache->Put(
-                    Gs2::LoginReward::Model::FBonusModelMaster::TypeName,
-                    Self->ParentKey,
-                    Key,
-                    nullptr,
-                    FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
-                );
-
-                if (Future->GetTask().Error()->Detail(0)->GetComponent() != "bonusModelMaster")
+                if (CacheHit)
                 {
-                    return Future->GetTask().Error();
+                    *Result = Value;
+                    return nullptr;
                 }
-            }
-            else
-            {
-                Value = Future->GetTask().Result();
-            }
-            Future->EnsureCompletion();
-        }
-        *Result = Value;
+                const auto Error = Gs2::LoginReward::Model::Cache::FBonusModelMasterCache::Fetch(
+                    Self->Gs2->Cache,
 
-        return nullptr;
+                    Self->NamespaceName,
+                    Self->BonusModelName,
+                    TOptional<int32>(),
+                    [Self](Gs2::LoginReward::Model::FBonusModelMasterPtr* OutItem) -> Gs2::Core::Model::FGs2ErrorPtr
+                    {
+                        const auto Future = Self->Get(
+                            MakeShared<Gs2::LoginReward::Request::FGetBonusModelMasterRequest>()
+                        );
+                        Future->StartSynchronousTask();
+                        if (Future->GetTask().IsError()) return Future->GetTask().Error();
+                        *OutItem = Future->GetTask().Result();
+                        Future->EnsureCompletion();
+                        return nullptr;
+                    },
+                    &Value
+                );
+                if (Error.IsValid()) return Error;
+                *Result = Value;
+                return nullptr;
+            }
+        );
     }
 
     TSharedPtr<FAsyncTask<FBonusModelMasterDomain::FModelTask>> FBonusModelMasterDomain::Model() {
         return Gs2::Core::Util::New<FAsyncTask<FBonusModelMasterDomain::FModelTask>>(this->AsShared());
     }
 
+    void FBonusModelMasterDomain::Invalidate()
+    {
+        Gs2::LoginReward::Model::Cache::FBonusModelMasterCache::Delete(
+            Gs2->Cache,
+
+            NamespaceName,
+            BonusModelName,
+            TOptional<int32>()
+        );
+    }
+
+    FBonusModelMasterDomain::FSubscribeWithInitialCallTask::FSubscribeWithInitialCallTask(
+        const TSharedPtr<FBonusModelMasterDomain>& Self,
+        TFunction<void(Gs2::LoginReward::Model::FBonusModelMasterPtr)> Callback
+    ):
+        Self(Self),
+        Callback(Callback)
+    {
+    }
+
+    FBonusModelMasterDomain::FSubscribeWithInitialCallTask::FSubscribeWithInitialCallTask(
+        const FSubscribeWithInitialCallTask& From
+    ):
+        TGs2Future(From),
+        Self(From.Self),
+        Callback(From.Callback)
+    {
+    }
+
+    Gs2::Core::Model::FGs2ErrorPtr FBonusModelMasterDomain::FSubscribeWithInitialCallTask::Action(
+        TSharedPtr<TSharedPtr<Gs2::Core::Domain::CallbackID>> Result
+    )
+    {
+        const auto Task = Self->Model();
+        Task->StartSynchronousTask();
+        Task->EnsureCompletion();
+        if (Task->GetTask().IsError()) return Task->GetTask().Error();
+        const auto Item = Task->GetTask().Result();
+        const auto CallbackId = Self->Subscribe(Callback);
+        Callback(Item);
+        *Result = MakeShared<Gs2::Core::Domain::CallbackID>(CallbackId);
+        return nullptr;
+    }
+
+    TSharedPtr<FAsyncTask<FBonusModelMasterDomain::FSubscribeWithInitialCallTask>> FBonusModelMasterDomain::SubscribeWithInitialCall(
+        TFunction<void(Gs2::LoginReward::Model::FBonusModelMasterPtr)> Callback
+    )
+    {
+        return Gs2::Core::Util::New<FAsyncTask<FSubscribeWithInitialCallTask>>(this->AsShared(), Callback);
+    }
+
     Gs2::Core::Domain::CallbackID FBonusModelMasterDomain::Subscribe(
         TFunction<void(Gs2::LoginReward::Model::FBonusModelMasterPtr)> Callback
     )
     {
+        const auto SubscriptionParentKey = Gs2::LoginReward::Model::Cache::FBonusModelMasterCache::CreateCacheParentKey(
+
+            NamespaceName,
+            TOptional<int32>()
+        );
+        const auto SubscriptionCacheKey = Gs2::LoginReward::Model::Cache::FBonusModelMasterCache::CreateCacheKey(
+
+            BonusModelName
+        );
+        const TWeakPtr<Gs2::Core::Domain::FGs2> WeakGs2 = Gs2;
+        const TWeakPtr<LoginReward::Domain::FGs2LoginRewardDomain> WeakService = Service;
+        const FString RegisteredParentKey = SubscriptionParentKey;
+        const TOptional<FString> QueryNamespaceName = NamespaceName;
+        const TOptional<FString> QueryBonusModelName = BonusModelName;
         return Gs2->Cache->Subscribe(
             Gs2::LoginReward::Model::FBonusModelMaster::TypeName,
-            ParentKey,
-            Gs2::LoginReward::Domain::Model::FBonusModelMasterDomain::CreateCacheKey(
-                BonusModelName
-            ),
+            SubscriptionParentKey,
+            SubscriptionCacheKey,
             [Callback](TSharedPtr<FGs2Object> obj)
             {
                 Callback(StaticCastSharedPtr<Gs2::LoginReward::Model::FBonusModelMaster>(obj));
+            },
+            [WeakGs2, WeakService, RegisteredParentKey, QueryNamespaceName, QueryBonusModelName]()
+            {
+                const auto Owner = WeakGs2.Pin();
+                if (!Owner.IsValid())
+                {
+                    return;
+                }
+                const auto Domain = MakeShared<FBonusModelMasterDomain>(
+                    Owner,
+                    WeakService.Pin(),
+                    QueryNamespaceName,
+                    QueryBonusModelName
+                );
+                Domain->ParentKey = RegisteredParentKey;
+                const auto Task = Domain->Model();
+                Task->StartBackgroundTask();
             }
         );
     }
@@ -339,12 +446,19 @@ namespace Gs2::LoginReward::Domain::Model
         Gs2::Core::Domain::CallbackID CallbackID
     )
     {
+        const auto SubscriptionParentKey = Gs2::LoginReward::Model::Cache::FBonusModelMasterCache::CreateCacheParentKey(
+
+            NamespaceName,
+            TOptional<int32>()
+        );
+        const auto SubscriptionCacheKey = Gs2::LoginReward::Model::Cache::FBonusModelMasterCache::CreateCacheKey(
+
+            BonusModelName
+        );
         Gs2->Cache->Unsubscribe(
             Gs2::LoginReward::Model::FBonusModelMaster::TypeName,
-            ParentKey,
-            Gs2::LoginReward::Domain::Model::FBonusModelMasterDomain::CreateCacheKey(
-                BonusModelName
-            ),
+            SubscriptionParentKey,
+            SubscriptionCacheKey,
             CallbackID
         );
     }
@@ -355,4 +469,3 @@ namespace Gs2::LoginReward::Domain::Model
 #elif defined(__clang__)
 #pragma clang diagnostic pop
 #endif
-

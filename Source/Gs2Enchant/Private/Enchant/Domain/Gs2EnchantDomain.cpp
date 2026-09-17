@@ -35,6 +35,18 @@
 #include "Enchant/Domain/Model/UserAccessToken.h"
 #include "Enchant/Domain/Model/BalanceParameterStatus.h"
 #include "Enchant/Domain/Model/RarityParameterStatus.h"
+#include "Enchant/Model/Cache/BalanceParameterStatus.h"
+#include "Enchant/Model/Cache/RarityParameterStatus.h"
+
+#include "Enchant/Model/Cache/Namespace.h"
+#include "Enchant/Model/Cache/BalanceParameterModelMaster.h"
+#include "Enchant/Model/Cache/RarityParameterModelMaster.h"
+#include "Enchant/Model/Cache/CurrentParameterMaster.h"
+#include "Enchant/Model/Cache/BalanceParameterModel.h"
+#include "Enchant/Model/Cache/RarityParameterModel.h"
+#include "Enchant/Model/Cache/BalanceParameterStatus.h"
+#include "Enchant/Model/Cache/RarityParameterStatus.h"
+
 #include "Core/Domain/Gs2.h"
 
 namespace Gs2::Enchant::Domain
@@ -88,6 +100,19 @@ namespace Gs2::Enchant::Domain
         }
         const auto ResultModel = Future->GetTask().Result();
         Future->EnsureCompletion();
+
+            if (ResultModel.IsValid() && ResultModel->GetItem() != nullptr)
+            {
+
+
+        Gs2::Enchant::Model::Cache::FNamespaceCache::Put(
+            Self->Gs2->Cache,
+
+            ResultModel->GetItem()->GetName(),
+            TOptional<int32>(),
+            ResultModel->GetItem()
+        );
+            }
         auto Domain = MakeShared<Gs2::Enchant::Domain::Model::FNamespaceDomain>(
             Self->Gs2,
             Self,
@@ -131,6 +156,7 @@ namespace Gs2::Enchant::Domain
         }
         const auto ResultModel = Future->GetTask().Result();
         Future->EnsureCompletion();
+
         const auto Domain = Self;
         *Result = Domain;
         return nullptr;
@@ -170,6 +196,7 @@ namespace Gs2::Enchant::Domain
         }
         const auto ResultModel = Future->GetTask().Result();
         Future->EnsureCompletion();
+
         const auto Domain = Self;
         if (ResultModel != nullptr)
         {
@@ -216,6 +243,7 @@ namespace Gs2::Enchant::Domain
         }
         const auto ResultModel = Future->GetTask().Result();
         Future->EnsureCompletion();
+
         const auto Domain = Self;
         *Result = Domain;
         return nullptr;
@@ -255,6 +283,7 @@ namespace Gs2::Enchant::Domain
         }
         const auto ResultModel = Future->GetTask().Result();
         Future->EnsureCompletion();
+
         const auto Domain = Self;
         *Result = Domain;
         return nullptr;
@@ -294,6 +323,7 @@ namespace Gs2::Enchant::Domain
         }
         const auto ResultModel = Future->GetTask().Result();
         Future->EnsureCompletion();
+
         const auto Domain = Self;
         if (ResultModel != nullptr)
         {
@@ -344,6 +374,7 @@ namespace Gs2::Enchant::Domain
         }
         const auto ResultModel = Future->GetTask().Result();
         Future->EnsureCompletion();
+
         const auto Domain = Self;
         *Result = Domain;
         return nullptr;
@@ -383,6 +414,7 @@ namespace Gs2::Enchant::Domain
         }
         const auto ResultModel = Future->GetTask().Result();
         Future->EnsureCompletion();
+
         const auto Domain = Self;
         if (ResultModel != nullptr)
         {
@@ -414,24 +446,110 @@ namespace Gs2::Enchant::Domain
 
     Gs2::Core::Domain::CallbackID FGs2EnchantDomain::SubscribeNamespaces(
     TFunction<void()> Callback
+
     )
     {
         return Gs2->Cache->ListSubscribe(
             Gs2::Enchant::Model::FNamespace::TypeName,
-            "enchant:Namespace",
+            Gs2::Enchant::Model::Cache::FNamespaceCache::CreateCacheParentKey(
+                TOptional<int32>()
+            ),
+            Callback,
             Callback
         );
     }
-
     void FGs2EnchantDomain::UnsubscribeNamespaces(
         Gs2::Core::Domain::CallbackID CallbackID
     )
     {
         Gs2->Cache->ListUnsubscribe(
             Gs2::Enchant::Model::FNamespace::TypeName,
-            "enchant:Namespace",
+            Gs2::Enchant::Model::Cache::FNamespaceCache::CreateCacheParentKey(
+                TOptional<int32>()
+            ),
             CallbackID
         );
+    }
+    class FGs2EnchantDomain::FCollectNamespacesTask : public Gs2::Core::Util::TGs2Future<TArray<Gs2::Enchant::Model::FNamespacePtr>>, public TSharedFromThis<FCollectNamespacesTask>
+    {
+        const TSharedPtr<FGs2EnchantDomain> Self;
+        const TFunction<void(TArray<Gs2::Enchant::Model::FNamespacePtr>)> OnCollected;
+    const TOptional<FString> QueryNamePrefix;
+    public:
+        explicit FCollectNamespacesTask(const TSharedPtr<FGs2EnchantDomain>& Self, TFunction<void(TArray<Gs2::Enchant::Model::FNamespacePtr>)> OnCollected,const TOptional<FString> NamePrefix) : Self(Self), OnCollected(OnCollected), QueryNamePrefix(NamePrefix) {}
+        FCollectNamespacesTask(const FCollectNamespacesTask& From) : TGs2Future(From), Self(From.Self), OnCollected(From.OnCollected), QueryNamePrefix(From.QueryNamePrefix) {}
+        virtual Gs2::Core::Model::FGs2ErrorPtr Action(TSharedPtr<TSharedPtr<TArray<Gs2::Enchant::Model::FNamespacePtr>>> Result) override
+        {
+            TArray<Gs2::Enchant::Model::FNamespacePtr> Items;
+            auto Iterator = Self->Namespaces(QueryNamePrefix)->begin();
+            while (Iterator.HasNext())
+            {
+                if (Iterator.IsError()) return Iterator.Error();
+                if (Iterator.IsCurrentValid()) Items.Add(Iterator.Current());
+                ++Iterator;
+            }
+            if (Iterator.IsError()) return Iterator.Error();
+            *Result = MakeShared<TArray<Gs2::Enchant::Model::FNamespacePtr>>(Items);
+            if (OnCollected) OnCollected(Items);
+            return nullptr;
+        }
+    };
+
+    Gs2::Core::Domain::CallbackID FGs2EnchantDomain::SubscribeNamespaces(
+        TFunction<void(TArray<Gs2::Enchant::Model::FNamespacePtr>)> Callback,const TOptional<FString> NamePrefix
+    )
+    {
+        const TWeakPtr<Gs2::Core::Domain::FGs2> WeakGs2 = this->Gs2;
+        const auto QueryNamePrefix = NamePrefix;
+        const auto Parent = Gs2::Enchant::Model::Cache::FNamespaceCache::CreateCacheParentKey(
+        TOptional<int32>()
+    );
+        return Gs2->Cache->ListSubscribeTyped(
+            Gs2::Enchant::Model::FNamespace::TypeName,
+            Parent,
+            [Callback, WeakGs2](const TArray<FGs2ObjectPtr>& Values)
+            {
+                if (!WeakGs2.Pin().IsValid()) return;
+                TArray<Gs2::Enchant::Model::FNamespacePtr> TypedValues;
+                for (const auto& Value : Values) if (Value.IsValid()) TypedValues.Add(StaticCastSharedPtr<Gs2::Enchant::Model::FNamespace>(Value));
+                Callback(TypedValues);
+            },
+            [WeakGs2, Callback, QueryNamePrefix]()
+            {
+                const auto Owner = WeakGs2.Pin();
+                if (!Owner.IsValid()) return;
+                const auto Domain = MakeShared<FGs2EnchantDomain>(Owner);
+                const auto Task = Gs2::Core::Util::New<FAsyncTask<FCollectNamespacesTask>>(Domain, Callback, QueryNamePrefix);
+                Task->StartBackgroundTask();
+            }
+        );
+    }
+
+    void FGs2EnchantDomain::InvalidateNamespaces(const TOptional<FString> NamePrefix)
+    {
+        Gs2->Cache->ClearListCache(
+            Gs2::Enchant::Model::FNamespace::TypeName,
+            Gs2::Enchant::Model::Cache::FNamespaceCache::CreateCacheParentKey(
+        TOptional<int32>()
+    )
+        );
+    }
+
+    FGs2EnchantDomain::FSubscribeNamespacesWithInitialCallTask::FSubscribeNamespacesWithInitialCallTask(const TSharedPtr<FGs2EnchantDomain>& Self, TFunction<void(TArray<Gs2::Enchant::Model::FNamespacePtr>)> Callback,const TOptional<FString> NamePrefix) : Self(Self), Callback(Callback), QueryNamePrefix(NamePrefix) {}
+    FGs2EnchantDomain::FSubscribeNamespacesWithInitialCallTask::FSubscribeNamespacesWithInitialCallTask(const FSubscribeNamespacesWithInitialCallTask& From) : TGs2Future(From), Self(From.Self), Callback(From.Callback), QueryNamePrefix(From.QueryNamePrefix) {}
+    Gs2::Core::Model::FGs2ErrorPtr FGs2EnchantDomain::FSubscribeNamespacesWithInitialCallTask::Action(TSharedPtr<TSharedPtr<Gs2::Core::Domain::CallbackID>> Result)
+    {
+        const auto Task = Gs2::Core::Util::New<FAsyncTask<FCollectNamespacesTask>>(Self, TFunction<void(TArray<Gs2::Enchant::Model::FNamespacePtr>)>(), QueryNamePrefix);
+        Task->StartSynchronousTask(); Task->EnsureCompletion();
+        if (Task->GetTask().IsError()) return Task->GetTask().Error();
+        const auto Values = Task->GetTask().Result();
+        const auto CallbackId = Self->SubscribeNamespaces(Callback, QueryNamePrefix);
+        Callback(*Values); *Result = MakeShared<Gs2::Core::Domain::CallbackID>(CallbackId);
+        return nullptr;
+    }
+    TSharedPtr<FAsyncTask<FGs2EnchantDomain::FSubscribeNamespacesWithInitialCallTask>> FGs2EnchantDomain::SubscribeNamespacesWithInitialCall(TFunction<void(TArray<Gs2::Enchant::Model::FNamespacePtr>)> Callback,const TOptional<FString> NamePrefix)
+    {
+        return Gs2::Core::Util::New<FAsyncTask<FSubscribeNamespacesWithInitialCallTask>>(this->AsShared(), Callback, NamePrefix);
     }
 
     TSharedPtr<Gs2::Enchant::Domain::Model::FNamespaceDomain> FGs2EnchantDomain::Namespace(
@@ -448,7 +566,8 @@ namespace Gs2::Enchant::Domain
     void FGs2EnchantDomain::UpdateCacheFromStampSheet(
         const FString Method,
         const FString Request,
-        const FString Result
+        const FString Result,
+        const TOptional<int32> TimeOffset
     ) {
         if (Method == "ReDrawBalanceParameterStatusByUserId") {
             TSharedPtr<FJsonObject> RequestModelJson;
@@ -465,26 +584,29 @@ namespace Gs2::Enchant::Domain
             }
             const auto RequestModel = Gs2::Enchant::Request::FReDrawBalanceParameterStatusByUserIdRequest::FromJson(RequestModelJson);
             const auto ResultModel = Gs2::Enchant::Result::FReDrawBalanceParameterStatusByUserIdResult::FromJson(ResultModelJson);
-            
-            if (ResultModel->GetItem() != nullptr)
-            {
-                const auto ParentKey = Gs2::Enchant::Domain::Model::FUserDomain::CreateCacheParentKey(
+
+                    if (ResultModel.IsValid() && ResultModel->GetItem() != nullptr)
+                    {
+
+                if (!ResultModel.IsValid() || !ResultModel->GetItem().IsValid())
+                    {
+                      return;
+                      }if (!ResultModel.IsValid() || !((ResultModel.IsValid() && ResultModel->GetItem().IsValid() ? ResultModel->GetItem()->GetUserId() : TOptional<FString>())).IsSet())
+                    {
+                      return;
+                      }
+                Gs2::Enchant::Model::Cache::FBalanceParameterStatusCache::Put(
+                    Gs2->Cache,
+
                     RequestModel->GetNamespaceName(),
-                    RequestModel->GetUserId(),
-                    "BalanceParameterStatus"
-                );
-                const auto Key = Gs2::Enchant::Domain::Model::FBalanceParameterStatusDomain::CreateCacheKey(
+                    (ResultModel.IsValid() && ResultModel->GetItem().IsValid() ? ResultModel->GetItem()->GetUserId() : TOptional<FString>()),
                     ResultModel->GetItem()->GetParameterName(),
-                    ResultModel->GetItem()->GetPropertyId()
+                    ResultModel->GetItem()->GetPropertyId(),
+                    TimeOffset,
+                    ResultModel->GetItem()
                 );
-                Gs2->Cache->Put(
-                    Gs2::Enchant::Model::FBalanceParameterStatus::TypeName,
-                    ParentKey,
-                    Key,
-                    ResultModel->GetItem(),
-                    FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
-                );
-            }
+                    }
+
         }
         if (Method == "SetBalanceParameterStatusByUserId") {
             TSharedPtr<FJsonObject> RequestModelJson;
@@ -501,26 +623,29 @@ namespace Gs2::Enchant::Domain
             }
             const auto RequestModel = Gs2::Enchant::Request::FSetBalanceParameterStatusByUserIdRequest::FromJson(RequestModelJson);
             const auto ResultModel = Gs2::Enchant::Result::FSetBalanceParameterStatusByUserIdResult::FromJson(ResultModelJson);
-            
-            if (ResultModel->GetItem() != nullptr)
-            {
-                const auto ParentKey = Gs2::Enchant::Domain::Model::FUserDomain::CreateCacheParentKey(
+
+                    if (ResultModel.IsValid() && ResultModel->GetItem() != nullptr)
+                    {
+
+                if (!ResultModel.IsValid() || !ResultModel->GetItem().IsValid())
+                    {
+                      return;
+                      }if (!ResultModel.IsValid() || !((ResultModel.IsValid() && ResultModel->GetItem().IsValid() ? ResultModel->GetItem()->GetUserId() : TOptional<FString>())).IsSet())
+                    {
+                      return;
+                      }
+                Gs2::Enchant::Model::Cache::FBalanceParameterStatusCache::Put(
+                    Gs2->Cache,
+
                     RequestModel->GetNamespaceName(),
-                    RequestModel->GetUserId(),
-                    "BalanceParameterStatus"
-                );
-                const auto Key = Gs2::Enchant::Domain::Model::FBalanceParameterStatusDomain::CreateCacheKey(
+                    (ResultModel.IsValid() && ResultModel->GetItem().IsValid() ? ResultModel->GetItem()->GetUserId() : TOptional<FString>()),
                     ResultModel->GetItem()->GetParameterName(),
-                    ResultModel->GetItem()->GetPropertyId()
+                    ResultModel->GetItem()->GetPropertyId(),
+                    TimeOffset,
+                    ResultModel->GetItem()
                 );
-                Gs2->Cache->Put(
-                    Gs2::Enchant::Model::FBalanceParameterStatus::TypeName,
-                    ParentKey,
-                    Key,
-                    ResultModel->GetItem(),
-                    FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
-                );
-            }
+                    }
+
         }
         if (Method == "ReDrawRarityParameterStatusByUserId") {
             TSharedPtr<FJsonObject> RequestModelJson;
@@ -537,26 +662,29 @@ namespace Gs2::Enchant::Domain
             }
             const auto RequestModel = Gs2::Enchant::Request::FReDrawRarityParameterStatusByUserIdRequest::FromJson(RequestModelJson);
             const auto ResultModel = Gs2::Enchant::Result::FReDrawRarityParameterStatusByUserIdResult::FromJson(ResultModelJson);
-            
-            if (ResultModel->GetItem() != nullptr)
-            {
-                const auto ParentKey = Gs2::Enchant::Domain::Model::FUserDomain::CreateCacheParentKey(
+
+                    if (ResultModel.IsValid() && ResultModel->GetItem() != nullptr)
+                    {
+
+                if (!ResultModel.IsValid() || !ResultModel->GetItem().IsValid())
+                    {
+                      return;
+                      }if (!ResultModel.IsValid() || !((ResultModel.IsValid() && ResultModel->GetItem().IsValid() ? ResultModel->GetItem()->GetUserId() : TOptional<FString>())).IsSet())
+                    {
+                      return;
+                      }
+                Gs2::Enchant::Model::Cache::FRarityParameterStatusCache::Put(
+                    Gs2->Cache,
+
                     RequestModel->GetNamespaceName(),
-                    RequestModel->GetUserId(),
-                    "RarityParameterStatus"
-                );
-                const auto Key = Gs2::Enchant::Domain::Model::FRarityParameterStatusDomain::CreateCacheKey(
+                    (ResultModel.IsValid() && ResultModel->GetItem().IsValid() ? ResultModel->GetItem()->GetUserId() : TOptional<FString>()),
                     ResultModel->GetItem()->GetParameterName(),
-                    ResultModel->GetItem()->GetPropertyId()
+                    ResultModel->GetItem()->GetPropertyId(),
+                    TimeOffset,
+                    ResultModel->GetItem()
                 );
-                Gs2->Cache->Put(
-                    Gs2::Enchant::Model::FRarityParameterStatus::TypeName,
-                    ParentKey,
-                    Key,
-                    ResultModel->GetItem(),
-                    FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
-                );
-            }
+                    }
+
         }
         if (Method == "AddRarityParameterStatusByUserId") {
             TSharedPtr<FJsonObject> RequestModelJson;
@@ -573,26 +701,29 @@ namespace Gs2::Enchant::Domain
             }
             const auto RequestModel = Gs2::Enchant::Request::FAddRarityParameterStatusByUserIdRequest::FromJson(RequestModelJson);
             const auto ResultModel = Gs2::Enchant::Result::FAddRarityParameterStatusByUserIdResult::FromJson(ResultModelJson);
-            
-            if (ResultModel->GetItem() != nullptr)
-            {
-                const auto ParentKey = Gs2::Enchant::Domain::Model::FUserDomain::CreateCacheParentKey(
+
+                    if (ResultModel.IsValid() && ResultModel->GetItem() != nullptr)
+                    {
+
+                if (!ResultModel.IsValid() || !ResultModel->GetItem().IsValid())
+                    {
+                      return;
+                      }if (!ResultModel.IsValid() || !((ResultModel.IsValid() && ResultModel->GetItem().IsValid() ? ResultModel->GetItem()->GetUserId() : TOptional<FString>())).IsSet())
+                    {
+                      return;
+                      }
+                Gs2::Enchant::Model::Cache::FRarityParameterStatusCache::Put(
+                    Gs2->Cache,
+
                     RequestModel->GetNamespaceName(),
-                    RequestModel->GetUserId(),
-                    "RarityParameterStatus"
-                );
-                const auto Key = Gs2::Enchant::Domain::Model::FRarityParameterStatusDomain::CreateCacheKey(
+                    (ResultModel.IsValid() && ResultModel->GetItem().IsValid() ? ResultModel->GetItem()->GetUserId() : TOptional<FString>()),
                     ResultModel->GetItem()->GetParameterName(),
-                    ResultModel->GetItem()->GetPropertyId()
+                    ResultModel->GetItem()->GetPropertyId(),
+                    TimeOffset,
+                    ResultModel->GetItem()
                 );
-                Gs2->Cache->Put(
-                    Gs2::Enchant::Model::FRarityParameterStatus::TypeName,
-                    ParentKey,
-                    Key,
-                    ResultModel->GetItem(),
-                    FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
-                );
-            }
+                    }
+
         }
         if (Method == "SetRarityParameterStatusByUserId") {
             TSharedPtr<FJsonObject> RequestModelJson;
@@ -609,40 +740,45 @@ namespace Gs2::Enchant::Domain
             }
             const auto RequestModel = Gs2::Enchant::Request::FSetRarityParameterStatusByUserIdRequest::FromJson(RequestModelJson);
             const auto ResultModel = Gs2::Enchant::Result::FSetRarityParameterStatusByUserIdResult::FromJson(ResultModelJson);
-            
-            if (ResultModel->GetItem() != nullptr)
-            {
-                const auto ParentKey = Gs2::Enchant::Domain::Model::FUserDomain::CreateCacheParentKey(
+
+                    if (ResultModel.IsValid() && ResultModel->GetItem() != nullptr)
+                    {
+
+                if (!ResultModel.IsValid() || !ResultModel->GetItem().IsValid())
+                    {
+                      return;
+                      }if (!ResultModel.IsValid() || !((ResultModel.IsValid() && ResultModel->GetItem().IsValid() ? ResultModel->GetItem()->GetUserId() : TOptional<FString>())).IsSet())
+                    {
+                      return;
+                      }
+                Gs2::Enchant::Model::Cache::FRarityParameterStatusCache::Put(
+                    Gs2->Cache,
+
                     RequestModel->GetNamespaceName(),
-                    RequestModel->GetUserId(),
-                    "RarityParameterStatus"
-                );
-                const auto Key = Gs2::Enchant::Domain::Model::FRarityParameterStatusDomain::CreateCacheKey(
+                    (ResultModel.IsValid() && ResultModel->GetItem().IsValid() ? ResultModel->GetItem()->GetUserId() : TOptional<FString>()),
                     ResultModel->GetItem()->GetParameterName(),
-                    ResultModel->GetItem()->GetPropertyId()
+                    ResultModel->GetItem()->GetPropertyId(),
+                    TimeOffset,
+                    ResultModel->GetItem()
                 );
-                Gs2->Cache->Put(
-                    Gs2::Enchant::Model::FRarityParameterStatus::TypeName,
-                    ParentKey,
-                    Key,
-                    ResultModel->GetItem(),
-                    FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
-                );
-            }
+                    }
+
         }
     }
 
     void FGs2EnchantDomain::UpdateCacheFromStampTask(
         const FString Method,
         const FString Request,
-        const FString Result
+        const FString Result,
+        const TOptional<int32> TimeOffset
     ) {
     }
 
     void FGs2EnchantDomain::UpdateCacheFromJobResult(
         const FString Method,
         const Gs2::JobQueue::Model::FJobPtr Job,
-        const Gs2::JobQueue::Model::FJobResultBodyPtr Result
+        const Gs2::JobQueue::Model::FJobResultBodyPtr Result,
+        const TOptional<int32> TimeOffset
     ) {
         if (Method == "re_draw_balance_parameter_status_by_user_id") {
             TSharedPtr<FJsonObject> RequestModelJson;
@@ -667,26 +803,29 @@ namespace Gs2::Enchant::Domain
             }
             const auto RequestModel = Gs2::Enchant::Request::FReDrawBalanceParameterStatusByUserIdRequest::FromJson(RequestModelJson);
             const auto ResultModel = Gs2::Enchant::Result::FReDrawBalanceParameterStatusByUserIdResult::FromJson(ResultModelJson);
-            
-            if (ResultModel->GetItem() != nullptr)
-            {
-                const auto ParentKey = Gs2::Enchant::Domain::Model::FUserDomain::CreateCacheParentKey(
+
+                    if (ResultModel.IsValid() && ResultModel->GetItem() != nullptr)
+                    {
+
+                if (!ResultModel.IsValid() || !ResultModel->GetItem().IsValid())
+                    {
+                      return;
+                      }if (!ResultModel.IsValid() || !((ResultModel.IsValid() && ResultModel->GetItem().IsValid() ? ResultModel->GetItem()->GetUserId() : TOptional<FString>())).IsSet())
+                    {
+                      return;
+                      }
+                Gs2::Enchant::Model::Cache::FBalanceParameterStatusCache::Put(
+                    Gs2->Cache,
+
                     RequestModel->GetNamespaceName(),
-                    RequestModel->GetUserId(),
-                    "BalanceParameterStatus"
-                );
-                const auto Key = Gs2::Enchant::Domain::Model::FBalanceParameterStatusDomain::CreateCacheKey(
+                    (ResultModel.IsValid() && ResultModel->GetItem().IsValid() ? ResultModel->GetItem()->GetUserId() : TOptional<FString>()),
                     ResultModel->GetItem()->GetParameterName(),
-                    ResultModel->GetItem()->GetPropertyId()
+                    ResultModel->GetItem()->GetPropertyId(),
+                    TimeOffset,
+                    ResultModel->GetItem()
                 );
-                Gs2->Cache->Put(
-                    Gs2::Enchant::Model::FBalanceParameterStatus::TypeName,
-                    ParentKey,
-                    Key,
-                    ResultModel->GetItem(),
-                    FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
-                );
-            }
+                    }
+
         }
         if (Method == "set_balance_parameter_status_by_user_id") {
             TSharedPtr<FJsonObject> RequestModelJson;
@@ -711,26 +850,29 @@ namespace Gs2::Enchant::Domain
             }
             const auto RequestModel = Gs2::Enchant::Request::FSetBalanceParameterStatusByUserIdRequest::FromJson(RequestModelJson);
             const auto ResultModel = Gs2::Enchant::Result::FSetBalanceParameterStatusByUserIdResult::FromJson(ResultModelJson);
-            
-            if (ResultModel->GetItem() != nullptr)
-            {
-                const auto ParentKey = Gs2::Enchant::Domain::Model::FUserDomain::CreateCacheParentKey(
+
+                    if (ResultModel.IsValid() && ResultModel->GetItem() != nullptr)
+                    {
+
+                if (!ResultModel.IsValid() || !ResultModel->GetItem().IsValid())
+                    {
+                      return;
+                      }if (!ResultModel.IsValid() || !((ResultModel.IsValid() && ResultModel->GetItem().IsValid() ? ResultModel->GetItem()->GetUserId() : TOptional<FString>())).IsSet())
+                    {
+                      return;
+                      }
+                Gs2::Enchant::Model::Cache::FBalanceParameterStatusCache::Put(
+                    Gs2->Cache,
+
                     RequestModel->GetNamespaceName(),
-                    RequestModel->GetUserId(),
-                    "BalanceParameterStatus"
-                );
-                const auto Key = Gs2::Enchant::Domain::Model::FBalanceParameterStatusDomain::CreateCacheKey(
+                    (ResultModel.IsValid() && ResultModel->GetItem().IsValid() ? ResultModel->GetItem()->GetUserId() : TOptional<FString>()),
                     ResultModel->GetItem()->GetParameterName(),
-                    ResultModel->GetItem()->GetPropertyId()
+                    ResultModel->GetItem()->GetPropertyId(),
+                    TimeOffset,
+                    ResultModel->GetItem()
                 );
-                Gs2->Cache->Put(
-                    Gs2::Enchant::Model::FBalanceParameterStatus::TypeName,
-                    ParentKey,
-                    Key,
-                    ResultModel->GetItem(),
-                    FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
-                );
-            }
+                    }
+
         }
         if (Method == "re_draw_rarity_parameter_status_by_user_id") {
             TSharedPtr<FJsonObject> RequestModelJson;
@@ -755,26 +897,29 @@ namespace Gs2::Enchant::Domain
             }
             const auto RequestModel = Gs2::Enchant::Request::FReDrawRarityParameterStatusByUserIdRequest::FromJson(RequestModelJson);
             const auto ResultModel = Gs2::Enchant::Result::FReDrawRarityParameterStatusByUserIdResult::FromJson(ResultModelJson);
-            
-            if (ResultModel->GetItem() != nullptr)
-            {
-                const auto ParentKey = Gs2::Enchant::Domain::Model::FUserDomain::CreateCacheParentKey(
+
+                    if (ResultModel.IsValid() && ResultModel->GetItem() != nullptr)
+                    {
+
+                if (!ResultModel.IsValid() || !ResultModel->GetItem().IsValid())
+                    {
+                      return;
+                      }if (!ResultModel.IsValid() || !((ResultModel.IsValid() && ResultModel->GetItem().IsValid() ? ResultModel->GetItem()->GetUserId() : TOptional<FString>())).IsSet())
+                    {
+                      return;
+                      }
+                Gs2::Enchant::Model::Cache::FRarityParameterStatusCache::Put(
+                    Gs2->Cache,
+
                     RequestModel->GetNamespaceName(),
-                    RequestModel->GetUserId(),
-                    "RarityParameterStatus"
-                );
-                const auto Key = Gs2::Enchant::Domain::Model::FRarityParameterStatusDomain::CreateCacheKey(
+                    (ResultModel.IsValid() && ResultModel->GetItem().IsValid() ? ResultModel->GetItem()->GetUserId() : TOptional<FString>()),
                     ResultModel->GetItem()->GetParameterName(),
-                    ResultModel->GetItem()->GetPropertyId()
+                    ResultModel->GetItem()->GetPropertyId(),
+                    TimeOffset,
+                    ResultModel->GetItem()
                 );
-                Gs2->Cache->Put(
-                    Gs2::Enchant::Model::FRarityParameterStatus::TypeName,
-                    ParentKey,
-                    Key,
-                    ResultModel->GetItem(),
-                    FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
-                );
-            }
+                    }
+
         }
         if (Method == "add_rarity_parameter_status_by_user_id") {
             TSharedPtr<FJsonObject> RequestModelJson;
@@ -799,26 +944,29 @@ namespace Gs2::Enchant::Domain
             }
             const auto RequestModel = Gs2::Enchant::Request::FAddRarityParameterStatusByUserIdRequest::FromJson(RequestModelJson);
             const auto ResultModel = Gs2::Enchant::Result::FAddRarityParameterStatusByUserIdResult::FromJson(ResultModelJson);
-            
-            if (ResultModel->GetItem() != nullptr)
-            {
-                const auto ParentKey = Gs2::Enchant::Domain::Model::FUserDomain::CreateCacheParentKey(
+
+                    if (ResultModel.IsValid() && ResultModel->GetItem() != nullptr)
+                    {
+
+                if (!ResultModel.IsValid() || !ResultModel->GetItem().IsValid())
+                    {
+                      return;
+                      }if (!ResultModel.IsValid() || !((ResultModel.IsValid() && ResultModel->GetItem().IsValid() ? ResultModel->GetItem()->GetUserId() : TOptional<FString>())).IsSet())
+                    {
+                      return;
+                      }
+                Gs2::Enchant::Model::Cache::FRarityParameterStatusCache::Put(
+                    Gs2->Cache,
+
                     RequestModel->GetNamespaceName(),
-                    RequestModel->GetUserId(),
-                    "RarityParameterStatus"
-                );
-                const auto Key = Gs2::Enchant::Domain::Model::FRarityParameterStatusDomain::CreateCacheKey(
+                    (ResultModel.IsValid() && ResultModel->GetItem().IsValid() ? ResultModel->GetItem()->GetUserId() : TOptional<FString>()),
                     ResultModel->GetItem()->GetParameterName(),
-                    ResultModel->GetItem()->GetPropertyId()
+                    ResultModel->GetItem()->GetPropertyId(),
+                    TimeOffset,
+                    ResultModel->GetItem()
                 );
-                Gs2->Cache->Put(
-                    Gs2::Enchant::Model::FRarityParameterStatus::TypeName,
-                    ParentKey,
-                    Key,
-                    ResultModel->GetItem(),
-                    FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
-                );
-            }
+                    }
+
         }
         if (Method == "set_rarity_parameter_status_by_user_id") {
             TSharedPtr<FJsonObject> RequestModelJson;
@@ -843,26 +991,29 @@ namespace Gs2::Enchant::Domain
             }
             const auto RequestModel = Gs2::Enchant::Request::FSetRarityParameterStatusByUserIdRequest::FromJson(RequestModelJson);
             const auto ResultModel = Gs2::Enchant::Result::FSetRarityParameterStatusByUserIdResult::FromJson(ResultModelJson);
-            
-            if (ResultModel->GetItem() != nullptr)
-            {
-                const auto ParentKey = Gs2::Enchant::Domain::Model::FUserDomain::CreateCacheParentKey(
+
+                    if (ResultModel.IsValid() && ResultModel->GetItem() != nullptr)
+                    {
+
+                if (!ResultModel.IsValid() || !ResultModel->GetItem().IsValid())
+                    {
+                      return;
+                      }if (!ResultModel.IsValid() || !((ResultModel.IsValid() && ResultModel->GetItem().IsValid() ? ResultModel->GetItem()->GetUserId() : TOptional<FString>())).IsSet())
+                    {
+                      return;
+                      }
+                Gs2::Enchant::Model::Cache::FRarityParameterStatusCache::Put(
+                    Gs2->Cache,
+
                     RequestModel->GetNamespaceName(),
-                    RequestModel->GetUserId(),
-                    "RarityParameterStatus"
-                );
-                const auto Key = Gs2::Enchant::Domain::Model::FRarityParameterStatusDomain::CreateCacheKey(
+                    (ResultModel.IsValid() && ResultModel->GetItem().IsValid() ? ResultModel->GetItem()->GetUserId() : TOptional<FString>()),
                     ResultModel->GetItem()->GetParameterName(),
-                    ResultModel->GetItem()->GetPropertyId()
+                    ResultModel->GetItem()->GetPropertyId(),
+                    TimeOffset,
+                    ResultModel->GetItem()
                 );
-                Gs2->Cache->Put(
-                    Gs2::Enchant::Model::FRarityParameterStatus::TypeName,
-                    ParentKey,
-                    Key,
-                    ResultModel->GetItem(),
-                    FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
-                );
-            }
+                    }
+
         }
     }
 
@@ -878,4 +1029,3 @@ namespace Gs2::Enchant::Domain
 #elif defined(__clang__)
 #pragma clang diagnostic pop
 #endif
-

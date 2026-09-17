@@ -114,7 +114,7 @@ namespace Gs2::UE5::JobQueue::Domain::Model
     Gs2::Core::Domain::CallbackID FEzJobDomain::Subscribe(TFunction<void(Gs2::UE5::JobQueue::Model::FEzJobPtr)> Callback)
     {
         return Domain->Subscribe(
-            [&](Gs2::JobQueue::Model::FJobPtr Item)
+            [Callback](Gs2::JobQueue::Model::FJobPtr Item)
             {
                 Callback(Gs2::UE5::JobQueue::Model::FEzJob::FromModel(Item));
             }

@@ -1,3 +1,4 @@
+
 /*
  * Copyright 2016 Game Server Services, Inc. or its affiliates. All Rights
  * Reserved.
@@ -29,6 +30,9 @@
 #include "Datastore/Domain/Model/DataObject.h"
 
 #include "Core/Domain/Gs2.h"
+
+#include "Datastore/Model/Cache/DataObjectHistory.h"
+#include "Datastore/Model/Cache/DataObject.h"
 
 namespace Gs2::Datastore::Domain::Iterator
 {
@@ -81,7 +85,7 @@ namespace Gs2::Datastore::Domain::Iterator
 
     FDescribeDataObjectHistoriesIterator::FIterator& FDescribeDataObjectHistoriesIterator::FIterator::operator++()
     {
-        
+
 
         if (bEnd) return *this;
 
@@ -91,17 +95,18 @@ namespace Gs2::Datastore::Domain::Iterator
             return *this;
         }
 
-        if (RangeIteratorOpt) ++*RangeIteratorOpt;
+        if (RangeIteratorOpt && *RangeIteratorOpt) ++*RangeIteratorOpt;
 
+        // Keep the previous page alive until its iterator has been replaced.
+        const auto PreviousRange = Range;
         if (!RangeIteratorOpt || (!*RangeIteratorOpt && !bLast))
         {
-            const auto ListParentKey = Gs2::Datastore::Domain::Model::FDataObjectDomain::CreateCacheParentKey(
+            const auto ListParentKey = Gs2::Datastore::Model::Cache::FDataObjectHistoryCache::CreateCacheParentKey(
                 Self->NamespaceName,
-                Self->UserId(),
+                Self->AccessToken.IsValid() ? Self->AccessToken->GetUserId() : TOptional<FString>(),
                 Self->DataObjectName,
-                "DataObjectHistory"
+                Self->AccessToken.IsValid() ? Self->AccessToken->GetTimeOffset() : TOptional<int32>()
             );
-
             if (!RangeIteratorOpt)
             {
                 Range = Self->Gs2->Cache->TryGetList<Gs2::Datastore::Model::FDataObjectHistory>(ListParentKey);
@@ -115,8 +120,7 @@ namespace Gs2::Datastore::Domain::Iterator
                     return *this;
                 }
             }
-
-            const auto Future = Self->Client->DescribeDataObjectHistories(
+            const auto Request =
                 MakeShared<Gs2::Datastore::Request::FDescribeDataObjectHistoriesRequest>()
                     ->WithContextStack(Self->Gs2->DefaultContextStack)
                     ->WithNamespaceName(Self->NamespaceName)
@@ -124,7 +128,8 @@ namespace Gs2::Datastore::Domain::Iterator
                     ->WithDataObjectName(Self->DataObjectName)
                     ->WithPageToken(PageToken)
                     ->WithLimit(FetchSize)
-            );
+            ;
+            const auto Future = Self->Client->DescribeDataObjectHistories(Request);
             Future->StartSynchronousTask();
             if (Future->GetTask().IsError())
             {
@@ -138,18 +143,23 @@ namespace Gs2::Datastore::Domain::Iterator
             }
             const auto R = Future->GetTask().Result();
             Future->EnsureCompletion();
-            Range = R->GetItems();
-            for (auto Item : *R->GetItems())
+            Range = R->GetItems().IsValid() ? R->GetItems() : MakeShared<TArray<Gs2::Datastore::Model::FDataObjectHistoryPtr>>();
+            const auto CacheOwnerSnapshotUserId = Self->AccessToken.IsValid() ? Self->UserId() : TOptional<FString>();
+            const auto CacheOwnerSnapshotTimeOffset = Self->AccessToken.IsValid() ? Self->AccessToken->GetTimeOffset() : TOptional<int32>();
+            const auto ResultModel = R;
+
+
+            if (Range.IsValid())
             {
-                Self->Gs2->Cache->Put(
-                    Gs2::Datastore::Model::FDataObjectHistory::TypeName,
-                    ListParentKey,
-                    Gs2::Datastore::Domain::Model::FDataObjectHistoryDomain::CreateCacheKey(
-                        Item->GetGeneration()
-                    ),
-                    Item,
-                    FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
-                );
+                for (const auto& Item : *Range)
+                {
+                    if (!Item.IsValid()) continue;
+                    Gs2::Datastore::Model::Cache::FDataObjectHistoryCache::Put(
+                        Self->Gs2->Cache,
+                        Request->GetNamespaceName(), CacheOwnerSnapshotUserId, Request->GetDataObjectName(), Item->GetGeneration(),
+                        CacheOwnerSnapshotTimeOffset, Item
+                    );
+                }
             }
             if (Range)
             {
@@ -160,7 +170,12 @@ namespace Gs2::Datastore::Domain::Iterator
             if (bLast) {
                 Self->Gs2->Cache->SetListCached(
                     Gs2::Datastore::Model::FDataObjectHistory::TypeName,
-                    ListParentKey
+                    Gs2::Datastore::Model::Cache::FDataObjectHistoryCache::CreateCacheParentKey(
+                        Self->NamespaceName,
+                        Self->AccessToken.IsValid() ? Self->AccessToken->GetUserId() : TOptional<FString>(),
+                        Self->DataObjectName,
+                        Self->AccessToken.IsValid() ? Self->AccessToken->GetTimeOffset() : TOptional<int32>()
+                    )
                 );
             }
         }

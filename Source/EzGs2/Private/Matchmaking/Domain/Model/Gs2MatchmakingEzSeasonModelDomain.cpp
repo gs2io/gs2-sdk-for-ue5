@@ -82,7 +82,7 @@ namespace Gs2::UE5::Matchmaking::Domain::Model
     Gs2::Core::Domain::CallbackID FEzSeasonModelDomain::Subscribe(TFunction<void(Gs2::UE5::Matchmaking::Model::FEzSeasonModelPtr)> Callback)
     {
         return Domain->Subscribe(
-            [&](Gs2::Matchmaking::Model::FSeasonModelPtr Item)
+            [Callback](Gs2::Matchmaking::Model::FSeasonModelPtr Item)
             {
                 Callback(Gs2::UE5::Matchmaking::Model::FEzSeasonModel::FromModel(Item));
             }

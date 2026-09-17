@@ -65,17 +65,21 @@ namespace Gs2::UE5::Enchant::Domain::Model
             const TOptional<FString> ParameterName = TOptional<FString>()
         ) const;
 
-        Gs2::Core::Domain::CallbackID SubscribeBalanceParameterStatuses(TFunction<void()> Callback);
+        Gs2::Core::Domain::CallbackID SubscribeBalanceParameterStatuses(TFunction<void()> Callback, const TOptional<FString> ParameterName = TOptional<FString>());
 
-        void UnsubscribeBalanceParameterStatuses(Gs2::Core::Domain::CallbackID CallbackId);
+        void UnsubscribeBalanceParameterStatuses(
+                Gs2::Core::Domain::CallbackID CallbackId
+                , const TOptional<FString> ParameterName = TOptional<FString>());
 
         Gs2::UE5::Enchant::Domain::Iterator::FEzDescribeRarityParameterStatusesIteratorPtr RarityParameterStatuses(
             const TOptional<FString> ParameterName = TOptional<FString>()
         ) const;
 
-        Gs2::Core::Domain::CallbackID SubscribeRarityParameterStatuses(TFunction<void()> Callback);
+        Gs2::Core::Domain::CallbackID SubscribeRarityParameterStatuses(TFunction<void()> Callback, const TOptional<FString> ParameterName = TOptional<FString>());
 
-        void UnsubscribeRarityParameterStatuses(Gs2::Core::Domain::CallbackID CallbackId);
+        void UnsubscribeRarityParameterStatuses(
+                Gs2::Core::Domain::CallbackID CallbackId
+                , const TOptional<FString> ParameterName = TOptional<FString>());
 
         Gs2::UE5::Enchant::Domain::Model::FEzBalanceParameterStatusGameSessionDomainPtr BalanceParameterStatus(
             const FString ParameterName,

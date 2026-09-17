@@ -75,7 +75,8 @@ namespace Gs2::UE5::Idle::Domain::Model
         );
     }
 
-    void FEzNamespaceDomain::UnsubscribeCategoryModels(Gs2::Core::Domain::CallbackID CallbackId)
+    void FEzNamespaceDomain::UnsubscribeCategoryModels(
+            Gs2::Core::Domain::CallbackID CallbackId)
     {
         Domain->UnsubscribeCategoryModels(
             CallbackId

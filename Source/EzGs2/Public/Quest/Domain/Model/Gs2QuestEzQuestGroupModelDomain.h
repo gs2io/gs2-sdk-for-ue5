@@ -63,7 +63,8 @@ namespace Gs2::UE5::Quest::Domain::Model
 
         Gs2::Core::Domain::CallbackID SubscribeQuestModels(TFunction<void()> Callback);
 
-        void UnsubscribeQuestModels(Gs2::Core::Domain::CallbackID CallbackId);
+        void UnsubscribeQuestModels(
+                Gs2::Core::Domain::CallbackID CallbackId);
 
         Gs2::UE5::Quest::Domain::Model::FEzQuestModelDomainPtr QuestModel(
             const FString QuestName

@@ -95,6 +95,8 @@ namespace Gs2::Guild::Domain::Model
             const FSendMemberRequestDomain& From
         );
 
+
+
         class GS2GUILD_API FGetTask final :
             public Gs2::Core::Util::TGs2Future<Gs2::Guild::Model::FSendMemberRequest>,
             public TSharedFromThis<FGetTask>

@@ -87,6 +87,8 @@ namespace Gs2::Chat::Domain::Model
             const FCategoryModelMasterDomain& From
         );
 
+
+
         class GS2CHAT_API FCreateTask final :
             public Gs2::Core::Util::TGs2Future<Gs2::Chat::Domain::Model::FCategoryModelMasterDomain>,
             public TSharedFromThis<FCreateTask>
@@ -112,6 +114,8 @@ namespace Gs2::Chat::Domain::Model
         TSharedPtr<FAsyncTask<FCreateTask>> Create(
             Request::FCreateCategoryModelMasterRequestPtr Request
         );
+
+
 
         class GS2CHAT_API FGetTask final :
             public Gs2::Core::Util::TGs2Future<Gs2::Chat::Model::FCategoryModelMaster>,
@@ -139,6 +143,8 @@ namespace Gs2::Chat::Domain::Model
             Request::FGetCategoryModelMasterRequestPtr Request
         );
 
+
+
         class GS2CHAT_API FUpdateTask final :
             public Gs2::Core::Util::TGs2Future<Gs2::Chat::Domain::Model::FCategoryModelMasterDomain>,
             public TSharedFromThis<FUpdateTask>
@@ -164,6 +170,8 @@ namespace Gs2::Chat::Domain::Model
         TSharedPtr<FAsyncTask<FUpdateTask>> Update(
             Request::FUpdateCategoryModelMasterRequestPtr Request
         );
+
+
 
         class GS2CHAT_API FDeleteTask final :
             public Gs2::Core::Util::TGs2Future<Gs2::Chat::Domain::Model::FCategoryModelMasterDomain>,
@@ -223,7 +231,34 @@ namespace Gs2::Chat::Domain::Model
 
         TSharedPtr<FAsyncTask<FModelTask>> Model();
 
+        void Invalidate();
+
         Gs2::Core::Domain::CallbackID Subscribe(
+            TFunction<void(Gs2::Chat::Model::FCategoryModelMasterPtr)> Callback
+        );
+
+        class GS2CHAT_API FSubscribeWithInitialCallTask final :
+            public Gs2::Core::Util::TGs2Future<Gs2::Core::Domain::CallbackID>,
+            public TSharedFromThis<FSubscribeWithInitialCallTask>
+        {
+            const TSharedPtr<FCategoryModelMasterDomain> Self;
+            const TFunction<void(Gs2::Chat::Model::FCategoryModelMasterPtr)> Callback;
+        public:
+            FSubscribeWithInitialCallTask(
+                const TSharedPtr<FCategoryModelMasterDomain>& Self,
+                TFunction<void(Gs2::Chat::Model::FCategoryModelMasterPtr)> Callback
+            );
+
+            FSubscribeWithInitialCallTask(
+                const FSubscribeWithInitialCallTask& From
+            );
+
+            virtual Gs2::Core::Model::FGs2ErrorPtr Action(
+                TSharedPtr<TSharedPtr<Gs2::Core::Domain::CallbackID>> Result
+            ) override;
+        };
+
+        TSharedPtr<FAsyncTask<FSubscribeWithInitialCallTask>> SubscribeWithInitialCall(
             TFunction<void(Gs2::Chat::Model::FCategoryModelMasterPtr)> Callback
         );
 

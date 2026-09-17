@@ -90,6 +90,8 @@ namespace Gs2::News::Domain::Model
             const FNewsAccessTokenDomain& From
         );
 
+
+
         class GS2NEWS_API FWantGrantTask final :
             public Gs2::Core::Util::TGs2Future<TArray<TSharedPtr<Gs2::News::Domain::Model::FSetCookieRequestEntryAccessTokenDomain>>>,
             public TSharedFromThis<FWantGrantTask>
@@ -144,6 +146,33 @@ namespace Gs2::News::Domain::Model
             ) override;
         };
         friend FModelTask;
+
+        class GS2NEWS_API FSubscribeWithInitialCallTask final :
+            public Gs2::Core::Util::TGs2Future<Gs2::Core::Domain::CallbackID>,
+            public TSharedFromThis<FSubscribeWithInitialCallTask>
+        {
+            const TSharedPtr<FNewsAccessTokenDomain> Self;
+            const TFunction<void(Gs2::News::Model::FNewsPtr)> Callback;
+        public:
+            explicit FSubscribeWithInitialCallTask(
+                const TSharedPtr<FNewsAccessTokenDomain> Self,
+                const TFunction<void(Gs2::News::Model::FNewsPtr)>& Callback
+            );
+
+            FSubscribeWithInitialCallTask(
+                const FSubscribeWithInitialCallTask& From
+            );
+
+            virtual Gs2::Core::Model::FGs2ErrorPtr Action(
+                TSharedPtr<TSharedPtr<Gs2::Core::Domain::CallbackID>> Result
+            ) override;
+        };
+        friend FSubscribeWithInitialCallTask;
+
+        TSharedPtr<FAsyncTask<FNewsAccessTokenDomain::FSubscribeWithInitialCallTask>> SubscribeWithInitialCall(
+            TFunction<void(Gs2::News::Model::FNewsPtr)> Callback
+        );
+        void Invalidate();
 
         TSharedPtr<FAsyncTask<FModelTask>> Model();
 

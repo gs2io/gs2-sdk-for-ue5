@@ -127,6 +127,33 @@ namespace Gs2::Ranking::Domain::Model
         };
         friend FModelTask;
 
+        class GS2RANKING_API FSubscribeWithInitialCallTask final :
+            public Gs2::Core::Util::TGs2Future<Gs2::Core::Domain::CallbackID>,
+            public TSharedFromThis<FSubscribeWithInitialCallTask>
+        {
+            const TSharedPtr<FSubscribeAccessTokenDomain> Self;
+            const TFunction<void(Gs2::Ranking::Model::FSubscribePtr)> Callback;
+        public:
+            explicit FSubscribeWithInitialCallTask(
+                const TSharedPtr<FSubscribeAccessTokenDomain> Self,
+                const TFunction<void(Gs2::Ranking::Model::FSubscribePtr)>& Callback
+            );
+
+            FSubscribeWithInitialCallTask(
+                const FSubscribeWithInitialCallTask& From
+            );
+
+            virtual Gs2::Core::Model::FGs2ErrorPtr Action(
+                TSharedPtr<TSharedPtr<Gs2::Core::Domain::CallbackID>> Result
+            ) override;
+        };
+        friend FSubscribeWithInitialCallTask;
+
+        TSharedPtr<FAsyncTask<FSubscribeAccessTokenDomain::FSubscribeWithInitialCallTask>> SubscribeWithInitialCall(
+            TFunction<void(Gs2::Ranking::Model::FSubscribePtr)> Callback
+        );
+        void Invalidate();
+
         TSharedPtr<FAsyncTask<FModelTask>> Model();
 
         Gs2::Core::Domain::CallbackID Subscribe(

@@ -64,7 +64,8 @@ namespace Gs2::UE5::Grade::Domain::Model
 
         Gs2::Core::Domain::CallbackID SubscribeGradeModels(TFunction<void()> Callback);
 
-        void UnsubscribeGradeModels(Gs2::Core::Domain::CallbackID CallbackId);
+        void UnsubscribeGradeModels(
+                Gs2::Core::Domain::CallbackID CallbackId);
 
         Gs2::UE5::Grade::Domain::Model::FEzGradeModelDomainPtr GradeModel(
             const FString GradeName

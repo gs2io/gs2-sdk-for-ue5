@@ -26,10 +26,79 @@
 
 #include "Distributor/Domain/SpeculativeExecutor/Verify/OrExpressionByUserIdSpeculativeExecutor.h"
 
+#include "Auth/Model/AccessToken.h"
 #include "Core/Domain/Gs2.h"
+#include "Core/Domain/Model/IssueTransactionEvent.h"
+#include "Core/Domain/SpeculativeExecutor/PreparedSpeculativeCommit.h"
+#include "Distributor/Domain/Gs2Distributor.h"
 
 namespace Gs2::Distributor::Domain::SpeculativeExecutor
 {
+namespace
+{
+    Gs2::Auth::Model::FAccessTokenPtr PrepareOrExpressionAccessToken(
+        const Gs2::Auth::Model::FAccessTokenPtr& AccessToken
+    )
+    {
+        Gs2::Auth::Model::FAccessTokenPtr Prepared = nullptr;
+        if (AccessToken.IsValid()) Prepared = MakeShared<Gs2::Auth::Model::FAccessToken>(*AccessToken);
+        return Prepared;
+    }
+
+    Gs2::Distributor::Request::FOrExpressionByUserIdRequestPtr PrepareOrExpressionRequest(
+        const Gs2::Distributor::Request::FOrExpressionByUserIdRequestPtr& Request
+    )
+    {
+        if (!Request.IsValid()) return nullptr;
+        const auto Prepared = MakeShared<Gs2::Distributor::Request::FOrExpressionByUserIdRequest>(*Request);
+        const auto Actions = Request->GetActions();
+        if (Actions.IsValid())
+        {
+            const auto PreparedActions = MakeShared<TArray<Gs2::Core::Model::FVerifyActionPtr>>();
+            for (const auto& Action : *Actions)
+            {
+                Gs2::Core::Model::FVerifyActionPtr PreparedAction = nullptr;
+                if (Action.IsValid()) PreparedAction = MakeShared<Gs2::Core::Model::FVerifyAction>(*Action);
+                PreparedActions->Add(PreparedAction);
+            }
+            Prepared->WithActions(PreparedActions);
+        }
+        return Prepared;
+    }
+
+    bool OrExpressionUserIdMatches(
+        const Gs2::Distributor::Request::FOrExpressionByUserIdRequestPtr& Request,
+        const Gs2::Auth::Model::FAccessTokenPtr& AccessToken
+    )
+    {
+        const auto RequestUserId = Request->GetUserId();
+        const auto TokenUserId = AccessToken.IsValid()
+            ? AccessToken->GetUserId()
+            : TOptional<FString>();
+        return RequestUserId.IsSet() == TokenUserId.IsSet() &&
+            (!RequestUserId.IsSet() || RequestUserId.GetValue() == TokenUserId.GetValue());
+    }
+
+    Gs2::Core::Model::FGs2ErrorPtr DispatchOrExpressionVerify(
+        const Gs2::Distributor::Domain::FGs2DistributorDomainPtr& Service,
+        const Gs2::Auth::Model::FAccessTokenPtr& AccessToken,
+        const Gs2::Core::Model::FVerifyActionPtr& Action,
+        const TBigInt<1024, false>& Rate,
+        const bool Inverse,
+        Gs2::Core::Domain::SpeculativeExecutor::FPreparedSpeculativeCommit::FPreparedCommitPtr* Result
+    )
+    {
+        if (Result == nullptr) return nullptr;
+        *Result = nullptr;
+        if (!Service.IsValid() || !Action.IsValid()) return nullptr;
+        const auto Event = MakeShared<Gs2::Core::Domain::Model::FIssueTransactionEvent>(
+            AccessToken, Action, Rate, Inverse);
+        Service->OnIssueTransaction.Broadcast(Event);
+        if (Event->GetError().IsValid()) return Event->GetError();
+        *Result = Event->GetPreparedCommit();
+        return nullptr;
+    }
+}
 
     FString FOrExpressionByUserIdSpeculativeExecutor::Action()
     {
@@ -40,12 +109,16 @@ namespace Gs2::Distributor::Domain::SpeculativeExecutor
         const Gs2::Core::Domain::FGs2Ptr& Domain,
         const Gs2::Distributor::Domain::FGs2DistributorDomainPtr& Service,
         const Gs2::Auth::Model::FAccessTokenPtr& AccessToken,
-        const Gs2::Distributor::Request::FOrExpressionByUserIdRequestPtr& Request
+        const Gs2::Distributor::Request::FOrExpressionByUserIdRequestPtr& Request,
+        const TBigInt<1024, false>& Rate,
+        const bool Inverse
     ):
         Domain(Domain),
         Service(Service),
         AccessToken(AccessToken),
-        Request(Request)
+        Request(Request),
+        Rate(Rate),
+        Inverse(Inverse)
     {
 
     }
@@ -56,21 +129,81 @@ namespace Gs2::Distributor::Domain::SpeculativeExecutor
         Domain(From.Domain),
         Service(From.Service),
         AccessToken(From.AccessToken),
-        Request(From.Request)
+        Request(From.Request),
+        Rate(From.Rate),
+        Inverse(From.Inverse)
     {
 
     }
 
     Gs2::Core::Model::FGs2ErrorPtr FOrExpressionByUserIdSpeculativeExecutor::FCommitTask::Action(
-        TSharedPtr<TSharedPtr<TFunction<void()>>> Result
+        TSharedPtr<TSharedPtr<Gs2::Core::Domain::SpeculativeExecutor::FPreparedSpeculativeCommit>> Result
     )
     {
-        UE_LOG(Gs2Log, Warning, TEXT("Speculative execution not supported on this action: %s"), TEXT("Gs2Distributor:OrExpressionByUserId"))
-
-        *Result = MakeShared<TFunction<void()>>([&]()
+        *Result = nullptr;
+        const auto PreparedRequest = PrepareOrExpressionRequest(Request);
+        const auto PreparedAccessToken = PrepareOrExpressionAccessToken(AccessToken);
+        if (PreparedRequest.IsValid() && PreparedRequest->GetUserId().IsSet() &&
+            PreparedRequest->GetUserId().GetValue() == TEXT("#{userId}"))
+        {
+            PreparedRequest->WithUserId(PreparedAccessToken.IsValid() ? PreparedAccessToken->GetUserId() : TOptional<FString>());
+        }
+        if (!PreparedRequest.IsValid() || !OrExpressionUserIdMatches(PreparedRequest, PreparedAccessToken))
         {
             return nullptr;
-        });
+        }
+        const auto Actions = PreparedRequest->GetActions();
+        if (!Actions.IsValid() || (Inverse && Actions->Num() == 0)) return nullptr;
+
+        if (Inverse)
+        {
+            const auto Commits = MakeShared<Gs2::Core::Domain::SpeculativeExecutor::FPreparedSpeculativeCommit::FPreparedCommitArray>();
+            bool HasUnknown = false;
+            for (const auto& Action : *Actions)
+            {
+                Gs2::Core::Domain::SpeculativeExecutor::FPreparedSpeculativeCommit::FPreparedCommitPtr Prepared;
+                const auto Error = DispatchOrExpressionVerify(
+                    Service, PreparedAccessToken, Action, Rate, true, &Prepared);
+                if (Error.IsValid()) return Error;
+                if (!Prepared.IsValid())
+                {
+                    HasUnknown = true;
+                    continue;
+                }
+                Commits->Add(Prepared);
+            }
+            if (HasUnknown) return nullptr;
+            *Result = Gs2::Core::Domain::SpeculativeExecutor::FPreparedSpeculativeCommit::BuildAtomicVerificationPreparedCommit(
+                Commits, Actions->Num());
+            return nullptr;
+        }
+
+        Gs2::Core::Model::FGs2ErrorPtr LastError;
+        bool HasUnknown = false;
+        for (const auto& Action : *Actions)
+        {
+            Gs2::Core::Domain::SpeculativeExecutor::FPreparedSpeculativeCommit::FPreparedCommitPtr Prepared;
+            const auto Error = DispatchOrExpressionVerify(
+                Service, PreparedAccessToken, Action, Rate, false, &Prepared);
+            if (Error.IsValid())
+            {
+                LastError = Error;
+                continue;
+            }
+            if (Prepared.IsValid())
+            {
+                *Result = Prepared;
+                return nullptr;
+            }
+            HasUnknown = true;
+        }
+        if (HasUnknown) return nullptr;
+        if (LastError.IsValid())
+        {
+            return LastError;
+        }
+        const auto Empty = MakeShared<Gs2::Core::Domain::SpeculativeExecutor::FPreparedSpeculativeCommit::FPreparedCommitArray>();
+        *Result = Gs2::Core::Domain::SpeculativeExecutor::FPreparedSpeculativeCommit::BuildAtomicVerificationPreparedCommit(Empty, 0);
         return nullptr;
     }
 
@@ -81,7 +214,18 @@ namespace Gs2::Distributor::Domain::SpeculativeExecutor
         const Gs2::Distributor::Request::FOrExpressionByUserIdRequestPtr& Request
     )
     {
-        return Gs2::Core::Util::New<FAsyncTask<FCommitTask>>(Domain, Service, AccessToken, Request);
+        return Gs2::Core::Util::New<FAsyncTask<FCommitTask>>(Domain, Service, AccessToken, Request, TBigInt<1024, false>(1), false);
+    }
+
+    TSharedPtr<FAsyncTask<FOrExpressionByUserIdSpeculativeExecutor::FCommitTask>> FOrExpressionByUserIdSpeculativeExecutor::ExecuteRated(
+        const Gs2::Core::Domain::FGs2Ptr& Domain,
+        const Gs2::Distributor::Domain::FGs2DistributorDomainPtr& Service,
+        const Gs2::Auth::Model::FAccessTokenPtr& AccessToken,
+        const Gs2::Distributor::Request::FOrExpressionByUserIdRequestPtr& Request,
+        TBigInt<1024, false> Rate
+    )
+    {
+        return Gs2::Core::Util::New<FAsyncTask<FCommitTask>>(Domain, Service, AccessToken, Request, Rate, false);
     }
 
     Gs2::Distributor::Request::FOrExpressionByUserIdRequestPtr FOrExpressionByUserIdSpeculativeExecutor::Rate(
@@ -98,5 +242,16 @@ namespace Gs2::Distributor::Domain::SpeculativeExecutor
     )
     {
         return Request;
+    }
+
+    TSharedPtr<FAsyncTask<FOrExpressionByUserIdSpeculativeExecutor::FCommitTask>> FOrExpressionByUserIdSpeculativeExecutor::ExecuteInverseRated(
+        const Gs2::Core::Domain::FGs2Ptr& Domain,
+        const Gs2::Distributor::Domain::FGs2DistributorDomainPtr& Service,
+        const Gs2::Auth::Model::FAccessTokenPtr& AccessToken,
+        const Gs2::Distributor::Request::FOrExpressionByUserIdRequestPtr& Request,
+        TBigInt<1024, false> Rate
+    )
+    {
+        return Gs2::Core::Util::New<FAsyncTask<FCommitTask>>(Domain, Service, AccessToken, Request, Rate, true);
     }
 }

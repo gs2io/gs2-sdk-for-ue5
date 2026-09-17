@@ -12,6 +12,8 @@
  * on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either
  * express or implied. See the License for the specific language governing
  * permissions and limitations under the License.
+ *
+ * deny overwrite
  */
 
 #if defined(_MSC_VER)
@@ -37,6 +39,20 @@
 #include "Friend/Domain/Model/SendFriendRequest.h"
 #include "Friend/Domain/Model/ReceiveFriendRequest.h"
 #include "Friend/Domain/Model/PublicProfile.h"
+#include "Friend/Model/Cache/Profile.h"
+
+#include "Friend/Model/Cache/Namespace.h"
+#include "Friend/Model/Cache/Profile.h"
+#include "Friend/Model/Cache/SendFriendRequest.h"
+#include "Friend/Model/Cache/FriendRequest.h"
+#include "Friend/Model/Cache/PublicProfile.h"
+#include "Friend/Model/Cache/BlackList.h"
+#include "Friend/Model/Cache/FollowUser.h"
+#include "Friend/Model/Cache/Follow.h"
+#include "Friend/Model/Cache/FriendUser.h"
+#include "Friend/Model/Cache/Friend.h"
+#include "Friend/Model/Cache/ReceiveFriendRequest.h"
+
 #include "Core/Domain/Gs2.h"
 
 namespace Gs2::Friend::Domain
@@ -90,6 +106,19 @@ namespace Gs2::Friend::Domain
         }
         const auto ResultModel = Future->GetTask().Result();
         Future->EnsureCompletion();
+
+            if (ResultModel.IsValid() && ResultModel->GetItem() != nullptr)
+            {
+
+
+        Gs2::Friend::Model::Cache::FNamespaceCache::Put(
+            Self->Gs2->Cache,
+
+            ResultModel->GetItem()->GetName(),
+            TOptional<int32>(),
+            ResultModel->GetItem()
+        );
+            }
         auto Domain = MakeShared<Gs2::Friend::Domain::Model::FNamespaceDomain>(
             Self->Gs2,
             Self,
@@ -133,6 +162,7 @@ namespace Gs2::Friend::Domain
         }
         const auto ResultModel = Future->GetTask().Result();
         Future->EnsureCompletion();
+
         const auto Domain = Self;
         *Result = Domain;
         return nullptr;
@@ -172,6 +202,7 @@ namespace Gs2::Friend::Domain
         }
         const auto ResultModel = Future->GetTask().Result();
         Future->EnsureCompletion();
+
         const auto Domain = Self;
         if (ResultModel != nullptr)
         {
@@ -218,6 +249,7 @@ namespace Gs2::Friend::Domain
         }
         const auto ResultModel = Future->GetTask().Result();
         Future->EnsureCompletion();
+
         const auto Domain = Self;
         *Result = Domain;
         return nullptr;
@@ -257,6 +289,7 @@ namespace Gs2::Friend::Domain
         }
         const auto ResultModel = Future->GetTask().Result();
         Future->EnsureCompletion();
+
         const auto Domain = Self;
         *Result = Domain;
         return nullptr;
@@ -296,6 +329,7 @@ namespace Gs2::Friend::Domain
         }
         const auto ResultModel = Future->GetTask().Result();
         Future->EnsureCompletion();
+
         const auto Domain = Self;
         if (ResultModel != nullptr)
         {
@@ -346,6 +380,7 @@ namespace Gs2::Friend::Domain
         }
         const auto ResultModel = Future->GetTask().Result();
         Future->EnsureCompletion();
+
         const auto Domain = Self;
         *Result = Domain;
         return nullptr;
@@ -385,6 +420,7 @@ namespace Gs2::Friend::Domain
         }
         const auto ResultModel = Future->GetTask().Result();
         Future->EnsureCompletion();
+
         const auto Domain = Self;
         if (ResultModel != nullptr)
         {
@@ -416,24 +452,110 @@ namespace Gs2::Friend::Domain
 
     Gs2::Core::Domain::CallbackID FGs2FriendDomain::SubscribeNamespaces(
     TFunction<void()> Callback
+
     )
     {
         return Gs2->Cache->ListSubscribe(
             Gs2::Friend::Model::FNamespace::TypeName,
-            "friend:Namespace",
+            Gs2::Friend::Model::Cache::FNamespaceCache::CreateCacheParentKey(
+                TOptional<int32>()
+            ),
+            Callback,
             Callback
         );
     }
-
     void FGs2FriendDomain::UnsubscribeNamespaces(
         Gs2::Core::Domain::CallbackID CallbackID
     )
     {
         Gs2->Cache->ListUnsubscribe(
             Gs2::Friend::Model::FNamespace::TypeName,
-            "friend:Namespace",
+            Gs2::Friend::Model::Cache::FNamespaceCache::CreateCacheParentKey(
+                TOptional<int32>()
+            ),
             CallbackID
         );
+    }
+    class FGs2FriendDomain::FCollectNamespacesTask : public Gs2::Core::Util::TGs2Future<TArray<Gs2::Friend::Model::FNamespacePtr>>, public TSharedFromThis<FCollectNamespacesTask>
+    {
+        const TSharedPtr<FGs2FriendDomain> Self;
+        const TFunction<void(TArray<Gs2::Friend::Model::FNamespacePtr>)> OnCollected;
+    const TOptional<FString> QueryNamePrefix;
+    public:
+        explicit FCollectNamespacesTask(const TSharedPtr<FGs2FriendDomain>& Self, TFunction<void(TArray<Gs2::Friend::Model::FNamespacePtr>)> OnCollected,const TOptional<FString> NamePrefix) : Self(Self), OnCollected(OnCollected), QueryNamePrefix(NamePrefix) {}
+        FCollectNamespacesTask(const FCollectNamespacesTask& From) : TGs2Future(From), Self(From.Self), OnCollected(From.OnCollected), QueryNamePrefix(From.QueryNamePrefix) {}
+        virtual Gs2::Core::Model::FGs2ErrorPtr Action(TSharedPtr<TSharedPtr<TArray<Gs2::Friend::Model::FNamespacePtr>>> Result) override
+        {
+            TArray<Gs2::Friend::Model::FNamespacePtr> Items;
+            auto Iterator = Self->Namespaces(QueryNamePrefix)->begin();
+            while (Iterator.HasNext())
+            {
+                if (Iterator.IsError()) return Iterator.Error();
+                if (Iterator.IsCurrentValid()) Items.Add(Iterator.Current());
+                ++Iterator;
+            }
+            if (Iterator.IsError()) return Iterator.Error();
+            *Result = MakeShared<TArray<Gs2::Friend::Model::FNamespacePtr>>(Items);
+            if (OnCollected) OnCollected(Items);
+            return nullptr;
+        }
+    };
+
+    Gs2::Core::Domain::CallbackID FGs2FriendDomain::SubscribeNamespaces(
+        TFunction<void(TArray<Gs2::Friend::Model::FNamespacePtr>)> Callback,const TOptional<FString> NamePrefix
+    )
+    {
+        const TWeakPtr<Gs2::Core::Domain::FGs2> WeakGs2 = this->Gs2;
+        const auto QueryNamePrefix = NamePrefix;
+        const auto Parent = Gs2::Friend::Model::Cache::FNamespaceCache::CreateCacheParentKey(
+        TOptional<int32>()
+    );
+        return Gs2->Cache->ListSubscribeTyped(
+            Gs2::Friend::Model::FNamespace::TypeName,
+            Parent,
+            [Callback, WeakGs2](const TArray<FGs2ObjectPtr>& Values)
+            {
+                if (!WeakGs2.Pin().IsValid()) return;
+                TArray<Gs2::Friend::Model::FNamespacePtr> TypedValues;
+                for (const auto& Value : Values) if (Value.IsValid()) TypedValues.Add(StaticCastSharedPtr<Gs2::Friend::Model::FNamespace>(Value));
+                Callback(TypedValues);
+            },
+            [WeakGs2, Callback, QueryNamePrefix]()
+            {
+                const auto Owner = WeakGs2.Pin();
+                if (!Owner.IsValid()) return;
+                const auto Domain = MakeShared<FGs2FriendDomain>(Owner);
+                const auto Task = Gs2::Core::Util::New<FAsyncTask<FCollectNamespacesTask>>(Domain, Callback, QueryNamePrefix);
+                Task->StartBackgroundTask();
+            }
+        );
+    }
+
+    void FGs2FriendDomain::InvalidateNamespaces(const TOptional<FString> NamePrefix)
+    {
+        Gs2->Cache->ClearListCache(
+            Gs2::Friend::Model::FNamespace::TypeName,
+            Gs2::Friend::Model::Cache::FNamespaceCache::CreateCacheParentKey(
+        TOptional<int32>()
+    )
+        );
+    }
+
+    FGs2FriendDomain::FSubscribeNamespacesWithInitialCallTask::FSubscribeNamespacesWithInitialCallTask(const TSharedPtr<FGs2FriendDomain>& Self, TFunction<void(TArray<Gs2::Friend::Model::FNamespacePtr>)> Callback,const TOptional<FString> NamePrefix) : Self(Self), Callback(Callback), QueryNamePrefix(NamePrefix) {}
+    FGs2FriendDomain::FSubscribeNamespacesWithInitialCallTask::FSubscribeNamespacesWithInitialCallTask(const FSubscribeNamespacesWithInitialCallTask& From) : TGs2Future(From), Self(From.Self), Callback(From.Callback), QueryNamePrefix(From.QueryNamePrefix) {}
+    Gs2::Core::Model::FGs2ErrorPtr FGs2FriendDomain::FSubscribeNamespacesWithInitialCallTask::Action(TSharedPtr<TSharedPtr<Gs2::Core::Domain::CallbackID>> Result)
+    {
+        const auto Task = Gs2::Core::Util::New<FAsyncTask<FCollectNamespacesTask>>(Self, TFunction<void(TArray<Gs2::Friend::Model::FNamespacePtr>)>(), QueryNamePrefix);
+        Task->StartSynchronousTask(); Task->EnsureCompletion();
+        if (Task->GetTask().IsError()) return Task->GetTask().Error();
+        const auto Values = Task->GetTask().Result();
+        const auto CallbackId = Self->SubscribeNamespaces(Callback, QueryNamePrefix);
+        Callback(*Values); *Result = MakeShared<Gs2::Core::Domain::CallbackID>(CallbackId);
+        return nullptr;
+    }
+    TSharedPtr<FAsyncTask<FGs2FriendDomain::FSubscribeNamespacesWithInitialCallTask>> FGs2FriendDomain::SubscribeNamespacesWithInitialCall(TFunction<void(TArray<Gs2::Friend::Model::FNamespacePtr>)> Callback,const TOptional<FString> NamePrefix)
+    {
+        return Gs2::Core::Util::New<FAsyncTask<FSubscribeNamespacesWithInitialCallTask>>(this->AsShared(), Callback, NamePrefix);
     }
 
     TSharedPtr<Gs2::Friend::Domain::Model::FNamespaceDomain> FGs2FriendDomain::Namespace(
@@ -450,7 +572,8 @@ namespace Gs2::Friend::Domain
     void FGs2FriendDomain::UpdateCacheFromStampSheet(
         const FString Method,
         const FString Request,
-        const FString Result
+        const FString Result,
+        const TOptional<int32> TimeOffset
     ) {
         if (Method == "UpdateProfileByUserId") {
             TSharedPtr<FJsonObject> RequestModelJson;
@@ -467,38 +590,40 @@ namespace Gs2::Friend::Domain
             }
             const auto RequestModel = Gs2::Friend::Request::FUpdateProfileByUserIdRequest::FromJson(RequestModelJson);
             const auto ResultModel = Gs2::Friend::Result::FUpdateProfileByUserIdResult::FromJson(ResultModelJson);
-            
-            if (ResultModel->GetItem() != nullptr)
-            {
-                const auto ParentKey = Gs2::Friend::Domain::Model::FUserDomain::CreateCacheParentKey(
+
+                    if (ResultModel.IsValid() && ResultModel->GetItem() != nullptr)
+                    {
+
+                if (!ResultModel.IsValid() || !((ResultModel.IsValid() && ResultModel->GetItem().IsValid() ? ResultModel->GetItem()->GetUserId() : TOptional<FString>())).IsSet())
+                    {
+                      return;
+                      }
+                Gs2::Friend::Model::Cache::FProfileCache::Put(
+                    Gs2->Cache,
+
                     RequestModel->GetNamespaceName(),
-                    RequestModel->GetUserId(),
-                    "Profile"
+                    (ResultModel.IsValid() && ResultModel->GetItem().IsValid() ? ResultModel->GetItem()->GetUserId() : TOptional<FString>()),
+                    TimeOffset,
+                    ResultModel->GetItem()
                 );
-                const auto Key = Gs2::Friend::Domain::Model::FProfileDomain::CreateCacheKey(
-                );
-                Gs2->Cache->Put(
-                    Gs2::Friend::Model::FProfile::TypeName,
-                    ParentKey,
-                    Key,
-                    ResultModel->GetItem(),
-                    FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
-                );
-            }
+                    }
+
         }
     }
 
     void FGs2FriendDomain::UpdateCacheFromStampTask(
         const FString Method,
         const FString Request,
-        const FString Result
+        const FString Result,
+        const TOptional<int32> TimeOffset
     ) {
     }
 
     void FGs2FriendDomain::UpdateCacheFromJobResult(
         const FString Method,
         const Gs2::JobQueue::Model::FJobPtr Job,
-        const Gs2::JobQueue::Model::FJobResultBodyPtr Result
+        const Gs2::JobQueue::Model::FJobResultBodyPtr Result,
+        const TOptional<int32> TimeOffset
     ) {
         if (Method == "update_profile_by_user_id") {
             TSharedPtr<FJsonObject> RequestModelJson;
@@ -523,24 +648,24 @@ namespace Gs2::Friend::Domain
             }
             const auto RequestModel = Gs2::Friend::Request::FUpdateProfileByUserIdRequest::FromJson(RequestModelJson);
             const auto ResultModel = Gs2::Friend::Result::FUpdateProfileByUserIdResult::FromJson(ResultModelJson);
-            
-            if (ResultModel->GetItem() != nullptr)
-            {
-                const auto ParentKey = Gs2::Friend::Domain::Model::FUserDomain::CreateCacheParentKey(
+
+                    if (ResultModel.IsValid() && ResultModel->GetItem() != nullptr)
+                    {
+
+                if (!ResultModel.IsValid() || !((ResultModel.IsValid() && ResultModel->GetItem().IsValid() ? ResultModel->GetItem()->GetUserId() : TOptional<FString>())).IsSet())
+                    {
+                      return;
+                      }
+                Gs2::Friend::Model::Cache::FProfileCache::Put(
+                    Gs2->Cache,
+
                     RequestModel->GetNamespaceName(),
-                    RequestModel->GetUserId(),
-                    "Profile"
+                    (ResultModel.IsValid() && ResultModel->GetItem().IsValid() ? ResultModel->GetItem()->GetUserId() : TOptional<FString>()),
+                    TimeOffset,
+                    ResultModel->GetItem()
                 );
-                const auto Key = Gs2::Friend::Domain::Model::FProfileDomain::CreateCacheKey(
-                );
-                Gs2->Cache->Put(
-                    Gs2::Friend::Model::FProfile::TypeName,
-                    ParentKey,
-                    Key,
-                    ResultModel->GetItem(),
-                    FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
-                );
-            }
+                    }
+
         }
     }
 
@@ -548,7 +673,7 @@ namespace Gs2::Friend::Domain
         const FString Action,
         const FString Payload
     ) {
-        if (Action == "Follow") {
+        if (Action == "Follow" || Action == "FollowNotification") {
             TSharedPtr<FJsonObject> PayloadJson;
             if (const TSharedRef<TJsonReader<>> JsonReader = TJsonReaderFactory<>::Create(Payload);
                 !FJsonSerializer::Deserialize(JsonReader, PayloadJson))
@@ -557,50 +682,176 @@ namespace Gs2::Friend::Domain
             }
             FollowNotificationEvent.Broadcast(Gs2::Friend::Model::FFollowNotification::FromJson(PayloadJson));
         }
-        if (Action == "AcceptRequest") {
+        if (Action == "AcceptRequest" || Action == "AcceptRequestNotification") {
             TSharedPtr<FJsonObject> PayloadJson;
             if (const TSharedRef<TJsonReader<>> JsonReader = TJsonReaderFactory<>::Create(Payload);
                 !FJsonSerializer::Deserialize(JsonReader, PayloadJson))
             {
                 return;
             }
-            AcceptRequestNotificationEvent.Broadcast(Gs2::Friend::Model::FAcceptRequestNotification::FromJson(PayloadJson));
+            const auto Notification = Gs2::Friend::Model::FAcceptRequestNotification::FromJson(PayloadJson);
+            Gs2::Friend::Model::Cache::FSendFriendRequestCache::Delete(
+                Gs2->Cache,
+                Notification->GetNamespaceName(),
+                Notification->GetUserId(),
+                Notification->GetTargetUserId(),
+                TOptional<int32>()
+            );
+            Gs2::Friend::Model::Cache::FReceiveFriendRequestCache::Delete(
+                Gs2->Cache,
+                Notification->GetNamespaceName(),
+                Notification->GetTargetUserId(),
+                Notification->GetUserId(),
+                TOptional<int32>()
+            );
+            Gs2->Cache->ClearListCache(
+                Gs2::Friend::Model::FFriendUser::TypeName,
+                Gs2::Friend::Model::Cache::FFriendUserCache::CreateCacheParentKey(
+                    Notification->GetNamespaceName(), Notification->GetUserId(), TOptional<bool>(false), TOptional<int32>()
+                )
+            );
+            Gs2->Cache->ClearListCache(
+                Gs2::Friend::Model::FFriendUser::TypeName,
+                Gs2::Friend::Model::Cache::FFriendUserCache::CreateCacheParentKey(
+                    Notification->GetNamespaceName(), Notification->GetUserId(), TOptional<bool>(true), TOptional<int32>()
+                )
+            );
+            Gs2->Cache->ClearListCache(
+                Gs2::Friend::Model::FFriendUser::TypeName,
+                Gs2::Friend::Model::Cache::FFriendUserCache::CreateCacheParentKey(
+                    Notification->GetNamespaceName(), Notification->GetUserId(), TOptional<bool>(), TOptional<int32>()
+                )
+            );
+            Gs2->Cache->ClearListCache(
+                Gs2::Friend::Model::FFriendUser::TypeName,
+                Gs2::Friend::Model::Cache::FFriendUserCache::CreateCacheParentKey(
+                    Notification->GetNamespaceName(), Notification->GetTargetUserId(), TOptional<bool>(false), TOptional<int32>()
+                )
+            );
+            Gs2->Cache->ClearListCache(
+                Gs2::Friend::Model::FFriendUser::TypeName,
+                Gs2::Friend::Model::Cache::FFriendUserCache::CreateCacheParentKey(
+                    Notification->GetNamespaceName(), Notification->GetTargetUserId(), TOptional<bool>(true), TOptional<int32>()
+                )
+            );
+            Gs2->Cache->ClearListCache(
+                Gs2::Friend::Model::FFriendUser::TypeName,
+                Gs2::Friend::Model::Cache::FFriendUserCache::CreateCacheParentKey(
+                    Notification->GetNamespaceName(), Notification->GetTargetUserId(), TOptional<bool>(), TOptional<int32>()
+                )
+            );
+            AcceptRequestNotificationEvent.Broadcast(Notification);
         }
-        if (Action == "RejectRequest") {
+        if (Action == "RejectRequest" || Action == "RejectRequestNotification") {
             TSharedPtr<FJsonObject> PayloadJson;
             if (const TSharedRef<TJsonReader<>> JsonReader = TJsonReaderFactory<>::Create(Payload);
                 !FJsonSerializer::Deserialize(JsonReader, PayloadJson))
             {
                 return;
             }
-            RejectRequestNotificationEvent.Broadcast(Gs2::Friend::Model::FRejectRequestNotification::FromJson(PayloadJson));
+            const auto Notification = Gs2::Friend::Model::FRejectRequestNotification::FromJson(PayloadJson);
+            Gs2::Friend::Model::Cache::FSendFriendRequestCache::Delete(
+                Gs2->Cache,
+                Notification->GetNamespaceName(),
+                Notification->GetUserId(),
+                Notification->GetTargetUserId(),
+                TOptional<int32>()
+            );
+            Gs2::Friend::Model::Cache::FReceiveFriendRequestCache::Delete(
+                Gs2->Cache,
+                Notification->GetNamespaceName(),
+                Notification->GetTargetUserId(),
+                Notification->GetUserId(),
+                TOptional<int32>()
+            );
+            for (const auto& UserId : {Notification->GetUserId(), Notification->GetTargetUserId()})
+            {
+                for (const auto& WithProfile : {TOptional<bool>(false), TOptional<bool>(true), TOptional<bool>()})
+                {
+                    Gs2->Cache->ClearListCache(
+                        Gs2::Friend::Model::FFriendUser::TypeName,
+                        Gs2::Friend::Model::Cache::FFriendUserCache::CreateCacheParentKey(
+                            Notification->GetNamespaceName(), UserId, WithProfile, TOptional<int32>()
+                        )
+                    );
+                }
+            }
+            RejectRequestNotificationEvent.Broadcast(Notification);
         }
-        if (Action == "DeleteFriend") {
+        if (Action == "DeleteFriend" || Action == "DeleteFriendNotification") {
             TSharedPtr<FJsonObject> PayloadJson;
             if (const TSharedRef<TJsonReader<>> JsonReader = TJsonReaderFactory<>::Create(Payload);
                 !FJsonSerializer::Deserialize(JsonReader, PayloadJson))
             {
                 return;
             }
-            DeleteFriendNotificationEvent.Broadcast(Gs2::Friend::Model::FDeleteFriendNotification::FromJson(PayloadJson));
+            const auto Notification = Gs2::Friend::Model::FDeleteFriendNotification::FromJson(PayloadJson);
+            for (const auto& WithProfile : {TOptional<bool>(false), TOptional<bool>(true), TOptional<bool>()})
+            {
+                Gs2->Cache->ClearListCache(
+                    Gs2::Friend::Model::FFriendUser::TypeName,
+                    Gs2::Friend::Model::Cache::FFriendUserCache::CreateCacheParentKey(
+                        Notification->GetNamespaceName(), Notification->GetUserId(), WithProfile, TOptional<int32>()
+                    )
+                );
+            }
+            DeleteFriendNotificationEvent.Broadcast(Notification);
         }
-        if (Action == "ReceiveRequest") {
+        if (Action == "ReceiveRequest" || Action == "ReceiveRequestNotification") {
             TSharedPtr<FJsonObject> PayloadJson;
             if (const TSharedRef<TJsonReader<>> JsonReader = TJsonReaderFactory<>::Create(Payload);
                 !FJsonSerializer::Deserialize(JsonReader, PayloadJson))
             {
                 return;
             }
-            ReceiveRequestNotificationEvent.Broadcast(Gs2::Friend::Model::FReceiveRequestNotification::FromJson(PayloadJson));
+            const auto Notification = Gs2::Friend::Model::FReceiveRequestNotification::FromJson(PayloadJson);
+            Gs2->Cache->ClearListCache(
+                Gs2::Friend::Model::FSendFriendRequest::TypeName,
+                Gs2::Friend::Model::Cache::FSendFriendRequestCache::CreateCacheParentKey(
+                    Notification->GetNamespaceName(), Notification->GetFromUserId(), TOptional<int32>()
+                )
+            );
+            Gs2->Cache->ClearListCache(
+                Gs2::Friend::Model::FReceiveFriendRequest::TypeName,
+                Gs2::Friend::Model::Cache::FReceiveFriendRequestCache::CreateCacheParentKey(
+                    Notification->GetNamespaceName(), Notification->GetUserId(), TOptional<int32>()
+                )
+            );
+            for (const auto& UserId : {Notification->GetUserId(), Notification->GetFromUserId()})
+            {
+                for (const auto& WithProfile : {TOptional<bool>(false), TOptional<bool>(true), TOptional<bool>()})
+                {
+                    Gs2->Cache->ClearListCache(
+                        Gs2::Friend::Model::FFriendUser::TypeName,
+                        Gs2::Friend::Model::Cache::FFriendUserCache::CreateCacheParentKey(
+                            Notification->GetNamespaceName(), UserId, WithProfile, TOptional<int32>()
+                        )
+                    );
+                }
+            }
+            ReceiveRequestNotificationEvent.Broadcast(Notification);
         }
-        if (Action == "CancelRequest") {
+        if (Action == "CancelRequest" || Action == "CancelRequestNotification") {
             TSharedPtr<FJsonObject> PayloadJson;
             if (const TSharedRef<TJsonReader<>> JsonReader = TJsonReaderFactory<>::Create(Payload);
                 !FJsonSerializer::Deserialize(JsonReader, PayloadJson))
             {
                 return;
             }
-            CancelRequestNotificationEvent.Broadcast(Gs2::Friend::Model::FCancelRequestNotification::FromJson(PayloadJson));
+            const auto Notification = Gs2::Friend::Model::FCancelRequestNotification::FromJson(PayloadJson);
+            Gs2->Cache->ClearListCache(
+                Gs2::Friend::Model::FSendFriendRequest::TypeName,
+                Gs2::Friend::Model::Cache::FSendFriendRequestCache::CreateCacheParentKey(
+                    Notification->GetNamespaceName(), Notification->GetUserId(), TOptional<int32>()
+                )
+            );
+            Gs2->Cache->ClearListCache(
+                Gs2::Friend::Model::FReceiveFriendRequest::TypeName,
+                Gs2::Friend::Model::Cache::FReceiveFriendRequestCache::CreateCacheParentKey(
+                    Notification->GetNamespaceName(), Notification->GetFromUserId(), TOptional<int32>()
+                )
+            );
+            CancelRequestNotificationEvent.Broadcast(Notification);
         }
     }
 
@@ -640,4 +891,3 @@ namespace Gs2::Friend::Domain
 #elif defined(__clang__)
 #pragma clang diagnostic pop
 #endif
-

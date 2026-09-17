@@ -18,6 +18,8 @@
 
 #pragma once
 
+// deny overwrite
+
 #include "Core/Domain/Gs2Core.h"
 #include "Auth/Gs2Auth.h"
 #include "Schedule/Domain/Iterator/DescribeNamespacesIterator.h"
@@ -50,6 +52,7 @@ namespace Gs2::Schedule::Domain::Model
     class FUserDomain;
     class FUserAccessTokenDomain;
     class FCurrentEventMasterDomain;
+    class FRepeatScheduleDomain;
 
     class GS2SCHEDULE_API FEventDomain:
         public TSharedFromThis<FEventDomain>
@@ -88,6 +91,8 @@ namespace Gs2::Schedule::Domain::Model
 
     public:
 
+        TSharedPtr<Gs2::Schedule::Domain::Model::FRepeatScheduleDomain> RepeatSchedule();
+
         FEventDomain(
             const Core::Domain::FGs2Ptr& Gs2,
             const Schedule::Domain::FGs2ScheduleDomainPtr& Service,
@@ -100,6 +105,8 @@ namespace Gs2::Schedule::Domain::Model
         FEventDomain(
             const FEventDomain& From
         );
+
+
 
         class GS2SCHEDULE_API FGetTask final :
             public Gs2::Core::Util::TGs2Future<Gs2::Schedule::Model::FEvent>,
@@ -126,6 +133,8 @@ namespace Gs2::Schedule::Domain::Model
         TSharedPtr<FAsyncTask<FGetTask>> Get(
             Request::FGetEventByUserIdRequestPtr Request
         );
+
+
 
         class GS2SCHEDULE_API FVerifyTask final :
             public Gs2::Core::Util::TGs2Future<Gs2::Schedule::Domain::Model::FEventDomain>,
@@ -186,7 +195,34 @@ namespace Gs2::Schedule::Domain::Model
 
         TSharedPtr<FAsyncTask<FModelTask>> Model();
 
+        void Invalidate();
+
         Gs2::Core::Domain::CallbackID Subscribe(
+            TFunction<void(Gs2::Schedule::Model::FEventPtr)> Callback
+        );
+
+        class GS2SCHEDULE_API FSubscribeWithInitialCallTask final :
+            public Gs2::Core::Util::TGs2Future<Gs2::Core::Domain::CallbackID>,
+            public TSharedFromThis<FSubscribeWithInitialCallTask>
+        {
+            const TSharedPtr<FEventDomain> Self;
+            const TFunction<void(Gs2::Schedule::Model::FEventPtr)> Callback;
+        public:
+            FSubscribeWithInitialCallTask(
+                const TSharedPtr<FEventDomain>& Self,
+                TFunction<void(Gs2::Schedule::Model::FEventPtr)> Callback
+            );
+
+            FSubscribeWithInitialCallTask(
+                const FSubscribeWithInitialCallTask& From
+            );
+
+            virtual Gs2::Core::Model::FGs2ErrorPtr Action(
+                TSharedPtr<TSharedPtr<Gs2::Core::Domain::CallbackID>> Result
+            ) override;
+        };
+
+        TSharedPtr<FAsyncTask<FSubscribeWithInitialCallTask>> SubscribeWithInitialCall(
             TFunction<void(Gs2::Schedule::Model::FEventPtr)> Callback
         );
 

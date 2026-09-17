@@ -16,6 +16,7 @@
 
 
 #include "Core/Domain/Model/JobQueueDomain.h"
+#include "Misc/ScopeLock.h"
 #include "Core/Domain/Gs2.h"
 
 namespace Gs2::Core::Domain::Model
@@ -33,11 +34,98 @@ namespace Gs2::Core::Domain::Model
     ):
         JobQueueExecutedEventHandler(From.JobQueueExecutedEventHandler)
     {
-        
+        FScopeLock Lock(&From.Mutex);
+        Tasks = From.Tasks;
+    }
+
+    void FJobQueueDomain::PushPendingTask(
+        FString NamespaceName,
+        FString UserId,
+        bool bWildcard
+    )
+    {
+        if (NamespaceName.IsEmpty() || (!bWildcard && UserId.IsEmpty()))
+        {
+            return;
+        }
+
+        FScopeLock Lock(&Mutex);
+        for (const auto& Task : Tasks)
+        {
+            if (Task.NamespaceName == NamespaceName &&
+                Task.UserId == UserId &&
+                Task.bWildcard == bWildcard)
+            {
+                return;
+            }
+        }
+        Tasks.Add(FPendingTask{NamespaceName, UserId, bWildcard});
     }
 
     void FJobQueueDomain::Push(FString NamespaceName)
     {
-        
+        PushPendingTask(NamespaceName, FString(), true);
     }
+
+    void FJobQueueDomain::PushForUser(FString NamespaceName, FString UserId)
+    {
+        PushPendingTask(NamespaceName, UserId, false);
+    }
+
+    TOptional<FString> FJobQueueDomain::TakeNextTaskForUser(FString UserId)
+    {
+        if (UserId.IsEmpty())
+        {
+            return TOptional<FString>();
+        }
+
+        FScopeLock Lock(&Mutex);
+        int32 TaskIndex = INDEX_NONE;
+        for (int32 i = 0; i < Tasks.Num(); ++i)
+        {
+            if (!Tasks[i].bWildcard && Tasks[i].UserId == UserId)
+            {
+                TaskIndex = i;
+                break;
+            }
+        }
+        if (TaskIndex == INDEX_NONE)
+        {
+            for (int32 i = 0; i < Tasks.Num(); ++i)
+            {
+                if (Tasks[i].bWildcard)
+                {
+                    TaskIndex = i;
+                    break;
+                }
+            }
+        }
+        if (TaskIndex == INDEX_NONE)
+        {
+            return TOptional<FString>();
+        }
+
+        const FString NamespaceName = Tasks[TaskIndex].NamespaceName;
+        Tasks.RemoveAt(TaskIndex);
+        return NamespaceName;
+    }
+
+    bool FJobQueueDomain::IsEmptyForUser(FString UserId) const
+    {
+        if (UserId.IsEmpty())
+        {
+            return true;
+        }
+
+        FScopeLock Lock(&Mutex);
+        for (const auto& Task : Tasks)
+        {
+            if (Task.bWildcard || Task.UserId == UserId)
+            {
+                return false;
+            }
+        }
+        return true;
+    }
+
 }

@@ -90,7 +90,8 @@ namespace Gs2::UE5::Chat::Domain::Model
 
         Gs2::Core::Domain::CallbackID SubscribeSubscribes(TFunction<void()> Callback);
 
-        void UnsubscribeSubscribes(Gs2::Core::Domain::CallbackID CallbackId);
+        void UnsubscribeSubscribes(
+                Gs2::Core::Domain::CallbackID CallbackId);
 
         Gs2::UE5::Chat::Domain::Model::FEzRoomGameSessionDomainPtr Room(
             const FString RoomName,

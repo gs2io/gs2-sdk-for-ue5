@@ -87,7 +87,7 @@ namespace Gs2::UE5::Matchmaking::Domain::Model
     Gs2::Core::Domain::CallbackID FEzRatingDomain::Subscribe(TFunction<void(Gs2::UE5::Matchmaking::Model::FEzRatingPtr)> Callback)
     {
         return Domain->Subscribe(
-            [&](Gs2::Matchmaking::Model::FRatingPtr Item)
+            [Callback](Gs2::Matchmaking::Model::FRatingPtr Item)
             {
                 Callback(Gs2::UE5::Matchmaking::Model::FEzRating::FromModel(Item));
             }

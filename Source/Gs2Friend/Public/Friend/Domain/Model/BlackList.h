@@ -97,6 +97,8 @@ namespace Gs2::Friend::Domain::Model
             const FBlackListDomain& From
         );
 
+
+
         class GS2FRIEND_API FRegisterTask final :
             public Gs2::Core::Util::TGs2Future<Gs2::Friend::Domain::Model::FBlackListDomain>,
             public TSharedFromThis<FRegisterTask>
@@ -122,6 +124,8 @@ namespace Gs2::Friend::Domain::Model
         TSharedPtr<FAsyncTask<FRegisterTask>> Register(
             Request::FRegisterBlackListByUserIdRequestPtr Request
         );
+
+
 
         class GS2FRIEND_API FUnregisterTask final :
             public Gs2::Core::Util::TGs2Future<Gs2::Friend::Domain::Model::FBlackListDomain>,
@@ -180,7 +184,34 @@ namespace Gs2::Friend::Domain::Model
 
         TSharedPtr<FAsyncTask<FModelTask>> Model();
 
+        void Invalidate();
+
         Gs2::Core::Domain::CallbackID Subscribe(
+            TFunction<void(Gs2::Friend::Model::FBlackListPtr)> Callback
+        );
+
+        class GS2FRIEND_API FSubscribeWithInitialCallTask final :
+            public Gs2::Core::Util::TGs2Future<Gs2::Core::Domain::CallbackID>,
+            public TSharedFromThis<FSubscribeWithInitialCallTask>
+        {
+            const TSharedPtr<FBlackListDomain> Self;
+            const TFunction<void(Gs2::Friend::Model::FBlackListPtr)> Callback;
+        public:
+            FSubscribeWithInitialCallTask(
+                const TSharedPtr<FBlackListDomain>& Self,
+                TFunction<void(Gs2::Friend::Model::FBlackListPtr)> Callback
+            );
+
+            FSubscribeWithInitialCallTask(
+                const FSubscribeWithInitialCallTask& From
+            );
+
+            virtual Gs2::Core::Model::FGs2ErrorPtr Action(
+                TSharedPtr<TSharedPtr<Gs2::Core::Domain::CallbackID>> Result
+            ) override;
+        };
+
+        TSharedPtr<FAsyncTask<FSubscribeWithInitialCallTask>> SubscribeWithInitialCall(
             TFunction<void(Gs2::Friend::Model::FBlackListPtr)> Callback
         );
 

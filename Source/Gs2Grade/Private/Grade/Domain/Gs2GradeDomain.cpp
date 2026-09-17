@@ -12,8 +12,6 @@
  * on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either
  * express or implied. See the License for the specific language governing
  * permissions and limitations under the License.
- *
- * deny overwrite
  */
 
 #if defined(_MSC_VER)
@@ -34,8 +32,17 @@
 #include "Grade/Domain/Model/UserAccessToken.h"
 #include "Grade/Domain/Model/Status.h"
 #include "Grade/Domain/Model/CurrentGradeMaster.h"
+#include "Grade/Model/Cache/Status.h"
+#include "Experience/Model/Cache/Status.h"
+
+#include "Grade/Model/Cache/Namespace.h"
+#include "Grade/Model/Cache/GradeModelMaster.h"
+#include "Grade/Model/Cache/CurrentGradeMaster.h"
+#include "Grade/Model/Cache/GradeModel.h"
+#include "Grade/Model/Cache/Status.h"
+#include "Experience/Model/Cache/Status.h"
+
 #include "Core/Domain/Gs2.h"
-#include "Experience/Domain/Model/Status.h"
 
 namespace Gs2::Grade::Domain
 {
@@ -88,6 +95,19 @@ namespace Gs2::Grade::Domain
         }
         const auto ResultModel = Future->GetTask().Result();
         Future->EnsureCompletion();
+
+            if (ResultModel.IsValid() && ResultModel->GetItem() != nullptr)
+            {
+
+
+        Gs2::Grade::Model::Cache::FNamespaceCache::Put(
+            Self->Gs2->Cache,
+
+            ResultModel->GetItem()->GetName(),
+            TOptional<int32>(),
+            ResultModel->GetItem()
+        );
+            }
         auto Domain = MakeShared<Gs2::Grade::Domain::Model::FNamespaceDomain>(
             Self->Gs2,
             Self,
@@ -131,6 +151,7 @@ namespace Gs2::Grade::Domain
         }
         const auto ResultModel = Future->GetTask().Result();
         Future->EnsureCompletion();
+
         const auto Domain = Self;
         *Result = Domain;
         return nullptr;
@@ -170,6 +191,7 @@ namespace Gs2::Grade::Domain
         }
         const auto ResultModel = Future->GetTask().Result();
         Future->EnsureCompletion();
+
         const auto Domain = Self;
         if (ResultModel != nullptr)
         {
@@ -216,6 +238,7 @@ namespace Gs2::Grade::Domain
         }
         const auto ResultModel = Future->GetTask().Result();
         Future->EnsureCompletion();
+
         const auto Domain = Self;
         *Result = Domain;
         return nullptr;
@@ -255,6 +278,7 @@ namespace Gs2::Grade::Domain
         }
         const auto ResultModel = Future->GetTask().Result();
         Future->EnsureCompletion();
+
         const auto Domain = Self;
         *Result = Domain;
         return nullptr;
@@ -294,6 +318,7 @@ namespace Gs2::Grade::Domain
         }
         const auto ResultModel = Future->GetTask().Result();
         Future->EnsureCompletion();
+
         const auto Domain = Self;
         if (ResultModel != nullptr)
         {
@@ -344,6 +369,7 @@ namespace Gs2::Grade::Domain
         }
         const auto ResultModel = Future->GetTask().Result();
         Future->EnsureCompletion();
+
         const auto Domain = Self;
         *Result = Domain;
         return nullptr;
@@ -383,6 +409,7 @@ namespace Gs2::Grade::Domain
         }
         const auto ResultModel = Future->GetTask().Result();
         Future->EnsureCompletion();
+
         const auto Domain = Self;
         if (ResultModel != nullptr)
         {
@@ -414,24 +441,110 @@ namespace Gs2::Grade::Domain
 
     Gs2::Core::Domain::CallbackID FGs2GradeDomain::SubscribeNamespaces(
     TFunction<void()> Callback
+
     )
     {
         return Gs2->Cache->ListSubscribe(
             Gs2::Grade::Model::FNamespace::TypeName,
-            "grade:Namespace",
+            Gs2::Grade::Model::Cache::FNamespaceCache::CreateCacheParentKey(
+                TOptional<int32>()
+            ),
+            Callback,
             Callback
         );
     }
-
     void FGs2GradeDomain::UnsubscribeNamespaces(
         Gs2::Core::Domain::CallbackID CallbackID
     )
     {
         Gs2->Cache->ListUnsubscribe(
             Gs2::Grade::Model::FNamespace::TypeName,
-            "grade:Namespace",
+            Gs2::Grade::Model::Cache::FNamespaceCache::CreateCacheParentKey(
+                TOptional<int32>()
+            ),
             CallbackID
         );
+    }
+    class FGs2GradeDomain::FCollectNamespacesTask : public Gs2::Core::Util::TGs2Future<TArray<Gs2::Grade::Model::FNamespacePtr>>, public TSharedFromThis<FCollectNamespacesTask>
+    {
+        const TSharedPtr<FGs2GradeDomain> Self;
+        const TFunction<void(TArray<Gs2::Grade::Model::FNamespacePtr>)> OnCollected;
+    const TOptional<FString> QueryNamePrefix;
+    public:
+        explicit FCollectNamespacesTask(const TSharedPtr<FGs2GradeDomain>& Self, TFunction<void(TArray<Gs2::Grade::Model::FNamespacePtr>)> OnCollected,const TOptional<FString> NamePrefix) : Self(Self), OnCollected(OnCollected), QueryNamePrefix(NamePrefix) {}
+        FCollectNamespacesTask(const FCollectNamespacesTask& From) : TGs2Future(From), Self(From.Self), OnCollected(From.OnCollected), QueryNamePrefix(From.QueryNamePrefix) {}
+        virtual Gs2::Core::Model::FGs2ErrorPtr Action(TSharedPtr<TSharedPtr<TArray<Gs2::Grade::Model::FNamespacePtr>>> Result) override
+        {
+            TArray<Gs2::Grade::Model::FNamespacePtr> Items;
+            auto Iterator = Self->Namespaces(QueryNamePrefix)->begin();
+            while (Iterator.HasNext())
+            {
+                if (Iterator.IsError()) return Iterator.Error();
+                if (Iterator.IsCurrentValid()) Items.Add(Iterator.Current());
+                ++Iterator;
+            }
+            if (Iterator.IsError()) return Iterator.Error();
+            *Result = MakeShared<TArray<Gs2::Grade::Model::FNamespacePtr>>(Items);
+            if (OnCollected) OnCollected(Items);
+            return nullptr;
+        }
+    };
+
+    Gs2::Core::Domain::CallbackID FGs2GradeDomain::SubscribeNamespaces(
+        TFunction<void(TArray<Gs2::Grade::Model::FNamespacePtr>)> Callback,const TOptional<FString> NamePrefix
+    )
+    {
+        const TWeakPtr<Gs2::Core::Domain::FGs2> WeakGs2 = this->Gs2;
+        const auto QueryNamePrefix = NamePrefix;
+        const auto Parent = Gs2::Grade::Model::Cache::FNamespaceCache::CreateCacheParentKey(
+        TOptional<int32>()
+    );
+        return Gs2->Cache->ListSubscribeTyped(
+            Gs2::Grade::Model::FNamespace::TypeName,
+            Parent,
+            [Callback, WeakGs2](const TArray<FGs2ObjectPtr>& Values)
+            {
+                if (!WeakGs2.Pin().IsValid()) return;
+                TArray<Gs2::Grade::Model::FNamespacePtr> TypedValues;
+                for (const auto& Value : Values) if (Value.IsValid()) TypedValues.Add(StaticCastSharedPtr<Gs2::Grade::Model::FNamespace>(Value));
+                Callback(TypedValues);
+            },
+            [WeakGs2, Callback, QueryNamePrefix]()
+            {
+                const auto Owner = WeakGs2.Pin();
+                if (!Owner.IsValid()) return;
+                const auto Domain = MakeShared<FGs2GradeDomain>(Owner);
+                const auto Task = Gs2::Core::Util::New<FAsyncTask<FCollectNamespacesTask>>(Domain, Callback, QueryNamePrefix);
+                Task->StartBackgroundTask();
+            }
+        );
+    }
+
+    void FGs2GradeDomain::InvalidateNamespaces(const TOptional<FString> NamePrefix)
+    {
+        Gs2->Cache->ClearListCache(
+            Gs2::Grade::Model::FNamespace::TypeName,
+            Gs2::Grade::Model::Cache::FNamespaceCache::CreateCacheParentKey(
+        TOptional<int32>()
+    )
+        );
+    }
+
+    FGs2GradeDomain::FSubscribeNamespacesWithInitialCallTask::FSubscribeNamespacesWithInitialCallTask(const TSharedPtr<FGs2GradeDomain>& Self, TFunction<void(TArray<Gs2::Grade::Model::FNamespacePtr>)> Callback,const TOptional<FString> NamePrefix) : Self(Self), Callback(Callback), QueryNamePrefix(NamePrefix) {}
+    FGs2GradeDomain::FSubscribeNamespacesWithInitialCallTask::FSubscribeNamespacesWithInitialCallTask(const FSubscribeNamespacesWithInitialCallTask& From) : TGs2Future(From), Self(From.Self), Callback(From.Callback), QueryNamePrefix(From.QueryNamePrefix) {}
+    Gs2::Core::Model::FGs2ErrorPtr FGs2GradeDomain::FSubscribeNamespacesWithInitialCallTask::Action(TSharedPtr<TSharedPtr<Gs2::Core::Domain::CallbackID>> Result)
+    {
+        const auto Task = Gs2::Core::Util::New<FAsyncTask<FCollectNamespacesTask>>(Self, TFunction<void(TArray<Gs2::Grade::Model::FNamespacePtr>)>(), QueryNamePrefix);
+        Task->StartSynchronousTask(); Task->EnsureCompletion();
+        if (Task->GetTask().IsError()) return Task->GetTask().Error();
+        const auto Values = Task->GetTask().Result();
+        const auto CallbackId = Self->SubscribeNamespaces(Callback, QueryNamePrefix);
+        Callback(*Values); *Result = MakeShared<Gs2::Core::Domain::CallbackID>(CallbackId);
+        return nullptr;
+    }
+    TSharedPtr<FAsyncTask<FGs2GradeDomain::FSubscribeNamespacesWithInitialCallTask>> FGs2GradeDomain::SubscribeNamespacesWithInitialCall(TFunction<void(TArray<Gs2::Grade::Model::FNamespacePtr>)> Callback,const TOptional<FString> NamePrefix)
+    {
+        return Gs2::Core::Util::New<FAsyncTask<FSubscribeNamespacesWithInitialCallTask>>(this->AsShared(), Callback, NamePrefix);
     }
 
     TSharedPtr<Gs2::Grade::Domain::Model::FNamespaceDomain> FGs2GradeDomain::Namespace(
@@ -448,7 +561,8 @@ namespace Gs2::Grade::Domain
     void FGs2GradeDomain::UpdateCacheFromStampSheet(
         const FString Method,
         const FString Request,
-        const FString Result
+        const FString Result,
+        const TOptional<int32> TimeOffset
     ) {
         if (Method == "AddGradeByUserId") {
             TSharedPtr<FJsonObject> RequestModelJson;
@@ -465,45 +579,51 @@ namespace Gs2::Grade::Domain
             }
             const auto RequestModel = Gs2::Grade::Request::FAddGradeByUserIdRequest::FromJson(RequestModelJson);
             const auto ResultModel = Gs2::Grade::Result::FAddGradeByUserIdResult::FromJson(ResultModelJson);
-            
-            if (ResultModel->GetItem() != nullptr)
-            {
-                const auto ParentKey = Gs2::Grade::Domain::Model::FUserDomain::CreateCacheParentKey(
+
+                    if (ResultModel.IsValid() && ResultModel->GetItem() != nullptr)
+                    {
+
+                if (!ResultModel.IsValid() || !ResultModel->GetItem().IsValid())
+                    {
+                      return;
+                      }if (!ResultModel.IsValid() || !((ResultModel.IsValid() && ResultModel->GetItem().IsValid() ? ResultModel->GetItem()->GetUserId() : TOptional<FString>())).IsSet())
+                    {
+                      return;
+                      }
+                Gs2::Grade::Model::Cache::FStatusCache::Put(
+                    Gs2->Cache,
+
                     RequestModel->GetNamespaceName(),
-                    RequestModel->GetUserId(),
-                    "Status"
-                );
-                const auto Key = Gs2::Grade::Domain::Model::FStatusDomain::CreateCacheKey(
+                    (ResultModel.IsValid() && ResultModel->GetItem().IsValid() ? ResultModel->GetItem()->GetUserId() : TOptional<FString>()),
                     ResultModel->GetItem()->GetGradeName(),
-                    ResultModel->GetItem()->GetPropertyId()
+                    ResultModel->GetItem()->GetPropertyId(),
+                    TimeOffset,
+                    ResultModel->GetItem()
                 );
-                Gs2->Cache->Put(
-                    Gs2::Grade::Model::FStatus::TypeName,
-                    ParentKey,
-                    Key,
-                    ResultModel->GetItem(),
-                    FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
-                );
-            }
-            if (ResultModel->GetExperienceStatus() != nullptr)
-            {
-                const auto ParentKey = Gs2::Grade::Domain::Model::FUserDomain::CreateCacheParentKey(
-                    RequestModel->GetNamespaceName(),
-                    RequestModel->GetUserId(),
-                    "Status"
-                );
-                const auto Key = Gs2::Experience::Domain::Model::FStatusDomain::CreateCacheKey(
+                    }
+                    if (ResultModel.IsValid() && ResultModel->GetExperienceStatus() != nullptr)
+                    {
+
+                if (!ResultModel.IsValid() || !ResultModel->GetItem().IsValid())
+                    {
+                      return;
+                      }if (!ResultModel.IsValid() || !((ResultModel.IsValid() && ResultModel->GetItem().IsValid() ? ResultModel->GetItem()->GetUserId() : TOptional<FString>())).IsSet())
+                    {
+                      return;
+                      }
+                Gs2::Experience::Model::Cache::FStatusCache::Put(
+                    Gs2->Cache,
+
+                    Gs2::Experience::Model::FStatus::GetNamespaceNameFromGrn(ResultModel->GetExperienceStatus()->GetStatusId().Get(FString())),
+                    (ResultModel.IsValid() && ResultModel->GetItem().IsValid() ? ResultModel->GetItem()->GetUserId() : TOptional<FString>()),
                     ResultModel->GetExperienceStatus()->GetExperienceName(),
-                    ResultModel->GetExperienceStatus()->GetPropertyId()
+                    ResultModel->GetItem()->GetPropertyId(),
+                    TimeOffset,
+                    ResultModel->GetExperienceStatus()
                 );
-                Gs2->Cache->Put(
-                    Gs2::Experience::Model::FStatus::TypeName,
-                    ParentKey,
-                    Key,
-                    ResultModel->GetExperienceStatus(),
-                    FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
-                );
-            }
+                    }
+
+
         }
         if (Method == "ApplyRankCapByUserId") {
             TSharedPtr<FJsonObject> RequestModelJson;
@@ -520,45 +640,51 @@ namespace Gs2::Grade::Domain
             }
             const auto RequestModel = Gs2::Grade::Request::FApplyRankCapByUserIdRequest::FromJson(RequestModelJson);
             const auto ResultModel = Gs2::Grade::Result::FApplyRankCapByUserIdResult::FromJson(ResultModelJson);
-            
-            if (ResultModel->GetItem() != nullptr)
-            {
-                const auto ParentKey = Gs2::Grade::Domain::Model::FUserDomain::CreateCacheParentKey(
+
+                    if (ResultModel.IsValid() && ResultModel->GetItem() != nullptr)
+                    {
+
+                if (!ResultModel.IsValid() || !ResultModel->GetItem().IsValid())
+                    {
+                      return;
+                      }if (!ResultModel.IsValid() || !((ResultModel.IsValid() && ResultModel->GetItem().IsValid() ? ResultModel->GetItem()->GetUserId() : TOptional<FString>())).IsSet())
+                    {
+                      return;
+                      }
+                Gs2::Grade::Model::Cache::FStatusCache::Put(
+                    Gs2->Cache,
+
                     RequestModel->GetNamespaceName(),
-                    RequestModel->GetUserId(),
-                    "Status"
-                );
-                const auto Key = Gs2::Grade::Domain::Model::FStatusDomain::CreateCacheKey(
+                    (ResultModel.IsValid() && ResultModel->GetItem().IsValid() ? ResultModel->GetItem()->GetUserId() : TOptional<FString>()),
                     ResultModel->GetItem()->GetGradeName(),
-                    ResultModel->GetItem()->GetPropertyId()
+                    ResultModel->GetItem()->GetPropertyId(),
+                    TimeOffset,
+                    ResultModel->GetItem()
                 );
-                Gs2->Cache->Put(
-                    Gs2::Grade::Model::FStatus::TypeName,
-                    ParentKey,
-                    Key,
-                    ResultModel->GetItem(),
-                    FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
-                );
-            }
-            if (ResultModel->GetExperienceStatus() != nullptr)
-            {
-                const auto ParentKey = Gs2::Grade::Domain::Model::FUserDomain::CreateCacheParentKey(
-                    RequestModel->GetNamespaceName(),
-                    RequestModel->GetUserId(),
-                    "Status"
-                );
-                const auto Key = Gs2::Experience::Domain::Model::FStatusDomain::CreateCacheKey(
+                    }
+                    if (ResultModel.IsValid() && ResultModel->GetExperienceStatus() != nullptr)
+                    {
+
+                if (!ResultModel.IsValid() || !ResultModel->GetItem().IsValid())
+                    {
+                      return;
+                      }if (!ResultModel.IsValid() || !((ResultModel.IsValid() && ResultModel->GetItem().IsValid() ? ResultModel->GetItem()->GetUserId() : TOptional<FString>())).IsSet())
+                    {
+                      return;
+                      }
+                Gs2::Experience::Model::Cache::FStatusCache::Put(
+                    Gs2->Cache,
+
+                    Gs2::Experience::Model::FStatus::GetNamespaceNameFromGrn(ResultModel->GetExperienceStatus()->GetStatusId().Get(FString())),
+                    (ResultModel.IsValid() && ResultModel->GetItem().IsValid() ? ResultModel->GetItem()->GetUserId() : TOptional<FString>()),
                     ResultModel->GetExperienceStatus()->GetExperienceName(),
-                    ResultModel->GetExperienceStatus()->GetPropertyId()
+                    ResultModel->GetItem()->GetPropertyId(),
+                    TimeOffset,
+                    ResultModel->GetExperienceStatus()
                 );
-                Gs2->Cache->Put(
-                    Gs2::Experience::Model::FStatus::TypeName,
-                    ParentKey,
-                    Key,
-                    ResultModel->GetExperienceStatus(),
-                    FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
-                );
-            }
+                    }
+
+
         }
         if (Method == "MultiplyAcquireActionsByUserId") {
             TSharedPtr<FJsonObject> RequestModelJson;
@@ -575,14 +701,15 @@ namespace Gs2::Grade::Domain
             }
             const auto RequestModel = Gs2::Grade::Request::FMultiplyAcquireActionsByUserIdRequest::FromJson(RequestModelJson);
             const auto ResultModel = Gs2::Grade::Result::FMultiplyAcquireActionsByUserIdResult::FromJson(ResultModelJson);
-            
+
         }
     }
 
     void FGs2GradeDomain::UpdateCacheFromStampTask(
         const FString Method,
         const FString Request,
-        const FString Result
+        const FString Result,
+        const TOptional<int32> TimeOffset
     ) {
         if (Method == "SubGradeByUserId") {
             TSharedPtr<FJsonObject> RequestModelJson;
@@ -599,52 +726,59 @@ namespace Gs2::Grade::Domain
             }
             const auto RequestModel = Gs2::Grade::Request::FSubGradeByUserIdRequest::FromJson(RequestModelJson);
             const auto ResultModel = Gs2::Grade::Result::FSubGradeByUserIdResult::FromJson(ResultModelJson);
-            
-            if (ResultModel->GetItem() != nullptr)
-            {
-                const auto ParentKey = Gs2::Grade::Domain::Model::FUserDomain::CreateCacheParentKey(
+
+                    if (ResultModel.IsValid() && ResultModel->GetItem() != nullptr)
+                    {
+
+                if (!ResultModel.IsValid() || !ResultModel->GetItem().IsValid())
+                    {
+                      return;
+                      }if (!ResultModel.IsValid() || !((ResultModel.IsValid() && ResultModel->GetItem().IsValid() ? ResultModel->GetItem()->GetUserId() : TOptional<FString>())).IsSet())
+                    {
+                      return;
+                      }
+                Gs2::Grade::Model::Cache::FStatusCache::Put(
+                    Gs2->Cache,
+
                     RequestModel->GetNamespaceName(),
-                    RequestModel->GetUserId(),
-                    "Status"
-                );
-                const auto Key = Gs2::Grade::Domain::Model::FStatusDomain::CreateCacheKey(
+                    (ResultModel.IsValid() && ResultModel->GetItem().IsValid() ? ResultModel->GetItem()->GetUserId() : TOptional<FString>()),
                     ResultModel->GetItem()->GetGradeName(),
-                    ResultModel->GetItem()->GetPropertyId()
+                    ResultModel->GetItem()->GetPropertyId(),
+                    TimeOffset,
+                    ResultModel->GetItem()
                 );
-                Gs2->Cache->Put(
-                    Gs2::Grade::Model::FStatus::TypeName,
-                    ParentKey,
-                    Key,
-                    ResultModel->GetItem(),
-                    FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
-                );
-            }
-            if (ResultModel->GetExperienceStatus() != nullptr)
-            {
-                const auto ParentKey = Gs2::Grade::Domain::Model::FUserDomain::CreateCacheParentKey(
-                    RequestModel->GetNamespaceName(),
-                    RequestModel->GetUserId(),
-                    "Status"
-                );
-                const auto Key = Gs2::Experience::Domain::Model::FStatusDomain::CreateCacheKey(
+                    }
+                    if (ResultModel.IsValid() && ResultModel->GetExperienceStatus() != nullptr)
+                    {
+
+                if (!ResultModel.IsValid() || !ResultModel->GetItem().IsValid())
+                    {
+                      return;
+                      }if (!ResultModel.IsValid() || !((ResultModel.IsValid() && ResultModel->GetItem().IsValid() ? ResultModel->GetItem()->GetUserId() : TOptional<FString>())).IsSet())
+                    {
+                      return;
+                      }
+                Gs2::Experience::Model::Cache::FStatusCache::Put(
+                    Gs2->Cache,
+
+                    Gs2::Experience::Model::FStatus::GetNamespaceNameFromGrn(ResultModel->GetExperienceStatus()->GetStatusId().Get(FString())),
+                    (ResultModel.IsValid() && ResultModel->GetItem().IsValid() ? ResultModel->GetItem()->GetUserId() : TOptional<FString>()),
                     ResultModel->GetExperienceStatus()->GetExperienceName(),
-                    ResultModel->GetExperienceStatus()->GetPropertyId()
+                    ResultModel->GetItem()->GetPropertyId(),
+                    TimeOffset,
+                    ResultModel->GetExperienceStatus()
                 );
-                Gs2->Cache->Put(
-                    Gs2::Experience::Model::FStatus::TypeName,
-                    ParentKey,
-                    Key,
-                    ResultModel->GetExperienceStatus(),
-                    FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
-                );
-            }
+                    }
+
+
         }
     }
 
     void FGs2GradeDomain::UpdateCacheFromJobResult(
         const FString Method,
         const Gs2::JobQueue::Model::FJobPtr Job,
-        const Gs2::JobQueue::Model::FJobResultBodyPtr Result
+        const Gs2::JobQueue::Model::FJobResultBodyPtr Result,
+        const TOptional<int32> TimeOffset
     ) {
         if (Method == "add_grade_by_user_id") {
             TSharedPtr<FJsonObject> RequestModelJson;
@@ -669,45 +803,51 @@ namespace Gs2::Grade::Domain
             }
             const auto RequestModel = Gs2::Grade::Request::FAddGradeByUserIdRequest::FromJson(RequestModelJson);
             const auto ResultModel = Gs2::Grade::Result::FAddGradeByUserIdResult::FromJson(ResultModelJson);
-            
-            if (ResultModel->GetItem() != nullptr)
-            {
-                const auto ParentKey = Gs2::Grade::Domain::Model::FUserDomain::CreateCacheParentKey(
+
+                    if (ResultModel.IsValid() && ResultModel->GetItem() != nullptr)
+                    {
+
+                if (!ResultModel.IsValid() || !ResultModel->GetItem().IsValid())
+                    {
+                      return;
+                      }if (!ResultModel.IsValid() || !((ResultModel.IsValid() && ResultModel->GetItem().IsValid() ? ResultModel->GetItem()->GetUserId() : TOptional<FString>())).IsSet())
+                    {
+                      return;
+                      }
+                Gs2::Grade::Model::Cache::FStatusCache::Put(
+                    Gs2->Cache,
+
                     RequestModel->GetNamespaceName(),
-                    RequestModel->GetUserId(),
-                    "Status"
-                );
-                const auto Key = Gs2::Grade::Domain::Model::FStatusDomain::CreateCacheKey(
+                    (ResultModel.IsValid() && ResultModel->GetItem().IsValid() ? ResultModel->GetItem()->GetUserId() : TOptional<FString>()),
                     ResultModel->GetItem()->GetGradeName(),
-                    ResultModel->GetItem()->GetPropertyId()
+                    ResultModel->GetItem()->GetPropertyId(),
+                    TimeOffset,
+                    ResultModel->GetItem()
                 );
-                Gs2->Cache->Put(
-                    Gs2::Grade::Model::FStatus::TypeName,
-                    ParentKey,
-                    Key,
-                    ResultModel->GetItem(),
-                    FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
-                );
-            }
-            if (ResultModel->GetExperienceStatus() != nullptr)
-            {
-                const auto ParentKey = Gs2::Grade::Domain::Model::FUserDomain::CreateCacheParentKey(
-                    RequestModel->GetNamespaceName(),
-                    RequestModel->GetUserId(),
-                    "Status"
-                );
-                const auto Key = Gs2::Experience::Domain::Model::FStatusDomain::CreateCacheKey(
+                    }
+                    if (ResultModel.IsValid() && ResultModel->GetExperienceStatus() != nullptr)
+                    {
+
+                if (!ResultModel.IsValid() || !ResultModel->GetItem().IsValid())
+                    {
+                      return;
+                      }if (!ResultModel.IsValid() || !((ResultModel.IsValid() && ResultModel->GetItem().IsValid() ? ResultModel->GetItem()->GetUserId() : TOptional<FString>())).IsSet())
+                    {
+                      return;
+                      }
+                Gs2::Experience::Model::Cache::FStatusCache::Put(
+                    Gs2->Cache,
+
+                    Gs2::Experience::Model::FStatus::GetNamespaceNameFromGrn(ResultModel->GetExperienceStatus()->GetStatusId().Get(FString())),
+                    (ResultModel.IsValid() && ResultModel->GetItem().IsValid() ? ResultModel->GetItem()->GetUserId() : TOptional<FString>()),
                     ResultModel->GetExperienceStatus()->GetExperienceName(),
-                    ResultModel->GetExperienceStatus()->GetPropertyId()
+                    ResultModel->GetItem()->GetPropertyId(),
+                    TimeOffset,
+                    ResultModel->GetExperienceStatus()
                 );
-                Gs2->Cache->Put(
-                    Gs2::Experience::Model::FStatus::TypeName,
-                    ParentKey,
-                    Key,
-                    ResultModel->GetExperienceStatus(),
-                    FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
-                );
-            }
+                    }
+
+
         }
         if (Method == "apply_rank_cap_by_user_id") {
             TSharedPtr<FJsonObject> RequestModelJson;
@@ -732,45 +872,51 @@ namespace Gs2::Grade::Domain
             }
             const auto RequestModel = Gs2::Grade::Request::FApplyRankCapByUserIdRequest::FromJson(RequestModelJson);
             const auto ResultModel = Gs2::Grade::Result::FApplyRankCapByUserIdResult::FromJson(ResultModelJson);
-            
-            if (ResultModel->GetItem() != nullptr)
-            {
-                const auto ParentKey = Gs2::Grade::Domain::Model::FUserDomain::CreateCacheParentKey(
+
+                    if (ResultModel.IsValid() && ResultModel->GetItem() != nullptr)
+                    {
+
+                if (!ResultModel.IsValid() || !ResultModel->GetItem().IsValid())
+                    {
+                      return;
+                      }if (!ResultModel.IsValid() || !((ResultModel.IsValid() && ResultModel->GetItem().IsValid() ? ResultModel->GetItem()->GetUserId() : TOptional<FString>())).IsSet())
+                    {
+                      return;
+                      }
+                Gs2::Grade::Model::Cache::FStatusCache::Put(
+                    Gs2->Cache,
+
                     RequestModel->GetNamespaceName(),
-                    RequestModel->GetUserId(),
-                    "Status"
-                );
-                const auto Key = Gs2::Grade::Domain::Model::FStatusDomain::CreateCacheKey(
+                    (ResultModel.IsValid() && ResultModel->GetItem().IsValid() ? ResultModel->GetItem()->GetUserId() : TOptional<FString>()),
                     ResultModel->GetItem()->GetGradeName(),
-                    ResultModel->GetItem()->GetPropertyId()
+                    ResultModel->GetItem()->GetPropertyId(),
+                    TimeOffset,
+                    ResultModel->GetItem()
                 );
-                Gs2->Cache->Put(
-                    Gs2::Grade::Model::FStatus::TypeName,
-                    ParentKey,
-                    Key,
-                    ResultModel->GetItem(),
-                    FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
-                );
-            }
-            if (ResultModel->GetExperienceStatus() != nullptr)
-            {
-                const auto ParentKey = Gs2::Grade::Domain::Model::FUserDomain::CreateCacheParentKey(
-                    RequestModel->GetNamespaceName(),
-                    RequestModel->GetUserId(),
-                    "Status"
-                );
-                const auto Key = Gs2::Experience::Domain::Model::FStatusDomain::CreateCacheKey(
+                    }
+                    if (ResultModel.IsValid() && ResultModel->GetExperienceStatus() != nullptr)
+                    {
+
+                if (!ResultModel.IsValid() || !ResultModel->GetItem().IsValid())
+                    {
+                      return;
+                      }if (!ResultModel.IsValid() || !((ResultModel.IsValid() && ResultModel->GetItem().IsValid() ? ResultModel->GetItem()->GetUserId() : TOptional<FString>())).IsSet())
+                    {
+                      return;
+                      }
+                Gs2::Experience::Model::Cache::FStatusCache::Put(
+                    Gs2->Cache,
+
+                    Gs2::Experience::Model::FStatus::GetNamespaceNameFromGrn(ResultModel->GetExperienceStatus()->GetStatusId().Get(FString())),
+                    (ResultModel.IsValid() && ResultModel->GetItem().IsValid() ? ResultModel->GetItem()->GetUserId() : TOptional<FString>()),
                     ResultModel->GetExperienceStatus()->GetExperienceName(),
-                    ResultModel->GetExperienceStatus()->GetPropertyId()
+                    ResultModel->GetItem()->GetPropertyId(),
+                    TimeOffset,
+                    ResultModel->GetExperienceStatus()
                 );
-                Gs2->Cache->Put(
-                    Gs2::Experience::Model::FStatus::TypeName,
-                    ParentKey,
-                    Key,
-                    ResultModel->GetExperienceStatus(),
-                    FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
-                );
-            }
+                    }
+
+
         }
         if (Method == "multiply_acquire_actions_by_user_id") {
             TSharedPtr<FJsonObject> RequestModelJson;
@@ -795,7 +941,7 @@ namespace Gs2::Grade::Domain
             }
             const auto RequestModel = Gs2::Grade::Request::FMultiplyAcquireActionsByUserIdRequest::FromJson(RequestModelJson);
             const auto ResultModel = Gs2::Grade::Result::FMultiplyAcquireActionsByUserIdResult::FromJson(ResultModelJson);
-            
+
         }
     }
 
@@ -811,4 +957,3 @@ namespace Gs2::Grade::Domain
 #elif defined(__clang__)
 #pragma clang diagnostic pop
 #endif
-

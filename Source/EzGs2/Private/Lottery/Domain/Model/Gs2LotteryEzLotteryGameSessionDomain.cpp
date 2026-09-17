@@ -65,7 +65,8 @@ namespace Gs2::UE5::Lottery::Domain::Model
         );
     }
 
-    void FEzLotteryGameSessionDomain::UnsubscribeProbabilities(Gs2::Core::Domain::CallbackID CallbackId)
+    void FEzLotteryGameSessionDomain::UnsubscribeProbabilities(
+            Gs2::Core::Domain::CallbackID CallbackId)
     {
         Domain->UnsubscribeProbabilities(
             CallbackId

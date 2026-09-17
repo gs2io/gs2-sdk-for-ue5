@@ -59,6 +59,7 @@
 #include "Ranking2/Domain/Model/SubscribeUserAccessToken.h"
 #include "Ranking2/Domain/Model/User.h"
 #include "Ranking2/Domain/Model/UserAccessToken.h"
+#include "Ranking2/Model/Cache/ClusterRankingData.h"
 
 #include "Core/Domain/Gs2.h"
 #include "Core/Domain/Transaction/JobQueueJobDomainFactory.h"
@@ -159,37 +160,158 @@ namespace Gs2::Ranking2::Domain::Model
         TSharedPtr<TSharedPtr<Gs2::Ranking2::Model::FClusterRankingData>> Result
     )
     {
-        // ReSharper disable once CppLocalVariableMayBeConst
-        TSharedPtr<Gs2::Ranking2::Model::FClusterRankingData> Value;
-        auto bCacheHit = Self->Gs2->Cache->TryGet<Gs2::Ranking2::Model::FClusterRankingData>(
-            Self->ParentKey,
-            Gs2::Ranking2::Domain::Model::FClusterRankingDataDomain::CreateCacheKey(
-                Self->ScorerUserId
-            ),
-            &Value
-        );
-        *Result = Value;
+        const auto CacheParentKey = Gs2::Ranking2::Model::Cache::FClusterRankingDataCache::CreateCacheParentKey(
 
-        return nullptr;
+            Self->NamespaceName,
+            Self->RankingName,
+            Self->ClusterName,
+            Self->Season,
+            TOptional<int32>()
+        );
+        const auto CacheKey = Gs2::Ranking2::Model::Cache::FClusterRankingDataCache::CreateCacheKey(
+
+            Self->ScorerUserId
+        );
+        return Self->Gs2->Cache->ExecuteWithKeyLock(
+            Gs2::Ranking2::Model::FClusterRankingData::TypeName,
+            CacheParentKey,
+            CacheKey,
+            [Self = Self, Result]() -> Gs2::Core::Model::FGs2ErrorPtr
+            {
+                Gs2::Ranking2::Model::FClusterRankingDataPtr Value;
+                const auto CacheHit = Gs2::Ranking2::Model::Cache::FClusterRankingDataCache::TryGet(
+                    Self->Gs2->Cache,
+
+                    Self->NamespaceName,
+                    Self->RankingName,
+                    Self->ClusterName,
+                    Self->Season,
+                    Self->ScorerUserId,
+                    TOptional<int32>(),
+                    &Value
+                );
+                if (CacheHit)
+                {
+                    *Result = Value;
+                    return nullptr;
+                }
+                *Result = Value;
+                return nullptr;
+            }
+        );
     }
 
     TSharedPtr<FAsyncTask<FClusterRankingDataDomain::FModelTask>> FClusterRankingDataDomain::Model() {
         return Gs2::Core::Util::New<FAsyncTask<FClusterRankingDataDomain::FModelTask>>(this->AsShared());
     }
 
+    void FClusterRankingDataDomain::Invalidate()
+    {
+        Gs2::Ranking2::Model::Cache::FClusterRankingDataCache::Delete(
+            Gs2->Cache,
+
+            NamespaceName,
+            RankingName,
+            ClusterName,
+            Season,
+            ScorerUserId,
+            TOptional<int32>()
+        );
+    }
+
+    FClusterRankingDataDomain::FSubscribeWithInitialCallTask::FSubscribeWithInitialCallTask(
+        const TSharedPtr<FClusterRankingDataDomain>& Self,
+        TFunction<void(Gs2::Ranking2::Model::FClusterRankingDataPtr)> Callback
+    ):
+        Self(Self),
+        Callback(Callback)
+    {
+    }
+
+    FClusterRankingDataDomain::FSubscribeWithInitialCallTask::FSubscribeWithInitialCallTask(
+        const FSubscribeWithInitialCallTask& From
+    ):
+        TGs2Future(From),
+        Self(From.Self),
+        Callback(From.Callback)
+    {
+    }
+
+    Gs2::Core::Model::FGs2ErrorPtr FClusterRankingDataDomain::FSubscribeWithInitialCallTask::Action(
+        TSharedPtr<TSharedPtr<Gs2::Core::Domain::CallbackID>> Result
+    )
+    {
+        const auto Task = Self->Model();
+        Task->StartSynchronousTask();
+        Task->EnsureCompletion();
+        if (Task->GetTask().IsError()) return Task->GetTask().Error();
+        const auto Item = Task->GetTask().Result();
+        const auto CallbackId = Self->Subscribe(Callback);
+        Callback(Item);
+        *Result = MakeShared<Gs2::Core::Domain::CallbackID>(CallbackId);
+        return nullptr;
+    }
+
+    TSharedPtr<FAsyncTask<FClusterRankingDataDomain::FSubscribeWithInitialCallTask>> FClusterRankingDataDomain::SubscribeWithInitialCall(
+        TFunction<void(Gs2::Ranking2::Model::FClusterRankingDataPtr)> Callback
+    )
+    {
+        return Gs2::Core::Util::New<FAsyncTask<FSubscribeWithInitialCallTask>>(this->AsShared(), Callback);
+    }
+
     Gs2::Core::Domain::CallbackID FClusterRankingDataDomain::Subscribe(
         TFunction<void(Gs2::Ranking2::Model::FClusterRankingDataPtr)> Callback
     )
     {
+        const auto SubscriptionParentKey = Gs2::Ranking2::Model::Cache::FClusterRankingDataCache::CreateCacheParentKey(
+
+            NamespaceName,
+            RankingName,
+            ClusterName,
+            Season,
+            TOptional<int32>()
+        );
+        const auto SubscriptionCacheKey = Gs2::Ranking2::Model::Cache::FClusterRankingDataCache::CreateCacheKey(
+
+            ScorerUserId
+        );
+        const TWeakPtr<Gs2::Core::Domain::FGs2> WeakGs2 = Gs2;
+        const TWeakPtr<Ranking2::Domain::FGs2Ranking2Domain> WeakService = Service;
+        const FString RegisteredParentKey = SubscriptionParentKey;
+        const TOptional<FString> QueryNamespaceName = NamespaceName;
+        const TOptional<FString> QueryRankingName = RankingName;
+        const TOptional<FString> QueryClusterName = ClusterName;
+        const TOptional<int64> QuerySeason = Season;
+        const TOptional<FString> QueryUserId = UserId;
+        const TOptional<FString> QueryScorerUserId = ScorerUserId;
         return Gs2->Cache->Subscribe(
             Gs2::Ranking2::Model::FClusterRankingData::TypeName,
-            ParentKey,
-            Gs2::Ranking2::Domain::Model::FClusterRankingDataDomain::CreateCacheKey(
-                ScorerUserId
-            ),
+            SubscriptionParentKey,
+            SubscriptionCacheKey,
             [Callback](TSharedPtr<FGs2Object> obj)
             {
                 Callback(StaticCastSharedPtr<Gs2::Ranking2::Model::FClusterRankingData>(obj));
+            },
+            [WeakGs2, WeakService, RegisteredParentKey, QueryNamespaceName, QueryRankingName, QueryClusterName, QuerySeason, QueryUserId, QueryScorerUserId]()
+            {
+                const auto Owner = WeakGs2.Pin();
+                if (!Owner.IsValid())
+                {
+                    return;
+                }
+                const auto Domain = MakeShared<FClusterRankingDataDomain>(
+                    Owner,
+                    WeakService.Pin(),
+                    QueryNamespaceName,
+                    QueryRankingName,
+                    QueryClusterName,
+                    QuerySeason,
+                    QueryUserId,
+                    QueryScorerUserId
+                );
+                Domain->ParentKey = RegisteredParentKey;
+                const auto Task = Domain->Model();
+                Task->StartBackgroundTask();
             }
         );
     }
@@ -198,12 +320,22 @@ namespace Gs2::Ranking2::Domain::Model
         Gs2::Core::Domain::CallbackID CallbackID
     )
     {
+        const auto SubscriptionParentKey = Gs2::Ranking2::Model::Cache::FClusterRankingDataCache::CreateCacheParentKey(
+
+            NamespaceName,
+            RankingName,
+            ClusterName,
+            Season,
+            TOptional<int32>()
+        );
+        const auto SubscriptionCacheKey = Gs2::Ranking2::Model::Cache::FClusterRankingDataCache::CreateCacheKey(
+
+            ScorerUserId
+        );
         Gs2->Cache->Unsubscribe(
             Gs2::Ranking2::Model::FClusterRankingData::TypeName,
-            ParentKey,
-            Gs2::Ranking2::Domain::Model::FClusterRankingDataDomain::CreateCacheKey(
-                ScorerUserId
-            ),
+            SubscriptionParentKey,
+            SubscriptionCacheKey,
             CallbackID
         );
     }
@@ -214,4 +346,3 @@ namespace Gs2::Ranking2::Domain::Model
 #elif defined(__clang__)
 #pragma clang diagnostic pop
 #endif
-

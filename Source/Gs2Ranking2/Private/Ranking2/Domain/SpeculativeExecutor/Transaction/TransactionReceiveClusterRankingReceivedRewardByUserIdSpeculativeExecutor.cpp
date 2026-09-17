@@ -27,6 +27,7 @@
 #include "Ranking2/Domain/SpeculativeExecutor/Transaction/ReceiveClusterRankingReceivedRewardByUserIdSpeculativeExecutor.h"
 
 #include "Core/Domain/Gs2.h"
+#include "Core/Domain/SpeculativeExecutor/PreparedSpeculativeCommit.h"
 
 namespace Gs2::Ranking2::Domain::Transaction::SpeculativeExecutor
 {
@@ -58,7 +59,7 @@ namespace Gs2::Ranking2::Domain::Transaction::SpeculativeExecutor
     }
 
     Gs2::Core::Model::FGs2ErrorPtr FReceiveClusterRankingReceivedRewardByUserIdSpeculativeExecutor::FCommitTask::Action(
-        TSharedPtr<TSharedPtr<TFunction<void()>>> Result)
+        TSharedPtr<TSharedPtr<Gs2::Core::Domain::SpeculativeExecutor::FPreparedSpeculativeCommit>> Result)
     {
         UE_LOG(Gs2Log, Warning, TEXT("Speculative execution not supported on this action: %s"), ToCStr(FReceiveClusterRankingReceivedRewardByUserIdSpeculativeExecutor::Action()))
 

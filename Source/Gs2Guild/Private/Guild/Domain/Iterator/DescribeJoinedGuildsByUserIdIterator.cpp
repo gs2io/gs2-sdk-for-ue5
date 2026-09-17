@@ -1,3 +1,4 @@
+
 /*
  * Copyright 2016 Game Server Services, Inc. or its affiliates. All Rights
  * Reserved.
@@ -29,6 +30,8 @@
 #include "Guild/Domain/Model/User.h"
 
 #include "Core/Domain/Gs2.h"
+
+#include "Guild/Model/Cache/JoinedGuild.h"
 
 namespace Gs2::Guild::Domain::Iterator
 {
@@ -84,7 +87,7 @@ namespace Gs2::Guild::Domain::Iterator
 
     FDescribeJoinedGuildsByUserIdIterator::FIterator& FDescribeJoinedGuildsByUserIdIterator::FIterator::operator++()
     {
-        
+
 
         if (bEnd) return *this;
 
@@ -94,16 +97,17 @@ namespace Gs2::Guild::Domain::Iterator
             return *this;
         }
 
-        if (RangeIteratorOpt) ++*RangeIteratorOpt;
+        if (RangeIteratorOpt && *RangeIteratorOpt) ++*RangeIteratorOpt;
 
+        // Keep the previous page alive until its iterator has been replaced.
+        const auto PreviousRange = Range;
         if (!RangeIteratorOpt || (!*RangeIteratorOpt && !bLast))
         {
-            const auto ListParentKey = Gs2::Guild::Domain::Model::FUserDomain::CreateCacheParentKey(
+            const auto ListParentKey = Gs2::Guild::Model::Cache::FJoinedGuildCache::CreateCacheParentKey(
                 Self->NamespaceName,
                 Self->UserId,
-                "JoinedGuild"
+                TOptional<int32>()
             );
-
             if (!RangeIteratorOpt)
             {
                 Range = Self->Gs2->Cache->TryGetList<Gs2::Guild::Model::FJoinedGuild>(ListParentKey);
@@ -118,15 +122,15 @@ namespace Gs2::Guild::Domain::Iterator
                     return *this;
                 }
             }
-
-            const auto Future = Self->Client->DescribeJoinedGuildsByUserId(
+            const auto Request =
                 MakeShared<Gs2::Guild::Request::FDescribeJoinedGuildsByUserIdRequest>()
                     ->WithContextStack(Self->Gs2->DefaultContextStack)
                     ->WithNamespaceName(Self->NamespaceName)
                     ->WithUserId(Self->UserId)
                     ->WithPageToken(PageToken)
                     ->WithLimit(FetchSize)
-            );
+            ;
+            const auto Future = Self->Client->DescribeJoinedGuildsByUserId(Request);
             Future->StartSynchronousTask();
             if (Future->GetTask().IsError())
             {
@@ -140,19 +144,21 @@ namespace Gs2::Guild::Domain::Iterator
             }
             const auto R = Future->GetTask().Result();
             Future->EnsureCompletion();
-            Range = R->GetItems();
-            for (auto Item : *R->GetItems())
+            Range = R->GetItems().IsValid() ? R->GetItems() : MakeShared<TArray<Gs2::Guild::Model::FJoinedGuildPtr>>();
+            const auto ResultModel = R;
+
+
+            if (Range.IsValid())
             {
-                Self->Gs2->Cache->Put(
-                    Gs2::Guild::Model::FJoinedGuild::TypeName,
-                    ListParentKey,
-                    Gs2::Guild::Domain::Model::FJoinedGuildDomain::CreateCacheKey(
-                        Item->GetGuildModelName(),
-                        Item->GetGuildName()
-                    ),
-                    Item,
-                    FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
-                );
+                for (const auto& Item : *Range)
+                {
+                    if (!Item.IsValid()) continue;
+                    Gs2::Guild::Model::Cache::FJoinedGuildCache::Put(
+                        Self->Gs2->Cache,
+                        Request->GetNamespaceName(), Request->GetUserId(), Item->GetGuildModelName(), Item->GetGuildName(),
+                        TOptional<int32>(), Item
+                    );
+                }
             }
             if (Range)
             {

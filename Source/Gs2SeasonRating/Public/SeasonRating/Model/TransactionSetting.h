@@ -27,6 +27,7 @@ namespace Gs2::SeasonRating::Model
         TOptional<bool> TransactionUseDistributorValue;
         TOptional<bool> CommitScriptResultInUseDistributorValue;
         TOptional<bool> AcquireActionUseJobQueueValue;
+        TOptional<bool> EnableSequentialExecutionValue;
         TOptional<FString> DistributorNamespaceIdValue;
         TOptional<FString> QueueNamespaceIdValue;
 
@@ -41,6 +42,7 @@ namespace Gs2::SeasonRating::Model
         TSharedPtr<FTransactionSetting> WithTransactionUseDistributor(const TOptional<bool> TransactionUseDistributor);
         TSharedPtr<FTransactionSetting> WithCommitScriptResultInUseDistributor(const TOptional<bool> CommitScriptResultInUseDistributor);
         TSharedPtr<FTransactionSetting> WithAcquireActionUseJobQueue(const TOptional<bool> AcquireActionUseJobQueue);
+        TSharedPtr<FTransactionSetting> WithEnableSequentialExecution(const TOptional<bool> EnableSequentialExecution);
         TSharedPtr<FTransactionSetting> WithDistributorNamespaceId(const TOptional<FString> DistributorNamespaceId);
         TSharedPtr<FTransactionSetting> WithQueueNamespaceId(const TOptional<FString> QueueNamespaceId);
 
@@ -52,6 +54,8 @@ namespace Gs2::SeasonRating::Model
         FString GetCommitScriptResultInUseDistributorString() const;
         TOptional<bool> GetAcquireActionUseJobQueue() const;
         FString GetAcquireActionUseJobQueueString() const;
+        TOptional<bool> GetEnableSequentialExecution() const;
+        FString GetEnableSequentialExecutionString() const;
         TOptional<FString> GetDistributorNamespaceId() const;
         TOptional<FString> GetQueueNamespaceId() const;
 

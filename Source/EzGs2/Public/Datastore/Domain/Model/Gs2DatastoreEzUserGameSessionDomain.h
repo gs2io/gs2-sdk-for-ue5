@@ -114,6 +114,11 @@ namespace Gs2::UE5::Datastore::Domain::Model
             const TOptional<FString> Status = TOptional<FString>()
         ) const;
 
+        Gs2::Core::Domain::CallbackID SubscribeDataObjects(TFunction<void()> Callback);
+
+        void UnsubscribeDataObjects(
+                Gs2::Core::Domain::CallbackID CallbackId);
+
         Gs2::UE5::Datastore::Domain::Model::FEzDataObjectGameSessionDomainPtr DataObject(
             const FString DataObjectName
         ) const;

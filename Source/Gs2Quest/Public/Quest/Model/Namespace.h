@@ -19,6 +19,7 @@
 #include "CoreMinimal.h"
 #include "Core/Gs2Object.h"
 #include "TransactionSetting.h"
+#include "TransactionSettingV2.h"
 #include "ScriptSetting.h"
 #include "LogSetting.h"
 
@@ -30,6 +31,7 @@ namespace Gs2::Quest::Model
         TOptional<FString> NameValue;
         TOptional<FString> DescriptionValue;
         TSharedPtr<FTransactionSetting> TransactionSettingValue;
+        TSharedPtr<FTransactionSettingV2> TransactionSettingV2Value;
         TSharedPtr<FScriptSetting> StartQuestScriptValue;
         TSharedPtr<FScriptSetting> CompleteQuestScriptValue;
         TSharedPtr<FScriptSetting> FailedQuestScriptValue;
@@ -51,6 +53,7 @@ namespace Gs2::Quest::Model
         TSharedPtr<FNamespace> WithName(const TOptional<FString> Name);
         TSharedPtr<FNamespace> WithDescription(const TOptional<FString> Description);
         TSharedPtr<FNamespace> WithTransactionSetting(const TSharedPtr<FTransactionSetting> TransactionSetting);
+        TSharedPtr<FNamespace> WithTransactionSettingV2(const TSharedPtr<FTransactionSettingV2> TransactionSettingV2);
         TSharedPtr<FNamespace> WithStartQuestScript(const TSharedPtr<FScriptSetting> StartQuestScript);
         TSharedPtr<FNamespace> WithCompleteQuestScript(const TSharedPtr<FScriptSetting> CompleteQuestScript);
         TSharedPtr<FNamespace> WithFailedQuestScript(const TSharedPtr<FScriptSetting> FailedQuestScript);
@@ -65,6 +68,7 @@ namespace Gs2::Quest::Model
         TOptional<FString> GetName() const;
         TOptional<FString> GetDescription() const;
         TSharedPtr<FTransactionSetting> GetTransactionSetting() const;
+        TSharedPtr<FTransactionSettingV2> GetTransactionSettingV2() const;
         TSharedPtr<FScriptSetting> GetStartQuestScript() const;
         TSharedPtr<FScriptSetting> GetCompleteQuestScript() const;
         TSharedPtr<FScriptSetting> GetFailedQuestScript() const;

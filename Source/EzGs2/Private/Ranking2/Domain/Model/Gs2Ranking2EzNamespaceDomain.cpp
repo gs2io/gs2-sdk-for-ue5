@@ -75,7 +75,8 @@ namespace Gs2::UE5::Ranking2::Domain::Model
         );
     }
 
-    void FEzNamespaceDomain::UnsubscribeGlobalRankingModels(Gs2::Core::Domain::CallbackID CallbackId)
+    void FEzNamespaceDomain::UnsubscribeGlobalRankingModels(
+            Gs2::Core::Domain::CallbackID CallbackId)
     {
         Domain->UnsubscribeGlobalRankingModels(
             CallbackId
@@ -98,7 +99,8 @@ namespace Gs2::UE5::Ranking2::Domain::Model
         );
     }
 
-    void FEzNamespaceDomain::UnsubscribeClusterRankingModels(Gs2::Core::Domain::CallbackID CallbackId)
+    void FEzNamespaceDomain::UnsubscribeClusterRankingModels(
+            Gs2::Core::Domain::CallbackID CallbackId)
     {
         Domain->UnsubscribeClusterRankingModels(
             CallbackId
@@ -121,7 +123,8 @@ namespace Gs2::UE5::Ranking2::Domain::Model
         );
     }
 
-    void FEzNamespaceDomain::UnsubscribeSubscribeRankingModels(Gs2::Core::Domain::CallbackID CallbackId)
+    void FEzNamespaceDomain::UnsubscribeSubscribeRankingModels(
+            Gs2::Core::Domain::CallbackID CallbackId)
     {
         Domain->UnsubscribeSubscribeRankingModels(
             CallbackId

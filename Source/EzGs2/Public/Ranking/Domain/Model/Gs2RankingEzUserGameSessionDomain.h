@@ -58,9 +58,12 @@ namespace Gs2::UE5::Ranking::Domain::Model
             const FString ScorerUserId
         ) const;
 
-        Gs2::Core::Domain::CallbackID SubscribeScores(TFunction<void()> Callback);
+        Gs2::Core::Domain::CallbackID SubscribeScores(TFunction<void()> Callback, const FString CategoryName, const FString ScorerUserId);
 
-        void UnsubscribeScores(Gs2::Core::Domain::CallbackID CallbackId);
+        void UnsubscribeScores(
+                const FString CategoryName,
+                const FString ScorerUserId,
+                Gs2::Core::Domain::CallbackID CallbackId);
 
         Gs2::UE5::Ranking::Domain::Model::FEzRankingCategoryGameSessionDomainPtr RankingCategory(
             const FString CategoryName,

@@ -25,7 +25,6 @@ namespace Gs2::Core::Domain
 	class FManualJobQueueDomain: public FTransactionDomain
 	{
 	private:
-		static TMap<FString, FDateTime> Handled;
 	    FString NamespaceName;
 	    FString JobName;
 

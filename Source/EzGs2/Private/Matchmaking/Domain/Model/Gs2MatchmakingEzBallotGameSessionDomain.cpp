@@ -79,7 +79,7 @@ namespace Gs2::UE5::Matchmaking::Domain::Model
     }
 
     Gs2::Core::Model::FGs2ErrorPtr FEzBallotGameSessionDomain::FModelTask::Action(
-        TSharedPtr<Gs2::UE5::Matchmaking::Model::FEzBallotPtr> Result
+        TSharedPtr<Gs2::UE5::Matchmaking::Model::FEzSignedBallotPtr> Result
     )
     {
         const auto Future = Self->ConnectionValue->Run(
@@ -91,7 +91,7 @@ namespace Gs2::UE5::Matchmaking::Domain::Model
                     Task->EnsureCompletion();
                     return Task->GetTask().Error();
                 }
-                *Result = Gs2::UE5::Matchmaking::Model::FEzBallot::FromModel(Task->GetTask().Result());
+                *Result = Gs2::UE5::Matchmaking::Model::FEzSignedBallot::FromModel(Task->GetTask().Result());
                 Task->EnsureCompletion();
                 return nullptr;
             },
@@ -111,12 +111,12 @@ namespace Gs2::UE5::Matchmaking::Domain::Model
         return Gs2::Core::Util::New<FAsyncTask<FModelTask>>(this->AsShared());
     }
 
-    Gs2::Core::Domain::CallbackID FEzBallotGameSessionDomain::Subscribe(TFunction<void(Gs2::UE5::Matchmaking::Model::FEzBallotPtr)> Callback)
+    Gs2::Core::Domain::CallbackID FEzBallotGameSessionDomain::Subscribe(TFunction<void(Gs2::UE5::Matchmaking::Model::FEzSignedBallotPtr)> Callback)
     {
         return Domain->Subscribe(
-            [&](Gs2::Matchmaking::Model::FBallotPtr Item)
+            [Callback](Gs2::Matchmaking::Model::FSignedBallotPtr Item)
             {
-                Callback(Gs2::UE5::Matchmaking::Model::FEzBallot::FromModel(Item));
+                Callback(Gs2::UE5::Matchmaking::Model::FEzSignedBallot::FromModel(Item));
             }
         );
     }

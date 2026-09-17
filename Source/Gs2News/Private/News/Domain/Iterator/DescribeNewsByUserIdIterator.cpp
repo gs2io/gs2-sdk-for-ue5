@@ -1,3 +1,4 @@
+
 /*
  * Copyright 2016 Game Server Services, Inc. or its affiliates. All Rights
  * Reserved.
@@ -29,6 +30,8 @@
 #include "News/Domain/Model/User.h"
 
 #include "Core/Domain/Gs2.h"
+
+#include "News/Model/Cache/News.h"
 
 namespace Gs2::News::Domain::Iterator
 {
@@ -80,7 +83,7 @@ namespace Gs2::News::Domain::Iterator
 
     FDescribeNewsByUserIdIterator::FIterator& FDescribeNewsByUserIdIterator::FIterator::operator++()
     {
-        
+
 
         if (bEnd) return *this;
 
@@ -90,16 +93,17 @@ namespace Gs2::News::Domain::Iterator
             return *this;
         }
 
-        if (RangeIteratorOpt) ++*RangeIteratorOpt;
+        if (RangeIteratorOpt && *RangeIteratorOpt) ++*RangeIteratorOpt;
 
+        // Keep the previous page alive until its iterator has been replaced.
+        const auto PreviousRange = Range;
         if (!RangeIteratorOpt || (!*RangeIteratorOpt && !bLast))
         {
-            const auto ListParentKey = Gs2::News::Domain::Model::FUserDomain::CreateCacheParentKey(
+            const auto ListParentKey = Gs2::News::Model::Cache::FNewsCache::CreateCacheParentKey(
                 Self->NamespaceName,
                 Self->UserId,
-                "News"
+                TOptional<int32>()
             );
-
             if (!RangeIteratorOpt)
             {
                 Range = Self->Gs2->Cache->TryGetList<Gs2::News::Model::FNews>(ListParentKey);
@@ -112,13 +116,13 @@ namespace Gs2::News::Domain::Iterator
                     return *this;
                 }
             }
-
-            const auto Future = Self->Client->DescribeNewsByUserId(
+            const auto Request =
                 MakeShared<Gs2::News::Request::FDescribeNewsByUserIdRequest>()
                     ->WithContextStack(Self->Gs2->DefaultContextStack)
                     ->WithNamespaceName(Self->NamespaceName)
                     ->WithUserId(Self->UserId)
-            );
+            ;
+            const auto Future = Self->Client->DescribeNewsByUserId(Request);
             Future->StartSynchronousTask();
             if (Future->GetTask().IsError())
             {
@@ -132,18 +136,10 @@ namespace Gs2::News::Domain::Iterator
             }
             const auto R = Future->GetTask().Result();
             Future->EnsureCompletion();
-            Range = R->GetItems();
-            for (auto Item : *R->GetItems())
-            {
-                Self->Gs2->Cache->Put(
-                    Gs2::News::Model::FNews::TypeName,
-                    ListParentKey,
-                    Gs2::News::Domain::Model::FNewsDomain::CreateCacheKey(
-                    ),
-                    Item,
-                    FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
-                );
-            }
+            Range = R->GetItems().IsValid() ? R->GetItems() : MakeShared<TArray<Gs2::News::Model::FNewsPtr>>();
+            const auto ResultModel = R;
+
+
             if (Range)
             {
             }

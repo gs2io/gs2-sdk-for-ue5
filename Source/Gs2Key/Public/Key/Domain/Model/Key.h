@@ -75,6 +75,8 @@ namespace Gs2::Key::Domain::Model
             const FKeyDomain& From
         );
 
+
+
         class GS2KEY_API FUpdateTask final :
             public Gs2::Core::Util::TGs2Future<Gs2::Key::Domain::Model::FKeyDomain>,
             public TSharedFromThis<FUpdateTask>
@@ -100,6 +102,8 @@ namespace Gs2::Key::Domain::Model
         TSharedPtr<FAsyncTask<FUpdateTask>> Update(
             Request::FUpdateKeyRequestPtr Request
         );
+
+
 
         class GS2KEY_API FGetTask final :
             public Gs2::Core::Util::TGs2Future<Gs2::Key::Model::FKey>,
@@ -127,6 +131,8 @@ namespace Gs2::Key::Domain::Model
             Request::FGetKeyRequestPtr Request
         );
 
+
+
         class GS2KEY_API FDeleteTask final :
             public Gs2::Core::Util::TGs2Future<Gs2::Key::Domain::Model::FKeyDomain>,
             public TSharedFromThis<FDeleteTask>
@@ -153,6 +159,8 @@ namespace Gs2::Key::Domain::Model
             Request::FDeleteKeyRequestPtr Request
         );
 
+
+
         class GS2KEY_API FEncryptTask final :
             public Gs2::Core::Util::TGs2Future<Gs2::Key::Domain::Model::FKeyDomain>,
             public TSharedFromThis<FEncryptTask>
@@ -178,6 +186,8 @@ namespace Gs2::Key::Domain::Model
         TSharedPtr<FAsyncTask<FEncryptTask>> Encrypt(
             Request::FEncryptRequestPtr Request
         );
+
+
 
         class GS2KEY_API FDecryptTask final :
             public Gs2::Core::Util::TGs2Future<Gs2::Key::Domain::Model::FKeyDomain>,
@@ -237,7 +247,34 @@ namespace Gs2::Key::Domain::Model
 
         TSharedPtr<FAsyncTask<FModelTask>> Model();
 
+        void Invalidate();
+
         Gs2::Core::Domain::CallbackID Subscribe(
+            TFunction<void(Gs2::Key::Model::FKeyPtr)> Callback
+        );
+
+        class GS2KEY_API FSubscribeWithInitialCallTask final :
+            public Gs2::Core::Util::TGs2Future<Gs2::Core::Domain::CallbackID>,
+            public TSharedFromThis<FSubscribeWithInitialCallTask>
+        {
+            const TSharedPtr<FKeyDomain> Self;
+            const TFunction<void(Gs2::Key::Model::FKeyPtr)> Callback;
+        public:
+            FSubscribeWithInitialCallTask(
+                const TSharedPtr<FKeyDomain>& Self,
+                TFunction<void(Gs2::Key::Model::FKeyPtr)> Callback
+            );
+
+            FSubscribeWithInitialCallTask(
+                const FSubscribeWithInitialCallTask& From
+            );
+
+            virtual Gs2::Core::Model::FGs2ErrorPtr Action(
+                TSharedPtr<TSharedPtr<Gs2::Core::Domain::CallbackID>> Result
+            ) override;
+        };
+
+        TSharedPtr<FAsyncTask<FSubscribeWithInitialCallTask>> SubscribeWithInitialCall(
             TFunction<void(Gs2::Key::Model::FKeyPtr)> Callback
         );
 

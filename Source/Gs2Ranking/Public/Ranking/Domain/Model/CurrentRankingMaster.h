@@ -98,6 +98,8 @@ namespace Gs2::Ranking::Domain::Model
             const FCurrentRankingMasterDomain& From
         );
 
+
+
         class GS2RANKING_API FExportMasterTask final :
             public Gs2::Core::Util::TGs2Future<Gs2::Ranking::Domain::Model::FCurrentRankingMasterDomain>,
             public TSharedFromThis<FExportMasterTask>
@@ -123,6 +125,8 @@ namespace Gs2::Ranking::Domain::Model
         TSharedPtr<FAsyncTask<FExportMasterTask>> ExportMaster(
             Request::FExportMasterRequestPtr Request
         );
+
+
 
         class GS2RANKING_API FGetTask final :
             public Gs2::Core::Util::TGs2Future<Gs2::Ranking::Model::FCurrentRankingMaster>,
@@ -150,6 +154,8 @@ namespace Gs2::Ranking::Domain::Model
             Request::FGetCurrentRankingMasterRequestPtr Request
         );
 
+
+
         class GS2RANKING_API FPreUpdateTask final :
             public Gs2::Core::Util::TGs2Future<Gs2::Ranking::Domain::Model::FCurrentRankingMasterDomain>,
             public TSharedFromThis<FPreUpdateTask>
@@ -176,6 +182,8 @@ namespace Gs2::Ranking::Domain::Model
             Request::FPreUpdateCurrentRankingMasterRequestPtr Request
         );
 
+
+
         class GS2RANKING_API FUpdateTask final :
             public Gs2::Core::Util::TGs2Future<Gs2::Ranking::Domain::Model::FCurrentRankingMasterDomain>,
             public TSharedFromThis<FUpdateTask>
@@ -201,6 +209,8 @@ namespace Gs2::Ranking::Domain::Model
         TSharedPtr<FAsyncTask<FUpdateTask>> Update(
             Request::FUpdateCurrentRankingMasterRequestPtr Request
         );
+
+
 
         class GS2RANKING_API FUpdateFromGitHubTask final :
             public Gs2::Core::Util::TGs2Future<Gs2::Ranking::Domain::Model::FCurrentRankingMasterDomain>,
@@ -258,7 +268,34 @@ namespace Gs2::Ranking::Domain::Model
 
         TSharedPtr<FAsyncTask<FModelTask>> Model();
 
+        void Invalidate();
+
         Gs2::Core::Domain::CallbackID Subscribe(
+            TFunction<void(Gs2::Ranking::Model::FCurrentRankingMasterPtr)> Callback
+        );
+
+        class GS2RANKING_API FSubscribeWithInitialCallTask final :
+            public Gs2::Core::Util::TGs2Future<Gs2::Core::Domain::CallbackID>,
+            public TSharedFromThis<FSubscribeWithInitialCallTask>
+        {
+            const TSharedPtr<FCurrentRankingMasterDomain> Self;
+            const TFunction<void(Gs2::Ranking::Model::FCurrentRankingMasterPtr)> Callback;
+        public:
+            FSubscribeWithInitialCallTask(
+                const TSharedPtr<FCurrentRankingMasterDomain>& Self,
+                TFunction<void(Gs2::Ranking::Model::FCurrentRankingMasterPtr)> Callback
+            );
+
+            FSubscribeWithInitialCallTask(
+                const FSubscribeWithInitialCallTask& From
+            );
+
+            virtual Gs2::Core::Model::FGs2ErrorPtr Action(
+                TSharedPtr<TSharedPtr<Gs2::Core::Domain::CallbackID>> Result
+            ) override;
+        };
+
+        TSharedPtr<FAsyncTask<FSubscribeWithInitialCallTask>> SubscribeWithInitialCall(
             TFunction<void(Gs2::Ranking::Model::FCurrentRankingMasterPtr)> Callback
         );
 

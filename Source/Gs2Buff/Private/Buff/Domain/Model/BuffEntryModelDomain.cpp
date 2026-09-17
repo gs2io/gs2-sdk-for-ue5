@@ -31,6 +31,7 @@
 #include "Buff/Domain/Model/CurrentBuffMaster.h"
 #include "Buff/Domain/Model/User.h"
 #include "Buff/Domain/Model/UserAccessToken.h"
+#include "Buff/Model/Cache/BuffEntryModel.h"
 
 #include "Core/Domain/Gs2.h"
 #include "Core/Domain/Transaction/JobQueueJobDomainFactory.h"
@@ -104,6 +105,20 @@ namespace Gs2::Buff::Domain::Model
         }
         const auto ResultModel = Future->GetTask().Result();
         Future->EnsureCompletion();
+
+            if (ResultModel.IsValid() && ResultModel->GetItem() != nullptr)
+            {
+
+
+        Gs2::Buff::Model::Cache::FBuffEntryModelCache::Put(
+            Self->Gs2->Cache,
+
+            Request->GetNamespaceName(),
+            Request->GetBuffEntryName(),
+            TOptional<int32>(),
+            ResultModel->GetItem()
+        );
+            }
         *Result = ResultModel->GetItem();
         return nullptr;
     }
@@ -152,71 +167,158 @@ namespace Gs2::Buff::Domain::Model
         TSharedPtr<TSharedPtr<Gs2::Buff::Model::FBuffEntryModel>> Result
     )
     {
-        // ReSharper disable once CppLocalVariableMayBeConst
-        TSharedPtr<Gs2::Buff::Model::FBuffEntryModel> Value;
-        auto bCacheHit = Self->Gs2->Cache->TryGet<Gs2::Buff::Model::FBuffEntryModel>(
-            Self->ParentKey,
-            Gs2::Buff::Domain::Model::FBuffEntryModelDomain::CreateCacheKey(
-                Self->BuffEntryName
-            ),
-            &Value
+        const auto CacheParentKey = Gs2::Buff::Model::Cache::FBuffEntryModelCache::CreateCacheParentKey(
+
+            Self->NamespaceName,
+            TOptional<int32>()
         );
-        if (!bCacheHit) {
-            const auto Future = Self->Get(
-                MakeShared<Gs2::Buff::Request::FGetBuffEntryModelRequest>()
-            );
-            Future->StartSynchronousTask();
-            if (Future->GetTask().IsError())
+        const auto CacheKey = Gs2::Buff::Model::Cache::FBuffEntryModelCache::CreateCacheKey(
+
+            Self->BuffEntryName
+        );
+        return Self->Gs2->Cache->ExecuteWithKeyLock(
+            Gs2::Buff::Model::FBuffEntryModel::TypeName,
+            CacheParentKey,
+            CacheKey,
+            [Self = Self, Result]() -> Gs2::Core::Model::FGs2ErrorPtr
             {
-                if (Future->GetTask().Error()->Type() != Gs2::Core::Model::FNotFoundError::TypeString)
-                {
-                    return Future->GetTask().Error();
-                }
+                Gs2::Buff::Model::FBuffEntryModelPtr Value;
+                const auto CacheHit = Gs2::Buff::Model::Cache::FBuffEntryModelCache::TryGet(
+                    Self->Gs2->Cache,
 
-                const auto Key = Gs2::Buff::Domain::Model::FBuffEntryModelDomain::CreateCacheKey(
-                    Self->BuffEntryName
+                    Self->NamespaceName,
+                    Self->BuffEntryName,
+                    TOptional<int32>(),
+                    &Value
                 );
-                Self->Gs2->Cache->Put(
-                    Gs2::Buff::Model::FBuffEntryModel::TypeName,
-                    Self->ParentKey,
-                    Key,
-                    nullptr,
-                    FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
-                );
-
-                if (Future->GetTask().Error()->Detail(0)->GetComponent() != "buffEntryModel")
+                if (CacheHit)
                 {
-                    return Future->GetTask().Error();
+                    *Result = Value;
+                    return nullptr;
                 }
-            }
-            else
-            {
-                Value = Future->GetTask().Result();
-            }
-            Future->EnsureCompletion();
-        }
-        *Result = Value;
+                const auto Error = Gs2::Buff::Model::Cache::FBuffEntryModelCache::Fetch(
+                    Self->Gs2->Cache,
 
-        return nullptr;
+                    Self->NamespaceName,
+                    Self->BuffEntryName,
+                    TOptional<int32>(),
+                    [Self](Gs2::Buff::Model::FBuffEntryModelPtr* OutItem) -> Gs2::Core::Model::FGs2ErrorPtr
+                    {
+                        const auto Future = Self->Get(
+                            MakeShared<Gs2::Buff::Request::FGetBuffEntryModelRequest>()
+                        );
+                        Future->StartSynchronousTask();
+                        if (Future->GetTask().IsError()) return Future->GetTask().Error();
+                        *OutItem = Future->GetTask().Result();
+                        Future->EnsureCompletion();
+                        return nullptr;
+                    },
+                    &Value
+                );
+                if (Error.IsValid()) return Error;
+                *Result = Value;
+                return nullptr;
+            }
+        );
     }
 
     TSharedPtr<FAsyncTask<FBuffEntryModelDomain::FModelTask>> FBuffEntryModelDomain::Model() {
         return Gs2::Core::Util::New<FAsyncTask<FBuffEntryModelDomain::FModelTask>>(this->AsShared());
     }
 
+    void FBuffEntryModelDomain::Invalidate()
+    {
+        Gs2::Buff::Model::Cache::FBuffEntryModelCache::Delete(
+            Gs2->Cache,
+
+            NamespaceName,
+            BuffEntryName,
+            TOptional<int32>()
+        );
+    }
+
+    FBuffEntryModelDomain::FSubscribeWithInitialCallTask::FSubscribeWithInitialCallTask(
+        const TSharedPtr<FBuffEntryModelDomain>& Self,
+        TFunction<void(Gs2::Buff::Model::FBuffEntryModelPtr)> Callback
+    ):
+        Self(Self),
+        Callback(Callback)
+    {
+    }
+
+    FBuffEntryModelDomain::FSubscribeWithInitialCallTask::FSubscribeWithInitialCallTask(
+        const FSubscribeWithInitialCallTask& From
+    ):
+        TGs2Future(From),
+        Self(From.Self),
+        Callback(From.Callback)
+    {
+    }
+
+    Gs2::Core::Model::FGs2ErrorPtr FBuffEntryModelDomain::FSubscribeWithInitialCallTask::Action(
+        TSharedPtr<TSharedPtr<Gs2::Core::Domain::CallbackID>> Result
+    )
+    {
+        const auto Task = Self->Model();
+        Task->StartSynchronousTask();
+        Task->EnsureCompletion();
+        if (Task->GetTask().IsError()) return Task->GetTask().Error();
+        const auto Item = Task->GetTask().Result();
+        const auto CallbackId = Self->Subscribe(Callback);
+        Callback(Item);
+        *Result = MakeShared<Gs2::Core::Domain::CallbackID>(CallbackId);
+        return nullptr;
+    }
+
+    TSharedPtr<FAsyncTask<FBuffEntryModelDomain::FSubscribeWithInitialCallTask>> FBuffEntryModelDomain::SubscribeWithInitialCall(
+        TFunction<void(Gs2::Buff::Model::FBuffEntryModelPtr)> Callback
+    )
+    {
+        return Gs2::Core::Util::New<FAsyncTask<FSubscribeWithInitialCallTask>>(this->AsShared(), Callback);
+    }
+
     Gs2::Core::Domain::CallbackID FBuffEntryModelDomain::Subscribe(
         TFunction<void(Gs2::Buff::Model::FBuffEntryModelPtr)> Callback
     )
     {
+        const auto SubscriptionParentKey = Gs2::Buff::Model::Cache::FBuffEntryModelCache::CreateCacheParentKey(
+
+            NamespaceName,
+            TOptional<int32>()
+        );
+        const auto SubscriptionCacheKey = Gs2::Buff::Model::Cache::FBuffEntryModelCache::CreateCacheKey(
+
+            BuffEntryName
+        );
+        const TWeakPtr<Gs2::Core::Domain::FGs2> WeakGs2 = Gs2;
+        const TWeakPtr<Buff::Domain::FGs2BuffDomain> WeakService = Service;
+        const FString RegisteredParentKey = SubscriptionParentKey;
+        const TOptional<FString> QueryNamespaceName = NamespaceName;
+        const TOptional<FString> QueryBuffEntryName = BuffEntryName;
         return Gs2->Cache->Subscribe(
             Gs2::Buff::Model::FBuffEntryModel::TypeName,
-            ParentKey,
-            Gs2::Buff::Domain::Model::FBuffEntryModelDomain::CreateCacheKey(
-                BuffEntryName
-            ),
+            SubscriptionParentKey,
+            SubscriptionCacheKey,
             [Callback](TSharedPtr<FGs2Object> obj)
             {
                 Callback(StaticCastSharedPtr<Gs2::Buff::Model::FBuffEntryModel>(obj));
+            },
+            [WeakGs2, WeakService, RegisteredParentKey, QueryNamespaceName, QueryBuffEntryName]()
+            {
+                const auto Owner = WeakGs2.Pin();
+                if (!Owner.IsValid())
+                {
+                    return;
+                }
+                const auto Domain = MakeShared<FBuffEntryModelDomain>(
+                    Owner,
+                    WeakService.Pin(),
+                    QueryNamespaceName,
+                    QueryBuffEntryName
+                );
+                Domain->ParentKey = RegisteredParentKey;
+                const auto Task = Domain->Model();
+                Task->StartBackgroundTask();
             }
         );
     }
@@ -225,12 +327,19 @@ namespace Gs2::Buff::Domain::Model
         Gs2::Core::Domain::CallbackID CallbackID
     )
     {
+        const auto SubscriptionParentKey = Gs2::Buff::Model::Cache::FBuffEntryModelCache::CreateCacheParentKey(
+
+            NamespaceName,
+            TOptional<int32>()
+        );
+        const auto SubscriptionCacheKey = Gs2::Buff::Model::Cache::FBuffEntryModelCache::CreateCacheKey(
+
+            BuffEntryName
+        );
         Gs2->Cache->Unsubscribe(
             Gs2::Buff::Model::FBuffEntryModel::TypeName,
-            ParentKey,
-            Gs2::Buff::Domain::Model::FBuffEntryModelDomain::CreateCacheKey(
-                BuffEntryName
-            ),
+            SubscriptionParentKey,
+            SubscriptionCacheKey,
             CallbackID
         );
     }
@@ -241,4 +350,3 @@ namespace Gs2::Buff::Domain::Model
 #elif defined(__clang__)
 #pragma clang diagnostic pop
 #endif
-

@@ -102,6 +102,8 @@ namespace Gs2::Inbox::Domain::Model
             const FNamespaceDomain& From
         );
 
+
+
         class GS2INBOX_API FGetStatusTask final :
             public Gs2::Core::Util::TGs2Future<Gs2::Inbox::Domain::Model::FNamespaceDomain>,
             public TSharedFromThis<FGetStatusTask>
@@ -127,6 +129,8 @@ namespace Gs2::Inbox::Domain::Model
         TSharedPtr<FAsyncTask<FGetStatusTask>> GetStatus(
             Request::FGetNamespaceStatusRequestPtr Request
         );
+
+
 
         class GS2INBOX_API FGetTask final :
             public Gs2::Core::Util::TGs2Future<Gs2::Inbox::Model::FNamespace>,
@@ -154,6 +158,8 @@ namespace Gs2::Inbox::Domain::Model
             Request::FGetNamespaceRequestPtr Request
         );
 
+
+
         class GS2INBOX_API FUpdateTask final :
             public Gs2::Core::Util::TGs2Future<Gs2::Inbox::Domain::Model::FNamespaceDomain>,
             public TSharedFromThis<FUpdateTask>
@@ -180,6 +186,8 @@ namespace Gs2::Inbox::Domain::Model
             Request::FUpdateNamespaceRequestPtr Request
         );
 
+
+
         class GS2INBOX_API FDeleteTask final :
             public Gs2::Core::Util::TGs2Future<Gs2::Inbox::Domain::Model::FNamespaceDomain>,
             public TSharedFromThis<FDeleteTask>
@@ -205,6 +213,8 @@ namespace Gs2::Inbox::Domain::Model
         TSharedPtr<FAsyncTask<FDeleteTask>> Delete(
             Request::FDeleteNamespaceRequestPtr Request
         );
+
+
 
         class GS2INBOX_API FCreateGlobalMessageMasterTask final :
             public Gs2::Core::Util::TGs2Future<Gs2::Inbox::Domain::Model::FGlobalMessageMasterDomain>,
@@ -248,8 +258,33 @@ namespace Gs2::Inbox::Domain::Model
 
         Gs2::Core::Domain::CallbackID SubscribeGlobalMessages(
             TFunction<void()> Callback
+
         );
 
+        class FCollectGlobalMessagesTask;
+
+        Gs2::Core::Domain::CallbackID SubscribeGlobalMessages(
+            TFunction<void(TArray<Gs2::Inbox::Model::FGlobalMessagePtr>)> Callback
+        );
+
+        void InvalidateGlobalMessages();
+
+        class GS2INBOX_API FSubscribeGlobalMessagesWithInitialCallTask final :
+            public Gs2::Core::Util::TGs2Future<Gs2::Core::Domain::CallbackID>,
+            public TSharedFromThis<FSubscribeGlobalMessagesWithInitialCallTask>
+        {
+            const TSharedPtr<FNamespaceDomain> Self;
+            const TFunction<void(TArray<Gs2::Inbox::Model::FGlobalMessagePtr>)> Callback;
+
+        public:
+            FSubscribeGlobalMessagesWithInitialCallTask(const TSharedPtr<FNamespaceDomain>& Self, TFunction<void(TArray<Gs2::Inbox::Model::FGlobalMessagePtr>)> Callback);
+            FSubscribeGlobalMessagesWithInitialCallTask(const FSubscribeGlobalMessagesWithInitialCallTask& From);
+            virtual Gs2::Core::Model::FGs2ErrorPtr Action(TSharedPtr<TSharedPtr<Gs2::Core::Domain::CallbackID>> Result) override;
+        };
+
+        TSharedPtr<FAsyncTask<FSubscribeGlobalMessagesWithInitialCallTask>> SubscribeGlobalMessagesWithInitialCall(
+            TFunction<void(TArray<Gs2::Inbox::Model::FGlobalMessagePtr>)> Callback
+        );
         void UnsubscribeGlobalMessages(
             Gs2::Core::Domain::CallbackID CallbackID
         );
@@ -264,8 +299,33 @@ namespace Gs2::Inbox::Domain::Model
 
         Gs2::Core::Domain::CallbackID SubscribeGlobalMessageMasters(
             TFunction<void()> Callback
+
         );
 
+        class FCollectGlobalMessageMastersTask;
+
+        Gs2::Core::Domain::CallbackID SubscribeGlobalMessageMasters(
+            TFunction<void(TArray<Gs2::Inbox::Model::FGlobalMessageMasterPtr>)> Callback,const TOptional<FString> NamePrefix = TOptional<FString>()
+        );
+
+        void InvalidateGlobalMessageMasters(const TOptional<FString> NamePrefix = TOptional<FString>());
+
+        class GS2INBOX_API FSubscribeGlobalMessageMastersWithInitialCallTask final :
+            public Gs2::Core::Util::TGs2Future<Gs2::Core::Domain::CallbackID>,
+            public TSharedFromThis<FSubscribeGlobalMessageMastersWithInitialCallTask>
+        {
+            const TSharedPtr<FNamespaceDomain> Self;
+            const TFunction<void(TArray<Gs2::Inbox::Model::FGlobalMessageMasterPtr>)> Callback;
+        const TOptional<FString> QueryNamePrefix;
+        public:
+            FSubscribeGlobalMessageMastersWithInitialCallTask(const TSharedPtr<FNamespaceDomain>& Self, TFunction<void(TArray<Gs2::Inbox::Model::FGlobalMessageMasterPtr>)> Callback,const TOptional<FString> NamePrefix);
+            FSubscribeGlobalMessageMastersWithInitialCallTask(const FSubscribeGlobalMessageMastersWithInitialCallTask& From);
+            virtual Gs2::Core::Model::FGs2ErrorPtr Action(TSharedPtr<TSharedPtr<Gs2::Core::Domain::CallbackID>> Result) override;
+        };
+
+        TSharedPtr<FAsyncTask<FSubscribeGlobalMessageMastersWithInitialCallTask>> SubscribeGlobalMessageMastersWithInitialCall(
+            TFunction<void(TArray<Gs2::Inbox::Model::FGlobalMessageMasterPtr>)> Callback,const TOptional<FString> NamePrefix = TOptional<FString>()
+        );
         void UnsubscribeGlobalMessageMasters(
             Gs2::Core::Domain::CallbackID CallbackID
         );
@@ -305,7 +365,34 @@ namespace Gs2::Inbox::Domain::Model
 
         TSharedPtr<FAsyncTask<FModelTask>> Model();
 
+        void Invalidate();
+
         Gs2::Core::Domain::CallbackID Subscribe(
+            TFunction<void(Gs2::Inbox::Model::FNamespacePtr)> Callback
+        );
+
+        class GS2INBOX_API FSubscribeWithInitialCallTask final :
+            public Gs2::Core::Util::TGs2Future<Gs2::Core::Domain::CallbackID>,
+            public TSharedFromThis<FSubscribeWithInitialCallTask>
+        {
+            const TSharedPtr<FNamespaceDomain> Self;
+            const TFunction<void(Gs2::Inbox::Model::FNamespacePtr)> Callback;
+        public:
+            FSubscribeWithInitialCallTask(
+                const TSharedPtr<FNamespaceDomain>& Self,
+                TFunction<void(Gs2::Inbox::Model::FNamespacePtr)> Callback
+            );
+
+            FSubscribeWithInitialCallTask(
+                const FSubscribeWithInitialCallTask& From
+            );
+
+            virtual Gs2::Core::Model::FGs2ErrorPtr Action(
+                TSharedPtr<TSharedPtr<Gs2::Core::Domain::CallbackID>> Result
+            ) override;
+        };
+
+        TSharedPtr<FAsyncTask<FSubscribeWithInitialCallTask>> SubscribeWithInitialCall(
             TFunction<void(Gs2::Inbox::Model::FNamespacePtr)> Callback
         );
 

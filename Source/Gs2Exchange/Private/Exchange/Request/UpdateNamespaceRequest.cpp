@@ -24,6 +24,7 @@ namespace Gs2::Exchange::Request
         EnableAwaitExchangeValue(TOptional<bool>()),
         EnableDirectExchangeValue(TOptional<bool>()),
         TransactionSettingValue(nullptr),
+        TransactionSettingV2Value(nullptr),
         ExchangeScriptValue(nullptr),
         IncrementalExchangeScriptValue(nullptr),
         AcquireAwaitScriptValue(nullptr),
@@ -41,6 +42,7 @@ namespace Gs2::Exchange::Request
         EnableAwaitExchangeValue(From.EnableAwaitExchangeValue),
         EnableDirectExchangeValue(From.EnableDirectExchangeValue),
         TransactionSettingValue(From.TransactionSettingValue),
+        TransactionSettingV2Value(From.TransactionSettingV2Value),
         ExchangeScriptValue(From.ExchangeScriptValue),
         IncrementalExchangeScriptValue(From.IncrementalExchangeScriptValue),
         AcquireAwaitScriptValue(From.AcquireAwaitScriptValue),
@@ -95,6 +97,14 @@ namespace Gs2::Exchange::Request
     )
     {
         this->TransactionSettingValue = TransactionSetting;
+        return SharedThis(this);
+    }
+
+    TSharedPtr<FUpdateNamespaceRequest> FUpdateNamespaceRequest::WithTransactionSettingV2(
+        const TSharedPtr<Model::FTransactionSettingV2> TransactionSettingV2
+    )
+    {
+        this->TransactionSettingV2Value = TransactionSettingV2;
         return SharedThis(this);
     }
 
@@ -198,6 +208,15 @@ namespace Gs2::Exchange::Request
         return TransactionSettingValue;
     }
 
+    TSharedPtr<Model::FTransactionSettingV2> FUpdateNamespaceRequest::GetTransactionSettingV2() const
+    {
+        if (!TransactionSettingV2Value.IsValid())
+        {
+            return nullptr;
+        }
+        return TransactionSettingV2Value;
+    }
+
     TSharedPtr<Model::FScriptSetting> FUpdateNamespaceRequest::GetExchangeScript() const
     {
         if (!ExchangeScriptValue.IsValid())
@@ -295,6 +314,14 @@ namespace Gs2::Exchange::Request
                   }
                   return Model::FTransactionSetting::FromJson(Data->GetObjectField(ANSI_TO_TCHAR("transactionSetting")));
               }() : nullptr)
+          ->WithTransactionSettingV2(Data->HasField(ANSI_TO_TCHAR("transactionSettingV2")) ? [Data]() -> Model::FTransactionSettingV2Ptr
+              {
+                  if (Data->HasTypedField<EJson::Null>(ANSI_TO_TCHAR("transactionSettingV2")))
+                  {
+                      return nullptr;
+                  }
+                  return Model::FTransactionSettingV2::FromJson(Data->GetObjectField(ANSI_TO_TCHAR("transactionSettingV2")));
+              }() : nullptr)
           ->WithExchangeScript(Data->HasField(ANSI_TO_TCHAR("exchangeScript")) ? [Data]() -> Model::FScriptSettingPtr
               {
                   if (Data->HasTypedField<EJson::Null>(ANSI_TO_TCHAR("exchangeScript")))
@@ -373,6 +400,10 @@ namespace Gs2::Exchange::Request
         if (TransactionSettingValue != nullptr && TransactionSettingValue.IsValid())
         {
             JsonRootObject->SetObjectField(TEXT("transactionSetting"), TransactionSettingValue->ToJson());
+        }
+        if (TransactionSettingV2Value != nullptr && TransactionSettingV2Value.IsValid())
+        {
+            JsonRootObject->SetObjectField(TEXT("transactionSettingV2"), TransactionSettingV2Value->ToJson());
         }
         if (ExchangeScriptValue != nullptr && ExchangeScriptValue.IsValid())
         {

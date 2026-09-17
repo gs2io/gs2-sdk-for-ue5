@@ -12,8 +12,6 @@
  * on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either
  * express or implied. See the License for the specific language governing
  * permissions and limitations under the License.
- *
- * deny overwrite
  */
 
 #if defined(_MSC_VER)
@@ -39,6 +37,8 @@
 #include "Mission/Domain/Model/MissionTaskModelMaster.h"
 #include "Mission/Domain/Model/User.h"
 #include "Mission/Domain/Model/UserAccessToken.h"
+#include "Mission/Model/Cache/Counter.h"
+#include "Mission/Model/Cache/Complete.h"
 
 #include "Core/Domain/Gs2.h"
 #include "Core/Domain/Transaction/JobQueueJobDomainFactory.h"
@@ -103,7 +103,7 @@ namespace Gs2::Mission::Domain::Model
     )
     {
         Request
-            ->WithContextStack(Self->Gs2->DefaultContextStack)
+            ->WithContextStack((!Request->GetContextStack().IsSet() || Request->GetContextStack()->IsEmpty()) ? Self->Gs2->DefaultContextStack : Request->GetContextStack())
             ->WithNamespaceName(Self->NamespaceName)
             ->WithCounterName(Self->CounterName)
             ->WithUserId(Self->UserId);
@@ -117,46 +117,38 @@ namespace Gs2::Mission::Domain::Model
         }
         const auto ResultModel = Future->GetTask().Result();
         Future->EnsureCompletion();
-        if (ResultModel->GetItem() != nullptr)
+        if (ResultModel.IsValid() && ResultModel->GetChangedCompletes().IsValid())
         {
-            const auto Key = Gs2::Mission::Domain::Model::FCounterDomain::CreateCacheKey(
-                ResultModel->GetItem()->GetName()
-            );
-            Self->Gs2->Cache->Put(
-                Gs2::Mission::Model::FCounter::TypeName,
-                Self->ParentKey,
-                Key,
-                ResultModel->GetItem(),
-                FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
-            );
-        }
-        if (ResultModel->GetChangedCompletes() != nullptr)
-        {
-            const auto CompleteParentKey = Gs2::Mission::Domain::Model::FUserDomain::CreateCacheParentKey(
-                Self->NamespaceName,
-                Self->UserId,
-                "Complete"
-            );
-            for (const auto& ChangedComplete : *ResultModel->GetChangedCompletes())
+            for (const auto& Item : *ResultModel->GetChangedCompletes())
             {
-                if (ChangedComplete == nullptr) continue;
-                Self->Gs2->Cache->Put(
-                    Gs2::Mission::Model::FComplete::TypeName,
-                    CompleteParentKey,
-                    Gs2::Mission::Domain::Model::FCompleteDomain::CreateCacheKey(
-                        ChangedComplete->GetMissionGroupName()
-                    ),
-                    ChangedComplete,
-                    ChangedComplete->GetNextResetAt().IsSet() && *ChangedComplete->GetNextResetAt() != 0
-                        ? FDateTime::FromUnixTimestamp(*ChangedComplete->GetNextResetAt() / 1000)
-                        : FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
+                if (!Item.IsValid()) continue;
+                Gs2::Mission::Model::Cache::FCompleteCache::Put(
+                    Self->Gs2->Cache,
+                    Request->GetNamespaceName(), (ResultModel->GetItem().IsValid() ? ResultModel->GetItem()->GetUserId() : TOptional<FString>()), Item->GetMissionGroupName(),
+                    TOptional<int32>(), Item
                 );
             }
-            Self->Gs2->Cache->ClearListCache(
-                Gs2::Mission::Model::FComplete::TypeName,
-                CompleteParentKey
-            );
         }
+
+            if (ResultModel.IsValid() && ResultModel->GetItem() != nullptr)
+            {
+
+        if (!ResultModel.IsValid() || !((ResultModel.IsValid() && ResultModel->GetItem().IsValid() ? ResultModel->GetItem()->GetUserId() : TOptional<FString>())).IsSet())
+            {
+              const auto Details = MakeShared<TArray<TSharedPtr<Gs2::Core::Model::FGs2ErrorDetail>>>();
+                Details->Add(MakeShared<Gs2::Core::Model::FGs2ErrorDetail>(TEXT("userId"), TEXT("userId is invalid."), TEXT("invalid_response")));
+                return MakeShared<Gs2::Core::Model::FUnknownError>(Details);
+              }
+        Gs2::Mission::Model::Cache::FCounterCache::Put(
+            Self->Gs2->Cache,
+
+            Request->GetNamespaceName(),
+            (ResultModel.IsValid() && ResultModel->GetItem().IsValid() ? ResultModel->GetItem()->GetUserId() : TOptional<FString>()),
+            Request->GetCounterName(),
+            TOptional<int32>(),
+            ResultModel->GetItem()
+        );
+            }
         auto Domain = Self;
 
         *Result = Domain;
@@ -188,7 +180,7 @@ namespace Gs2::Mission::Domain::Model
     )
     {
         Request
-            ->WithContextStack(Self->Gs2->DefaultContextStack)
+            ->WithContextStack((!Request->GetContextStack().IsSet() || Request->GetContextStack()->IsEmpty()) ? Self->Gs2->DefaultContextStack : Request->GetContextStack())
             ->WithNamespaceName(Self->NamespaceName)
             ->WithCounterName(Self->CounterName)
             ->WithUserId(Self->UserId);
@@ -202,46 +194,38 @@ namespace Gs2::Mission::Domain::Model
         }
         const auto ResultModel = Future->GetTask().Result();
         Future->EnsureCompletion();
-        if (ResultModel->GetItem() != nullptr)
+        if (ResultModel.IsValid() && ResultModel->GetChangedCompletes().IsValid())
         {
-            const auto Key = Gs2::Mission::Domain::Model::FCounterDomain::CreateCacheKey(
-                ResultModel->GetItem()->GetName()
-            );
-            Self->Gs2->Cache->Put(
-                Gs2::Mission::Model::FCounter::TypeName,
-                Self->ParentKey,
-                Key,
-                ResultModel->GetItem(),
-                FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
-            );
-        }
-        if (ResultModel->GetChangedCompletes() != nullptr)
-        {
-            const auto CompleteParentKey = Gs2::Mission::Domain::Model::FUserDomain::CreateCacheParentKey(
-                Self->NamespaceName,
-                Self->UserId,
-                "Complete"
-            );
-            for (const auto& ChangedComplete : *ResultModel->GetChangedCompletes())
+            for (const auto& Item : *ResultModel->GetChangedCompletes())
             {
-                if (ChangedComplete == nullptr) continue;
-                Self->Gs2->Cache->Put(
-                    Gs2::Mission::Model::FComplete::TypeName,
-                    CompleteParentKey,
-                    Gs2::Mission::Domain::Model::FCompleteDomain::CreateCacheKey(
-                        ChangedComplete->GetMissionGroupName()
-                    ),
-                    ChangedComplete,
-                    ChangedComplete->GetNextResetAt().IsSet() && *ChangedComplete->GetNextResetAt() != 0
-                        ? FDateTime::FromUnixTimestamp(*ChangedComplete->GetNextResetAt() / 1000)
-                        : FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
+                if (!Item.IsValid()) continue;
+                Gs2::Mission::Model::Cache::FCompleteCache::Put(
+                    Self->Gs2->Cache,
+                    Request->GetNamespaceName(), (ResultModel->GetItem().IsValid() ? ResultModel->GetItem()->GetUserId() : TOptional<FString>()), Item->GetMissionGroupName(),
+                    TOptional<int32>(), Item
                 );
             }
-            Self->Gs2->Cache->ClearListCache(
-                Gs2::Mission::Model::FComplete::TypeName,
-                CompleteParentKey
-            );
         }
+
+            if (ResultModel.IsValid() && ResultModel->GetItem() != nullptr)
+            {
+
+        if (!ResultModel.IsValid() || !((ResultModel.IsValid() && ResultModel->GetItem().IsValid() ? ResultModel->GetItem()->GetUserId() : TOptional<FString>())).IsSet())
+            {
+              const auto Details = MakeShared<TArray<TSharedPtr<Gs2::Core::Model::FGs2ErrorDetail>>>();
+                Details->Add(MakeShared<Gs2::Core::Model::FGs2ErrorDetail>(TEXT("userId"), TEXT("userId is invalid."), TEXT("invalid_response")));
+                return MakeShared<Gs2::Core::Model::FUnknownError>(Details);
+              }
+        Gs2::Mission::Model::Cache::FCounterCache::Put(
+            Self->Gs2->Cache,
+
+            Request->GetNamespaceName(),
+            (ResultModel.IsValid() && ResultModel->GetItem().IsValid() ? ResultModel->GetItem()->GetUserId() : TOptional<FString>()),
+            Request->GetCounterName(),
+            TOptional<int32>(),
+            ResultModel->GetItem()
+        );
+            }
         auto Domain = Self;
 
         *Result = Domain;
@@ -273,7 +257,7 @@ namespace Gs2::Mission::Domain::Model
     )
     {
         Request
-            ->WithContextStack(Self->Gs2->DefaultContextStack)
+            ->WithContextStack((!Request->GetContextStack().IsSet() || Request->GetContextStack()->IsEmpty()) ? Self->Gs2->DefaultContextStack : Request->GetContextStack())
             ->WithNamespaceName(Self->NamespaceName)
             ->WithCounterName(Self->CounterName)
             ->WithUserId(Self->UserId);
@@ -287,46 +271,38 @@ namespace Gs2::Mission::Domain::Model
         }
         const auto ResultModel = Future->GetTask().Result();
         Future->EnsureCompletion();
-        if (ResultModel->GetItem() != nullptr)
+        if (ResultModel.IsValid() && ResultModel->GetChangedCompletes().IsValid())
         {
-            const auto Key = Gs2::Mission::Domain::Model::FCounterDomain::CreateCacheKey(
-                ResultModel->GetItem()->GetName()
-            );
-            Self->Gs2->Cache->Put(
-                Gs2::Mission::Model::FCounter::TypeName,
-                Self->ParentKey,
-                Key,
-                ResultModel->GetItem(),
-                FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
-            );
-        }
-        if (ResultModel->GetChangedCompletes() != nullptr)
-        {
-            const auto CompleteParentKey = Gs2::Mission::Domain::Model::FUserDomain::CreateCacheParentKey(
-                Self->NamespaceName,
-                Self->UserId,
-                "Complete"
-            );
-            for (const auto& ChangedComplete : *ResultModel->GetChangedCompletes())
+            for (const auto& Item : *ResultModel->GetChangedCompletes())
             {
-                if (ChangedComplete == nullptr) continue;
-                Self->Gs2->Cache->Put(
-                    Gs2::Mission::Model::FComplete::TypeName,
-                    CompleteParentKey,
-                    Gs2::Mission::Domain::Model::FCompleteDomain::CreateCacheKey(
-                        ChangedComplete->GetMissionGroupName()
-                    ),
-                    ChangedComplete,
-                    ChangedComplete->GetNextResetAt().IsSet() && *ChangedComplete->GetNextResetAt() != 0
-                        ? FDateTime::FromUnixTimestamp(*ChangedComplete->GetNextResetAt() / 1000)
-                        : FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
+                if (!Item.IsValid()) continue;
+                Gs2::Mission::Model::Cache::FCompleteCache::Put(
+                    Self->Gs2->Cache,
+                    Request->GetNamespaceName(), (ResultModel->GetItem().IsValid() ? ResultModel->GetItem()->GetUserId() : TOptional<FString>()), Item->GetMissionGroupName(),
+                    TOptional<int32>(), Item
                 );
             }
-            Self->Gs2->Cache->ClearListCache(
-                Gs2::Mission::Model::FComplete::TypeName,
-                CompleteParentKey
-            );
         }
+
+            if (ResultModel.IsValid() && ResultModel->GetItem() != nullptr)
+            {
+
+        if (!ResultModel.IsValid() || !((ResultModel.IsValid() && ResultModel->GetItem().IsValid() ? ResultModel->GetItem()->GetUserId() : TOptional<FString>())).IsSet())
+            {
+              const auto Details = MakeShared<TArray<TSharedPtr<Gs2::Core::Model::FGs2ErrorDetail>>>();
+                Details->Add(MakeShared<Gs2::Core::Model::FGs2ErrorDetail>(TEXT("userId"), TEXT("userId is invalid."), TEXT("invalid_response")));
+                return MakeShared<Gs2::Core::Model::FUnknownError>(Details);
+              }
+        Gs2::Mission::Model::Cache::FCounterCache::Put(
+            Self->Gs2->Cache,
+
+            Request->GetNamespaceName(),
+            (ResultModel.IsValid() && ResultModel->GetItem().IsValid() ? ResultModel->GetItem()->GetUserId() : TOptional<FString>()),
+            Request->GetCounterName(),
+            TOptional<int32>(),
+            ResultModel->GetItem()
+        );
+            }
         auto Domain = Self;
 
         *Result = Domain;
@@ -358,7 +334,7 @@ namespace Gs2::Mission::Domain::Model
     )
     {
         Request
-            ->WithContextStack(Self->Gs2->DefaultContextStack)
+            ->WithContextStack((!Request->GetContextStack().IsSet() || Request->GetContextStack()->IsEmpty()) ? Self->Gs2->DefaultContextStack : Request->GetContextStack())
             ->WithNamespaceName(Self->NamespaceName)
             ->WithCounterName(Self->CounterName)
             ->WithUserId(Self->UserId);
@@ -372,6 +348,26 @@ namespace Gs2::Mission::Domain::Model
         }
         const auto ResultModel = Future->GetTask().Result();
         Future->EnsureCompletion();
+
+            if (ResultModel.IsValid() && ResultModel->GetItem() != nullptr)
+            {
+
+        if (!ResultModel.IsValid() || !((ResultModel.IsValid() && ResultModel->GetItem().IsValid() ? ResultModel->GetItem()->GetUserId() : TOptional<FString>())).IsSet())
+            {
+              const auto Details = MakeShared<TArray<TSharedPtr<Gs2::Core::Model::FGs2ErrorDetail>>>();
+                Details->Add(MakeShared<Gs2::Core::Model::FGs2ErrorDetail>(TEXT("userId"), TEXT("userId is invalid."), TEXT("invalid_response")));
+                return MakeShared<Gs2::Core::Model::FUnknownError>(Details);
+              }
+        Gs2::Mission::Model::Cache::FCounterCache::Put(
+            Self->Gs2->Cache,
+
+            Request->GetNamespaceName(),
+            (ResultModel.IsValid() && ResultModel->GetItem().IsValid() ? ResultModel->GetItem()->GetUserId() : TOptional<FString>()),
+            Request->GetCounterName(),
+            TOptional<int32>(),
+            ResultModel->GetItem()
+        );
+            }
         *Result = ResultModel->GetItem();
         return nullptr;
     }
@@ -401,7 +397,7 @@ namespace Gs2::Mission::Domain::Model
     )
     {
         Request
-            ->WithContextStack(Self->Gs2->DefaultContextStack)
+            ->WithContextStack((!Request->GetContextStack().IsSet() || Request->GetContextStack()->IsEmpty()) ? Self->Gs2->DefaultContextStack : Request->GetContextStack())
             ->WithNamespaceName(Self->NamespaceName)
             ->WithUserId(Self->UserId)
             ->WithCounterName(Self->CounterName);
@@ -415,19 +411,26 @@ namespace Gs2::Mission::Domain::Model
         }
         const auto ResultModel = Future->GetTask().Result();
         Future->EnsureCompletion();
-        if (ResultModel->GetItem() != nullptr)
-        {
-            const auto Key = Gs2::Mission::Domain::Model::FCounterDomain::CreateCacheKey(
-                ResultModel->GetItem()->GetName()
-            );
-            Self->Gs2->Cache->Put(
-                Gs2::Mission::Model::FCounter::TypeName,
-                Self->ParentKey,
-                Key,
-                ResultModel->GetItem(),
-                FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
-            );
-        }
+
+            if (ResultModel.IsValid() && ResultModel->GetItem() != nullptr)
+            {
+
+        if (!ResultModel.IsValid() || !((ResultModel.IsValid() && ResultModel->GetItem().IsValid() ? ResultModel->GetItem()->GetUserId() : TOptional<FString>())).IsSet())
+            {
+              const auto Details = MakeShared<TArray<TSharedPtr<Gs2::Core::Model::FGs2ErrorDetail>>>();
+                Details->Add(MakeShared<Gs2::Core::Model::FGs2ErrorDetail>(TEXT("userId"), TEXT("userId is invalid."), TEXT("invalid_response")));
+                return MakeShared<Gs2::Core::Model::FUnknownError>(Details);
+              }
+        Gs2::Mission::Model::Cache::FCounterCache::Put(
+            Self->Gs2->Cache,
+
+            Request->GetNamespaceName(),
+            (ResultModel.IsValid() && ResultModel->GetItem().IsValid() ? ResultModel->GetItem()->GetUserId() : TOptional<FString>()),
+            Request->GetCounterName(),
+            TOptional<int32>(),
+            ResultModel->GetItem()
+        );
+            }
         auto Domain = Self;
 
         *Result = Domain;
@@ -459,7 +462,7 @@ namespace Gs2::Mission::Domain::Model
     )
     {
         Request
-            ->WithContextStack(Self->Gs2->DefaultContextStack)
+            ->WithContextStack((!Request->GetContextStack().IsSet() || Request->GetContextStack()->IsEmpty()) ? Self->Gs2->DefaultContextStack : Request->GetContextStack())
             ->WithNamespaceName(Self->NamespaceName)
             ->WithUserId(Self->UserId)
             ->WithCounterName(Self->CounterName);
@@ -473,19 +476,26 @@ namespace Gs2::Mission::Domain::Model
         }
         const auto ResultModel = Future->GetTask().Result();
         Future->EnsureCompletion();
-        if (ResultModel->GetItem() != nullptr)
-        {
-            const auto Key = Gs2::Mission::Domain::Model::FCounterDomain::CreateCacheKey(
-                ResultModel->GetItem()->GetName()
-            );
-            Self->Gs2->Cache->Put(
-                Gs2::Mission::Model::FCounter::TypeName,
-                Self->ParentKey,
-                Key,
-                ResultModel->GetItem(),
-                FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
-            );
-        }
+
+            if (ResultModel.IsValid() && ResultModel->GetItem() != nullptr)
+            {
+
+        if (!ResultModel.IsValid() || !((ResultModel.IsValid() && ResultModel->GetItem().IsValid() ? ResultModel->GetItem()->GetUserId() : TOptional<FString>())).IsSet())
+            {
+              const auto Details = MakeShared<TArray<TSharedPtr<Gs2::Core::Model::FGs2ErrorDetail>>>();
+                Details->Add(MakeShared<Gs2::Core::Model::FGs2ErrorDetail>(TEXT("userId"), TEXT("userId is invalid."), TEXT("invalid_response")));
+                return MakeShared<Gs2::Core::Model::FUnknownError>(Details);
+              }
+        Gs2::Mission::Model::Cache::FCounterCache::Put(
+            Self->Gs2->Cache,
+
+            Request->GetNamespaceName(),
+            (ResultModel.IsValid() && ResultModel->GetItem().IsValid() ? ResultModel->GetItem()->GetUserId() : TOptional<FString>()),
+            Request->GetCounterName(),
+            TOptional<int32>(),
+            ResultModel->GetItem()
+        );
+            }
         auto Domain = Self;
 
         *Result = Domain;
@@ -517,7 +527,7 @@ namespace Gs2::Mission::Domain::Model
     )
     {
         Request
-            ->WithContextStack(Self->Gs2->DefaultContextStack)
+            ->WithContextStack((!Request->GetContextStack().IsSet() || Request->GetContextStack()->IsEmpty()) ? Self->Gs2->DefaultContextStack : Request->GetContextStack())
             ->WithNamespaceName(Self->NamespaceName)
             ->WithUserId(Self->UserId)
             ->WithCounterName(Self->CounterName);
@@ -527,24 +537,30 @@ namespace Gs2::Mission::Domain::Model
         Future->StartSynchronousTask();
         if (Future->GetTask().IsError())
         {
-            return Future->GetTask().Error();
+            const auto Error = Future->GetTask().Error();
+            if (Error.IsValid() && Error->IsChildOf(Gs2::Core::Model::FNotFoundError::Class))
+            {
+                *Result = Self;
+                return nullptr;
+            }
+            return Error;
         }
         const auto ResultModel = Future->GetTask().Result();
         Future->EnsureCompletion();
-        if (ResultModel->GetItem() != nullptr)
-        {
-            const auto Key = Gs2::Mission::Domain::Model::FCounterDomain::CreateCacheKey(
-                ResultModel->GetItem()->GetName()
-            );
-            Self->Gs2->Cache->Delete(
-                Gs2::Mission::Model::FCounter::TypeName,
-                Self->ParentKey,
-                Key
-            );
-        }
-        Self->Gs2->Cache->ClearListCache(
-            Gs2::Mission::Model::FCounter::TypeName,
-            Self->ParentKey
+
+              if (!ResultModel.IsValid() || !((ResultModel.IsValid() && ResultModel->GetItem().IsValid() ? ResultModel->GetItem()->GetUserId() : TOptional<FString>())).IsSet())
+                  {
+                    const auto Details = MakeShared<TArray<TSharedPtr<Gs2::Core::Model::FGs2ErrorDetail>>>();
+                      Details->Add(MakeShared<Gs2::Core::Model::FGs2ErrorDetail>(TEXT("userId"), TEXT("userId is invalid."), TEXT("invalid_response")));
+                      return MakeShared<Gs2::Core::Model::FUnknownError>(Details);
+                    }
+              Gs2::Mission::Model::Cache::FCounterCache::Delete(
+            Self->Gs2->Cache,
+
+            Request->GetNamespaceName(),
+            (ResultModel.IsValid() && ResultModel->GetItem().IsValid() ? ResultModel->GetItem()->GetUserId() : TOptional<FString>()),
+            Request->GetCounterName(),
+            TOptional<int32>()
         );
         auto Domain = Self;
 
@@ -598,71 +614,165 @@ namespace Gs2::Mission::Domain::Model
         TSharedPtr<TSharedPtr<Gs2::Mission::Model::FCounter>> Result
     )
     {
-        // ReSharper disable once CppLocalVariableMayBeConst
-        TSharedPtr<Gs2::Mission::Model::FCounter> Value;
-        auto bCacheHit = Self->Gs2->Cache->TryGet<Gs2::Mission::Model::FCounter>(
-            Self->ParentKey,
-            Gs2::Mission::Domain::Model::FCounterDomain::CreateCacheKey(
-                Self->CounterName
-            ),
-            &Value
+        const auto CacheParentKey = Gs2::Mission::Model::Cache::FCounterCache::CreateCacheParentKey(
+
+            Self->NamespaceName,
+            Self->UserId,
+            TOptional<int32>()
         );
-        if (!bCacheHit) {
-            const auto Future = Self->Get(
-                MakeShared<Gs2::Mission::Request::FGetCounterByUserIdRequest>()
-            );
-            Future->StartSynchronousTask();
-            if (Future->GetTask().IsError())
+        const auto CacheKey = Gs2::Mission::Model::Cache::FCounterCache::CreateCacheKey(
+
+            Self->CounterName
+        );
+        return Self->Gs2->Cache->ExecuteWithKeyLock(
+            Gs2::Mission::Model::FCounter::TypeName,
+            CacheParentKey,
+            CacheKey,
+            [Self = Self, Result]() -> Gs2::Core::Model::FGs2ErrorPtr
             {
-                if (Future->GetTask().Error()->Type() != Gs2::Core::Model::FNotFoundError::TypeString)
-                {
-                    return Future->GetTask().Error();
-                }
+                Gs2::Mission::Model::FCounterPtr Value;
+                const auto CacheHit = Gs2::Mission::Model::Cache::FCounterCache::TryGet(
+                    Self->Gs2->Cache,
 
-                const auto Key = Gs2::Mission::Domain::Model::FCounterDomain::CreateCacheKey(
-                    Self->CounterName
+                    Self->NamespaceName,
+                    Self->UserId,
+                    Self->CounterName,
+                    TOptional<int32>(),
+                    &Value
                 );
-                Self->Gs2->Cache->Put(
-                    Gs2::Mission::Model::FCounter::TypeName,
-                    Self->ParentKey,
-                    Key,
-                    nullptr,
-                    FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
-                );
-
-                if (Future->GetTask().Error()->Detail(0)->GetComponent() != "counter")
+                if (CacheHit)
                 {
-                    return Future->GetTask().Error();
+                    *Result = Value;
+                    return nullptr;
                 }
-            }
-            else
-            {
-                Value = Future->GetTask().Result();
-            }
-            Future->EnsureCompletion();
-        }
-        *Result = Value;
+                const auto Error = Gs2::Mission::Model::Cache::FCounterCache::Fetch(
+                    Self->Gs2->Cache,
 
-        return nullptr;
+                    Self->NamespaceName,
+                    Self->UserId,
+                    Self->CounterName,
+                    TOptional<int32>(),
+                    [Self](Gs2::Mission::Model::FCounterPtr* OutItem) -> Gs2::Core::Model::FGs2ErrorPtr
+                    {
+                        const auto Future = Self->Get(
+                            MakeShared<Gs2::Mission::Request::FGetCounterByUserIdRequest>()
+                        );
+                        Future->StartSynchronousTask();
+                        if (Future->GetTask().IsError()) return Future->GetTask().Error();
+                        *OutItem = Future->GetTask().Result();
+                        Future->EnsureCompletion();
+                        return nullptr;
+                    },
+                    &Value
+                );
+                if (Error.IsValid()) return Error;
+                *Result = Value;
+                return nullptr;
+            }
+        );
     }
 
     TSharedPtr<FAsyncTask<FCounterDomain::FModelTask>> FCounterDomain::Model() {
         return Gs2::Core::Util::New<FAsyncTask<FCounterDomain::FModelTask>>(this->AsShared());
     }
 
+    void FCounterDomain::Invalidate()
+    {
+        Gs2::Mission::Model::Cache::FCounterCache::Delete(
+            Gs2->Cache,
+
+            NamespaceName,
+            UserId,
+            CounterName,
+            TOptional<int32>()
+        );
+    }
+
+    FCounterDomain::FSubscribeWithInitialCallTask::FSubscribeWithInitialCallTask(
+        const TSharedPtr<FCounterDomain>& Self,
+        TFunction<void(Gs2::Mission::Model::FCounterPtr)> Callback
+    ):
+        Self(Self),
+        Callback(Callback)
+    {
+    }
+
+    FCounterDomain::FSubscribeWithInitialCallTask::FSubscribeWithInitialCallTask(
+        const FSubscribeWithInitialCallTask& From
+    ):
+        TGs2Future(From),
+        Self(From.Self),
+        Callback(From.Callback)
+    {
+    }
+
+    Gs2::Core::Model::FGs2ErrorPtr FCounterDomain::FSubscribeWithInitialCallTask::Action(
+        TSharedPtr<TSharedPtr<Gs2::Core::Domain::CallbackID>> Result
+    )
+    {
+        const auto Task = Self->Model();
+        Task->StartSynchronousTask();
+        Task->EnsureCompletion();
+        if (Task->GetTask().IsError()) return Task->GetTask().Error();
+        const auto Item = Task->GetTask().Result();
+        const auto CallbackId = Self->Subscribe(Callback);
+        Callback(Item);
+        *Result = MakeShared<Gs2::Core::Domain::CallbackID>(CallbackId);
+        return nullptr;
+    }
+
+    TSharedPtr<FAsyncTask<FCounterDomain::FSubscribeWithInitialCallTask>> FCounterDomain::SubscribeWithInitialCall(
+        TFunction<void(Gs2::Mission::Model::FCounterPtr)> Callback
+    )
+    {
+        return Gs2::Core::Util::New<FAsyncTask<FSubscribeWithInitialCallTask>>(this->AsShared(), Callback);
+    }
+
     Gs2::Core::Domain::CallbackID FCounterDomain::Subscribe(
         TFunction<void(Gs2::Mission::Model::FCounterPtr)> Callback
     )
     {
+        const auto SubscriptionParentKey = Gs2::Mission::Model::Cache::FCounterCache::CreateCacheParentKey(
+
+            NamespaceName,
+            UserId,
+            TOptional<int32>()
+        );
+        const auto SubscriptionCacheKey = Gs2::Mission::Model::Cache::FCounterCache::CreateCacheKey(
+
+            CounterName
+        );
+        const TWeakPtr<Gs2::Core::Domain::FGs2> WeakGs2 = Gs2;
+        const TWeakPtr<Mission::Domain::FGs2MissionDomain> WeakService = Service;
+        const FString RegisteredParentKey = SubscriptionParentKey;
+        const TOptional<FString> QueryNamespaceName = NamespaceName;
+        const TOptional<FString> QueryUserId = UserId;
+        const TOptional<FString> QueryCounterName = CounterName;
         return Gs2->Cache->Subscribe(
             Gs2::Mission::Model::FCounter::TypeName,
-            ParentKey,
-            Gs2::Mission::Domain::Model::FCounterDomain::CreateCacheKey(
-                CounterName
-            ),
+            SubscriptionParentKey,
+            SubscriptionCacheKey,
             [Callback](TSharedPtr<FGs2Object> obj)
             {
                 Callback(StaticCastSharedPtr<Gs2::Mission::Model::FCounter>(obj));
+            },
+            [WeakGs2, WeakService, RegisteredParentKey, QueryNamespaceName, QueryUserId, QueryCounterName]()
+            {
+                const auto Owner = WeakGs2.Pin();
+                if (!Owner.IsValid())
+                {
+                    return;
+                }
+                const auto Domain = MakeShared<FCounterDomain>(
+                    Owner,
+                    WeakService.Pin(),
+                    QueryNamespaceName,
+                    QueryUserId,
+                    QueryCounterName
+                );
+                Domain->ParentKey = RegisteredParentKey;
+                const auto Task = Domain->Model();
+                Task->StartBackgroundTask();
             }
         );
     }
@@ -671,12 +781,20 @@ namespace Gs2::Mission::Domain::Model
         Gs2::Core::Domain::CallbackID CallbackID
     )
     {
+        const auto SubscriptionParentKey = Gs2::Mission::Model::Cache::FCounterCache::CreateCacheParentKey(
+
+            NamespaceName,
+            UserId,
+            TOptional<int32>()
+        );
+        const auto SubscriptionCacheKey = Gs2::Mission::Model::Cache::FCounterCache::CreateCacheKey(
+
+            CounterName
+        );
         Gs2->Cache->Unsubscribe(
             Gs2::Mission::Model::FCounter::TypeName,
-            ParentKey,
-            Gs2::Mission::Domain::Model::FCounterDomain::CreateCacheKey(
-                CounterName
-            ),
+            SubscriptionParentKey,
+            SubscriptionCacheKey,
             CallbackID
         );
     }
@@ -687,4 +805,3 @@ namespace Gs2::Mission::Domain::Model
 #elif defined(__clang__)
 #pragma clang diagnostic pop
 #endif
-

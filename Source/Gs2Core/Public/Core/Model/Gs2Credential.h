@@ -36,6 +36,8 @@ namespace Gs2::Core::Model
 		virtual const FGs2ProjectToken& ProjectToken() const = 0;
 
 		virtual void UpdateProjectToken(const FGs2ProjectToken& Token) = 0;
+
+		virtual bool IsProjectTokenCredential() const { return false; }
 	};
 	typedef TSharedPtr<IGs2Credential, ESPMode::ThreadSafe> FGs2CredentialPtr;
 }

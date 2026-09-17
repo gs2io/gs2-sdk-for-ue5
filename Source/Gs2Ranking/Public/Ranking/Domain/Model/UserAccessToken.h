@@ -109,10 +109,36 @@ namespace Gs2::Ranking::Domain::Model
 
         Gs2::Core::Domain::CallbackID SubscribeScores(
             TFunction<void()> Callback
+            , const FString CategoryName, const FString ScorerUserId
         );
 
+        class FCollectScoresTask;
+
+        Gs2::Core::Domain::CallbackID SubscribeScores(
+            TFunction<void(TArray<Gs2::Ranking::Model::FScorePtr>)> Callback,const FString CategoryName,const FString ScorerUserId
+        );
+
+        void InvalidateScores(const FString CategoryName,const FString ScorerUserId);
+
+        class GS2RANKING_API FSubscribeScoresWithInitialCallTask final :
+            public Gs2::Core::Util::TGs2Future<Gs2::Core::Domain::CallbackID>,
+            public TSharedFromThis<FSubscribeScoresWithInitialCallTask>
+        {
+            const TSharedPtr<FUserAccessTokenDomain> Self;
+            const TFunction<void(TArray<Gs2::Ranking::Model::FScorePtr>)> Callback;
+        const FString QueryCategoryName;const FString QueryScorerUserId;
+        public:
+            FSubscribeScoresWithInitialCallTask(const TSharedPtr<FUserAccessTokenDomain>& Self, TFunction<void(TArray<Gs2::Ranking::Model::FScorePtr>)> Callback,const FString CategoryName,const FString ScorerUserId);
+            FSubscribeScoresWithInitialCallTask(const FSubscribeScoresWithInitialCallTask& From);
+            virtual Gs2::Core::Model::FGs2ErrorPtr Action(TSharedPtr<TSharedPtr<Gs2::Core::Domain::CallbackID>> Result) override;
+        };
+
+        TSharedPtr<FAsyncTask<FSubscribeScoresWithInitialCallTask>> SubscribeScoresWithInitialCall(
+            TFunction<void(TArray<Gs2::Ranking::Model::FScorePtr>)> Callback,const FString CategoryName,const FString ScorerUserId
+        );
         void UnsubscribeScores(
-            Gs2::Core::Domain::CallbackID CallbackID
+            const FString CategoryName, const FString ScorerUserId
+            , Gs2::Core::Domain::CallbackID CallbackID
         );
 
         TSharedPtr<Gs2::Ranking::Domain::Model::FScoreAccessTokenDomain> Score(

@@ -68,7 +68,8 @@ namespace Gs2::UE5::Stamina::Domain::Model
         );
     }
 
-    void FEzUserGameSessionDomain::UnsubscribeStaminas(Gs2::Core::Domain::CallbackID CallbackId)
+    void FEzUserGameSessionDomain::UnsubscribeStaminas(
+            Gs2::Core::Domain::CallbackID CallbackId)
     {
         Domain->UnsubscribeStaminas(
             CallbackId

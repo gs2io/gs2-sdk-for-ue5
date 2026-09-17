@@ -20,6 +20,8 @@
 #include "Core/Model/Gs2Error.h"
 #include "../../Gs2Core/Gs2Core.h"
 
+#include <atomic>
+
 namespace Gs2::Core::Util
 {
     template <class TResult>
@@ -48,21 +50,34 @@ namespace Gs2::Core::Util
     private:
         TSharedPtr<TResult> ResultValue;
         Model::FGs2ErrorPtr ErrorValue;
+        std::atomic<bool> Complete;
 
         TSharedRef<DelegateContext> Delegates;
     
     public:
         TGs2Future(
-        ): ResultValue(nullptr), ErrorValue(MakeShared<Model::FNotExecutedError>(MakeShared<TArray<Model::FGs2ErrorDetailPtr>>())), Delegates(MakeShared<DelegateContext>())
+        ): ResultValue(nullptr), ErrorValue(MakeShared<Model::FNotExecutedError>(MakeShared<TArray<Model::FGs2ErrorDetailPtr>>())), Complete(false), Delegates(MakeShared<DelegateContext>())
         {
             
         }
 
         TGs2Future(
             const TGs2Future& From
-        ): ResultValue(From.ResultValue), ErrorValue(From.ErrorValue), Delegates(From.Delegates)
+        ): ResultValue(From.ResultValue), ErrorValue(From.ErrorValue), Complete(From.Complete.load(std::memory_order_acquire)), Delegates(From.Delegates)
         {
             
+        }
+
+        TGs2Future& operator=(const TGs2Future& From)
+        {
+            if (this != &From)
+            {
+                this->ResultValue = From.ResultValue;
+                this->ErrorValue = From.ErrorValue;
+                this->Complete.store(From.Complete.load(std::memory_order_acquire), std::memory_order_release);
+                this->Delegates = From.Delegates;
+            }
+            return *this;
         }
 
         virtual ~TGs2Future() = default;
@@ -74,7 +89,7 @@ namespace Gs2::Core::Util
     
         bool IsComplete() const
         {
-            return (ResultValue != nullptr && ResultValue.IsValid()) || (ErrorValue != nullptr && ErrorValue.IsValid());
+            return this->Complete.load(std::memory_order_acquire);
         }
 
         bool IsError() const
@@ -124,38 +139,40 @@ namespace Gs2::Core::Util
         
         virtual void OnError(Model::FGs2ErrorPtr Error)
         {
+            this->ResultValue = nullptr;
+            this->ErrorValue = Error;
+            this->Complete.store(true, std::memory_order_release);
             FGs2Ticker::EntryInvokeFromGameThreads([Delegates=this->Delegates, Error]
             {
                 // ReSharper disable once CppExpressionWithoutSideEffects
                 Delegates->ErrorDelegate.ExecuteIfBound(Error);
             });
-            this->ErrorValue = Error;
         }
     
         virtual void OnComplete(TSharedPtr<TResult> Result)
         {
+            this->ErrorValue = nullptr;
+            this->ResultValue = Result;
+            this->Complete.store(true, std::memory_order_release);
             FGs2Ticker::EntryInvokeFromGameThreads([Delegates=this->Delegates, Result]
             {
                 // ReSharper disable once CppExpressionWithoutSideEffects
                 Delegates->SuccessDelegate.ExecuteIfBound(Result);
             });
-            this->ErrorValue = nullptr;
-            this->ResultValue = Result;
         }
     };
 
     GS2CORE_API extern TArray<TSharedPtr<FAsyncTaskBase>> RunningTasks;
+    GS2CORE_API void RegisterRunningTask(const TSharedPtr<FAsyncTaskBase>& Task);
 
     template <typename InObjectType, typename... InArgTypes>
     static TSharedPtr<InObjectType> New(InArgTypes&&... Args)
     {
-        for (auto Iterator = RunningTasks.CreateIterator(); Iterator; ++Iterator)
-        {
-            if ((*Iterator)->IsDone()) Iterator.RemoveCurrent();
-        }
-        
+        // SDK tasks are single-use. Keep a strong pointer while starting or waiting. After
+        // releasing the caller's last strong pointer, do not start, reuse, or synchronize
+        // the task by pinning a weak pointer.
         auto Future = MakeShared<InObjectType>(Args...);
-        RunningTasks.Add(Future);
+        RegisterRunningTask(Future);
         return Future;
     }
 

@@ -79,6 +79,8 @@ namespace Gs2::StateMachine::Domain::Model
             const FUserDomain& From
         );
 
+
+
         class GS2STATEMACHINE_API FStartStateMachineTask final :
             public Gs2::Core::Util::TGs2Future<Gs2::StateMachine::Domain::Model::FStatusDomain>,
             public TSharedFromThis<FStartStateMachineTask>
@@ -112,8 +114,33 @@ namespace Gs2::StateMachine::Domain::Model
 
         Gs2::Core::Domain::CallbackID SubscribeStatuses(
             TFunction<void()> Callback
+
         );
 
+        class FCollectStatusesTask;
+
+        Gs2::Core::Domain::CallbackID SubscribeStatuses(
+            TFunction<void(TArray<Gs2::StateMachine::Model::FStatusPtr>)> Callback,const TOptional<FString> Status = TOptional<FString>(),const TOptional<FString> TimeOffsetToken = TOptional<FString>()
+        );
+
+        void InvalidateStatuses(const TOptional<FString> Status = TOptional<FString>(),const TOptional<FString> TimeOffsetToken = TOptional<FString>());
+
+        class GS2STATEMACHINE_API FSubscribeStatusesWithInitialCallTask final :
+            public Gs2::Core::Util::TGs2Future<Gs2::Core::Domain::CallbackID>,
+            public TSharedFromThis<FSubscribeStatusesWithInitialCallTask>
+        {
+            const TSharedPtr<FUserDomain> Self;
+            const TFunction<void(TArray<Gs2::StateMachine::Model::FStatusPtr>)> Callback;
+        const TOptional<FString> QueryStatus;const TOptional<FString> QueryTimeOffsetToken;
+        public:
+            FSubscribeStatusesWithInitialCallTask(const TSharedPtr<FUserDomain>& Self, TFunction<void(TArray<Gs2::StateMachine::Model::FStatusPtr>)> Callback,const TOptional<FString> Status,const TOptional<FString> TimeOffsetToken);
+            FSubscribeStatusesWithInitialCallTask(const FSubscribeStatusesWithInitialCallTask& From);
+            virtual Gs2::Core::Model::FGs2ErrorPtr Action(TSharedPtr<TSharedPtr<Gs2::Core::Domain::CallbackID>> Result) override;
+        };
+
+        TSharedPtr<FAsyncTask<FSubscribeStatusesWithInitialCallTask>> SubscribeStatusesWithInitialCall(
+            TFunction<void(TArray<Gs2::StateMachine::Model::FStatusPtr>)> Callback,const TOptional<FString> Status = TOptional<FString>(),const TOptional<FString> TimeOffsetToken = TOptional<FString>()
+        );
         void UnsubscribeStatuses(
             Gs2::Core::Domain::CallbackID CallbackID
         );

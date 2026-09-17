@@ -27,10 +27,17 @@
 #include "Showcase/Domain/SpeculativeExecutor/Consume/IncrementPurchaseCountByUserIdSpeculativeExecutor.h"
 
 #include "Core/Domain/Gs2.h"
+#include "Core/Domain/SpeculativeExecutor/PreparedSpeculativeCommit.h"
 #include "Showcase/Domain/Gs2Showcase.h"
+#include "Showcase/Domain/SpeculativeExecutor/PurchaseCountSpeculativeCommit.h"
+#include "Showcase/Model/Cache/RandomDisplayItem.h"
+
+#include <cmath>
+#include <cstdint>
 
 namespace Gs2::Showcase::Domain::SpeculativeExecutor
 {
+    using Private::FPurchaseCountSpeculativeCommit;
 
     FString FIncrementPurchaseCountByUserIdSpeculativeExecutor::Action()
     {
@@ -44,8 +51,10 @@ namespace Gs2::Showcase::Domain::SpeculativeExecutor
         Gs2::Showcase::Model::FRandomDisplayItemPtr& Item
     )
     {
-        Item->WithCurrentPurchaseCount(*Item->GetCurrentPurchaseCount() + *Request->GetCount());
-        if (*Item->GetCurrentPurchaseCount() > *Item->GetMaximumPurchaseCount()) {
+        static_cast<void>(Domain);
+        static_cast<void>(AccessToken);
+        if (!Request.IsValid())
+        {
             return MakeShared<Gs2::Core::Model::FBadRequestError>([]
             {
                 auto Arr = MakeShared<TArray<Gs2::Core::Model::FGs2ErrorDetailPtr>>();
@@ -53,6 +62,20 @@ namespace Gs2::Showcase::Domain::SpeculativeExecutor
                 return Arr;
             }());
         }
+        int32 Count = 1;
+        Count = Request->GetCount().Get(1);
+        const auto Changed = FPurchaseCountSpeculativeCommit::Transform(
+            Item, Count
+        );
+        if (!Changed.IsValid()) {
+            return MakeShared<Gs2::Core::Model::FBadRequestError>([]
+            {
+                auto Arr = MakeShared<TArray<Gs2::Core::Model::FGs2ErrorDetailPtr>>();
+                Arr->Add(MakeShared<Gs2::Core::Model::FGs2ErrorDetail>("count", "invalid", ""));
+                return Arr;
+            }());
+        }
+        Item = Changed;
         return nullptr;
     }
 
@@ -82,60 +105,66 @@ namespace Gs2::Showcase::Domain::SpeculativeExecutor
     }
 
     Gs2::Core::Model::FGs2ErrorPtr FIncrementPurchaseCountByUserIdSpeculativeExecutor::FCommitTask::Action(
-        TSharedPtr<TSharedPtr<TFunction<void()>>> Result
+        TSharedPtr<TSharedPtr<Gs2::Core::Domain::SpeculativeExecutor::FPreparedSpeculativeCommit>> Result
     )
     {
-        const auto Future = Domain->Showcase->Namespace(
-                Request->GetNamespaceName().IsSet() ? *Request->GetNamespaceName() : FString("")
-            )->AccessToken(
-                AccessToken
-            )->RandomShowcase(
-                Request->GetShowcaseName().IsSet() ? *Request->GetShowcaseName() : FString("")
-            )->RandomDisplayItem(
-                Request->GetDisplayItemName().IsSet() ? *Request->GetDisplayItemName() : FString("")
-            )->Model();
-        Future->StartSynchronousTask();
-        if (Future->GetTask().IsError())
+        *Result = nullptr;
+        Gs2::Showcase::Request::FIncrementPurchaseCountByUserIdRequestPtr PreparedRequest;
+        if (Request.IsValid())
         {
-            return Future->GetTask().Error();
+            PreparedRequest = Gs2::Showcase::Request::FIncrementPurchaseCountByUserIdRequest::FromJson(
+                Request->ToJson()
+            );
         }
-        auto Item = Future->GetTask().Result();
-
-        if (!Item.IsValid())
+        if (PreparedRequest.IsValid() && PreparedRequest->GetUserId().IsSet() &&
+            *PreparedRequest->GetUserId() == TEXT("#{userId}"))
         {
-            *Result = MakeShared<TFunction<void()>>([&]()
+            TOptional<FString> UserId;
+            if (AccessToken.IsValid())
             {
-                return nullptr;
-            });
+                UserId = AccessToken->GetUserId();
+            }
+            PreparedRequest->WithUserId(UserId);
+        }
+        Gs2::Auth::Model::FAccessTokenPtr PreparedAccessToken;
+        if (AccessToken.IsValid())
+        {
+            PreparedAccessToken = MakeShared<Gs2::Auth::Model::FAccessToken>(*AccessToken);
+        }
+        if (!Domain.IsValid() || !Domain->RestSession.IsValid() || !PreparedRequest.IsValid() ||
+            !PreparedAccessToken.IsValid() || !PreparedAccessToken->GetUserId().IsSet() ||
+            PreparedAccessToken->GetUserId().Get(FString()).IsEmpty() ||
+            PreparedRequest->GetUserId() != PreparedAccessToken->GetUserId())
+        {
             return nullptr;
         }
-        auto Err = Transform(Domain, AccessToken, Request, Item);
+
+        const auto UserId = *PreparedAccessToken->GetUserId();
+        const auto TimeOffset = PreparedAccessToken->GetTimeOffset();
+        Gs2::Showcase::Model::FRandomDisplayItemPtr PreparedItem;
+        if (!Gs2::Showcase::Model::Cache::FRandomDisplayItemCache::TryGet(
+            Domain->Cache, PreparedRequest->GetNamespaceName(), UserId,
+            PreparedRequest->GetShowcaseName(), PreparedRequest->GetDisplayItemName(),
+            TimeOffset, &PreparedItem
+        ) || !PreparedItem.IsValid() ||
+            PreparedItem->GetShowcaseName() != PreparedRequest->GetShowcaseName() ||
+            PreparedItem->GetName() != PreparedRequest->GetDisplayItemName())
+        {
+            return nullptr;
+        }
+
+        const int32 Count = PreparedRequest->GetCount().Get(1);
+        auto PreparedValidation = PreparedItem;
+        const auto Err = Transform(Domain, PreparedAccessToken, PreparedRequest, PreparedValidation);
         if (Err != nullptr)
         {
             return Err;
         }
-
-        const auto ParentKey = Gs2::Showcase::Domain::Model::FRandomShowcaseDomain::CreateCacheParentKey(
-            Request->GetNamespaceName(),
-            AccessToken->GetUserId(),
-            Request->GetShowcaseName(),
-            "RandomDisplayItem"
+        *Result = FPurchaseCountSpeculativeCommit::Create(
+            Domain->Cache, PreparedRequest->GetNamespaceName(), UserId,
+            PreparedRequest->GetShowcaseName(), PreparedRequest->GetDisplayItemName(),
+            TimeOffset, PreparedItem, Count
         );
-        const auto Key = Gs2::Showcase::Domain::Model::FRandomDisplayItemDomain::CreateCacheKey(
-            Request->GetDisplayItemName()
-        );
-        
-        *Result = MakeShared<TFunction<void()>>([&]()
-        {
-            Domain->Cache->Put(
-                Showcase::Model::FRandomDisplayItem::TypeName,
-                ParentKey,
-                Key,
-                Item,
-                FDateTime::Now() + FTimespan::FromSeconds(10)
-            );
-            return nullptr;
-        });
         return nullptr;
     }
 
@@ -154,6 +183,49 @@ namespace Gs2::Showcase::Domain::SpeculativeExecutor
         const double Rate
     )
     {
+        if (!Request.IsValid() || std::isnan(Rate) || std::isinf(Rate))
+        {
+            return nullptr;
+        }
+        const int32 Count = Request->GetCount().Get(1);
+        if (Count == 0)
+        {
+            Request->WithCount(0);
+            return Request;
+        }
+        uint64 Bits = 0;
+        FMemory::Memcpy(&Bits, &Rate, sizeof(Bits));
+        const int32 ExponentBits = static_cast<int32>((Bits >> 52) & 0x7ffULL);
+        const uint64 Fraction = Bits & 0x000fffffffffffffULL;
+        uint64 Significand = ExponentBits == 0
+            ? Fraction
+            : (Fraction | 0x0010000000000000ULL);
+        const bool Negative = ((Bits & 0x8000000000000000ULL) != 0) != (Count < 0);
+        const int32 Exponent = ExponentBits == 0 ? -1074 : ExponentBits - 1075;
+        using FUnsignedBigInt = TBigInt<1024, false>;
+        FUnsignedBigInt Product(static_cast<int64>(Count < 0 ? -static_cast<int64>(Count) : Count));
+        Product *= FUnsignedBigInt(static_cast<int64>(Significand));
+        if (Exponent >= 0)
+        {
+            if (Exponent > 31)
+            {
+                return nullptr;
+            }
+            Product <<= Exponent;
+        }
+        else
+        {
+            const int32 Shift = -Exponent;
+            Product >>= Shift;
+        }
+        const int64 MaximumMagnitude = Negative ? 2147483648LL : 2147483647LL;
+        if (Product > FUnsignedBigInt(MaximumMagnitude))
+        {
+            return nullptr;
+        }
+        const int64 Magnitude = Product.ToInt();
+        const int32 Value = static_cast<int32>(Negative ? -Magnitude : Magnitude);
+        Request->WithCount(Value);
         return Request;
     }
 
@@ -162,6 +234,22 @@ namespace Gs2::Showcase::Domain::SpeculativeExecutor
         TBigInt<1024, false> Rate
     )
     {
+        if (!Request.IsValid())
+        {
+            return nullptr;
+        }
+        const int32 Count = Request->GetCount().Get(1);
+        const bool Negative = Count < 0;
+        using FUnsignedBigInt = TBigInt<1024, false>;
+        FUnsignedBigInt Product(static_cast<int64>(Negative ? -static_cast<int64>(Count) : Count));
+        Product *= Rate;
+        const int64 MaximumMagnitude = Negative ? 2147483648LL : 2147483647LL;
+        if (Product > FUnsignedBigInt(MaximumMagnitude))
+        {
+            return nullptr;
+        }
+        const int64 Magnitude = Product.ToInt();
+        Request->WithCount(static_cast<int32>(Negative ? -Magnitude : Magnitude));
         return Request;
     }
 }

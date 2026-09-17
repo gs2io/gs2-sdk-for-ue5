@@ -41,6 +41,7 @@
 #include "Showcase/Domain/Model/RandomShowcaseStatusAccessToken.h"
 #include "Showcase/Domain/Model/RandomDisplayItem.h"
 #include "Showcase/Domain/Model/RandomDisplayItemAccessToken.h"
+#include "Showcase/Model/Cache/SalesItemMaster.h"
 
 #include "Core/Domain/Gs2.h"
 #include "Core/Domain/Transaction/JobQueueJobDomainFactory.h"
@@ -114,6 +115,20 @@ namespace Gs2::Showcase::Domain::Model
         }
         const auto ResultModel = Future->GetTask().Result();
         Future->EnsureCompletion();
+
+            if (ResultModel.IsValid() && ResultModel->GetItem() != nullptr)
+            {
+
+
+        Gs2::Showcase::Model::Cache::FSalesItemMasterCache::Put(
+            Self->Gs2->Cache,
+
+            Request->GetNamespaceName(),
+            Request->GetSalesItemName(),
+            TOptional<int32>(),
+            ResultModel->GetItem()
+        );
+            }
         *Result = ResultModel->GetItem();
         return nullptr;
     }
@@ -156,19 +171,20 @@ namespace Gs2::Showcase::Domain::Model
         }
         const auto ResultModel = Future->GetTask().Result();
         Future->EnsureCompletion();
-        if (ResultModel->GetItem() != nullptr)
-        {
-            const auto Key = Gs2::Showcase::Domain::Model::FSalesItemMasterDomain::CreateCacheKey(
-                ResultModel->GetItem()->GetName()
-            );
-            Self->Gs2->Cache->Put(
-                Gs2::Showcase::Model::FSalesItemMaster::TypeName,
-                Self->ParentKey,
-                Key,
-                ResultModel->GetItem(),
-                FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
-            );
-        }
+
+            if (ResultModel.IsValid() && ResultModel->GetItem() != nullptr)
+            {
+
+
+        Gs2::Showcase::Model::Cache::FSalesItemMasterCache::Put(
+            Self->Gs2->Cache,
+
+            Request->GetNamespaceName(),
+            Request->GetSalesItemName(),
+            TOptional<int32>(),
+            ResultModel->GetItem()
+        );
+            }
         auto Domain = Self;
 
         *Result = Domain;
@@ -209,21 +225,25 @@ namespace Gs2::Showcase::Domain::Model
         Future->StartSynchronousTask();
         if (Future->GetTask().IsError())
         {
-            return Future->GetTask().Error();
+            const auto Error = Future->GetTask().Error();
+            if (Error.IsValid() && Error->IsChildOf(Gs2::Core::Model::FNotFoundError::Class))
+            {
+                *Result = Self;
+                return nullptr;
+            }
+            return Error;
         }
         const auto ResultModel = Future->GetTask().Result();
         Future->EnsureCompletion();
-        if (ResultModel->GetItem() != nullptr)
-        {
-            const auto Key = Gs2::Showcase::Domain::Model::FSalesItemMasterDomain::CreateCacheKey(
-                ResultModel->GetItem()->GetName()
-            );
-            Self->Gs2->Cache->Delete(
-                Gs2::Showcase::Model::FSalesItemMaster::TypeName,
-                Self->ParentKey,
-                Key
-            );
-        }
+
+
+              Gs2::Showcase::Model::Cache::FSalesItemMasterCache::Delete(
+            Self->Gs2->Cache,
+
+            Request->GetNamespaceName(),
+            Request->GetSalesItemName(),
+            TOptional<int32>()
+        );
         auto Domain = Self;
 
         *Result = Domain;
@@ -274,71 +294,158 @@ namespace Gs2::Showcase::Domain::Model
         TSharedPtr<TSharedPtr<Gs2::Showcase::Model::FSalesItemMaster>> Result
     )
     {
-        // ReSharper disable once CppLocalVariableMayBeConst
-        TSharedPtr<Gs2::Showcase::Model::FSalesItemMaster> Value;
-        auto bCacheHit = Self->Gs2->Cache->TryGet<Gs2::Showcase::Model::FSalesItemMaster>(
-            Self->ParentKey,
-            Gs2::Showcase::Domain::Model::FSalesItemMasterDomain::CreateCacheKey(
-                Self->SalesItemName
-            ),
-            &Value
+        const auto CacheParentKey = Gs2::Showcase::Model::Cache::FSalesItemMasterCache::CreateCacheParentKey(
+
+            Self->NamespaceName,
+            TOptional<int32>()
         );
-        if (!bCacheHit) {
-            const auto Future = Self->Get(
-                MakeShared<Gs2::Showcase::Request::FGetSalesItemMasterRequest>()
-            );
-            Future->StartSynchronousTask();
-            if (Future->GetTask().IsError())
+        const auto CacheKey = Gs2::Showcase::Model::Cache::FSalesItemMasterCache::CreateCacheKey(
+
+            Self->SalesItemName
+        );
+        return Self->Gs2->Cache->ExecuteWithKeyLock(
+            Gs2::Showcase::Model::FSalesItemMaster::TypeName,
+            CacheParentKey,
+            CacheKey,
+            [Self = Self, Result]() -> Gs2::Core::Model::FGs2ErrorPtr
             {
-                if (Future->GetTask().Error()->Type() != Gs2::Core::Model::FNotFoundError::TypeString)
-                {
-                    return Future->GetTask().Error();
-                }
+                Gs2::Showcase::Model::FSalesItemMasterPtr Value;
+                const auto CacheHit = Gs2::Showcase::Model::Cache::FSalesItemMasterCache::TryGet(
+                    Self->Gs2->Cache,
 
-                const auto Key = Gs2::Showcase::Domain::Model::FSalesItemMasterDomain::CreateCacheKey(
-                    Self->SalesItemName
+                    Self->NamespaceName,
+                    Self->SalesItemName,
+                    TOptional<int32>(),
+                    &Value
                 );
-                Self->Gs2->Cache->Put(
-                    Gs2::Showcase::Model::FSalesItemMaster::TypeName,
-                    Self->ParentKey,
-                    Key,
-                    nullptr,
-                    FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
-                );
-
-                if (Future->GetTask().Error()->Detail(0)->GetComponent() != "salesItemMaster")
+                if (CacheHit)
                 {
-                    return Future->GetTask().Error();
+                    *Result = Value;
+                    return nullptr;
                 }
-            }
-            else
-            {
-                Value = Future->GetTask().Result();
-            }
-            Future->EnsureCompletion();
-        }
-        *Result = Value;
+                const auto Error = Gs2::Showcase::Model::Cache::FSalesItemMasterCache::Fetch(
+                    Self->Gs2->Cache,
 
-        return nullptr;
+                    Self->NamespaceName,
+                    Self->SalesItemName,
+                    TOptional<int32>(),
+                    [Self](Gs2::Showcase::Model::FSalesItemMasterPtr* OutItem) -> Gs2::Core::Model::FGs2ErrorPtr
+                    {
+                        const auto Future = Self->Get(
+                            MakeShared<Gs2::Showcase::Request::FGetSalesItemMasterRequest>()
+                        );
+                        Future->StartSynchronousTask();
+                        if (Future->GetTask().IsError()) return Future->GetTask().Error();
+                        *OutItem = Future->GetTask().Result();
+                        Future->EnsureCompletion();
+                        return nullptr;
+                    },
+                    &Value
+                );
+                if (Error.IsValid()) return Error;
+                *Result = Value;
+                return nullptr;
+            }
+        );
     }
 
     TSharedPtr<FAsyncTask<FSalesItemMasterDomain::FModelTask>> FSalesItemMasterDomain::Model() {
         return Gs2::Core::Util::New<FAsyncTask<FSalesItemMasterDomain::FModelTask>>(this->AsShared());
     }
 
+    void FSalesItemMasterDomain::Invalidate()
+    {
+        Gs2::Showcase::Model::Cache::FSalesItemMasterCache::Delete(
+            Gs2->Cache,
+
+            NamespaceName,
+            SalesItemName,
+            TOptional<int32>()
+        );
+    }
+
+    FSalesItemMasterDomain::FSubscribeWithInitialCallTask::FSubscribeWithInitialCallTask(
+        const TSharedPtr<FSalesItemMasterDomain>& Self,
+        TFunction<void(Gs2::Showcase::Model::FSalesItemMasterPtr)> Callback
+    ):
+        Self(Self),
+        Callback(Callback)
+    {
+    }
+
+    FSalesItemMasterDomain::FSubscribeWithInitialCallTask::FSubscribeWithInitialCallTask(
+        const FSubscribeWithInitialCallTask& From
+    ):
+        TGs2Future(From),
+        Self(From.Self),
+        Callback(From.Callback)
+    {
+    }
+
+    Gs2::Core::Model::FGs2ErrorPtr FSalesItemMasterDomain::FSubscribeWithInitialCallTask::Action(
+        TSharedPtr<TSharedPtr<Gs2::Core::Domain::CallbackID>> Result
+    )
+    {
+        const auto Task = Self->Model();
+        Task->StartSynchronousTask();
+        Task->EnsureCompletion();
+        if (Task->GetTask().IsError()) return Task->GetTask().Error();
+        const auto Item = Task->GetTask().Result();
+        const auto CallbackId = Self->Subscribe(Callback);
+        Callback(Item);
+        *Result = MakeShared<Gs2::Core::Domain::CallbackID>(CallbackId);
+        return nullptr;
+    }
+
+    TSharedPtr<FAsyncTask<FSalesItemMasterDomain::FSubscribeWithInitialCallTask>> FSalesItemMasterDomain::SubscribeWithInitialCall(
+        TFunction<void(Gs2::Showcase::Model::FSalesItemMasterPtr)> Callback
+    )
+    {
+        return Gs2::Core::Util::New<FAsyncTask<FSubscribeWithInitialCallTask>>(this->AsShared(), Callback);
+    }
+
     Gs2::Core::Domain::CallbackID FSalesItemMasterDomain::Subscribe(
         TFunction<void(Gs2::Showcase::Model::FSalesItemMasterPtr)> Callback
     )
     {
+        const auto SubscriptionParentKey = Gs2::Showcase::Model::Cache::FSalesItemMasterCache::CreateCacheParentKey(
+
+            NamespaceName,
+            TOptional<int32>()
+        );
+        const auto SubscriptionCacheKey = Gs2::Showcase::Model::Cache::FSalesItemMasterCache::CreateCacheKey(
+
+            SalesItemName
+        );
+        const TWeakPtr<Gs2::Core::Domain::FGs2> WeakGs2 = Gs2;
+        const TWeakPtr<Showcase::Domain::FGs2ShowcaseDomain> WeakService = Service;
+        const FString RegisteredParentKey = SubscriptionParentKey;
+        const TOptional<FString> QueryNamespaceName = NamespaceName;
+        const TOptional<FString> QuerySalesItemName = SalesItemName;
         return Gs2->Cache->Subscribe(
             Gs2::Showcase::Model::FSalesItemMaster::TypeName,
-            ParentKey,
-            Gs2::Showcase::Domain::Model::FSalesItemMasterDomain::CreateCacheKey(
-                SalesItemName
-            ),
+            SubscriptionParentKey,
+            SubscriptionCacheKey,
             [Callback](TSharedPtr<FGs2Object> obj)
             {
                 Callback(StaticCastSharedPtr<Gs2::Showcase::Model::FSalesItemMaster>(obj));
+            },
+            [WeakGs2, WeakService, RegisteredParentKey, QueryNamespaceName, QuerySalesItemName]()
+            {
+                const auto Owner = WeakGs2.Pin();
+                if (!Owner.IsValid())
+                {
+                    return;
+                }
+                const auto Domain = MakeShared<FSalesItemMasterDomain>(
+                    Owner,
+                    WeakService.Pin(),
+                    QueryNamespaceName,
+                    QuerySalesItemName
+                );
+                Domain->ParentKey = RegisteredParentKey;
+                const auto Task = Domain->Model();
+                Task->StartBackgroundTask();
             }
         );
     }
@@ -347,12 +454,19 @@ namespace Gs2::Showcase::Domain::Model
         Gs2::Core::Domain::CallbackID CallbackID
     )
     {
+        const auto SubscriptionParentKey = Gs2::Showcase::Model::Cache::FSalesItemMasterCache::CreateCacheParentKey(
+
+            NamespaceName,
+            TOptional<int32>()
+        );
+        const auto SubscriptionCacheKey = Gs2::Showcase::Model::Cache::FSalesItemMasterCache::CreateCacheKey(
+
+            SalesItemName
+        );
         Gs2->Cache->Unsubscribe(
             Gs2::Showcase::Model::FSalesItemMaster::TypeName,
-            ParentKey,
-            Gs2::Showcase::Domain::Model::FSalesItemMasterDomain::CreateCacheKey(
-                SalesItemName
-            ),
+            SubscriptionParentKey,
+            SubscriptionCacheKey,
             CallbackID
         );
     }
@@ -363,4 +477,3 @@ namespace Gs2::Showcase::Domain::Model
 #elif defined(__clang__)
 #pragma clang diagnostic pop
 #endif
-

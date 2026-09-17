@@ -30,6 +30,8 @@
 #include "Gateway/Domain/Model/FirebaseTokenAccessToken.h"
 #include "Gateway/Domain/Model/User.h"
 #include "Gateway/Domain/Model/UserAccessToken.h"
+#include "Gateway/Model/Cache/WebSocketSession.h"
+#include "Gateway/Model/Cache/FirebaseToken.h"
 
 #include "Core/Domain/Gs2.h"
 #include "Core/Domain/Transaction/JobQueueJobDomainFactory.h"
@@ -105,6 +107,7 @@ namespace Gs2::Gateway::Domain::Model
         }
         const auto ResultModel = Future->GetTask().Result();
         Future->EnsureCompletion();
+
         const auto Domain = Self;
         if (ResultModel != nullptr)
         {
@@ -156,7 +159,22 @@ namespace Gs2::Gateway::Domain::Model
         }
         const auto ResultModel = Future->GetTask().Result();
         Future->EnsureCompletion();
+        if (ResultModel.IsValid() && ResultModel->GetItems().IsValid())
+        {
+            for (const auto& Item : *ResultModel->GetItems())
+            {
+                if (!Item.IsValid()) continue;
+                Gs2::Gateway::Model::Cache::FWebSocketSessionCache::Put(
+                    Self->Gs2->Cache,
+                    Request->GetNamespaceName(), Request->GetUserId(),
+                    TOptional<int32>(), Item
+                );
+            }
+        }
+
         auto Domain = MakeShared<TArray<TSharedPtr<Gs2::Gateway::Domain::Model::FWebSocketSessionDomain>>>();
+        if (ResultModel.IsValid() && ResultModel->GetItems().IsValid())
+        {
         for (auto i=0; i<ResultModel->GetItems()->Num(); i++)
         {
             Domain->Add(
@@ -167,20 +185,7 @@ namespace Gs2::Gateway::Domain::Model
                     (*ResultModel->GetItems())[i]->GetUserId()
                 )
             );
-            const auto ParentKey = Gs2::Gateway::Domain::Model::FUserDomain::CreateCacheParentKey(
-                Self->NamespaceName,
-                Self->UserId,
-                "WebSocketSession"
-            );
-            const auto Key = Gs2::Gateway::Domain::Model::FWebSocketSessionDomain::CreateCacheKey(
-            );
-            Self->Gs2->Cache->Put(
-                Gs2::Gateway::Model::FWebSocketSession::TypeName,
-                ParentKey,
-                Key,
-                (*ResultModel->GetItems())[i],
-                FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
-            );
+        }
         }
         *Result = Domain;
         return nullptr;
@@ -223,6 +228,7 @@ namespace Gs2::Gateway::Domain::Model
         }
         const auto ResultModel = Future->GetTask().Result();
         Future->EnsureCompletion();
+
         const auto Domain = Self;
         *Result = Domain;
         return nullptr;
@@ -249,32 +255,121 @@ namespace Gs2::Gateway::Domain::Model
 
     Gs2::Core::Domain::CallbackID FUserDomain::SubscribeWebSocketSessions(
     TFunction<void()> Callback
+
     )
     {
         return Gs2->Cache->ListSubscribe(
             Gs2::Gateway::Model::FWebSocketSession::TypeName,
-            Gs2::Gateway::Domain::Model::FUserDomain::CreateCacheParentKey(
+            Gs2::Gateway::Model::Cache::FWebSocketSessionCache::CreateCacheParentKey(
                 NamespaceName,
                 UserId,
-                "WebSocketSession"
+                TOptional<int32>()
             ),
+            Callback,
             Callback
         );
     }
-
     void FUserDomain::UnsubscribeWebSocketSessions(
         Gs2::Core::Domain::CallbackID CallbackID
     )
     {
         Gs2->Cache->ListUnsubscribe(
             Gs2::Gateway::Model::FWebSocketSession::TypeName,
-            Gs2::Gateway::Domain::Model::FUserDomain::CreateCacheParentKey(
+            Gs2::Gateway::Model::Cache::FWebSocketSessionCache::CreateCacheParentKey(
                 NamespaceName,
                 UserId,
-                "WebSocketSession"
+                TOptional<int32>()
             ),
             CallbackID
         );
+    }
+    class FUserDomain::FCollectWebSocketSessionsTask : public Gs2::Core::Util::TGs2Future<TArray<Gs2::Gateway::Model::FWebSocketSessionPtr>>, public TSharedFromThis<FCollectWebSocketSessionsTask>
+    {
+        const TSharedPtr<FUserDomain> Self;
+        const TFunction<void(TArray<Gs2::Gateway::Model::FWebSocketSessionPtr>)> OnCollected;
+    const TOptional<FString> QueryTimeOffsetToken;
+    public:
+        explicit FCollectWebSocketSessionsTask(const TSharedPtr<FUserDomain>& Self, TFunction<void(TArray<Gs2::Gateway::Model::FWebSocketSessionPtr>)> OnCollected,const TOptional<FString> TimeOffsetToken) : Self(Self), OnCollected(OnCollected), QueryTimeOffsetToken(TimeOffsetToken) {}
+        FCollectWebSocketSessionsTask(const FCollectWebSocketSessionsTask& From) : TGs2Future(From), Self(From.Self), OnCollected(From.OnCollected), QueryTimeOffsetToken(From.QueryTimeOffsetToken) {}
+        virtual Gs2::Core::Model::FGs2ErrorPtr Action(TSharedPtr<TSharedPtr<TArray<Gs2::Gateway::Model::FWebSocketSessionPtr>>> Result) override
+        {
+            TArray<Gs2::Gateway::Model::FWebSocketSessionPtr> Items;
+            auto Iterator = Self->WebSocketSessions(QueryTimeOffsetToken)->begin();
+            while (Iterator.HasNext())
+            {
+                if (Iterator.IsError()) return Iterator.Error();
+                if (Iterator.IsCurrentValid()) Items.Add(Iterator.Current());
+                ++Iterator;
+            }
+            if (Iterator.IsError()) return Iterator.Error();
+            *Result = MakeShared<TArray<Gs2::Gateway::Model::FWebSocketSessionPtr>>(Items);
+            if (OnCollected) OnCollected(Items);
+            return nullptr;
+        }
+    };
+
+    Gs2::Core::Domain::CallbackID FUserDomain::SubscribeWebSocketSessions(
+        TFunction<void(TArray<Gs2::Gateway::Model::FWebSocketSessionPtr>)> Callback,const TOptional<FString> TimeOffsetToken
+    )
+    {
+        const TWeakPtr<Gs2::Core::Domain::FGs2> WeakGs2 = this->Gs2;
+        const TWeakPtr<Gateway::Domain::FGs2GatewayDomain> WeakService = this->Service;
+        const auto QueryNamespaceName = NamespaceName;
+        const auto QueryUserId = UserId;
+        const auto QueryTimeOffsetToken = TimeOffsetToken;
+        const auto Parent = Gs2::Gateway::Model::Cache::FWebSocketSessionCache::CreateCacheParentKey(
+        NamespaceName,
+        UserId,
+        TOptional<int32>()
+    );
+        return Gs2->Cache->ListSubscribeTyped(
+            Gs2::Gateway::Model::FWebSocketSession::TypeName,
+            Parent,
+            [Callback, WeakGs2](const TArray<FGs2ObjectPtr>& Values)
+            {
+                if (!WeakGs2.Pin().IsValid()) return;
+                TArray<Gs2::Gateway::Model::FWebSocketSessionPtr> TypedValues;
+                for (const auto& Value : Values) if (Value.IsValid()) TypedValues.Add(StaticCastSharedPtr<Gs2::Gateway::Model::FWebSocketSession>(Value));
+                Callback(TypedValues);
+            },
+            [WeakGs2, WeakService, Callback, QueryNamespaceName, QueryUserId, QueryTimeOffsetToken]()
+            {
+                const auto Owner = WeakGs2.Pin();
+                if (!Owner.IsValid()) return;
+                const auto Domain = MakeShared<FUserDomain>(Owner, WeakService.Pin(), QueryNamespaceName, QueryUserId);
+                const auto Task = Gs2::Core::Util::New<FAsyncTask<FCollectWebSocketSessionsTask>>(Domain, Callback, QueryTimeOffsetToken);
+                Task->StartBackgroundTask();
+            }
+        );
+    }
+
+    void FUserDomain::InvalidateWebSocketSessions(const TOptional<FString> TimeOffsetToken)
+    {
+        Gs2->Cache->ClearListCache(
+            Gs2::Gateway::Model::FWebSocketSession::TypeName,
+            Gs2::Gateway::Model::Cache::FWebSocketSessionCache::CreateCacheParentKey(
+        NamespaceName,
+        UserId,
+        TOptional<int32>()
+    )
+        );
+    }
+
+    FUserDomain::FSubscribeWebSocketSessionsWithInitialCallTask::FSubscribeWebSocketSessionsWithInitialCallTask(const TSharedPtr<FUserDomain>& Self, TFunction<void(TArray<Gs2::Gateway::Model::FWebSocketSessionPtr>)> Callback,const TOptional<FString> TimeOffsetToken) : Self(Self), Callback(Callback), QueryTimeOffsetToken(TimeOffsetToken) {}
+    FUserDomain::FSubscribeWebSocketSessionsWithInitialCallTask::FSubscribeWebSocketSessionsWithInitialCallTask(const FSubscribeWebSocketSessionsWithInitialCallTask& From) : TGs2Future(From), Self(From.Self), Callback(From.Callback), QueryTimeOffsetToken(From.QueryTimeOffsetToken) {}
+    Gs2::Core::Model::FGs2ErrorPtr FUserDomain::FSubscribeWebSocketSessionsWithInitialCallTask::Action(TSharedPtr<TSharedPtr<Gs2::Core::Domain::CallbackID>> Result)
+    {
+        const auto Task = Gs2::Core::Util::New<FAsyncTask<FCollectWebSocketSessionsTask>>(Self, TFunction<void(TArray<Gs2::Gateway::Model::FWebSocketSessionPtr>)>(), QueryTimeOffsetToken);
+        Task->StartSynchronousTask(); Task->EnsureCompletion();
+        if (Task->GetTask().IsError()) return Task->GetTask().Error();
+        const auto Values = Task->GetTask().Result();
+        const auto CallbackId = Self->SubscribeWebSocketSessions(Callback, QueryTimeOffsetToken);
+        Callback(*Values); *Result = MakeShared<Gs2::Core::Domain::CallbackID>(CallbackId);
+        return nullptr;
+    }
+    TSharedPtr<FAsyncTask<FUserDomain::FSubscribeWebSocketSessionsWithInitialCallTask>> FUserDomain::SubscribeWebSocketSessionsWithInitialCall(TFunction<void(TArray<Gs2::Gateway::Model::FWebSocketSessionPtr>)> Callback,const TOptional<FString> TimeOffsetToken)
+    {
+        return Gs2::Core::Util::New<FAsyncTask<FSubscribeWebSocketSessionsWithInitialCallTask>>(this->AsShared(), Callback, TimeOffsetToken);
     }
 
     TSharedPtr<Gs2::Gateway::Domain::Model::FWebSocketSessionDomain> FUserDomain::WebSocketSession(
@@ -325,4 +420,3 @@ namespace Gs2::Gateway::Domain::Model
 #elif defined(__clang__)
 #pragma clang diagnostic pop
 #endif
-

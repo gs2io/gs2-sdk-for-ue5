@@ -68,7 +68,8 @@ namespace Gs2::UE5::Formation::Domain::Model
         );
     }
 
-    void FEzMoldGameSessionDomain::UnsubscribeForms(Gs2::Core::Domain::CallbackID CallbackId)
+    void FEzMoldGameSessionDomain::UnsubscribeForms(
+            Gs2::Core::Domain::CallbackID CallbackId)
     {
         Domain->UnsubscribeForms(
             CallbackId
@@ -131,7 +132,7 @@ namespace Gs2::UE5::Formation::Domain::Model
     Gs2::Core::Domain::CallbackID FEzMoldGameSessionDomain::Subscribe(TFunction<void(Gs2::UE5::Formation::Model::FEzMoldPtr)> Callback)
     {
         return Domain->Subscribe(
-            [&](Gs2::Formation::Model::FMoldPtr Item)
+            [Callback](Gs2::Formation::Model::FMoldPtr Item)
             {
                 Callback(Gs2::UE5::Formation::Model::FEzMold::FromModel(Item));
             }

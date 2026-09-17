@@ -19,6 +19,7 @@
 #include "CoreMinimal.h"
 #include "Core/Gs2Object.h"
 #include "TransactionSetting.h"
+#include "TransactionSettingV2.h"
 #include "ScriptSetting.h"
 #include "LogSetting.h"
 
@@ -30,6 +31,7 @@ namespace Gs2::Idle::Model
         TOptional<FString> NameValue;
         TOptional<FString> DescriptionValue;
         TSharedPtr<FTransactionSetting> TransactionSettingValue;
+        TSharedPtr<FTransactionSettingV2> TransactionSettingV2Value;
         TSharedPtr<FScriptSetting> ReceiveScriptValue;
         TOptional<FString> OverrideAcquireActionsScriptIdValue;
         TSharedPtr<FLogSetting> LogSettingValue;
@@ -48,6 +50,7 @@ namespace Gs2::Idle::Model
         TSharedPtr<FNamespace> WithName(const TOptional<FString> Name);
         TSharedPtr<FNamespace> WithDescription(const TOptional<FString> Description);
         TSharedPtr<FNamespace> WithTransactionSetting(const TSharedPtr<FTransactionSetting> TransactionSetting);
+        TSharedPtr<FNamespace> WithTransactionSettingV2(const TSharedPtr<FTransactionSettingV2> TransactionSettingV2);
         TSharedPtr<FNamespace> WithReceiveScript(const TSharedPtr<FScriptSetting> ReceiveScript);
         TSharedPtr<FNamespace> WithOverrideAcquireActionsScriptId(const TOptional<FString> OverrideAcquireActionsScriptId);
         TSharedPtr<FNamespace> WithLogSetting(const TSharedPtr<FLogSetting> LogSetting);
@@ -59,6 +62,7 @@ namespace Gs2::Idle::Model
         TOptional<FString> GetName() const;
         TOptional<FString> GetDescription() const;
         TSharedPtr<FTransactionSetting> GetTransactionSetting() const;
+        TSharedPtr<FTransactionSettingV2> GetTransactionSettingV2() const;
         TSharedPtr<FScriptSetting> GetReceiveScript() const;
         TOptional<FString> GetOverrideAcquireActionsScriptId() const;
         TSharedPtr<FLogSetting> GetLogSetting() const;

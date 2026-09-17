@@ -1,3 +1,4 @@
+
 /*
  * Copyright 2016 Game Server Services, Inc. or its affiliates. All Rights
  * Reserved.
@@ -29,6 +30,9 @@
 #include "Inventory/Domain/Model/InventoryModelMaster.h"
 
 #include "Core/Domain/Gs2.h"
+
+#include "Inventory/Model/Cache/ItemModelMaster.h"
+#include "Inventory/Model/Cache/InventoryModelMaster.h"
 
 namespace Gs2::Inventory::Domain::Iterator
 {
@@ -78,7 +82,7 @@ namespace Gs2::Inventory::Domain::Iterator
 
     FDescribeItemModelMastersIterator::FIterator& FDescribeItemModelMastersIterator::FIterator::operator++()
     {
-        
+
 
         if (bEnd) return *this;
 
@@ -88,16 +92,17 @@ namespace Gs2::Inventory::Domain::Iterator
             return *this;
         }
 
-        if (RangeIteratorOpt) ++*RangeIteratorOpt;
+        if (RangeIteratorOpt && *RangeIteratorOpt) ++*RangeIteratorOpt;
 
+        // Keep the previous page alive until its iterator has been replaced.
+        const auto PreviousRange = Range;
         if (!RangeIteratorOpt || (!*RangeIteratorOpt && !bLast))
         {
-            const auto ListParentKey = Gs2::Inventory::Domain::Model::FInventoryModelMasterDomain::CreateCacheParentKey(
+            const auto ListParentKey = Gs2::Inventory::Model::Cache::FItemModelMasterCache::CreateCacheParentKey(
                 Self->NamespaceName,
                 Self->InventoryName,
-                "ItemModelMaster"
+                TOptional<int32>()
             );
-
             if (!RangeIteratorOpt)
             {
                 Range = Self->Gs2->Cache->TryGetList<Gs2::Inventory::Model::FItemModelMaster>(ListParentKey);
@@ -111,15 +116,15 @@ namespace Gs2::Inventory::Domain::Iterator
                     return *this;
                 }
             }
-
-            const auto Future = Self->Client->DescribeItemModelMasters(
+            const auto Request =
                 MakeShared<Gs2::Inventory::Request::FDescribeItemModelMastersRequest>()
                     ->WithContextStack(Self->Gs2->DefaultContextStack)
                     ->WithNamespaceName(Self->NamespaceName)
                     ->WithInventoryName(Self->InventoryName)
                     ->WithPageToken(PageToken)
                     ->WithLimit(FetchSize)
-            );
+            ;
+            const auto Future = Self->Client->DescribeItemModelMasters(Request);
             Future->StartSynchronousTask();
             if (Future->GetTask().IsError())
             {
@@ -133,18 +138,21 @@ namespace Gs2::Inventory::Domain::Iterator
             }
             const auto R = Future->GetTask().Result();
             Future->EnsureCompletion();
-            Range = R->GetItems();
-            for (auto Item : *R->GetItems())
+            Range = R->GetItems().IsValid() ? R->GetItems() : MakeShared<TArray<Gs2::Inventory::Model::FItemModelMasterPtr>>();
+            const auto ResultModel = R;
+
+
+            if (Range.IsValid())
             {
-                Self->Gs2->Cache->Put(
-                    Gs2::Inventory::Model::FItemModelMaster::TypeName,
-                    ListParentKey,
-                    Gs2::Inventory::Domain::Model::FItemModelMasterDomain::CreateCacheKey(
-                        Item->GetName()
-                    ),
-                    Item,
-                    FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
-                );
+                for (const auto& Item : *Range)
+                {
+                    if (!Item.IsValid()) continue;
+                    Gs2::Inventory::Model::Cache::FItemModelMasterCache::Put(
+                        Self->Gs2->Cache,
+                        Request->GetNamespaceName(), Request->GetInventoryName(), Item->GetName(),
+                        TOptional<int32>(), Item
+                    );
+                }
             }
             if (Range)
             {

@@ -12,17 +12,22 @@
  * on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either
  * express or implied. See the License for the specific language governing
  * permissions and limitations under the License.
+ *
+ * deny overwrite
  */
 
 // ReSharper disable CppUnusedIncludeDirective
 
 #pragma once
 
+// deny overwrite
+
 #include "Core/Domain/Gs2Core.h"
 #include "Core/Model/AcquireAction.h"
 #include "Core/Model/ConsumeAction.h"
 #include "Core/Model/VerifyAction.h"
 #include "Grade/Model/Status.h"
+#include "Grade/Model/GradeModel.h"
 #include "Grade/Request/VerifyGradeUpMaterialByUserIdRequest.h"
 #include "Math/BigInt.h"
 
@@ -30,6 +35,11 @@ namespace Gs2::Core::Domain
 {
     class FGs2;
     typedef TSharedPtr<FGs2> FGs2Ptr;
+}
+
+namespace Gs2::Core::Domain::SpeculativeExecutor
+{
+    class FPreparedSpeculativeCommit;
 }
 
 namespace Gs2::Grade::Domain
@@ -47,7 +57,11 @@ namespace Gs2::Grade::Domain::SpeculativeExecutor
             const Gs2::Core::Domain::FGs2Ptr& Domain,
             const Gs2::Auth::Model::FAccessTokenPtr& AccessToken,
             const Gs2::Grade::Request::FVerifyGradeUpMaterialByUserIdRequestPtr& Request,
-            Gs2::Grade::Model::FStatusPtr Item
+            Gs2::Grade::Model::FStatusPtr Item,
+            Gs2::Grade::Model::FGradeModelPtr GradeModel,
+            const FString& Region,
+            const FString& OwnerId,
+            const FString& UserId
         );
 
     public:
@@ -55,7 +69,7 @@ namespace Gs2::Grade::Domain::SpeculativeExecutor
         static FString Action();
 
         class FCommitTask final :
-            public Gs2::Core::Util::TGs2Future<TFunction<void()>>,
+            public Gs2::Core::Util::TGs2Future<Gs2::Core::Domain::SpeculativeExecutor::FPreparedSpeculativeCommit>,
             public TSharedFromThis<FCommitTask>
         {
             const Gs2::Core::Domain::FGs2Ptr Domain;
@@ -76,12 +90,19 @@ namespace Gs2::Grade::Domain::SpeculativeExecutor
             );
 
             virtual Gs2::Core::Model::FGs2ErrorPtr Action(
-                TSharedPtr<TSharedPtr<TFunction<void()>>> Result
+                TSharedPtr<TSharedPtr<Gs2::Core::Domain::SpeculativeExecutor::FPreparedSpeculativeCommit>> Result
             ) override;
         };
         friend FCommitTask;
 
         static TSharedPtr<FAsyncTask<FCommitTask>> Execute(
+            const Gs2::Core::Domain::FGs2Ptr& Domain,
+            const Gs2::Grade::Domain::FGs2GradeDomainPtr& Service,
+            const Gs2::Auth::Model::FAccessTokenPtr& AccessToken,
+            const Gs2::Grade::Request::FVerifyGradeUpMaterialByUserIdRequestPtr& Request
+        );
+
+        static TSharedPtr<FAsyncTask<FCommitTask>> ExecuteInverse(
             const Gs2::Core::Domain::FGs2Ptr& Domain,
             const Gs2::Grade::Domain::FGs2GradeDomainPtr& Service,
             const Gs2::Auth::Model::FAccessTokenPtr& AccessToken,

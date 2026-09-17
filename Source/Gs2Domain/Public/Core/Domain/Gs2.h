@@ -21,6 +21,8 @@
 #include "Math/BigInt.h"
 #include "SpeculativeExecutor/SpeculativeExecutor.h"
 
+class FGs2JobResultScriptNameTest;
+
 namespace Gs2::Account::Domain
 {
     class FGs2AccountDomain;
@@ -109,6 +111,18 @@ namespace Gs2::Friend::Domain
 {
     class FGs2FriendDomain;
     typedef TSharedPtr<FGs2FriendDomain> FGs2FriendDomainPtr;
+}
+
+namespace Gs2::Freeze::Domain
+{
+    class FGs2FreezeDomain;
+    typedef TSharedPtr<FGs2FreezeDomain> FGs2FreezeDomainPtr;
+}
+
+namespace Gs2::Guard::Domain
+{
+    class FGs2GuardDomain;
+    typedef TSharedPtr<FGs2GuardDomain> FGs2GuardDomainPtr;
 }
 
 namespace Gs2::Gateway::Domain
@@ -328,6 +342,9 @@ namespace Gs2::Core::Domain
         const Gs2::Core::Net::Rest::FGs2RestSessionPtr RestSession;
         const Gs2::Core::Net::WebSocket::FGs2WebSocketSessionPtr WebSocketSession;
         const TOptional<FString> DistributorNamespaceName;
+        const TFunction<Gs2::Core::Model::FGs2ErrorPtr(
+            const Gs2::Auth::Model::FAccessTokenPtr& AccessToken
+        )> DispatchAccessToken;
 
         Gs2::Account::Domain::FGs2AccountDomainPtr Account;
         Gs2::AdReward::Domain::FGs2AdRewardDomainPtr AdReward;
@@ -344,6 +361,8 @@ namespace Gs2::Core::Domain
         Gs2::Experience::Domain::FGs2ExperienceDomainPtr Experience;
         Gs2::Formation::Domain::FGs2FormationDomainPtr Formation;
         Gs2::Friend::Domain::FGs2FriendDomainPtr Friend;
+        Gs2::Freeze::Domain::FGs2FreezeDomainPtr Freeze;
+        Gs2::Guard::Domain::FGs2GuardDomainPtr Guard;
         Gs2::Gateway::Domain::FGs2GatewayDomainPtr Gateway;
         Gs2::Grade::Domain::FGs2GradeDomainPtr Grade;
         Gs2::Guild::Domain::FGs2GuildDomainPtr Guild;
@@ -382,6 +401,7 @@ namespace Gs2::Core::Domain
 
         bool Disposed;
 
+    public:
         explicit FGs2(
             Gs2::Core::Net::Rest::FGs2RestSessionPtr RestSession,
             Gs2::Core::Net::WebSocket::FGs2WebSocketSessionPtr WebSocketSession = nullptr,
@@ -391,6 +411,19 @@ namespace Gs2::Core::Domain
             const FGs2& From
         );
         virtual ~FGs2();
+
+    private:
+        friend class ::FGs2JobResultScriptNameTest;
+
+        FDelegateHandle NotificationHandle;
+
+        static bool TryParseJobResultScriptName(
+            const FString& ScriptName,
+            FString& Service,
+            FString& Method
+        );
+
+    public:
 
         void Initialize();
     
@@ -402,15 +435,21 @@ namespace Gs2::Core::Domain
             }
             Cache->Clear();
         }
+        void ClearCacheAndAllUnsubscribe()
+        {
+            Cache->ClearAndAllUnsubscribe();
+        }
         void UpdateCacheFromStampSheet(
             FString Action,
             FString Request,
-            FString Result
+            FString Result,
+            const TOptional<int32> TimeOffset = TOptional<int32>()
         ) const;
         void UpdateCacheFromStampTask(
             FString Action,
             FString Request,
-            FString Result
+            FString Result,
+            const TOptional<int32> TimeOffset = TOptional<int32>()
         ) const;
 
         void PushJobQueue(
@@ -419,7 +458,8 @@ namespace Gs2::Core::Domain
         
         void UpdateCacheFromJobResult(
             Gs2::JobQueue::Model::FJobPtr Job,
-            Gs2::JobQueue::Model::FJobResultBodyPtr Result
+            Gs2::JobQueue::Model::FJobResultBodyPtr Result,
+            const TOptional<int32> TimeOffset = TOptional<int32>()
         );
         
         class GS2DOMAIN_API FDispatchTask final :

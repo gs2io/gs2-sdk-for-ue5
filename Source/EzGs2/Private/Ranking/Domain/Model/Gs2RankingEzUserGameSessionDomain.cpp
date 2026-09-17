@@ -60,17 +60,20 @@ namespace Gs2::UE5::Ranking::Domain::Model
         );
     }
 
-    Gs2::Core::Domain::CallbackID FEzUserGameSessionDomain::SubscribeScores(TFunction<void()> Callback)
+    Gs2::Core::Domain::CallbackID FEzUserGameSessionDomain::SubscribeScores(TFunction<void()> Callback, const FString CategoryName, const FString ScorerUserId)
     {
         return Domain->SubscribeScores(
-            Callback
+            Callback, CategoryName, ScorerUserId
         );
     }
 
-    void FEzUserGameSessionDomain::UnsubscribeScores(Gs2::Core::Domain::CallbackID CallbackId)
+    void FEzUserGameSessionDomain::UnsubscribeScores(
+            const FString CategoryName,
+            const FString ScorerUserId,
+            Gs2::Core::Domain::CallbackID CallbackId)
     {
         Domain->UnsubscribeScores(
-            CallbackId
+            CategoryName, ScorerUserId, CallbackId
         );
     }
 

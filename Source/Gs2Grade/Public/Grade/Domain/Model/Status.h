@@ -86,6 +86,8 @@ namespace Gs2::Grade::Domain::Model
             const FStatusDomain& From
         );
 
+
+
         class GS2GRADE_API FGetTask final :
             public Gs2::Core::Util::TGs2Future<Gs2::Grade::Model::FStatus>,
             public TSharedFromThis<FGetTask>
@@ -111,6 +113,8 @@ namespace Gs2::Grade::Domain::Model
         TSharedPtr<FAsyncTask<FGetTask>> Get(
             Request::FGetStatusByUserIdRequestPtr Request
         );
+
+
 
         class GS2GRADE_API FAddGradeTask final :
             public Gs2::Core::Util::TGs2Future<Gs2::Grade::Domain::Model::FStatusDomain>,
@@ -138,6 +142,8 @@ namespace Gs2::Grade::Domain::Model
             Request::FAddGradeByUserIdRequestPtr Request
         );
 
+
+
         class GS2GRADE_API FSubGradeTask final :
             public Gs2::Core::Util::TGs2Future<Gs2::Grade::Domain::Model::FStatusDomain>,
             public TSharedFromThis<FSubGradeTask>
@@ -163,6 +169,8 @@ namespace Gs2::Grade::Domain::Model
         TSharedPtr<FAsyncTask<FSubGradeTask>> SubGrade(
             Request::FSubGradeByUserIdRequestPtr Request
         );
+
+
 
         class GS2GRADE_API FSetGradeTask final :
             public Gs2::Core::Util::TGs2Future<Gs2::Grade::Domain::Model::FStatusDomain>,
@@ -190,6 +198,8 @@ namespace Gs2::Grade::Domain::Model
             Request::FSetGradeByUserIdRequestPtr Request
         );
 
+
+
         class GS2GRADE_API FApplyRankCapTask final :
             public Gs2::Core::Util::TGs2Future<Gs2::Grade::Domain::Model::FStatusDomain>,
             public TSharedFromThis<FApplyRankCapTask>
@@ -215,6 +225,8 @@ namespace Gs2::Grade::Domain::Model
         TSharedPtr<FAsyncTask<FApplyRankCapTask>> ApplyRankCap(
             Request::FApplyRankCapByUserIdRequestPtr Request
         );
+
+
 
         class GS2GRADE_API FDeleteTask final :
             public Gs2::Core::Util::TGs2Future<Gs2::Grade::Domain::Model::FStatusDomain>,
@@ -242,6 +254,8 @@ namespace Gs2::Grade::Domain::Model
             Request::FDeleteStatusByUserIdRequestPtr Request
         );
 
+
+
         class GS2GRADE_API FVerifyGradeTask final :
             public Gs2::Core::Util::TGs2Future<Gs2::Grade::Domain::Model::FStatusDomain>,
             public TSharedFromThis<FVerifyGradeTask>
@@ -268,6 +282,8 @@ namespace Gs2::Grade::Domain::Model
             Request::FVerifyGradeByUserIdRequestPtr Request
         );
 
+
+
         class GS2GRADE_API FVerifyGradeUpMaterialTask final :
             public Gs2::Core::Util::TGs2Future<Gs2::Grade::Domain::Model::FStatusDomain>,
             public TSharedFromThis<FVerifyGradeUpMaterialTask>
@@ -293,6 +309,8 @@ namespace Gs2::Grade::Domain::Model
         TSharedPtr<FAsyncTask<FVerifyGradeUpMaterialTask>> VerifyGradeUpMaterial(
             Request::FVerifyGradeUpMaterialByUserIdRequestPtr Request
         );
+
+
 
         class GS2GRADE_API FMultiplyAcquireActionsTask final :
             public Gs2::Core::Util::TGs2Future<Gs2::Core::Domain::FTransactionDomain>,
@@ -355,7 +373,34 @@ namespace Gs2::Grade::Domain::Model
 
         TSharedPtr<FAsyncTask<FModelTask>> Model();
 
+        void Invalidate();
+
         Gs2::Core::Domain::CallbackID Subscribe(
+            TFunction<void(Gs2::Grade::Model::FStatusPtr)> Callback
+        );
+
+        class GS2GRADE_API FSubscribeWithInitialCallTask final :
+            public Gs2::Core::Util::TGs2Future<Gs2::Core::Domain::CallbackID>,
+            public TSharedFromThis<FSubscribeWithInitialCallTask>
+        {
+            const TSharedPtr<FStatusDomain> Self;
+            const TFunction<void(Gs2::Grade::Model::FStatusPtr)> Callback;
+        public:
+            FSubscribeWithInitialCallTask(
+                const TSharedPtr<FStatusDomain>& Self,
+                TFunction<void(Gs2::Grade::Model::FStatusPtr)> Callback
+            );
+
+            FSubscribeWithInitialCallTask(
+                const FSubscribeWithInitialCallTask& From
+            );
+
+            virtual Gs2::Core::Model::FGs2ErrorPtr Action(
+                TSharedPtr<TSharedPtr<Gs2::Core::Domain::CallbackID>> Result
+            ) override;
+        };
+
+        TSharedPtr<FAsyncTask<FSubscribeWithInitialCallTask>> SubscribeWithInitialCall(
             TFunction<void(Gs2::Grade::Model::FStatusPtr)> Callback
         );
 

@@ -30,6 +30,7 @@
 #include "Gateway/Domain/Model/FirebaseTokenAccessToken.h"
 #include "Gateway/Domain/Model/User.h"
 #include "Gateway/Domain/Model/UserAccessToken.h"
+#include "Gateway/Model/Cache/FirebaseToken.h"
 
 #include "Core/Domain/Gs2.h"
 #include "Core/Domain/Transaction/JobQueueJobDomainFactory.h"
@@ -106,18 +107,25 @@ namespace Gs2::Gateway::Domain::Model
         }
         const auto ResultModel = Future->GetTask().Result();
         Future->EnsureCompletion();
-        if (ResultModel->GetItem() != nullptr)
-        {
-            const auto Key = Gs2::Gateway::Domain::Model::FFirebaseTokenDomain::CreateCacheKey(
-            );
-            Self->Gs2->Cache->Put(
-                Gs2::Gateway::Model::FFirebaseToken::TypeName,
-                Self->ParentKey,
-                Key,
-                ResultModel->GetItem(),
-                FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
-            );
-        }
+
+            if (ResultModel.IsValid() && ResultModel->GetItem() != nullptr)
+            {
+
+        if (!ResultModel.IsValid() || !((ResultModel.IsValid() && ResultModel->GetItem().IsValid() ? ResultModel->GetItem()->GetUserId() : TOptional<FString>())).IsSet())
+            {
+              const auto Details = MakeShared<TArray<TSharedPtr<Gs2::Core::Model::FGs2ErrorDetail>>>();
+                Details->Add(MakeShared<Gs2::Core::Model::FGs2ErrorDetail>(TEXT("userId"), TEXT("userId is invalid."), TEXT("invalid_response")));
+                return MakeShared<Gs2::Core::Model::FUnknownError>(Details);
+              }
+        Gs2::Gateway::Model::Cache::FFirebaseTokenCache::Put(
+            Self->Gs2->Cache,
+
+            Request->GetNamespaceName(),
+            (ResultModel.IsValid() && ResultModel->GetItem().IsValid() ? ResultModel->GetItem()->GetUserId() : TOptional<FString>()),
+            TOptional<int32>(),
+            ResultModel->GetItem()
+        );
+            }
         auto Domain = Self;
 
         *Result = Domain;
@@ -162,6 +170,25 @@ namespace Gs2::Gateway::Domain::Model
         }
         const auto ResultModel = Future->GetTask().Result();
         Future->EnsureCompletion();
+
+            if (ResultModel.IsValid() && ResultModel->GetItem() != nullptr)
+            {
+
+        if (!ResultModel.IsValid() || !((ResultModel.IsValid() && ResultModel->GetItem().IsValid() ? ResultModel->GetItem()->GetUserId() : TOptional<FString>())).IsSet())
+            {
+              const auto Details = MakeShared<TArray<TSharedPtr<Gs2::Core::Model::FGs2ErrorDetail>>>();
+                Details->Add(MakeShared<Gs2::Core::Model::FGs2ErrorDetail>(TEXT("userId"), TEXT("userId is invalid."), TEXT("invalid_response")));
+                return MakeShared<Gs2::Core::Model::FUnknownError>(Details);
+              }
+        Gs2::Gateway::Model::Cache::FFirebaseTokenCache::Put(
+            Self->Gs2->Cache,
+
+            Request->GetNamespaceName(),
+            (ResultModel.IsValid() && ResultModel->GetItem().IsValid() ? ResultModel->GetItem()->GetUserId() : TOptional<FString>()),
+            TOptional<int32>(),
+            ResultModel->GetItem()
+        );
+            }
         *Result = ResultModel->GetItem();
         return nullptr;
     }
@@ -200,20 +227,30 @@ namespace Gs2::Gateway::Domain::Model
         Future->StartSynchronousTask();
         if (Future->GetTask().IsError())
         {
-            return Future->GetTask().Error();
+            const auto Error = Future->GetTask().Error();
+            if (Error.IsValid() && Error->IsChildOf(Gs2::Core::Model::FNotFoundError::Class))
+            {
+                *Result = Self;
+                return nullptr;
+            }
+            return Error;
         }
         const auto ResultModel = Future->GetTask().Result();
         Future->EnsureCompletion();
-        if (ResultModel->GetItem() != nullptr)
-        {
-            const auto Key = Gs2::Gateway::Domain::Model::FFirebaseTokenDomain::CreateCacheKey(
-            );
-            Self->Gs2->Cache->Delete(
-                Gs2::Gateway::Model::FFirebaseToken::TypeName,
-                Self->ParentKey,
-                Key
-            );
-        }
+
+              if (!ResultModel.IsValid() || !((ResultModel.IsValid() && ResultModel->GetItem().IsValid() ? ResultModel->GetItem()->GetUserId() : TOptional<FString>())).IsSet())
+                  {
+                    const auto Details = MakeShared<TArray<TSharedPtr<Gs2::Core::Model::FGs2ErrorDetail>>>();
+                      Details->Add(MakeShared<Gs2::Core::Model::FGs2ErrorDetail>(TEXT("userId"), TEXT("userId is invalid."), TEXT("invalid_response")));
+                      return MakeShared<Gs2::Core::Model::FUnknownError>(Details);
+                    }
+              Gs2::Gateway::Model::Cache::FFirebaseTokenCache::Delete(
+            Self->Gs2->Cache,
+
+            Request->GetNamespaceName(),
+            (ResultModel.IsValid() && ResultModel->GetItem().IsValid() ? ResultModel->GetItem()->GetUserId() : TOptional<FString>()),
+            TOptional<int32>()
+        );
         auto Domain = Self;
 
         *Result = Domain;
@@ -258,6 +295,7 @@ namespace Gs2::Gateway::Domain::Model
         }
         const auto ResultModel = Future->GetTask().Result();
         Future->EnsureCompletion();
+
         const auto Domain = Self;
         *Result = Domain;
         return nullptr;
@@ -305,68 +343,158 @@ namespace Gs2::Gateway::Domain::Model
         TSharedPtr<TSharedPtr<Gs2::Gateway::Model::FFirebaseToken>> Result
     )
     {
-        // ReSharper disable once CppLocalVariableMayBeConst
-        TSharedPtr<Gs2::Gateway::Model::FFirebaseToken> Value;
-        auto bCacheHit = Self->Gs2->Cache->TryGet<Gs2::Gateway::Model::FFirebaseToken>(
-            Self->ParentKey,
-            Gs2::Gateway::Domain::Model::FFirebaseTokenDomain::CreateCacheKey(
-            ),
-            &Value
+        const auto CacheParentKey = Gs2::Gateway::Model::Cache::FFirebaseTokenCache::CreateCacheParentKey(
+
+            Self->NamespaceName,
+            Self->UserId,
+            TOptional<int32>()
         );
-        if (!bCacheHit) {
-            const auto Future = Self->Get(
-                MakeShared<Gs2::Gateway::Request::FGetFirebaseTokenByUserIdRequest>()
-            );
-            Future->StartSynchronousTask();
-            if (Future->GetTask().IsError())
+        const auto CacheKey = Gs2::Gateway::Model::Cache::FFirebaseTokenCache::CreateCacheKey(
+
+        );
+        return Self->Gs2->Cache->ExecuteWithKeyLock(
+            Gs2::Gateway::Model::FFirebaseToken::TypeName,
+            CacheParentKey,
+            CacheKey,
+            [Self = Self, Result]() -> Gs2::Core::Model::FGs2ErrorPtr
             {
-                if (Future->GetTask().Error()->Type() != Gs2::Core::Model::FNotFoundError::TypeString)
-                {
-                    return Future->GetTask().Error();
-                }
+                Gs2::Gateway::Model::FFirebaseTokenPtr Value;
+                const auto CacheHit = Gs2::Gateway::Model::Cache::FFirebaseTokenCache::TryGet(
+                    Self->Gs2->Cache,
 
-                const auto Key = Gs2::Gateway::Domain::Model::FFirebaseTokenDomain::CreateCacheKey(
+                    Self->NamespaceName,
+                    Self->UserId,
+                    TOptional<int32>(),
+                    &Value
                 );
-                Self->Gs2->Cache->Put(
-                    Gs2::Gateway::Model::FFirebaseToken::TypeName,
-                    Self->ParentKey,
-                    Key,
-                    nullptr,
-                    FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
-                );
-
-                if (Future->GetTask().Error()->Detail(0)->GetComponent() != "firebaseToken")
+                if (CacheHit)
                 {
-                    return Future->GetTask().Error();
+                    *Result = Value;
+                    return nullptr;
                 }
-            }
-            else
-            {
-                Value = Future->GetTask().Result();
-            }
-            Future->EnsureCompletion();
-        }
-        *Result = Value;
+                const auto Error = Gs2::Gateway::Model::Cache::FFirebaseTokenCache::Fetch(
+                    Self->Gs2->Cache,
 
-        return nullptr;
+                    Self->NamespaceName,
+                    Self->UserId,
+                    TOptional<int32>(),
+                    [Self](Gs2::Gateway::Model::FFirebaseTokenPtr* OutItem) -> Gs2::Core::Model::FGs2ErrorPtr
+                    {
+                        const auto Future = Self->Get(
+                            MakeShared<Gs2::Gateway::Request::FGetFirebaseTokenByUserIdRequest>()
+                        );
+                        Future->StartSynchronousTask();
+                        if (Future->GetTask().IsError()) return Future->GetTask().Error();
+                        *OutItem = Future->GetTask().Result();
+                        Future->EnsureCompletion();
+                        return nullptr;
+                    },
+                    &Value
+                );
+                if (Error.IsValid()) return Error;
+                *Result = Value;
+                return nullptr;
+            }
+        );
     }
 
     TSharedPtr<FAsyncTask<FFirebaseTokenDomain::FModelTask>> FFirebaseTokenDomain::Model() {
         return Gs2::Core::Util::New<FAsyncTask<FFirebaseTokenDomain::FModelTask>>(this->AsShared());
     }
 
+    void FFirebaseTokenDomain::Invalidate()
+    {
+        Gs2::Gateway::Model::Cache::FFirebaseTokenCache::Delete(
+            Gs2->Cache,
+
+            NamespaceName,
+            UserId,
+            TOptional<int32>()
+        );
+    }
+
+    FFirebaseTokenDomain::FSubscribeWithInitialCallTask::FSubscribeWithInitialCallTask(
+        const TSharedPtr<FFirebaseTokenDomain>& Self,
+        TFunction<void(Gs2::Gateway::Model::FFirebaseTokenPtr)> Callback
+    ):
+        Self(Self),
+        Callback(Callback)
+    {
+    }
+
+    FFirebaseTokenDomain::FSubscribeWithInitialCallTask::FSubscribeWithInitialCallTask(
+        const FSubscribeWithInitialCallTask& From
+    ):
+        TGs2Future(From),
+        Self(From.Self),
+        Callback(From.Callback)
+    {
+    }
+
+    Gs2::Core::Model::FGs2ErrorPtr FFirebaseTokenDomain::FSubscribeWithInitialCallTask::Action(
+        TSharedPtr<TSharedPtr<Gs2::Core::Domain::CallbackID>> Result
+    )
+    {
+        const auto Task = Self->Model();
+        Task->StartSynchronousTask();
+        Task->EnsureCompletion();
+        if (Task->GetTask().IsError()) return Task->GetTask().Error();
+        const auto Item = Task->GetTask().Result();
+        const auto CallbackId = Self->Subscribe(Callback);
+        Callback(Item);
+        *Result = MakeShared<Gs2::Core::Domain::CallbackID>(CallbackId);
+        return nullptr;
+    }
+
+    TSharedPtr<FAsyncTask<FFirebaseTokenDomain::FSubscribeWithInitialCallTask>> FFirebaseTokenDomain::SubscribeWithInitialCall(
+        TFunction<void(Gs2::Gateway::Model::FFirebaseTokenPtr)> Callback
+    )
+    {
+        return Gs2::Core::Util::New<FAsyncTask<FSubscribeWithInitialCallTask>>(this->AsShared(), Callback);
+    }
+
     Gs2::Core::Domain::CallbackID FFirebaseTokenDomain::Subscribe(
         TFunction<void(Gs2::Gateway::Model::FFirebaseTokenPtr)> Callback
     )
     {
+        const auto SubscriptionParentKey = Gs2::Gateway::Model::Cache::FFirebaseTokenCache::CreateCacheParentKey(
+
+            NamespaceName,
+            UserId,
+            TOptional<int32>()
+        );
+        const auto SubscriptionCacheKey = Gs2::Gateway::Model::Cache::FFirebaseTokenCache::CreateCacheKey(
+
+        );
+        const TWeakPtr<Gs2::Core::Domain::FGs2> WeakGs2 = Gs2;
+        const TWeakPtr<Gateway::Domain::FGs2GatewayDomain> WeakService = Service;
+        const FString RegisteredParentKey = SubscriptionParentKey;
+        const TOptional<FString> QueryNamespaceName = NamespaceName;
+        const TOptional<FString> QueryUserId = UserId;
         return Gs2->Cache->Subscribe(
             Gs2::Gateway::Model::FFirebaseToken::TypeName,
-            ParentKey,
-            Gs2::Gateway::Domain::Model::FFirebaseTokenDomain::CreateCacheKey(
-            ),
+            SubscriptionParentKey,
+            SubscriptionCacheKey,
             [Callback](TSharedPtr<FGs2Object> obj)
             {
                 Callback(StaticCastSharedPtr<Gs2::Gateway::Model::FFirebaseToken>(obj));
+            },
+            [WeakGs2, WeakService, RegisteredParentKey, QueryNamespaceName, QueryUserId]()
+            {
+                const auto Owner = WeakGs2.Pin();
+                if (!Owner.IsValid())
+                {
+                    return;
+                }
+                const auto Domain = MakeShared<FFirebaseTokenDomain>(
+                    Owner,
+                    WeakService.Pin(),
+                    QueryNamespaceName,
+                    QueryUserId
+                );
+                Domain->ParentKey = RegisteredParentKey;
+                const auto Task = Domain->Model();
+                Task->StartBackgroundTask();
             }
         );
     }
@@ -375,11 +503,19 @@ namespace Gs2::Gateway::Domain::Model
         Gs2::Core::Domain::CallbackID CallbackID
     )
     {
+        const auto SubscriptionParentKey = Gs2::Gateway::Model::Cache::FFirebaseTokenCache::CreateCacheParentKey(
+
+            NamespaceName,
+            UserId,
+            TOptional<int32>()
+        );
+        const auto SubscriptionCacheKey = Gs2::Gateway::Model::Cache::FFirebaseTokenCache::CreateCacheKey(
+
+        );
         Gs2->Cache->Unsubscribe(
             Gs2::Gateway::Model::FFirebaseToken::TypeName,
-            ParentKey,
-            Gs2::Gateway::Domain::Model::FFirebaseTokenDomain::CreateCacheKey(
-            ),
+            SubscriptionParentKey,
+            SubscriptionCacheKey,
             CallbackID
         );
     }
@@ -390,4 +526,3 @@ namespace Gs2::Gateway::Domain::Model
 #elif defined(__clang__)
 #pragma clang diagnostic pop
 #endif
-

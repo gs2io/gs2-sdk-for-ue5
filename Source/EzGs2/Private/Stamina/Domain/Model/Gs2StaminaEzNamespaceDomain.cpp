@@ -75,7 +75,8 @@ namespace Gs2::UE5::Stamina::Domain::Model
         );
     }
 
-    void FEzNamespaceDomain::UnsubscribeStaminaModels(Gs2::Core::Domain::CallbackID CallbackId)
+    void FEzNamespaceDomain::UnsubscribeStaminaModels(
+            Gs2::Core::Domain::CallbackID CallbackId)
     {
         Domain->UnsubscribeStaminaModels(
             CallbackId

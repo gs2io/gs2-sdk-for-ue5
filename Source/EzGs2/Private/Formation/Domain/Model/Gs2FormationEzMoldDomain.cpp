@@ -104,7 +104,7 @@ namespace Gs2::UE5::Formation::Domain::Model
     Gs2::Core::Domain::CallbackID FEzMoldDomain::Subscribe(TFunction<void(Gs2::UE5::Formation::Model::FEzMoldPtr)> Callback)
     {
         return Domain->Subscribe(
-            [&](Gs2::Formation::Model::FMoldPtr Item)
+            [Callback](Gs2::Formation::Model::FMoldPtr Item)
             {
                 Callback(Gs2::UE5::Formation::Model::FEzMold::FromModel(Item));
             }

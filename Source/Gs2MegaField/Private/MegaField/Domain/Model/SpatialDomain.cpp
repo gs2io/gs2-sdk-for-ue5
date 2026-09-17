@@ -33,6 +33,7 @@
 #include "MegaField/Domain/Model/UserAccessToken.h"
 #include "MegaField/Domain/Model/Spatial.h"
 #include "MegaField/Domain/Model/SpatialAccessToken.h"
+#include "MegaField/Model/Cache/Spatial.h"
 
 #include "Core/Domain/Gs2.h"
 #include "Core/Domain/Transaction/JobQueueJobDomainFactory.h"
@@ -115,20 +116,32 @@ namespace Gs2::MegaField::Domain::Model
         }
         const auto ResultModel = Future->GetTask().Result();
         Future->EnsureCompletion();
-        if (ResultModel->GetItem() != nullptr)
-        {
-            const auto Key = Gs2::MegaField::Domain::Model::FSpatialDomain::CreateCacheKey(
-                ResultModel->GetItem()->GetAreaModelName(),
-                ResultModel->GetItem()->GetLayerModelName()
-            );
-            Self->Gs2->Cache->Put(
-                Gs2::MegaField::Model::FSpatial::TypeName,
-                Self->ParentKey,
-                Key,
-                ResultModel->GetItem(),
-                FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
-            );
-        }
+
+            if (ResultModel.IsValid() && ResultModel->GetItem() != nullptr)
+            {
+
+        if (!ResultModel.IsValid() || !ResultModel->GetItem().IsValid())
+            {
+              const auto Details = MakeShared<TArray<TSharedPtr<Gs2::Core::Model::FGs2ErrorDetail>>>();
+                Details->Add(MakeShared<Gs2::Core::Model::FGs2ErrorDetail>(TEXT("result.item"), TEXT("result.item is invalid."), TEXT("invalid_response")));
+                return MakeShared<Gs2::Core::Model::FUnknownError>(Details);
+              }if (!ResultModel.IsValid() || !((ResultModel.IsValid() && ResultModel->GetItem().IsValid() ? ResultModel->GetItem()->GetUserId() : TOptional<FString>())).IsSet())
+            {
+              const auto Details = MakeShared<TArray<TSharedPtr<Gs2::Core::Model::FGs2ErrorDetail>>>();
+                Details->Add(MakeShared<Gs2::Core::Model::FGs2ErrorDetail>(TEXT("userId"), TEXT("userId is invalid."), TEXT("invalid_response")));
+                return MakeShared<Gs2::Core::Model::FUnknownError>(Details);
+              }
+        Gs2::MegaField::Model::Cache::FSpatialCache::Put(
+            Self->Gs2->Cache,
+
+            Request->GetNamespaceName(),
+            (ResultModel.IsValid() && ResultModel->GetItem().IsValid() ? ResultModel->GetItem()->GetUserId() : TOptional<FString>()),
+            ResultModel->GetItem()->GetAreaModelName(),
+            ResultModel->GetItem()->GetLayerModelName(),
+            TOptional<int32>(),
+            ResultModel->GetItem()
+        );
+            }
         auto Domain = Self;
 
         *Result = Domain;
@@ -175,7 +188,22 @@ namespace Gs2::MegaField::Domain::Model
         }
         const auto ResultModel = Future->GetTask().Result();
         Future->EnsureCompletion();
+        if (ResultModel.IsValid() && ResultModel->GetItems().IsValid())
+        {
+            for (const auto& Item : *ResultModel->GetItems())
+            {
+                if (!Item.IsValid()) continue;
+                Gs2::MegaField::Model::Cache::FSpatialCache::Put(
+                    Self->Gs2->Cache,
+                    Request->GetNamespaceName(), Request->GetUserId(), Item->GetAreaModelName(), Item->GetLayerModelName(),
+                    TOptional<int32>(), Item
+                );
+            }
+        }
+
         auto Domain = MakeShared<TArray<TSharedPtr<Gs2::MegaField::Domain::Model::FSpatialDomain>>>();
+        if (ResultModel.IsValid() && ResultModel->GetItems().IsValid())
+        {
         for (auto i=0; i<ResultModel->GetItems()->Num(); i++)
         {
             Domain->Add(
@@ -188,22 +216,7 @@ namespace Gs2::MegaField::Domain::Model
                     (*ResultModel->GetItems())[i]->GetLayerModelName()
                 )
             );
-            const auto ParentKey = Gs2::MegaField::Domain::Model::FUserDomain::CreateCacheParentKey(
-                Self->NamespaceName,
-                Self->UserId,
-                "Spatial"
-            );
-            const auto Key = Gs2::MegaField::Domain::Model::FSpatialDomain::CreateCacheKey(
-                (*ResultModel->GetItems())[i]->GetAreaModelName(),
-                (*ResultModel->GetItems())[i]->GetLayerModelName()
-            );
-            Self->Gs2->Cache->Put(
-                Gs2::MegaField::Model::FSpatial::TypeName,
-                ParentKey,
-                Key,
-                (*ResultModel->GetItems())[i],
-                FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
-            );
+        }
         }
         *Result = Domain;
         return nullptr;
@@ -237,7 +250,7 @@ namespace Gs2::MegaField::Domain::Model
     )
     {
         return FString("") +
-            (AreaModelName.IsSet() ? *AreaModelName : "null") + ":" + 
+            (AreaModelName.IsSet() ? *AreaModelName : "null") + ":" +
             (LayerModelName.IsSet() ? *LayerModelName : "null");
     }
 
@@ -259,39 +272,150 @@ namespace Gs2::MegaField::Domain::Model
         TSharedPtr<TSharedPtr<Gs2::MegaField::Model::FSpatial>> Result
     )
     {
-        // ReSharper disable once CppLocalVariableMayBeConst
-        TSharedPtr<Gs2::MegaField::Model::FSpatial> Value;
-        auto bCacheHit = Self->Gs2->Cache->TryGet<Gs2::MegaField::Model::FSpatial>(
-            Self->ParentKey,
-            Gs2::MegaField::Domain::Model::FSpatialDomain::CreateCacheKey(
-                Self->AreaModelName,
-                Self->LayerModelName
-            ),
-            &Value
-        );
-        *Result = Value;
+        const auto CacheParentKey = Gs2::MegaField::Model::Cache::FSpatialCache::CreateCacheParentKey(
 
-        return nullptr;
+            Self->NamespaceName,
+            Self->UserId,
+            TOptional<int32>()
+        );
+        const auto CacheKey = Gs2::MegaField::Model::Cache::FSpatialCache::CreateCacheKey(
+
+            Self->AreaModelName,
+            Self->LayerModelName
+        );
+        return Self->Gs2->Cache->ExecuteWithKeyLock(
+            Gs2::MegaField::Model::FSpatial::TypeName,
+            CacheParentKey,
+            CacheKey,
+            [Self = Self, Result]() -> Gs2::Core::Model::FGs2ErrorPtr
+            {
+                Gs2::MegaField::Model::FSpatialPtr Value;
+                const auto CacheHit = Gs2::MegaField::Model::Cache::FSpatialCache::TryGet(
+                    Self->Gs2->Cache,
+
+                    Self->NamespaceName,
+                    Self->UserId,
+                    Self->AreaModelName,
+                    Self->LayerModelName,
+                    TOptional<int32>(),
+                    &Value
+                );
+                if (CacheHit)
+                {
+                    *Result = Value;
+                    return nullptr;
+                }
+                *Result = Value;
+                return nullptr;
+            }
+        );
     }
 
     TSharedPtr<FAsyncTask<FSpatialDomain::FModelTask>> FSpatialDomain::Model() {
         return Gs2::Core::Util::New<FAsyncTask<FSpatialDomain::FModelTask>>(this->AsShared());
     }
 
+    void FSpatialDomain::Invalidate()
+    {
+        Gs2::MegaField::Model::Cache::FSpatialCache::Delete(
+            Gs2->Cache,
+
+            NamespaceName,
+            UserId,
+            AreaModelName,
+            LayerModelName,
+            TOptional<int32>()
+        );
+    }
+
+    FSpatialDomain::FSubscribeWithInitialCallTask::FSubscribeWithInitialCallTask(
+        const TSharedPtr<FSpatialDomain>& Self,
+        TFunction<void(Gs2::MegaField::Model::FSpatialPtr)> Callback
+    ):
+        Self(Self),
+        Callback(Callback)
+    {
+    }
+
+    FSpatialDomain::FSubscribeWithInitialCallTask::FSubscribeWithInitialCallTask(
+        const FSubscribeWithInitialCallTask& From
+    ):
+        TGs2Future(From),
+        Self(From.Self),
+        Callback(From.Callback)
+    {
+    }
+
+    Gs2::Core::Model::FGs2ErrorPtr FSpatialDomain::FSubscribeWithInitialCallTask::Action(
+        TSharedPtr<TSharedPtr<Gs2::Core::Domain::CallbackID>> Result
+    )
+    {
+        const auto Task = Self->Model();
+        Task->StartSynchronousTask();
+        Task->EnsureCompletion();
+        if (Task->GetTask().IsError()) return Task->GetTask().Error();
+        const auto Item = Task->GetTask().Result();
+        const auto CallbackId = Self->Subscribe(Callback);
+        Callback(Item);
+        *Result = MakeShared<Gs2::Core::Domain::CallbackID>(CallbackId);
+        return nullptr;
+    }
+
+    TSharedPtr<FAsyncTask<FSpatialDomain::FSubscribeWithInitialCallTask>> FSpatialDomain::SubscribeWithInitialCall(
+        TFunction<void(Gs2::MegaField::Model::FSpatialPtr)> Callback
+    )
+    {
+        return Gs2::Core::Util::New<FAsyncTask<FSubscribeWithInitialCallTask>>(this->AsShared(), Callback);
+    }
+
     Gs2::Core::Domain::CallbackID FSpatialDomain::Subscribe(
         TFunction<void(Gs2::MegaField::Model::FSpatialPtr)> Callback
     )
     {
+        const auto SubscriptionParentKey = Gs2::MegaField::Model::Cache::FSpatialCache::CreateCacheParentKey(
+
+            NamespaceName,
+            UserId,
+            TOptional<int32>()
+        );
+        const auto SubscriptionCacheKey = Gs2::MegaField::Model::Cache::FSpatialCache::CreateCacheKey(
+
+            AreaModelName,
+            LayerModelName
+        );
+        const TWeakPtr<Gs2::Core::Domain::FGs2> WeakGs2 = Gs2;
+        const TWeakPtr<MegaField::Domain::FGs2MegaFieldDomain> WeakService = Service;
+        const FString RegisteredParentKey = SubscriptionParentKey;
+        const TOptional<FString> QueryNamespaceName = NamespaceName;
+        const TOptional<FString> QueryUserId = UserId;
+        const TOptional<FString> QueryAreaModelName = AreaModelName;
+        const TOptional<FString> QueryLayerModelName = LayerModelName;
         return Gs2->Cache->Subscribe(
             Gs2::MegaField::Model::FSpatial::TypeName,
-            ParentKey,
-            Gs2::MegaField::Domain::Model::FSpatialDomain::CreateCacheKey(
-                AreaModelName,
-                LayerModelName
-            ),
+            SubscriptionParentKey,
+            SubscriptionCacheKey,
             [Callback](TSharedPtr<FGs2Object> obj)
             {
                 Callback(StaticCastSharedPtr<Gs2::MegaField::Model::FSpatial>(obj));
+            },
+            [WeakGs2, WeakService, RegisteredParentKey, QueryNamespaceName, QueryUserId, QueryAreaModelName, QueryLayerModelName]()
+            {
+                const auto Owner = WeakGs2.Pin();
+                if (!Owner.IsValid())
+                {
+                    return;
+                }
+                const auto Domain = MakeShared<FSpatialDomain>(
+                    Owner,
+                    WeakService.Pin(),
+                    QueryNamespaceName,
+                    QueryUserId,
+                    QueryAreaModelName,
+                    QueryLayerModelName
+                );
+                Domain->ParentKey = RegisteredParentKey;
+                const auto Task = Domain->Model();
+                Task->StartBackgroundTask();
             }
         );
     }
@@ -300,13 +424,21 @@ namespace Gs2::MegaField::Domain::Model
         Gs2::Core::Domain::CallbackID CallbackID
     )
     {
+        const auto SubscriptionParentKey = Gs2::MegaField::Model::Cache::FSpatialCache::CreateCacheParentKey(
+
+            NamespaceName,
+            UserId,
+            TOptional<int32>()
+        );
+        const auto SubscriptionCacheKey = Gs2::MegaField::Model::Cache::FSpatialCache::CreateCacheKey(
+
+            AreaModelName,
+            LayerModelName
+        );
         Gs2->Cache->Unsubscribe(
             Gs2::MegaField::Model::FSpatial::TypeName,
-            ParentKey,
-            Gs2::MegaField::Domain::Model::FSpatialDomain::CreateCacheKey(
-                AreaModelName,
-                LayerModelName
-            ),
+            SubscriptionParentKey,
+            SubscriptionCacheKey,
             CallbackID
         );
     }
@@ -317,4 +449,3 @@ namespace Gs2::MegaField::Domain::Model
 #elif defined(__clang__)
 #pragma clang diagnostic pop
 #endif
-

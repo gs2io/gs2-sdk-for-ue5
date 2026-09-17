@@ -35,6 +35,18 @@
 #include "Enhance/Domain/Model/CurrentRateMaster.h"
 #include "Enhance/Domain/Model/User.h"
 #include "Enhance/Domain/Model/UserAccessToken.h"
+#include "Enhance/Model/Cache/RateModel.h"
+#include "Enhance/Model/Cache/UnleashRateModel.h"
+#include "Enhance/Model/Cache/Progress.h"
+
+#include "Enhance/Model/Cache/Namespace.h"
+#include "Enhance/Model/Cache/UnleashRateModelMaster.h"
+#include "Enhance/Model/Cache/RateModelMaster.h"
+#include "Enhance/Model/Cache/CurrentRateMaster.h"
+#include "Enhance/Model/Cache/UnleashRateModel.h"
+#include "Enhance/Model/Cache/RateModel.h"
+#include "Enhance/Model/Cache/Progress.h"
+
 #include "Core/Domain/Gs2.h"
 
 namespace Gs2::Enhance::Domain
@@ -88,6 +100,19 @@ namespace Gs2::Enhance::Domain
         }
         const auto ResultModel = Future->GetTask().Result();
         Future->EnsureCompletion();
+
+            if (ResultModel.IsValid() && ResultModel->GetItem() != nullptr)
+            {
+
+
+        Gs2::Enhance::Model::Cache::FNamespaceCache::Put(
+            Self->Gs2->Cache,
+
+            ResultModel->GetItem()->GetName(),
+            TOptional<int32>(),
+            ResultModel->GetItem()
+        );
+            }
         auto Domain = MakeShared<Gs2::Enhance::Domain::Model::FNamespaceDomain>(
             Self->Gs2,
             Self,
@@ -131,6 +156,7 @@ namespace Gs2::Enhance::Domain
         }
         const auto ResultModel = Future->GetTask().Result();
         Future->EnsureCompletion();
+
         const auto Domain = Self;
         *Result = Domain;
         return nullptr;
@@ -170,6 +196,7 @@ namespace Gs2::Enhance::Domain
         }
         const auto ResultModel = Future->GetTask().Result();
         Future->EnsureCompletion();
+
         const auto Domain = Self;
         if (ResultModel != nullptr)
         {
@@ -216,6 +243,7 @@ namespace Gs2::Enhance::Domain
         }
         const auto ResultModel = Future->GetTask().Result();
         Future->EnsureCompletion();
+
         const auto Domain = Self;
         *Result = Domain;
         return nullptr;
@@ -255,6 +283,7 @@ namespace Gs2::Enhance::Domain
         }
         const auto ResultModel = Future->GetTask().Result();
         Future->EnsureCompletion();
+
         const auto Domain = Self;
         *Result = Domain;
         return nullptr;
@@ -294,6 +323,7 @@ namespace Gs2::Enhance::Domain
         }
         const auto ResultModel = Future->GetTask().Result();
         Future->EnsureCompletion();
+
         const auto Domain = Self;
         if (ResultModel != nullptr)
         {
@@ -344,6 +374,7 @@ namespace Gs2::Enhance::Domain
         }
         const auto ResultModel = Future->GetTask().Result();
         Future->EnsureCompletion();
+
         const auto Domain = Self;
         *Result = Domain;
         return nullptr;
@@ -383,6 +414,7 @@ namespace Gs2::Enhance::Domain
         }
         const auto ResultModel = Future->GetTask().Result();
         Future->EnsureCompletion();
+
         const auto Domain = Self;
         if (ResultModel != nullptr)
         {
@@ -414,24 +446,110 @@ namespace Gs2::Enhance::Domain
 
     Gs2::Core::Domain::CallbackID FGs2EnhanceDomain::SubscribeNamespaces(
     TFunction<void()> Callback
+
     )
     {
         return Gs2->Cache->ListSubscribe(
             Gs2::Enhance::Model::FNamespace::TypeName,
-            "enhance:Namespace",
+            Gs2::Enhance::Model::Cache::FNamespaceCache::CreateCacheParentKey(
+                TOptional<int32>()
+            ),
+            Callback,
             Callback
         );
     }
-
     void FGs2EnhanceDomain::UnsubscribeNamespaces(
         Gs2::Core::Domain::CallbackID CallbackID
     )
     {
         Gs2->Cache->ListUnsubscribe(
             Gs2::Enhance::Model::FNamespace::TypeName,
-            "enhance:Namespace",
+            Gs2::Enhance::Model::Cache::FNamespaceCache::CreateCacheParentKey(
+                TOptional<int32>()
+            ),
             CallbackID
         );
+    }
+    class FGs2EnhanceDomain::FCollectNamespacesTask : public Gs2::Core::Util::TGs2Future<TArray<Gs2::Enhance::Model::FNamespacePtr>>, public TSharedFromThis<FCollectNamespacesTask>
+    {
+        const TSharedPtr<FGs2EnhanceDomain> Self;
+        const TFunction<void(TArray<Gs2::Enhance::Model::FNamespacePtr>)> OnCollected;
+    const TOptional<FString> QueryNamePrefix;
+    public:
+        explicit FCollectNamespacesTask(const TSharedPtr<FGs2EnhanceDomain>& Self, TFunction<void(TArray<Gs2::Enhance::Model::FNamespacePtr>)> OnCollected,const TOptional<FString> NamePrefix) : Self(Self), OnCollected(OnCollected), QueryNamePrefix(NamePrefix) {}
+        FCollectNamespacesTask(const FCollectNamespacesTask& From) : TGs2Future(From), Self(From.Self), OnCollected(From.OnCollected), QueryNamePrefix(From.QueryNamePrefix) {}
+        virtual Gs2::Core::Model::FGs2ErrorPtr Action(TSharedPtr<TSharedPtr<TArray<Gs2::Enhance::Model::FNamespacePtr>>> Result) override
+        {
+            TArray<Gs2::Enhance::Model::FNamespacePtr> Items;
+            auto Iterator = Self->Namespaces(QueryNamePrefix)->begin();
+            while (Iterator.HasNext())
+            {
+                if (Iterator.IsError()) return Iterator.Error();
+                if (Iterator.IsCurrentValid()) Items.Add(Iterator.Current());
+                ++Iterator;
+            }
+            if (Iterator.IsError()) return Iterator.Error();
+            *Result = MakeShared<TArray<Gs2::Enhance::Model::FNamespacePtr>>(Items);
+            if (OnCollected) OnCollected(Items);
+            return nullptr;
+        }
+    };
+
+    Gs2::Core::Domain::CallbackID FGs2EnhanceDomain::SubscribeNamespaces(
+        TFunction<void(TArray<Gs2::Enhance::Model::FNamespacePtr>)> Callback,const TOptional<FString> NamePrefix
+    )
+    {
+        const TWeakPtr<Gs2::Core::Domain::FGs2> WeakGs2 = this->Gs2;
+        const auto QueryNamePrefix = NamePrefix;
+        const auto Parent = Gs2::Enhance::Model::Cache::FNamespaceCache::CreateCacheParentKey(
+        TOptional<int32>()
+    );
+        return Gs2->Cache->ListSubscribeTyped(
+            Gs2::Enhance::Model::FNamespace::TypeName,
+            Parent,
+            [Callback, WeakGs2](const TArray<FGs2ObjectPtr>& Values)
+            {
+                if (!WeakGs2.Pin().IsValid()) return;
+                TArray<Gs2::Enhance::Model::FNamespacePtr> TypedValues;
+                for (const auto& Value : Values) if (Value.IsValid()) TypedValues.Add(StaticCastSharedPtr<Gs2::Enhance::Model::FNamespace>(Value));
+                Callback(TypedValues);
+            },
+            [WeakGs2, Callback, QueryNamePrefix]()
+            {
+                const auto Owner = WeakGs2.Pin();
+                if (!Owner.IsValid()) return;
+                const auto Domain = MakeShared<FGs2EnhanceDomain>(Owner);
+                const auto Task = Gs2::Core::Util::New<FAsyncTask<FCollectNamespacesTask>>(Domain, Callback, QueryNamePrefix);
+                Task->StartBackgroundTask();
+            }
+        );
+    }
+
+    void FGs2EnhanceDomain::InvalidateNamespaces(const TOptional<FString> NamePrefix)
+    {
+        Gs2->Cache->ClearListCache(
+            Gs2::Enhance::Model::FNamespace::TypeName,
+            Gs2::Enhance::Model::Cache::FNamespaceCache::CreateCacheParentKey(
+        TOptional<int32>()
+    )
+        );
+    }
+
+    FGs2EnhanceDomain::FSubscribeNamespacesWithInitialCallTask::FSubscribeNamespacesWithInitialCallTask(const TSharedPtr<FGs2EnhanceDomain>& Self, TFunction<void(TArray<Gs2::Enhance::Model::FNamespacePtr>)> Callback,const TOptional<FString> NamePrefix) : Self(Self), Callback(Callback), QueryNamePrefix(NamePrefix) {}
+    FGs2EnhanceDomain::FSubscribeNamespacesWithInitialCallTask::FSubscribeNamespacesWithInitialCallTask(const FSubscribeNamespacesWithInitialCallTask& From) : TGs2Future(From), Self(From.Self), Callback(From.Callback), QueryNamePrefix(From.QueryNamePrefix) {}
+    Gs2::Core::Model::FGs2ErrorPtr FGs2EnhanceDomain::FSubscribeNamespacesWithInitialCallTask::Action(TSharedPtr<TSharedPtr<Gs2::Core::Domain::CallbackID>> Result)
+    {
+        const auto Task = Gs2::Core::Util::New<FAsyncTask<FCollectNamespacesTask>>(Self, TFunction<void(TArray<Gs2::Enhance::Model::FNamespacePtr>)>(), QueryNamePrefix);
+        Task->StartSynchronousTask(); Task->EnsureCompletion();
+        if (Task->GetTask().IsError()) return Task->GetTask().Error();
+        const auto Values = Task->GetTask().Result();
+        const auto CallbackId = Self->SubscribeNamespaces(Callback, QueryNamePrefix);
+        Callback(*Values); *Result = MakeShared<Gs2::Core::Domain::CallbackID>(CallbackId);
+        return nullptr;
+    }
+    TSharedPtr<FAsyncTask<FGs2EnhanceDomain::FSubscribeNamespacesWithInitialCallTask>> FGs2EnhanceDomain::SubscribeNamespacesWithInitialCall(TFunction<void(TArray<Gs2::Enhance::Model::FNamespacePtr>)> Callback,const TOptional<FString> NamePrefix)
+    {
+        return Gs2::Core::Util::New<FAsyncTask<FSubscribeNamespacesWithInitialCallTask>>(this->AsShared(), Callback, NamePrefix);
     }
 
     TSharedPtr<Gs2::Enhance::Domain::Model::FNamespaceDomain> FGs2EnhanceDomain::Namespace(
@@ -448,7 +566,8 @@ namespace Gs2::Enhance::Domain
     void FGs2EnhanceDomain::UpdateCacheFromStampSheet(
         const FString Method,
         const FString Request,
-        const FString Result
+        const FString Result,
+        const TOptional<int32> TimeOffset
     ) {
         if (Method == "DirectEnhanceByUserId") {
             TSharedPtr<FJsonObject> RequestModelJson;
@@ -465,24 +584,21 @@ namespace Gs2::Enhance::Domain
             }
             const auto RequestModel = Gs2::Enhance::Request::FDirectEnhanceByUserIdRequest::FromJson(RequestModelJson);
             const auto ResultModel = Gs2::Enhance::Result::FDirectEnhanceByUserIdResult::FromJson(ResultModelJson);
-            
-            if (ResultModel->GetItem() != nullptr)
-            {
-                const auto ParentKey = Gs2::Enhance::Domain::Model::FNamespaceDomain::CreateCacheParentKey(
+
+                    if (ResultModel.IsValid() && ResultModel->GetItem() != nullptr)
+                    {
+
+
+                Gs2::Enhance::Model::Cache::FRateModelCache::Put(
+                    Gs2->Cache,
+
                     RequestModel->GetNamespaceName(),
-                    "RateModel"
+                    RequestModel->GetRateName(),
+                    TimeOffset,
+                    ResultModel->GetItem()
                 );
-                const auto Key = Gs2::Enhance::Domain::Model::FRateModelDomain::CreateCacheKey(
-                    ResultModel->GetItem()->GetName()
-                );
-                Gs2->Cache->Put(
-                    Gs2::Enhance::Model::FRateModel::TypeName,
-                    ParentKey,
-                    Key,
-                    ResultModel->GetItem(),
-                    FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
-                );
-            }
+                    }
+
         }
         if (Method == "UnleashByUserId") {
             TSharedPtr<FJsonObject> RequestModelJson;
@@ -499,24 +615,21 @@ namespace Gs2::Enhance::Domain
             }
             const auto RequestModel = Gs2::Enhance::Request::FUnleashByUserIdRequest::FromJson(RequestModelJson);
             const auto ResultModel = Gs2::Enhance::Result::FUnleashByUserIdResult::FromJson(ResultModelJson);
-            
-            if (ResultModel->GetItem() != nullptr)
-            {
-                const auto ParentKey = Gs2::Enhance::Domain::Model::FNamespaceDomain::CreateCacheParentKey(
+
+                    if (ResultModel.IsValid() && ResultModel->GetItem() != nullptr)
+                    {
+
+
+                Gs2::Enhance::Model::Cache::FUnleashRateModelCache::Put(
+                    Gs2->Cache,
+
                     RequestModel->GetNamespaceName(),
-                    "UnleashRateModel"
+                    RequestModel->GetRateName(),
+                    TimeOffset,
+                    ResultModel->GetItem()
                 );
-                const auto Key = Gs2::Enhance::Domain::Model::FUnleashRateModelDomain::CreateCacheKey(
-                    ResultModel->GetItem()->GetName()
-                );
-                Gs2->Cache->Put(
-                    Gs2::Enhance::Model::FUnleashRateModel::TypeName,
-                    ParentKey,
-                    Key,
-                    ResultModel->GetItem(),
-                    FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
-                );
-            }
+                    }
+
         }
         if (Method == "CreateProgressByUserId") {
             TSharedPtr<FJsonObject> RequestModelJson;
@@ -533,31 +646,32 @@ namespace Gs2::Enhance::Domain
             }
             const auto RequestModel = Gs2::Enhance::Request::FCreateProgressByUserIdRequest::FromJson(RequestModelJson);
             const auto ResultModel = Gs2::Enhance::Result::FCreateProgressByUserIdResult::FromJson(ResultModelJson);
-            
-            if (ResultModel->GetItem() != nullptr)
-            {
-                const auto ParentKey = Gs2::Enhance::Domain::Model::FUserDomain::CreateCacheParentKey(
+
+                    if (ResultModel.IsValid() && ResultModel->GetItem() != nullptr)
+                    {
+
+                if (!ResultModel.IsValid() || !((ResultModel.IsValid() && ResultModel->GetItem().IsValid() ? ResultModel->GetItem()->GetUserId() : TOptional<FString>())).IsSet())
+                    {
+                      return;
+                      }
+                Gs2::Enhance::Model::Cache::FProgressCache::Put(
+                    Gs2->Cache,
+
                     RequestModel->GetNamespaceName(),
-                    RequestModel->GetUserId(),
-                    "Progress"
+                    (ResultModel.IsValid() && ResultModel->GetItem().IsValid() ? ResultModel->GetItem()->GetUserId() : TOptional<FString>()),
+                    TimeOffset,
+                    ResultModel->GetItem()
                 );
-                const auto Key = Gs2::Enhance::Domain::Model::FProgressDomain::CreateCacheKey(
-                );
-                Gs2->Cache->Put(
-                    Gs2::Enhance::Model::FProgress::TypeName,
-                    ParentKey,
-                    Key,
-                    ResultModel->GetItem(),
-                    FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
-                );
-            }
+                    }
+
         }
     }
 
     void FGs2EnhanceDomain::UpdateCacheFromStampTask(
         const FString Method,
         const FString Request,
-        const FString Result
+        const FString Result,
+        const TOptional<int32> TimeOffset
     ) {
         if (Method == "DeleteProgressByUserId") {
             TSharedPtr<FJsonObject> RequestModelJson;
@@ -574,25 +688,27 @@ namespace Gs2::Enhance::Domain
             }
             const auto RequestModel = Gs2::Enhance::Request::FDeleteProgressByUserIdRequest::FromJson(RequestModelJson);
             const auto ResultModel = Gs2::Enhance::Result::FDeleteProgressByUserIdResult::FromJson(ResultModelJson);
-            
-            if (ResultModel->GetItem() != nullptr)
-            {
-                const auto ParentKey = Gs2::Enhance::Domain::Model::FUserDomain::CreateCacheParentKey(
+
+                      if (!ResultModel.IsValid() || !((ResultModel.IsValid() && ResultModel->GetItem().IsValid() ? ResultModel->GetItem()->GetUserId() : TOptional<FString>())).IsSet())
+                          {
+                            return;
+                            }
+                      Gs2::Enhance::Model::Cache::FProgressCache::Delete(
+                    Gs2->Cache,
+
                     RequestModel->GetNamespaceName(),
-                    RequestModel->GetUserId(),
-                    "Progress"
+                    (ResultModel.IsValid() && ResultModel->GetItem().IsValid() ? ResultModel->GetItem()->GetUserId() : TOptional<FString>()),
+                    TimeOffset
                 );
-                const auto Key = Gs2::Enhance::Domain::Model::FProgressDomain::CreateCacheKey(
-                );
-                Gs2->Cache->Delete(Gs2::Enhance::Model::FProgress::TypeName, ParentKey, Key);
-            }
+
         }
     }
 
     void FGs2EnhanceDomain::UpdateCacheFromJobResult(
         const FString Method,
         const Gs2::JobQueue::Model::FJobPtr Job,
-        const Gs2::JobQueue::Model::FJobResultBodyPtr Result
+        const Gs2::JobQueue::Model::FJobResultBodyPtr Result,
+        const TOptional<int32> TimeOffset
     ) {
         if (Method == "direct_enhance_by_user_id") {
             TSharedPtr<FJsonObject> RequestModelJson;
@@ -617,24 +733,21 @@ namespace Gs2::Enhance::Domain
             }
             const auto RequestModel = Gs2::Enhance::Request::FDirectEnhanceByUserIdRequest::FromJson(RequestModelJson);
             const auto ResultModel = Gs2::Enhance::Result::FDirectEnhanceByUserIdResult::FromJson(ResultModelJson);
-            
-            if (ResultModel->GetItem() != nullptr)
-            {
-                const auto ParentKey = Gs2::Enhance::Domain::Model::FNamespaceDomain::CreateCacheParentKey(
+
+                    if (ResultModel.IsValid() && ResultModel->GetItem() != nullptr)
+                    {
+
+
+                Gs2::Enhance::Model::Cache::FRateModelCache::Put(
+                    Gs2->Cache,
+
                     RequestModel->GetNamespaceName(),
-                    "RateModel"
+                    RequestModel->GetRateName(),
+                    TimeOffset,
+                    ResultModel->GetItem()
                 );
-                const auto Key = Gs2::Enhance::Domain::Model::FRateModelDomain::CreateCacheKey(
-                    ResultModel->GetItem()->GetName()
-                );
-                Gs2->Cache->Put(
-                    Gs2::Enhance::Model::FRateModel::TypeName,
-                    ParentKey,
-                    Key,
-                    ResultModel->GetItem(),
-                    FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
-                );
-            }
+                    }
+
         }
         if (Method == "unleash_by_user_id") {
             TSharedPtr<FJsonObject> RequestModelJson;
@@ -659,24 +772,21 @@ namespace Gs2::Enhance::Domain
             }
             const auto RequestModel = Gs2::Enhance::Request::FUnleashByUserIdRequest::FromJson(RequestModelJson);
             const auto ResultModel = Gs2::Enhance::Result::FUnleashByUserIdResult::FromJson(ResultModelJson);
-            
-            if (ResultModel->GetItem() != nullptr)
-            {
-                const auto ParentKey = Gs2::Enhance::Domain::Model::FNamespaceDomain::CreateCacheParentKey(
+
+                    if (ResultModel.IsValid() && ResultModel->GetItem() != nullptr)
+                    {
+
+
+                Gs2::Enhance::Model::Cache::FUnleashRateModelCache::Put(
+                    Gs2->Cache,
+
                     RequestModel->GetNamespaceName(),
-                    "UnleashRateModel"
+                    RequestModel->GetRateName(),
+                    TimeOffset,
+                    ResultModel->GetItem()
                 );
-                const auto Key = Gs2::Enhance::Domain::Model::FUnleashRateModelDomain::CreateCacheKey(
-                    ResultModel->GetItem()->GetName()
-                );
-                Gs2->Cache->Put(
-                    Gs2::Enhance::Model::FUnleashRateModel::TypeName,
-                    ParentKey,
-                    Key,
-                    ResultModel->GetItem(),
-                    FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
-                );
-            }
+                    }
+
         }
         if (Method == "create_progress_by_user_id") {
             TSharedPtr<FJsonObject> RequestModelJson;
@@ -701,24 +811,24 @@ namespace Gs2::Enhance::Domain
             }
             const auto RequestModel = Gs2::Enhance::Request::FCreateProgressByUserIdRequest::FromJson(RequestModelJson);
             const auto ResultModel = Gs2::Enhance::Result::FCreateProgressByUserIdResult::FromJson(ResultModelJson);
-            
-            if (ResultModel->GetItem() != nullptr)
-            {
-                const auto ParentKey = Gs2::Enhance::Domain::Model::FUserDomain::CreateCacheParentKey(
+
+                    if (ResultModel.IsValid() && ResultModel->GetItem() != nullptr)
+                    {
+
+                if (!ResultModel.IsValid() || !((ResultModel.IsValid() && ResultModel->GetItem().IsValid() ? ResultModel->GetItem()->GetUserId() : TOptional<FString>())).IsSet())
+                    {
+                      return;
+                      }
+                Gs2::Enhance::Model::Cache::FProgressCache::Put(
+                    Gs2->Cache,
+
                     RequestModel->GetNamespaceName(),
-                    RequestModel->GetUserId(),
-                    "Progress"
+                    (ResultModel.IsValid() && ResultModel->GetItem().IsValid() ? ResultModel->GetItem()->GetUserId() : TOptional<FString>()),
+                    TimeOffset,
+                    ResultModel->GetItem()
                 );
-                const auto Key = Gs2::Enhance::Domain::Model::FProgressDomain::CreateCacheKey(
-                );
-                Gs2->Cache->Put(
-                    Gs2::Enhance::Model::FProgress::TypeName,
-                    ParentKey,
-                    Key,
-                    ResultModel->GetItem(),
-                    FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
-                );
-            }
+                    }
+
         }
     }
 
@@ -734,4 +844,3 @@ namespace Gs2::Enhance::Domain
 #elif defined(__clang__)
 #pragma clang diagnostic pop
 #endif
-

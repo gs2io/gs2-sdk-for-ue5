@@ -31,6 +31,7 @@
 #include "Identifier/Domain/Model/Password.h"
 #include "Identifier/Domain/Model/AttachSecurityPolicy.h"
 
+#include "Identifier/Model/Cache/Identifier.h"
 #include "Core/Domain/Gs2.h"
 #include "Core/Domain/Transaction/JobQueueJobDomainFactory.h"
 #include "Core/Domain/Transaction/InternalTransactionDomainFactory.h"
@@ -297,26 +298,110 @@ namespace Gs2::Identifier::Domain::Model
     {
         return Gs2->Cache->ListSubscribe(
             Gs2::Identifier::Model::FIdentifier::TypeName,
-            Gs2::Identifier::Domain::Model::FUserDomain::CreateCacheParentKey(
+            Gs2::Identifier::Model::Cache::FIdentifierCache::CreateCacheParentKey(
                 UserName,
-                "Identifier"
+                TOptional<int32>()
             ),
+            Callback,
             Callback
         );
     }
-
     void FUserDomain::UnsubscribeIdentifiers(
         Gs2::Core::Domain::CallbackID CallbackID
     )
     {
         Gs2->Cache->ListUnsubscribe(
             Gs2::Identifier::Model::FIdentifier::TypeName,
-            Gs2::Identifier::Domain::Model::FUserDomain::CreateCacheParentKey(
+            Gs2::Identifier::Model::Cache::FIdentifierCache::CreateCacheParentKey(
                 UserName,
-                "Identifier"
+                TOptional<int32>()
             ),
             CallbackID
         );
+    }
+    class FUserDomain::FCollectIdentifiersTask : public Gs2::Core::Util::TGs2Future<TArray<Gs2::Identifier::Model::FIdentifierPtr>>, public TSharedFromThis<FCollectIdentifiersTask>
+    {
+        const TSharedPtr<FUserDomain> Self;
+        const TFunction<void(TArray<Gs2::Identifier::Model::FIdentifierPtr>)> OnCollected;
+
+    public:
+        explicit FCollectIdentifiersTask(const TSharedPtr<FUserDomain>& Self, TFunction<void(TArray<Gs2::Identifier::Model::FIdentifierPtr>)> OnCollected) : Self(Self), OnCollected(OnCollected) {}
+        FCollectIdentifiersTask(const FCollectIdentifiersTask& From) : TGs2Future(From), Self(From.Self), OnCollected(From.OnCollected) {}
+        virtual Gs2::Core::Model::FGs2ErrorPtr Action(TSharedPtr<TSharedPtr<TArray<Gs2::Identifier::Model::FIdentifierPtr>>> Result) override
+        {
+            TArray<Gs2::Identifier::Model::FIdentifierPtr> Items;
+            auto Iterator = Self->Identifiers()->begin();
+            while (Iterator.HasNext())
+            {
+                if (Iterator.IsError()) return Iterator.Error();
+                if (Iterator.IsCurrentValid()) Items.Add(Iterator.Current());
+                ++Iterator;
+            }
+            if (Iterator.IsError()) return Iterator.Error();
+            *Result = MakeShared<TArray<Gs2::Identifier::Model::FIdentifierPtr>>(Items);
+            if (OnCollected) OnCollected(Items);
+            return nullptr;
+        }
+    };
+
+    Gs2::Core::Domain::CallbackID FUserDomain::SubscribeIdentifiers(
+        TFunction<void(TArray<Gs2::Identifier::Model::FIdentifierPtr>)> Callback
+    )
+    {
+        const TWeakPtr<Gs2::Core::Domain::FGs2> WeakGs2 = this->Gs2;
+        const TWeakPtr<Identifier::Domain::FGs2IdentifierDomain> WeakService = this->Service;
+        const auto QueryUserName = UserName;
+        const auto Parent = Gs2::Identifier::Model::Cache::FIdentifierCache::CreateCacheParentKey(
+        UserName,
+        TOptional<int32>()
+    );
+        return Gs2->Cache->ListSubscribeTyped(
+            Gs2::Identifier::Model::FIdentifier::TypeName,
+            Parent,
+            [Callback, WeakGs2](const TArray<FGs2ObjectPtr>& Values)
+            {
+                if (!WeakGs2.Pin().IsValid()) return;
+                TArray<Gs2::Identifier::Model::FIdentifierPtr> TypedValues;
+                for (const auto& Value : Values) if (Value.IsValid()) TypedValues.Add(StaticCastSharedPtr<Gs2::Identifier::Model::FIdentifier>(Value));
+                Callback(TypedValues);
+            },
+            [WeakGs2, WeakService, Callback, QueryUserName]()
+            {
+                const auto Owner = WeakGs2.Pin();
+                if (!Owner.IsValid()) return;
+                const auto Domain = MakeShared<FUserDomain>(Owner, WeakService.Pin(), QueryUserName);
+                const auto Task = Gs2::Core::Util::New<FAsyncTask<FCollectIdentifiersTask>>(Domain, Callback);
+                Task->StartBackgroundTask();
+            }
+        );
+    }
+
+    void FUserDomain::InvalidateIdentifiers()
+    {
+        Gs2->Cache->ClearListCache(
+            Gs2::Identifier::Model::FIdentifier::TypeName,
+            Gs2::Identifier::Model::Cache::FIdentifierCache::CreateCacheParentKey(
+        UserName,
+        TOptional<int32>()
+    )
+        );
+    }
+
+    FUserDomain::FSubscribeIdentifiersWithInitialCallTask::FSubscribeIdentifiersWithInitialCallTask(const TSharedPtr<FUserDomain>& Self, TFunction<void(TArray<Gs2::Identifier::Model::FIdentifierPtr>)> Callback) : Self(Self), Callback(Callback) {}
+    FUserDomain::FSubscribeIdentifiersWithInitialCallTask::FSubscribeIdentifiersWithInitialCallTask(const FSubscribeIdentifiersWithInitialCallTask& From) : TGs2Future(From), Self(From.Self), Callback(From.Callback) {}
+    Gs2::Core::Model::FGs2ErrorPtr FUserDomain::FSubscribeIdentifiersWithInitialCallTask::Action(TSharedPtr<TSharedPtr<Gs2::Core::Domain::CallbackID>> Result)
+    {
+        const auto Task = Gs2::Core::Util::New<FAsyncTask<FCollectIdentifiersTask>>(Self, TFunction<void(TArray<Gs2::Identifier::Model::FIdentifierPtr>)>());
+        Task->StartSynchronousTask(); Task->EnsureCompletion();
+        if (Task->GetTask().IsError()) return Task->GetTask().Error();
+        const auto Values = Task->GetTask().Result();
+        const auto CallbackId = Self->SubscribeIdentifiers(Callback);
+        Callback(*Values); *Result = MakeShared<Gs2::Core::Domain::CallbackID>(CallbackId);
+        return nullptr;
+    }
+    TSharedPtr<FAsyncTask<FUserDomain::FSubscribeIdentifiersWithInitialCallTask>> FUserDomain::SubscribeIdentifiersWithInitialCall(TFunction<void(TArray<Gs2::Identifier::Model::FIdentifierPtr>)> Callback)
+    {
+        return Gs2::Core::Util::New<FAsyncTask<FSubscribeIdentifiersWithInitialCallTask>>(this->AsShared(), Callback);
     }
 
     TSharedPtr<Gs2::Identifier::Domain::Model::FIdentifierDomain> FUserDomain::Identifier(
@@ -388,62 +473,79 @@ namespace Gs2::Identifier::Domain::Model
     )
     {
         const auto ParentKey = FString("identifier:User");
-        // ReSharper disable once CppLocalVariableMayBeConst
-        TSharedPtr<Gs2::Identifier::Model::FUser> Value;
-        auto bCacheHit = Self->Gs2->Cache->TryGet<Gs2::Identifier::Model::FUser>(
-            ParentKey,
-            Gs2::Identifier::Domain::Model::FUserDomain::CreateCacheKey(
-                Self->UserName
-            ),
-            &Value
+        const FString CacheKey = Gs2::Identifier::Domain::Model::FUserDomain::CreateCacheKey(
+            Self->UserName
         );
-        if (!bCacheHit) {
-            const auto Future = Self->Get(
-                MakeShared<Gs2::Identifier::Request::FGetUserRequest>()
-            );
-            Future->StartSynchronousTask();
-            if (Future->GetTask().IsError())
+        return Self->Gs2->Cache->ExecuteWithKeyLock(
+            Gs2::Identifier::Model::FUser::TypeName,
+            ParentKey,
+            CacheKey,
+            [this, Result, CacheKey, ParentKey]() -> Gs2::Core::Model::FGs2ErrorPtr
             {
-                if (Future->GetTask().Error()->Type() != Gs2::Core::Model::FNotFoundError::TypeString)
-                {
-                    return Future->GetTask().Error();
-                }
-
-                const auto Key = Gs2::Identifier::Domain::Model::FUserDomain::CreateCacheKey(
-                    Self->UserName
-                );
-                Self->Gs2->Cache->Put(
-                    Gs2::Identifier::Model::FUser::TypeName,
+                // ReSharper disable once CppLocalVariableMayBeConst
+                TSharedPtr<Gs2::Identifier::Model::FUser> Value;
+                auto bCacheHit = Self->Gs2->Cache->TryGet<Gs2::Identifier::Model::FUser>(
                     ParentKey,
-                    Key,
-                    nullptr,
-                    FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
+                    CacheKey,
+                    &Value
                 );
+                if (!bCacheHit) {
+                    const auto Future = Self->Get(
+                        MakeShared<Gs2::Identifier::Request::FGetUserRequest>()
+                    );
+                    Future->StartSynchronousTask();
+                    if (Future->GetTask().IsError())
+                    {
+                        const auto Error = Future->GetTask().Error();
+                        if (!Error.IsValid() || Error->Type() != Gs2::Core::Model::FNotFoundError::TypeString)
+                        {
+                            return Error;
+                        }
+                        Self->Gs2->Cache->Put(
+                            Gs2::Identifier::Model::FUser::TypeName,
+                            ParentKey,
+                            CacheKey,
+                            nullptr,
+                            FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
+                        );
 
-                if (Future->GetTask().Error()->Detail(0)->GetComponent() != "user")
-                {
-                    return Future->GetTask().Error();
+                        if (!Error->GetErrors().IsValid() || Error->Count() == 0 || !Error->Detail(0).IsValid() || Error->Detail(0)->GetComponent() != "user")
+                        {
+                            return Error;
+                        }
+                    }
+                    else
+                    {
+                        Value = Future->GetTask().Result();
+                    }
+                    Future->EnsureCompletion();
                 }
-            }
-            else
-            {
-                Value = Future->GetTask().Result();
-                if (Value.IsValid())
+                if (!bCacheHit)
                 {
-                    Self->Gs2->Cache->Put(
+                    FGs2ObjectPtr ExistingObject;
+                    const bool Existing = Self->Gs2->Cache->TryGet(
                         Gs2::Identifier::Model::FUser::TypeName,
                         ParentKey,
-                        FUserDomain::CreateCacheKey(Self->UserName),
-                        Value,
-                        FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
+                        CacheKey,
+                        &ExistingObject
                     );
+                    if (!Existing || ExistingObject != Value)
+                    {
+                        Self->Gs2->Cache->Put(
+                            Gs2::Identifier::Model::FUser::TypeName,
+                            ParentKey,
+                            CacheKey,
+                            Value,
+                            FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
+                        );
+                    }
                 }
-            }
-            Future->EnsureCompletion();
-        }
-        *Result = Value;
 
-        return nullptr;
+                *Result = Value;
+
+                return nullptr;
+            }
+        );
     }
 
     TSharedPtr<FAsyncTask<FUserDomain::FModelTask>> FUserDomain::Model() {
@@ -454,6 +556,10 @@ namespace Gs2::Identifier::Domain::Model
         TFunction<void(Gs2::Identifier::Model::FUserPtr)> Callback
     )
     {
+        const TWeakPtr<Gs2::Core::Domain::FGs2> WeakGs2 = Gs2;
+        const TWeakPtr<Identifier::Domain::FGs2IdentifierDomain> WeakService = Service;
+        const FString RegisteredParentKey = ParentKey;
+        const TOptional<FString> QueryUserName = UserName;
         return Gs2->Cache->Subscribe(
             Gs2::Identifier::Model::FUser::TypeName,
             ParentKey,
@@ -463,6 +569,22 @@ namespace Gs2::Identifier::Domain::Model
             [Callback](TSharedPtr<FGs2Object> obj)
             {
                 Callback(StaticCastSharedPtr<Gs2::Identifier::Model::FUser>(obj));
+            },
+            [WeakGs2, WeakService, RegisteredParentKey, QueryUserName]()
+            {
+                const auto Owner = WeakGs2.Pin();
+                if (!Owner.IsValid())
+                {
+                    return;
+                }
+                const auto Domain = MakeShared<FUserDomain>(
+                    Owner,
+                    WeakService.Pin(),
+                    QueryUserName
+                );
+                Domain->ParentKey = RegisteredParentKey;
+                const auto Task = Domain->Model();
+                Task->StartBackgroundTask();
             }
         );
     }

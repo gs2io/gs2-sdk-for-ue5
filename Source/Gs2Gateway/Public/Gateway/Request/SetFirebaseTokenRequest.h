@@ -29,6 +29,7 @@ namespace Gs2::Gateway::Request
         TOptional<FString> NamespaceNameValue;
         TOptional<FString> AccessTokenValue;
         TOptional<FString> TokenValue;
+        TOptional<FString> LocaleValue;
         TOptional<FString> DuplicationAvoiderValue;
         
     public:
@@ -43,12 +44,14 @@ namespace Gs2::Gateway::Request
         TSharedPtr<FSetFirebaseTokenRequest> WithNamespaceName(const TOptional<FString> NamespaceName);
         TSharedPtr<FSetFirebaseTokenRequest> WithAccessToken(const TOptional<FString> AccessToken);
         TSharedPtr<FSetFirebaseTokenRequest> WithToken(const TOptional<FString> Token);
+        TSharedPtr<FSetFirebaseTokenRequest> WithLocale(const TOptional<FString> Locale);
         TSharedPtr<FSetFirebaseTokenRequest> WithDuplicationAvoider(const TOptional<FString> DuplicationAvoider);
 
         TOptional<FString> GetContextStack() const;
         TOptional<FString> GetNamespaceName() const;
         TOptional<FString> GetAccessToken() const;
         TOptional<FString> GetToken() const;
+        TOptional<FString> GetLocale() const;
         TOptional<FString> GetDuplicationAvoider() const;
 
         static TSharedPtr<FSetFirebaseTokenRequest> FromJson(const TSharedPtr<FJsonObject> Data);

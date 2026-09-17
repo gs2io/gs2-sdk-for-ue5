@@ -247,7 +247,7 @@ namespace Gs2::UE5::Version::Domain::Model
     Gs2::Core::Domain::CallbackID FEzAcceptVersionGameSessionDomain::Subscribe(TFunction<void(Gs2::UE5::Version::Model::FEzAcceptVersionPtr)> Callback)
     {
         return Domain->Subscribe(
-            [&](Gs2::Version::Model::FAcceptVersionPtr Item)
+            [Callback](Gs2::Version::Model::FAcceptVersionPtr Item)
             {
                 Callback(Gs2::UE5::Version::Model::FEzAcceptVersion::FromModel(Item));
             }

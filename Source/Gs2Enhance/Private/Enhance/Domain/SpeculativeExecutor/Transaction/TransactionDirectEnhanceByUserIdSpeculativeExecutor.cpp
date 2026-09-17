@@ -27,9 +27,81 @@
 #include "Enhance/Domain/SpeculativeExecutor/Transaction/DirectEnhanceByUserIdSpeculativeExecutor.h"
 
 #include "Core/Domain/Gs2.h"
+#include "Auth/Model/AccessToken.h"
+#include "Core/Domain/SpeculativeExecutor/ActionConfig.h"
+#include "Core/Domain/Model/IssueTransactionEvent.h"
+#include "Core/Domain/SpeculativeExecutor/PreparedSpeculativeCommit.h"
+#include "Enhance/Model/Material.h"
+#include "Inventory/Model/ConsumeCount.h"
+#include "Inventory/Request/ConsumeItemSetByUserIdRequest.h"
+#include "Inventory/Request/ConsumeSimpleItemsByUserIdRequest.h"
+#include "Internationalization/Regex.h"
+#include "Serialization/JsonSerializer.h"
+#include "Serialization/JsonWriter.h"
 
 namespace Gs2::Enhance::Domain::Transaction::SpeculativeExecutor
 {
+    namespace
+    {
+        FString SerializeDirectRequest(const TSharedPtr<FJsonObject>& Object)
+        {
+            if (!Object.IsValid()) return FString();
+            FString Body;
+            const TSharedRef<TJsonWriter<TCHAR>> Writer = TJsonWriterFactory<TCHAR>::Create(&Body);
+            FJsonSerializer::Serialize(Object.ToSharedRef(), Writer);
+            return Body;
+        }
+
+        Gs2::Core::Model::FConsumeActionPtr BuildDirectConsumeAction(
+            const Gs2::Auth::Model::FAccessTokenPtr& Token,
+            const Gs2::Enhance::Model::FMaterialPtr& Material
+        )
+        {
+            if (!Token.IsValid() || !Token->GetUserId().IsSet() || !Material.IsValid() ||
+                !Material->GetMaterialItemSetId().IsSet() || !Material->GetCount().IsSet())
+            {
+                return nullptr;
+            }
+            const FString ItemSetId = Material->GetMaterialItemSetId().GetValue();
+            const int64 Count = Material->GetCount().GetValue();
+            const auto ItemSetPattern = FRegexPattern(
+                TEXT("^grn:gs2:[-_.{}a-zA-Z0-9]+:[-_.{}a-zA-Z0-9]+:inventory:([-_.{}a-zA-Z0-9]+):user:[-_.{}a-zA-Z0-9]+:inventory:([-_.{}a-zA-Z0-9]+):item:([-_.{}a-zA-Z0-9]+):itemSet:([-_.{}a-zA-Z0-9]+)$"));
+            FRegexMatcher ItemSetMatcher(ItemSetPattern, ItemSetId);
+            if (ItemSetMatcher.FindNext())
+            {
+                const auto Request = MakeShared<Gs2::Inventory::Request::FConsumeItemSetByUserIdRequest>()
+                    ->WithNamespaceName(ItemSetMatcher.GetCaptureGroup(1))
+                    ->WithInventoryName(ItemSetMatcher.GetCaptureGroup(2))
+                    ->WithUserId(Token->GetUserId())
+                    ->WithItemName(ItemSetMatcher.GetCaptureGroup(3))
+                    ->WithItemSetName(ItemSetMatcher.GetCaptureGroup(4))
+                    ->WithConsumeCount(Count);
+                return MakeShared<Gs2::Core::Model::FConsumeAction>()
+                    ->WithAction(FString("Gs2Inventory:ConsumeItemSetByUserId"))
+                    ->WithRequest(SerializeDirectRequest(Request->ToJson()));
+            }
+
+            const auto SimplePattern = FRegexPattern(
+                TEXT("^grn:gs2:[-_.{}a-zA-Z0-9]+:[-_.{}a-zA-Z0-9]+:inventory:([-_.{}a-zA-Z0-9]+):user:[-_.{}a-zA-Z0-9]+:simple:inventory:([-_.{}a-zA-Z0-9]+):item:([-_.{}a-zA-Z0-9]+)$"));
+            FRegexMatcher SimpleMatcher(SimplePattern, ItemSetId);
+            if (!SimpleMatcher.FindNext()) return nullptr;
+            const auto ConsumeCounts = MakeShared<TArray<Gs2::Inventory::Model::FConsumeCountPtr>>();
+            ConsumeCounts->Add(
+                MakeShared<Gs2::Inventory::Model::FConsumeCount>()
+                    ->WithItemName(SimpleMatcher.GetCaptureGroup(3))
+                    ->WithCount(Count)
+            );
+            const auto Request = MakeShared<Gs2::Inventory::Request::FConsumeSimpleItemsByUserIdRequest>()
+                ->WithNamespaceName(SimpleMatcher.GetCaptureGroup(1))
+                ->WithInventoryName(SimpleMatcher.GetCaptureGroup(2))
+                ->WithUserId(Token->GetUserId())
+                ->WithConsumeCounts(ConsumeCounts);
+            return MakeShared<Gs2::Core::Model::FConsumeAction>()
+                ->WithAction(FString("Gs2Inventory:ConsumeSimpleItemsByUserId"))
+                ->WithRequest(SerializeDirectRequest(Request->ToJson()));
+        }
+    }
+
     FString FDirectEnhanceByUserIdSpeculativeExecutor::Action() {
         return "Gs2Enhance:DirectEnhanceByUserId";
     }
@@ -58,12 +130,73 @@ namespace Gs2::Enhance::Domain::Transaction::SpeculativeExecutor
     }
 
     Gs2::Core::Model::FGs2ErrorPtr FDirectEnhanceByUserIdSpeculativeExecutor::FCommitTask::Action(
-        TSharedPtr<TSharedPtr<TFunction<void()>>> Result)
+        TSharedPtr<TSharedPtr<Gs2::Core::Domain::SpeculativeExecutor::FPreparedSpeculativeCommit>> Result)
     {
-        UE_LOG(Gs2Log, Warning, TEXT("Speculative execution not supported on this action: %s"), ToCStr(FDirectEnhanceByUserIdSpeculativeExecutor::Action()))
+        if (!Result.IsValid() || !Domain.IsValid() || !Domain->RestSession.IsValid() ||
+            !AccessToken.IsValid() || !Request.IsValid())
+        {
+            if (Result.IsValid()) *Result = nullptr;
+            return nullptr;
+        }
+        const auto PreparedAccessToken = MakeShared<Gs2::Auth::Model::FAccessToken>(*AccessToken);
+        const auto PreparedRequest = Gs2::Enhance::Request::FDirectEnhanceByUserIdRequest::FromJson(Request->ToJson());
+        if (!PreparedRequest.IsValid() || !PreparedAccessToken->GetUserId().IsSet() ||
+            PreparedAccessToken->GetUserId()->IsEmpty())
+        {
+            *Result = nullptr;
+            return nullptr;
+        }
+        if (PreparedRequest->GetUserId().IsSet() && *PreparedRequest->GetUserId() == TEXT("#{userId}"))
+        {
+            PreparedRequest->WithUserId(PreparedAccessToken->GetUserId());
+        }
+        if (!PreparedRequest->GetUserId().IsSet() ||
+            *PreparedRequest->GetUserId() != *PreparedAccessToken->GetUserId())
+        {
+            *Result = nullptr;
+            return nullptr;
+        }
 
-        *Result = MakeShared<TFunction<void()>>([]{});
-
+        const auto ConsumeActions = MakeShared<TArray<Gs2::Core::Model::FConsumeActionPtr>>();
+        if (const auto Materials = PreparedRequest->GetMaterials(); Materials.IsValid())
+        {
+            for (const auto& Material : *Materials)
+            {
+                Gs2::Core::Model::FConsumeActionPtr Action = BuildDirectConsumeAction(PreparedAccessToken, Material);
+                if (const auto Config = PreparedRequest->GetConfig(); Config.IsValid())
+                {
+                    for (const auto& Entry : *Config)
+                    {
+                        if (!Entry.IsValid())
+                        {
+                            Action = nullptr;
+                            break;
+                        }
+                        Action = Gs2::Core::Domain::SpeculativeExecutor::ApplyConfig(
+                            Gs2::Core::Model::FConsumeActionPtr(Action),
+                            TOptional<FString>(Entry->GetKey()), TOptional<FString>(Entry->GetValue()));
+                    }
+                }
+                if (Action.IsValid()) ConsumeActions->Add(Action);
+            }
+        }
+        if (ConsumeActions->Num() == 0)
+        {
+            *Result = nullptr;
+            return nullptr;
+        }
+        const auto AcquireActions = MakeShared<TArray<Gs2::Core::Model::FAcquireActionPtr>>();
+        const auto Event = MakeShared<Gs2::Core::Domain::Model::FIssueTransactionEvent>(
+            PreparedAccessToken, ConsumeActions, AcquireActions, TBigInt<1024, false>(1));
+        Service->OnIssueTransaction.Broadcast(Event);
+        if (Event->GetError().IsValid()) return Event->GetError();
+        const auto Commit = Event->GetCommit();
+        if (!Commit.IsValid())
+        {
+            *Result = nullptr;
+            return nullptr;
+        }
+        *Result = Gs2::Core::Domain::SpeculativeExecutor::FPreparedSpeculativeCommit::WrapLegacy(Commit);
         return nullptr;
     }
 

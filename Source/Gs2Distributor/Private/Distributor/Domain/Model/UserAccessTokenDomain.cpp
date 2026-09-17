@@ -36,6 +36,8 @@
 #include "Distributor/Domain/Model/StampSheetResultAccessToken.h"
 #include "Distributor/Domain/Model/TransactionResult.h"
 #include "Distributor/Domain/Model/TransactionResultAccessToken.h"
+#include "Distributor/Model/Cache/TransactionResult.h"
+#include "Distributor/Model/Cache/StampSheetResult.h"
 
 #include "Core/Domain/Gs2.h"
 #include "Core/Domain/Transaction/JobQueueJobDomainFactory.h"
@@ -129,4 +131,3 @@ namespace Gs2::Distributor::Domain::Model
 #elif defined(__clang__)
 #pragma clang diagnostic pop
 #endif
-

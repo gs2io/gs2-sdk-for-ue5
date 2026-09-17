@@ -75,6 +75,8 @@ namespace Gs2::Buff::Domain::Model
             const FBuffEntryModelMasterDomain& From
         );
 
+
+
         class GS2BUFF_API FGetTask final :
             public Gs2::Core::Util::TGs2Future<Gs2::Buff::Model::FBuffEntryModelMaster>,
             public TSharedFromThis<FGetTask>
@@ -101,6 +103,8 @@ namespace Gs2::Buff::Domain::Model
             Request::FGetBuffEntryModelMasterRequestPtr Request
         );
 
+
+
         class GS2BUFF_API FUpdateTask final :
             public Gs2::Core::Util::TGs2Future<Gs2::Buff::Domain::Model::FBuffEntryModelMasterDomain>,
             public TSharedFromThis<FUpdateTask>
@@ -126,6 +130,8 @@ namespace Gs2::Buff::Domain::Model
         TSharedPtr<FAsyncTask<FUpdateTask>> Update(
             Request::FUpdateBuffEntryModelMasterRequestPtr Request
         );
+
+
 
         class GS2BUFF_API FDeleteTask final :
             public Gs2::Core::Util::TGs2Future<Gs2::Buff::Domain::Model::FBuffEntryModelMasterDomain>,
@@ -185,7 +191,34 @@ namespace Gs2::Buff::Domain::Model
 
         TSharedPtr<FAsyncTask<FModelTask>> Model();
 
+        void Invalidate();
+
         Gs2::Core::Domain::CallbackID Subscribe(
+            TFunction<void(Gs2::Buff::Model::FBuffEntryModelMasterPtr)> Callback
+        );
+
+        class GS2BUFF_API FSubscribeWithInitialCallTask final :
+            public Gs2::Core::Util::TGs2Future<Gs2::Core::Domain::CallbackID>,
+            public TSharedFromThis<FSubscribeWithInitialCallTask>
+        {
+            const TSharedPtr<FBuffEntryModelMasterDomain> Self;
+            const TFunction<void(Gs2::Buff::Model::FBuffEntryModelMasterPtr)> Callback;
+        public:
+            FSubscribeWithInitialCallTask(
+                const TSharedPtr<FBuffEntryModelMasterDomain>& Self,
+                TFunction<void(Gs2::Buff::Model::FBuffEntryModelMasterPtr)> Callback
+            );
+
+            FSubscribeWithInitialCallTask(
+                const FSubscribeWithInitialCallTask& From
+            );
+
+            virtual Gs2::Core::Model::FGs2ErrorPtr Action(
+                TSharedPtr<TSharedPtr<Gs2::Core::Domain::CallbackID>> Result
+            ) override;
+        };
+
+        TSharedPtr<FAsyncTask<FSubscribeWithInitialCallTask>> SubscribeWithInitialCall(
             TFunction<void(Gs2::Buff::Model::FBuffEntryModelMasterPtr)> Callback
         );
 

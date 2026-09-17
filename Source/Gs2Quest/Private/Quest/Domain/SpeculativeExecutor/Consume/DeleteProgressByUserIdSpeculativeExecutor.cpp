@@ -26,11 +26,37 @@
 
 #include "Quest/Domain/SpeculativeExecutor/Consume/DeleteProgressByUserIdSpeculativeExecutor.h"
 #include "Quest/Domain/Gs2Quest.h"
+#include "Quest/Model/Cache/Progress.h"
 
+#include "Auth/Model/AccessToken.h"
 #include "Core/Domain/Gs2.h"
+#include "Core/Domain/SpeculativeExecutor/PreparedSpeculativeCommit.h"
+#include "Serialization/JsonSerializer.h"
+#include "Serialization/JsonWriter.h"
 
 namespace Gs2::Quest::Domain::SpeculativeExecutor
 {
+
+    namespace
+    {
+        using FProgress = Gs2::Quest::Model::FProgress;
+        using FProgressPtr = Gs2::Quest::Model::FProgressPtr;
+        using FProgressCache = Gs2::Quest::Model::Cache::FProgressCache;
+
+        static FString ExpectedProgressId(const Gs2::Core::Domain::FGs2Ptr& Domain, const FString& NamespaceName, const FString& UserId)
+        {
+            return FString::Printf(TEXT("grn:gs2:%s:%s:quest:%s:user:%s:progress"), *Domain->RestSession->RegionName(), *Domain->RestSession->OwnerId(), *NamespaceName, *UserId);
+        }
+
+        static FString DeleteProgressSnapshot(const TSharedPtr<FJsonObject>& Json)
+        {
+            FString Result;
+            const auto Writer = TJsonWriterFactory<>::Create(&Result);
+            FJsonSerializer::Serialize(Json.ToSharedRef(), Writer);
+            return Result;
+        }
+
+    }
 
     FString FDeleteProgressByUserIdSpeculativeExecutor::Action()
     {
@@ -73,28 +99,27 @@ namespace Gs2::Quest::Domain::SpeculativeExecutor
     }
 
     Gs2::Core::Model::FGs2ErrorPtr FDeleteProgressByUserIdSpeculativeExecutor::FCommitTask::Action(
-        TSharedPtr<TSharedPtr<TFunction<void()>>> Result
+        TSharedPtr<TSharedPtr<Gs2::Core::Domain::SpeculativeExecutor::FPreparedSpeculativeCommit>> Result
     )
     {
-        const auto ParentKey = Model::FUserDomain::CreateCacheParentKey(
-            Request->GetNamespaceName(),
-            AccessToken->GetUserId(),
-            FString("Progress")
-        );
-        const auto Key = Model::FProgressDomain::CreateCacheKey(
-        );
-
-        *Result = MakeShared<TFunction<void()>>([&]()
+        *Result = nullptr;
+        const auto Prepared = Request.IsValid() ? Gs2::Quest::Request::FDeleteProgressByUserIdRequest::FromJson(Request->ToJson()) : nullptr;
+        Gs2::Auth::Model::FAccessTokenPtr PreparedAccessToken;
+        if (AccessToken.IsValid()) PreparedAccessToken = MakeShared<Gs2::Auth::Model::FAccessToken>(*AccessToken);
+        if (Prepared.IsValid() && Prepared->GetUserId().IsSet() && *Prepared->GetUserId() == TEXT("#{userId}")) Prepared->WithUserId(PreparedAccessToken.IsValid() ? PreparedAccessToken->GetUserId() : TOptional<FString>());
+        if (!Domain.IsValid() || !Domain->RestSession.IsValid() || !Prepared.IsValid() || !PreparedAccessToken.IsValid() || !PreparedAccessToken->GetUserId().IsSet() || PreparedAccessToken->GetUserId()->IsEmpty() || Prepared->GetUserId() != PreparedAccessToken->GetUserId() || !Prepared->GetNamespaceName().IsSet()) return nullptr;
+        const auto UserId = *PreparedAccessToken->GetUserId();
+        const auto TimeOffset = PreparedAccessToken->GetTimeOffset();
+        FProgressPtr PreparedItem;
+        if (!FProgressCache::TryGet(Domain->Cache, Prepared->GetNamespaceName(), UserId, TimeOffset, &PreparedItem) || !PreparedItem.IsValid() || !PreparedItem->GetProgressId().IsSet() || *PreparedItem->GetProgressId() != ExpectedProgressId(Domain, *Prepared->GetNamespaceName(), UserId) || !PreparedItem->GetUserId().IsSet() || *PreparedItem->GetUserId() != UserId) return nullptr;
+        const FString PreparedSnapshot = DeleteProgressSnapshot(PreparedItem->ToJson());
+        *Result = Gs2::Core::Domain::SpeculativeExecutor::FPreparedSpeculativeCommit::WrapLegacy(MakeShared<TFunction<void()>>([DomainCopy = Domain, Prepared, UserId, TimeOffset, PreparedSnapshot]()
         {
-            Domain->Cache->Put(
-                Quest::Model::FProgress::TypeName,
-                ParentKey,
-                Key,
-                nullptr,
-                FDateTime::Now() + FTimespan::FromSeconds(10)
-            );
-            return nullptr;
-        });
+            FProgressPtr Live;
+            if (FProgressCache::TryGet(DomainCopy->Cache, Prepared->GetNamespaceName(), UserId, TimeOffset, &Live) && Live.IsValid() && DeleteProgressSnapshot(Live->ToJson()) == PreparedSnapshot) {
+                FProgressCache::Put(DomainCopy->Cache, Prepared->GetNamespaceName(), UserId, TimeOffset, nullptr);
+            }
+        }));
         return nullptr;
     }
 

@@ -12,6 +12,8 @@
  * on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either
  * express or implied. See the License for the specific language governing
  * permissions and limitations under the License.
+ *
+ * deny overwrite
  */
 
 #if defined(_MSC_VER)
@@ -26,6 +28,10 @@
 #include "Friend/Domain/Gs2Friend.h"
 
 #include "Core/Domain/Gs2.h"
+#include "Core/Domain/SpeculativeExecutor/PreparedSpeculativeCommit.h"
+#include "Auth/Model/AccessToken.h"
+#include "Friend/Model/Cache/Profile.h"
+#include "Friend/Model/Cache/PublicProfile.h"
 
 namespace Gs2::Friend::Domain::SpeculativeExecutor
 {
@@ -73,55 +79,92 @@ namespace Gs2::Friend::Domain::SpeculativeExecutor
     }
 
     Gs2::Core::Model::FGs2ErrorPtr FUpdateProfileByUserIdSpeculativeExecutor::FCommitTask::Action(
-        TSharedPtr<TSharedPtr<TFunction<void()>>> Result
+        TSharedPtr<TSharedPtr<Gs2::Core::Domain::SpeculativeExecutor::FPreparedSpeculativeCommit>> Result
     )
     {
-        const auto Future = Domain->Friend->Namespace(
-                Request->GetNamespaceName().IsSet() ? *Request->GetNamespaceName() : FString("")
-            )->AccessToken(
-                AccessToken
-            )->Profile(
-            )->Model();
-        Future->StartSynchronousTask();
-        if (Future->GetTask().IsError())
+        if (!Domain.IsValid() || !Domain->RestSession.IsValid() ||
+            !AccessToken.IsValid() || !Request.IsValid())
         {
-            return Future->GetTask().Error();
+            *Result = nullptr;
+            return nullptr;
         }
-        auto Item = Future->GetTask().Result();
-
-        if (!Item.IsValid())
+        const auto PreparedRequest = MakeShared<Gs2::Friend::Request::FUpdateProfileByUserIdRequest>(*Request);
+        const auto PreparedAccessToken = MakeShared<Gs2::Auth::Model::FAccessToken>(*AccessToken);
+        if (PreparedRequest->GetUserId().IsSet() && *PreparedRequest->GetUserId() == TEXT("#{userId}"))
         {
-            *Result = MakeShared<TFunction<void()>>([&]()
+            PreparedRequest->WithUserId(PreparedAccessToken->GetUserId());
+        }
+        if (!PreparedAccessToken->GetUserId().IsSet() || PreparedAccessToken->GetUserId()->IsEmpty() ||
+            !PreparedRequest->GetUserId().IsSet() || *PreparedRequest->GetUserId() != *PreparedAccessToken->GetUserId() ||
+            !PreparedRequest->GetNamespaceName().IsSet())
+        {
+            *Result = nullptr;
+            return nullptr;
+        }
+        const auto NamespaceName = PreparedRequest->GetNamespaceName();
+        const auto UserId = PreparedAccessToken->GetUserId();
+        const auto TimeOffset = PreparedAccessToken->GetTimeOffset();
+        const auto Region = Domain->RestSession->RegionName();
+        const auto OwnerId = Domain->RestSession->OwnerId();
+        const FString ExpectedProfileId = FString::Printf(
+            TEXT("grn:gs2:%s:%s:friend:%s:user:%s"),
+            *Region, *OwnerId, **NamespaceName, **UserId);
+        Gs2::Friend::Model::FProfilePtr Item;
+        const bool Found = Gs2::Friend::Model::Cache::FProfileCache::TryGet(
+            Domain->Cache, NamespaceName, UserId, TimeOffset, &Item);
+        if (!Found || !Item.IsValid() || !Item->GetProfileId().IsSet() ||
+            *Item->GetProfileId() != ExpectedProfileId || !Item->GetUserId().IsSet() ||
+            *Item->GetUserId() != *UserId)
+        {
+            *Result = nullptr;
+            return nullptr;
+        }
+        const int64 PhysicalTimeMillis = static_cast<int64>(
+            FDateTime::UtcNow().ToUnixTimestampDecimal() * 1000.0);
+        const int64 LogicalTimeMillis = PhysicalTimeMillis +
+            static_cast<int64>(TimeOffset.Get(0)) * 1000;
+        const auto PreparedRevision = Item->GetRevision();
+
+        *Result = Gs2::Core::Domain::SpeculativeExecutor::FPreparedSpeculativeCommit::WrapLegacy(
+            MakeShared<TFunction<void()>>([Domain = Domain, PreparedRequest, UserId, TimeOffset,
+                                           ExpectedProfileId, PreparedRevision,
+                                           LogicalTimeMillis]()
+        {
+            Gs2::Friend::Model::FProfilePtr Current;
+            const bool CurrentFound = Gs2::Friend::Model::Cache::FProfileCache::TryGet(
+                Domain->Cache, PreparedRequest->GetNamespaceName(), UserId, TimeOffset, &Current);
+            if (!CurrentFound || !Current.IsValid() || !Current->GetProfileId().IsSet() ||
+                *Current->GetProfileId() != ExpectedProfileId || !Current->GetUserId().IsSet() ||
+                *Current->GetUserId() != *UserId)
             {
-                return nullptr;
-            });
-            return nullptr;
-        }
-        auto Err = Transform(Domain, AccessToken, Request, Item);
-        if (Err != nullptr)
-        {
-            return Err;
-        }
-
-        const auto ParentKey = Model::FUserDomain::CreateCacheParentKey(
-            Request->GetNamespaceName(),
-            AccessToken->GetUserId(),
-            FString("Profile")
-        );
-        const auto Key = Model::FProfileDomain::CreateCacheKey(
-        );
-
-        *Result = MakeShared<TFunction<void()>>([&]()
-        {
-            Domain->Cache->Put(
-                Friend::Model::FProfile::TypeName,
-                ParentKey,
-                Key,
-                Item,
-                FDateTime::Now() + FTimespan::FromSeconds(10)
-            );
-            return nullptr;
-        });
+                return;
+            }
+            if (Current->GetRevision().IsSet() && *Current->GetRevision() > 0 &&
+                (!PreparedRevision.IsSet() || *Current->GetRevision() != *PreparedRevision))
+            {
+                return;
+            }
+            const auto Changed = MakeShared<Gs2::Friend::Model::FProfile>(*Current)
+                ->WithPublicProfile(PreparedRequest->GetPublicProfile())
+                ->WithFollowerProfile(PreparedRequest->GetFollowerProfile())
+                ->WithFriendProfile(PreparedRequest->GetFriendProfile())
+                ->WithUpdatedAt(LogicalTimeMillis)
+                ->WithRevision(0);
+            if (!Changed.IsValid() || !Changed->GetProfileId().IsSet() ||
+                *Changed->GetProfileId() != ExpectedProfileId || !Changed->GetUserId().IsSet() ||
+                *Changed->GetUserId() != *UserId || !Changed->GetRevision().IsSet() ||
+                *Changed->GetRevision() != 0)
+            {
+                return;
+            }
+            Gs2::Friend::Model::Cache::FProfileCache::Put(
+                Domain->Cache, PreparedRequest->GetNamespaceName(), UserId, TimeOffset, Changed);
+            Gs2::Friend::Model::Cache::FPublicProfileCache::Put(
+                Domain->Cache, PreparedRequest->GetNamespaceName(), UserId, TimeOffset,
+                MakeShared<Gs2::Friend::Model::FPublicProfile>()
+                    ->WithUserId(UserId)
+                    ->WithPublicProfile(Changed->GetPublicProfile()));
+        }));
         return nullptr;
     }
 

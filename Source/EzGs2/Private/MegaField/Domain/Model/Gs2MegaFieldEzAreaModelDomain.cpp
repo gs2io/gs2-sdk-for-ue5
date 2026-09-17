@@ -55,7 +55,8 @@ namespace Gs2::UE5::MegaField::Domain::Model
         );
     }
 
-    void FEzAreaModelDomain::UnsubscribeLayerModels(Gs2::Core::Domain::CallbackID CallbackId)
+    void FEzAreaModelDomain::UnsubscribeLayerModels(
+            Gs2::Core::Domain::CallbackID CallbackId)
     {
         Domain->UnsubscribeLayerModels(
             CallbackId
@@ -117,7 +118,7 @@ namespace Gs2::UE5::MegaField::Domain::Model
     Gs2::Core::Domain::CallbackID FEzAreaModelDomain::Subscribe(TFunction<void(Gs2::UE5::MegaField::Model::FEzAreaModelPtr)> Callback)
     {
         return Domain->Subscribe(
-            [&](Gs2::MegaField::Model::FAreaModelPtr Item)
+            [Callback](Gs2::MegaField::Model::FAreaModelPtr Item)
             {
                 Callback(Gs2::UE5::MegaField::Model::FEzAreaModel::FromModel(Item));
             }

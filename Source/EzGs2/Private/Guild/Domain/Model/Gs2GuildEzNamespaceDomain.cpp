@@ -77,7 +77,8 @@ namespace Gs2::UE5::Guild::Domain::Model
         );
     }
 
-    void FEzNamespaceDomain::UnsubscribeGuildModels(Gs2::Core::Domain::CallbackID CallbackId)
+    void FEzNamespaceDomain::UnsubscribeGuildModels(
+            Gs2::Core::Domain::CallbackID CallbackId)
     {
         Domain->UnsubscribeGuildModels(
             CallbackId

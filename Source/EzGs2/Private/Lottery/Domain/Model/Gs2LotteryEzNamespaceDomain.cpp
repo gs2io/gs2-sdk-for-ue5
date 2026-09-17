@@ -75,7 +75,8 @@ namespace Gs2::UE5::Lottery::Domain::Model
         );
     }
 
-    void FEzNamespaceDomain::UnsubscribeLotteryModels(Gs2::Core::Domain::CallbackID CallbackId)
+    void FEzNamespaceDomain::UnsubscribeLotteryModels(
+            Gs2::Core::Domain::CallbackID CallbackId)
     {
         Domain->UnsubscribeLotteryModels(
             CallbackId

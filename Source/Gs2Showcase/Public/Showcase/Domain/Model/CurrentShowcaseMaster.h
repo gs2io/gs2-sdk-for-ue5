@@ -99,6 +99,8 @@ namespace Gs2::Showcase::Domain::Model
             const FCurrentShowcaseMasterDomain& From
         );
 
+
+
         class GS2SHOWCASE_API FExportMasterTask final :
             public Gs2::Core::Util::TGs2Future<Gs2::Showcase::Domain::Model::FCurrentShowcaseMasterDomain>,
             public TSharedFromThis<FExportMasterTask>
@@ -124,6 +126,8 @@ namespace Gs2::Showcase::Domain::Model
         TSharedPtr<FAsyncTask<FExportMasterTask>> ExportMaster(
             Request::FExportMasterRequestPtr Request
         );
+
+
 
         class GS2SHOWCASE_API FGetTask final :
             public Gs2::Core::Util::TGs2Future<Gs2::Showcase::Model::FCurrentShowcaseMaster>,
@@ -151,6 +155,8 @@ namespace Gs2::Showcase::Domain::Model
             Request::FGetCurrentShowcaseMasterRequestPtr Request
         );
 
+
+
         class GS2SHOWCASE_API FPreUpdateTask final :
             public Gs2::Core::Util::TGs2Future<Gs2::Showcase::Domain::Model::FCurrentShowcaseMasterDomain>,
             public TSharedFromThis<FPreUpdateTask>
@@ -177,6 +183,8 @@ namespace Gs2::Showcase::Domain::Model
             Request::FPreUpdateCurrentShowcaseMasterRequestPtr Request
         );
 
+
+
         class GS2SHOWCASE_API FUpdateTask final :
             public Gs2::Core::Util::TGs2Future<Gs2::Showcase::Domain::Model::FCurrentShowcaseMasterDomain>,
             public TSharedFromThis<FUpdateTask>
@@ -202,6 +210,8 @@ namespace Gs2::Showcase::Domain::Model
         TSharedPtr<FAsyncTask<FUpdateTask>> Update(
             Request::FUpdateCurrentShowcaseMasterRequestPtr Request
         );
+
+
 
         class GS2SHOWCASE_API FUpdateFromGitHubTask final :
             public Gs2::Core::Util::TGs2Future<Gs2::Showcase::Domain::Model::FCurrentShowcaseMasterDomain>,
@@ -259,7 +269,34 @@ namespace Gs2::Showcase::Domain::Model
 
         TSharedPtr<FAsyncTask<FModelTask>> Model();
 
+        void Invalidate();
+
         Gs2::Core::Domain::CallbackID Subscribe(
+            TFunction<void(Gs2::Showcase::Model::FCurrentShowcaseMasterPtr)> Callback
+        );
+
+        class GS2SHOWCASE_API FSubscribeWithInitialCallTask final :
+            public Gs2::Core::Util::TGs2Future<Gs2::Core::Domain::CallbackID>,
+            public TSharedFromThis<FSubscribeWithInitialCallTask>
+        {
+            const TSharedPtr<FCurrentShowcaseMasterDomain> Self;
+            const TFunction<void(Gs2::Showcase::Model::FCurrentShowcaseMasterPtr)> Callback;
+        public:
+            FSubscribeWithInitialCallTask(
+                const TSharedPtr<FCurrentShowcaseMasterDomain>& Self,
+                TFunction<void(Gs2::Showcase::Model::FCurrentShowcaseMasterPtr)> Callback
+            );
+
+            FSubscribeWithInitialCallTask(
+                const FSubscribeWithInitialCallTask& From
+            );
+
+            virtual Gs2::Core::Model::FGs2ErrorPtr Action(
+                TSharedPtr<TSharedPtr<Gs2::Core::Domain::CallbackID>> Result
+            ) override;
+        };
+
+        TSharedPtr<FAsyncTask<FSubscribeWithInitialCallTask>> SubscribeWithInitialCall(
             TFunction<void(Gs2::Showcase::Model::FCurrentShowcaseMasterPtr)> Callback
         );
 

@@ -32,7 +32,6 @@
 #include "Chat/Domain/Iterator/DescribeSubscribesByRoomNameIterator.h"
 #include "Chat/Domain/Iterator/DescribeCategoryModelsIterator.h"
 #include "Chat/Domain/Iterator/DescribeCategoryModelMastersIterator.h"
-
 namespace Gs2::Core::Domain
 {
     class FGs2;
@@ -153,7 +152,34 @@ namespace Gs2::Chat::Domain::Model
         };
         friend FModelTask;
 
+        class GS2CHAT_API FSubscribeWithInitialCallTask final :
+            public Gs2::Core::Util::TGs2Future<Gs2::Core::Domain::CallbackID>,
+            public TSharedFromThis<FSubscribeWithInitialCallTask>
+        {
+            const TSharedPtr<FMessageAccessTokenDomain> Self;
+            const TFunction<void(Gs2::Chat::Model::FMessagePtr)> Callback;
+        public:
+            explicit FSubscribeWithInitialCallTask(
+                const TSharedPtr<FMessageAccessTokenDomain> Self,
+                const TFunction<void(Gs2::Chat::Model::FMessagePtr)>& Callback
+            );
+
+            FSubscribeWithInitialCallTask(
+                const FSubscribeWithInitialCallTask& From
+            );
+
+            virtual Gs2::Core::Model::FGs2ErrorPtr Action(
+                TSharedPtr<TSharedPtr<Gs2::Core::Domain::CallbackID>> Result
+            ) override;
+        };
+        friend FSubscribeWithInitialCallTask;
+
         TSharedPtr<FAsyncTask<FModelTask>> Model();
+
+        TSharedPtr<FAsyncTask<FSubscribeWithInitialCallTask>> SubscribeWithInitialCall(
+            TFunction<void(Gs2::Chat::Model::FMessagePtr)> Callback
+        );
+        void Invalidate();
 
         Gs2::Core::Domain::CallbackID Subscribe(
             TFunction<void(Gs2::Chat::Model::FMessagePtr)> Callback

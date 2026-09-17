@@ -82,7 +82,7 @@ namespace Gs2::UE5::Exchange::Domain::Model
     Gs2::Core::Domain::CallbackID FEzIncrementalRateModelDomain::Subscribe(TFunction<void(Gs2::UE5::Exchange::Model::FEzIncrementalRateModelPtr)> Callback)
     {
         return Domain->Subscribe(
-            [&](Gs2::Exchange::Model::FIncrementalRateModelPtr Item)
+            [Callback](Gs2::Exchange::Model::FIncrementalRateModelPtr Item)
             {
                 Callback(Gs2::UE5::Exchange::Model::FEzIncrementalRateModel::FromModel(Item));
             }

@@ -106,27 +106,89 @@ namespace Gs2::Showcase::Domain::Model
         TSharedPtr<TSharedPtr<Gs2::Showcase::Model::FSalesItemGroup>> Result
     )
     {
-        // ReSharper disable once CppLocalVariableMayBeConst
-        TSharedPtr<Gs2::Showcase::Model::FSalesItemGroup> Value;
-        auto bCacheHit = Self->Gs2->Cache->TryGet<Gs2::Showcase::Model::FSalesItemGroup>(
-            Self->ParentKey,
-            Gs2::Showcase::Domain::Model::FSalesItemGroupDomain::CreateCacheKey(
-            ),
-            &Value
+        const FString CacheKey = Gs2::Showcase::Domain::Model::FSalesItemGroupDomain::CreateCacheKey(
         );
-        *Result = Value;
+        return Self->Gs2->Cache->ExecuteWithKeyLock(
+            Gs2::Showcase::Model::FSalesItemGroup::TypeName,
+            Self->ParentKey,
+            CacheKey,
+            [this, Result, CacheKey]() -> Gs2::Core::Model::FGs2ErrorPtr
+            {
+                // ReSharper disable once CppLocalVariableMayBeConst
+                TSharedPtr<Gs2::Showcase::Model::FSalesItemGroup> Value;
+                auto bCacheHit = Self->Gs2->Cache->TryGet<Gs2::Showcase::Model::FSalesItemGroup>(
+                    Self->ParentKey,
+                    CacheKey,
+                    &Value
+                );
+                *Result = Value;
 
-        return nullptr;
+                return nullptr;
+            }
+        );
     }
 
     TSharedPtr<FAsyncTask<FSalesItemGroupDomain::FModelTask>> FSalesItemGroupDomain::Model() {
         return Gs2::Core::Util::New<FAsyncTask<FSalesItemGroupDomain::FModelTask>>(this->AsShared());
     }
 
+    void FSalesItemGroupDomain::Invalidate()
+    {
+        Gs2->Cache->Delete(
+            Gs2::Showcase::Model::FSalesItemGroup::TypeName,
+            ParentKey,
+            Gs2::Showcase::Domain::Model::FSalesItemGroupDomain::CreateCacheKey(
+            )
+        );
+    }
+
+    FSalesItemGroupDomain::FSubscribeWithInitialCallTask::FSubscribeWithInitialCallTask(
+        const TSharedPtr<FSalesItemGroupDomain>& Self,
+        TFunction<void(Gs2::Showcase::Model::FSalesItemGroupPtr)> Callback
+    ):
+        Self(Self),
+        Callback(Callback)
+    {
+    }
+
+    FSalesItemGroupDomain::FSubscribeWithInitialCallTask::FSubscribeWithInitialCallTask(
+        const FSubscribeWithInitialCallTask& From
+    ):
+        TGs2Future(From),
+        Self(From.Self),
+        Callback(From.Callback)
+    {
+    }
+
+    Gs2::Core::Model::FGs2ErrorPtr FSalesItemGroupDomain::FSubscribeWithInitialCallTask::Action(
+        TSharedPtr<TSharedPtr<Gs2::Core::Domain::CallbackID>> Result
+    )
+    {
+        const auto Task = Self->Model();
+        Task->StartSynchronousTask();
+        Task->EnsureCompletion();
+        if (Task->GetTask().IsError()) return Task->GetTask().Error();
+        const auto Item = Task->GetTask().Result();
+        const auto CallbackId = Self->Subscribe(Callback);
+        Callback(Item);
+        *Result = MakeShared<Gs2::Core::Domain::CallbackID>(CallbackId);
+        return nullptr;
+    }
+
+    TSharedPtr<FAsyncTask<FSalesItemGroupDomain::FSubscribeWithInitialCallTask>> FSalesItemGroupDomain::SubscribeWithInitialCall(
+        TFunction<void(Gs2::Showcase::Model::FSalesItemGroupPtr)> Callback
+    )
+    {
+        return Gs2::Core::Util::New<FAsyncTask<FSubscribeWithInitialCallTask>>(this->AsShared(), Callback);
+    }
+
     Gs2::Core::Domain::CallbackID FSalesItemGroupDomain::Subscribe(
         TFunction<void(Gs2::Showcase::Model::FSalesItemGroupPtr)> Callback
     )
     {
+        const TWeakPtr<Gs2::Core::Domain::FGs2> WeakGs2 = Gs2;
+        const TWeakPtr<Showcase::Domain::FGs2ShowcaseDomain> WeakService = Service;
+        const FString RegisteredParentKey = ParentKey;
         return Gs2->Cache->Subscribe(
             Gs2::Showcase::Model::FSalesItemGroup::TypeName,
             ParentKey,
@@ -135,6 +197,21 @@ namespace Gs2::Showcase::Domain::Model
             [Callback](TSharedPtr<FGs2Object> obj)
             {
                 Callback(StaticCastSharedPtr<Gs2::Showcase::Model::FSalesItemGroup>(obj));
+            },
+            [WeakGs2, WeakService, RegisteredParentKey]()
+            {
+                const auto Owner = WeakGs2.Pin();
+                if (!Owner.IsValid())
+                {
+                    return;
+                }
+                const auto Domain = MakeShared<FSalesItemGroupDomain>(
+                    Owner,
+                    WeakService.Pin()
+                );
+                Domain->ParentKey = RegisteredParentKey;
+                const auto Task = Domain->Model();
+                Task->StartBackgroundTask();
             }
         );
     }
@@ -158,4 +235,3 @@ namespace Gs2::Showcase::Domain::Model
 #elif defined(__clang__)
 #pragma clang diagnostic pop
 #endif
-

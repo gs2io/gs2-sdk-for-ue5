@@ -1,5 +1,9 @@
 #pragma once
 
+#include "CoreMinimal.h"
+#include "Dom/JsonValue.h"
+#include "Dom/JsonObject.h"
+
 class GS2CORE_API FGs2Object
 {
 protected:

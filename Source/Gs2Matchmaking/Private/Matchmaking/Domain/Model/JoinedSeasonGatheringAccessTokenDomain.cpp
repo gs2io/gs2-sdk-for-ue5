@@ -76,7 +76,7 @@ namespace Gs2::Matchmaking::Domain::Model
             NamespaceName,
             UserId(),
             SeasonName,
-            TOptional<int64>(),
+            Season,
             "JoinedSeasonGathering"
         ))
     {
@@ -116,11 +116,13 @@ namespace Gs2::Matchmaking::Domain::Model
     )
     {
         Request
-            ->WithContextStack(Self->Gs2->DefaultContextStack)
+            ->WithContextStack((!Request->GetContextStack().IsSet() || Request->GetContextStack()->IsEmpty()) ? Self->Gs2->DefaultContextStack : Request->GetContextStack())
             ->WithNamespaceName(Self->NamespaceName)
             ->WithAccessToken(Self->AccessToken->GetToken())
             ->WithSeasonName(Self->SeasonName)
             ->WithSeason(Self->Season);
+        const auto CacheOwnerSnapshotUserId = Self->AccessToken.IsValid() ? Self->UserId() : TOptional<FString>();
+        const auto CacheOwnerSnapshotTimeOffset = Self->AccessToken.IsValid() ? Self->AccessToken->GetTimeOffset() : TOptional<int32>();
         const auto Future = Self->Client->GetJoinedSeasonGathering(
             Request
         );
@@ -129,31 +131,34 @@ namespace Gs2::Matchmaking::Domain::Model
         {
             return Future->GetTask().Error();
         }
-        const auto RequestModel = Request;
         const auto ResultModel = Future->GetTask().Result();
         Future->EnsureCompletion();
-        if (ResultModel != nullptr) {
-            
-            if (ResultModel->GetItem() != nullptr)
+
+            if (ResultModel.IsValid() && ResultModel->GetItem() != nullptr)
             {
-                const auto ParentKey = Gs2::Matchmaking::Domain::Model::FSeasonDomain::CreateCacheParentKey(
-                    Self->NamespaceName,
-                    Self->UserId(),
-                    Self->SeasonName,
-                    TOptional<int64>(),
-                    "JoinedSeasonGathering"
-                );
-                const auto Key = Gs2::Matchmaking::Domain::Model::FJoinedSeasonGatheringDomain::CreateCacheKey(
-                );
-                Self->Gs2->Cache->Put(
-                    Gs2::Matchmaking::Model::FJoinedSeasonGathering::TypeName,
-                    ParentKey,
-                    Key,
-                    ResultModel->GetItem(),
-                    FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
-                );
+
+        if (!ResultModel.IsValid() || !ResultModel->GetItem().IsValid())
+            {
+              const auto Details = MakeShared<TArray<TSharedPtr<Gs2::Core::Model::FGs2ErrorDetail>>>();
+                Details->Add(MakeShared<Gs2::Core::Model::FGs2ErrorDetail>(TEXT("result.item"), TEXT("result.item is invalid."), TEXT("invalid_response")));
+                return MakeShared<Gs2::Core::Model::FUnknownError>(Details);
+              }if (!((CacheOwnerSnapshotUserId)).IsSet())
+            {
+              const auto Details = MakeShared<TArray<TSharedPtr<Gs2::Core::Model::FGs2ErrorDetail>>>();
+                Details->Add(MakeShared<Gs2::Core::Model::FGs2ErrorDetail>(TEXT("userId"), TEXT("userId is invalid."), TEXT("invalid_response")));
+                return MakeShared<Gs2::Core::Model::FUnknownError>(Details);
+              }
+        Gs2::Matchmaking::Model::Cache::FJoinedSeasonGatheringCache::Put(
+            Self->Gs2->Cache,
+
+            Request->GetNamespaceName(),
+            (CacheOwnerSnapshotUserId),
+            ResultModel->GetItem()->GetSeasonName(),
+            ResultModel->GetItem()->GetSeason().Get(int64{}),
+            CacheOwnerSnapshotTimeOffset,
+            ResultModel->GetItem()
+        );
             }
-        }
         *Result = ResultModel->GetItem();
         return nullptr;
     }
@@ -204,79 +209,181 @@ namespace Gs2::Matchmaking::Domain::Model
         TSharedPtr<TSharedPtr<Gs2::Matchmaking::Model::FJoinedSeasonGathering>> Result
     )
     {
-        // ReSharper disable once CppLocalVariableMayBeConst
-        TSharedPtr<Gs2::Matchmaking::Model::FJoinedSeasonGathering> Value;
-        auto bCacheHit = Self->Gs2->Cache->TryGet<Gs2::Matchmaking::Model::FJoinedSeasonGathering>(
-            Self->ParentKey,
-            Gs2::Matchmaking::Domain::Model::FJoinedSeasonGatheringDomain::CreateCacheKey(
-            ),
-            &Value
+        const auto CacheParentKey = Gs2::Matchmaking::Model::Cache::FJoinedSeasonGatheringCache::CreateCacheParentKey(
+
+            Self->NamespaceName,
+            Self->AccessToken.IsValid() ? Self->UserId() : TOptional<FString>(),
+            Self->SeasonName,
+            Self->Season,
+            Self->AccessToken.IsValid() ? Self->AccessToken->GetTimeOffset() : TOptional<int32>()
         );
-        if (!bCacheHit) {
-            const auto Future = Self->Get(
-                MakeShared<Gs2::Matchmaking::Request::FGetJoinedSeasonGatheringRequest>()
-            );
-            Future->StartSynchronousTask();
-            if (Future->GetTask().IsError())
+        const auto CacheKey = Gs2::Matchmaking::Model::Cache::FJoinedSeasonGatheringCache::CreateCacheKey(
+
+        );
+        return Self->Gs2->Cache->ExecuteWithKeyLock(
+            Gs2::Matchmaking::Model::FJoinedSeasonGathering::TypeName,
+            CacheParentKey,
+            CacheKey,
+            [Self = Self, Result]() -> Gs2::Core::Model::FGs2ErrorPtr
             {
-                if (Future->GetTask().Error()->Type() != Gs2::Core::Model::FNotFoundError::TypeString)
-                {
-                    return Future->GetTask().Error();
-                }
+                Gs2::Matchmaking::Model::FJoinedSeasonGatheringPtr Value;
+                const auto CacheHit = Gs2::Matchmaking::Model::Cache::FJoinedSeasonGatheringCache::TryGet(
+                    Self->Gs2->Cache,
 
-                const auto Key = Gs2::Matchmaking::Domain::Model::FJoinedSeasonGatheringDomain::CreateCacheKey(
+                    Self->NamespaceName,
+                    Self->AccessToken.IsValid() ? Self->UserId() : TOptional<FString>(),
+                    Self->SeasonName,
+                    Self->Season,
+                    Self->AccessToken.IsValid() ? Self->AccessToken->GetTimeOffset() : TOptional<int32>(),
+                    &Value
                 );
-                Self->Gs2->Cache->Put(
-                    Gs2::Matchmaking::Model::FJoinedSeasonGathering::TypeName,
-                    Self->ParentKey,
-                    Key,
-                    nullptr,
-                    FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
+                if (CacheHit)
+                {
+                    *Result = Value;
+                    return nullptr;
+                }
+                const auto Error = Gs2::Matchmaking::Model::Cache::FJoinedSeasonGatheringCache::Fetch(
+                    Self->Gs2->Cache,
+
+                    Self->NamespaceName,
+                    Self->AccessToken.IsValid() ? Self->UserId() : TOptional<FString>(),
+                    Self->SeasonName,
+                    Self->Season,
+                    Self->AccessToken.IsValid() ? Self->AccessToken->GetTimeOffset() : TOptional<int32>(),
+                    [Self](Gs2::Matchmaking::Model::FJoinedSeasonGatheringPtr* OutItem) -> Gs2::Core::Model::FGs2ErrorPtr
+                    {
+                        const auto Future = Self->Get(
+                            MakeShared<Gs2::Matchmaking::Request::FGetJoinedSeasonGatheringRequest>()
+                        );
+                        Future->StartSynchronousTask();
+                        if (Future->GetTask().IsError()) return Future->GetTask().Error();
+                        *OutItem = Future->GetTask().Result();
+                        Future->EnsureCompletion();
+                        return nullptr;
+                    },
+                    &Value
                 );
-
-                if (Future->GetTask().Error()->Detail(0)->GetComponent() != "joinedSeasonGathering")
-                {
-                    return Future->GetTask().Error();
-                }
+                if (Error.IsValid()) return Error;
+                *Result = Value;
+                return nullptr;
             }
-            else
-            {
-                Value = Future->GetTask().Result();
-                if (Value.IsValid())
-                {
-                    Self->Gs2->Cache->Put(
-                        Gs2::Matchmaking::Model::FJoinedSeasonGathering::TypeName,
-                        Self->ParentKey,
-                        FJoinedSeasonGatheringDomain::CreateCacheKey(
-                        ),
-                        Value,
-                        FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
-                    );
-                }
-            }
-            Future->EnsureCompletion();
-        }
-        *Result = Value;
-
-        return nullptr;
+        );
     }
 
     TSharedPtr<FAsyncTask<FJoinedSeasonGatheringAccessTokenDomain::FModelTask>> FJoinedSeasonGatheringAccessTokenDomain::Model() {
         return Gs2::Core::Util::New<FAsyncTask<FJoinedSeasonGatheringAccessTokenDomain::FModelTask>>(this->AsShared());
     }
 
+    void FJoinedSeasonGatheringAccessTokenDomain::Invalidate()
+    {
+        Gs2::Matchmaking::Model::Cache::FJoinedSeasonGatheringCache::Delete(
+            Gs2->Cache,
+
+            NamespaceName,
+            AccessToken.IsValid() ? UserId() : TOptional<FString>(),
+            SeasonName,
+            Season,
+            AccessToken.IsValid() ? AccessToken->GetTimeOffset() : TOptional<int32>()
+        );
+    }
+
+    FJoinedSeasonGatheringAccessTokenDomain::FSubscribeWithInitialCallTask::FSubscribeWithInitialCallTask(
+        const TSharedPtr<FJoinedSeasonGatheringAccessTokenDomain>& Self,
+        TFunction<void(Gs2::Matchmaking::Model::FJoinedSeasonGatheringPtr)> Callback
+    ):
+        Self(Self),
+        Callback(Callback)
+    {
+    }
+
+    FJoinedSeasonGatheringAccessTokenDomain::FSubscribeWithInitialCallTask::FSubscribeWithInitialCallTask(
+        const FSubscribeWithInitialCallTask& From
+    ):
+        TGs2Future(From),
+        Self(From.Self),
+        Callback(From.Callback)
+    {
+    }
+
+    Gs2::Core::Model::FGs2ErrorPtr FJoinedSeasonGatheringAccessTokenDomain::FSubscribeWithInitialCallTask::Action(
+        TSharedPtr<TSharedPtr<Gs2::Core::Domain::CallbackID>> Result
+    )
+    {
+        const auto Task = Self->Model();
+        Task->StartSynchronousTask();
+        Task->EnsureCompletion();
+        if (Task->GetTask().IsError()) return Task->GetTask().Error();
+        const auto Item = Task->GetTask().Result();
+        const auto CallbackId = Self->Subscribe(Callback);
+        Callback(Item);
+        *Result = MakeShared<Gs2::Core::Domain::CallbackID>(CallbackId);
+        return nullptr;
+    }
+
+    TSharedPtr<FAsyncTask<FJoinedSeasonGatheringAccessTokenDomain::FSubscribeWithInitialCallTask>> FJoinedSeasonGatheringAccessTokenDomain::SubscribeWithInitialCall(
+        TFunction<void(Gs2::Matchmaking::Model::FJoinedSeasonGatheringPtr)> Callback
+    )
+    {
+        return Gs2::Core::Util::New<FAsyncTask<FSubscribeWithInitialCallTask>>(this->AsShared(), Callback);
+    }
+
     Gs2::Core::Domain::CallbackID FJoinedSeasonGatheringAccessTokenDomain::Subscribe(
         TFunction<void(Gs2::Matchmaking::Model::FJoinedSeasonGatheringPtr)> Callback
     )
     {
+        const auto SubscriptionParentKey = Gs2::Matchmaking::Model::Cache::FJoinedSeasonGatheringCache::CreateCacheParentKey(
+
+            NamespaceName,
+            AccessToken.IsValid() ? UserId() : TOptional<FString>(),
+            SeasonName,
+            Season,
+            AccessToken.IsValid() ? AccessToken->GetTimeOffset() : TOptional<int32>()
+        );
+        const auto SubscriptionCacheKey = Gs2::Matchmaking::Model::Cache::FJoinedSeasonGatheringCache::CreateCacheKey(
+
+        );
+        const TWeakPtr<Gs2::Core::Domain::FGs2> WeakGs2 = Gs2;
+        const TWeakPtr<Matchmaking::Domain::FGs2MatchmakingDomain> WeakService = Service;
+        const FString RegisteredParentKey = SubscriptionParentKey;
+        const TOptional<FString> QueryNamespaceName = NamespaceName;
+        const TOptional<FString> QuerySeasonName = SeasonName;
+        const TOptional<int64> QuerySeason = Season;
+        const auto SourceToken = AccessToken;
+        const TOptional<FString> RegisteredUserId = SourceToken.IsValid()
+            ? TOptional<FString>(SourceToken->GetUserId())
+            : TOptional<FString>();
+        const int32 RegisteredTimeOffset = SourceToken.IsValid() ? SourceToken->GetTimeOffset().Get(0) : 0;
         return Gs2->Cache->Subscribe(
             Gs2::Matchmaking::Model::FJoinedSeasonGathering::TypeName,
-            ParentKey,
-            Gs2::Matchmaking::Domain::Model::FJoinedSeasonGatheringDomain::CreateCacheKey(
-            ),
+            SubscriptionParentKey,
+            SubscriptionCacheKey,
             [Callback](TSharedPtr<FGs2Object> obj)
             {
                 Callback(StaticCastSharedPtr<Gs2::Matchmaking::Model::FJoinedSeasonGathering>(obj));
+            },
+            [WeakGs2, WeakService, RegisteredParentKey, QueryNamespaceName, QuerySeasonName, QuerySeason, SourceToken, RegisteredUserId, RegisteredTimeOffset]()
+            {
+                const auto Owner = WeakGs2.Pin();
+                if (!Owner.IsValid() || !SourceToken.IsValid() || !RegisteredUserId.IsSet())
+                {
+                    return;
+                }
+                const auto TokenSnapshot = MakeShared<Gs2::Auth::Model::FAccessToken>(*SourceToken);
+                if (TokenSnapshot->GetUserId() != RegisteredUserId || TokenSnapshot->GetTimeOffset().Get(0) != RegisteredTimeOffset)
+                {
+                    return;
+                }
+                const auto Domain = MakeShared<FJoinedSeasonGatheringAccessTokenDomain>(
+                    Owner,
+                    WeakService.Pin(),
+                    QueryNamespaceName,
+                    TokenSnapshot,
+                    QuerySeasonName,
+                    QuerySeason
+                );
+                Domain->ParentKey = RegisteredParentKey;
+                const auto Task = Domain->Model();
+                Task->StartBackgroundTask();
             }
         );
     }
@@ -285,11 +392,21 @@ namespace Gs2::Matchmaking::Domain::Model
         Gs2::Core::Domain::CallbackID CallbackID
     )
     {
+        const auto SubscriptionParentKey = Gs2::Matchmaking::Model::Cache::FJoinedSeasonGatheringCache::CreateCacheParentKey(
+
+            NamespaceName,
+            AccessToken.IsValid() ? UserId() : TOptional<FString>(),
+            SeasonName,
+            Season,
+            AccessToken.IsValid() ? AccessToken->GetTimeOffset() : TOptional<int32>()
+        );
+        const auto SubscriptionCacheKey = Gs2::Matchmaking::Model::Cache::FJoinedSeasonGatheringCache::CreateCacheKey(
+
+        );
         Gs2->Cache->Unsubscribe(
             Gs2::Matchmaking::Model::FJoinedSeasonGathering::TypeName,
-            ParentKey,
-            Gs2::Matchmaking::Domain::Model::FJoinedSeasonGatheringDomain::CreateCacheKey(
-            ),
+            SubscriptionParentKey,
+            SubscriptionCacheKey,
             CallbackID
         );
     }

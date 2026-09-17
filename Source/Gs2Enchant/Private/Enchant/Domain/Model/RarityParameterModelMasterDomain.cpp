@@ -35,6 +35,7 @@
 #include "Enchant/Domain/Model/BalanceParameterStatusAccessToken.h"
 #include "Enchant/Domain/Model/RarityParameterStatus.h"
 #include "Enchant/Domain/Model/RarityParameterStatusAccessToken.h"
+#include "Enchant/Model/Cache/RarityParameterModelMaster.h"
 
 #include "Core/Domain/Gs2.h"
 #include "Core/Domain/Transaction/JobQueueJobDomainFactory.h"
@@ -108,6 +109,20 @@ namespace Gs2::Enchant::Domain::Model
         }
         const auto ResultModel = Future->GetTask().Result();
         Future->EnsureCompletion();
+
+            if (ResultModel.IsValid() && ResultModel->GetItem() != nullptr)
+            {
+
+
+        Gs2::Enchant::Model::Cache::FRarityParameterModelMasterCache::Put(
+            Self->Gs2->Cache,
+
+            Request->GetNamespaceName(),
+            Request->GetParameterName(),
+            TOptional<int32>(),
+            ResultModel->GetItem()
+        );
+            }
         *Result = ResultModel->GetItem();
         return nullptr;
     }
@@ -150,19 +165,20 @@ namespace Gs2::Enchant::Domain::Model
         }
         const auto ResultModel = Future->GetTask().Result();
         Future->EnsureCompletion();
-        if (ResultModel->GetItem() != nullptr)
-        {
-            const auto Key = Gs2::Enchant::Domain::Model::FRarityParameterModelMasterDomain::CreateCacheKey(
-                ResultModel->GetItem()->GetName()
-            );
-            Self->Gs2->Cache->Put(
-                Gs2::Enchant::Model::FRarityParameterModelMaster::TypeName,
-                Self->ParentKey,
-                Key,
-                ResultModel->GetItem(),
-                FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
-            );
-        }
+
+            if (ResultModel.IsValid() && ResultModel->GetItem() != nullptr)
+            {
+
+
+        Gs2::Enchant::Model::Cache::FRarityParameterModelMasterCache::Put(
+            Self->Gs2->Cache,
+
+            Request->GetNamespaceName(),
+            Request->GetParameterName(),
+            TOptional<int32>(),
+            ResultModel->GetItem()
+        );
+            }
         auto Domain = Self;
 
         *Result = Domain;
@@ -203,21 +219,25 @@ namespace Gs2::Enchant::Domain::Model
         Future->StartSynchronousTask();
         if (Future->GetTask().IsError())
         {
-            return Future->GetTask().Error();
+            const auto Error = Future->GetTask().Error();
+            if (Error.IsValid() && Error->IsChildOf(Gs2::Core::Model::FNotFoundError::Class))
+            {
+                *Result = Self;
+                return nullptr;
+            }
+            return Error;
         }
         const auto ResultModel = Future->GetTask().Result();
         Future->EnsureCompletion();
-        if (ResultModel->GetItem() != nullptr)
-        {
-            const auto Key = Gs2::Enchant::Domain::Model::FRarityParameterModelMasterDomain::CreateCacheKey(
-                ResultModel->GetItem()->GetName()
-            );
-            Self->Gs2->Cache->Delete(
-                Gs2::Enchant::Model::FRarityParameterModelMaster::TypeName,
-                Self->ParentKey,
-                Key
-            );
-        }
+
+
+              Gs2::Enchant::Model::Cache::FRarityParameterModelMasterCache::Delete(
+            Self->Gs2->Cache,
+
+            Request->GetNamespaceName(),
+            Request->GetParameterName(),
+            TOptional<int32>()
+        );
         auto Domain = Self;
 
         *Result = Domain;
@@ -268,71 +288,158 @@ namespace Gs2::Enchant::Domain::Model
         TSharedPtr<TSharedPtr<Gs2::Enchant::Model::FRarityParameterModelMaster>> Result
     )
     {
-        // ReSharper disable once CppLocalVariableMayBeConst
-        TSharedPtr<Gs2::Enchant::Model::FRarityParameterModelMaster> Value;
-        auto bCacheHit = Self->Gs2->Cache->TryGet<Gs2::Enchant::Model::FRarityParameterModelMaster>(
-            Self->ParentKey,
-            Gs2::Enchant::Domain::Model::FRarityParameterModelMasterDomain::CreateCacheKey(
-                Self->ParameterName
-            ),
-            &Value
+        const auto CacheParentKey = Gs2::Enchant::Model::Cache::FRarityParameterModelMasterCache::CreateCacheParentKey(
+
+            Self->NamespaceName,
+            TOptional<int32>()
         );
-        if (!bCacheHit) {
-            const auto Future = Self->Get(
-                MakeShared<Gs2::Enchant::Request::FGetRarityParameterModelMasterRequest>()
-            );
-            Future->StartSynchronousTask();
-            if (Future->GetTask().IsError())
+        const auto CacheKey = Gs2::Enchant::Model::Cache::FRarityParameterModelMasterCache::CreateCacheKey(
+
+            Self->ParameterName
+        );
+        return Self->Gs2->Cache->ExecuteWithKeyLock(
+            Gs2::Enchant::Model::FRarityParameterModelMaster::TypeName,
+            CacheParentKey,
+            CacheKey,
+            [Self = Self, Result]() -> Gs2::Core::Model::FGs2ErrorPtr
             {
-                if (Future->GetTask().Error()->Type() != Gs2::Core::Model::FNotFoundError::TypeString)
-                {
-                    return Future->GetTask().Error();
-                }
+                Gs2::Enchant::Model::FRarityParameterModelMasterPtr Value;
+                const auto CacheHit = Gs2::Enchant::Model::Cache::FRarityParameterModelMasterCache::TryGet(
+                    Self->Gs2->Cache,
 
-                const auto Key = Gs2::Enchant::Domain::Model::FRarityParameterModelMasterDomain::CreateCacheKey(
-                    Self->ParameterName
+                    Self->NamespaceName,
+                    Self->ParameterName,
+                    TOptional<int32>(),
+                    &Value
                 );
-                Self->Gs2->Cache->Put(
-                    Gs2::Enchant::Model::FRarityParameterModelMaster::TypeName,
-                    Self->ParentKey,
-                    Key,
-                    nullptr,
-                    FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
-                );
-
-                if (Future->GetTask().Error()->Detail(0)->GetComponent() != "rarityParameterModelMaster")
+                if (CacheHit)
                 {
-                    return Future->GetTask().Error();
+                    *Result = Value;
+                    return nullptr;
                 }
-            }
-            else
-            {
-                Value = Future->GetTask().Result();
-            }
-            Future->EnsureCompletion();
-        }
-        *Result = Value;
+                const auto Error = Gs2::Enchant::Model::Cache::FRarityParameterModelMasterCache::Fetch(
+                    Self->Gs2->Cache,
 
-        return nullptr;
+                    Self->NamespaceName,
+                    Self->ParameterName,
+                    TOptional<int32>(),
+                    [Self](Gs2::Enchant::Model::FRarityParameterModelMasterPtr* OutItem) -> Gs2::Core::Model::FGs2ErrorPtr
+                    {
+                        const auto Future = Self->Get(
+                            MakeShared<Gs2::Enchant::Request::FGetRarityParameterModelMasterRequest>()
+                        );
+                        Future->StartSynchronousTask();
+                        if (Future->GetTask().IsError()) return Future->GetTask().Error();
+                        *OutItem = Future->GetTask().Result();
+                        Future->EnsureCompletion();
+                        return nullptr;
+                    },
+                    &Value
+                );
+                if (Error.IsValid()) return Error;
+                *Result = Value;
+                return nullptr;
+            }
+        );
     }
 
     TSharedPtr<FAsyncTask<FRarityParameterModelMasterDomain::FModelTask>> FRarityParameterModelMasterDomain::Model() {
         return Gs2::Core::Util::New<FAsyncTask<FRarityParameterModelMasterDomain::FModelTask>>(this->AsShared());
     }
 
+    void FRarityParameterModelMasterDomain::Invalidate()
+    {
+        Gs2::Enchant::Model::Cache::FRarityParameterModelMasterCache::Delete(
+            Gs2->Cache,
+
+            NamespaceName,
+            ParameterName,
+            TOptional<int32>()
+        );
+    }
+
+    FRarityParameterModelMasterDomain::FSubscribeWithInitialCallTask::FSubscribeWithInitialCallTask(
+        const TSharedPtr<FRarityParameterModelMasterDomain>& Self,
+        TFunction<void(Gs2::Enchant::Model::FRarityParameterModelMasterPtr)> Callback
+    ):
+        Self(Self),
+        Callback(Callback)
+    {
+    }
+
+    FRarityParameterModelMasterDomain::FSubscribeWithInitialCallTask::FSubscribeWithInitialCallTask(
+        const FSubscribeWithInitialCallTask& From
+    ):
+        TGs2Future(From),
+        Self(From.Self),
+        Callback(From.Callback)
+    {
+    }
+
+    Gs2::Core::Model::FGs2ErrorPtr FRarityParameterModelMasterDomain::FSubscribeWithInitialCallTask::Action(
+        TSharedPtr<TSharedPtr<Gs2::Core::Domain::CallbackID>> Result
+    )
+    {
+        const auto Task = Self->Model();
+        Task->StartSynchronousTask();
+        Task->EnsureCompletion();
+        if (Task->GetTask().IsError()) return Task->GetTask().Error();
+        const auto Item = Task->GetTask().Result();
+        const auto CallbackId = Self->Subscribe(Callback);
+        Callback(Item);
+        *Result = MakeShared<Gs2::Core::Domain::CallbackID>(CallbackId);
+        return nullptr;
+    }
+
+    TSharedPtr<FAsyncTask<FRarityParameterModelMasterDomain::FSubscribeWithInitialCallTask>> FRarityParameterModelMasterDomain::SubscribeWithInitialCall(
+        TFunction<void(Gs2::Enchant::Model::FRarityParameterModelMasterPtr)> Callback
+    )
+    {
+        return Gs2::Core::Util::New<FAsyncTask<FSubscribeWithInitialCallTask>>(this->AsShared(), Callback);
+    }
+
     Gs2::Core::Domain::CallbackID FRarityParameterModelMasterDomain::Subscribe(
         TFunction<void(Gs2::Enchant::Model::FRarityParameterModelMasterPtr)> Callback
     )
     {
+        const auto SubscriptionParentKey = Gs2::Enchant::Model::Cache::FRarityParameterModelMasterCache::CreateCacheParentKey(
+
+            NamespaceName,
+            TOptional<int32>()
+        );
+        const auto SubscriptionCacheKey = Gs2::Enchant::Model::Cache::FRarityParameterModelMasterCache::CreateCacheKey(
+
+            ParameterName
+        );
+        const TWeakPtr<Gs2::Core::Domain::FGs2> WeakGs2 = Gs2;
+        const TWeakPtr<Enchant::Domain::FGs2EnchantDomain> WeakService = Service;
+        const FString RegisteredParentKey = SubscriptionParentKey;
+        const TOptional<FString> QueryNamespaceName = NamespaceName;
+        const TOptional<FString> QueryParameterName = ParameterName;
         return Gs2->Cache->Subscribe(
             Gs2::Enchant::Model::FRarityParameterModelMaster::TypeName,
-            ParentKey,
-            Gs2::Enchant::Domain::Model::FRarityParameterModelMasterDomain::CreateCacheKey(
-                ParameterName
-            ),
+            SubscriptionParentKey,
+            SubscriptionCacheKey,
             [Callback](TSharedPtr<FGs2Object> obj)
             {
                 Callback(StaticCastSharedPtr<Gs2::Enchant::Model::FRarityParameterModelMaster>(obj));
+            },
+            [WeakGs2, WeakService, RegisteredParentKey, QueryNamespaceName, QueryParameterName]()
+            {
+                const auto Owner = WeakGs2.Pin();
+                if (!Owner.IsValid())
+                {
+                    return;
+                }
+                const auto Domain = MakeShared<FRarityParameterModelMasterDomain>(
+                    Owner,
+                    WeakService.Pin(),
+                    QueryNamespaceName,
+                    QueryParameterName
+                );
+                Domain->ParentKey = RegisteredParentKey;
+                const auto Task = Domain->Model();
+                Task->StartBackgroundTask();
             }
         );
     }
@@ -341,12 +448,19 @@ namespace Gs2::Enchant::Domain::Model
         Gs2::Core::Domain::CallbackID CallbackID
     )
     {
+        const auto SubscriptionParentKey = Gs2::Enchant::Model::Cache::FRarityParameterModelMasterCache::CreateCacheParentKey(
+
+            NamespaceName,
+            TOptional<int32>()
+        );
+        const auto SubscriptionCacheKey = Gs2::Enchant::Model::Cache::FRarityParameterModelMasterCache::CreateCacheKey(
+
+            ParameterName
+        );
         Gs2->Cache->Unsubscribe(
             Gs2::Enchant::Model::FRarityParameterModelMaster::TypeName,
-            ParentKey,
-            Gs2::Enchant::Domain::Model::FRarityParameterModelMasterDomain::CreateCacheKey(
-                ParameterName
-            ),
+            SubscriptionParentKey,
+            SubscriptionCacheKey,
             CallbackID
         );
     }
@@ -357,4 +471,3 @@ namespace Gs2::Enchant::Domain::Model
 #elif defined(__clang__)
 #pragma clang diagnostic pop
 #endif
-

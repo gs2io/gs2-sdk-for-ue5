@@ -87,6 +87,8 @@ namespace Gs2::Quest::Domain::Model
             const FProgressAccessTokenDomain& From
         );
 
+
+
         class GS2QUEST_API FGetTask final :
             public Gs2::Core::Util::TGs2Future<Gs2::Quest::Model::FProgress>,
             public TSharedFromThis<FGetTask>
@@ -112,6 +114,8 @@ namespace Gs2::Quest::Domain::Model
         TSharedPtr<FAsyncTask<FGetTask>> Get(
             Request::FGetProgressRequestPtr Request
         );
+
+
 
         class GS2QUEST_API FEndTask final :
             public Gs2::Core::Util::TGs2Future<Gs2::Core::Domain::FTransactionAccessTokenDomain>,
@@ -141,6 +145,8 @@ namespace Gs2::Quest::Domain::Model
             Request::FEndRequestPtr Request,
             bool SpeculativeExecute = true
         );
+
+
 
         class GS2QUEST_API FDeleteTask final :
             public Gs2::Core::Util::TGs2Future<Gs2::Quest::Domain::Model::FProgressAccessTokenDomain>,
@@ -199,7 +205,34 @@ namespace Gs2::Quest::Domain::Model
 
         TSharedPtr<FAsyncTask<FModelTask>> Model();
 
+        void Invalidate();
+
         Gs2::Core::Domain::CallbackID Subscribe(
+            TFunction<void(Gs2::Quest::Model::FProgressPtr)> Callback
+        );
+
+        class GS2QUEST_API FSubscribeWithInitialCallTask final :
+            public Gs2::Core::Util::TGs2Future<Gs2::Core::Domain::CallbackID>,
+            public TSharedFromThis<FSubscribeWithInitialCallTask>
+        {
+            const TSharedPtr<FProgressAccessTokenDomain> Self;
+            const TFunction<void(Gs2::Quest::Model::FProgressPtr)> Callback;
+        public:
+            FSubscribeWithInitialCallTask(
+                const TSharedPtr<FProgressAccessTokenDomain>& Self,
+                TFunction<void(Gs2::Quest::Model::FProgressPtr)> Callback
+            );
+
+            FSubscribeWithInitialCallTask(
+                const FSubscribeWithInitialCallTask& From
+            );
+
+            virtual Gs2::Core::Model::FGs2ErrorPtr Action(
+                TSharedPtr<TSharedPtr<Gs2::Core::Domain::CallbackID>> Result
+            ) override;
+        };
+
+        TSharedPtr<FAsyncTask<FSubscribeWithInitialCallTask>> SubscribeWithInitialCall(
             TFunction<void(Gs2::Quest::Model::FProgressPtr)> Callback
         );
 

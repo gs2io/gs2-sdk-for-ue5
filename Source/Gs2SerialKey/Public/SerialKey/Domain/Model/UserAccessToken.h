@@ -90,6 +90,8 @@ namespace Gs2::SerialKey::Domain::Model
             const FUserAccessTokenDomain& From
         );
 
+
+
         class GS2SERIALKEY_API FVerifyCodeTask final :
             public Gs2::Core::Util::TGs2Future<Gs2::SerialKey::Domain::Model::FSerialKeyAccessTokenDomain>,
             public TSharedFromThis<FVerifyCodeTask>

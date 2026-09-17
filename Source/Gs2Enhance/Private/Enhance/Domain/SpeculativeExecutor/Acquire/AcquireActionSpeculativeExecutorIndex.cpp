@@ -28,6 +28,7 @@
 #include "Enhance/Domain/SpeculativeExecutor/Acquire/CreateProgressByUserIdSpeculativeExecutor.h"
 
 #include "Core/Domain/Gs2.h"
+#include "Core/Domain/SpeculativeExecutor/PreparedSpeculativeCommit.h"
 
 namespace Gs2::Enhance::Domain::SpeculativeExecutor
 {
@@ -60,13 +61,17 @@ namespace Gs2::Enhance::Domain::SpeculativeExecutor
     }
 
     Gs2::Core::Model::FGs2ErrorPtr FAcquireActionSpeculativeExecutorIndex::FCommitTask::Action(
-        TSharedPtr<TSharedPtr<TFunction<void()>>> Result
+        TSharedPtr<TSharedPtr<Gs2::Core::Domain::SpeculativeExecutor::FPreparedSpeculativeCommit>> Result
     )
     {
         auto NewAcquireAction = AcquireAction->WithAction(AcquireAction->GetAction()->Replace(TEXT("{region}"), ToCStr(Domain->RestSession->RegionName())));
         NewAcquireAction = AcquireAction->WithAction(NewAcquireAction->GetAction()->Replace(TEXT("{ownerId}"), ToCStr(Domain->RestSession->OwnerId())));
         NewAcquireAction = AcquireAction->WithAction(NewAcquireAction->GetAction()->Replace(TEXT("{userId}"), ToCStr(AccessToken->GetUserId().IsSet() ? *AccessToken->GetUserId() : "")));
         if (FDirectEnhanceByUserIdSpeculativeExecutor::Action() == NewAcquireAction->GetAction()) {
+            if (Rate != 1)
+            {
+                return nullptr;
+            }
             TSharedPtr<FJsonObject> RequestModelJson;
             if (const TSharedRef<TJsonReader<>> JsonReader = TJsonReaderFactory<>::Create(NewAcquireAction->GetRequest().IsSet() ? *NewAcquireAction->GetRequest() : "{}");
                 !FJsonSerializer::Deserialize(JsonReader, RequestModelJson))
@@ -87,8 +92,13 @@ namespace Gs2::Enhance::Domain::SpeculativeExecutor
                 return Future->GetTask().Error();
             }
             *Result = Future->GetTask().Result();
+            return nullptr;
         }
         if (FUnleashByUserIdSpeculativeExecutor::Action() == NewAcquireAction->GetAction()) {
+            if (Rate != 1)
+            {
+                return nullptr;
+            }
             TSharedPtr<FJsonObject> RequestModelJson;
             if (const TSharedRef<TJsonReader<>> JsonReader = TJsonReaderFactory<>::Create(NewAcquireAction->GetRequest().IsSet() ? *NewAcquireAction->GetRequest() : "{}");
                 !FJsonSerializer::Deserialize(JsonReader, RequestModelJson))
@@ -109,6 +119,7 @@ namespace Gs2::Enhance::Domain::SpeculativeExecutor
                 return Future->GetTask().Error();
             }
             *Result = Future->GetTask().Result();
+            return nullptr;
         }
         if (FCreateProgressByUserIdSpeculativeExecutor::Action() == NewAcquireAction->GetAction()) {
             TSharedPtr<FJsonObject> RequestModelJson;
@@ -118,7 +129,6 @@ namespace Gs2::Enhance::Domain::SpeculativeExecutor
                 return nullptr;
             }
             auto Request = Request::FCreateProgressByUserIdRequest::FromJson(RequestModelJson);
-            Request = FCreateProgressByUserIdSpeculativeExecutor::Rate(Request, Rate);
             auto Future = FCreateProgressByUserIdSpeculativeExecutor::Execute(
                 Domain,
                 Service,
@@ -131,6 +141,7 @@ namespace Gs2::Enhance::Domain::SpeculativeExecutor
                 return Future->GetTask().Error();
             }
             *Result = Future->GetTask().Result();
+            return nullptr;
         }
         return nullptr;
     }

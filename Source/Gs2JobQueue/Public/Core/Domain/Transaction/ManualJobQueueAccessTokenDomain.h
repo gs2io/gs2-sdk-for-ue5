@@ -25,7 +25,6 @@ namespace Gs2::Core::Domain
 	class FManualJobQueueAccessTokenDomain: public FTransactionAccessTokenDomain
 	{
 	private:
-		static TMap<FString, FDateTime> Handled;
 	    FString NamespaceName;
 	    FString JobName;
 
@@ -49,7 +48,10 @@ namespace Gs2::Core::Domain
 				bool bAtomicCommit,
 				Gs2::Core::Model::FTransactionResultPtr TransactionResult
 			)>& NewTransactionDomain,
-            const Gs2::Auth::Model::FAccessTokenPtr& AccessToken,
+			const TFunction<Gs2::Core::Model::FGs2ErrorPtr(
+				const Gs2::Auth::Model::FAccessTokenPtr& AccessToken
+			)>& Dispatch,
+			const Gs2::Auth::Model::FAccessTokenPtr& AccessToken,
             const FString NamespaceName,
             const FString JobName
         );
@@ -58,6 +60,8 @@ namespace Gs2::Core::Domain
 		);
 
 	    virtual ~FManualJobQueueAccessTokenDomain() override = default;
+
+		virtual TOptional<FString> GetJobName() const override;
 
 		Gs2::Core::Model::FGs2ErrorPtr WaitImpl(
 			const bool All,

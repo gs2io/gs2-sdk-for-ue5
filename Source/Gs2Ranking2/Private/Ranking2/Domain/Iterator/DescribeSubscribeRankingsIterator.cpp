@@ -1,3 +1,4 @@
+
 /*
  * Copyright 2016 Game Server Services, Inc. or its affiliates. All Rights
  * Reserved.
@@ -106,7 +107,6 @@ namespace Gs2::Ranking2::Domain::Iterator
                 Self->Season,
                 "SubscribeRankingData"
             );
-
             if (!RangeIteratorOpt)
             {
                 Range = Self->Gs2->Cache->TryGetList<Gs2::Ranking2::Model::FSubscribeRankingData>(ListParentKey);
@@ -121,7 +121,7 @@ namespace Gs2::Ranking2::Domain::Iterator
                 }
             }
 
-            const auto Future = Self->Client->DescribeSubscribeRankings(
+            const auto Request =
                 MakeShared<Gs2::Ranking2::Request::FDescribeSubscribeRankingsRequest>()
                     ->WithContextStack(Self->Gs2->DefaultContextStack)
                     ->WithNamespaceName(Self->NamespaceName)
@@ -130,7 +130,8 @@ namespace Gs2::Ranking2::Domain::Iterator
                     ->WithSeason(Self->Season)
                     ->WithPageToken(PageToken)
                     ->WithLimit(FetchSize)
-            );
+            ;
+            const auto Future = Self->Client->DescribeSubscribeRankings(Request);
             Future->StartSynchronousTask();
             if (Future->GetTask().IsError())
             {
@@ -144,19 +145,22 @@ namespace Gs2::Ranking2::Domain::Iterator
             }
             const auto R = Future->GetTask().Result();
             Future->EnsureCompletion();
-            Range = R->GetItems();
-            for (auto Item : *R->GetItems())
+            Range = R->GetItems().IsValid() ? R->GetItems() : MakeShared<TArray<Gs2::Ranking2::Model::FSubscribeRankingDataPtr>>();
+            const auto CacheOwnerSnapshotTimeOffset = Self->AccessToken.IsValid() ? Self->AccessToken->GetTimeOffset() : TOptional<int32>();
+            const auto ResultModel = R;
+
+
+            if (Range.IsValid())
             {
-                Self->Gs2->Cache->Put(
-                    Gs2::Ranking2::Model::FSubscribeRankingData::TypeName,
-                    ListParentKey,
-                    Gs2::Ranking2::Domain::Model::FSubscribeRankingDataDomain::CreateCacheKey(
-                        Item->GetRankingName(),
-                        Item->GetScorerUserId()
-                    ),
-                    Item,
-                    FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
-                );
+                for (const auto& Item : *Range)
+                {
+                    if (!Item.IsValid()) continue;
+                    Gs2::Ranking2::Model::Cache::FSubscribeRankingDataCache::Put(
+                        Self->Gs2->Cache,
+                        Request->GetNamespaceName(), Item->GetRankingName(), Request->GetSeason().Get(int64{}), Item->GetScorerUserId(),
+                        CacheOwnerSnapshotTimeOffset, Item
+                    );
+                }
             }
             if (Range)
             {
@@ -197,4 +201,3 @@ namespace Gs2::Ranking2::Domain::Iterator
 #elif defined(__clang__)
 #pragma clang diagnostic pop
 #endif
-

@@ -19,6 +19,7 @@
 #include "CoreMinimal.h"
 #include "Dom/JsonObject.h"
 #include "../Model/TransactionSetting.h"
+#include "../Model/TransactionSettingV2.h"
 #include "../Model/ScriptSetting.h"
 #include "../Model/LogSetting.h"
 
@@ -32,6 +33,7 @@ namespace Gs2::SkillTree::Request
         TOptional<FString> NameValue;
         TOptional<FString> DescriptionValue;
         TSharedPtr<Model::FTransactionSetting> TransactionSettingValue;
+        TSharedPtr<Model::FTransactionSettingV2> TransactionSettingV2Value;
         TSharedPtr<Model::FScriptSetting> ReleaseScriptValue;
         TSharedPtr<Model::FScriptSetting> RestrainScriptValue;
         TSharedPtr<Model::FLogSetting> LogSettingValue;
@@ -48,6 +50,7 @@ namespace Gs2::SkillTree::Request
         TSharedPtr<FCreateNamespaceRequest> WithName(const TOptional<FString> Name);
         TSharedPtr<FCreateNamespaceRequest> WithDescription(const TOptional<FString> Description);
         TSharedPtr<FCreateNamespaceRequest> WithTransactionSetting(const TSharedPtr<Model::FTransactionSetting> TransactionSetting);
+        TSharedPtr<FCreateNamespaceRequest> WithTransactionSettingV2(const TSharedPtr<Model::FTransactionSettingV2> TransactionSettingV2);
         TSharedPtr<FCreateNamespaceRequest> WithReleaseScript(const TSharedPtr<Model::FScriptSetting> ReleaseScript);
         TSharedPtr<FCreateNamespaceRequest> WithRestrainScript(const TSharedPtr<Model::FScriptSetting> RestrainScript);
         TSharedPtr<FCreateNamespaceRequest> WithLogSetting(const TSharedPtr<Model::FLogSetting> LogSetting);
@@ -56,6 +59,7 @@ namespace Gs2::SkillTree::Request
         TOptional<FString> GetName() const;
         TOptional<FString> GetDescription() const;
         TSharedPtr<Model::FTransactionSetting> GetTransactionSetting() const;
+        TSharedPtr<Model::FTransactionSettingV2> GetTransactionSettingV2() const;
         TSharedPtr<Model::FScriptSetting> GetReleaseScript() const;
         TSharedPtr<Model::FScriptSetting> GetRestrainScript() const;
         TSharedPtr<Model::FLogSetting> GetLogSetting() const;

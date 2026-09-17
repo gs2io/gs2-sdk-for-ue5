@@ -34,6 +34,7 @@
 #include "MegaField/Domain/Model/UserAccessToken.h"
 #include "MegaField/Domain/Model/Spatial.h"
 #include "MegaField/Domain/Model/SpatialAccessToken.h"
+#include "MegaField/Model/Cache/Spatial.h"
 
 #include "Core/Domain/Gs2.h"
 #include "Core/Domain/Transaction/JobQueueJobDomainFactory.h"
@@ -116,4 +117,3 @@ namespace Gs2::MegaField::Domain::Model
 #elif defined(__clang__)
 #pragma clang diagnostic pop
 #endif
-

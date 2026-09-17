@@ -66,7 +66,8 @@ namespace Gs2::UE5::LoginReward::Domain::Model
 
         Gs2::Core::Domain::CallbackID SubscribeBonusModels(TFunction<void()> Callback);
 
-        void UnsubscribeBonusModels(Gs2::Core::Domain::CallbackID CallbackId);
+        void UnsubscribeBonusModels(
+                Gs2::Core::Domain::CallbackID CallbackId);
 
         Gs2::UE5::LoginReward::Domain::Model::FEzUserDomainPtr User(
             const FString UserId

@@ -21,27 +21,66 @@
 namespace Gs2::Core::Model
 {
     FResultMetadata::FResultMetadata():
-        UncommittedValue(FString())
+        RequestIdValue(TOptional<FString>()),
+        UncommittedValue(TOptional<FString>()),
+        ScriptTransactionResultsValue(nullptr)
     {
     }
 
     FResultMetadata::FResultMetadata(
         const FResultMetadata& From
     ):
-        UncommittedValue(From.UncommittedValue)
+        RequestIdValue(From.RequestIdValue),
+        UncommittedValue(From.UncommittedValue),
+        ScriptTransactionResultsValue(From.ScriptTransactionResultsValue)
     {
+    }
+
+    TSharedPtr<FResultMetadata> FResultMetadata::WithRequestId(
+        const TOptional<FString> RequestId
+    )
+    {
+        this->RequestIdValue = RequestId;
+        return SharedThis(this);
     }
 
     TSharedPtr<FResultMetadata> FResultMetadata::WithUncommitted(
         const FString Uncommitted
     )
     {
+        this->UncommittedValue = TOptional<FString>(Uncommitted);
+        return SharedThis(this);
+    }
+
+    TSharedPtr<FResultMetadata> FResultMetadata::WithUncommitted(
+        const TOptional<FString> Uncommitted
+    )
+    {
         this->UncommittedValue = Uncommitted;
         return SharedThis(this);
     }
+
+    TSharedPtr<FResultMetadata> FResultMetadata::WithScriptTransactionResults(
+        const TSharedPtr<TArray<TSharedPtr<FScriptTransactionResult>>> ScriptTransactionResults
+    )
+    {
+        this->ScriptTransactionResultsValue = ScriptTransactionResults;
+        return SharedThis(this);
+    }
+
+    TOptional<FString> FResultMetadata::GetRequestId() const
+    {
+        return RequestIdValue;
+    }
+
     FString FResultMetadata::GetUncommitted() const
     {
-        return UncommittedValue;
+        return UncommittedValue.IsSet() ? UncommittedValue.GetValue() : FString();
+    }
+
+    TSharedPtr<TArray<TSharedPtr<FScriptTransactionResult>>> FResultMetadata::GetScriptTransactionResults() const
+    {
+        return ScriptTransactionResultsValue;
     }
 
     TSharedPtr<FResultMetadata> FResultMetadata::FromJson(const TSharedPtr<FJsonObject> Data)
@@ -50,22 +89,67 @@ namespace Gs2::Core::Model
             return nullptr;
         }
         return MakeShared<FResultMetadata>()
-            ->WithUncommitted(Data->HasField(ANSI_TO_TCHAR("uncommitted")) ? [Data]() -> FString
+            ->WithRequestId(Data->HasField(ANSI_TO_TCHAR("requestId")) ? [Data]() -> TOptional<FString>
                 {
-                    if (Data->HasTypedField<EJson::Null>(ANSI_TO_TCHAR("uncommitted")))
+                    FString Value;
+                    if (Data->TryGetStringField(ANSI_TO_TCHAR("requestId"), Value))
                     {
-                        return FString();
+                        return TOptional<FString>(Value);
                     }
-                    return FString(ANSI_TO_TCHAR("uncommitted"));
-                 }() : FString());
+                    return TOptional<FString>();
+                 }() : TOptional<FString>())
+            ->WithUncommitted(Data->HasField(ANSI_TO_TCHAR("uncommitted")) ? [Data]() -> TOptional<FString>
+                {
+                    FString Value;
+                    if (Data->TryGetStringField(ANSI_TO_TCHAR("uncommitted"), Value))
+                    {
+                        return TOptional<FString>(Value);
+                    }
+                    return TOptional<FString>();
+                 }() : TOptional<FString>())
+            ->WithScriptTransactionResults(Data->HasField(ANSI_TO_TCHAR("scriptTransactionResults")) ? [Data]() -> TSharedPtr<TArray<TSharedPtr<FScriptTransactionResult>>>
+                {
+                    auto Value = MakeShared<TArray<TSharedPtr<FScriptTransactionResult>>>();
+                    if (!Data->HasTypedField<EJson::Null>(ANSI_TO_TCHAR("scriptTransactionResults")) && Data->HasTypedField<EJson::Array>(ANSI_TO_TCHAR("scriptTransactionResults")))
+                    {
+                        for (const auto& JsonValue : Data->GetArrayField(ANSI_TO_TCHAR("scriptTransactionResults")))
+                        {
+                            if (JsonValue.IsValid() && JsonValue->Type == EJson::Object)
+                            {
+                                const auto Item = FScriptTransactionResult::FromJson(JsonValue->AsObject());
+                                if (Item.IsValid())
+                                {
+                                    Value->Add(Item);
+                                }
+                            }
+                        }
+                    }
+                    return Value;
+                }() : MakeShared<TArray<TSharedPtr<FScriptTransactionResult>>>());
     }
 
     TSharedPtr<FJsonObject> FResultMetadata::ToJson() const
     {
         const TSharedPtr<FJsonObject> JsonRootObject = MakeShared<FJsonObject>();
-        if (UncommittedValue.IsEmpty())
+        if (RequestIdValue.IsSet())
         {
-            JsonRootObject->SetStringField(TEXT("uncommitted"), UncommittedValue);
+            JsonRootObject->SetStringField(TEXT("requestId"), RequestIdValue.GetValue());
+        }
+        if (UncommittedValue.IsSet())
+        {
+            JsonRootObject->SetStringField(TEXT("uncommitted"), UncommittedValue.GetValue());
+        }
+        if (ScriptTransactionResultsValue.IsValid() && ScriptTransactionResultsValue->Num() > 0)
+        {
+            TArray<TSharedPtr<FJsonValue>> Values;
+            for (const auto& Item : *ScriptTransactionResultsValue)
+            {
+                if (Item.IsValid())
+                {
+                    Values.Add(MakeShared<FJsonValueObject>(Item->ToJson()));
+                }
+            }
+            JsonRootObject->SetArrayField(TEXT("scriptTransactionResults"), Values);
         }
         return JsonRootObject;
     }

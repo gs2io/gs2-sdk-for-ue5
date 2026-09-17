@@ -99,8 +99,33 @@ namespace Gs2::Exchange::Domain::Model
 
         Gs2::Core::Domain::CallbackID SubscribeAwaits(
             TFunction<void()> Callback
+
         );
 
+        class FCollectAwaitsTask;
+
+        Gs2::Core::Domain::CallbackID SubscribeAwaits(
+            TFunction<void(TArray<Gs2::Exchange::Model::FAwaitPtr>)> Callback,const TOptional<FString> RateName = TOptional<FString>()
+        );
+
+        void InvalidateAwaits(const TOptional<FString> RateName = TOptional<FString>());
+
+        class GS2EXCHANGE_API FSubscribeAwaitsWithInitialCallTask final :
+            public Gs2::Core::Util::TGs2Future<Gs2::Core::Domain::CallbackID>,
+            public TSharedFromThis<FSubscribeAwaitsWithInitialCallTask>
+        {
+            const TSharedPtr<FUserAccessTokenDomain> Self;
+            const TFunction<void(TArray<Gs2::Exchange::Model::FAwaitPtr>)> Callback;
+        const TOptional<FString> QueryRateName;
+        public:
+            FSubscribeAwaitsWithInitialCallTask(const TSharedPtr<FUserAccessTokenDomain>& Self, TFunction<void(TArray<Gs2::Exchange::Model::FAwaitPtr>)> Callback,const TOptional<FString> RateName);
+            FSubscribeAwaitsWithInitialCallTask(const FSubscribeAwaitsWithInitialCallTask& From);
+            virtual Gs2::Core::Model::FGs2ErrorPtr Action(TSharedPtr<TSharedPtr<Gs2::Core::Domain::CallbackID>> Result) override;
+        };
+
+        TSharedPtr<FAsyncTask<FSubscribeAwaitsWithInitialCallTask>> SubscribeAwaitsWithInitialCall(
+            TFunction<void(TArray<Gs2::Exchange::Model::FAwaitPtr>)> Callback,const TOptional<FString> RateName = TOptional<FString>()
+        );
         void UnsubscribeAwaits(
             Gs2::Core::Domain::CallbackID CallbackID
         );

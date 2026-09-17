@@ -81,6 +81,8 @@ namespace Gs2::Version::Domain::Model
             const FAcceptVersionDomain& From
         );
 
+
+
         class GS2VERSION_API FAcceptTask final :
             public Gs2::Core::Util::TGs2Future<Gs2::Version::Domain::Model::FAcceptVersionDomain>,
             public TSharedFromThis<FAcceptTask>
@@ -106,6 +108,8 @@ namespace Gs2::Version::Domain::Model
         TSharedPtr<FAsyncTask<FAcceptTask>> Accept(
             Request::FAcceptByUserIdRequestPtr Request
         );
+
+
 
         class GS2VERSION_API FRejectTask final :
             public Gs2::Core::Util::TGs2Future<Gs2::Version::Domain::Model::FAcceptVersionDomain>,
@@ -133,6 +137,8 @@ namespace Gs2::Version::Domain::Model
             Request::FRejectByUserIdRequestPtr Request
         );
 
+
+
         class GS2VERSION_API FGetTask final :
             public Gs2::Core::Util::TGs2Future<Gs2::Version::Model::FAcceptVersion>,
             public TSharedFromThis<FGetTask>
@@ -158,6 +164,8 @@ namespace Gs2::Version::Domain::Model
         TSharedPtr<FAsyncTask<FGetTask>> Get(
             Request::FGetAcceptVersionByUserIdRequestPtr Request
         );
+
+
 
         class GS2VERSION_API FDeleteTask final :
             public Gs2::Core::Util::TGs2Future<Gs2::Version::Domain::Model::FAcceptVersionDomain>,
@@ -218,7 +226,34 @@ namespace Gs2::Version::Domain::Model
 
         TSharedPtr<FAsyncTask<FModelTask>> Model();
 
+        void Invalidate();
+
         Gs2::Core::Domain::CallbackID Subscribe(
+            TFunction<void(Gs2::Version::Model::FAcceptVersionPtr)> Callback
+        );
+
+        class GS2VERSION_API FSubscribeWithInitialCallTask final :
+            public Gs2::Core::Util::TGs2Future<Gs2::Core::Domain::CallbackID>,
+            public TSharedFromThis<FSubscribeWithInitialCallTask>
+        {
+            const TSharedPtr<FAcceptVersionDomain> Self;
+            const TFunction<void(Gs2::Version::Model::FAcceptVersionPtr)> Callback;
+        public:
+            FSubscribeWithInitialCallTask(
+                const TSharedPtr<FAcceptVersionDomain>& Self,
+                TFunction<void(Gs2::Version::Model::FAcceptVersionPtr)> Callback
+            );
+
+            FSubscribeWithInitialCallTask(
+                const FSubscribeWithInitialCallTask& From
+            );
+
+            virtual Gs2::Core::Model::FGs2ErrorPtr Action(
+                TSharedPtr<TSharedPtr<Gs2::Core::Domain::CallbackID>> Result
+            ) override;
+        };
+
+        TSharedPtr<FAsyncTask<FSubscribeWithInitialCallTask>> SubscribeWithInitialCall(
             TFunction<void(Gs2::Version::Model::FAcceptVersionPtr)> Callback
         );
 

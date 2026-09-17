@@ -69,10 +69,6 @@ namespace Gs2::Account::Domain::Model
         Gs2::Auth::Model::FAccessTokenPtr AccessToken;
         TOptional<FString> UserId() const { return AccessToken->GetUserId(); }
         TOptional<FString> DataOwnerName;
-    private:
-
-        FString ParentKey;
-
     public:
 
         FDataOwnerAccessTokenDomain(
@@ -116,7 +112,34 @@ namespace Gs2::Account::Domain::Model
         };
         friend FModelTask;
 
+        class GS2ACCOUNT_API FSubscribeWithInitialCallTask final :
+            public Gs2::Core::Util::TGs2Future<Gs2::Core::Domain::CallbackID>,
+            public TSharedFromThis<FSubscribeWithInitialCallTask>
+        {
+            const TSharedPtr<FDataOwnerAccessTokenDomain> Self;
+            const TFunction<void(Gs2::Account::Model::FDataOwnerPtr)> Callback;
+        public:
+            explicit FSubscribeWithInitialCallTask(
+                const TSharedPtr<FDataOwnerAccessTokenDomain> Self,
+                const TFunction<void(Gs2::Account::Model::FDataOwnerPtr)>& Callback
+            );
+
+            FSubscribeWithInitialCallTask(
+                const FSubscribeWithInitialCallTask& From
+            );
+
+            virtual Gs2::Core::Model::FGs2ErrorPtr Action(
+                TSharedPtr<TSharedPtr<Gs2::Core::Domain::CallbackID>> Result
+            ) override;
+        };
+        friend FSubscribeWithInitialCallTask;
+
         TSharedPtr<FAsyncTask<FModelTask>> Model();
+
+        TSharedPtr<FAsyncTask<FDataOwnerAccessTokenDomain::FSubscribeWithInitialCallTask>> SubscribeWithInitialCall(
+            TFunction<void(Gs2::Account::Model::FDataOwnerPtr)> Callback
+        );
+        void Invalidate();
 
         Gs2::Core::Domain::CallbackID Subscribe(
             TFunction<void(Gs2::Account::Model::FDataOwnerPtr)> Callback

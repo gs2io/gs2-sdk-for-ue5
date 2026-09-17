@@ -98,6 +98,8 @@ namespace Gs2::Datastore::Domain::Model
             const FDataObjectDomain& From
         );
 
+
+
         class GS2DATASTORE_API FUpdateTask final :
             public Gs2::Core::Util::TGs2Future<Gs2::Datastore::Domain::Model::FDataObjectDomain>,
             public TSharedFromThis<FUpdateTask>
@@ -123,6 +125,8 @@ namespace Gs2::Datastore::Domain::Model
         TSharedPtr<FAsyncTask<FUpdateTask>> Update(
             Request::FUpdateDataObjectByUserIdRequestPtr Request
         );
+
+
 
         class GS2DATASTORE_API FPrepareReUploadTask final :
             public Gs2::Core::Util::TGs2Future<Gs2::Datastore::Domain::Model::FDataObjectDomain>,
@@ -150,6 +154,8 @@ namespace Gs2::Datastore::Domain::Model
             Request::FPrepareReUploadByUserIdRequestPtr Request
         );
 
+
+
         class GS2DATASTORE_API FDoneUploadTask final :
             public Gs2::Core::Util::TGs2Future<Gs2::Datastore::Domain::Model::FDataObjectDomain>,
             public TSharedFromThis<FDoneUploadTask>
@@ -175,6 +181,8 @@ namespace Gs2::Datastore::Domain::Model
         TSharedPtr<FAsyncTask<FDoneUploadTask>> DoneUpload(
             Request::FDoneUploadByUserIdRequestPtr Request
         );
+
+
 
         class GS2DATASTORE_API FDeleteTask final :
             public Gs2::Core::Util::TGs2Future<Gs2::Datastore::Domain::Model::FDataObjectDomain>,
@@ -202,6 +210,8 @@ namespace Gs2::Datastore::Domain::Model
             Request::FDeleteDataObjectByUserIdRequestPtr Request
         );
 
+
+
         class GS2DATASTORE_API FPrepareDownloadByUserIdAndDataObjectNameTask final :
             public Gs2::Core::Util::TGs2Future<Gs2::Datastore::Domain::Model::FDataObjectDomain>,
             public TSharedFromThis<FPrepareDownloadByUserIdAndDataObjectNameTask>
@@ -227,6 +237,8 @@ namespace Gs2::Datastore::Domain::Model
         TSharedPtr<FAsyncTask<FPrepareDownloadByUserIdAndDataObjectNameTask>> PrepareDownloadByUserIdAndDataObjectName(
             Request::FPrepareDownloadByUserIdAndDataObjectNameRequestPtr Request
         );
+
+
 
         class GS2DATASTORE_API FPrepareDownloadByUserIdAndDataObjectNameAndGenerationTask final :
             public Gs2::Core::Util::TGs2Future<Gs2::Datastore::Domain::Model::FDataObjectDomain>,
@@ -260,8 +272,33 @@ namespace Gs2::Datastore::Domain::Model
 
         Gs2::Core::Domain::CallbackID SubscribeDataObjectHistories(
             TFunction<void()> Callback
+
         );
 
+        class FCollectDataObjectHistoriesTask;
+
+        Gs2::Core::Domain::CallbackID SubscribeDataObjectHistories(
+            TFunction<void(TArray<Gs2::Datastore::Model::FDataObjectHistoryPtr>)> Callback,const TOptional<FString> TimeOffsetToken = TOptional<FString>()
+        );
+
+        void InvalidateDataObjectHistories(const TOptional<FString> TimeOffsetToken = TOptional<FString>());
+
+        class GS2DATASTORE_API FSubscribeDataObjectHistoriesWithInitialCallTask final :
+            public Gs2::Core::Util::TGs2Future<Gs2::Core::Domain::CallbackID>,
+            public TSharedFromThis<FSubscribeDataObjectHistoriesWithInitialCallTask>
+        {
+            const TSharedPtr<FDataObjectDomain> Self;
+            const TFunction<void(TArray<Gs2::Datastore::Model::FDataObjectHistoryPtr>)> Callback;
+        const TOptional<FString> QueryTimeOffsetToken;
+        public:
+            FSubscribeDataObjectHistoriesWithInitialCallTask(const TSharedPtr<FDataObjectDomain>& Self, TFunction<void(TArray<Gs2::Datastore::Model::FDataObjectHistoryPtr>)> Callback,const TOptional<FString> TimeOffsetToken);
+            FSubscribeDataObjectHistoriesWithInitialCallTask(const FSubscribeDataObjectHistoriesWithInitialCallTask& From);
+            virtual Gs2::Core::Model::FGs2ErrorPtr Action(TSharedPtr<TSharedPtr<Gs2::Core::Domain::CallbackID>> Result) override;
+        };
+
+        TSharedPtr<FAsyncTask<FSubscribeDataObjectHistoriesWithInitialCallTask>> SubscribeDataObjectHistoriesWithInitialCall(
+            TFunction<void(TArray<Gs2::Datastore::Model::FDataObjectHistoryPtr>)> Callback,const TOptional<FString> TimeOffsetToken = TOptional<FString>()
+        );
         void UnsubscribeDataObjectHistories(
             Gs2::Core::Domain::CallbackID CallbackID
         );
@@ -303,7 +340,34 @@ namespace Gs2::Datastore::Domain::Model
 
         TSharedPtr<FAsyncTask<FModelTask>> Model();
 
+        void Invalidate();
+
         Gs2::Core::Domain::CallbackID Subscribe(
+            TFunction<void(Gs2::Datastore::Model::FDataObjectPtr)> Callback
+        );
+
+        class GS2DATASTORE_API FSubscribeWithInitialCallTask final :
+            public Gs2::Core::Util::TGs2Future<Gs2::Core::Domain::CallbackID>,
+            public TSharedFromThis<FSubscribeWithInitialCallTask>
+        {
+            const TSharedPtr<FDataObjectDomain> Self;
+            const TFunction<void(Gs2::Datastore::Model::FDataObjectPtr)> Callback;
+        public:
+            FSubscribeWithInitialCallTask(
+                const TSharedPtr<FDataObjectDomain>& Self,
+                TFunction<void(Gs2::Datastore::Model::FDataObjectPtr)> Callback
+            );
+
+            FSubscribeWithInitialCallTask(
+                const FSubscribeWithInitialCallTask& From
+            );
+
+            virtual Gs2::Core::Model::FGs2ErrorPtr Action(
+                TSharedPtr<TSharedPtr<Gs2::Core::Domain::CallbackID>> Result
+            ) override;
+        };
+
+        TSharedPtr<FAsyncTask<FSubscribeWithInitialCallTask>> SubscribeWithInitialCall(
             TFunction<void(Gs2::Datastore::Model::FDataObjectPtr)> Callback
         );
 

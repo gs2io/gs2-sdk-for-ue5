@@ -96,6 +96,8 @@ namespace Gs2::Chat::Domain::Model
             const FRoomDomain& From
         );
 
+
+
         class GS2CHAT_API FGetTask final :
             public Gs2::Core::Util::TGs2Future<Gs2::Chat::Model::FRoom>,
             public TSharedFromThis<FGetTask>
@@ -121,6 +123,8 @@ namespace Gs2::Chat::Domain::Model
         TSharedPtr<FAsyncTask<FGetTask>> Get(
             Request::FGetRoomRequestPtr Request
         );
+
+
 
         class GS2CHAT_API FUpdateFromBackendTask final :
             public Gs2::Core::Util::TGs2Future<Gs2::Chat::Domain::Model::FRoomDomain>,
@@ -148,6 +152,8 @@ namespace Gs2::Chat::Domain::Model
             Request::FUpdateRoomFromBackendRequestPtr Request
         );
 
+
+
         class GS2CHAT_API FDeleteFromBackendTask final :
             public Gs2::Core::Util::TGs2Future<Gs2::Chat::Domain::Model::FRoomDomain>,
             public TSharedFromThis<FDeleteFromBackendTask>
@@ -173,6 +179,8 @@ namespace Gs2::Chat::Domain::Model
         TSharedPtr<FAsyncTask<FDeleteFromBackendTask>> DeleteFromBackend(
             Request::FDeleteRoomFromBackendRequestPtr Request
         );
+
+
 
         class GS2CHAT_API FPostTask final :
             public Gs2::Core::Util::TGs2Future<Gs2::Chat::Domain::Model::FMessageDomain>,
@@ -207,8 +215,33 @@ namespace Gs2::Chat::Domain::Model
 
         Gs2::Core::Domain::CallbackID SubscribeMessages(
             TFunction<void()> Callback
+
         );
 
+        class FCollectMessagesTask;
+
+        Gs2::Core::Domain::CallbackID SubscribeMessages(
+            TFunction<void(TArray<Gs2::Chat::Model::FMessagePtr>)> Callback,const TOptional<int32> Category = TOptional<int32>(),const TOptional<FString> TimeOffsetToken = TOptional<FString>()
+        );
+
+        void InvalidateMessages(const TOptional<int32> Category = TOptional<int32>(),const TOptional<FString> TimeOffsetToken = TOptional<FString>());
+
+        class GS2CHAT_API FSubscribeMessagesWithInitialCallTask final :
+            public Gs2::Core::Util::TGs2Future<Gs2::Core::Domain::CallbackID>,
+            public TSharedFromThis<FSubscribeMessagesWithInitialCallTask>
+        {
+            const TSharedPtr<FRoomDomain> Self;
+            const TFunction<void(TArray<Gs2::Chat::Model::FMessagePtr>)> Callback;
+        const TOptional<int32> QueryCategory;const TOptional<FString> QueryTimeOffsetToken;
+        public:
+            FSubscribeMessagesWithInitialCallTask(const TSharedPtr<FRoomDomain>& Self, TFunction<void(TArray<Gs2::Chat::Model::FMessagePtr>)> Callback,const TOptional<int32> Category,const TOptional<FString> TimeOffsetToken);
+            FSubscribeMessagesWithInitialCallTask(const FSubscribeMessagesWithInitialCallTask& From);
+            virtual Gs2::Core::Model::FGs2ErrorPtr Action(TSharedPtr<TSharedPtr<Gs2::Core::Domain::CallbackID>> Result) override;
+        };
+
+        TSharedPtr<FAsyncTask<FSubscribeMessagesWithInitialCallTask>> SubscribeMessagesWithInitialCall(
+            TFunction<void(TArray<Gs2::Chat::Model::FMessagePtr>)> Callback,const TOptional<int32> Category = TOptional<int32>(),const TOptional<FString> TimeOffsetToken = TOptional<FString>()
+        );
         void UnsubscribeMessages(
             Gs2::Core::Domain::CallbackID CallbackID
         );
@@ -220,8 +253,33 @@ namespace Gs2::Chat::Domain::Model
 
         Gs2::Core::Domain::CallbackID SubscribeLatestMessages(
             TFunction<void()> Callback
+
         );
 
+        class FCollectLatestMessagesTask;
+
+        Gs2::Core::Domain::CallbackID SubscribeLatestMessages(
+            TFunction<void(TArray<Gs2::Chat::Model::FMessagePtr>)> Callback,const TOptional<int32> Category = TOptional<int32>(),const TOptional<FString> TimeOffsetToken = TOptional<FString>()
+        );
+
+        void InvalidateLatestMessages(const TOptional<int32> Category = TOptional<int32>(),const TOptional<FString> TimeOffsetToken = TOptional<FString>());
+
+        class GS2CHAT_API FSubscribeLatestMessagesWithInitialCallTask final :
+            public Gs2::Core::Util::TGs2Future<Gs2::Core::Domain::CallbackID>,
+            public TSharedFromThis<FSubscribeLatestMessagesWithInitialCallTask>
+        {
+            const TSharedPtr<FRoomDomain> Self;
+            const TFunction<void(TArray<Gs2::Chat::Model::FMessagePtr>)> Callback;
+        const TOptional<int32> QueryCategory;const TOptional<FString> QueryTimeOffsetToken;
+        public:
+            FSubscribeLatestMessagesWithInitialCallTask(const TSharedPtr<FRoomDomain>& Self, TFunction<void(TArray<Gs2::Chat::Model::FMessagePtr>)> Callback,const TOptional<int32> Category,const TOptional<FString> TimeOffsetToken);
+            FSubscribeLatestMessagesWithInitialCallTask(const FSubscribeLatestMessagesWithInitialCallTask& From);
+            virtual Gs2::Core::Model::FGs2ErrorPtr Action(TSharedPtr<TSharedPtr<Gs2::Core::Domain::CallbackID>> Result) override;
+        };
+
+        TSharedPtr<FAsyncTask<FSubscribeLatestMessagesWithInitialCallTask>> SubscribeLatestMessagesWithInitialCall(
+            TFunction<void(TArray<Gs2::Chat::Model::FMessagePtr>)> Callback,const TOptional<int32> Category = TOptional<int32>(),const TOptional<FString> TimeOffsetToken = TOptional<FString>()
+        );
         void UnsubscribeLatestMessages(
             Gs2::Core::Domain::CallbackID CallbackID
         );
@@ -263,7 +321,34 @@ namespace Gs2::Chat::Domain::Model
 
         TSharedPtr<FAsyncTask<FModelTask>> Model();
 
+        void Invalidate();
+
         Gs2::Core::Domain::CallbackID Subscribe(
+            TFunction<void(Gs2::Chat::Model::FRoomPtr)> Callback
+        );
+
+        class GS2CHAT_API FSubscribeWithInitialCallTask final :
+            public Gs2::Core::Util::TGs2Future<Gs2::Core::Domain::CallbackID>,
+            public TSharedFromThis<FSubscribeWithInitialCallTask>
+        {
+            const TSharedPtr<FRoomDomain> Self;
+            const TFunction<void(Gs2::Chat::Model::FRoomPtr)> Callback;
+        public:
+            FSubscribeWithInitialCallTask(
+                const TSharedPtr<FRoomDomain>& Self,
+                TFunction<void(Gs2::Chat::Model::FRoomPtr)> Callback
+            );
+
+            FSubscribeWithInitialCallTask(
+                const FSubscribeWithInitialCallTask& From
+            );
+
+            virtual Gs2::Core::Model::FGs2ErrorPtr Action(
+                TSharedPtr<TSharedPtr<Gs2::Core::Domain::CallbackID>> Result
+            ) override;
+        };
+
+        TSharedPtr<FAsyncTask<FSubscribeWithInitialCallTask>> SubscribeWithInitialCall(
             TFunction<void(Gs2::Chat::Model::FRoomPtr)> Callback
         );
 

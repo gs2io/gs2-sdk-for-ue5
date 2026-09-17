@@ -19,6 +19,7 @@
 #include "CoreMinimal.h"
 #include "Dom/JsonObject.h"
 #include "../Model/TransactionSetting.h"
+#include "../Model/TransactionSettingV2.h"
 #include "../Model/ScriptSetting.h"
 #include "../Model/LogSetting.h"
 
@@ -32,6 +33,7 @@ namespace Gs2::Account::Request
         TOptional<FString> NamespaceNameValue;
         TOptional<FString> DescriptionValue;
         TSharedPtr<Model::FTransactionSetting> TransactionSettingValue;
+        TSharedPtr<Model::FTransactionSettingV2> TransactionSettingV2Value;
         TOptional<bool> ChangePasswordIfTakeOverValue;
         TSharedPtr<Model::FScriptSetting> CreateAccountScriptValue;
         TSharedPtr<Model::FScriptSetting> AuthenticationScriptValue;
@@ -53,6 +55,7 @@ namespace Gs2::Account::Request
         TSharedPtr<FUpdateNamespaceRequest> WithNamespaceName(const TOptional<FString> NamespaceName);
         TSharedPtr<FUpdateNamespaceRequest> WithDescription(const TOptional<FString> Description);
         TSharedPtr<FUpdateNamespaceRequest> WithTransactionSetting(const TSharedPtr<Model::FTransactionSetting> TransactionSetting);
+        TSharedPtr<FUpdateNamespaceRequest> WithTransactionSettingV2(const TSharedPtr<Model::FTransactionSettingV2> TransactionSettingV2);
         TSharedPtr<FUpdateNamespaceRequest> WithChangePasswordIfTakeOver(const TOptional<bool> ChangePasswordIfTakeOver);
         TSharedPtr<FUpdateNamespaceRequest> WithCreateAccountScript(const TSharedPtr<Model::FScriptSetting> CreateAccountScript);
         TSharedPtr<FUpdateNamespaceRequest> WithAuthenticationScript(const TSharedPtr<Model::FScriptSetting> AuthenticationScript);
@@ -66,6 +69,7 @@ namespace Gs2::Account::Request
         TOptional<FString> GetNamespaceName() const;
         TOptional<FString> GetDescription() const;
         TSharedPtr<Model::FTransactionSetting> GetTransactionSetting() const;
+        TSharedPtr<Model::FTransactionSettingV2> GetTransactionSettingV2() const;
         TOptional<bool> GetChangePasswordIfTakeOver() const;
         FString GetChangePasswordIfTakeOverString() const;
         TSharedPtr<Model::FScriptSetting> GetCreateAccountScript() const;

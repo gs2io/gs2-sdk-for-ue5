@@ -106,6 +106,8 @@ namespace Gs2::Version::Domain::Model
             const FCheckerAccessTokenDomain& From
         );
 
+
+
         class GS2VERSION_API FCheckVersionTask final :
             public Gs2::Core::Util::TGs2Future<Gs2::Version::Domain::Model::FCheckerAccessTokenDomain>,
             public TSharedFromThis<FCheckVersionTask>

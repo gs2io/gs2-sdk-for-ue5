@@ -44,7 +44,13 @@ void UGs2FriendSendFriendRequestGetValueAsyncFunction::Activate()
     auto Future = SendFriendRequest.Value->Model();
     Future->GetTask().OnSuccessDelegate().BindLambda([&](const auto Result)
     {
-        auto ReturnValue = EzFriendRequestToFGs2FriendFriendRequest(Result);
+        FGs2FriendFriendRequest ReturnValue;
+        if (Result.IsValid())
+        {
+            ReturnValue.UserId = Result->GetUserId().Get(FString());
+            ReturnValue.TargetUserId = Result->GetTargetUserId().Get(FString());
+            ReturnValue.PublicProfile = Result->GetPublicProfile().Get(FString());
+        }
         const FGs2Error ReturnError;
         OnSuccess.Broadcast(ReturnValue, ReturnError);
         SetReadyToDestroy();

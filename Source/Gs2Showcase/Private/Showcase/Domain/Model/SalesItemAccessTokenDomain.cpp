@@ -133,17 +133,26 @@ namespace Gs2::Showcase::Domain::Model
         TSharedPtr<TSharedPtr<Gs2::Showcase::Model::FSalesItem>> Result
     )
     {
-        // ReSharper disable once CppLocalVariableMayBeConst
-        TSharedPtr<Gs2::Showcase::Model::FSalesItem> Value;
-        auto bCacheHit = Self->Gs2->Cache->TryGet<Gs2::Showcase::Model::FSalesItem>(
-            Self->ParentKey,
-            Gs2::Showcase::Domain::Model::FSalesItemDomain::CreateCacheKey(
-            ),
-            &Value
+        const FString CacheKey = Gs2::Showcase::Domain::Model::FSalesItemDomain::CreateCacheKey(
         );
-        *Result = Value;
+        return Self->Gs2->Cache->ExecuteWithKeyLock(
+            Gs2::Showcase::Model::FSalesItem::TypeName,
+            Self->ParentKey,
+            CacheKey,
+            [this, Result, CacheKey]() -> Gs2::Core::Model::FGs2ErrorPtr
+            {
+                // ReSharper disable once CppLocalVariableMayBeConst
+                TSharedPtr<Gs2::Showcase::Model::FSalesItem> Value;
+                auto bCacheHit = Self->Gs2->Cache->TryGet<Gs2::Showcase::Model::FSalesItem>(
+                    Self->ParentKey,
+                    CacheKey,
+                    &Value
+                );
+                *Result = Value;
 
-        return nullptr;
+                return nullptr;
+            }
+        );
     }
 
     TSharedPtr<FAsyncTask<FSalesItemAccessTokenDomain::FModelTask>> FSalesItemAccessTokenDomain::Model() {

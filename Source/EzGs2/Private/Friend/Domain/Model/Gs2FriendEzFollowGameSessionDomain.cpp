@@ -122,7 +122,8 @@ namespace Gs2::UE5::Friend::Domain::Model
         );
     }
 
-    void FEzFollowGameSessionDomain::UnsubscribeFollows(Gs2::Core::Domain::CallbackID CallbackId)
+    void FEzFollowGameSessionDomain::UnsubscribeFollows(
+            Gs2::Core::Domain::CallbackID CallbackId)
     {
         Domain->UnsubscribeFollows(
             CallbackId

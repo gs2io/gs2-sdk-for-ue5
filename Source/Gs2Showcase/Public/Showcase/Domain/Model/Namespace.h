@@ -114,6 +114,8 @@ namespace Gs2::Showcase::Domain::Model
             const FNamespaceDomain& From
         );
 
+
+
         class GS2SHOWCASE_API FGetStatusTask final :
             public Gs2::Core::Util::TGs2Future<Gs2::Showcase::Domain::Model::FNamespaceDomain>,
             public TSharedFromThis<FGetStatusTask>
@@ -139,6 +141,8 @@ namespace Gs2::Showcase::Domain::Model
         TSharedPtr<FAsyncTask<FGetStatusTask>> GetStatus(
             Request::FGetNamespaceStatusRequestPtr Request
         );
+
+
 
         class GS2SHOWCASE_API FGetTask final :
             public Gs2::Core::Util::TGs2Future<Gs2::Showcase::Model::FNamespace>,
@@ -166,6 +170,8 @@ namespace Gs2::Showcase::Domain::Model
             Request::FGetNamespaceRequestPtr Request
         );
 
+
+
         class GS2SHOWCASE_API FUpdateTask final :
             public Gs2::Core::Util::TGs2Future<Gs2::Showcase::Domain::Model::FNamespaceDomain>,
             public TSharedFromThis<FUpdateTask>
@@ -191,6 +197,8 @@ namespace Gs2::Showcase::Domain::Model
         TSharedPtr<FAsyncTask<FUpdateTask>> Update(
             Request::FUpdateNamespaceRequestPtr Request
         );
+
+
 
         class GS2SHOWCASE_API FDeleteTask final :
             public Gs2::Core::Util::TGs2Future<Gs2::Showcase::Domain::Model::FNamespaceDomain>,
@@ -218,6 +226,8 @@ namespace Gs2::Showcase::Domain::Model
             Request::FDeleteNamespaceRequestPtr Request
         );
 
+
+
         class GS2SHOWCASE_API FCreateSalesItemMasterTask final :
             public Gs2::Core::Util::TGs2Future<Gs2::Showcase::Domain::Model::FSalesItemMasterDomain>,
             public TSharedFromThis<FCreateSalesItemMasterTask>
@@ -243,6 +253,8 @@ namespace Gs2::Showcase::Domain::Model
         TSharedPtr<FAsyncTask<FCreateSalesItemMasterTask>> CreateSalesItemMaster(
             Request::FCreateSalesItemMasterRequestPtr Request
         );
+
+
 
         class GS2SHOWCASE_API FCreateSalesItemGroupMasterTask final :
             public Gs2::Core::Util::TGs2Future<Gs2::Showcase::Domain::Model::FSalesItemGroupMasterDomain>,
@@ -270,6 +282,8 @@ namespace Gs2::Showcase::Domain::Model
             Request::FCreateSalesItemGroupMasterRequestPtr Request
         );
 
+
+
         class GS2SHOWCASE_API FCreateShowcaseMasterTask final :
             public Gs2::Core::Util::TGs2Future<Gs2::Showcase::Domain::Model::FShowcaseMasterDomain>,
             public TSharedFromThis<FCreateShowcaseMasterTask>
@@ -295,6 +309,8 @@ namespace Gs2::Showcase::Domain::Model
         TSharedPtr<FAsyncTask<FCreateShowcaseMasterTask>> CreateShowcaseMaster(
             Request::FCreateShowcaseMasterRequestPtr Request
         );
+
+
 
         class GS2SHOWCASE_API FCreateRandomShowcaseMasterTask final :
             public Gs2::Core::Util::TGs2Future<Gs2::Showcase::Domain::Model::FRandomShowcaseMasterDomain>,
@@ -331,8 +347,33 @@ namespace Gs2::Showcase::Domain::Model
 
         Gs2::Core::Domain::CallbackID SubscribeSalesItemMasters(
             TFunction<void()> Callback
+
         );
 
+        class FCollectSalesItemMastersTask;
+
+        Gs2::Core::Domain::CallbackID SubscribeSalesItemMasters(
+            TFunction<void(TArray<Gs2::Showcase::Model::FSalesItemMasterPtr>)> Callback,const TOptional<FString> NamePrefix = TOptional<FString>()
+        );
+
+        void InvalidateSalesItemMasters(const TOptional<FString> NamePrefix = TOptional<FString>());
+
+        class GS2SHOWCASE_API FSubscribeSalesItemMastersWithInitialCallTask final :
+            public Gs2::Core::Util::TGs2Future<Gs2::Core::Domain::CallbackID>,
+            public TSharedFromThis<FSubscribeSalesItemMastersWithInitialCallTask>
+        {
+            const TSharedPtr<FNamespaceDomain> Self;
+            const TFunction<void(TArray<Gs2::Showcase::Model::FSalesItemMasterPtr>)> Callback;
+        const TOptional<FString> QueryNamePrefix;
+        public:
+            FSubscribeSalesItemMastersWithInitialCallTask(const TSharedPtr<FNamespaceDomain>& Self, TFunction<void(TArray<Gs2::Showcase::Model::FSalesItemMasterPtr>)> Callback,const TOptional<FString> NamePrefix);
+            FSubscribeSalesItemMastersWithInitialCallTask(const FSubscribeSalesItemMastersWithInitialCallTask& From);
+            virtual Gs2::Core::Model::FGs2ErrorPtr Action(TSharedPtr<TSharedPtr<Gs2::Core::Domain::CallbackID>> Result) override;
+        };
+
+        TSharedPtr<FAsyncTask<FSubscribeSalesItemMastersWithInitialCallTask>> SubscribeSalesItemMastersWithInitialCall(
+            TFunction<void(TArray<Gs2::Showcase::Model::FSalesItemMasterPtr>)> Callback,const TOptional<FString> NamePrefix = TOptional<FString>()
+        );
         void UnsubscribeSalesItemMasters(
             Gs2::Core::Domain::CallbackID CallbackID
         );
@@ -347,8 +388,33 @@ namespace Gs2::Showcase::Domain::Model
 
         Gs2::Core::Domain::CallbackID SubscribeSalesItemGroupMasters(
             TFunction<void()> Callback
+
         );
 
+        class FCollectSalesItemGroupMastersTask;
+
+        Gs2::Core::Domain::CallbackID SubscribeSalesItemGroupMasters(
+            TFunction<void(TArray<Gs2::Showcase::Model::FSalesItemGroupMasterPtr>)> Callback,const TOptional<FString> NamePrefix = TOptional<FString>()
+        );
+
+        void InvalidateSalesItemGroupMasters(const TOptional<FString> NamePrefix = TOptional<FString>());
+
+        class GS2SHOWCASE_API FSubscribeSalesItemGroupMastersWithInitialCallTask final :
+            public Gs2::Core::Util::TGs2Future<Gs2::Core::Domain::CallbackID>,
+            public TSharedFromThis<FSubscribeSalesItemGroupMastersWithInitialCallTask>
+        {
+            const TSharedPtr<FNamespaceDomain> Self;
+            const TFunction<void(TArray<Gs2::Showcase::Model::FSalesItemGroupMasterPtr>)> Callback;
+        const TOptional<FString> QueryNamePrefix;
+        public:
+            FSubscribeSalesItemGroupMastersWithInitialCallTask(const TSharedPtr<FNamespaceDomain>& Self, TFunction<void(TArray<Gs2::Showcase::Model::FSalesItemGroupMasterPtr>)> Callback,const TOptional<FString> NamePrefix);
+            FSubscribeSalesItemGroupMastersWithInitialCallTask(const FSubscribeSalesItemGroupMastersWithInitialCallTask& From);
+            virtual Gs2::Core::Model::FGs2ErrorPtr Action(TSharedPtr<TSharedPtr<Gs2::Core::Domain::CallbackID>> Result) override;
+        };
+
+        TSharedPtr<FAsyncTask<FSubscribeSalesItemGroupMastersWithInitialCallTask>> SubscribeSalesItemGroupMastersWithInitialCall(
+            TFunction<void(TArray<Gs2::Showcase::Model::FSalesItemGroupMasterPtr>)> Callback,const TOptional<FString> NamePrefix = TOptional<FString>()
+        );
         void UnsubscribeSalesItemGroupMasters(
             Gs2::Core::Domain::CallbackID CallbackID
         );
@@ -371,8 +437,33 @@ namespace Gs2::Showcase::Domain::Model
 
         Gs2::Core::Domain::CallbackID SubscribeShowcaseMasters(
             TFunction<void()> Callback
+
         );
 
+        class FCollectShowcaseMastersTask;
+
+        Gs2::Core::Domain::CallbackID SubscribeShowcaseMasters(
+            TFunction<void(TArray<Gs2::Showcase::Model::FShowcaseMasterPtr>)> Callback,const TOptional<FString> NamePrefix = TOptional<FString>()
+        );
+
+        void InvalidateShowcaseMasters(const TOptional<FString> NamePrefix = TOptional<FString>());
+
+        class GS2SHOWCASE_API FSubscribeShowcaseMastersWithInitialCallTask final :
+            public Gs2::Core::Util::TGs2Future<Gs2::Core::Domain::CallbackID>,
+            public TSharedFromThis<FSubscribeShowcaseMastersWithInitialCallTask>
+        {
+            const TSharedPtr<FNamespaceDomain> Self;
+            const TFunction<void(TArray<Gs2::Showcase::Model::FShowcaseMasterPtr>)> Callback;
+        const TOptional<FString> QueryNamePrefix;
+        public:
+            FSubscribeShowcaseMastersWithInitialCallTask(const TSharedPtr<FNamespaceDomain>& Self, TFunction<void(TArray<Gs2::Showcase::Model::FShowcaseMasterPtr>)> Callback,const TOptional<FString> NamePrefix);
+            FSubscribeShowcaseMastersWithInitialCallTask(const FSubscribeShowcaseMastersWithInitialCallTask& From);
+            virtual Gs2::Core::Model::FGs2ErrorPtr Action(TSharedPtr<TSharedPtr<Gs2::Core::Domain::CallbackID>> Result) override;
+        };
+
+        TSharedPtr<FAsyncTask<FSubscribeShowcaseMastersWithInitialCallTask>> SubscribeShowcaseMastersWithInitialCall(
+            TFunction<void(TArray<Gs2::Showcase::Model::FShowcaseMasterPtr>)> Callback,const TOptional<FString> NamePrefix = TOptional<FString>()
+        );
         void UnsubscribeShowcaseMasters(
             Gs2::Core::Domain::CallbackID CallbackID
         );
@@ -387,8 +478,33 @@ namespace Gs2::Showcase::Domain::Model
 
         Gs2::Core::Domain::CallbackID SubscribeRandomShowcaseMasters(
             TFunction<void()> Callback
+
         );
 
+        class FCollectRandomShowcaseMastersTask;
+
+        Gs2::Core::Domain::CallbackID SubscribeRandomShowcaseMasters(
+            TFunction<void(TArray<Gs2::Showcase::Model::FRandomShowcaseMasterPtr>)> Callback,const TOptional<FString> NamePrefix = TOptional<FString>()
+        );
+
+        void InvalidateRandomShowcaseMasters(const TOptional<FString> NamePrefix = TOptional<FString>());
+
+        class GS2SHOWCASE_API FSubscribeRandomShowcaseMastersWithInitialCallTask final :
+            public Gs2::Core::Util::TGs2Future<Gs2::Core::Domain::CallbackID>,
+            public TSharedFromThis<FSubscribeRandomShowcaseMastersWithInitialCallTask>
+        {
+            const TSharedPtr<FNamespaceDomain> Self;
+            const TFunction<void(TArray<Gs2::Showcase::Model::FRandomShowcaseMasterPtr>)> Callback;
+        const TOptional<FString> QueryNamePrefix;
+        public:
+            FSubscribeRandomShowcaseMastersWithInitialCallTask(const TSharedPtr<FNamespaceDomain>& Self, TFunction<void(TArray<Gs2::Showcase::Model::FRandomShowcaseMasterPtr>)> Callback,const TOptional<FString> NamePrefix);
+            FSubscribeRandomShowcaseMastersWithInitialCallTask(const FSubscribeRandomShowcaseMastersWithInitialCallTask& From);
+            virtual Gs2::Core::Model::FGs2ErrorPtr Action(TSharedPtr<TSharedPtr<Gs2::Core::Domain::CallbackID>> Result) override;
+        };
+
+        TSharedPtr<FAsyncTask<FSubscribeRandomShowcaseMastersWithInitialCallTask>> SubscribeRandomShowcaseMastersWithInitialCall(
+            TFunction<void(TArray<Gs2::Showcase::Model::FRandomShowcaseMasterPtr>)> Callback,const TOptional<FString> NamePrefix = TOptional<FString>()
+        );
         void UnsubscribeRandomShowcaseMasters(
             Gs2::Core::Domain::CallbackID CallbackID
         );
@@ -428,7 +544,34 @@ namespace Gs2::Showcase::Domain::Model
 
         TSharedPtr<FAsyncTask<FModelTask>> Model();
 
+        void Invalidate();
+
         Gs2::Core::Domain::CallbackID Subscribe(
+            TFunction<void(Gs2::Showcase::Model::FNamespacePtr)> Callback
+        );
+
+        class GS2SHOWCASE_API FSubscribeWithInitialCallTask final :
+            public Gs2::Core::Util::TGs2Future<Gs2::Core::Domain::CallbackID>,
+            public TSharedFromThis<FSubscribeWithInitialCallTask>
+        {
+            const TSharedPtr<FNamespaceDomain> Self;
+            const TFunction<void(Gs2::Showcase::Model::FNamespacePtr)> Callback;
+        public:
+            FSubscribeWithInitialCallTask(
+                const TSharedPtr<FNamespaceDomain>& Self,
+                TFunction<void(Gs2::Showcase::Model::FNamespacePtr)> Callback
+            );
+
+            FSubscribeWithInitialCallTask(
+                const FSubscribeWithInitialCallTask& From
+            );
+
+            virtual Gs2::Core::Model::FGs2ErrorPtr Action(
+                TSharedPtr<TSharedPtr<Gs2::Core::Domain::CallbackID>> Result
+            ) override;
+        };
+
+        TSharedPtr<FAsyncTask<FSubscribeWithInitialCallTask>> SubscribeWithInitialCall(
             TFunction<void(Gs2::Showcase::Model::FNamespacePtr)> Callback
         );
 

@@ -86,6 +86,8 @@ namespace Gs2::Dictionary::Domain::Model
             const FUserDomain& From
         );
 
+
+
         class GS2DICTIONARY_API FAddEntriesTask final :
             public Gs2::Core::Util::TGs2Future<TArray<TSharedPtr<Gs2::Dictionary::Domain::Model::FEntryDomain>>>,
             public TSharedFromThis<FAddEntriesTask>
@@ -111,6 +113,8 @@ namespace Gs2::Dictionary::Domain::Model
         TSharedPtr<FAsyncTask<FAddEntriesTask>> AddEntries(
             Request::FAddEntriesByUserIdRequestPtr Request
         );
+
+
 
         class GS2DICTIONARY_API FResetTask final :
             public Gs2::Core::Util::TGs2Future<Gs2::Dictionary::Domain::Model::FUserDomain>,
@@ -138,6 +142,8 @@ namespace Gs2::Dictionary::Domain::Model
             Request::FResetByUserIdRequestPtr Request
         );
 
+
+
         class GS2DICTIONARY_API FDeleteEntriesTask final :
             public Gs2::Core::Util::TGs2Future<TArray<TSharedPtr<Gs2::Dictionary::Domain::Model::FEntryDomain>>>,
             public TSharedFromThis<FDeleteEntriesTask>
@@ -163,6 +169,8 @@ namespace Gs2::Dictionary::Domain::Model
         TSharedPtr<FAsyncTask<FDeleteEntriesTask>> DeleteEntries(
             Request::FDeleteEntriesByUserIdRequestPtr Request
         );
+
+
 
         class GS2DICTIONARY_API FAddLikesTask final :
             public Gs2::Core::Util::TGs2Future<TArray<TSharedPtr<Gs2::Dictionary::Domain::Model::FLikeDomain>>>,
@@ -190,6 +198,8 @@ namespace Gs2::Dictionary::Domain::Model
             Request::FAddLikesByUserIdRequestPtr Request
         );
 
+
+
         class GS2DICTIONARY_API FResetLikesTask final :
             public Gs2::Core::Util::TGs2Future<Gs2::Dictionary::Domain::Model::FUserDomain>,
             public TSharedFromThis<FResetLikesTask>
@@ -215,6 +225,8 @@ namespace Gs2::Dictionary::Domain::Model
         TSharedPtr<FAsyncTask<FResetLikesTask>> ResetLikes(
             Request::FResetLikesByUserIdRequestPtr Request
         );
+
+
 
         class GS2DICTIONARY_API FDeleteLikesTask final :
             public Gs2::Core::Util::TGs2Future<TArray<TSharedPtr<Gs2::Dictionary::Domain::Model::FLikeDomain>>>,
@@ -248,8 +260,33 @@ namespace Gs2::Dictionary::Domain::Model
 
         Gs2::Core::Domain::CallbackID SubscribeEntries(
             TFunction<void()> Callback
+
         );
 
+        class FCollectEntriesTask;
+
+        Gs2::Core::Domain::CallbackID SubscribeEntries(
+            TFunction<void(TArray<Gs2::Dictionary::Model::FEntryPtr>)> Callback,const TOptional<FString> TimeOffsetToken = TOptional<FString>()
+        );
+
+        void InvalidateEntries(const TOptional<FString> TimeOffsetToken = TOptional<FString>());
+
+        class GS2DICTIONARY_API FSubscribeEntriesWithInitialCallTask final :
+            public Gs2::Core::Util::TGs2Future<Gs2::Core::Domain::CallbackID>,
+            public TSharedFromThis<FSubscribeEntriesWithInitialCallTask>
+        {
+            const TSharedPtr<FUserDomain> Self;
+            const TFunction<void(TArray<Gs2::Dictionary::Model::FEntryPtr>)> Callback;
+        const TOptional<FString> QueryTimeOffsetToken;
+        public:
+            FSubscribeEntriesWithInitialCallTask(const TSharedPtr<FUserDomain>& Self, TFunction<void(TArray<Gs2::Dictionary::Model::FEntryPtr>)> Callback,const TOptional<FString> TimeOffsetToken);
+            FSubscribeEntriesWithInitialCallTask(const FSubscribeEntriesWithInitialCallTask& From);
+            virtual Gs2::Core::Model::FGs2ErrorPtr Action(TSharedPtr<TSharedPtr<Gs2::Core::Domain::CallbackID>> Result) override;
+        };
+
+        TSharedPtr<FAsyncTask<FSubscribeEntriesWithInitialCallTask>> SubscribeEntriesWithInitialCall(
+            TFunction<void(TArray<Gs2::Dictionary::Model::FEntryPtr>)> Callback,const TOptional<FString> TimeOffsetToken = TOptional<FString>()
+        );
         void UnsubscribeEntries(
             Gs2::Core::Domain::CallbackID CallbackID
         );
@@ -264,8 +301,33 @@ namespace Gs2::Dictionary::Domain::Model
 
         Gs2::Core::Domain::CallbackID SubscribeLikes(
             TFunction<void()> Callback
+
         );
 
+        class FCollectLikesTask;
+
+        Gs2::Core::Domain::CallbackID SubscribeLikes(
+            TFunction<void(TArray<Gs2::Dictionary::Model::FLikePtr>)> Callback,const TOptional<FString> TimeOffsetToken = TOptional<FString>()
+        );
+
+        void InvalidateLikes(const TOptional<FString> TimeOffsetToken = TOptional<FString>());
+
+        class GS2DICTIONARY_API FSubscribeLikesWithInitialCallTask final :
+            public Gs2::Core::Util::TGs2Future<Gs2::Core::Domain::CallbackID>,
+            public TSharedFromThis<FSubscribeLikesWithInitialCallTask>
+        {
+            const TSharedPtr<FUserDomain> Self;
+            const TFunction<void(TArray<Gs2::Dictionary::Model::FLikePtr>)> Callback;
+        const TOptional<FString> QueryTimeOffsetToken;
+        public:
+            FSubscribeLikesWithInitialCallTask(const TSharedPtr<FUserDomain>& Self, TFunction<void(TArray<Gs2::Dictionary::Model::FLikePtr>)> Callback,const TOptional<FString> TimeOffsetToken);
+            FSubscribeLikesWithInitialCallTask(const FSubscribeLikesWithInitialCallTask& From);
+            virtual Gs2::Core::Model::FGs2ErrorPtr Action(TSharedPtr<TSharedPtr<Gs2::Core::Domain::CallbackID>> Result) override;
+        };
+
+        TSharedPtr<FAsyncTask<FSubscribeLikesWithInitialCallTask>> SubscribeLikesWithInitialCall(
+            TFunction<void(TArray<Gs2::Dictionary::Model::FLikePtr>)> Callback,const TOptional<FString> TimeOffsetToken = TOptional<FString>()
+        );
         void UnsubscribeLikes(
             Gs2::Core::Domain::CallbackID CallbackID
         );

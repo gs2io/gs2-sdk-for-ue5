@@ -31,12 +31,16 @@ namespace Gs2::Core::Domain
 			bool bAtomicCommit,
 			Gs2::Core::Model::FTransactionResultPtr TransactionResult
 		)>& NewTransactionDomain,
+		const TFunction<Gs2::Core::Model::FGs2ErrorPtr(
+			const Gs2::Auth::Model::FAccessTokenPtr& AccessToken
+		)>& Dispatch,
 		const Gs2::Auth::Model::FAccessTokenPtr& AccessToken,
 		const TSharedPtr<TArray<TSharedPtr<FTransactionAccessTokenDomain>>>& Actions
 	):
 		Gs2(Gs2),
 		NewJobQueueDomain(NewJobQueueDomain),
 		NewTransactionDomain(NewTransactionDomain),
+		Dispatch(Dispatch),
 		AccessToken(AccessToken),
 		Actions(Actions)
 	{
@@ -49,6 +53,7 @@ namespace Gs2::Core::Domain
 		Gs2(From.Gs2),
 		NewJobQueueDomain(From.NewJobQueueDomain),
 		NewTransactionDomain(From.NewTransactionDomain),
+		Dispatch(From.Dispatch),
 		AccessToken(From.AccessToken),
 		Actions(From.Actions)
 	{
@@ -60,6 +65,7 @@ namespace Gs2::Core::Domain
 	) const
 	{
 		if (Actions->Num() == 0) {
+			*Result = nullptr;
 			return nullptr;
 		}
 		const auto NextActions = MakeShared<TArray<TSharedPtr<FTransactionAccessTokenDomain>>>();
@@ -79,16 +85,49 @@ namespace Gs2::Core::Domain
 			Gs2,
 			NewJobQueueDomain,
 			NewTransactionDomain,
+			Dispatch,
 			AccessToken,
 			NextActions
 		);
+		if (!All)
+		{
+			if (Dispatch)
+			{
+				const auto DispatchError = Dispatch(AccessToken);
+				if (DispatchError.IsValid())
+				{
+					return DispatchError;
+				}
+			}
+			*Result = Next;
+			return nullptr;
+		}
 		const auto NextFuture = Next->Wait(true);
 		NextFuture->StartSynchronousTask();
 		if (NextFuture->GetTask().IsError())
 		{
 			return NextFuture->GetTask().Error();
 		}
+		if (Dispatch)
+		{
+			const auto DispatchError = Dispatch(AccessToken);
+			if (DispatchError.IsValid())
+			{
+				return DispatchError;
+			}
+		}
+		*Result = nullptr;
 		return nullptr;
+	}
+
+	TOptional<FString> FTransactionAccessTokenDomain::GetTransactionId() const
+	{
+		return TOptional<FString>();
+	}
+
+	TOptional<FString> FTransactionAccessTokenDomain::GetJobName() const
+	{
+		return TOptional<FString>();
 	}
 
 	FTransactionAccessTokenDomain::FWaitTask::FWaitTask(

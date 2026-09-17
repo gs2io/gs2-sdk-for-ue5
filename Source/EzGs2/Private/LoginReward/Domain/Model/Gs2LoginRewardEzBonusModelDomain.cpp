@@ -82,7 +82,7 @@ namespace Gs2::UE5::LoginReward::Domain::Model
     Gs2::Core::Domain::CallbackID FEzBonusModelDomain::Subscribe(TFunction<void(Gs2::UE5::LoginReward::Model::FEzBonusModelPtr)> Callback)
     {
         return Domain->Subscribe(
-            [&](Gs2::LoginReward::Model::FBonusModelPtr Item)
+            [Callback](Gs2::LoginReward::Model::FBonusModelPtr Item)
             {
                 Callback(Gs2::UE5::LoginReward::Model::FEzBonusModel::FromModel(Item));
             }

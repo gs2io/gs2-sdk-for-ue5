@@ -44,14 +44,14 @@ void UGs2SeasonRatingBallotGetValueAsyncFunction::Activate()
     auto Future = Ballot.Value->Model();
     Future->GetTask().OnSuccessDelegate().BindLambda([&](const auto Result)
     {
-        auto ReturnValue = EzBallotToFGs2SeasonRatingBallotValue(Result);
+        auto ReturnValue = EzSignedBallotToFGs2SeasonRatingSignedBallot(Result);
         const FGs2Error ReturnError;
         OnSuccess.Broadcast(ReturnValue, ReturnError);
         SetReadyToDestroy();
     });
     Future->GetTask().OnErrorDelegate().BindLambda([&](const auto Error)
     {
-        FGs2SeasonRatingBallotValue ReturnBallot;
+        FGs2SeasonRatingSignedBallot ReturnBallot;
         FGs2Error ReturnError;
         ReturnError.Value = Error;
         OnError.Broadcast(ReturnBallot, ReturnError);

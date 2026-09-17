@@ -32,6 +32,14 @@
 #include "SkillTree/Domain/Model/CurrentTreeMaster.h"
 #include "SkillTree/Domain/Model/User.h"
 #include "SkillTree/Domain/Model/UserAccessToken.h"
+#include "SkillTree/Model/Cache/Status.h"
+
+#include "SkillTree/Model/Cache/Namespace.h"
+#include "SkillTree/Model/Cache/NodeModelMaster.h"
+#include "SkillTree/Model/Cache/CurrentTreeMaster.h"
+#include "SkillTree/Model/Cache/NodeModel.h"
+#include "SkillTree/Model/Cache/Status.h"
+
 #include "Core/Domain/Gs2.h"
 
 namespace Gs2::SkillTree::Domain
@@ -85,6 +93,19 @@ namespace Gs2::SkillTree::Domain
         }
         const auto ResultModel = Future->GetTask().Result();
         Future->EnsureCompletion();
+
+            if (ResultModel.IsValid() && ResultModel->GetItem() != nullptr)
+            {
+
+
+        Gs2::SkillTree::Model::Cache::FNamespaceCache::Put(
+            Self->Gs2->Cache,
+
+            ResultModel->GetItem()->GetName(),
+            TOptional<int32>(),
+            ResultModel->GetItem()
+        );
+            }
         auto Domain = MakeShared<Gs2::SkillTree::Domain::Model::FNamespaceDomain>(
             Self->Gs2,
             Self,
@@ -128,6 +149,7 @@ namespace Gs2::SkillTree::Domain
         }
         const auto ResultModel = Future->GetTask().Result();
         Future->EnsureCompletion();
+
         const auto Domain = Self;
         *Result = Domain;
         return nullptr;
@@ -167,6 +189,7 @@ namespace Gs2::SkillTree::Domain
         }
         const auto ResultModel = Future->GetTask().Result();
         Future->EnsureCompletion();
+
         const auto Domain = Self;
         if (ResultModel != nullptr)
         {
@@ -213,6 +236,7 @@ namespace Gs2::SkillTree::Domain
         }
         const auto ResultModel = Future->GetTask().Result();
         Future->EnsureCompletion();
+
         const auto Domain = Self;
         *Result = Domain;
         return nullptr;
@@ -252,6 +276,7 @@ namespace Gs2::SkillTree::Domain
         }
         const auto ResultModel = Future->GetTask().Result();
         Future->EnsureCompletion();
+
         const auto Domain = Self;
         *Result = Domain;
         return nullptr;
@@ -291,6 +316,7 @@ namespace Gs2::SkillTree::Domain
         }
         const auto ResultModel = Future->GetTask().Result();
         Future->EnsureCompletion();
+
         const auto Domain = Self;
         if (ResultModel != nullptr)
         {
@@ -341,6 +367,7 @@ namespace Gs2::SkillTree::Domain
         }
         const auto ResultModel = Future->GetTask().Result();
         Future->EnsureCompletion();
+
         const auto Domain = Self;
         *Result = Domain;
         return nullptr;
@@ -380,6 +407,7 @@ namespace Gs2::SkillTree::Domain
         }
         const auto ResultModel = Future->GetTask().Result();
         Future->EnsureCompletion();
+
         const auto Domain = Self;
         if (ResultModel != nullptr)
         {
@@ -411,24 +439,110 @@ namespace Gs2::SkillTree::Domain
 
     Gs2::Core::Domain::CallbackID FGs2SkillTreeDomain::SubscribeNamespaces(
     TFunction<void()> Callback
+
     )
     {
         return Gs2->Cache->ListSubscribe(
             Gs2::SkillTree::Model::FNamespace::TypeName,
-            "skillTree:Namespace",
+            Gs2::SkillTree::Model::Cache::FNamespaceCache::CreateCacheParentKey(
+                TOptional<int32>()
+            ),
+            Callback,
             Callback
         );
     }
-
     void FGs2SkillTreeDomain::UnsubscribeNamespaces(
         Gs2::Core::Domain::CallbackID CallbackID
     )
     {
         Gs2->Cache->ListUnsubscribe(
             Gs2::SkillTree::Model::FNamespace::TypeName,
-            "skillTree:Namespace",
+            Gs2::SkillTree::Model::Cache::FNamespaceCache::CreateCacheParentKey(
+                TOptional<int32>()
+            ),
             CallbackID
         );
+    }
+    class FGs2SkillTreeDomain::FCollectNamespacesTask : public Gs2::Core::Util::TGs2Future<TArray<Gs2::SkillTree::Model::FNamespacePtr>>, public TSharedFromThis<FCollectNamespacesTask>
+    {
+        const TSharedPtr<FGs2SkillTreeDomain> Self;
+        const TFunction<void(TArray<Gs2::SkillTree::Model::FNamespacePtr>)> OnCollected;
+    const TOptional<FString> QueryNamePrefix;
+    public:
+        explicit FCollectNamespacesTask(const TSharedPtr<FGs2SkillTreeDomain>& Self, TFunction<void(TArray<Gs2::SkillTree::Model::FNamespacePtr>)> OnCollected,const TOptional<FString> NamePrefix) : Self(Self), OnCollected(OnCollected), QueryNamePrefix(NamePrefix) {}
+        FCollectNamespacesTask(const FCollectNamespacesTask& From) : TGs2Future(From), Self(From.Self), OnCollected(From.OnCollected), QueryNamePrefix(From.QueryNamePrefix) {}
+        virtual Gs2::Core::Model::FGs2ErrorPtr Action(TSharedPtr<TSharedPtr<TArray<Gs2::SkillTree::Model::FNamespacePtr>>> Result) override
+        {
+            TArray<Gs2::SkillTree::Model::FNamespacePtr> Items;
+            auto Iterator = Self->Namespaces(QueryNamePrefix)->begin();
+            while (Iterator.HasNext())
+            {
+                if (Iterator.IsError()) return Iterator.Error();
+                if (Iterator.IsCurrentValid()) Items.Add(Iterator.Current());
+                ++Iterator;
+            }
+            if (Iterator.IsError()) return Iterator.Error();
+            *Result = MakeShared<TArray<Gs2::SkillTree::Model::FNamespacePtr>>(Items);
+            if (OnCollected) OnCollected(Items);
+            return nullptr;
+        }
+    };
+
+    Gs2::Core::Domain::CallbackID FGs2SkillTreeDomain::SubscribeNamespaces(
+        TFunction<void(TArray<Gs2::SkillTree::Model::FNamespacePtr>)> Callback,const TOptional<FString> NamePrefix
+    )
+    {
+        const TWeakPtr<Gs2::Core::Domain::FGs2> WeakGs2 = this->Gs2;
+        const auto QueryNamePrefix = NamePrefix;
+        const auto Parent = Gs2::SkillTree::Model::Cache::FNamespaceCache::CreateCacheParentKey(
+        TOptional<int32>()
+    );
+        return Gs2->Cache->ListSubscribeTyped(
+            Gs2::SkillTree::Model::FNamespace::TypeName,
+            Parent,
+            [Callback, WeakGs2](const TArray<FGs2ObjectPtr>& Values)
+            {
+                if (!WeakGs2.Pin().IsValid()) return;
+                TArray<Gs2::SkillTree::Model::FNamespacePtr> TypedValues;
+                for (const auto& Value : Values) if (Value.IsValid()) TypedValues.Add(StaticCastSharedPtr<Gs2::SkillTree::Model::FNamespace>(Value));
+                Callback(TypedValues);
+            },
+            [WeakGs2, Callback, QueryNamePrefix]()
+            {
+                const auto Owner = WeakGs2.Pin();
+                if (!Owner.IsValid()) return;
+                const auto Domain = MakeShared<FGs2SkillTreeDomain>(Owner);
+                const auto Task = Gs2::Core::Util::New<FAsyncTask<FCollectNamespacesTask>>(Domain, Callback, QueryNamePrefix);
+                Task->StartBackgroundTask();
+            }
+        );
+    }
+
+    void FGs2SkillTreeDomain::InvalidateNamespaces(const TOptional<FString> NamePrefix)
+    {
+        Gs2->Cache->ClearListCache(
+            Gs2::SkillTree::Model::FNamespace::TypeName,
+            Gs2::SkillTree::Model::Cache::FNamespaceCache::CreateCacheParentKey(
+        TOptional<int32>()
+    )
+        );
+    }
+
+    FGs2SkillTreeDomain::FSubscribeNamespacesWithInitialCallTask::FSubscribeNamespacesWithInitialCallTask(const TSharedPtr<FGs2SkillTreeDomain>& Self, TFunction<void(TArray<Gs2::SkillTree::Model::FNamespacePtr>)> Callback,const TOptional<FString> NamePrefix) : Self(Self), Callback(Callback), QueryNamePrefix(NamePrefix) {}
+    FGs2SkillTreeDomain::FSubscribeNamespacesWithInitialCallTask::FSubscribeNamespacesWithInitialCallTask(const FSubscribeNamespacesWithInitialCallTask& From) : TGs2Future(From), Self(From.Self), Callback(From.Callback), QueryNamePrefix(From.QueryNamePrefix) {}
+    Gs2::Core::Model::FGs2ErrorPtr FGs2SkillTreeDomain::FSubscribeNamespacesWithInitialCallTask::Action(TSharedPtr<TSharedPtr<Gs2::Core::Domain::CallbackID>> Result)
+    {
+        const auto Task = Gs2::Core::Util::New<FAsyncTask<FCollectNamespacesTask>>(Self, TFunction<void(TArray<Gs2::SkillTree::Model::FNamespacePtr>)>(), QueryNamePrefix);
+        Task->StartSynchronousTask(); Task->EnsureCompletion();
+        if (Task->GetTask().IsError()) return Task->GetTask().Error();
+        const auto Values = Task->GetTask().Result();
+        const auto CallbackId = Self->SubscribeNamespaces(Callback, QueryNamePrefix);
+        Callback(*Values); *Result = MakeShared<Gs2::Core::Domain::CallbackID>(CallbackId);
+        return nullptr;
+    }
+    TSharedPtr<FAsyncTask<FGs2SkillTreeDomain::FSubscribeNamespacesWithInitialCallTask>> FGs2SkillTreeDomain::SubscribeNamespacesWithInitialCall(TFunction<void(TArray<Gs2::SkillTree::Model::FNamespacePtr>)> Callback,const TOptional<FString> NamePrefix)
+    {
+        return Gs2::Core::Util::New<FAsyncTask<FSubscribeNamespacesWithInitialCallTask>>(this->AsShared(), Callback, NamePrefix);
     }
 
     TSharedPtr<Gs2::SkillTree::Domain::Model::FNamespaceDomain> FGs2SkillTreeDomain::Namespace(
@@ -445,7 +559,8 @@ namespace Gs2::SkillTree::Domain
     void FGs2SkillTreeDomain::UpdateCacheFromStampSheet(
         const FString Method,
         const FString Request,
-        const FString Result
+        const FString Result,
+        const TOptional<int32> TimeOffset
     ) {
         if (Method == "MarkReleaseByUserId") {
             TSharedPtr<FJsonObject> RequestModelJson;
@@ -462,32 +577,36 @@ namespace Gs2::SkillTree::Domain
             }
             const auto RequestModel = Gs2::SkillTree::Request::FMarkReleaseByUserIdRequest::FromJson(RequestModelJson);
             const auto ResultModel = Gs2::SkillTree::Result::FMarkReleaseByUserIdResult::FromJson(ResultModelJson);
-            
-            if (ResultModel->GetItem() != nullptr)
-            {
-                const auto ParentKey = Gs2::SkillTree::Domain::Model::FUserDomain::CreateCacheParentKey(
+
+                    if (ResultModel.IsValid() && ResultModel->GetItem() != nullptr)
+                    {
+
+                if (!ResultModel.IsValid() || !ResultModel->GetItem().IsValid())
+                    {
+                      return;
+                      }if (!ResultModel.IsValid() || !((ResultModel.IsValid() && ResultModel->GetItem().IsValid() ? ResultModel->GetItem()->GetUserId() : TOptional<FString>())).IsSet())
+                    {
+                      return;
+                      }
+                Gs2::SkillTree::Model::Cache::FStatusCache::Put(
+                    Gs2->Cache,
+
                     RequestModel->GetNamespaceName(),
-                    RequestModel->GetUserId(),
-                    "Status"
+                    (ResultModel.IsValid() && ResultModel->GetItem().IsValid() ? ResultModel->GetItem()->GetUserId() : TOptional<FString>()),
+                    ResultModel->GetItem()->GetPropertyId(),
+                    TimeOffset,
+                    ResultModel->GetItem()
                 );
-                const auto Key = Gs2::SkillTree::Domain::Model::FStatusDomain::CreateCacheKey(
-                    ResultModel->GetItem()->GetPropertyId()
-                );
-                Gs2->Cache->Put(
-                    Gs2::SkillTree::Model::FStatus::TypeName,
-                    ParentKey,
-                    Key,
-                    ResultModel->GetItem(),
-                    FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
-                );
-            }
+                    }
+
         }
     }
 
     void FGs2SkillTreeDomain::UpdateCacheFromStampTask(
         const FString Method,
         const FString Request,
-        const FString Result
+        const FString Result,
+        const TOptional<int32> TimeOffset
     ) {
         if (Method == "MarkRestrainByUserId") {
             TSharedPtr<FJsonObject> RequestModelJson;
@@ -504,32 +623,36 @@ namespace Gs2::SkillTree::Domain
             }
             const auto RequestModel = Gs2::SkillTree::Request::FMarkRestrainByUserIdRequest::FromJson(RequestModelJson);
             const auto ResultModel = Gs2::SkillTree::Result::FMarkRestrainByUserIdResult::FromJson(ResultModelJson);
-            
-            if (ResultModel->GetItem() != nullptr)
-            {
-                const auto ParentKey = Gs2::SkillTree::Domain::Model::FUserDomain::CreateCacheParentKey(
+
+                    if (ResultModel.IsValid() && ResultModel->GetItem() != nullptr)
+                    {
+
+                if (!ResultModel.IsValid() || !ResultModel->GetItem().IsValid())
+                    {
+                      return;
+                      }if (!ResultModel.IsValid() || !((ResultModel.IsValid() && ResultModel->GetItem().IsValid() ? ResultModel->GetItem()->GetUserId() : TOptional<FString>())).IsSet())
+                    {
+                      return;
+                      }
+                Gs2::SkillTree::Model::Cache::FStatusCache::Put(
+                    Gs2->Cache,
+
                     RequestModel->GetNamespaceName(),
-                    RequestModel->GetUserId(),
-                    "Status"
+                    (ResultModel.IsValid() && ResultModel->GetItem().IsValid() ? ResultModel->GetItem()->GetUserId() : TOptional<FString>()),
+                    ResultModel->GetItem()->GetPropertyId(),
+                    TimeOffset,
+                    ResultModel->GetItem()
                 );
-                const auto Key = Gs2::SkillTree::Domain::Model::FStatusDomain::CreateCacheKey(
-                    ResultModel->GetItem()->GetPropertyId()
-                );
-                Gs2->Cache->Put(
-                    Gs2::SkillTree::Model::FStatus::TypeName,
-                    ParentKey,
-                    Key,
-                    ResultModel->GetItem(),
-                    FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
-                );
-            }
+                    }
+
         }
     }
 
     void FGs2SkillTreeDomain::UpdateCacheFromJobResult(
         const FString Method,
         const Gs2::JobQueue::Model::FJobPtr Job,
-        const Gs2::JobQueue::Model::FJobResultBodyPtr Result
+        const Gs2::JobQueue::Model::FJobResultBodyPtr Result,
+        const TOptional<int32> TimeOffset
     ) {
         if (Method == "mark_release_by_user_id") {
             TSharedPtr<FJsonObject> RequestModelJson;
@@ -554,25 +677,28 @@ namespace Gs2::SkillTree::Domain
             }
             const auto RequestModel = Gs2::SkillTree::Request::FMarkReleaseByUserIdRequest::FromJson(RequestModelJson);
             const auto ResultModel = Gs2::SkillTree::Result::FMarkReleaseByUserIdResult::FromJson(ResultModelJson);
-            
-            if (ResultModel->GetItem() != nullptr)
-            {
-                const auto ParentKey = Gs2::SkillTree::Domain::Model::FUserDomain::CreateCacheParentKey(
+
+                    if (ResultModel.IsValid() && ResultModel->GetItem() != nullptr)
+                    {
+
+                if (!ResultModel.IsValid() || !ResultModel->GetItem().IsValid())
+                    {
+                      return;
+                      }if (!ResultModel.IsValid() || !((ResultModel.IsValid() && ResultModel->GetItem().IsValid() ? ResultModel->GetItem()->GetUserId() : TOptional<FString>())).IsSet())
+                    {
+                      return;
+                      }
+                Gs2::SkillTree::Model::Cache::FStatusCache::Put(
+                    Gs2->Cache,
+
                     RequestModel->GetNamespaceName(),
-                    RequestModel->GetUserId(),
-                    "Status"
+                    (ResultModel.IsValid() && ResultModel->GetItem().IsValid() ? ResultModel->GetItem()->GetUserId() : TOptional<FString>()),
+                    ResultModel->GetItem()->GetPropertyId(),
+                    TimeOffset,
+                    ResultModel->GetItem()
                 );
-                const auto Key = Gs2::SkillTree::Domain::Model::FStatusDomain::CreateCacheKey(
-                    ResultModel->GetItem()->GetPropertyId()
-                );
-                Gs2->Cache->Put(
-                    Gs2::SkillTree::Model::FStatus::TypeName,
-                    ParentKey,
-                    Key,
-                    ResultModel->GetItem(),
-                    FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
-                );
-            }
+                    }
+
         }
     }
 
@@ -588,4 +714,3 @@ namespace Gs2::SkillTree::Domain
 #elif defined(__clang__)
 #pragma clang diagnostic pop
 #endif
-

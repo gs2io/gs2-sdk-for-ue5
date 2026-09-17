@@ -184,6 +184,7 @@ namespace Gs2::Identifier::Domain
         return Gs2->Cache->ListSubscribe(
             Gs2::Identifier::Model::FUser::TypeName,
             "identifier:User",
+            Callback,
             Callback
         );
     }
@@ -226,6 +227,7 @@ namespace Gs2::Identifier::Domain
         return Gs2->Cache->ListSubscribe(
             Gs2::Identifier::Model::FSecurityPolicy::TypeName,
             "identifier:SecurityPolicy",
+            Callback,
             Callback
         );
     }
@@ -257,6 +259,7 @@ namespace Gs2::Identifier::Domain
         return Gs2->Cache->ListSubscribe(
             Gs2::Identifier::Model::FSecurityPolicy::TypeName,
             "identifier:SecurityPolicy",
+            Callback,
             Callback
         );
     }
@@ -286,21 +289,24 @@ namespace Gs2::Identifier::Domain
     void FGs2IdentifierDomain::UpdateCacheFromStampSheet(
         const FString Method,
         const FString Request,
-        const FString Result
+        const FString Result,
+        const TOptional<int32> TimeOffset
     ) {
     }
 
     void FGs2IdentifierDomain::UpdateCacheFromStampTask(
         const FString Method,
         const FString Request,
-        const FString Result
+        const FString Result,
+        const TOptional<int32> TimeOffset
     ) {
     }
 
     void FGs2IdentifierDomain::UpdateCacheFromJobResult(
         const FString Method,
         const Gs2::JobQueue::Model::FJobPtr Job,
-        const Gs2::JobQueue::Model::FJobResultBodyPtr Result
+        const Gs2::JobQueue::Model::FJobResultBodyPtr Result,
+        const TOptional<int32> TimeOffset
     ) {
     }
 
@@ -316,4 +322,3 @@ namespace Gs2::Identifier::Domain
 #elif defined(__clang__)
 #pragma clang diagnostic pop
 #endif
-

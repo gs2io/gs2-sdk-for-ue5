@@ -102,7 +102,7 @@ namespace Gs2::UE5::Mission::Domain::Model
     Gs2::Core::Domain::CallbackID FEzCounterDomain::Subscribe(TFunction<void(Gs2::UE5::Mission::Model::FEzCounterPtr)> Callback)
     {
         return Domain->Subscribe(
-            [&](Gs2::Mission::Model::FCounterPtr Item)
+            [Callback](Gs2::Mission::Model::FCounterPtr Item)
             {
                 Callback(Gs2::UE5::Mission::Model::FEzCounter::FromModel(Item));
             }

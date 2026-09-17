@@ -123,11 +123,36 @@ namespace Gs2::Matchmaking::Domain::Model
         ) const;
 
         Gs2::Core::Domain::CallbackID SubscribeSeasonGatherings(
-            TFunction<void()> Callback
+            TFunction<void()> Callback, const TOptional<int64> Tier = TOptional<int64>()
         );
 
+        class FCollectSeasonGatheringsTask;
+
+        Gs2::Core::Domain::CallbackID SubscribeSeasonGatherings(
+            TFunction<void(TArray<Gs2::Matchmaking::Model::FSeasonGatheringPtr>)> Callback,const TOptional<int64> Tier = TOptional<int64>()
+        );
+
+        void InvalidateSeasonGatherings(const TOptional<int64> Tier = TOptional<int64>());
+
+        class GS2MATCHMAKING_API FSubscribeSeasonGatheringsWithInitialCallTask final :
+            public Gs2::Core::Util::TGs2Future<Gs2::Core::Domain::CallbackID>,
+            public TSharedFromThis<FSubscribeSeasonGatheringsWithInitialCallTask>
+        {
+            const TSharedPtr<FSeasonDomain> Self;
+            const TFunction<void(TArray<Gs2::Matchmaking::Model::FSeasonGatheringPtr>)> Callback;
+        const TOptional<int64> QueryTier;
+        public:
+            FSubscribeSeasonGatheringsWithInitialCallTask(const TSharedPtr<FSeasonDomain>& Self, TFunction<void(TArray<Gs2::Matchmaking::Model::FSeasonGatheringPtr>)> Callback,const TOptional<int64> Tier);
+            FSubscribeSeasonGatheringsWithInitialCallTask(const FSubscribeSeasonGatheringsWithInitialCallTask& From);
+            virtual Gs2::Core::Model::FGs2ErrorPtr Action(TSharedPtr<TSharedPtr<Gs2::Core::Domain::CallbackID>> Result) override;
+        };
+
+        TSharedPtr<FAsyncTask<FSubscribeSeasonGatheringsWithInitialCallTask>> SubscribeSeasonGatheringsWithInitialCall(
+            TFunction<void(TArray<Gs2::Matchmaking::Model::FSeasonGatheringPtr>)> Callback,const TOptional<int64> Tier = TOptional<int64>()
+        );
         void UnsubscribeSeasonGatherings(
-            Gs2::Core::Domain::CallbackID CallbackID
+
+            Gs2::Core::Domain::CallbackID CallbackID, const TOptional<int64> Tier = TOptional<int64>()
         );
 
         Gs2::Matchmaking::Domain::Iterator::FDescribeMatchmakingSeasonGatheringsIteratorPtr MatchmakingSeasonGatherings(
@@ -135,16 +160,53 @@ namespace Gs2::Matchmaking::Domain::Model
         ) const;
 
         Gs2::Core::Domain::CallbackID SubscribeMatchmakingSeasonGatherings(
-            TFunction<void()> Callback
+            TFunction<void()> Callback, const TOptional<int64> Tier = TOptional<int64>()
         );
 
+        class FCollectMatchmakingSeasonGatheringsTask;
+
+        Gs2::Core::Domain::CallbackID SubscribeMatchmakingSeasonGatherings(
+            TFunction<void(TArray<Gs2::Matchmaking::Model::FSeasonGatheringPtr>)> Callback,const TOptional<int64> Tier = TOptional<int64>()
+        );
+
+        void InvalidateMatchmakingSeasonGatherings(const TOptional<int64> Tier = TOptional<int64>());
+
+        class GS2MATCHMAKING_API FSubscribeMatchmakingSeasonGatheringsWithInitialCallTask final :
+            public Gs2::Core::Util::TGs2Future<Gs2::Core::Domain::CallbackID>,
+            public TSharedFromThis<FSubscribeMatchmakingSeasonGatheringsWithInitialCallTask>
+        {
+            const TSharedPtr<FSeasonDomain> Self;
+            const TFunction<void(TArray<Gs2::Matchmaking::Model::FSeasonGatheringPtr>)> Callback;
+        const TOptional<int64> QueryTier;
+        public:
+            FSubscribeMatchmakingSeasonGatheringsWithInitialCallTask(const TSharedPtr<FSeasonDomain>& Self, TFunction<void(TArray<Gs2::Matchmaking::Model::FSeasonGatheringPtr>)> Callback,const TOptional<int64> Tier);
+            FSubscribeMatchmakingSeasonGatheringsWithInitialCallTask(const FSubscribeMatchmakingSeasonGatheringsWithInitialCallTask& From);
+            virtual Gs2::Core::Model::FGs2ErrorPtr Action(TSharedPtr<TSharedPtr<Gs2::Core::Domain::CallbackID>> Result) override;
+        };
+
+        TSharedPtr<FAsyncTask<FSubscribeMatchmakingSeasonGatheringsWithInitialCallTask>> SubscribeMatchmakingSeasonGatheringsWithInitialCall(
+            TFunction<void(TArray<Gs2::Matchmaking::Model::FSeasonGatheringPtr>)> Callback,const TOptional<int64> Tier = TOptional<int64>()
+        );
         void UnsubscribeMatchmakingSeasonGatherings(
-            Gs2::Core::Domain::CallbackID CallbackID
+
+            Gs2::Core::Domain::CallbackID CallbackID, const TOptional<int64> Tier = TOptional<int64>()
         );
 
         Gs2::Matchmaking::Domain::Iterator::FDoSeasonMatchmakingByUserIdIteratorPtr DoSeasonMatchmaking(
             const TOptional<FString> TimeOffsetToken = TOptional<FString>()
         ) const;
+
+        Gs2::Core::Domain::CallbackID SubscribeDoSeasonMatchmaking(TFunction<void()> Callback);
+        class FCollectDoSeasonMatchmakingTask;
+        Gs2::Core::Domain::CallbackID SubscribeDoSeasonMatchmaking(TFunction<void(TArray<Gs2::Matchmaking::Model::FSeasonGatheringPtr>)> Callback);
+        void InvalidateDoSeasonMatchmaking();
+        class GS2MATCHMAKING_API FSubscribeDoSeasonMatchmakingWithInitialCallTask final : public Gs2::Core::Util::TGs2Future<Gs2::Core::Domain::CallbackID>, public TSharedFromThis<FSubscribeDoSeasonMatchmakingWithInitialCallTask>
+        { const TSharedPtr<FSeasonDomain> Self; const TFunction<void(TArray<Gs2::Matchmaking::Model::FSeasonGatheringPtr>)> Callback; public:
+            FSubscribeDoSeasonMatchmakingWithInitialCallTask(const TSharedPtr<FSeasonDomain>& Self,TFunction<void(TArray<Gs2::Matchmaking::Model::FSeasonGatheringPtr>)> Callback);
+            FSubscribeDoSeasonMatchmakingWithInitialCallTask(const FSubscribeDoSeasonMatchmakingWithInitialCallTask& From);
+            virtual Gs2::Core::Model::FGs2ErrorPtr Action(TSharedPtr<TSharedPtr<Gs2::Core::Domain::CallbackID>> Result) override; };
+        TSharedPtr<FAsyncTask<FSubscribeDoSeasonMatchmakingWithInitialCallTask>> SubscribeDoSeasonMatchmakingWithInitialCall(TFunction<void(TArray<Gs2::Matchmaking::Model::FSeasonGatheringPtr>)> Callback);
+        void UnsubscribeDoSeasonMatchmaking(Gs2::Core::Domain::CallbackID CallbackID);
 
         TSharedPtr<Gs2::Matchmaking::Domain::Model::FSeasonGatheringDomain> SeasonGathering(
             const int64 Tier,
@@ -159,6 +221,30 @@ namespace Gs2::Matchmaking::Domain::Model
             TFunction<void()> Callback
         );
 
+        class FCollectJoinedSeasonGatheringsTask;
+
+        Gs2::Core::Domain::CallbackID SubscribeJoinedSeasonGatherings(
+            TFunction<void(TArray<Gs2::Matchmaking::Model::FJoinedSeasonGatheringPtr>)> Callback,const TOptional<FString> TimeOffsetToken = TOptional<FString>()
+        );
+
+        void InvalidateJoinedSeasonGatherings(const TOptional<FString> TimeOffsetToken = TOptional<FString>());
+
+        class GS2MATCHMAKING_API FSubscribeJoinedSeasonGatheringsWithInitialCallTask final :
+            public Gs2::Core::Util::TGs2Future<Gs2::Core::Domain::CallbackID>,
+            public TSharedFromThis<FSubscribeJoinedSeasonGatheringsWithInitialCallTask>
+        {
+            const TSharedPtr<FSeasonDomain> Self;
+            const TFunction<void(TArray<Gs2::Matchmaking::Model::FJoinedSeasonGatheringPtr>)> Callback;
+        const TOptional<FString> QueryTimeOffsetToken;
+        public:
+            FSubscribeJoinedSeasonGatheringsWithInitialCallTask(const TSharedPtr<FSeasonDomain>& Self, TFunction<void(TArray<Gs2::Matchmaking::Model::FJoinedSeasonGatheringPtr>)> Callback,const TOptional<FString> TimeOffsetToken);
+            FSubscribeJoinedSeasonGatheringsWithInitialCallTask(const FSubscribeJoinedSeasonGatheringsWithInitialCallTask& From);
+            virtual Gs2::Core::Model::FGs2ErrorPtr Action(TSharedPtr<TSharedPtr<Gs2::Core::Domain::CallbackID>> Result) override;
+        };
+
+        TSharedPtr<FAsyncTask<FSubscribeJoinedSeasonGatheringsWithInitialCallTask>> SubscribeJoinedSeasonGatheringsWithInitialCall(
+            TFunction<void(TArray<Gs2::Matchmaking::Model::FJoinedSeasonGatheringPtr>)> Callback,const TOptional<FString> TimeOffsetToken = TOptional<FString>()
+        );
         void UnsubscribeJoinedSeasonGatherings(
             Gs2::Core::Domain::CallbackID CallbackID
         );

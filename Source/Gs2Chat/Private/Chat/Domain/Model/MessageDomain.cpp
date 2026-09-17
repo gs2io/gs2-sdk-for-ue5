@@ -35,6 +35,7 @@
 #include "Chat/Domain/Model/CurrentModelMaster.h"
 #include "Chat/Domain/Model/User.h"
 #include "Chat/Domain/Model/UserAccessToken.h"
+#include "Chat/Model/Cache/Message.h"
 
 #include "Core/Domain/Gs2.h"
 #include "Core/Domain/Transaction/JobQueueJobDomainFactory.h"
@@ -122,6 +123,27 @@ namespace Gs2::Chat::Domain::Model
         }
         const auto ResultModel = Future->GetTask().Result();
         Future->EnsureCompletion();
+
+            if (ResultModel.IsValid() && ResultModel->GetItem() != nullptr)
+            {
+
+        if (!ResultModel.IsValid() || !ResultModel->GetItem().IsValid())
+            {
+              const auto Details = MakeShared<TArray<TSharedPtr<Gs2::Core::Model::FGs2ErrorDetail>>>();
+                Details->Add(MakeShared<Gs2::Core::Model::FGs2ErrorDetail>(TEXT("result.item"), TEXT("result.item is invalid."), TEXT("invalid_response")));
+                return MakeShared<Gs2::Core::Model::FUnknownError>(Details);
+              }
+        Gs2::Chat::Model::Cache::FMessageCache::Put(
+            Self->Gs2->Cache,
+
+            Request->GetNamespaceName(),
+            (ResultModel.IsValid() && ResultModel->GetItem().IsValid() ? ResultModel->GetItem()->GetUserId() : TOptional<FString>()),
+            ResultModel->GetItem()->GetRoomName(),
+            Request->GetMessageName(),
+            TOptional<int32>(),
+            ResultModel->GetItem()
+        );
+            }
         *Result = ResultModel->GetItem();
         return nullptr;
     }
@@ -162,21 +184,32 @@ namespace Gs2::Chat::Domain::Model
         Future->StartSynchronousTask();
         if (Future->GetTask().IsError())
         {
-            return Future->GetTask().Error();
+            const auto Error = Future->GetTask().Error();
+            if (Error.IsValid() && Error->IsChildOf(Gs2::Core::Model::FNotFoundError::Class))
+            {
+                *Result = Self;
+                return nullptr;
+            }
+            return Error;
         }
         const auto ResultModel = Future->GetTask().Result();
         Future->EnsureCompletion();
-        if (ResultModel->GetItem() != nullptr)
-        {
-            const auto Key = Gs2::Chat::Domain::Model::FMessageDomain::CreateCacheKey(
-                ResultModel->GetItem()->GetName()
-            );
-            Self->Gs2->Cache->Delete(
-                Gs2::Chat::Model::FMessage::TypeName,
-                Self->ParentKey,
-                Key
-            );
-        }
+
+              if (!ResultModel.IsValid() || !ResultModel->GetItem().IsValid())
+                  {
+                    const auto Details = MakeShared<TArray<TSharedPtr<Gs2::Core::Model::FGs2ErrorDetail>>>();
+                      Details->Add(MakeShared<Gs2::Core::Model::FGs2ErrorDetail>(TEXT("result.item"), TEXT("result.item is invalid."), TEXT("invalid_response")));
+                      return MakeShared<Gs2::Core::Model::FUnknownError>(Details);
+                    }
+              Gs2::Chat::Model::Cache::FMessageCache::Delete(
+            Self->Gs2->Cache,
+
+            Request->GetNamespaceName(),
+            (ResultModel.IsValid() && ResultModel->GetItem().IsValid() ? ResultModel->GetItem()->GetUserId() : TOptional<FString>()),
+            ResultModel->GetItem()->GetRoomName(),
+            Request->GetMessageName(),
+            TOptional<int32>()
+        );
         auto Domain = Self;
 
         *Result = Domain;
@@ -231,71 +264,192 @@ namespace Gs2::Chat::Domain::Model
         TSharedPtr<TSharedPtr<Gs2::Chat::Model::FMessage>> Result
     )
     {
-        // ReSharper disable once CppLocalVariableMayBeConst
-        TSharedPtr<Gs2::Chat::Model::FMessage> Value;
-        auto bCacheHit = Self->Gs2->Cache->TryGet<Gs2::Chat::Model::FMessage>(
-            Self->ParentKey,
-            Gs2::Chat::Domain::Model::FMessageDomain::CreateCacheKey(
-                Self->MessageName
-            ),
-            &Value
+        const auto CacheParentKey = Gs2::Chat::Model::Cache::FMessageCache::CreateCacheParentKey(
+
+            Self->NamespaceName,
+            Self->UserId,
+            Self->RoomName,
+            TOptional<int32>()
         );
-        if (!bCacheHit) {
-            const auto Future = Self->Get(
-                MakeShared<Gs2::Chat::Request::FGetMessageByUserIdRequest>()
-            );
-            Future->StartSynchronousTask();
-            if (Future->GetTask().IsError())
+        const auto CacheKey = Gs2::Chat::Model::Cache::FMessageCache::CreateCacheKey(
+
+            Self->MessageName
+        );
+        return Self->Gs2->Cache->ExecuteWithKeyLock(
+            Gs2::Chat::Model::FMessage::TypeName,
+            CacheParentKey,
+            CacheKey,
+            [this, Result, CacheParentKey, CacheKey]() -> Gs2::Core::Model::FGs2ErrorPtr
             {
-                if (Future->GetTask().Error()->Type() != Gs2::Core::Model::FNotFoundError::TypeString)
-                {
-                    return Future->GetTask().Error();
+                // ReSharper disable once CppLocalVariableMayBeConst
+                TSharedPtr<Gs2::Chat::Model::FMessage> Value;
+                auto bCacheHit = Self->Gs2->Cache->TryGet<Gs2::Chat::Model::FMessage>(
+                    CacheParentKey,
+                    CacheKey,
+                    &Value
+                );
+                if (!bCacheHit) {
+                    const auto Future = Self->Get(
+                        MakeShared<Gs2::Chat::Request::FGetMessageByUserIdRequest>()
+                    );
+                    Future->StartSynchronousTask();
+                    if (Future->GetTask().IsError())
+                    {
+                        const auto Error = Future->GetTask().Error();
+                        if (!Error.IsValid() || Error->Type() != Gs2::Core::Model::FNotFoundError::TypeString)
+                        {
+                            return Error;
+                        }
+
+                        Self->Gs2->Cache->Put(
+                            Gs2::Chat::Model::FMessage::TypeName,
+                            CacheParentKey,
+                            CacheKey,
+                            nullptr,
+                            FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
+                        );
+
+                        if (!Error->GetErrors().IsValid() || Error->Count() == 0 || !Error->Detail(0).IsValid() || Error->Detail(0)->GetComponent() != "message")
+                        {
+                            return Error;
+                        }
+                    }
+                    else
+                    {
+                        Value = Future->GetTask().Result();
+                    }
+                    Future->EnsureCompletion();
                 }
 
-                const auto Key = Gs2::Chat::Domain::Model::FMessageDomain::CreateCacheKey(
-                    Self->MessageName
-                );
-                Self->Gs2->Cache->Put(
-                    Gs2::Chat::Model::FMessage::TypeName,
-                    Self->ParentKey,
-                    Key,
-                    nullptr,
-                    FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
-                );
-
-                if (Future->GetTask().Error()->Detail(0)->GetComponent() != "message")
+                if (!bCacheHit)
                 {
-                    return Future->GetTask().Error();
+                    FGs2ObjectPtr ExistingObject;
+                    const bool Existing = Self->Gs2->Cache->TryGet(
+                        Gs2::Chat::Model::FMessage::TypeName,
+                        CacheParentKey,
+                        CacheKey,
+                        &ExistingObject
+                    );
+                    if (!Existing || ExistingObject != Value)
+                    {
+                        Self->Gs2->Cache->Put(
+                            Gs2::Chat::Model::FMessage::TypeName,
+                            CacheParentKey,
+                            CacheKey,
+                            Value,
+                            FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
+                        );
+                    }
                 }
-            }
-            else
-            {
-                Value = Future->GetTask().Result();
-            }
-            Future->EnsureCompletion();
-        }
-        *Result = Value;
+                *Result = Value;
 
-        return nullptr;
+                return nullptr;
+            }
+        );
     }
 
     TSharedPtr<FAsyncTask<FMessageDomain::FModelTask>> FMessageDomain::Model() {
         return Gs2::Core::Util::New<FAsyncTask<FMessageDomain::FModelTask>>(this->AsShared());
     }
 
+    void FMessageDomain::Invalidate()
+    {
+        Gs2::Chat::Model::Cache::FMessageCache::Delete(
+            Gs2->Cache,
+
+            NamespaceName,
+            UserId,
+            RoomName,
+            MessageName,
+            TOptional<int32>()
+        );
+    }
+
+    FMessageDomain::FSubscribeWithInitialCallTask::FSubscribeWithInitialCallTask(
+        const TSharedPtr<FMessageDomain> Self,
+        const TFunction<void(Gs2::Chat::Model::FMessagePtr)>& Callback
+    ): Self(Self), Callback(Callback)
+    {
+    }
+
+    FMessageDomain::FSubscribeWithInitialCallTask::FSubscribeWithInitialCallTask(
+        const FSubscribeWithInitialCallTask& From
+    ): TGs2Future(From), Self(From.Self), Callback(From.Callback)
+    {
+    }
+
+    Gs2::Core::Model::FGs2ErrorPtr FMessageDomain::FSubscribeWithInitialCallTask::Action(
+        TSharedPtr<TSharedPtr<Gs2::Core::Domain::CallbackID>> Result
+    )
+    {
+        const auto Task = Self->Model();
+        Task->StartSynchronousTask();
+        Task->EnsureCompletion();
+        if (Task->GetTask().IsError()) return Task->GetTask().Error();
+        const auto Item = Task->GetTask().Result();
+        const auto CallbackId = Self->Subscribe(Callback);
+        Callback(Item);
+        *Result = MakeShared<Gs2::Core::Domain::CallbackID>(CallbackId);
+        return nullptr;
+    }
+
+    TSharedPtr<FAsyncTask<FMessageDomain::FSubscribeWithInitialCallTask>> FMessageDomain::SubscribeWithInitialCall(
+        TFunction<void(Gs2::Chat::Model::FMessagePtr)> Callback
+    )
+    {
+        return Gs2::Core::Util::New<FAsyncTask<FSubscribeWithInitialCallTask>>(this->AsShared(), Callback);
+    }
+
     Gs2::Core::Domain::CallbackID FMessageDomain::Subscribe(
         TFunction<void(Gs2::Chat::Model::FMessagePtr)> Callback
     )
     {
+        const auto SubscriptionParentKey = Gs2::Chat::Model::Cache::FMessageCache::CreateCacheParentKey(
+
+            NamespaceName,
+            UserId,
+            RoomName,
+            TOptional<int32>()
+        );
+        const auto SubscriptionCacheKey = Gs2::Chat::Model::Cache::FMessageCache::CreateCacheKey(
+
+            MessageName
+        );
+        const TWeakPtr<Gs2::Core::Domain::FGs2> WeakGs2 = Gs2;
+        const TWeakPtr<Chat::Domain::FGs2ChatDomain> WeakService = Service;
+        const FString RegisteredParentKey = SubscriptionParentKey;
+        const TOptional<FString> QueryNamespaceName = NamespaceName;
+        const TOptional<FString> QueryUserId = UserId;
+        const TOptional<FString> QueryRoomName = RoomName;
+        const TOptional<FString> QueryPassword = Password;
+        const TOptional<FString> QueryMessageName = MessageName;
         return Gs2->Cache->Subscribe(
             Gs2::Chat::Model::FMessage::TypeName,
-            ParentKey,
-            Gs2::Chat::Domain::Model::FMessageDomain::CreateCacheKey(
-                MessageName
-            ),
+            SubscriptionParentKey,
+            SubscriptionCacheKey,
             [Callback](TSharedPtr<FGs2Object> obj)
             {
                 Callback(StaticCastSharedPtr<Gs2::Chat::Model::FMessage>(obj));
+            },
+            [WeakGs2, WeakService, RegisteredParentKey, QueryNamespaceName, QueryUserId, QueryRoomName, QueryPassword, QueryMessageName]()
+            {
+                const auto Owner = WeakGs2.Pin();
+                if (!Owner.IsValid())
+                {
+                    return;
+                }
+                const auto Domain = MakeShared<FMessageDomain>(
+                    Owner,
+                    WeakService.Pin(),
+                    QueryNamespaceName,
+                    QueryUserId,
+                    QueryRoomName,
+                    QueryPassword,
+                    QueryMessageName
+                );
+                Domain->ParentKey = RegisteredParentKey;
+                const auto Task = Domain->Model();
+                Task->StartBackgroundTask();
             }
         );
     }
@@ -304,12 +458,21 @@ namespace Gs2::Chat::Domain::Model
         Gs2::Core::Domain::CallbackID CallbackID
     )
     {
+        const auto SubscriptionParentKey = Gs2::Chat::Model::Cache::FMessageCache::CreateCacheParentKey(
+
+            NamespaceName,
+            UserId,
+            RoomName,
+            TOptional<int32>()
+        );
+        const auto SubscriptionCacheKey = Gs2::Chat::Model::Cache::FMessageCache::CreateCacheKey(
+
+            MessageName
+        );
         Gs2->Cache->Unsubscribe(
             Gs2::Chat::Model::FMessage::TypeName,
-            ParentKey,
-            Gs2::Chat::Domain::Model::FMessageDomain::CreateCacheKey(
-                MessageName
-            ),
+            SubscriptionParentKey,
+            SubscriptionCacheKey,
             CallbackID
         );
     }
@@ -320,4 +483,3 @@ namespace Gs2::Chat::Domain::Model
 #elif defined(__clang__)
 #pragma clang diagnostic pop
 #endif
-

@@ -75,7 +75,8 @@ namespace Gs2::UE5::Formation::Domain::Model
         );
     }
 
-    void FEzNamespaceDomain::UnsubscribeMoldModels(Gs2::Core::Domain::CallbackID CallbackId)
+    void FEzNamespaceDomain::UnsubscribeMoldModels(
+            Gs2::Core::Domain::CallbackID CallbackId)
     {
         Domain->UnsubscribeMoldModels(
             CallbackId
@@ -98,7 +99,8 @@ namespace Gs2::UE5::Formation::Domain::Model
         );
     }
 
-    void FEzNamespaceDomain::UnsubscribePropertyFormModels(Gs2::Core::Domain::CallbackID CallbackId)
+    void FEzNamespaceDomain::UnsubscribePropertyFormModels(
+            Gs2::Core::Domain::CallbackID CallbackId)
     {
         Domain->UnsubscribePropertyFormModels(
             CallbackId

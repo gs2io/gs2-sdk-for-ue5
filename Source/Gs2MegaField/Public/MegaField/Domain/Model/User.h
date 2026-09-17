@@ -79,6 +79,8 @@ namespace Gs2::MegaField::Domain::Model
             const FUserDomain& From
         );
 
+
+
         class GS2MEGAFIELD_API FFetchPositionFromSystemTask final :
             public Gs2::Core::Util::TGs2Future<TArray<TSharedPtr<Gs2::MegaField::Domain::Model::FSpatialDomain>>>,
             public TSharedFromThis<FFetchPositionFromSystemTask>
@@ -104,6 +106,8 @@ namespace Gs2::MegaField::Domain::Model
         TSharedPtr<FAsyncTask<FFetchPositionFromSystemTask>> FetchPositionFromSystem(
             Request::FFetchPositionFromSystemRequestPtr Request
         );
+
+
 
         class GS2MEGAFIELD_API FNearUserIdsFromSystemTask final :
             public Gs2::Core::Util::TGs2Future<TArray<TSharedPtr<Gs2::MegaField::Domain::Model::FSpatialDomain>>>,

@@ -88,7 +88,6 @@ namespace Gs2::Inventory::Domain::Model
     class FBigItemAccessTokenDomain;
     class FUserDomain;
     class FUserAccessTokenDomain;
-    class FItemSetEntry;
 
     class GS2INVENTORY_API FUserDomain:
         public TSharedFromThis<FUserDomain>
@@ -129,8 +128,33 @@ namespace Gs2::Inventory::Domain::Model
 
         Gs2::Core::Domain::CallbackID SubscribeInventories(
             TFunction<void()> Callback
+
         );
 
+        class FCollectInventoriesTask;
+
+        Gs2::Core::Domain::CallbackID SubscribeInventories(
+            TFunction<void(TArray<Gs2::Inventory::Model::FInventoryPtr>)> Callback,const TOptional<FString> TimeOffsetToken = TOptional<FString>()
+        );
+
+        void InvalidateInventories(const TOptional<FString> TimeOffsetToken = TOptional<FString>());
+
+        class GS2INVENTORY_API FSubscribeInventoriesWithInitialCallTask final :
+            public Gs2::Core::Util::TGs2Future<Gs2::Core::Domain::CallbackID>,
+            public TSharedFromThis<FSubscribeInventoriesWithInitialCallTask>
+        {
+            const TSharedPtr<FUserDomain> Self;
+            const TFunction<void(TArray<Gs2::Inventory::Model::FInventoryPtr>)> Callback;
+        const TOptional<FString> QueryTimeOffsetToken;
+        public:
+            FSubscribeInventoriesWithInitialCallTask(const TSharedPtr<FUserDomain>& Self, TFunction<void(TArray<Gs2::Inventory::Model::FInventoryPtr>)> Callback,const TOptional<FString> TimeOffsetToken);
+            FSubscribeInventoriesWithInitialCallTask(const FSubscribeInventoriesWithInitialCallTask& From);
+            virtual Gs2::Core::Model::FGs2ErrorPtr Action(TSharedPtr<TSharedPtr<Gs2::Core::Domain::CallbackID>> Result) override;
+        };
+
+        TSharedPtr<FAsyncTask<FSubscribeInventoriesWithInitialCallTask>> SubscribeInventoriesWithInitialCall(
+            TFunction<void(TArray<Gs2::Inventory::Model::FInventoryPtr>)> Callback,const TOptional<FString> TimeOffsetToken = TOptional<FString>()
+        );
         void UnsubscribeInventories(
             Gs2::Core::Domain::CallbackID CallbackID
         );

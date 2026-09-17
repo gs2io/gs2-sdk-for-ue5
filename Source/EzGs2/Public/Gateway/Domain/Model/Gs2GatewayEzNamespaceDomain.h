@@ -19,6 +19,7 @@
 #include "CoreMinimal.h"
 #include "Gateway/Domain/Model/Namespace.h"
 #include "Gateway/Model/Gs2GatewayEzWebSocketSession.h"
+#include "Gateway/Model/Gs2GatewayEzFirebaseToken.h"
 #include "Gs2GatewayEzUserDomain.h"
 #include "Gs2GatewayEzUserDomain.h"
 #include "Gs2GatewayEzUserGameSessionDomain.h"

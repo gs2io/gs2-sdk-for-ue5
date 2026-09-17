@@ -33,6 +33,7 @@
 #include "Idle/Domain/Model/Status.h"
 #include "Idle/Domain/Model/StatusAccessToken.h"
 #include "Idle/Domain/Model/CurrentCategoryMaster.h"
+#include "Idle/Model/Cache/Status.h"
 
 #include "Core/Domain/Gs2.h"
 #include "Core/Domain/Transaction/JobQueueJobDomainFactory.h"
@@ -56,10 +57,10 @@ namespace Gs2::Idle::Domain::Model
         NamespaceName(NamespaceName),
         UserId(UserId),
         CategoryName(CategoryName),
-        ParentKey(Gs2::Idle::Domain::Model::FUserDomain::CreateCacheParentKey(
+        ParentKey(Gs2::Idle::Model::Cache::FStatusCache::CreateCacheParentKey(
             NamespaceName,
             UserId,
-            "Status"
+            TOptional<int32>()
         ))
     {
     }
@@ -116,20 +117,13 @@ namespace Gs2::Idle::Domain::Model
             
             if (ResultModel->GetItem() != nullptr)
             {
-                const auto ParentKey = Gs2::Idle::Domain::Model::FUserDomain::CreateCacheParentKey(
+                Gs2::Idle::Model::Cache::FStatusCache::Put(
+                    Self->Gs2->Cache,
                     Self->NamespaceName,
                     Self->UserId,
-                    "Status"
-                );
-                const auto Key = Gs2::Idle::Domain::Model::FStatusDomain::CreateCacheKey(
-                    ResultModel->GetItem()->GetCategoryName()
-                );
-                Self->Gs2->Cache->Put(
-                    Gs2::Idle::Model::FStatus::TypeName,
-                    ParentKey,
-                    Key,
-                    ResultModel->GetItem(),
-                    FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
+                    ResultModel->GetItem()->GetCategoryName(),
+                    TOptional<int32>(),
+                    ResultModel->GetItem()
                 );
             }
         }
@@ -181,20 +175,13 @@ namespace Gs2::Idle::Domain::Model
             
             if (ResultModel->GetStatus() != nullptr)
             {
-                const auto ParentKey = Gs2::Idle::Domain::Model::FUserDomain::CreateCacheParentKey(
+                Gs2::Idle::Model::Cache::FStatusCache::Put(
+                    Self->Gs2->Cache,
                     Self->NamespaceName,
                     Self->UserId,
-                    "Status"
-                );
-                const auto Key = Gs2::Idle::Domain::Model::FStatusDomain::CreateCacheKey(
-                    ResultModel->GetStatus()->GetCategoryName()
-                );
-                Self->Gs2->Cache->Put(
-                    Gs2::Idle::Model::FStatus::TypeName,
-                    ParentKey,
-                    Key,
-                    ResultModel->GetStatus(),
-                    FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
+                    Request->GetCategoryName(),
+                    TOptional<int32>(),
+                    ResultModel->GetStatus()
                 );
             }
         }
@@ -239,7 +226,7 @@ namespace Gs2::Idle::Domain::Model
     }
 
     Gs2::Core::Model::FGs2ErrorPtr FStatusDomain::FReceiveTask::Action(
-        TSharedPtr<TSharedPtr<Gs2::Idle::Domain::Model::FStatusDomain>> Result
+        TSharedPtr<TSharedPtr<Gs2::Core::Domain::FTransactionDomain>> Result
     )
     {
         Request
@@ -258,21 +245,33 @@ namespace Gs2::Idle::Domain::Model
         const auto RequestModel = Request;
         const auto ResultModel = Future->GetTask().Result();
         Future->EnsureCompletion();
-        if (ResultModel != nullptr) {
-            
-        }
-        if (ResultModel && ResultModel->GetStampSheet())
+        if (ResultModel.IsValid() && ResultModel->GetStatus().IsValid())
         {
-            const auto Transaction = Gs2::Core::Domain::Internal::FTransactionDomainFactory::ToTransaction(
-                Self->Gs2,
-                *Self->UserId,
-                false,
-                ResultModel->GetTransactionId().IsSet() ? *ResultModel->GetTransactionId() : FString(),
-                ResultModel->GetStampSheet().IsSet() ? *ResultModel->GetStampSheet() : FString(),
-                ResultModel->GetStampSheetEncryptionKeyId().IsSet() ? *ResultModel->GetStampSheetEncryptionKeyId() : FString(),
-                ResultModel->GetAtomicCommit().IsSet() ? *ResultModel->GetAtomicCommit() : false,
-                ResultModel->GetTransactionResult()
+            Gs2::Idle::Model::Cache::FStatusCache::Put(
+                Self->Gs2->Cache,
+                Request->GetNamespaceName(),
+                Request->GetUserId(),
+                Request->GetCategoryName(),
+                TOptional<int32>(),
+                ResultModel->GetStatus()
             );
+        }
+        const auto Transaction = Gs2::Core::Domain::Internal::FTransactionDomainFactory::ToTransaction(
+            Self->Gs2,
+            *Self->UserId,
+            ResultModel->GetAutoRunStampSheet().IsSet() ? *ResultModel->GetAutoRunStampSheet() : false,
+            ResultModel->GetTransactionId().IsSet() ? *ResultModel->GetTransactionId() : FString(),
+            ResultModel->GetStampSheet().IsSet() ? *ResultModel->GetStampSheet() : FString(),
+            ResultModel->GetStampSheetEncryptionKeyId().IsSet() ? *ResultModel->GetStampSheetEncryptionKeyId() : FString(),
+            ResultModel->GetAtomicCommit().IsSet() ? *ResultModel->GetAtomicCommit() : false,
+            ResultModel->GetTransactionResult()
+        );
+        const bool HasInlineTransactionResult =
+            ResultModel->GetAutoRunStampSheet().Get(false) &&
+            ResultModel->GetAtomicCommit().Get(false) &&
+            ResultModel->GetTransactionResult().IsValid();
+        if (ResultModel->GetStampSheet().IsSet() || HasInlineTransactionResult)
+        {
             const auto Future3 = Transaction->Wait(true);
             Future3->StartSynchronousTask();
             if (Future3->GetTask().IsError())
@@ -280,12 +279,7 @@ namespace Gs2::Idle::Domain::Model
                 return Future3->GetTask().Error();
             }
         }
-        if (ResultModel != nullptr)
-        {
-            Self->AutoRunStampSheet = ResultModel->GetAutoRunStampSheet();
-            Self->TransactionId = ResultModel->GetTransactionId();
-        }
-        *Result = Self;
+        *Result = Transaction;
         return nullptr;
     }
 
@@ -333,20 +327,13 @@ namespace Gs2::Idle::Domain::Model
             
             if (ResultModel->GetItem() != nullptr)
             {
-                const auto ParentKey = Gs2::Idle::Domain::Model::FUserDomain::CreateCacheParentKey(
+                Gs2::Idle::Model::Cache::FStatusCache::Put(
+                    Self->Gs2->Cache,
                     Self->NamespaceName,
                     Self->UserId,
-                    "Status"
-                );
-                const auto Key = Gs2::Idle::Domain::Model::FStatusDomain::CreateCacheKey(
-                    ResultModel->GetItem()->GetCategoryName()
-                );
-                Self->Gs2->Cache->Put(
-                    Gs2::Idle::Model::FStatus::TypeName,
-                    ParentKey,
-                    Key,
-                    ResultModel->GetItem(),
-                    FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
+                    ResultModel->GetItem()->GetCategoryName(),
+                    TOptional<int32>(),
+                    ResultModel->GetItem()
                 );
             }
         }
@@ -400,20 +387,13 @@ namespace Gs2::Idle::Domain::Model
             
             if (ResultModel->GetItem() != nullptr)
             {
-                const auto ParentKey = Gs2::Idle::Domain::Model::FUserDomain::CreateCacheParentKey(
+                Gs2::Idle::Model::Cache::FStatusCache::Put(
+                    Self->Gs2->Cache,
                     Self->NamespaceName,
                     Self->UserId,
-                    "Status"
-                );
-                const auto Key = Gs2::Idle::Domain::Model::FStatusDomain::CreateCacheKey(
-                    ResultModel->GetItem()->GetCategoryName()
-                );
-                Self->Gs2->Cache->Put(
-                    Gs2::Idle::Model::FStatus::TypeName,
-                    ParentKey,
-                    Key,
-                    ResultModel->GetItem(),
-                    FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
+                    ResultModel->GetItem()->GetCategoryName(),
+                    TOptional<int32>(),
+                    ResultModel->GetItem()
                 );
             }
         }
@@ -467,20 +447,13 @@ namespace Gs2::Idle::Domain::Model
             
             if (ResultModel->GetItem() != nullptr)
             {
-                const auto ParentKey = Gs2::Idle::Domain::Model::FUserDomain::CreateCacheParentKey(
+                Gs2::Idle::Model::Cache::FStatusCache::Put(
+                    Self->Gs2->Cache,
                     Self->NamespaceName,
                     Self->UserId,
-                    "Status"
-                );
-                const auto Key = Gs2::Idle::Domain::Model::FStatusDomain::CreateCacheKey(
-                    ResultModel->GetItem()->GetCategoryName()
-                );
-                Self->Gs2->Cache->Put(
-                    Gs2::Idle::Model::FStatus::TypeName,
-                    ParentKey,
-                    Key,
-                    ResultModel->GetItem(),
-                    FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
+                    ResultModel->GetItem()->GetCategoryName(),
+                    TOptional<int32>(),
+                    ResultModel->GetItem()
                 );
             }
         }
@@ -536,71 +509,118 @@ namespace Gs2::Idle::Domain::Model
         TSharedPtr<TSharedPtr<Gs2::Idle::Model::FStatus>> Result
     )
     {
-        // ReSharper disable once CppLocalVariableMayBeConst
-        TSharedPtr<Gs2::Idle::Model::FStatus> Value;
-        auto bCacheHit = Self->Gs2->Cache->TryGet<Gs2::Idle::Model::FStatus>(
-            Self->ParentKey,
-            Gs2::Idle::Domain::Model::FStatusDomain::CreateCacheKey(
-                Self->CategoryName
-            ),
-            &Value
+        const auto CacheParentKey = Gs2::Idle::Model::Cache::FStatusCache::CreateCacheParentKey(
+            Self->NamespaceName,
+            Self->UserId,
+            TOptional<int32>()
         );
-        if (!bCacheHit) {
-            const auto Future = Self->Get(
-                MakeShared<Gs2::Idle::Request::FGetStatusByUserIdRequest>()
-            );
-            Future->StartSynchronousTask();
-            if (Future->GetTask().IsError())
+        const auto CacheKey = Gs2::Idle::Model::Cache::FStatusCache::CreateCacheKey(
+            Self->CategoryName
+        );
+        return Self->Gs2->Cache->ExecuteWithKeyLock(
+            Gs2::Idle::Model::FStatus::TypeName,
+            CacheParentKey,
+            CacheKey,
+            [Self = Self, Result]() -> Gs2::Core::Model::FGs2ErrorPtr
             {
-                if (Future->GetTask().Error()->Type() != Gs2::Core::Model::FNotFoundError::TypeString)
-                {
-                    return Future->GetTask().Error();
-                }
-
-                const auto Key = Gs2::Idle::Domain::Model::FStatusDomain::CreateCacheKey(
-                    Self->CategoryName
+                Gs2::Idle::Model::FStatusPtr Value;
+                const auto CacheHit = Gs2::Idle::Model::Cache::FStatusCache::TryGet(
+                    Self->Gs2->Cache,
+                    Self->NamespaceName,
+                    Self->UserId,
+                    Self->CategoryName,
+                    TOptional<int32>(),
+                    &Value
                 );
-                Self->Gs2->Cache->Put(
-                    Gs2::Idle::Model::FStatus::TypeName,
-                    Self->ParentKey,
-                    Key,
-                    nullptr,
-                    FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
-                );
-
-                if (Future->GetTask().Error()->Detail(0)->GetComponent() != "status")
+                if (CacheHit)
                 {
-                    return Future->GetTask().Error();
+                    *Result = Value;
+                    return nullptr;
                 }
+                const auto Error = Gs2::Idle::Model::Cache::FStatusCache::Fetch(
+                    Self->Gs2->Cache,
+                    Self->NamespaceName,
+                    Self->UserId,
+                    Self->CategoryName,
+                    TOptional<int32>(),
+                    [Self](Gs2::Idle::Model::FStatusPtr* OutItem) -> Gs2::Core::Model::FGs2ErrorPtr
+                    {
+                        const auto Future = Self->Get(
+                            MakeShared<Gs2::Idle::Request::FGetStatusByUserIdRequest>()
+                        );
+                        Future->StartSynchronousTask();
+                        if (Future->GetTask().IsError()) return Future->GetTask().Error();
+                        *OutItem = Future->GetTask().Result();
+                        Future->EnsureCompletion();
+                        return nullptr;
+                    },
+                    &Value
+                );
+                if (Error.IsValid()) return Error;
+                *Result = Value;
+                return nullptr;
             }
-            else
-            {
-                Value = Future->GetTask().Result();
-            }
-            Future->EnsureCompletion();
-        }
-        *Result = Value;
-
-        return nullptr;
+        );
     }
 
     TSharedPtr<FAsyncTask<FStatusDomain::FModelTask>> FStatusDomain::Model() {
         return Gs2::Core::Util::New<FAsyncTask<FStatusDomain::FModelTask>>(this->AsShared());
     }
 
+    void FStatusDomain::Invalidate()
+    {
+        Gs2::Idle::Model::Cache::FStatusCache::Delete(
+            Gs2->Cache,
+            NamespaceName,
+            UserId,
+            CategoryName,
+            TOptional<int32>()
+        );
+    }
+
     Gs2::Core::Domain::CallbackID FStatusDomain::Subscribe(
         TFunction<void(Gs2::Idle::Model::FStatusPtr)> Callback
     )
     {
+        const TWeakPtr<Gs2::Core::Domain::FGs2> WeakGs2 = Gs2;
+        const TWeakPtr<Idle::Domain::FGs2IdleDomain> WeakService = Service;
+        const auto SubscriptionParentKey = Gs2::Idle::Model::Cache::FStatusCache::CreateCacheParentKey(
+            NamespaceName,
+            UserId,
+            TOptional<int32>()
+        );
+        const auto SubscriptionCacheKey = Gs2::Idle::Model::Cache::FStatusCache::CreateCacheKey(
+            CategoryName
+        );
+        const FString RegisteredParentKey = SubscriptionParentKey;
+        const TOptional<FString> QueryNamespaceName = NamespaceName;
+        const TOptional<FString> QueryUserId = UserId;
+        const TOptional<FString> QueryCategoryName = CategoryName;
         return Gs2->Cache->Subscribe(
             Gs2::Idle::Model::FStatus::TypeName,
-            ParentKey,
-            Gs2::Idle::Domain::Model::FStatusDomain::CreateCacheKey(
-                CategoryName
-            ),
+            SubscriptionParentKey,
+            SubscriptionCacheKey,
             [Callback](TSharedPtr<FGs2Object> obj)
             {
                 Callback(StaticCastSharedPtr<Gs2::Idle::Model::FStatus>(obj));
+            },
+            [WeakGs2, WeakService, RegisteredParentKey, QueryNamespaceName, QueryUserId, QueryCategoryName]()
+            {
+                const auto Owner = WeakGs2.Pin();
+                if (!Owner.IsValid())
+                {
+                    return;
+                }
+                const auto Domain = MakeShared<FStatusDomain>(
+                    Owner,
+                    WeakService.Pin(),
+                    QueryNamespaceName,
+                    QueryUserId,
+                    QueryCategoryName
+                );
+                Domain->ParentKey = RegisteredParentKey;
+                const auto Task = Domain->Model();
+                Task->StartBackgroundTask();
             }
         );
     }
@@ -611,10 +631,8 @@ namespace Gs2::Idle::Domain::Model
     {
         Gs2->Cache->Unsubscribe(
             Gs2::Idle::Model::FStatus::TypeName,
-            ParentKey,
-            Gs2::Idle::Domain::Model::FStatusDomain::CreateCacheKey(
-                CategoryName
-            ),
+            Gs2::Idle::Model::Cache::FStatusCache::CreateCacheParentKey(NamespaceName, UserId, TOptional<int32>()),
+            Gs2::Idle::Model::Cache::FStatusCache::CreateCacheKey(CategoryName),
             CallbackID
         );
     }
@@ -625,4 +643,3 @@ namespace Gs2::Idle::Domain::Model
 #elif defined(__clang__)
 #pragma clang diagnostic pop
 #endif
-

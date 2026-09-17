@@ -40,6 +40,10 @@
 #include "Formation/Domain/Model/PropertyFormAccessToken.h"
 #include "Formation/Domain/Model/User.h"
 #include "Formation/Domain/Model/UserAccessToken.h"
+#include "Formation/Model/Cache/Mold.h"
+#include "Formation/Model/Cache/MoldModel.h"
+#include "Formation/Model/Cache/Form.h"
+#include "Formation/Model/Cache/FormModel.h"
 
 #include "Core/Domain/Gs2.h"
 #include "Core/Domain/Transaction/JobQueueJobDomainFactory.h"
@@ -108,6 +112,8 @@ namespace Gs2::Formation::Domain::Model
             ->WithNamespaceName(Self->NamespaceName)
             ->WithAccessToken(Self->AccessToken->GetToken())
             ->WithMoldModelName(Self->MoldModelName);
+        const auto CacheOwnerSnapshotUserId = Self->AccessToken.IsValid() ? Self->UserId() : TOptional<FString>();
+        const auto CacheOwnerSnapshotTimeOffset = Self->AccessToken.IsValid() ? Self->AccessToken->GetTimeOffset() : TOptional<int32>();
         const auto Future = Self->Client->GetMold(
             Request
         );
@@ -118,6 +124,39 @@ namespace Gs2::Formation::Domain::Model
         }
         const auto ResultModel = Future->GetTask().Result();
         Future->EnsureCompletion();
+
+            if (ResultModel.IsValid() && ResultModel->GetItem() != nullptr)
+            {
+
+        if (!((CacheOwnerSnapshotUserId)).IsSet())
+            {
+              const auto Details = MakeShared<TArray<TSharedPtr<Gs2::Core::Model::FGs2ErrorDetail>>>();
+                Details->Add(MakeShared<Gs2::Core::Model::FGs2ErrorDetail>(TEXT("userId"), TEXT("userId is invalid."), TEXT("invalid_response")));
+                return MakeShared<Gs2::Core::Model::FUnknownError>(Details);
+              }
+        Gs2::Formation::Model::Cache::FMoldCache::Put(
+            Self->Gs2->Cache,
+
+            Request->GetNamespaceName(),
+            (CacheOwnerSnapshotUserId),
+            Request->GetMoldModelName(),
+            CacheOwnerSnapshotTimeOffset,
+            ResultModel->GetItem()
+        );
+            }
+            if (ResultModel.IsValid() && ResultModel->GetMoldModel() != nullptr)
+            {
+
+
+        Gs2::Formation::Model::Cache::FMoldModelCache::Put(
+            Self->Gs2->Cache,
+
+            Request->GetNamespaceName(),
+            Request->GetMoldModelName(),
+            CacheOwnerSnapshotTimeOffset,
+            ResultModel->GetMoldModel()
+        );
+            }
         *Result = ResultModel->GetItem();
         return nullptr;
     }
@@ -151,6 +190,8 @@ namespace Gs2::Formation::Domain::Model
             ->WithNamespaceName(Self->NamespaceName)
             ->WithAccessToken(Self->AccessToken->GetToken())
             ->WithMoldModelName(Self->MoldModelName);
+        const auto CacheOwnerSnapshotUserId = Self->AccessToken.IsValid() ? Self->UserId() : TOptional<FString>();
+        const auto CacheOwnerSnapshotTimeOffset = Self->AccessToken.IsValid() ? Self->AccessToken->GetTimeOffset() : TOptional<int32>();
         const auto Future = Self->Client->SubMoldCapacity(
             Request
         );
@@ -161,19 +202,39 @@ namespace Gs2::Formation::Domain::Model
         }
         const auto ResultModel = Future->GetTask().Result();
         Future->EnsureCompletion();
-        if (ResultModel->GetItem() != nullptr)
-        {
-            const auto Key = Gs2::Formation::Domain::Model::FMoldDomain::CreateCacheKey(
-                ResultModel->GetItem()->GetName()
-            );
-            Self->Gs2->Cache->Put(
-                Gs2::Formation::Model::FMold::TypeName,
-                Self->ParentKey,
-                Key,
-                ResultModel->GetItem(),
-                FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
-            );
-        }
+
+            if (ResultModel.IsValid() && ResultModel->GetItem() != nullptr)
+            {
+
+        if (!((CacheOwnerSnapshotUserId)).IsSet())
+            {
+              const auto Details = MakeShared<TArray<TSharedPtr<Gs2::Core::Model::FGs2ErrorDetail>>>();
+                Details->Add(MakeShared<Gs2::Core::Model::FGs2ErrorDetail>(TEXT("userId"), TEXT("userId is invalid."), TEXT("invalid_response")));
+                return MakeShared<Gs2::Core::Model::FUnknownError>(Details);
+              }
+        Gs2::Formation::Model::Cache::FMoldCache::Put(
+            Self->Gs2->Cache,
+
+            Request->GetNamespaceName(),
+            (CacheOwnerSnapshotUserId),
+            Request->GetMoldModelName(),
+            CacheOwnerSnapshotTimeOffset,
+            ResultModel->GetItem()
+        );
+            }
+            if (ResultModel.IsValid() && ResultModel->GetMoldModel() != nullptr)
+            {
+
+
+        Gs2::Formation::Model::Cache::FMoldModelCache::Put(
+            Self->Gs2->Cache,
+
+            Request->GetNamespaceName(),
+            Request->GetMoldModelName(),
+            CacheOwnerSnapshotTimeOffset,
+            ResultModel->GetMoldModel()
+        );
+            }
         auto Domain = Self;
 
         *Result = Domain;
@@ -209,27 +270,39 @@ namespace Gs2::Formation::Domain::Model
             ->WithNamespaceName(Self->NamespaceName)
             ->WithAccessToken(Self->AccessToken->GetToken())
             ->WithMoldModelName(Self->MoldModelName);
+        const auto CacheOwnerSnapshotUserId = Self->AccessToken.IsValid() ? Self->UserId() : TOptional<FString>();
+        const auto CacheOwnerSnapshotTimeOffset = Self->AccessToken.IsValid() ? Self->AccessToken->GetTimeOffset() : TOptional<int32>();
         const auto Future = Self->Client->DeleteMold(
             Request
         );
         Future->StartSynchronousTask();
         if (Future->GetTask().IsError())
         {
-            return Future->GetTask().Error();
+            const auto Error = Future->GetTask().Error();
+            if (Error.IsValid() && Error->IsChildOf(Gs2::Core::Model::FNotFoundError::Class))
+            {
+                *Result = Self;
+                return nullptr;
+            }
+            return Error;
         }
         const auto ResultModel = Future->GetTask().Result();
         Future->EnsureCompletion();
-        if (ResultModel->GetItem() != nullptr)
-        {
-            const auto Key = Gs2::Formation::Domain::Model::FMoldDomain::CreateCacheKey(
-                ResultModel->GetItem()->GetName()
-            );
-            Self->Gs2->Cache->Delete(
-                Gs2::Formation::Model::FMold::TypeName,
-                Self->ParentKey,
-                Key
-            );
-        }
+
+              if (!((CacheOwnerSnapshotUserId)).IsSet())
+                  {
+                    const auto Details = MakeShared<TArray<TSharedPtr<Gs2::Core::Model::FGs2ErrorDetail>>>();
+                      Details->Add(MakeShared<Gs2::Core::Model::FGs2ErrorDetail>(TEXT("userId"), TEXT("userId is invalid."), TEXT("invalid_response")));
+                      return MakeShared<Gs2::Core::Model::FUnknownError>(Details);
+                    }
+              Gs2::Formation::Model::Cache::FMoldCache::Delete(
+            Self->Gs2->Cache,
+
+            Request->GetNamespaceName(),
+            (CacheOwnerSnapshotUserId),
+            Request->GetMoldModelName(),
+            CacheOwnerSnapshotTimeOffset
+        );
         auto Domain = Self;
 
         *Result = Domain;
@@ -256,34 +329,129 @@ namespace Gs2::Formation::Domain::Model
 
     Gs2::Core::Domain::CallbackID FMoldAccessTokenDomain::SubscribeForms(
     TFunction<void()> Callback
+
     )
     {
         return Gs2->Cache->ListSubscribe(
             Gs2::Formation::Model::FForm::TypeName,
-            Gs2::Formation::Domain::Model::FMoldDomain::CreateCacheParentKey(
+            Gs2::Formation::Model::Cache::FFormCache::CreateCacheParentKey(
                 NamespaceName,
-                UserId(),
+                AccessToken.IsValid() ? AccessToken->GetUserId() : TOptional<FString>(),
                 MoldModelName,
-                "Form"
+                AccessToken.IsValid() ? AccessToken->GetTimeOffset() : TOptional<int32>()
             ),
+            Callback,
             Callback
         );
     }
-
     void FMoldAccessTokenDomain::UnsubscribeForms(
         Gs2::Core::Domain::CallbackID CallbackID
     )
     {
         Gs2->Cache->ListUnsubscribe(
             Gs2::Formation::Model::FForm::TypeName,
-            Gs2::Formation::Domain::Model::FMoldDomain::CreateCacheParentKey(
+            Gs2::Formation::Model::Cache::FFormCache::CreateCacheParentKey(
                 NamespaceName,
-                UserId(),
+                AccessToken.IsValid() ? AccessToken->GetUserId() : TOptional<FString>(),
                 MoldModelName,
-                "Form"
+                AccessToken.IsValid() ? AccessToken->GetTimeOffset() : TOptional<int32>()
             ),
             CallbackID
         );
+    }
+    class FMoldAccessTokenDomain::FCollectFormsTask : public Gs2::Core::Util::TGs2Future<TArray<Gs2::Formation::Model::FFormPtr>>, public TSharedFromThis<FCollectFormsTask>
+    {
+        const TSharedPtr<FMoldAccessTokenDomain> Self;
+        const TFunction<void(TArray<Gs2::Formation::Model::FFormPtr>)> OnCollected;
+
+    public:
+        explicit FCollectFormsTask(const TSharedPtr<FMoldAccessTokenDomain>& Self, TFunction<void(TArray<Gs2::Formation::Model::FFormPtr>)> OnCollected) : Self(Self), OnCollected(OnCollected) {}
+        FCollectFormsTask(const FCollectFormsTask& From) : TGs2Future(From), Self(From.Self), OnCollected(From.OnCollected) {}
+        virtual Gs2::Core::Model::FGs2ErrorPtr Action(TSharedPtr<TSharedPtr<TArray<Gs2::Formation::Model::FFormPtr>>> Result) override
+        {
+            TArray<Gs2::Formation::Model::FFormPtr> Items;
+            auto Iterator = Self->Forms()->begin();
+            while (Iterator.HasNext())
+            {
+                if (Iterator.IsError()) return Iterator.Error();
+                if (Iterator.IsCurrentValid()) Items.Add(Iterator.Current());
+                ++Iterator;
+            }
+            if (Iterator.IsError()) return Iterator.Error();
+            *Result = MakeShared<TArray<Gs2::Formation::Model::FFormPtr>>(Items);
+            if (OnCollected) OnCollected(Items);
+            return nullptr;
+        }
+    };
+
+    Gs2::Core::Domain::CallbackID FMoldAccessTokenDomain::SubscribeForms(
+        TFunction<void(TArray<Gs2::Formation::Model::FFormPtr>)> Callback
+    )
+    {
+        const TWeakPtr<Gs2::Core::Domain::FGs2> WeakGs2 = this->Gs2;
+        const TWeakPtr<Formation::Domain::FGs2FormationDomain> WeakService = this->Service;
+        const auto SourceToken = this->AccessToken;
+        const TOptional<FString> RegisteredUserId = SourceToken.IsValid() ? TOptional<FString>(SourceToken->GetUserId()) : TOptional<FString>();
+        const int32 RegisteredTimeOffset = SourceToken.IsValid() ? SourceToken->GetTimeOffset().Get(0) : 0;
+        const auto QueryNamespaceName = NamespaceName;
+        const auto QueryMoldModelName = MoldModelName;
+        const auto Parent = Gs2::Formation::Model::Cache::FFormCache::CreateCacheParentKey(
+        NamespaceName,
+        AccessToken.IsValid() ? AccessToken->GetUserId() : TOptional<FString>(),
+        MoldModelName,
+        AccessToken.IsValid() ? AccessToken->GetTimeOffset() : TOptional<int32>()
+    );
+        return Gs2->Cache->ListSubscribeTyped(
+            Gs2::Formation::Model::FForm::TypeName,
+            Parent,
+            [Callback, WeakGs2](const TArray<FGs2ObjectPtr>& Values)
+            {
+                if (!WeakGs2.Pin().IsValid()) return;
+                TArray<Gs2::Formation::Model::FFormPtr> TypedValues;
+                for (const auto& Value : Values) if (Value.IsValid()) TypedValues.Add(StaticCastSharedPtr<Gs2::Formation::Model::FForm>(Value));
+                Callback(TypedValues);
+            },
+            [WeakGs2, WeakService, Callback, QueryNamespaceName, QueryMoldModelName, SourceToken, RegisteredUserId, RegisteredTimeOffset]()
+            {
+                const auto Owner = WeakGs2.Pin();
+                if (!Owner.IsValid() || !SourceToken.IsValid() || !RegisteredUserId.IsSet()) return;
+                const auto TokenSnapshot = MakeShared<Gs2::Auth::Model::FAccessToken>(*SourceToken);
+                if (TokenSnapshot->GetUserId() != RegisteredUserId || TokenSnapshot->GetTimeOffset().Get(0) != RegisteredTimeOffset) return;
+                const auto Domain = MakeShared<FMoldAccessTokenDomain>(Owner, WeakService.Pin(), QueryNamespaceName, TokenSnapshot, QueryMoldModelName);
+                const auto Task = Gs2::Core::Util::New<FAsyncTask<FCollectFormsTask>>(Domain, Callback);
+                Task->StartBackgroundTask();
+            }
+        );
+    }
+
+    void FMoldAccessTokenDomain::InvalidateForms()
+    {
+        Gs2->Cache->ClearListCache(
+            Gs2::Formation::Model::FForm::TypeName,
+            Gs2::Formation::Model::Cache::FFormCache::CreateCacheParentKey(
+        NamespaceName,
+        AccessToken.IsValid() ? AccessToken->GetUserId() : TOptional<FString>(),
+        MoldModelName,
+        AccessToken.IsValid() ? AccessToken->GetTimeOffset() : TOptional<int32>()
+    )
+        );
+    }
+
+    FMoldAccessTokenDomain::FSubscribeFormsWithInitialCallTask::FSubscribeFormsWithInitialCallTask(const TSharedPtr<FMoldAccessTokenDomain>& Self, TFunction<void(TArray<Gs2::Formation::Model::FFormPtr>)> Callback) : Self(Self), Callback(Callback) {}
+    FMoldAccessTokenDomain::FSubscribeFormsWithInitialCallTask::FSubscribeFormsWithInitialCallTask(const FSubscribeFormsWithInitialCallTask& From) : TGs2Future(From), Self(From.Self), Callback(From.Callback) {}
+    Gs2::Core::Model::FGs2ErrorPtr FMoldAccessTokenDomain::FSubscribeFormsWithInitialCallTask::Action(TSharedPtr<TSharedPtr<Gs2::Core::Domain::CallbackID>> Result)
+    {
+        const auto Task = Gs2::Core::Util::New<FAsyncTask<FCollectFormsTask>>(Self, TFunction<void(TArray<Gs2::Formation::Model::FFormPtr>)>());
+        Task->StartSynchronousTask(); Task->EnsureCompletion();
+        if (Task->GetTask().IsError()) return Task->GetTask().Error();
+        const auto Values = Task->GetTask().Result();
+        const auto CallbackId = Self->SubscribeForms(Callback);
+        Callback(*Values); *Result = MakeShared<Gs2::Core::Domain::CallbackID>(CallbackId);
+        return nullptr;
+    }
+    TSharedPtr<FAsyncTask<FMoldAccessTokenDomain::FSubscribeFormsWithInitialCallTask>> FMoldAccessTokenDomain::SubscribeFormsWithInitialCall(TFunction<void(TArray<Gs2::Formation::Model::FFormPtr>)> Callback)
+    {
+        return Gs2::Core::Util::New<FAsyncTask<FSubscribeFormsWithInitialCallTask>>(this->AsShared(), Callback);
     }
 
     TSharedPtr<Gs2::Formation::Domain::Model::FFormAccessTokenDomain> FMoldAccessTokenDomain::Form(
@@ -340,71 +508,174 @@ namespace Gs2::Formation::Domain::Model
         TSharedPtr<TSharedPtr<Gs2::Formation::Model::FMold>> Result
     )
     {
-        // ReSharper disable once CppLocalVariableMayBeConst
-        TSharedPtr<Gs2::Formation::Model::FMold> Value;
-        auto bCacheHit = Self->Gs2->Cache->TryGet<Gs2::Formation::Model::FMold>(
-            Self->ParentKey,
-            Gs2::Formation::Domain::Model::FMoldDomain::CreateCacheKey(
-                Self->MoldModelName
-            ),
-            &Value
+        const auto CacheParentKey = Gs2::Formation::Model::Cache::FMoldCache::CreateCacheParentKey(
+
+            Self->NamespaceName,
+            Self->AccessToken.IsValid() ? Self->UserId() : TOptional<FString>(),
+            Self->AccessToken.IsValid() ? Self->AccessToken->GetTimeOffset() : TOptional<int32>()
         );
-        if (!bCacheHit) {
-            const auto Future = Self->Get(
-                MakeShared<Gs2::Formation::Request::FGetMoldRequest>()
-            );
-            Future->StartSynchronousTask();
-            if (Future->GetTask().IsError())
+        const auto CacheKey = Gs2::Formation::Model::Cache::FMoldCache::CreateCacheKey(
+
+            Self->MoldModelName
+        );
+        return Self->Gs2->Cache->ExecuteWithKeyLock(
+            Gs2::Formation::Model::FMold::TypeName,
+            CacheParentKey,
+            CacheKey,
+            [Self = Self, Result]() -> Gs2::Core::Model::FGs2ErrorPtr
             {
-                if (Future->GetTask().Error()->Type() != Gs2::Core::Model::FNotFoundError::TypeString)
-                {
-                    return Future->GetTask().Error();
-                }
+                Gs2::Formation::Model::FMoldPtr Value;
+                const auto CacheHit = Gs2::Formation::Model::Cache::FMoldCache::TryGet(
+                    Self->Gs2->Cache,
 
-                const auto Key = Gs2::Formation::Domain::Model::FMoldDomain::CreateCacheKey(
-                    Self->MoldModelName
+                    Self->NamespaceName,
+                    Self->AccessToken.IsValid() ? Self->UserId() : TOptional<FString>(),
+                    Self->MoldModelName,
+                    Self->AccessToken.IsValid() ? Self->AccessToken->GetTimeOffset() : TOptional<int32>(),
+                    &Value
                 );
-                Self->Gs2->Cache->Put(
-                    Gs2::Formation::Model::FMold::TypeName,
-                    Self->ParentKey,
-                    Key,
-                    nullptr,
-                    FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
-                );
-
-                if (Future->GetTask().Error()->Detail(0)->GetComponent() != "mold")
+                if (CacheHit)
                 {
-                    return Future->GetTask().Error();
+                    *Result = Value;
+                    return nullptr;
                 }
-            }
-            else
-            {
-                Value = Future->GetTask().Result();
-            }
-            Future->EnsureCompletion();
-        }
-        *Result = Value;
+                const auto Error = Gs2::Formation::Model::Cache::FMoldCache::Fetch(
+                    Self->Gs2->Cache,
 
-        return nullptr;
+                    Self->NamespaceName,
+                    Self->AccessToken.IsValid() ? Self->UserId() : TOptional<FString>(),
+                    Self->MoldModelName,
+                    Self->AccessToken.IsValid() ? Self->AccessToken->GetTimeOffset() : TOptional<int32>(),
+                    [Self](Gs2::Formation::Model::FMoldPtr* OutItem) -> Gs2::Core::Model::FGs2ErrorPtr
+                    {
+                        const auto Future = Self->Get(
+                            MakeShared<Gs2::Formation::Request::FGetMoldRequest>()
+                        );
+                        Future->StartSynchronousTask();
+                        if (Future->GetTask().IsError()) return Future->GetTask().Error();
+                        *OutItem = Future->GetTask().Result();
+                        Future->EnsureCompletion();
+                        return nullptr;
+                    },
+                    &Value
+                );
+                if (Error.IsValid()) return Error;
+                *Result = Value;
+                return nullptr;
+            }
+        );
     }
 
     TSharedPtr<FAsyncTask<FMoldAccessTokenDomain::FModelTask>> FMoldAccessTokenDomain::Model() {
         return Gs2::Core::Util::New<FAsyncTask<FMoldAccessTokenDomain::FModelTask>>(this->AsShared());
     }
 
+    void FMoldAccessTokenDomain::Invalidate()
+    {
+        Gs2::Formation::Model::Cache::FMoldCache::Delete(
+            Gs2->Cache,
+
+            NamespaceName,
+            AccessToken.IsValid() ? UserId() : TOptional<FString>(),
+            MoldModelName,
+            AccessToken.IsValid() ? AccessToken->GetTimeOffset() : TOptional<int32>()
+        );
+    }
+
+    FMoldAccessTokenDomain::FSubscribeWithInitialCallTask::FSubscribeWithInitialCallTask(
+        const TSharedPtr<FMoldAccessTokenDomain>& Self,
+        TFunction<void(Gs2::Formation::Model::FMoldPtr)> Callback
+    ):
+        Self(Self),
+        Callback(Callback)
+    {
+    }
+
+    FMoldAccessTokenDomain::FSubscribeWithInitialCallTask::FSubscribeWithInitialCallTask(
+        const FSubscribeWithInitialCallTask& From
+    ):
+        TGs2Future(From),
+        Self(From.Self),
+        Callback(From.Callback)
+    {
+    }
+
+    Gs2::Core::Model::FGs2ErrorPtr FMoldAccessTokenDomain::FSubscribeWithInitialCallTask::Action(
+        TSharedPtr<TSharedPtr<Gs2::Core::Domain::CallbackID>> Result
+    )
+    {
+        const auto Task = Self->Model();
+        Task->StartSynchronousTask();
+        Task->EnsureCompletion();
+        if (Task->GetTask().IsError()) return Task->GetTask().Error();
+        const auto Item = Task->GetTask().Result();
+        const auto CallbackId = Self->Subscribe(Callback);
+        Callback(Item);
+        *Result = MakeShared<Gs2::Core::Domain::CallbackID>(CallbackId);
+        return nullptr;
+    }
+
+    TSharedPtr<FAsyncTask<FMoldAccessTokenDomain::FSubscribeWithInitialCallTask>> FMoldAccessTokenDomain::SubscribeWithInitialCall(
+        TFunction<void(Gs2::Formation::Model::FMoldPtr)> Callback
+    )
+    {
+        return Gs2::Core::Util::New<FAsyncTask<FSubscribeWithInitialCallTask>>(this->AsShared(), Callback);
+    }
+
     Gs2::Core::Domain::CallbackID FMoldAccessTokenDomain::Subscribe(
         TFunction<void(Gs2::Formation::Model::FMoldPtr)> Callback
     )
     {
+        const auto SubscriptionParentKey = Gs2::Formation::Model::Cache::FMoldCache::CreateCacheParentKey(
+
+            NamespaceName,
+            AccessToken.IsValid() ? UserId() : TOptional<FString>(),
+            AccessToken.IsValid() ? AccessToken->GetTimeOffset() : TOptional<int32>()
+        );
+        const auto SubscriptionCacheKey = Gs2::Formation::Model::Cache::FMoldCache::CreateCacheKey(
+
+            MoldModelName
+        );
+        const TWeakPtr<Gs2::Core::Domain::FGs2> WeakGs2 = Gs2;
+        const TWeakPtr<Formation::Domain::FGs2FormationDomain> WeakService = Service;
+        const FString RegisteredParentKey = SubscriptionParentKey;
+        const TOptional<FString> QueryNamespaceName = NamespaceName;
+        const TOptional<FString> QueryMoldModelName = MoldModelName;
+        const auto SourceToken = AccessToken;
+        const TOptional<FString> RegisteredUserId = SourceToken.IsValid()
+            ? TOptional<FString>(SourceToken->GetUserId())
+            : TOptional<FString>();
+        const int32 RegisteredTimeOffset = SourceToken.IsValid() ? SourceToken->GetTimeOffset().Get(0) : 0;
         return Gs2->Cache->Subscribe(
             Gs2::Formation::Model::FMold::TypeName,
-            ParentKey,
-            Gs2::Formation::Domain::Model::FMoldDomain::CreateCacheKey(
-                MoldModelName
-            ),
+            SubscriptionParentKey,
+            SubscriptionCacheKey,
             [Callback](TSharedPtr<FGs2Object> obj)
             {
                 Callback(StaticCastSharedPtr<Gs2::Formation::Model::FMold>(obj));
+            },
+            [WeakGs2, WeakService, RegisteredParentKey, QueryNamespaceName, QueryMoldModelName, SourceToken, RegisteredUserId, RegisteredTimeOffset]()
+            {
+                const auto Owner = WeakGs2.Pin();
+                if (!Owner.IsValid() || !SourceToken.IsValid() || !RegisteredUserId.IsSet())
+                {
+                    return;
+                }
+                const auto TokenSnapshot = MakeShared<Gs2::Auth::Model::FAccessToken>(*SourceToken);
+                if (TokenSnapshot->GetUserId() != RegisteredUserId || TokenSnapshot->GetTimeOffset().Get(0) != RegisteredTimeOffset)
+                {
+                    return;
+                }
+                const auto Domain = MakeShared<FMoldAccessTokenDomain>(
+                    Owner,
+                    WeakService.Pin(),
+                    QueryNamespaceName,
+                    TokenSnapshot,
+                    QueryMoldModelName
+                );
+                Domain->ParentKey = RegisteredParentKey;
+                const auto Task = Domain->Model();
+                Task->StartBackgroundTask();
             }
         );
     }
@@ -413,12 +684,20 @@ namespace Gs2::Formation::Domain::Model
         Gs2::Core::Domain::CallbackID CallbackID
     )
     {
+        const auto SubscriptionParentKey = Gs2::Formation::Model::Cache::FMoldCache::CreateCacheParentKey(
+
+            NamespaceName,
+            AccessToken.IsValid() ? UserId() : TOptional<FString>(),
+            AccessToken.IsValid() ? AccessToken->GetTimeOffset() : TOptional<int32>()
+        );
+        const auto SubscriptionCacheKey = Gs2::Formation::Model::Cache::FMoldCache::CreateCacheKey(
+
+            MoldModelName
+        );
         Gs2->Cache->Unsubscribe(
             Gs2::Formation::Model::FMold::TypeName,
-            ParentKey,
-            Gs2::Formation::Domain::Model::FMoldDomain::CreateCacheKey(
-                MoldModelName
-            ),
+            SubscriptionParentKey,
+            SubscriptionCacheKey,
             CallbackID
         );
     }
@@ -429,4 +708,3 @@ namespace Gs2::Formation::Domain::Model
 #elif defined(__clang__)
 #pragma clang diagnostic pop
 #endif
-

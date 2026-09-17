@@ -37,6 +37,8 @@
 #include "Guild/Domain/Model/ReceiveMemberRequest.h"
 #include "Guild/Domain/Model/SendMemberRequest.h"
 #include "Guild/Domain/Model/SendMemberRequestAccessToken.h"
+#include "Guild/Model/Cache/SendMemberRequest.h"
+
 
 #include "Core/Domain/Gs2.h"
 #include "Core/Domain/Transaction/JobQueueJobDomainFactory.h"
@@ -62,10 +64,14 @@ namespace Gs2::Guild::Domain::Model
         UserId(UserId),
         GuildModelName(GuildModelName),
         GuildName(GuildName),
-        ParentKey(Gs2::Guild::Domain::Model::FUserDomain::CreateCacheParentKey(
+        ParentKey(Gs2::Guild::Model::Cache::FSendMemberRequestCache::CreateCacheParentKey(
+
             NamespaceName,
+            GuildModelName,
+
             UserId,
-            "SendMemberRequest::" + *GuildModelName
+            TOptional<int32>()
+
         ))
     {
     }
@@ -117,31 +123,18 @@ namespace Gs2::Guild::Domain::Model
         {
             return Future->GetTask().Error();
         }
-        const auto RequestModel = Request;
         const auto ResultModel = Future->GetTask().Result();
         Future->EnsureCompletion();
-        if (ResultModel != nullptr) {
-            
-            if (ResultModel->GetItem() != nullptr)
-            {
-                const auto ParentKey = Gs2::Guild::Domain::Model::FUserDomain::CreateCacheParentKey(
-                    Self->NamespaceName,
-                    Self->UserId,
-                    "SendMemberRequest::" + *Self->GuildModelName
-                );
-                const auto Key = Gs2::Guild::Domain::Model::FSendMemberRequestDomain::CreateCacheKey(
-                    ResultModel->GetItem()->GetTargetGuildName()
-                );
-                Self->Gs2->Cache->Put(
-                    Gs2::Guild::Model::FSendMemberRequest::TypeName,
-                    ParentKey,
-                    Key,
-                    ResultModel->GetItem(),
-                    FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
-                );
-            }
+        if (ResultModel.IsValid() && ResultModel->GetItem().IsValid())
+        {
+            Gs2::Guild::Model::Cache::FSendMemberRequestCache::Put(
+                Self->Gs2->Cache,
+                Request->GetNamespaceName(), Request->GetUserId(), Request->GetGuildModelName(),
+                Request->GetTargetGuildName(), TOptional<int32>(), ResultModel->GetItem()
+            );
         }
-        *Result = ResultModel->GetItem();
+        *Result = ResultModel.IsValid() ? ResultModel->GetItem() : nullptr;
+
         return nullptr;
     }
 
@@ -193,64 +186,82 @@ namespace Gs2::Guild::Domain::Model
         TSharedPtr<TSharedPtr<Gs2::Guild::Model::FSendMemberRequest>> Result
     )
     {
-        // ReSharper disable once CppLocalVariableMayBeConst
-        TSharedPtr<Gs2::Guild::Model::FSendMemberRequest> Value;
-        auto bCacheHit = Self->Gs2->Cache->TryGet<Gs2::Guild::Model::FSendMemberRequest>(
+        const FString CacheKey = Gs2::Guild::Model::Cache::FSendMemberRequestCache::CreateCacheKey(Self->GuildName);
+
+        return Self->Gs2->Cache->ExecuteWithKeyLock(
+            Gs2::Guild::Model::FSendMemberRequest::TypeName,
             Self->ParentKey,
-            Gs2::Guild::Domain::Model::FSendMemberRequestDomain::CreateCacheKey(
-                Self->GuildName
-            ),
-            &Value
-        );
-        if (!bCacheHit) {
-            const auto Future = Self->Get(
-                MakeShared<Gs2::Guild::Request::FGetSendRequestByUserIdRequest>()
-            );
-            Future->StartSynchronousTask();
-            if (Future->GetTask().IsError())
+            CacheKey,
+            [this, Result, CacheKey]() -> Gs2::Core::Model::FGs2ErrorPtr
             {
-                if (Future->GetTask().Error()->Type() != Gs2::Core::Model::FNotFoundError::TypeString)
-                {
-                    return Future->GetTask().Error();
-                }
+                // ReSharper disable once CppLocalVariableMayBeConst
+                TSharedPtr<Gs2::Guild::Model::FSendMemberRequest> Value;
+                auto bCacheHit = Gs2::Guild::Model::Cache::FSendMemberRequestCache::TryGet(
 
-                const auto Key = Gs2::Guild::Domain::Model::FSendMemberRequestDomain::CreateCacheKey(
-                    Self->GuildName
-                );
-                Self->Gs2->Cache->Put(
-                    Gs2::Guild::Model::FSendMemberRequest::TypeName,
-                    Self->ParentKey,
-                    Key,
-                    nullptr,
-                    FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
-                );
+                    Self->Gs2->Cache, Self->NamespaceName, Self->UserId, Self->GuildModelName, Self->GuildName,
 
-                if (Future->GetTask().Error()->Detail(0)->GetComponent() != "sendMemberRequest")
-                {
-                    return Future->GetTask().Error();
-                }
-            }
-            else
-            {
-                Value = Future->GetTask().Result();
-                if (Value.IsValid())
-                {
-                    Self->Gs2->Cache->Put(
-                        Gs2::Guild::Model::FSendMemberRequest::TypeName,
-                        Self->ParentKey,
-                        FSendMemberRequestDomain::CreateCacheKey(
-                            Self->GuildName
-                        ),
-                        Value,
-                        FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
+                    TOptional<int32>(), &Value
+
+                );
+                if (!bCacheHit) {
+                    const auto Future = Self->Get(
+                        MakeShared<Gs2::Guild::Request::FGetSendRequestByUserIdRequest>()
                     );
-                }
-            }
-            Future->EnsureCompletion();
-        }
-        *Result = Value;
+                    Future->StartSynchronousTask();
+                    if (Future->GetTask().IsError())
+                    {
+                        const auto Error = Future->GetTask().Error();
+                        if (!Error.IsValid() || Error->Type() != Gs2::Core::Model::FNotFoundError::TypeString)
+                        {
+                            return Error;
+                        }
+                        Gs2::Guild::Model::Cache::FSendMemberRequestCache::Put(
 
-        return nullptr;
+                            Self->Gs2->Cache, Self->NamespaceName, Self->UserId, Self->GuildModelName, Self->GuildName,
+
+                            TOptional<int32>(), nullptr
+
+                        );
+
+                        if (!Error->GetErrors().IsValid() || Error->Count() == 0 || !Error->Detail(0).IsValid() || Error->Detail(0)->GetComponent() != "sendMemberRequest")
+                        {
+                            return Error;
+                        }
+                    }
+                    else
+                    {
+                        Value = Future->GetTask().Result();
+                    }
+                    Future->EnsureCompletion();
+                }
+                if (!bCacheHit)
+                {
+                    Gs2::Guild::Model::FSendMemberRequestPtr ExistingObject;
+
+                    const bool Existing = Gs2::Guild::Model::Cache::FSendMemberRequestCache::TryGet(
+
+                        Self->Gs2->Cache, Self->NamespaceName, Self->UserId, Self->GuildModelName, Self->GuildName,
+
+                        TOptional<int32>(), &ExistingObject
+
+                    );
+                    if (!Existing || ExistingObject != Value)
+                    {
+                        Gs2::Guild::Model::Cache::FSendMemberRequestCache::Put(
+
+                            Self->Gs2->Cache, Self->NamespaceName, Self->UserId, Self->GuildModelName, Self->GuildName,
+
+                            TOptional<int32>(), Value
+
+                        );
+                    }
+                }
+
+                *Result = Value;
+
+                return nullptr;
+            }
+        );
     }
 
     TSharedPtr<FAsyncTask<FSendMemberRequestDomain::FModelTask>> FSendMemberRequestDomain::Model() {
@@ -261,15 +272,40 @@ namespace Gs2::Guild::Domain::Model
         TFunction<void(Gs2::Guild::Model::FSendMemberRequestPtr)> Callback
     )
     {
+        const TWeakPtr<Gs2::Core::Domain::FGs2> WeakGs2 = Gs2;
+        const TWeakPtr<Guild::Domain::FGs2GuildDomain> WeakService = Service;
+        const FString RegisteredParentKey = ParentKey;
+        const TOptional<FString> QueryNamespaceName = NamespaceName;
+        const TOptional<FString> QueryUserId = UserId;
+        const TOptional<FString> QueryGuildModelName = GuildModelName;
+        const TOptional<FString> QueryGuildName = GuildName;
         return Gs2->Cache->Subscribe(
             Gs2::Guild::Model::FSendMemberRequest::TypeName,
             ParentKey,
-            Gs2::Guild::Domain::Model::FSendMemberRequestDomain::CreateCacheKey(
-                GuildName
-            ),
+            Gs2::Guild::Model::Cache::FSendMemberRequestCache::CreateCacheKey(GuildName),
+
             [Callback](TSharedPtr<FGs2Object> obj)
             {
                 Callback(StaticCastSharedPtr<Gs2::Guild::Model::FSendMemberRequest>(obj));
+            },
+            [WeakGs2, WeakService, RegisteredParentKey, QueryNamespaceName, QueryUserId, QueryGuildModelName, QueryGuildName]()
+            {
+                const auto Owner = WeakGs2.Pin();
+                if (!Owner.IsValid())
+                {
+                    return;
+                }
+                const auto Domain = MakeShared<FSendMemberRequestDomain>(
+                    Owner,
+                    WeakService.Pin(),
+                    QueryNamespaceName,
+                    QueryUserId,
+                    QueryGuildModelName,
+                    QueryGuildName
+                );
+                Domain->ParentKey = RegisteredParentKey;
+                const auto Task = Domain->Model();
+                Task->StartBackgroundTask();
             }
         );
     }
@@ -281,9 +317,8 @@ namespace Gs2::Guild::Domain::Model
         Gs2->Cache->Unsubscribe(
             Gs2::Guild::Model::FSendMemberRequest::TypeName,
             ParentKey,
-            Gs2::Guild::Domain::Model::FSendMemberRequestDomain::CreateCacheKey(
-                GuildName
-            ),
+            Gs2::Guild::Model::Cache::FSendMemberRequestCache::CreateCacheKey(GuildName),
+
             CallbackID
         );
     }
@@ -294,4 +329,3 @@ namespace Gs2::Guild::Domain::Model
 #elif defined(__clang__)
 #pragma clang diagnostic pop
 #endif
-

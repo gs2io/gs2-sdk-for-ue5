@@ -1,3 +1,4 @@
+
 /*
  * Copyright 2016 Game Server Services, Inc. or its affiliates. All Rights
  * Reserved.
@@ -29,6 +30,9 @@
 #include "Buff/Domain/Model/Namespace.h"
 
 #include "Core/Domain/Gs2.h"
+
+#include "Buff/Model/Cache/BuffEntryModel.h"
+#include "Buff/Model/Cache/Namespace.h"
 
 namespace Gs2::Buff::Domain::Iterator
 {
@@ -74,7 +78,7 @@ namespace Gs2::Buff::Domain::Iterator
 
     FDescribeBuffEntryModelsIterator::FIterator& FDescribeBuffEntryModelsIterator::FIterator::operator++()
     {
-        
+
 
         if (bEnd) return *this;
 
@@ -84,15 +88,16 @@ namespace Gs2::Buff::Domain::Iterator
             return *this;
         }
 
-        if (RangeIteratorOpt) ++*RangeIteratorOpt;
+        if (RangeIteratorOpt && *RangeIteratorOpt) ++*RangeIteratorOpt;
 
+        // Keep the previous page alive until its iterator has been replaced.
+        const auto PreviousRange = Range;
         if (!RangeIteratorOpt || (!*RangeIteratorOpt && !bLast))
         {
-            const auto ListParentKey = Gs2::Buff::Domain::Model::FNamespaceDomain::CreateCacheParentKey(
+            const auto ListParentKey = Gs2::Buff::Model::Cache::FBuffEntryModelCache::CreateCacheParentKey(
                 Self->NamespaceName,
-                "BuffEntryModel"
+                TOptional<int32>()
             );
-
             if (!RangeIteratorOpt)
             {
                 Range = Self->Gs2->Cache->TryGetList<Gs2::Buff::Model::FBuffEntryModel>(ListParentKey);
@@ -105,12 +110,12 @@ namespace Gs2::Buff::Domain::Iterator
                     return *this;
                 }
             }
-
-            const auto Future = Self->Client->DescribeBuffEntryModels(
+            const auto Request =
                 MakeShared<Gs2::Buff::Request::FDescribeBuffEntryModelsRequest>()
                     ->WithContextStack(Self->Gs2->DefaultContextStack)
                     ->WithNamespaceName(Self->NamespaceName)
-            );
+            ;
+            const auto Future = Self->Client->DescribeBuffEntryModels(Request);
             Future->StartSynchronousTask();
             if (Future->GetTask().IsError())
             {
@@ -124,18 +129,21 @@ namespace Gs2::Buff::Domain::Iterator
             }
             const auto R = Future->GetTask().Result();
             Future->EnsureCompletion();
-            Range = R->GetItems();
-            for (auto Item : *R->GetItems())
+            Range = R->GetItems().IsValid() ? R->GetItems() : MakeShared<TArray<Gs2::Buff::Model::FBuffEntryModelPtr>>();
+            const auto ResultModel = R;
+
+
+            if (Range.IsValid())
             {
-                Self->Gs2->Cache->Put(
-                    Gs2::Buff::Model::FBuffEntryModel::TypeName,
-                    ListParentKey,
-                    Gs2::Buff::Domain::Model::FBuffEntryModelDomain::CreateCacheKey(
-                        Item->GetName()
-                    ),
-                    Item,
-                    FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
-                );
+                for (const auto& Item : *Range)
+                {
+                    if (!Item.IsValid()) continue;
+                    Gs2::Buff::Model::Cache::FBuffEntryModelCache::Put(
+                        Self->Gs2->Cache,
+                        Request->GetNamespaceName(), Item->GetName(),
+                        TOptional<int32>(), Item
+                    );
+                }
             }
             if (Range)
             {

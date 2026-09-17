@@ -29,6 +29,11 @@ namespace Gs2::Core::Domain
     typedef TSharedPtr<FGs2> FGs2Ptr;
 }
 
+namespace Gs2::Core::Domain::SpeculativeExecutor
+{
+    class FPreparedSpeculativeCommit;
+}
+
 namespace Gs2::Limit::Domain
 {
     class FGs2LimitDomain;
@@ -41,7 +46,7 @@ namespace Gs2::Limit::Domain::SpeculativeExecutor
     {
     public:
         class FCommitTask final :
-            public Gs2::Core::Util::TGs2Future<TFunction<void()>>,
+            public Gs2::Core::Util::TGs2Future<Gs2::Core::Domain::SpeculativeExecutor::FPreparedSpeculativeCommit>,
             public TSharedFromThis<FCommitTask>
         {
             const Gs2::Core::Domain::FGs2Ptr Domain;
@@ -64,7 +69,7 @@ namespace Gs2::Limit::Domain::SpeculativeExecutor
             );
 
             virtual Gs2::Core::Model::FGs2ErrorPtr Action(
-                TSharedPtr<TSharedPtr<TFunction<void()>>> Result
+                TSharedPtr<TSharedPtr<Gs2::Core::Domain::SpeculativeExecutor::FPreparedSpeculativeCommit>> Result
             ) override;
         };
         friend FCommitTask;

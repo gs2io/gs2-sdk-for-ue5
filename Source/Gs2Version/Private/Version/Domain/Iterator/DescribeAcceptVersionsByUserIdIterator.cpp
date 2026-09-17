@@ -1,3 +1,4 @@
+
 /*
  * Copyright 2016 Game Server Services, Inc. or its affiliates. All Rights
  * Reserved.
@@ -29,6 +30,8 @@
 #include "Version/Domain/Model/User.h"
 
 #include "Core/Domain/Gs2.h"
+
+#include "Version/Model/Cache/AcceptVersion.h"
 
 namespace Gs2::Version::Domain::Iterator
 {
@@ -81,7 +84,7 @@ namespace Gs2::Version::Domain::Iterator
 
     FDescribeAcceptVersionsByUserIdIterator::FIterator& FDescribeAcceptVersionsByUserIdIterator::FIterator::operator++()
     {
-        
+
 
         if (bEnd) return *this;
 
@@ -91,16 +94,17 @@ namespace Gs2::Version::Domain::Iterator
             return *this;
         }
 
-        if (RangeIteratorOpt) ++*RangeIteratorOpt;
+        if (RangeIteratorOpt && *RangeIteratorOpt) ++*RangeIteratorOpt;
 
+        // Keep the previous page alive until its iterator has been replaced.
+        const auto PreviousRange = Range;
         if (!RangeIteratorOpt || (!*RangeIteratorOpt && !bLast))
         {
-            const auto ListParentKey = Gs2::Version::Domain::Model::FUserDomain::CreateCacheParentKey(
+            const auto ListParentKey = Gs2::Version::Model::Cache::FAcceptVersionCache::CreateCacheParentKey(
                 Self->NamespaceName,
                 Self->UserId,
-                "AcceptVersion"
+                TOptional<int32>()
             );
-
             if (!RangeIteratorOpt)
             {
                 Range = Self->Gs2->Cache->TryGetList<Gs2::Version::Model::FAcceptVersion>(ListParentKey);
@@ -114,15 +118,15 @@ namespace Gs2::Version::Domain::Iterator
                     return *this;
                 }
             }
-
-            const auto Future = Self->Client->DescribeAcceptVersionsByUserId(
+            const auto Request =
                 MakeShared<Gs2::Version::Request::FDescribeAcceptVersionsByUserIdRequest>()
                     ->WithContextStack(Self->Gs2->DefaultContextStack)
                     ->WithNamespaceName(Self->NamespaceName)
                     ->WithUserId(Self->UserId)
                     ->WithPageToken(PageToken)
                     ->WithLimit(FetchSize)
-            );
+            ;
+            const auto Future = Self->Client->DescribeAcceptVersionsByUserId(Request);
             Future->StartSynchronousTask();
             if (Future->GetTask().IsError())
             {
@@ -136,18 +140,21 @@ namespace Gs2::Version::Domain::Iterator
             }
             const auto R = Future->GetTask().Result();
             Future->EnsureCompletion();
-            Range = R->GetItems();
-            for (auto Item : *R->GetItems())
+            Range = R->GetItems().IsValid() ? R->GetItems() : MakeShared<TArray<Gs2::Version::Model::FAcceptVersionPtr>>();
+            const auto ResultModel = R;
+
+
+            if (Range.IsValid())
             {
-                Self->Gs2->Cache->Put(
-                    Gs2::Version::Model::FAcceptVersion::TypeName,
-                    ListParentKey,
-                    Gs2::Version::Domain::Model::FAcceptVersionDomain::CreateCacheKey(
-                        Item->GetVersionName()
-                    ),
-                    Item,
-                    FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
-                );
+                for (const auto& Item : *Range)
+                {
+                    if (!Item.IsValid()) continue;
+                    Gs2::Version::Model::Cache::FAcceptVersionCache::Put(
+                        Self->Gs2->Cache,
+                        Request->GetNamespaceName(), Request->GetUserId(), Item->GetVersionName(),
+                        TOptional<int32>(), Item
+                    );
+                }
             }
             if (Range)
             {

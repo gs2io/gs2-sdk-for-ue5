@@ -81,29 +81,87 @@ namespace Gs2::Core::Model
     TSharedPtr<FGs2Error> FGs2Error::FromResponse(int32 ResponseCode, FString Response)
     {
         UE_LOG(Gs2Log, Warning, TEXT("[%d] %s"), ResponseCode, ToCStr(Response));
-        
-        TSharedPtr<FJsonObject> JsonRootObject = MakeShared<FJsonObject>();
-        if (TSharedRef<TJsonReader<>> JsonReader = TJsonReaderFactory<>::Create(Response);
-            FJsonSerializer::Deserialize(JsonReader, JsonRootObject))
+
+        if (Response.IsEmpty())
         {
-            const auto Message = JsonRootObject->GetStringField(ANSI_TO_TCHAR("message"));
-            TSharedPtr<FJsonValue> JsonRootObject2;
-            if (JsonReader = TJsonReaderFactory<>::Create(Message);
-                FJsonSerializer::Deserialize(JsonReader, JsonRootObject2))
-            {
-                return FromJson(ResponseCode, JsonRootObject2->AsArray());
-            }
+            return FromJson(ResponseCode, TArray<TSharedPtr<FJsonValue>>(), nullptr);
         }
-        auto Details = MakeShared<TArray<TSharedPtr<FGs2ErrorDetail>>>();
-        return MakeShared<FUnknownError>(Details);
+
+        const auto ParseFailed = []
+        {
+            auto Details = MakeShared<TArray<TSharedPtr<FGs2ErrorDetail>>>();
+            Details->Add(MakeShared<FGs2ErrorDetail>(
+                TEXT("client"),
+                TEXT("core.network.result.error.parse.failed"),
+                TEXT("")));
+            return MakeShared<FUnknownError>(Details);
+        };
+
+        TSharedPtr<FJsonValue> OuterValue;
+        if (const TSharedRef<TJsonReader<>> JsonReader = TJsonReaderFactory<>::Create(Response);
+            !FJsonSerializer::Deserialize(JsonReader, OuterValue) ||
+            !OuterValue.IsValid() ||
+            OuterValue->Type != EJson::Object)
+        {
+            return ParseFailed();
+        }
+        const auto JsonRootObject = OuterValue->AsObject();
+        if (!JsonRootObject.IsValid() ||
+            !JsonRootObject->HasField(ANSI_TO_TCHAR("message")) ||
+            !JsonRootObject->HasTypedField<EJson::String>(ANSI_TO_TCHAR("message")) ||
+            (JsonRootObject->HasField(ANSI_TO_TCHAR("metadata")) &&
+                !JsonRootObject->HasTypedField<EJson::Object>(ANSI_TO_TCHAR("metadata")) &&
+                !JsonRootObject->HasTypedField<EJson::Null>(ANSI_TO_TCHAR("metadata"))))
+        {
+            return ParseFailed();
+        }
+
+        FResultMetadataPtr ParsedMetadata;
+        if (JsonRootObject->HasTypedField<EJson::Object>(ANSI_TO_TCHAR("metadata")))
+        {
+            ParsedMetadata = FResultMetadata::FromJson(JsonRootObject->GetObjectField(ANSI_TO_TCHAR("metadata")));
+        }
+        const auto Message = JsonRootObject->GetStringField(ANSI_TO_TCHAR("message"));
+        TSharedPtr<FJsonValue> MessageValue;
+        if (const TSharedRef<TJsonReader<>> JsonReader = TJsonReaderFactory<>::Create(Message);
+            FJsonSerializer::Deserialize(JsonReader, MessageValue) &&
+            MessageValue.IsValid() &&
+            MessageValue->Type == EJson::Array)
+        {
+            return FromJson(ResponseCode, MessageValue->AsArray(), ParsedMetadata);
+        }
+        return FromJson(ResponseCode, TArray<TSharedPtr<FJsonValue>>(), ParsedMetadata);
     }
 
     TSharedPtr<FGs2ErrorDetail> FGs2ErrorDetail::FromJson(TSharedPtr<FJsonValue> Object)
     {
+        if (!Object.IsValid() || Object->Type != EJson::Object || !Object->AsObject().IsValid())
+        {
+            return nullptr;
+        }
+        const auto JsonObject = Object->AsObject();
+        const auto IsStringOrNull = [&JsonObject](const TCHAR* Name)
+        {
+            return !JsonObject->HasField(Name) ||
+                JsonObject->HasTypedField<EJson::String>(Name) ||
+                JsonObject->HasTypedField<EJson::Null>(Name);
+        };
+        if (!IsStringOrNull(ANSI_TO_TCHAR("component")) ||
+            !IsStringOrNull(ANSI_TO_TCHAR("message")) ||
+            !IsStringOrNull(ANSI_TO_TCHAR("code")))
+        {
+            return nullptr;
+        }
+        const auto GetStringOrEmpty = [&JsonObject](const TCHAR* Name)
+        {
+            return JsonObject->HasTypedField<EJson::String>(Name)
+                ? JsonObject->GetStringField(Name)
+                : FString();
+        };
         return MakeShared<FGs2ErrorDetail>(
-            Object->AsObject()->GetStringField(ANSI_TO_TCHAR("component")),
-            Object->AsObject()->GetStringField(ANSI_TO_TCHAR("message")),
-            Object->AsObject()->GetStringField(ANSI_TO_TCHAR("code"))
+            GetStringOrEmpty(ANSI_TO_TCHAR("component")),
+            GetStringOrEmpty(ANSI_TO_TCHAR("message")),
+            GetStringOrEmpty(ANSI_TO_TCHAR("code"))
         );
     }
 
@@ -120,52 +178,79 @@ namespace Gs2::Core::Model
     }
 
     FGs2Error::FGs2Error(
-        const TSharedPtr<TArray<TSharedPtr<FGs2ErrorDetail>>> Details
-    ): Details(Details)
+        const TSharedPtr<TArray<TSharedPtr<FGs2ErrorDetail>>> Details,
+        const FResultMetadataPtr InMetadata
+    ): Details(Details), Metadata(InMetadata)
     {
     }
 
     FGs2Error::FGs2Error(
         const FGs2Error& From
-    ): Details(From.Details)
+    ): Details(From.Details), Metadata(From.Metadata)
     {
     }
 
-    TSharedPtr<FGs2Error> FGs2Error::FromJson(int32 StatusCode, TArray<TSharedPtr<FJsonValue>> Objects)
+    TSharedPtr<FGs2Error> FGs2Error::FromJson(int32 StatusCode, TArray<TSharedPtr<FJsonValue>> Objects, const FResultMetadataPtr InMetadata)
     {
         auto Errors = MakeShared<TArray<TSharedPtr<FGs2ErrorDetail>>>();
+        bool bInvalidDetail = false;
         for (auto Object : Objects)
         {
             const auto Error = FGs2ErrorDetail::FromJson(Object);
+            if (!Error.IsValid())
+            {
+                bInvalidDetail = true;
+                break;
+            }
             Errors->Add(MakeShared<FGs2ErrorDetail>(
                 Error->Component(),
                 Error->Message(),
                 Error->Code()
             ));
         }
+        if (bInvalidDetail)
+        {
+            Errors->Reset();
+        }
+        TSharedPtr<FGs2Error> Error;
         switch (StatusCode)
         {
+        case 0:
+            Error = MakeShared<FNoInternetConnectionError>(Errors);
+            break;
         case 400: 
-            return MakeShared<FBadRequestError>(Errors);
+            Error = MakeShared<FBadRequestError>(Errors);
+            break;
         case 401: 
-            return MakeShared<FUnauthorizedError>(Errors);
+            Error = MakeShared<FUnauthorizedError>(Errors);
+            break;
         case 402: 
-            return MakeShared<FQuotaLimitExceedError>(Errors);
+            Error = MakeShared<FQuotaLimitExceedError>(Errors);
+            break;
         case 404: 
-            return MakeShared<FNotFoundError>(Errors);
+            Error = MakeShared<FNotFoundError>(Errors);
+            break;
         case 409: 
-            return MakeShared<FConflictError>(Errors);
+            Error = MakeShared<FConflictError>(Errors);
+            break;
         case 500: 
-            return MakeShared<FInternalServerError>(Errors);
+            Error = MakeShared<FInternalServerError>(Errors);
+            break;
         case 502: 
-            return MakeShared<FBadGatewayError>(Errors);
+            Error = MakeShared<FBadGatewayError>(Errors);
+            break;
         case 503: 
-            return MakeShared<FServiceUnavailableError>(Errors);
+            Error = MakeShared<FServiceUnavailableError>(Errors);
+            break;
         case 504: 
-            return MakeShared<FRequestTimeoutError>(Errors);
+            Error = MakeShared<FRequestTimeoutError>(Errors);
+            break;
         default: 
-            return MakeShared<FUnknownError>(Errors);
+            Error = MakeShared<FUnknownError>(Errors);
+            break;
         }
+        Error->SetMetadata(InMetadata);
+        return Error;
     }
 
     FString FGs2Error::String() const

@@ -48,6 +48,8 @@
 #include "Matchmaking/Domain/Model/BallotAccessToken.h"
 #include "Matchmaking/Domain/Model/Vote.h"
 
+#include "Matchmaking/Model/Cache/Gathering.h"
+#include "Matchmaking/Model/Cache/Rating.h"
 #include "Core/Domain/Gs2.h"
 #include "Core/Domain/Transaction/JobQueueJobDomainFactory.h"
 #include "Core/Domain/Transaction/InternalTransactionDomainFactory.h"
@@ -151,6 +153,18 @@ namespace Gs2::Matchmaking::Domain::Model
         );
     }
 
+
+    Gs2::Core::Domain::CallbackID FUserAccessTokenDomain::SubscribeDoMatchmaking(TFunction<void()> Callback,const TSharedPtr<Gs2::Matchmaking::Model::FPlayer> Player){return Gs2->Cache->ListSubscribe(Gs2::Matchmaking::Model::FGathering::TypeName,Gs2::Matchmaking::Model::Cache::FGatheringCache::CreateCacheParentKey(NamespaceName,AccessToken.IsValid() ? AccessToken->GetUserId() : TOptional<FString>(),AccessToken.IsValid() ? AccessToken->GetTimeOffset() : TOptional<int32>()),Callback,Callback);}
+    void FUserAccessTokenDomain::UnsubscribeDoMatchmaking(Gs2::Core::Domain::CallbackID CallbackID,const TSharedPtr<Gs2::Matchmaking::Model::FPlayer> Player){Gs2->Cache->ListUnsubscribe(Gs2::Matchmaking::Model::FGathering::TypeName,Gs2::Matchmaking::Model::Cache::FGatheringCache::CreateCacheParentKey(NamespaceName,AccessToken.IsValid() ? AccessToken->GetUserId() : TOptional<FString>(),AccessToken.IsValid() ? AccessToken->GetTimeOffset() : TOptional<int32>()),CallbackID);}
+    class FUserAccessTokenDomain::FCollectDoMatchmakingTask:public Gs2::Core::Util::TGs2Future<TArray<Gs2::Matchmaking::Model::FGatheringPtr>>,public TSharedFromThis<FCollectDoMatchmakingTask>{const TSharedPtr<FUserAccessTokenDomain> Self;const TFunction<void(TArray<Gs2::Matchmaking::Model::FGatheringPtr>)> OnCollected;const TSharedPtr<Gs2::Matchmaking::Model::FPlayer> QueryPlayer;public:FCollectDoMatchmakingTask(const TSharedPtr<FUserAccessTokenDomain>& Self,TFunction<void(TArray<Gs2::Matchmaking::Model::FGatheringPtr>)> OnCollected,const TSharedPtr<Gs2::Matchmaking::Model::FPlayer> Player):Self(Self),OnCollected(OnCollected),QueryPlayer(Player){}FCollectDoMatchmakingTask(const FCollectDoMatchmakingTask& From):TGs2Future(From),Self(From.Self),OnCollected(From.OnCollected),QueryPlayer(From.QueryPlayer){}Gs2::Core::Model::FGs2ErrorPtr Action(TSharedPtr<TSharedPtr<TArray<Gs2::Matchmaking::Model::FGatheringPtr>>> Result)override{TArray<Gs2::Matchmaking::Model::FGatheringPtr> Items;auto It=Self->DoMatchmaking(QueryPlayer)->begin();while(It.HasNext()){if(It.IsError())return It.Error();if(It.IsCurrentValid())Items.Add(It.Current());++It;}if(It.IsError())return It.Error();*Result=MakeShared<TArray<Gs2::Matchmaking::Model::FGatheringPtr>>(Items);if(OnCollected)OnCollected(Items);return nullptr;}};
+    Gs2::Core::Domain::CallbackID FUserAccessTokenDomain::SubscribeDoMatchmaking(TFunction<void(TArray<Gs2::Matchmaking::Model::FGatheringPtr>)> Callback,const TSharedPtr<Gs2::Matchmaking::Model::FPlayer> Player){const TWeakPtr<Gs2::Core::Domain::FGs2> WeakGs2=Gs2;const TWeakPtr<Matchmaking::Domain::FGs2MatchmakingDomain> WeakService=Service;const auto QN=NamespaceName;const auto QU=AccessToken.IsValid() ? AccessToken->GetUserId() : TOptional<FString>();
+    const auto SourceToken=AccessToken;const auto QP=Player;const auto Parent=Gs2::Matchmaking::Model::Cache::FGatheringCache::CreateCacheParentKey(NamespaceName,AccessToken.IsValid() ? AccessToken->GetUserId() : TOptional<FString>(),AccessToken.IsValid() ? AccessToken->GetTimeOffset() : TOptional<int32>());return Gs2->Cache->ListSubscribeTyped(Gs2::Matchmaking::Model::FGathering::TypeName,Parent,[Callback,WeakGs2](const TArray<FGs2ObjectPtr>& Values){if(!WeakGs2.Pin().IsValid())return;TArray<Gs2::Matchmaking::Model::FGatheringPtr> Out;for(const auto& V:Values)if(V.IsValid())Out.Add(StaticCastSharedPtr<Gs2::Matchmaking::Model::FGathering>(V));Callback(Out);},[WeakGs2,WeakService,Callback,QN,QU,QP,SourceToken](){auto O=WeakGs2.Pin();if(!O.IsValid())return;auto D=MakeShared<FUserAccessTokenDomain>(O,WeakService.Pin(),QN,SourceToken);auto T=Gs2::Core::Util::New<FAsyncTask<FCollectDoMatchmakingTask>>(D,Callback,QP);T->StartBackgroundTask();});}
+    void FUserAccessTokenDomain::InvalidateDoMatchmaking(const TSharedPtr<Gs2::Matchmaking::Model::FPlayer> Player){Gs2->Cache->ClearListCache(Gs2::Matchmaking::Model::FGathering::TypeName,Gs2::Matchmaking::Model::Cache::FGatheringCache::CreateCacheParentKey(NamespaceName,AccessToken.IsValid() ? AccessToken->GetUserId() : TOptional<FString>(),AccessToken.IsValid() ? AccessToken->GetTimeOffset() : TOptional<int32>()));}
+    FUserAccessTokenDomain::FSubscribeDoMatchmakingWithInitialCallTask::FSubscribeDoMatchmakingWithInitialCallTask(const TSharedPtr<FUserAccessTokenDomain>& Self,TFunction<void(TArray<Gs2::Matchmaking::Model::FGatheringPtr>)> Callback,const TSharedPtr<Gs2::Matchmaking::Model::FPlayer> Player):Self(Self),Callback(Callback),QueryPlayer(Player){}
+    FUserAccessTokenDomain::FSubscribeDoMatchmakingWithInitialCallTask::FSubscribeDoMatchmakingWithInitialCallTask(const FSubscribeDoMatchmakingWithInitialCallTask& From):TGs2Future(From),Self(From.Self),Callback(From.Callback),QueryPlayer(From.QueryPlayer){}
+    Gs2::Core::Model::FGs2ErrorPtr FUserAccessTokenDomain::FSubscribeDoMatchmakingWithInitialCallTask::Action(TSharedPtr<TSharedPtr<Gs2::Core::Domain::CallbackID>> Result){auto T=Gs2::Core::Util::New<FAsyncTask<FCollectDoMatchmakingTask>>(Self,TFunction<void(TArray<Gs2::Matchmaking::Model::FGatheringPtr>)>(),QueryPlayer);T->StartSynchronousTask();T->EnsureCompletion();if(T->GetTask().IsError())return T->GetTask().Error();auto V=T->GetTask().Result();auto ID=Self->SubscribeDoMatchmaking(Callback,QueryPlayer);Callback(*V);*Result=MakeShared<Gs2::Core::Domain::CallbackID>(ID);return nullptr;}
+    TSharedPtr<FAsyncTask<FUserAccessTokenDomain::FSubscribeDoMatchmakingWithInitialCallTask>> FUserAccessTokenDomain::SubscribeDoMatchmakingWithInitialCall(TFunction<void(TArray<Gs2::Matchmaking::Model::FGatheringPtr>)> Callback,const TSharedPtr<Gs2::Matchmaking::Model::FPlayer> Player){return Gs2::Core::Util::New<FAsyncTask<FSubscribeDoMatchmakingWithInitialCallTask>>(this->AsShared(),Callback,Player);}
+
     TSharedPtr<Gs2::Matchmaking::Domain::Model::FGatheringAccessTokenDomain> FUserAccessTokenDomain::Gathering(
         const FString GatheringName
     )
@@ -181,28 +195,119 @@ namespace Gs2::Matchmaking::Domain::Model
     {
         return Gs2->Cache->ListSubscribe(
             Gs2::Matchmaking::Model::FRating::TypeName,
-            Gs2::Matchmaking::Domain::Model::FUserDomain::CreateCacheParentKey(
+            Gs2::Matchmaking::Model::Cache::FRatingCache::CreateCacheParentKey(
                 NamespaceName,
-                UserId(),
-                "Rating"
+                AccessToken.IsValid() ? AccessToken->GetUserId() : TOptional<FString>(),
+                AccessToken.IsValid() ? AccessToken->GetTimeOffset() : TOptional<int32>()
             ),
+            Callback,
             Callback
         );
     }
-
     void FUserAccessTokenDomain::UnsubscribeRatings(
         Gs2::Core::Domain::CallbackID CallbackID
     )
     {
         Gs2->Cache->ListUnsubscribe(
             Gs2::Matchmaking::Model::FRating::TypeName,
-            Gs2::Matchmaking::Domain::Model::FUserDomain::CreateCacheParentKey(
+            Gs2::Matchmaking::Model::Cache::FRatingCache::CreateCacheParentKey(
                 NamespaceName,
-                UserId(),
-                "Rating"
+                AccessToken.IsValid() ? AccessToken->GetUserId() : TOptional<FString>(),
+                AccessToken.IsValid() ? AccessToken->GetTimeOffset() : TOptional<int32>()
             ),
             CallbackID
         );
+    }
+    class FUserAccessTokenDomain::FCollectRatingsTask : public Gs2::Core::Util::TGs2Future<TArray<Gs2::Matchmaking::Model::FRatingPtr>>, public TSharedFromThis<FCollectRatingsTask>
+    {
+        const TSharedPtr<FUserAccessTokenDomain> Self;
+        const TFunction<void(TArray<Gs2::Matchmaking::Model::FRatingPtr>)> OnCollected;
+
+    public:
+        explicit FCollectRatingsTask(const TSharedPtr<FUserAccessTokenDomain>& Self, TFunction<void(TArray<Gs2::Matchmaking::Model::FRatingPtr>)> OnCollected) : Self(Self), OnCollected(OnCollected) {}
+        FCollectRatingsTask(const FCollectRatingsTask& From) : TGs2Future(From), Self(From.Self), OnCollected(From.OnCollected) {}
+        virtual Gs2::Core::Model::FGs2ErrorPtr Action(TSharedPtr<TSharedPtr<TArray<Gs2::Matchmaking::Model::FRatingPtr>>> Result) override
+        {
+            TArray<Gs2::Matchmaking::Model::FRatingPtr> Items;
+            auto Iterator = Self->Ratings()->begin();
+            while (Iterator.HasNext())
+            {
+                if (Iterator.IsError()) return Iterator.Error();
+                if (Iterator.IsCurrentValid()) Items.Add(Iterator.Current());
+                ++Iterator;
+            }
+            if (Iterator.IsError()) return Iterator.Error();
+            *Result = MakeShared<TArray<Gs2::Matchmaking::Model::FRatingPtr>>(Items);
+            if (OnCollected) OnCollected(Items);
+            return nullptr;
+        }
+    };
+
+    Gs2::Core::Domain::CallbackID FUserAccessTokenDomain::SubscribeRatings(
+        TFunction<void(TArray<Gs2::Matchmaking::Model::FRatingPtr>)> Callback
+    )
+    {
+        const TWeakPtr<Gs2::Core::Domain::FGs2> WeakGs2 = this->Gs2;
+        const TWeakPtr<Matchmaking::Domain::FGs2MatchmakingDomain> WeakService = this->Service;
+        const auto SourceToken = this->AccessToken;
+        const TOptional<FString> RegisteredUserId = SourceToken.IsValid() ? TOptional<FString>(SourceToken->GetUserId()) : TOptional<FString>();
+        const int32 RegisteredTimeOffset = SourceToken.IsValid() ? SourceToken->GetTimeOffset().Get(0) : 0;
+        const auto QueryNamespaceName = NamespaceName;
+        const auto Parent = Gs2::Matchmaking::Model::Cache::FRatingCache::CreateCacheParentKey(
+        NamespaceName,
+        AccessToken.IsValid() ? AccessToken->GetUserId() : TOptional<FString>(),
+        AccessToken.IsValid() ? AccessToken->GetTimeOffset() : TOptional<int32>()
+    );
+        return Gs2->Cache->ListSubscribeTyped(
+            Gs2::Matchmaking::Model::FRating::TypeName,
+            Parent,
+            [Callback, WeakGs2](const TArray<FGs2ObjectPtr>& Values)
+            {
+                if (!WeakGs2.Pin().IsValid()) return;
+                TArray<Gs2::Matchmaking::Model::FRatingPtr> TypedValues;
+                for (const auto& Value : Values) if (Value.IsValid()) TypedValues.Add(StaticCastSharedPtr<Gs2::Matchmaking::Model::FRating>(Value));
+                Callback(TypedValues);
+            },
+            [WeakGs2, WeakService, Callback, QueryNamespaceName, SourceToken, RegisteredUserId, RegisteredTimeOffset]()
+            {
+                const auto Owner = WeakGs2.Pin();
+                if (!Owner.IsValid() || !SourceToken.IsValid() || !RegisteredUserId.IsSet()) return;
+                const auto TokenSnapshot = MakeShared<Gs2::Auth::Model::FAccessToken>(*SourceToken);
+                if (TokenSnapshot->GetUserId() != RegisteredUserId || TokenSnapshot->GetTimeOffset().Get(0) != RegisteredTimeOffset) return;
+                const auto Domain = MakeShared<FUserAccessTokenDomain>(Owner, WeakService.Pin(), QueryNamespaceName, TokenSnapshot);
+                const auto Task = Gs2::Core::Util::New<FAsyncTask<FCollectRatingsTask>>(Domain, Callback);
+                Task->StartBackgroundTask();
+            }
+        );
+    }
+
+    void FUserAccessTokenDomain::InvalidateRatings()
+    {
+        Gs2->Cache->ClearListCache(
+            Gs2::Matchmaking::Model::FRating::TypeName,
+            Gs2::Matchmaking::Model::Cache::FRatingCache::CreateCacheParentKey(
+        NamespaceName,
+        AccessToken.IsValid() ? AccessToken->GetUserId() : TOptional<FString>(),
+        AccessToken.IsValid() ? AccessToken->GetTimeOffset() : TOptional<int32>()
+    )
+        );
+    }
+
+    FUserAccessTokenDomain::FSubscribeRatingsWithInitialCallTask::FSubscribeRatingsWithInitialCallTask(const TSharedPtr<FUserAccessTokenDomain>& Self, TFunction<void(TArray<Gs2::Matchmaking::Model::FRatingPtr>)> Callback) : Self(Self), Callback(Callback) {}
+    FUserAccessTokenDomain::FSubscribeRatingsWithInitialCallTask::FSubscribeRatingsWithInitialCallTask(const FSubscribeRatingsWithInitialCallTask& From) : TGs2Future(From), Self(From.Self), Callback(From.Callback) {}
+    Gs2::Core::Model::FGs2ErrorPtr FUserAccessTokenDomain::FSubscribeRatingsWithInitialCallTask::Action(TSharedPtr<TSharedPtr<Gs2::Core::Domain::CallbackID>> Result)
+    {
+        const auto Task = Gs2::Core::Util::New<FAsyncTask<FCollectRatingsTask>>(Self, TFunction<void(TArray<Gs2::Matchmaking::Model::FRatingPtr>)>());
+        Task->StartSynchronousTask(); Task->EnsureCompletion();
+        if (Task->GetTask().IsError()) return Task->GetTask().Error();
+        const auto Values = Task->GetTask().Result();
+        const auto CallbackId = Self->SubscribeRatings(Callback);
+        Callback(*Values); *Result = MakeShared<Gs2::Core::Domain::CallbackID>(CallbackId);
+        return nullptr;
+    }
+    TSharedPtr<FAsyncTask<FUserAccessTokenDomain::FSubscribeRatingsWithInitialCallTask>> FUserAccessTokenDomain::SubscribeRatingsWithInitialCall(TFunction<void(TArray<Gs2::Matchmaking::Model::FRatingPtr>)> Callback)
+    {
+        return Gs2::Core::Util::New<FAsyncTask<FSubscribeRatingsWithInitialCallTask>>(this->AsShared(), Callback);
     }
 
     TSharedPtr<Gs2::Matchmaking::Domain::Model::FRatingAccessTokenDomain> FUserAccessTokenDomain::Rating(

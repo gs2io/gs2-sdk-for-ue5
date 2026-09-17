@@ -17,6 +17,8 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "Core/Model/Gs2Error.h"
+#include "Misc/ScopeLock.h"
 
 typedef FString FTypeName;
 typedef FString FParentCacheKey;
@@ -29,26 +31,87 @@ namespace Gs2::Core::Domain
 {
     using CallbackID = int32;
 
-    static int32 DefaultCacheMinutes = 5;
+    // Configure this before starting SDK tasks; concurrent writes are unsupported.
+    GS2CORE_API extern int32 DefaultCacheMinutes;
     
     class GS2CORE_API FCacheDatabase
     {
+        struct FLockRegistry;
+
+        struct FCacheSubscription
+        {
+            TFunction<void(FGs2ObjectPtr)> Update;
+            TFunction<void()> Refetch;
+        };
+
+        struct FListSubscription
+        {
+            TFunction<void()> Update;
+            TFunction<void()> Refetch;
+            TFunction<void(const TArray<FGs2ObjectPtr>&)> TypedUpdate;
+        };
+
+        mutable FCriticalSection Mutex;
         TMap<FTypeName, TMap<FParentCacheKey, TMap<FCacheKey, TTuple<FGs2ObjectPtr, int64>>>> Cache;
-        TMap<FTypeName, TMap<FParentCacheKey, TMap<FCacheKey, TMap<CallbackID, TFunction<void(FGs2ObjectPtr)>>>>> CacheUpdateCallback;
+        TMap<FTypeName, TMap<FParentCacheKey, TMap<FCacheKey, TMap<CallbackID, FCacheSubscription>>>> CacheUpdateCallback;
         TMap<FTypeName, TSet<FParentCacheKey>> ListCached;
-        TMap<FTypeName, TMap<FParentCacheKey, TMap<CallbackID, TFunction<void()>>>> ListCacheUpdateCallback;
+        TMap<FTypeName, TMap<FParentCacheKey, TMap<CallbackID, FListSubscription>>> ListCacheUpdateCallback;
         TMap<FTypeName, TSet<FParentCacheKey>> ListCacheUpdateRequired;
         TMap<FTypeName, TMap<FParentCacheKey, FGs2ObjectPtr>> ListUpdateContexts;
+        TSharedPtr<FLockRegistry> LockRegistry;
+
+        void DispatchNotification(TFunction<void()> Notification);
+        void DispatchNotifications(TArray<TFunction<void()>> Notifications);
+
+        TArray<TFunction<void()>> GetListCallbacksLocked(
+            FTypeName Kind,
+            FParentCacheKey ParentKey
+        );
+
+        TArray<TFunction<void()>> GetListRefetchCallbacksLocked(FTypeName Kind, FParentCacheKey ParentKey) const;
+        TArray<TFunction<void()>> GetItemRefetchCallbacksLocked(FTypeName Kind, FParentCacheKey ParentKey, FCacheKey Key) const;
+        bool TryGetListSnapshot(FTypeName Kind, FParentCacheKey ParentKey, TArray<FGs2ObjectPtr>& Objects, FGs2ObjectPtr* OutUpdateContext, TArray<TFunction<void()>>& RefetchCallbacks);
+        void ClearListCacheLocked(FTypeName Kind, FParentCacheKey ParentKey, TArray<TFunction<void()>>& RefetchCallbacks);
 
     public:
         FCacheDatabase();
         FCacheDatabase(
             const FCacheDatabase& From
         );
+
+        FCacheDatabase& operator=(const FCacheDatabase& From);
         
         ~FCacheDatabase() = default;
 
+        // Keep the returned handle alive for the complete FScopeLock lifetime.
+        TSharedPtr<FCriticalSection> GetLockObject(
+            FTypeName Kind,
+            FParentCacheKey ParentKey,
+            FCacheKey Key
+        );
+
+        template<class TKind>
+        TSharedPtr<FCriticalSection> GetLockObject(
+            FParentCacheKey ParentKey,
+            FCacheKey Key
+        )
+        {
+            return GetLockObject(TKind::TypeName, ParentKey, Key);
+        }
+
+        // Runs a synchronous action under its key lock, then dispatches notifications on this thread.
+        // Same-cache nested actions merge notifications until the outer action unlocks.
+        // Other-cache operations and work on other threads are not covered; avoid cyclic waits.
+        // Keep this cache alive until this call returns and use a consistent nested key order.
+        Gs2::Core::Model::FGs2ErrorPtr ExecuteWithKeyLock(
+            FTypeName Kind,
+            FParentCacheKey ParentKey,
+            FCacheKey Key,
+            const TFunction<Gs2::Core::Model::FGs2ErrorPtr()>& Action
+        );
+
         void Clear();
+        void ClearAndAllUnsubscribe();
         
         void SetListCached(
             FTypeName Kind,
@@ -78,7 +141,8 @@ namespace Gs2::Core::Domain
             FTypeName Kind,
             FParentCacheKey ParentKey,
             FCacheKey Key,
-            const TFunction<void(FGs2ObjectPtr)>& Callback
+            const TFunction<void(FGs2ObjectPtr)>& Callback,
+            const TFunction<void()>& Refetch = TFunction<void()>()
         );
 
         void Unsubscribe(
@@ -91,7 +155,18 @@ namespace Gs2::Core::Domain
         CallbackID ListSubscribe(
             FTypeName Kind,
             FParentCacheKey ParentKey,
-            const TFunction<void()>& Callback
+            const TFunction<void()>& Callback,
+            const TFunction<void()>& Refetch = TFunction<void()>()
+        );
+
+        // Typed list callbacks capture subscription membership at mutation time;
+        // values are captured once at dispatch after item updates. Keep this cache
+        // alive until the enclosing mutation or ExecuteWithKeyLock returns.
+        CallbackID ListSubscribeTyped(
+            FTypeName Kind,
+            FParentCacheKey ParentKey,
+            const TFunction<void(const TArray<FGs2ObjectPtr>&)>& Callback,
+            const TFunction<void()>& Refetch = TFunction<void()>()
         );
 
         void ListUnsubscribe(
@@ -143,47 +218,18 @@ namespace Gs2::Core::Domain
             FGs2ObjectPtr* OutUpdateContext = nullptr
         )
         {
-            auto* ListCache0 = ListCached.Find(TKind::TypeName);
-            if (ListCache0 == nullptr || !ListCache0->Contains(ParentKey)) return nullptr;
-
-            auto* Cache0 = Cache.Find(TKind::TypeName);
-            if (Cache0 == nullptr) return nullptr;
-            auto* Cache1 = Cache0->Find(ParentKey);
-            if (Cache1 == nullptr) return nullptr;
-            auto now = FDateTime::Now().ToUnixTimestamp();
+            TArray<FGs2ObjectPtr> Objects;
+            TArray<TFunction<void()>> RefetchCallbacks;
+            FGs2ObjectPtr Context;
+            const bool Found = TryGetListSnapshot(TKind::TypeName, ParentKey, Objects, &Context, RefetchCallbacks);
+            DispatchNotifications(MoveTemp(RefetchCallbacks));
+            if (OutUpdateContext) *OutUpdateContext = Context;
+            if (!Found) return nullptr;
             auto Result = MakeShared<TArray<TSharedPtr<TKind>>>();
-            for (auto Item : *Cache1)
+            for (const auto& Object : Objects)
             {
-                auto Key = Item.Key;
-                auto Data = Item.Value;
-                if (Data.Value < now)
-                {
-                    ClearListCache(TKind::TypeName, ParentKey);
-                    return nullptr;
-                }
-                if (Data.Key)
-                {
-                    Result->Add(StaticCastSharedPtr<TKind>(Data.Key));
-                }
+                if (Object) Result->Add(StaticCastSharedPtr<TKind>(Object));
             }
-
-            if (OutUpdateContext)
-            {
-                *OutUpdateContext = nullptr;
-
-                auto* ListCacheUpdateRequired0 = ListCacheUpdateRequired.Find(TKind::TypeName);
-                if (ListCacheUpdateRequired0 && ListCacheUpdateRequired0->Contains(ParentKey))
-                {
-                    if (auto* ListUpdateContexts0 = ListUpdateContexts.Find(TKind::TypeName))
-                    {
-                        if (auto* UpdateContext = ListUpdateContexts0->Find(ParentKey))
-                        {
-                            *OutUpdateContext = *UpdateContext;
-                        }
-                    }
-                }
-            }
-
             return Result;
         }
     };

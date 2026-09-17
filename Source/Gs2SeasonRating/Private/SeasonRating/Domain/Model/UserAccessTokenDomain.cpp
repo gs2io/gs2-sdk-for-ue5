@@ -34,6 +34,7 @@
 #include "SeasonRating/Domain/Model/Vote.h"
 #include "SeasonRating/Domain/Model/User.h"
 #include "SeasonRating/Domain/Model/UserAccessToken.h"
+#include "SeasonRating/Model/Cache/Ballot.h"
 
 #include "Core/Domain/Gs2.h"
 #include "Core/Domain/Transaction/JobQueueJobDomainFactory.h"
@@ -120,4 +121,3 @@ namespace Gs2::SeasonRating::Domain::Model
 #elif defined(__clang__)
 #pragma clang diagnostic pop
 #endif
-

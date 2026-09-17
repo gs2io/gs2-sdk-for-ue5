@@ -19,6 +19,7 @@
 #include "CoreMinimal.h"
 #include "Dom/JsonObject.h"
 #include "../Model/TransactionSetting.h"
+#include "../Model/TransactionSettingV2.h"
 #include "../Model/ScriptSetting.h"
 #include "../Model/LogSetting.h"
 
@@ -32,6 +33,7 @@ namespace Gs2::Quest::Request
         TOptional<FString> NamespaceNameValue;
         TOptional<FString> DescriptionValue;
         TSharedPtr<Model::FTransactionSetting> TransactionSettingValue;
+        TSharedPtr<Model::FTransactionSettingV2> TransactionSettingV2Value;
         TSharedPtr<Model::FScriptSetting> StartQuestScriptValue;
         TSharedPtr<Model::FScriptSetting> CompleteQuestScriptValue;
         TSharedPtr<Model::FScriptSetting> FailedQuestScriptValue;
@@ -51,6 +53,7 @@ namespace Gs2::Quest::Request
         TSharedPtr<FUpdateNamespaceRequest> WithNamespaceName(const TOptional<FString> NamespaceName);
         TSharedPtr<FUpdateNamespaceRequest> WithDescription(const TOptional<FString> Description);
         TSharedPtr<FUpdateNamespaceRequest> WithTransactionSetting(const TSharedPtr<Model::FTransactionSetting> TransactionSetting);
+        TSharedPtr<FUpdateNamespaceRequest> WithTransactionSettingV2(const TSharedPtr<Model::FTransactionSettingV2> TransactionSettingV2);
         TSharedPtr<FUpdateNamespaceRequest> WithStartQuestScript(const TSharedPtr<Model::FScriptSetting> StartQuestScript);
         TSharedPtr<FUpdateNamespaceRequest> WithCompleteQuestScript(const TSharedPtr<Model::FScriptSetting> CompleteQuestScript);
         TSharedPtr<FUpdateNamespaceRequest> WithFailedQuestScript(const TSharedPtr<Model::FScriptSetting> FailedQuestScript);
@@ -62,6 +65,7 @@ namespace Gs2::Quest::Request
         TOptional<FString> GetNamespaceName() const;
         TOptional<FString> GetDescription() const;
         TSharedPtr<Model::FTransactionSetting> GetTransactionSetting() const;
+        TSharedPtr<Model::FTransactionSettingV2> GetTransactionSettingV2() const;
         TSharedPtr<Model::FScriptSetting> GetStartQuestScript() const;
         TSharedPtr<Model::FScriptSetting> GetCompleteQuestScript() const;
         TSharedPtr<Model::FScriptSetting> GetFailedQuestScript() const;

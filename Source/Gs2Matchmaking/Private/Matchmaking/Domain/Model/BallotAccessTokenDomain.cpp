@@ -22,34 +22,9 @@
 #pragma clang diagnostic ignored "-Wshadow" // declaration shadows a field of
 #endif
 
-#include "Matchmaking/Domain/Model/BallotAccessToken.h"
-#include "Matchmaking/Domain/Model/Ballot.h"
-#include "Matchmaking/Domain/Model/Namespace.h"
-#include "Matchmaking/Domain/Model/Gathering.h"
-#include "Matchmaking/Domain/Model/GatheringAccessToken.h"
-#include "Matchmaking/Domain/Model/RatingModelMaster.h"
-#include "Matchmaking/Domain/Model/RatingModel.h"
-#include "Matchmaking/Domain/Model/CurrentModelMaster.h"
-#include "Matchmaking/Domain/Model/User.h"
-#include "Matchmaking/Domain/Model/UserAccessToken.h"
-#include "Matchmaking/Domain/Model/Season.h"
-#include "Matchmaking/Domain/Model/SeasonAccessToken.h"
-#include "Matchmaking/Domain/Model/SeasonModel.h"
-#include "Matchmaking/Domain/Model/SeasonModelMaster.h"
-#include "Matchmaking/Domain/Model/SeasonGathering.h"
-#include "Matchmaking/Domain/Model/SeasonGatheringAccessToken.h"
-#include "Matchmaking/Domain/Model/JoinedSeasonGathering.h"
-#include "Matchmaking/Domain/Model/JoinedSeasonGatheringAccessToken.h"
-#include "Matchmaking/Domain/Model/Rating.h"
-#include "Matchmaking/Domain/Model/RatingAccessToken.h"
 #include "Matchmaking/Domain/Model/Ballot.h"
 #include "Matchmaking/Domain/Model/BallotAccessToken.h"
-#include "Matchmaking/Domain/Model/Vote.h"
-
 #include "Core/Domain/Gs2.h"
-#include "Core/Domain/Transaction/JobQueueJobDomainFactory.h"
-#include "Core/Domain/Transaction/InternalTransactionDomainFactory.h"
-#include "Core/Domain/Transaction/ManualTransactionAccessTokenDomain.h"
 
 namespace Gs2::Matchmaking::Domain::Model
 {
@@ -74,11 +49,7 @@ namespace Gs2::Matchmaking::Domain::Model
         GatheringName(GatheringName),
         NumberOfPlayer(NumberOfPlayer),
         KeyId(KeyId),
-        ParentKey(Gs2::Matchmaking::Domain::Model::FUserDomain::CreateCacheParentKey(
-            NamespaceName,
-            UserId(),
-            "Ballot"
-        ))
+        ParentKey(Gs2::Matchmaking::Domain::Model::FBallotDomain::CreateSignedCacheParentKey(NamespaceName, UserId(), AccessToken.IsValid() ? AccessToken->GetTimeOffset() : TOptional<int32>()))
     {
     }
 
@@ -114,7 +85,7 @@ namespace Gs2::Matchmaking::Domain::Model
     }
 
     Gs2::Core::Model::FGs2ErrorPtr FBallotAccessTokenDomain::FGetTask::Action(
-        TSharedPtr<TSharedPtr<Gs2::Matchmaking::Model::FBallot>> Result
+        TSharedPtr<TSharedPtr<Gs2::Matchmaking::Model::FSignedBallot>> Result
     )
     {
         Request
@@ -122,20 +93,27 @@ namespace Gs2::Matchmaking::Domain::Model
             ->WithNamespaceName(Self->NamespaceName)
             ->WithRatingName(Self->RatingName)
             ->WithGatheringName(Self->GatheringName)
-            ->WithAccessToken(Self->AccessToken->GetToken())
+            ->WithAccessToken(Self->AccessToken.IsValid() ? Self->AccessToken->GetToken() : TOptional<FString>())
             ->WithNumberOfPlayer(Self->NumberOfPlayer)
             ->WithKeyId(Self->KeyId);
-        const auto Future = Self->Client->GetBallot(
-            Request
-        );
+        const auto Future = Self->Client->GetBallot(Request);
         Future->StartSynchronousTask();
+        Future->EnsureCompletion();
         if (Future->GetTask().IsError())
         {
             return Future->GetTask().Error();
         }
-        const auto ResultModel = Future->GetTask().Result();
-        Future->EnsureCompletion();
-        *Result = ResultModel->GetItem();
+        const auto Response = Future->GetTask().Result();
+        Gs2::Matchmaking::Model::FSignedBallotPtr Value;
+        if (Response.IsValid())
+        {
+            Value = MakeShared<Gs2::Matchmaking::Model::FSignedBallot>()
+                ->WithBody(Response->GetBody())
+                ->WithSignature(Response->GetSignature());
+        }
+        Self->Body = Value.IsValid() ? Value->GetBody() : TOptional<FString>();
+        Self->Signature = Value.IsValid() ? Value->GetSignature() : TOptional<FString>();
+        *Result = Value;
         return nullptr;
     }
 
@@ -172,11 +150,7 @@ namespace Gs2::Matchmaking::Domain::Model
         TOptional<FString> KeyId
     )
     {
-        return FString("") +
-            (RatingName.IsSet() ? *RatingName : "null") + ":" + 
-            (GatheringName.IsSet() ? *GatheringName : "null") + ":" + 
-            (NumberOfPlayer.IsSet() ? FString::FromInt(*NumberOfPlayer) : "null") + ":" + 
-            (KeyId.IsSet() ? *KeyId : "null");
+        return RatingName.Get(FString()) + ":" + GatheringName.Get(FString());
     }
 
     FBallotAccessTokenDomain::FModelTask::FModelTask(
@@ -194,61 +168,52 @@ namespace Gs2::Matchmaking::Domain::Model
     }
 
     Gs2::Core::Model::FGs2ErrorPtr FBallotAccessTokenDomain::FModelTask::Action(
-        TSharedPtr<TSharedPtr<Gs2::Matchmaking::Model::FBallot>> Result
+        TSharedPtr<TSharedPtr<Gs2::Matchmaking::Model::FSignedBallot>> Result
     )
     {
-        // ReSharper disable once CppLocalVariableMayBeConst
-        TSharedPtr<Gs2::Matchmaking::Model::FBallot> Value;
-        auto bCacheHit = Self->Gs2->Cache->TryGet<Gs2::Matchmaking::Model::FBallot>(
-            Self->ParentKey,
-            Gs2::Matchmaking::Domain::Model::FBallotDomain::CreateCacheKey(
-                Self->RatingName,
-                Self->GatheringName,
-                Self->NumberOfPlayer,
-                Self->KeyId
-            ),
-            &Value
+        const FString CacheKey = Gs2::Matchmaking::Domain::Model::FBallotDomain::CreateCacheKey(Self->RatingName, Self->GatheringName);
+        const FString CacheParentKey = Gs2::Matchmaking::Domain::Model::FBallotDomain::CreateSignedCacheParentKey(Self->NamespaceName, Self->UserId(), Self->AccessToken.IsValid() ? Self->AccessToken->GetTimeOffset() : TOptional<int32>());
+        return Self->Gs2->Cache->ExecuteWithKeyLock(
+            Gs2::Matchmaking::Model::FSignedBallot::TypeName,
+            CacheParentKey,
+            CacheKey,
+            [this, Result, CacheKey, CacheParentKey]() -> Gs2::Core::Model::FGs2ErrorPtr
+            {
+                Gs2::Matchmaking::Model::FSignedBallotPtr Value;
+                if (!Self->Gs2->Cache->TryGet<Gs2::Matchmaking::Model::FSignedBallot>(CacheParentKey, CacheKey, &Value))
+                {
+                    const auto Future = Self->Get(MakeShared<Gs2::Matchmaking::Request::FGetBallotRequest>());
+                    Future->StartSynchronousTask();
+                    Future->EnsureCompletion();
+                    if (Future->GetTask().IsError())
+                    {
+                        const auto Error = Future->GetTask().Error();
+                        if (!Error.IsValid() || Error->Type() != Gs2::Core::Model::FNotFoundError::TypeString)
+                        {
+                            return Error;
+                        }
+                        Self->Gs2->Cache->Put(
+                            Gs2::Matchmaking::Model::FSignedBallot::TypeName, CacheParentKey, CacheKey, nullptr,
+                            FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes));
+                        if (!Error->GetErrors().IsValid() || Error->Count() == 0 || !Error->Detail(0).IsValid() || Error->Detail(0)->GetComponent() != "ballot")
+                        {
+                            return Error;
+                        }
+                    }
+                    else
+                    {
+                        Value = Future->GetTask().Result();
+                        Self->Gs2->Cache->Put(
+                            Gs2::Matchmaking::Model::FSignedBallot::TypeName, CacheParentKey, CacheKey, Value,
+                            FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes));
+                    }
+                }
+                Self->Body = Value.IsValid() ? Value->GetBody() : TOptional<FString>();
+                Self->Signature = Value.IsValid() ? Value->GetSignature() : TOptional<FString>();
+                *Result = Value;
+                return nullptr;
+            }
         );
-        if (!bCacheHit) {
-            const auto Future = Self->Get(
-                MakeShared<Gs2::Matchmaking::Request::FGetBallotRequest>()
-            );
-            Future->StartSynchronousTask();
-            if (Future->GetTask().IsError())
-            {
-                if (Future->GetTask().Error()->Type() != Gs2::Core::Model::FNotFoundError::TypeString)
-                {
-                    return Future->GetTask().Error();
-                }
-
-                const auto Key = Gs2::Matchmaking::Domain::Model::FBallotDomain::CreateCacheKey(
-                    Self->RatingName,
-                    Self->GatheringName,
-                    Self->NumberOfPlayer,
-                    Self->KeyId
-                );
-                Self->Gs2->Cache->Put(
-                    Gs2::Matchmaking::Model::FBallot::TypeName,
-                    Self->ParentKey,
-                    Key,
-                    nullptr,
-                    FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
-                );
-
-                if (Future->GetTask().Error()->Detail(0)->GetComponent() != "ballot")
-                {
-                    return Future->GetTask().Error();
-                }
-            }
-            else
-            {
-                Value = Future->GetTask().Result();
-            }
-            Future->EnsureCompletion();
-        }
-        *Result = Value;
-
-        return nullptr;
     }
 
     TSharedPtr<FAsyncTask<FBallotAccessTokenDomain::FModelTask>> FBallotAccessTokenDomain::Model() {
@@ -256,21 +221,61 @@ namespace Gs2::Matchmaking::Domain::Model
     }
 
     Gs2::Core::Domain::CallbackID FBallotAccessTokenDomain::Subscribe(
-        TFunction<void(Gs2::Matchmaking::Model::FBallotPtr)> Callback
+        TFunction<void(Gs2::Matchmaking::Model::FSignedBallotPtr)> Callback
     )
     {
+        const TWeakPtr<Gs2::Core::Domain::FGs2> WeakGs2 = Gs2;
+        const TWeakPtr<Matchmaking::Domain::FGs2MatchmakingDomain> WeakService = Service;
+        const TOptional<FString> QueryNamespaceName = NamespaceName;
+        const TOptional<FString> QueryRatingName = RatingName;
+        const TOptional<FString> QueryGatheringName = GatheringName;
+        const TOptional<int32> QueryNumberOfPlayer = NumberOfPlayer;
+        const TOptional<FString> QueryKeyId = KeyId;
+        const auto SourceToken = AccessToken;
+        const TOptional<FString> RegisteredUserId = SourceToken.IsValid()
+            ? TOptional<FString>(SourceToken->GetUserId())
+            : TOptional<FString>();
+        const int32 RegisteredTimeOffset = SourceToken.IsValid()
+            ? SourceToken->GetTimeOffset().Get(0)
+            : 0;
+        const FString RegisteredParentKey = FBallotDomain::CreateSignedCacheParentKey(
+            QueryNamespaceName, RegisteredUserId, RegisteredTimeOffset
+        );
+        const FString RegisteredCacheKey = FBallotDomain::CreateCacheKey(QueryRatingName, QueryGatheringName);
+
         return Gs2->Cache->Subscribe(
-            Gs2::Matchmaking::Model::FBallot::TypeName,
-            ParentKey,
-            Gs2::Matchmaking::Domain::Model::FBallotDomain::CreateCacheKey(
-                RatingName,
-                GatheringName,
-                NumberOfPlayer,
-                KeyId
-            ),
-            [Callback](TSharedPtr<FGs2Object> obj)
+            Gs2::Matchmaking::Model::FSignedBallot::TypeName,
+            RegisteredParentKey,
+            RegisteredCacheKey,
+            [Callback](TSharedPtr<FGs2Object> Obj)
             {
-                Callback(StaticCastSharedPtr<Gs2::Matchmaking::Model::FBallot>(obj));
+                Callback(StaticCastSharedPtr<Gs2::Matchmaking::Model::FSignedBallot>(Obj));
+            },
+            [WeakGs2, WeakService, QueryNamespaceName, QueryRatingName, QueryGatheringName, QueryNumberOfPlayer, QueryKeyId, SourceToken, RegisteredUserId, RegisteredTimeOffset]()
+            {
+                const auto Owner = WeakGs2.Pin();
+                if (!Owner.IsValid() || !SourceToken.IsValid())
+                {
+                    return;
+                }
+                const auto TokenSnapshot = MakeShared<Gs2::Auth::Model::FAccessToken>(*SourceToken);
+                if (TokenSnapshot->GetUserId() != RegisteredUserId ||
+                    TokenSnapshot->GetTimeOffset().Get(0) != RegisteredTimeOffset)
+                {
+                    return;
+                }
+                const auto Domain = MakeShared<FBallotAccessTokenDomain>(
+                    Owner,
+                    WeakService.Pin(),
+                    QueryNamespaceName,
+                    TokenSnapshot,
+                    QueryRatingName,
+                    QueryGatheringName,
+                    QueryNumberOfPlayer,
+                    QueryKeyId
+                );
+                const auto Task = Domain->Model();
+                Task->StartBackgroundTask();
             }
         );
     }
@@ -280,14 +285,9 @@ namespace Gs2::Matchmaking::Domain::Model
     )
     {
         Gs2->Cache->Unsubscribe(
-            Gs2::Matchmaking::Model::FBallot::TypeName,
-            ParentKey,
-            Gs2::Matchmaking::Domain::Model::FBallotDomain::CreateCacheKey(
-                RatingName,
-                GatheringName,
-                NumberOfPlayer,
-                KeyId
-            ),
+            Gs2::Matchmaking::Model::FSignedBallot::TypeName,
+            Gs2::Matchmaking::Domain::Model::FBallotDomain::CreateSignedCacheParentKey(NamespaceName, UserId(), AccessToken.IsValid() ? AccessToken->GetTimeOffset() : TOptional<int32>()),
+            Gs2::Matchmaking::Domain::Model::FBallotDomain::CreateCacheKey(RatingName, GatheringName),
             CallbackID
         );
     }
@@ -298,4 +298,3 @@ namespace Gs2::Matchmaking::Domain::Model
 #elif defined(__clang__)
 #pragma clang diagnostic pop
 #endif
-

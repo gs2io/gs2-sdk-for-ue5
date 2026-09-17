@@ -85,6 +85,8 @@ namespace Gs2::Money::Domain::Model
             const FUserDomain& From
         );
 
+
+
         class GS2MONEY_API FRecordReceiptTask final :
             public Gs2::Core::Util::TGs2Future<Gs2::Money::Domain::Model::FReceiptDomain>,
             public TSharedFromThis<FRecordReceiptTask>
@@ -110,6 +112,8 @@ namespace Gs2::Money::Domain::Model
         TSharedPtr<FAsyncTask<FRecordReceiptTask>> RecordReceipt(
             Request::FRecordReceiptRequestPtr Request
         );
+
+
 
         class GS2MONEY_API FRevertRecordReceiptTask final :
             public Gs2::Core::Util::TGs2Future<Gs2::Money::Domain::Model::FReceiptDomain>,
@@ -143,8 +147,33 @@ namespace Gs2::Money::Domain::Model
 
         Gs2::Core::Domain::CallbackID SubscribeWallets(
             TFunction<void()> Callback
+
         );
 
+        class FCollectWalletsTask;
+
+        Gs2::Core::Domain::CallbackID SubscribeWallets(
+            TFunction<void(TArray<Gs2::Money::Model::FWalletPtr>)> Callback,const TOptional<FString> TimeOffsetToken = TOptional<FString>()
+        );
+
+        void InvalidateWallets(const TOptional<FString> TimeOffsetToken = TOptional<FString>());
+
+        class GS2MONEY_API FSubscribeWalletsWithInitialCallTask final :
+            public Gs2::Core::Util::TGs2Future<Gs2::Core::Domain::CallbackID>,
+            public TSharedFromThis<FSubscribeWalletsWithInitialCallTask>
+        {
+            const TSharedPtr<FUserDomain> Self;
+            const TFunction<void(TArray<Gs2::Money::Model::FWalletPtr>)> Callback;
+        const TOptional<FString> QueryTimeOffsetToken;
+        public:
+            FSubscribeWalletsWithInitialCallTask(const TSharedPtr<FUserDomain>& Self, TFunction<void(TArray<Gs2::Money::Model::FWalletPtr>)> Callback,const TOptional<FString> TimeOffsetToken);
+            FSubscribeWalletsWithInitialCallTask(const FSubscribeWalletsWithInitialCallTask& From);
+            virtual Gs2::Core::Model::FGs2ErrorPtr Action(TSharedPtr<TSharedPtr<Gs2::Core::Domain::CallbackID>> Result) override;
+        };
+
+        TSharedPtr<FAsyncTask<FSubscribeWalletsWithInitialCallTask>> SubscribeWalletsWithInitialCall(
+            TFunction<void(TArray<Gs2::Money::Model::FWalletPtr>)> Callback,const TOptional<FString> TimeOffsetToken = TOptional<FString>()
+        );
         void UnsubscribeWallets(
             Gs2::Core::Domain::CallbackID CallbackID
         );
@@ -162,8 +191,33 @@ namespace Gs2::Money::Domain::Model
 
         Gs2::Core::Domain::CallbackID SubscribeReceipts(
             TFunction<void()> Callback
+
         );
 
+        class FCollectReceiptsTask;
+
+        Gs2::Core::Domain::CallbackID SubscribeReceipts(
+            TFunction<void(TArray<Gs2::Money::Model::FReceiptPtr>)> Callback,const TOptional<int32> Slot = TOptional<int32>(),const TOptional<int64> Begin = TOptional<int64>(),const TOptional<int64> End = TOptional<int64>(),const TOptional<FString> TimeOffsetToken = TOptional<FString>()
+        );
+
+        void InvalidateReceipts(const TOptional<int32> Slot = TOptional<int32>(),const TOptional<int64> Begin = TOptional<int64>(),const TOptional<int64> End = TOptional<int64>(),const TOptional<FString> TimeOffsetToken = TOptional<FString>());
+
+        class GS2MONEY_API FSubscribeReceiptsWithInitialCallTask final :
+            public Gs2::Core::Util::TGs2Future<Gs2::Core::Domain::CallbackID>,
+            public TSharedFromThis<FSubscribeReceiptsWithInitialCallTask>
+        {
+            const TSharedPtr<FUserDomain> Self;
+            const TFunction<void(TArray<Gs2::Money::Model::FReceiptPtr>)> Callback;
+        const TOptional<int32> QuerySlot;const TOptional<int64> QueryBegin;const TOptional<int64> QueryEnd;const TOptional<FString> QueryTimeOffsetToken;
+        public:
+            FSubscribeReceiptsWithInitialCallTask(const TSharedPtr<FUserDomain>& Self, TFunction<void(TArray<Gs2::Money::Model::FReceiptPtr>)> Callback,const TOptional<int32> Slot,const TOptional<int64> Begin,const TOptional<int64> End,const TOptional<FString> TimeOffsetToken);
+            FSubscribeReceiptsWithInitialCallTask(const FSubscribeReceiptsWithInitialCallTask& From);
+            virtual Gs2::Core::Model::FGs2ErrorPtr Action(TSharedPtr<TSharedPtr<Gs2::Core::Domain::CallbackID>> Result) override;
+        };
+
+        TSharedPtr<FAsyncTask<FSubscribeReceiptsWithInitialCallTask>> SubscribeReceiptsWithInitialCall(
+            TFunction<void(TArray<Gs2::Money::Model::FReceiptPtr>)> Callback,const TOptional<int32> Slot = TOptional<int32>(),const TOptional<int64> Begin = TOptional<int64>(),const TOptional<int64> End = TOptional<int64>(),const TOptional<FString> TimeOffsetToken = TOptional<FString>()
+        );
         void UnsubscribeReceipts(
             Gs2::Core::Domain::CallbackID CallbackID
         );

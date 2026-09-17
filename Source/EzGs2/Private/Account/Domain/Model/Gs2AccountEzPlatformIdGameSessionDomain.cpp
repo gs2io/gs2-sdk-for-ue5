@@ -250,7 +250,7 @@ namespace Gs2::UE5::Account::Domain::Model
     Gs2::Core::Domain::CallbackID FEzPlatformIdGameSessionDomain::Subscribe(TFunction<void(Gs2::UE5::Account::Model::FEzPlatformIdPtr)> Callback)
     {
         return Domain->Subscribe(
-            [&](Gs2::Account::Model::FPlatformIdPtr Item)
+            [Callback](Gs2::Account::Model::FPlatformIdPtr Item)
             {
                 Callback(Gs2::UE5::Account::Model::FEzPlatformId::FromModel(Item));
             }

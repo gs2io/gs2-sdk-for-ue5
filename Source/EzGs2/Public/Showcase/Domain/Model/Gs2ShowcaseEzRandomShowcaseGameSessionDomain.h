@@ -64,7 +64,8 @@ namespace Gs2::UE5::Showcase::Domain::Model
 
         Gs2::Core::Domain::CallbackID SubscribeRandomDisplayItems(TFunction<void()> Callback);
 
-        void UnsubscribeRandomDisplayItems(Gs2::Core::Domain::CallbackID CallbackId);
+        void UnsubscribeRandomDisplayItems(
+                Gs2::Core::Domain::CallbackID CallbackId);
 
         Gs2::UE5::Showcase::Domain::Model::FEzRandomDisplayItemGameSessionDomainPtr RandomDisplayItem(
             const FString DisplayItemName

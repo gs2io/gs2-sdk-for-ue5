@@ -32,6 +32,7 @@
 #include "Schedule/Domain/Model/User.h"
 #include "Schedule/Domain/Model/UserAccessToken.h"
 #include "Schedule/Domain/Model/CurrentEventMaster.h"
+#include "Schedule/Model/Cache/CurrentEventMaster.h"
 
 #include "Core/Domain/Gs2.h"
 #include "Core/Domain/Transaction/JobQueueJobDomainFactory.h"
@@ -101,18 +102,19 @@ namespace Gs2::Schedule::Domain::Model
         }
         const auto ResultModel = Future->GetTask().Result();
         Future->EnsureCompletion();
-        if (ResultModel->GetItem() != nullptr)
-        {
-            const auto Key = Gs2::Schedule::Domain::Model::FCurrentEventMasterDomain::CreateCacheKey(
-            );
-            Self->Gs2->Cache->Put(
-                Gs2::Schedule::Model::FCurrentEventMaster::TypeName,
-                Self->ParentKey,
-                Key,
-                ResultModel->GetItem(),
-                FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
-            );
-        }
+
+            if (ResultModel.IsValid() && ResultModel->GetItem() != nullptr)
+            {
+
+
+        Gs2::Schedule::Model::Cache::FCurrentEventMasterCache::Put(
+            Self->Gs2->Cache,
+
+            Request->GetNamespaceName(),
+            TOptional<int32>(),
+            ResultModel->GetItem()
+        );
+            }
         auto Domain = Self;
 
         *Result = Domain;
@@ -156,6 +158,19 @@ namespace Gs2::Schedule::Domain::Model
         }
         const auto ResultModel = Future->GetTask().Result();
         Future->EnsureCompletion();
+
+            if (ResultModel.IsValid() && ResultModel->GetItem() != nullptr)
+            {
+
+
+        Gs2::Schedule::Model::Cache::FCurrentEventMasterCache::Put(
+            Self->Gs2->Cache,
+
+            Request->GetNamespaceName(),
+            TOptional<int32>(),
+            ResultModel->GetItem()
+        );
+            }
         *Result = ResultModel->GetItem();
         return nullptr;
     }
@@ -197,6 +212,7 @@ namespace Gs2::Schedule::Domain::Model
         }
         const auto ResultModel = Future->GetTask().Result();
         Future->EnsureCompletion();
+
         const auto Domain = Self;
         if (ResultModel != nullptr)
         {
@@ -250,18 +266,19 @@ namespace Gs2::Schedule::Domain::Model
         }
         const auto ResultModel = Future->GetTask().Result();
         Future->EnsureCompletion();
-        if (ResultModel->GetItem() != nullptr)
-        {
-            const auto Key = Gs2::Schedule::Domain::Model::FCurrentEventMasterDomain::CreateCacheKey(
-            );
-            Self->Gs2->Cache->Put(
-                Gs2::Schedule::Model::FCurrentEventMaster::TypeName,
-                Self->ParentKey,
-                Key,
-                ResultModel->GetItem(),
-                FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
-            );
-        }
+
+            if (ResultModel.IsValid() && ResultModel->GetItem() != nullptr)
+            {
+
+
+        Gs2::Schedule::Model::Cache::FCurrentEventMasterCache::Put(
+            Self->Gs2->Cache,
+
+            Request->GetNamespaceName(),
+            TOptional<int32>(),
+            ResultModel->GetItem()
+        );
+            }
         auto Domain = Self;
 
         *Result = Domain;
@@ -305,18 +322,19 @@ namespace Gs2::Schedule::Domain::Model
         }
         const auto ResultModel = Future->GetTask().Result();
         Future->EnsureCompletion();
-        if (ResultModel->GetItem() != nullptr)
-        {
-            const auto Key = Gs2::Schedule::Domain::Model::FCurrentEventMasterDomain::CreateCacheKey(
-            );
-            Self->Gs2->Cache->Put(
-                Gs2::Schedule::Model::FCurrentEventMaster::TypeName,
-                Self->ParentKey,
-                Key,
-                ResultModel->GetItem(),
-                FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
-            );
-        }
+
+            if (ResultModel.IsValid() && ResultModel->GetItem() != nullptr)
+            {
+
+
+        Gs2::Schedule::Model::Cache::FCurrentEventMasterCache::Put(
+            Self->Gs2->Cache,
+
+            Request->GetNamespaceName(),
+            TOptional<int32>(),
+            ResultModel->GetItem()
+        );
+            }
         auto Domain = Self;
 
         *Result = Domain;
@@ -363,68 +381,151 @@ namespace Gs2::Schedule::Domain::Model
         TSharedPtr<TSharedPtr<Gs2::Schedule::Model::FCurrentEventMaster>> Result
     )
     {
-        // ReSharper disable once CppLocalVariableMayBeConst
-        TSharedPtr<Gs2::Schedule::Model::FCurrentEventMaster> Value;
-        auto bCacheHit = Self->Gs2->Cache->TryGet<Gs2::Schedule::Model::FCurrentEventMaster>(
-            Self->ParentKey,
-            Gs2::Schedule::Domain::Model::FCurrentEventMasterDomain::CreateCacheKey(
-            ),
-            &Value
+        const auto CacheParentKey = Gs2::Schedule::Model::Cache::FCurrentEventMasterCache::CreateCacheParentKey(
+
+            Self->NamespaceName,
+            TOptional<int32>()
         );
-        if (!bCacheHit) {
-            const auto Future = Self->Get(
-                MakeShared<Gs2::Schedule::Request::FGetCurrentEventMasterRequest>()
-            );
-            Future->StartSynchronousTask();
-            if (Future->GetTask().IsError())
+        const auto CacheKey = Gs2::Schedule::Model::Cache::FCurrentEventMasterCache::CreateCacheKey(
+
+        );
+        return Self->Gs2->Cache->ExecuteWithKeyLock(
+            Gs2::Schedule::Model::FCurrentEventMaster::TypeName,
+            CacheParentKey,
+            CacheKey,
+            [Self = Self, Result]() -> Gs2::Core::Model::FGs2ErrorPtr
             {
-                if (Future->GetTask().Error()->Type() != Gs2::Core::Model::FNotFoundError::TypeString)
-                {
-                    return Future->GetTask().Error();
-                }
+                Gs2::Schedule::Model::FCurrentEventMasterPtr Value;
+                const auto CacheHit = Gs2::Schedule::Model::Cache::FCurrentEventMasterCache::TryGet(
+                    Self->Gs2->Cache,
 
-                const auto Key = Gs2::Schedule::Domain::Model::FCurrentEventMasterDomain::CreateCacheKey(
+                    Self->NamespaceName,
+                    TOptional<int32>(),
+                    &Value
                 );
-                Self->Gs2->Cache->Put(
-                    Gs2::Schedule::Model::FCurrentEventMaster::TypeName,
-                    Self->ParentKey,
-                    Key,
-                    nullptr,
-                    FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
-                );
-
-                if (Future->GetTask().Error()->Detail(0)->GetComponent() != "currentEventMaster")
+                if (CacheHit)
                 {
-                    return Future->GetTask().Error();
+                    *Result = Value;
+                    return nullptr;
                 }
-            }
-            else
-            {
-                Value = Future->GetTask().Result();
-            }
-            Future->EnsureCompletion();
-        }
-        *Result = Value;
+                const auto Error = Gs2::Schedule::Model::Cache::FCurrentEventMasterCache::Fetch(
+                    Self->Gs2->Cache,
 
-        return nullptr;
+                    Self->NamespaceName,
+                    TOptional<int32>(),
+                    [Self](Gs2::Schedule::Model::FCurrentEventMasterPtr* OutItem) -> Gs2::Core::Model::FGs2ErrorPtr
+                    {
+                        const auto Future = Self->Get(
+                            MakeShared<Gs2::Schedule::Request::FGetCurrentEventMasterRequest>()
+                        );
+                        Future->StartSynchronousTask();
+                        if (Future->GetTask().IsError()) return Future->GetTask().Error();
+                        *OutItem = Future->GetTask().Result();
+                        Future->EnsureCompletion();
+                        return nullptr;
+                    },
+                    &Value
+                );
+                if (Error.IsValid()) return Error;
+                *Result = Value;
+                return nullptr;
+            }
+        );
     }
 
     TSharedPtr<FAsyncTask<FCurrentEventMasterDomain::FModelTask>> FCurrentEventMasterDomain::Model() {
         return Gs2::Core::Util::New<FAsyncTask<FCurrentEventMasterDomain::FModelTask>>(this->AsShared());
     }
 
+    void FCurrentEventMasterDomain::Invalidate()
+    {
+        Gs2::Schedule::Model::Cache::FCurrentEventMasterCache::Delete(
+            Gs2->Cache,
+
+            NamespaceName,
+            TOptional<int32>()
+        );
+    }
+
+    FCurrentEventMasterDomain::FSubscribeWithInitialCallTask::FSubscribeWithInitialCallTask(
+        const TSharedPtr<FCurrentEventMasterDomain>& Self,
+        TFunction<void(Gs2::Schedule::Model::FCurrentEventMasterPtr)> Callback
+    ):
+        Self(Self),
+        Callback(Callback)
+    {
+    }
+
+    FCurrentEventMasterDomain::FSubscribeWithInitialCallTask::FSubscribeWithInitialCallTask(
+        const FSubscribeWithInitialCallTask& From
+    ):
+        TGs2Future(From),
+        Self(From.Self),
+        Callback(From.Callback)
+    {
+    }
+
+    Gs2::Core::Model::FGs2ErrorPtr FCurrentEventMasterDomain::FSubscribeWithInitialCallTask::Action(
+        TSharedPtr<TSharedPtr<Gs2::Core::Domain::CallbackID>> Result
+    )
+    {
+        const auto Task = Self->Model();
+        Task->StartSynchronousTask();
+        Task->EnsureCompletion();
+        if (Task->GetTask().IsError()) return Task->GetTask().Error();
+        const auto Item = Task->GetTask().Result();
+        const auto CallbackId = Self->Subscribe(Callback);
+        Callback(Item);
+        *Result = MakeShared<Gs2::Core::Domain::CallbackID>(CallbackId);
+        return nullptr;
+    }
+
+    TSharedPtr<FAsyncTask<FCurrentEventMasterDomain::FSubscribeWithInitialCallTask>> FCurrentEventMasterDomain::SubscribeWithInitialCall(
+        TFunction<void(Gs2::Schedule::Model::FCurrentEventMasterPtr)> Callback
+    )
+    {
+        return Gs2::Core::Util::New<FAsyncTask<FSubscribeWithInitialCallTask>>(this->AsShared(), Callback);
+    }
+
     Gs2::Core::Domain::CallbackID FCurrentEventMasterDomain::Subscribe(
         TFunction<void(Gs2::Schedule::Model::FCurrentEventMasterPtr)> Callback
     )
     {
+        const auto SubscriptionParentKey = Gs2::Schedule::Model::Cache::FCurrentEventMasterCache::CreateCacheParentKey(
+
+            NamespaceName,
+            TOptional<int32>()
+        );
+        const auto SubscriptionCacheKey = Gs2::Schedule::Model::Cache::FCurrentEventMasterCache::CreateCacheKey(
+
+        );
+        const TWeakPtr<Gs2::Core::Domain::FGs2> WeakGs2 = Gs2;
+        const TWeakPtr<Schedule::Domain::FGs2ScheduleDomain> WeakService = Service;
+        const FString RegisteredParentKey = SubscriptionParentKey;
+        const TOptional<FString> QueryNamespaceName = NamespaceName;
         return Gs2->Cache->Subscribe(
             Gs2::Schedule::Model::FCurrentEventMaster::TypeName,
-            ParentKey,
-            Gs2::Schedule::Domain::Model::FCurrentEventMasterDomain::CreateCacheKey(
-            ),
+            SubscriptionParentKey,
+            SubscriptionCacheKey,
             [Callback](TSharedPtr<FGs2Object> obj)
             {
                 Callback(StaticCastSharedPtr<Gs2::Schedule::Model::FCurrentEventMaster>(obj));
+            },
+            [WeakGs2, WeakService, RegisteredParentKey, QueryNamespaceName]()
+            {
+                const auto Owner = WeakGs2.Pin();
+                if (!Owner.IsValid())
+                {
+                    return;
+                }
+                const auto Domain = MakeShared<FCurrentEventMasterDomain>(
+                    Owner,
+                    WeakService.Pin(),
+                    QueryNamespaceName
+                );
+                Domain->ParentKey = RegisteredParentKey;
+                const auto Task = Domain->Model();
+                Task->StartBackgroundTask();
             }
         );
     }
@@ -433,11 +534,18 @@ namespace Gs2::Schedule::Domain::Model
         Gs2::Core::Domain::CallbackID CallbackID
     )
     {
+        const auto SubscriptionParentKey = Gs2::Schedule::Model::Cache::FCurrentEventMasterCache::CreateCacheParentKey(
+
+            NamespaceName,
+            TOptional<int32>()
+        );
+        const auto SubscriptionCacheKey = Gs2::Schedule::Model::Cache::FCurrentEventMasterCache::CreateCacheKey(
+
+        );
         Gs2->Cache->Unsubscribe(
             Gs2::Schedule::Model::FCurrentEventMaster::TypeName,
-            ParentKey,
-            Gs2::Schedule::Domain::Model::FCurrentEventMasterDomain::CreateCacheKey(
-            ),
+            SubscriptionParentKey,
+            SubscriptionCacheKey,
             CallbackID
         );
     }
@@ -448,4 +556,3 @@ namespace Gs2::Schedule::Domain::Model
 #elif defined(__clang__)
 #pragma clang diagnostic pop
 #endif
-

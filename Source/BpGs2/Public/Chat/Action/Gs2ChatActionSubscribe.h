@@ -12,19 +12,20 @@
  * on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either
  * express or implied. See the License for the specific language governing
  * permissions and limitations under the License.
- *
- * deny overwrite
  */
 
 #pragma once
 
 #include "CoreMinimal.h"
 #include "Chat/Model/Gs2ChatSubscribe.h"
+#include "Chat/Model/Gs2ChatNotificationType.h"
 #include "Chat/Model/Gs2ChatSubscribe.h"
 #include "../../Core/Model/Gs2Error.h"
+#include "Core/Model/Gs2CoreTransaction.h"
 #include "Kismet/BlueprintAsyncActionBase.h"
 #include "Gs2ChatActionSubscribe.generated.h"
-  
+
+
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FGs2ChatSubscribeSuccessDelegate, FGs2ChatOwnSubscribe, Subscribe, const FGs2Error, Error);
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FGs2ChatSubscribeErrorDelegate, FGs2ChatOwnSubscribe, Subscribe, const FGs2Error, Error);
 
@@ -33,10 +34,10 @@ class BPGS2_API UGs2ChatSubscribeAsyncFunction : public UBlueprintAsyncActionBas
 {
     GENERATED_BODY()
 
-    UPARAM(DisplayName="Subscribe") FGs2ChatOwnSubscribe SubscribeValue;
+    FGs2ChatOwnSubscribe SubscribeValue;
+    TArray<FGs2ChatNotificationType> NotificationTypes;
 
 public:
-    TArray<FGs2ChatNotificationType> NotificationTypes;
 
     UPROPERTY(Category = Gs2, BlueprintAssignable)
     FGs2ChatSubscribeSuccessDelegate OnSuccess;
@@ -49,7 +50,8 @@ public:
 	UFUNCTION(BlueprintCallable, DisplayName="Gs2::Chat::Subscribe::Action::Subscribe", Category="Game Server Services|GS2-Chat|Namespace|User|Subscribe|Action", meta=(WorldContext="WorldContextObject", BlueprintInternalUseOnly="true"))
     static UGs2ChatSubscribeAsyncFunction* Subscribe(
         UObject* WorldContextObject,
-        FGs2ChatOwnSubscribe Subscribe
+        FGs2ChatOwnSubscribe SubscribeValue,
+        TArray<FGs2ChatNotificationType> NotificationTypes
     );
 
     virtual void Activate() override;

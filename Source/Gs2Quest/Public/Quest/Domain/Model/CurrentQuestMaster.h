@@ -92,6 +92,8 @@ namespace Gs2::Quest::Domain::Model
             const FCurrentQuestMasterDomain& From
         );
 
+
+
         class GS2QUEST_API FExportMasterTask final :
             public Gs2::Core::Util::TGs2Future<Gs2::Quest::Domain::Model::FCurrentQuestMasterDomain>,
             public TSharedFromThis<FExportMasterTask>
@@ -117,6 +119,8 @@ namespace Gs2::Quest::Domain::Model
         TSharedPtr<FAsyncTask<FExportMasterTask>> ExportMaster(
             Request::FExportMasterRequestPtr Request
         );
+
+
 
         class GS2QUEST_API FGetTask final :
             public Gs2::Core::Util::TGs2Future<Gs2::Quest::Model::FCurrentQuestMaster>,
@@ -144,6 +148,8 @@ namespace Gs2::Quest::Domain::Model
             Request::FGetCurrentQuestMasterRequestPtr Request
         );
 
+
+
         class GS2QUEST_API FPreUpdateTask final :
             public Gs2::Core::Util::TGs2Future<Gs2::Quest::Domain::Model::FCurrentQuestMasterDomain>,
             public TSharedFromThis<FPreUpdateTask>
@@ -170,6 +176,8 @@ namespace Gs2::Quest::Domain::Model
             Request::FPreUpdateCurrentQuestMasterRequestPtr Request
         );
 
+
+
         class GS2QUEST_API FUpdateTask final :
             public Gs2::Core::Util::TGs2Future<Gs2::Quest::Domain::Model::FCurrentQuestMasterDomain>,
             public TSharedFromThis<FUpdateTask>
@@ -195,6 +203,8 @@ namespace Gs2::Quest::Domain::Model
         TSharedPtr<FAsyncTask<FUpdateTask>> Update(
             Request::FUpdateCurrentQuestMasterRequestPtr Request
         );
+
+
 
         class GS2QUEST_API FUpdateFromGitHubTask final :
             public Gs2::Core::Util::TGs2Future<Gs2::Quest::Domain::Model::FCurrentQuestMasterDomain>,
@@ -252,7 +262,34 @@ namespace Gs2::Quest::Domain::Model
 
         TSharedPtr<FAsyncTask<FModelTask>> Model();
 
+        void Invalidate();
+
         Gs2::Core::Domain::CallbackID Subscribe(
+            TFunction<void(Gs2::Quest::Model::FCurrentQuestMasterPtr)> Callback
+        );
+
+        class GS2QUEST_API FSubscribeWithInitialCallTask final :
+            public Gs2::Core::Util::TGs2Future<Gs2::Core::Domain::CallbackID>,
+            public TSharedFromThis<FSubscribeWithInitialCallTask>
+        {
+            const TSharedPtr<FCurrentQuestMasterDomain> Self;
+            const TFunction<void(Gs2::Quest::Model::FCurrentQuestMasterPtr)> Callback;
+        public:
+            FSubscribeWithInitialCallTask(
+                const TSharedPtr<FCurrentQuestMasterDomain>& Self,
+                TFunction<void(Gs2::Quest::Model::FCurrentQuestMasterPtr)> Callback
+            );
+
+            FSubscribeWithInitialCallTask(
+                const FSubscribeWithInitialCallTask& From
+            );
+
+            virtual Gs2::Core::Model::FGs2ErrorPtr Action(
+                TSharedPtr<TSharedPtr<Gs2::Core::Domain::CallbackID>> Result
+            ) override;
+        };
+
+        TSharedPtr<FAsyncTask<FSubscribeWithInitialCallTask>> SubscribeWithInitialCall(
             TFunction<void(Gs2::Quest::Model::FCurrentQuestMasterPtr)> Callback
         );
 

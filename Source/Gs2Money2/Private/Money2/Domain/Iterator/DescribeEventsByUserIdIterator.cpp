@@ -109,18 +109,12 @@ namespace Gs2::Money2::Domain::Iterator
                 "Event"
             );
 
-            if (!RangeIteratorOpt)
+            if (!RangeIteratorOpt && (!Self->Begin.IsSet() && !Self->End.IsSet()))
             {
                 Range = Self->Gs2->Cache->TryGetList<Gs2::Money2::Model::FEvent>(ListParentKey);
 
                 if (Range)
                 {
-					if (Self->Begin.IsSet()) {
-                    	Range->RemoveAll([this](const Gs2::Money2::Model::FEventPtr& Item) { return Self->Begin && *Item->GetCreatedAt() >= *Self->Begin; });
-					}
-					if (Self->End.IsSet()) {
-                    	Range->RemoveAll([this](const Gs2::Money2::Model::FEventPtr& Item) { return Self->End && *Item->GetCreatedAt() <= *Self->End; });
-					}
                     bLast = true;
                     RangeIteratorOpt = Range->CreateIterator();
                     PageToken = TOptional<FString>();
@@ -129,7 +123,7 @@ namespace Gs2::Money2::Domain::Iterator
                 }
             }
 
-            const auto Future = Self->Client->DescribeEventsByUserId(
+            const auto Request =
                 MakeShared<Gs2::Money2::Request::FDescribeEventsByUserIdRequest>()
                     ->WithContextStack(Self->Gs2->DefaultContextStack)
                     ->WithNamespaceName(Self->NamespaceName)
@@ -138,7 +132,8 @@ namespace Gs2::Money2::Domain::Iterator
                     ->WithEnd(Self->End)
                     ->WithPageToken(PageToken)
                     ->WithLimit(FetchSize)
-            );
+            ;
+            const auto Future = Self->Client->DescribeEventsByUserId(Request);
             Future->StartSynchronousTask();
             if (Future->GetTask().IsError())
             {
@@ -152,32 +147,26 @@ namespace Gs2::Money2::Domain::Iterator
             }
             const auto R = Future->GetTask().Result();
             Future->EnsureCompletion();
-            Range = R->GetItems();
-            for (auto Item : *R->GetItems())
+            Range = R->GetItems().IsValid() ? R->GetItems() : MakeShared<TArray<Gs2::Money2::Model::FEventPtr>>();
+            const auto ResultModel = R;
+
+
+            if (Range.IsValid())
             {
-                Self->Gs2->Cache->Put(
-                    Gs2::Money2::Model::FEvent::TypeName,
-                    ListParentKey,
-                    Gs2::Money2::Domain::Model::FEventDomain::CreateCacheKey(
-                        Item->GetTransactionId()
-                    ),
-                    Item,
-                    FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
-                );
-            }
-            if (Range)
-            {
-				if (Self->Begin.IsSet()) {
-                    Range->RemoveAll([this](const Gs2::Money2::Model::FEventPtr& Item) { return Self->Begin && *Item->GetCreatedAt() >= *Self->Begin; });
-				}
-				if (Self->End.IsSet()) {
-                    Range->RemoveAll([this](const Gs2::Money2::Model::FEventPtr& Item) { return Self->End && *Item->GetCreatedAt() <= *Self->End; });
-				}
+                for (const auto& Item : *Range)
+                {
+                    if (!Item.IsValid()) continue;
+                    Gs2::Money2::Model::Cache::FEventCache::Put(
+                        Self->Gs2->Cache,
+                        Request->GetNamespaceName(), Request->GetUserId(), Item->GetTransactionId(),
+                        TOptional<int32>(), Item
+                    );
+                }
             }
             RangeIteratorOpt = Range->CreateIterator();
             PageToken = R->GetNextPageToken();
             bLast = !PageToken.IsSet();
-            if (bLast) {
+            if (bLast && (!Self->Begin.IsSet() && !Self->End.IsSet())) {
                 Self->Gs2->Cache->SetListCached(
                     Gs2::Money2::Model::FEvent::TypeName,
                     ListParentKey
@@ -210,4 +199,3 @@ namespace Gs2::Money2::Domain::Iterator
 #elif defined(__clang__)
 #pragma clang diagnostic pop
 #endif
-

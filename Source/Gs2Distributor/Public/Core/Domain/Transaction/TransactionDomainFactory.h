@@ -35,7 +35,8 @@ namespace Gs2::Core::Domain
 			FString StampSheet,
 			FString StampSheetEncryptionKeyId,
 			bool bAtomicCommit,
-			Gs2::Core::Model::FTransactionResultPtr TransactionResult
+			Gs2::Core::Model::FTransactionResultPtr TransactionResult,
+			TOptional<FString> NamespaceName = TOptional<FString>()
 		);
 
 		static FTransactionDomainPtr ToTransaction(
@@ -49,7 +50,8 @@ namespace Gs2::Core::Domain
 			FString StampSheet,
 			FString StampSheetEncryptionKeyId,
 			bool bAtomicCommit,
-			Gs2::Core::Model::FTransactionResultPtr TransactionResult
+			Gs2::Core::Model::FTransactionResultPtr TransactionResult,
+			TOptional<FString> NamespaceName = TOptional<FString>()
 		);
 	};
     typedef TSharedPtr<FTransactionDomainFactory> FTransactionDomainFactoryPtr;

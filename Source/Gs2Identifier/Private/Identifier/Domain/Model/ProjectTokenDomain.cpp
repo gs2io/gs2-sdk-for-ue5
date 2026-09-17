@@ -28,6 +28,7 @@
 #include "Identifier/Domain/Model/Identifier.h"
 #include "Identifier/Domain/Model/Password.h"
 #include "Identifier/Domain/Model/AttachSecurityPolicy.h"
+#include "Identifier/Model/Cache/ProjectToken.h"
 
 #include "Core/Domain/Gs2.h"
 #include "Core/Domain/Transaction/JobQueueJobDomainFactory.h"
@@ -88,6 +89,7 @@ namespace Gs2::Identifier::Domain::Model
         }
         const auto ResultModel = Future->GetTask().Result();
         Future->EnsureCompletion();
+
         const auto Domain = Self;
         if (ResultModel != nullptr)
         {
@@ -146,18 +148,7 @@ namespace Gs2::Identifier::Domain::Model
         }
         const auto ResultModel = Future->GetTask().Result();
         Future->EnsureCompletion();
-        if (ResultModel->GetItem() != nullptr)
-        {
-            const auto Key = Gs2::Identifier::Domain::Model::FProjectTokenDomain::CreateCacheKey(
-            );
-            Self->Gs2->Cache->Put(
-                Gs2::Identifier::Model::FProjectToken::TypeName,
-                Self->ParentKey,
-                Key,
-                ResultModel->GetItem(),
-                FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
-            );
-        }
+
         auto Domain = Self;
 
         *Result = Domain;
@@ -202,36 +193,126 @@ namespace Gs2::Identifier::Domain::Model
         TSharedPtr<TSharedPtr<Gs2::Identifier::Model::FProjectToken>> Result
     )
     {
-        const auto ParentKey = FString("identifier:ProjectToken");
-        // ReSharper disable once CppLocalVariableMayBeConst
-        TSharedPtr<Gs2::Identifier::Model::FProjectToken> Value;
-        auto bCacheHit = Self->Gs2->Cache->TryGet<Gs2::Identifier::Model::FProjectToken>(
-            ParentKey,
-            Gs2::Identifier::Domain::Model::FProjectTokenDomain::CreateCacheKey(
-            ),
-            &Value
-        );
-        *Result = Value;
+        const auto CacheParentKey = Gs2::Identifier::Model::Cache::FProjectTokenCache::CreateCacheParentKey(
 
-        return nullptr;
+            TOptional<int32>()
+        );
+        const auto CacheKey = Gs2::Identifier::Model::Cache::FProjectTokenCache::CreateCacheKey(
+
+        );
+        return Self->Gs2->Cache->ExecuteWithKeyLock(
+            Gs2::Identifier::Model::FProjectToken::TypeName,
+            CacheParentKey,
+            CacheKey,
+            [Self = Self, Result]() -> Gs2::Core::Model::FGs2ErrorPtr
+            {
+                Gs2::Identifier::Model::FProjectTokenPtr Value;
+                const auto CacheHit = Gs2::Identifier::Model::Cache::FProjectTokenCache::TryGet(
+                    Self->Gs2->Cache,
+
+                    TOptional<int32>(),
+                    &Value
+                );
+                if (CacheHit)
+                {
+                    *Result = Value;
+                    return nullptr;
+                }
+                *Result = Value;
+                return nullptr;
+            }
+        );
     }
 
     TSharedPtr<FAsyncTask<FProjectTokenDomain::FModelTask>> FProjectTokenDomain::Model() {
         return Gs2::Core::Util::New<FAsyncTask<FProjectTokenDomain::FModelTask>>(this->AsShared());
     }
 
+    void FProjectTokenDomain::Invalidate()
+    {
+        Gs2::Identifier::Model::Cache::FProjectTokenCache::Delete(
+            Gs2->Cache,
+
+            TOptional<int32>()
+        );
+    }
+
+    FProjectTokenDomain::FSubscribeWithInitialCallTask::FSubscribeWithInitialCallTask(
+        const TSharedPtr<FProjectTokenDomain>& Self,
+        TFunction<void(Gs2::Identifier::Model::FProjectTokenPtr)> Callback
+    ):
+        Self(Self),
+        Callback(Callback)
+    {
+    }
+
+    FProjectTokenDomain::FSubscribeWithInitialCallTask::FSubscribeWithInitialCallTask(
+        const FSubscribeWithInitialCallTask& From
+    ):
+        TGs2Future(From),
+        Self(From.Self),
+        Callback(From.Callback)
+    {
+    }
+
+    Gs2::Core::Model::FGs2ErrorPtr FProjectTokenDomain::FSubscribeWithInitialCallTask::Action(
+        TSharedPtr<TSharedPtr<Gs2::Core::Domain::CallbackID>> Result
+    )
+    {
+        const auto Task = Self->Model();
+        Task->StartSynchronousTask();
+        Task->EnsureCompletion();
+        if (Task->GetTask().IsError()) return Task->GetTask().Error();
+        const auto Item = Task->GetTask().Result();
+        const auto CallbackId = Self->Subscribe(Callback);
+        Callback(Item);
+        *Result = MakeShared<Gs2::Core::Domain::CallbackID>(CallbackId);
+        return nullptr;
+    }
+
+    TSharedPtr<FAsyncTask<FProjectTokenDomain::FSubscribeWithInitialCallTask>> FProjectTokenDomain::SubscribeWithInitialCall(
+        TFunction<void(Gs2::Identifier::Model::FProjectTokenPtr)> Callback
+    )
+    {
+        return Gs2::Core::Util::New<FAsyncTask<FSubscribeWithInitialCallTask>>(this->AsShared(), Callback);
+    }
+
     Gs2::Core::Domain::CallbackID FProjectTokenDomain::Subscribe(
         TFunction<void(Gs2::Identifier::Model::FProjectTokenPtr)> Callback
     )
     {
+        const auto SubscriptionParentKey = Gs2::Identifier::Model::Cache::FProjectTokenCache::CreateCacheParentKey(
+
+            TOptional<int32>()
+        );
+        const auto SubscriptionCacheKey = Gs2::Identifier::Model::Cache::FProjectTokenCache::CreateCacheKey(
+
+        );
+        const TWeakPtr<Gs2::Core::Domain::FGs2> WeakGs2 = Gs2;
+        const TWeakPtr<Identifier::Domain::FGs2IdentifierDomain> WeakService = Service;
+        const FString RegisteredParentKey = SubscriptionParentKey;
         return Gs2->Cache->Subscribe(
             Gs2::Identifier::Model::FProjectToken::TypeName,
-            ParentKey,
-            Gs2::Identifier::Domain::Model::FProjectTokenDomain::CreateCacheKey(
-            ),
+            SubscriptionParentKey,
+            SubscriptionCacheKey,
             [Callback](TSharedPtr<FGs2Object> obj)
             {
                 Callback(StaticCastSharedPtr<Gs2::Identifier::Model::FProjectToken>(obj));
+            },
+            [WeakGs2, WeakService, RegisteredParentKey]()
+            {
+                const auto Owner = WeakGs2.Pin();
+                if (!Owner.IsValid())
+                {
+                    return;
+                }
+                const auto Domain = MakeShared<FProjectTokenDomain>(
+                    Owner,
+                    WeakService.Pin()
+                );
+                Domain->ParentKey = RegisteredParentKey;
+                const auto Task = Domain->Model();
+                Task->StartBackgroundTask();
             }
         );
     }
@@ -240,11 +321,17 @@ namespace Gs2::Identifier::Domain::Model
         Gs2::Core::Domain::CallbackID CallbackID
     )
     {
+        const auto SubscriptionParentKey = Gs2::Identifier::Model::Cache::FProjectTokenCache::CreateCacheParentKey(
+
+            TOptional<int32>()
+        );
+        const auto SubscriptionCacheKey = Gs2::Identifier::Model::Cache::FProjectTokenCache::CreateCacheKey(
+
+        );
         Gs2->Cache->Unsubscribe(
             Gs2::Identifier::Model::FProjectToken::TypeName,
-            ParentKey,
-            Gs2::Identifier::Domain::Model::FProjectTokenDomain::CreateCacheKey(
-            ),
+            SubscriptionParentKey,
+            SubscriptionCacheKey,
             CallbackID
         );
     }
@@ -255,4 +342,3 @@ namespace Gs2::Identifier::Domain::Model
 #elif defined(__clang__)
 #pragma clang diagnostic pop
 #endif
-

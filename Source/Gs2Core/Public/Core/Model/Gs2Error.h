@@ -19,6 +19,7 @@
 #include "CoreMinimal.h"
 #include "Dom/JsonValue.h"
 #include "Async/AsyncWork.h"
+#include "Core/Model/ResultMetadata.h"
 
 typedef FString FGs2ErrorType;
 typedef FString FGs2ErrorComponent;
@@ -61,12 +62,14 @@ namespace Gs2::Core::Model
     class GS2CORE_API FGs2Error
     {
         TSharedPtr<TArray<TSharedPtr<FGs2ErrorDetail>>> Details;
+        FResultMetadataPtr Metadata;
     public:
         inline static const FGs2ErrorType TypeString = "FGs2Error";
         inline static const FGs2ErrorType Class = TypeString;
         
         explicit FGs2Error(
-            const TSharedPtr<TArray<TSharedPtr<FGs2ErrorDetail>>> Details
+            const TSharedPtr<TArray<TSharedPtr<FGs2ErrorDetail>>> Details,
+            const FResultMetadataPtr InMetadata = nullptr
         );
         FGs2Error(
             const FGs2Error& From
@@ -87,13 +90,23 @@ namespace Gs2::Core::Model
         {
             return this->Details;
         }
+
+        void SetMetadata(const FResultMetadataPtr InMetadata)
+        {
+            this->Metadata = InMetadata;
+        }
+
+        FResultMetadataPtr GetMetadata() const
+        {
+            return this->Metadata;
+        }
         
         virtual FGs2ErrorType Type() const = 0;
         virtual FGs2ErrorType SuperType() const = 0;
         bool IsChildOf( const FGs2ErrorType& BaseClass ) const;
         
         static TSharedPtr<FGs2Error> FromResponse(int32 StatusCode, FString Response);
-        static TSharedPtr<FGs2Error> FromJson(int32 StatusCode, TArray<TSharedPtr<FJsonValue>> Objects);
+        static TSharedPtr<FGs2Error> FromJson(int32 StatusCode, TArray<TSharedPtr<FJsonValue>> Objects, const FResultMetadataPtr InMetadata = nullptr);
         FString String() const;
     };
     typedef TSharedPtr<FGs2Error, ESPMode::ThreadSafe> FGs2ErrorPtr;
@@ -315,6 +328,29 @@ namespace Gs2::Core::Model
         ): FGs2Error(From) {}
         virtual ~FUnknownError() override = default;
         
+        virtual FGs2ErrorType Type() const override
+        {
+            return TypeString;
+        }
+
+        virtual FGs2ErrorType SuperType() const override
+        {
+            return Core::Model::FGs2Error::TypeString + ":" + TypeString;
+        }
+    };
+
+    class GS2CORE_API FNoInternetConnectionError : public FGs2Error
+    {
+    public:
+        inline static const FGs2ErrorType TypeString = "FNoInternetConnectionError";
+        inline static const FGs2ErrorType Class = TypeString;
+
+        explicit FNoInternetConnectionError(TSharedPtr<TArray<TSharedPtr<FGs2ErrorDetail>>> Details): FGs2Error(Details) {}
+        FNoInternetConnectionError(
+            const FNoInternetConnectionError& From
+        ): FGs2Error(From) {}
+        virtual ~FNoInternetConnectionError() override = default;
+
         virtual FGs2ErrorType Type() const override
         {
             return TypeString;

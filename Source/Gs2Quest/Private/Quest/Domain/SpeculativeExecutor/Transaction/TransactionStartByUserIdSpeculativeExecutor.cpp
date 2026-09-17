@@ -26,10 +26,32 @@
 
 #include "Quest/Domain/SpeculativeExecutor/Transaction/StartByUserIdSpeculativeExecutor.h"
 
+#include "Auth/Model/AccessToken.h"
 #include "Core/Domain/Gs2.h"
+#include "Core/Domain/Model/IssueTransactionEvent.h"
+#include "Core/Domain/SpeculativeExecutor/ActionConfig.h"
+#include "Core/Domain/SpeculativeExecutor/PreparedSpeculativeCommit.h"
+#include "Core/Model/ConsumeAction.h"
+#include "Quest/Model/Cache/QuestModel.h"
+#include "Quest/Model/QuestModel.h"
+#include "Quest/Request/CreateProgressByUserIdRequest.h"
+#include "Serialization/JsonSerializer.h"
+#include "Serialization/JsonWriter.h"
 
 namespace Gs2::Quest::Domain::Transaction::SpeculativeExecutor
 {
+    namespace
+    {
+        FString SerializeQuestStartSnapshot(const TSharedPtr<FJsonObject>& Object)
+        {
+            if (!Object.IsValid()) return FString();
+            FString Body;
+            const TSharedRef<TJsonWriter<TCHAR>> Writer = TJsonWriterFactory<TCHAR>::Create(&Body);
+            FJsonSerializer::Serialize(Object.ToSharedRef(), Writer);
+            return Body;
+        }
+    }
+
     FString FStartByUserIdSpeculativeExecutor::Action() {
         return "Gs2Quest:StartByUserId";
     }
@@ -58,12 +80,111 @@ namespace Gs2::Quest::Domain::Transaction::SpeculativeExecutor
     }
 
     Gs2::Core::Model::FGs2ErrorPtr FStartByUserIdSpeculativeExecutor::FCommitTask::Action(
-        TSharedPtr<TSharedPtr<TFunction<void()>>> Result)
+        TSharedPtr<TSharedPtr<Gs2::Core::Domain::SpeculativeExecutor::FPreparedSpeculativeCommit>> Result)
     {
-        UE_LOG(Gs2Log, Warning, TEXT("Speculative execution not supported on this action: %s"), ToCStr(FStartByUserIdSpeculativeExecutor::Action()))
+        *Result = nullptr;
+        Gs2::Auth::Model::FAccessTokenPtr PreparedToken = nullptr;
+        if (AccessToken.IsValid())
+        {
+            PreparedToken = MakeShared<Gs2::Auth::Model::FAccessToken>(*AccessToken);
+        }
+        Gs2::Quest::Request::FStartByUserIdRequestPtr PreparedRequest = nullptr;
+        if (Request.IsValid())
+        {
+            PreparedRequest = Gs2::Quest::Request::FStartByUserIdRequest::FromJson(Request->ToJson());
+        }
+        if (!Domain.IsValid() || !Domain->RestSession.IsValid() || !Domain->Cache.IsValid() ||
+            !PreparedToken.IsValid() || !PreparedRequest.IsValid() ||
+            !PreparedToken->GetUserId().IsSet() || PreparedToken->GetUserId().Get(FString()).IsEmpty())
+        {
+            return nullptr;
+        }
+        if (PreparedRequest->GetUserId().IsSet() &&
+            PreparedRequest->GetUserId().Get(FString()) == TEXT("#{userId}"))
+        {
+            PreparedRequest->WithUserId(PreparedToken->GetUserId());
+        }
+        if (!PreparedRequest->GetUserId().IsSet() ||
+            PreparedRequest->GetUserId().Get(FString()) != PreparedToken->GetUserId().Get(FString()))
+        {
+            return nullptr;
+        }
 
-        *Result = MakeShared<TFunction<void()>>([]{});
+        const auto NamespaceName = PreparedRequest->GetNamespaceName();
+        const auto QuestGroupName = PreparedRequest->GetQuestGroupName();
+        const auto QuestName = PreparedRequest->GetQuestName();
+        const auto UserId = PreparedToken->GetUserId();
+        Gs2::Quest::Model::FQuestModelPtr Item = nullptr;
+        if (!Gs2::Quest::Model::Cache::FQuestModelCache::TryGet(
+                Domain->Cache, NamespaceName, QuestGroupName, QuestName, TOptional<int32>(), &Item) ||
+            !Item.IsValid() || !Item->GetQuestModelId().IsSet() ||
+            !Item->GetName().IsSet())
+        {
+            return nullptr;
+        }
+        const FString ExpectedQuestModelId = FString::Printf(
+            TEXT("grn:gs2:%s:%s:quest:%s:group:%s:quest:%s"),
+            *Domain->RestSession->RegionName(), *Domain->RestSession->OwnerId(),
+            *NamespaceName.Get(FString()), *QuestGroupName.Get(FString()), *QuestName.Get(FString()));
+        if (*Item->GetQuestModelId() != ExpectedQuestModelId ||
+            *Item->GetName() != *QuestName.Get(FString()))
+        {
+            return nullptr;
+        }
 
+        const auto ConsumeActions = MakeShared<TArray<Gs2::Core::Model::FConsumeActionPtr>>();
+        if (const auto Sources = Item->GetConsumeActions(); Sources.IsValid())
+        {
+            for (const auto& Source : *Sources)
+            {
+                if (!Source.IsValid()) continue;
+                Gs2::Core::Model::FConsumeActionPtr Action =
+                    MakeShared<Gs2::Core::Model::FConsumeAction>(*Source);
+                if (const auto Config = PreparedRequest->GetConfig(); Config.IsValid())
+                {
+                    for (const auto& Entry : *Config)
+                    {
+                        if (!Entry.IsValid()) continue;
+                        Action = Gs2::Core::Domain::SpeculativeExecutor::ApplyConfig(
+                            Gs2::Core::Model::FConsumeActionPtr(Action),
+                            TOptional<FString>(Entry->GetKey()), TOptional<FString>(Entry->GetValue()));
+                    }
+                }
+                if (Action.IsValid()) ConsumeActions->Add(Action);
+            }
+        }
+
+        const auto AcquireActions = MakeShared<TArray<Gs2::Core::Model::FAcquireActionPtr>>();
+        const auto CreateProgressRequest = MakeShared<Gs2::Quest::Request::FCreateProgressByUserIdRequest>()
+            ->WithNamespaceName(NamespaceName)
+            ->WithUserId(UserId)
+            ->WithForce(PreparedRequest->GetForce())
+            ->WithConfig(PreparedRequest->GetConfig());
+        FString CreateProgressRequestBody;
+        const TSharedRef<TJsonWriter<TCHAR>> Writer = TJsonWriterFactory<TCHAR>::Create(&CreateProgressRequestBody);
+        FJsonSerializer::Serialize(CreateProgressRequest->ToJson().ToSharedRef(), Writer);
+        AcquireActions->Add(
+            MakeShared<Gs2::Core::Model::FAcquireAction>()
+                ->WithAction(TOptional<FString>(TEXT("Gs2Quest:CreateProgressByUserId")))
+                ->WithRequest(TOptional<FString>(CreateProgressRequestBody))
+        );
+
+        const auto Event = MakeShared<Gs2::Core::Domain::Model::FIssueTransactionEvent>(
+            PreparedToken, ConsumeActions, AcquireActions, TBigInt<1024, false>(1));
+        Service->OnIssueTransaction.Broadcast(Event);
+        if (Event->GetError().IsValid()) return Event->GetError();
+        const auto Commit = Event->GetCommit();
+        if (!Commit.IsValid()) return nullptr;
+        const FString QuestSnapshot = SerializeQuestStartSnapshot(Item->ToJson());
+        *Result = Gs2::Core::Domain::SpeculativeExecutor::FPreparedSpeculativeCommit::CreateGuarded(
+            MakeShared<TFunction<void()>>([Commit]() { (*Commit)(); }),
+            [DomainCopy = Domain, NamespaceName, QuestGroupName, QuestName, QuestSnapshot]()
+            {
+                Gs2::Quest::Model::FQuestModelPtr Current = nullptr;
+                return Gs2::Quest::Model::Cache::FQuestModelCache::TryGet(
+                    DomainCopy->Cache, NamespaceName, QuestGroupName, QuestName, TOptional<int32>(), &Current) &&
+                    Current.IsValid() && SerializeQuestStartSnapshot(Current->ToJson()) == QuestSnapshot;
+            });
         return nullptr;
     }
 

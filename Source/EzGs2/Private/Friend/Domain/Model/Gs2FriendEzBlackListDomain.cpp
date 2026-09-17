@@ -82,7 +82,7 @@ namespace Gs2::UE5::Friend::Domain::Model
     Gs2::Core::Domain::CallbackID FEzBlackListDomain::Subscribe(TFunction<void(Gs2::UE5::Friend::Model::FEzBlackListPtr)> Callback)
     {
         return Domain->Subscribe(
-            [&](Gs2::Friend::Model::FBlackListPtr Item)
+            [Callback](Gs2::Friend::Model::FBlackListPtr Item)
             {
                 Callback(Gs2::UE5::Friend::Model::FEzBlackList::FromModel(Item));
             }

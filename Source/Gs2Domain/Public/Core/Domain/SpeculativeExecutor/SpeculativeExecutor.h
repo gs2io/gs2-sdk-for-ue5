@@ -20,8 +20,10 @@
 
 #include "Auth/Model/AccessToken.h"
 #include "Core/Domain/Gs2.h"
+#include "Core/Domain/SpeculativeExecutor/PreparedSpeculativeCommit.h"
 #include "Core/Model/AcquireAction.h"
 #include "Core/Model/ConsumeAction.h"
+#include "Core/Model/VerifyAction.h"
 #include "Core/Util/Gs2Future.h"
 #include "Math/BigInt.h"
 
@@ -29,8 +31,8 @@ namespace Gs2::Core::Domain::SpeculativeExecutor
 {
 	class GS2DOMAIN_API FSpeculativeExecutor
 	{
-		const TSharedPtr<TArray<Gs2::Core::Model::FConsumeActionPtr>>& ConsumeActions;
-		const TSharedPtr<TArray<Gs2::Core::Model::FAcquireActionPtr>>& AcquireActions;
+		const TSharedPtr<TArray<Gs2::Core::Model::FConsumeActionPtr>> ConsumeActions;
+		const TSharedPtr<TArray<Gs2::Core::Model::FAcquireActionPtr>> AcquireActions;
 		const TBigInt<1024, false> Rate;
 	public:
 	
@@ -50,10 +52,10 @@ namespace Gs2::Core::Domain::SpeculativeExecutor
 			public Util::TGs2Future<TFunction<void()>>,
 			public TSharedFromThis<FCommitTask>
 		{
-			const Gs2::Core::Domain::FGs2Ptr& Domain;
-			const Gs2::Auth::Model::FAccessTokenPtr& AccessToken;
-			const TSharedPtr<TArray<Gs2::Core::Model::FConsumeActionPtr>>& ConsumeActions;
-			const TSharedPtr<TArray<Gs2::Core::Model::FAcquireActionPtr>>& AcquireActions;
+			const Gs2::Core::Domain::FGs2Ptr Domain;
+			const Gs2::Auth::Model::FAccessTokenPtr AccessToken;
+			const TSharedPtr<TArray<Gs2::Core::Model::FConsumeActionPtr>> ConsumeActions;
+			const TSharedPtr<TArray<Gs2::Core::Model::FAcquireActionPtr>> AcquireActions;
 			const TBigInt<1024, false> Rate;
 
 		public:
@@ -78,6 +80,35 @@ namespace Gs2::Core::Domain::SpeculativeExecutor
 		TSharedPtr<FAsyncTask<FSpeculativeExecutor::FCommitTask>> Execute(
 			const Gs2::Core::Domain::FGs2Ptr& Domain,
 			const Gs2::Auth::Model::FAccessTokenPtr& AccessToken = nullptr
+		);
+
+		using FPreparedCommitPtr = TSharedPtr<FPreparedSpeculativeCommit>;
+		using FPreparedCommitArray = TArray<FPreparedCommitPtr>;
+
+		static TSharedPtr<TFunction<void()>> BuildAtomicCommit(
+			const TSharedPtr<FPreparedCommitArray>& Commits,
+			int32 ExpectedActionCount
+		);
+		static TSharedPtr<TFunction<void()>> BuildAtomicCommit(
+			const TSharedPtr<TArray<TSharedPtr<TFunction<void()>>>>& Commits,
+			int32 ExpectedActionCount
+		);
+		static TSharedPtr<TFunction<void()>> BuildAtomicVerificationCommit(
+			const TSharedPtr<FPreparedCommitArray>& Commits,
+			int32 ExpectedActionCount
+		);
+		static FPreparedCommitPtr BuildAtomicVerificationPreparedCommit(
+			const TSharedPtr<FPreparedCommitArray>& Commits,
+			int32 ExpectedActionCount
+		);
+
+		static Gs2::Core::Model::FGs2ErrorPtr ExecuteVerifyAction(
+			const Gs2::Core::Domain::FGs2Ptr& Domain,
+			const Gs2::Auth::Model::FAccessTokenPtr& AccessToken,
+			const Gs2::Core::Model::FVerifyActionPtr& VerifyAction,
+			const TBigInt<1024, false>& Rate,
+			bool Inverse,
+			FPreparedCommitPtr* Result
 		);
 	};
 }

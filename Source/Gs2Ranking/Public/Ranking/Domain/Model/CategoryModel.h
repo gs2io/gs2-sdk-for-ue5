@@ -90,6 +90,8 @@ namespace Gs2::Ranking::Domain::Model
             const FCategoryModelDomain& From
         );
 
+
+
         class GS2RANKING_API FGetTask final :
             public Gs2::Core::Util::TGs2Future<Gs2::Ranking::Model::FCategoryModel>,
             public TSharedFromThis<FGetTask>

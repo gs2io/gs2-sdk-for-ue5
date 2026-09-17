@@ -89,8 +89,33 @@ namespace Gs2::Idle::Domain::Model
 
         Gs2::Core::Domain::CallbackID SubscribeStatuses(
             TFunction<void()> Callback
+
         );
 
+        class FCollectStatusesTask;
+
+        Gs2::Core::Domain::CallbackID SubscribeStatuses(
+            TFunction<void(TArray<Gs2::Idle::Model::FStatusPtr>)> Callback
+        );
+
+        void InvalidateStatuses();
+
+        class GS2IDLE_API FSubscribeStatusesWithInitialCallTask final :
+            public Gs2::Core::Util::TGs2Future<Gs2::Core::Domain::CallbackID>,
+            public TSharedFromThis<FSubscribeStatusesWithInitialCallTask>
+        {
+            const TSharedPtr<FUserAccessTokenDomain> Self;
+            const TFunction<void(TArray<Gs2::Idle::Model::FStatusPtr>)> Callback;
+
+        public:
+            FSubscribeStatusesWithInitialCallTask(const TSharedPtr<FUserAccessTokenDomain>& Self, TFunction<void(TArray<Gs2::Idle::Model::FStatusPtr>)> Callback);
+            FSubscribeStatusesWithInitialCallTask(const FSubscribeStatusesWithInitialCallTask& From);
+            virtual Gs2::Core::Model::FGs2ErrorPtr Action(TSharedPtr<TSharedPtr<Gs2::Core::Domain::CallbackID>> Result) override;
+        };
+
+        TSharedPtr<FAsyncTask<FSubscribeStatusesWithInitialCallTask>> SubscribeStatusesWithInitialCall(
+            TFunction<void(TArray<Gs2::Idle::Model::FStatusPtr>)> Callback
+        );
         void UnsubscribeStatuses(
             Gs2::Core::Domain::CallbackID CallbackID
         );

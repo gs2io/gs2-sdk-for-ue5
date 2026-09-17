@@ -27,6 +27,7 @@
 #include "Money2/Domain/SpeculativeExecutor/Consume/VerifyReceiptByUserIdSpeculativeExecutor.h"
 
 #include "Core/Domain/Gs2.h"
+#include "Core/Domain/SpeculativeExecutor/PreparedSpeculativeCommit.h"
 
 namespace Gs2::Money2::Domain::SpeculativeExecutor
 {
@@ -59,7 +60,7 @@ namespace Gs2::Money2::Domain::SpeculativeExecutor
     }
 
     Gs2::Core::Model::FGs2ErrorPtr FConsumeActionSpeculativeExecutorIndex::FCommitTask::Action(
-        TSharedPtr<TSharedPtr<TFunction<void()>>> Result
+        TSharedPtr<TSharedPtr<Gs2::Core::Domain::SpeculativeExecutor::FPreparedSpeculativeCommit>> Result
     )
     {
         auto NewConsumeAction = ConsumeAction->WithAction(ConsumeAction->GetAction()->Replace(TEXT("{region}"), ToCStr(Domain->RestSession->RegionName())));
@@ -86,8 +87,13 @@ namespace Gs2::Money2::Domain::SpeculativeExecutor
                 return Future->GetTask().Error();
             }
             *Result = Future->GetTask().Result();
+            return nullptr;
         }
         if (FVerifyReceiptByUserIdSpeculativeExecutor::Action() == NewConsumeAction->GetAction()) {
+            if (Rate != 1)
+            {
+                return nullptr;
+            }
             TSharedPtr<FJsonObject> RequestModelJson;
             if (const TSharedRef<TJsonReader<>> JsonReader = TJsonReaderFactory<>::Create(NewConsumeAction->GetRequest().IsSet() ? *NewConsumeAction->GetRequest() : "{}");
                 !FJsonSerializer::Deserialize(JsonReader, RequestModelJson))
@@ -95,7 +101,6 @@ namespace Gs2::Money2::Domain::SpeculativeExecutor
                 return nullptr;
             }
             auto Request = Request::FVerifyReceiptByUserIdRequest::FromJson(RequestModelJson);
-            Request = FVerifyReceiptByUserIdSpeculativeExecutor::Rate(Request, Rate);
             auto Future = FVerifyReceiptByUserIdSpeculativeExecutor::Execute(
                 Domain,
                 Service,
@@ -108,6 +113,7 @@ namespace Gs2::Money2::Domain::SpeculativeExecutor
                 return Future->GetTask().Error();
             }
             *Result = Future->GetTask().Result();
+            return nullptr;
         }
         return nullptr;
     }

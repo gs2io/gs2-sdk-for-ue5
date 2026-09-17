@@ -108,6 +108,8 @@ namespace Gs2::Formation::Domain::Model
             const FPropertyFormAccessTokenDomain& From
         );
 
+
+
         class GS2FORMATION_API FGetTask final :
             public Gs2::Core::Util::TGs2Future<Gs2::Formation::Model::FPropertyForm>,
             public TSharedFromThis<FGetTask>
@@ -133,6 +135,8 @@ namespace Gs2::Formation::Domain::Model
         TSharedPtr<FAsyncTask<FGetTask>> Get(
             Request::FGetPropertyFormRequestPtr Request
         );
+
+
 
         class GS2FORMATION_API FGetWithSignatureTask final :
             public Gs2::Core::Util::TGs2Future<Gs2::Formation::Domain::Model::FPropertyFormAccessTokenDomain>,
@@ -160,6 +164,8 @@ namespace Gs2::Formation::Domain::Model
             Request::FGetPropertyFormWithSignatureRequestPtr Request
         );
 
+
+
         class GS2FORMATION_API FSetTask final :
             public Gs2::Core::Util::TGs2Future<Gs2::Formation::Domain::Model::FPropertyFormAccessTokenDomain>,
             public TSharedFromThis<FSetTask>
@@ -186,6 +192,8 @@ namespace Gs2::Formation::Domain::Model
             Request::FSetPropertyFormRequestPtr Request
         );
 
+
+
         class GS2FORMATION_API FSetWithSignatureTask final :
             public Gs2::Core::Util::TGs2Future<Gs2::Formation::Domain::Model::FPropertyFormAccessTokenDomain>,
             public TSharedFromThis<FSetWithSignatureTask>
@@ -211,6 +219,8 @@ namespace Gs2::Formation::Domain::Model
         TSharedPtr<FAsyncTask<FSetWithSignatureTask>> SetWithSignature(
             Request::FSetPropertyFormWithSignatureRequestPtr Request
         );
+
+
 
         class GS2FORMATION_API FDeleteTask final :
             public Gs2::Core::Util::TGs2Future<Gs2::Formation::Domain::Model::FPropertyFormAccessTokenDomain>,
@@ -273,7 +283,34 @@ namespace Gs2::Formation::Domain::Model
 
         TSharedPtr<FAsyncTask<FModelTask>> Model();
 
+        void Invalidate();
+
         Gs2::Core::Domain::CallbackID Subscribe(
+            TFunction<void(Gs2::Formation::Model::FPropertyFormPtr)> Callback
+        );
+
+        class GS2FORMATION_API FSubscribeWithInitialCallTask final :
+            public Gs2::Core::Util::TGs2Future<Gs2::Core::Domain::CallbackID>,
+            public TSharedFromThis<FSubscribeWithInitialCallTask>
+        {
+            const TSharedPtr<FPropertyFormAccessTokenDomain> Self;
+            const TFunction<void(Gs2::Formation::Model::FPropertyFormPtr)> Callback;
+        public:
+            FSubscribeWithInitialCallTask(
+                const TSharedPtr<FPropertyFormAccessTokenDomain>& Self,
+                TFunction<void(Gs2::Formation::Model::FPropertyFormPtr)> Callback
+            );
+
+            FSubscribeWithInitialCallTask(
+                const FSubscribeWithInitialCallTask& From
+            );
+
+            virtual Gs2::Core::Model::FGs2ErrorPtr Action(
+                TSharedPtr<TSharedPtr<Gs2::Core::Domain::CallbackID>> Result
+            ) override;
+        };
+
+        TSharedPtr<FAsyncTask<FSubscribeWithInitialCallTask>> SubscribeWithInitialCall(
             TFunction<void(Gs2::Formation::Model::FPropertyFormPtr)> Callback
         );
 

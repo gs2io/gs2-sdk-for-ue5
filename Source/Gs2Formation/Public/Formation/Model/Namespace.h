@@ -19,6 +19,7 @@
 #include "CoreMinimal.h"
 #include "Core/Gs2Object.h"
 #include "TransactionSetting.h"
+#include "TransactionSettingV2.h"
 #include "ScriptSetting.h"
 #include "LogSetting.h"
 
@@ -30,6 +31,7 @@ namespace Gs2::Formation::Model
         TOptional<FString> NameValue;
         TOptional<FString> DescriptionValue;
         TSharedPtr<FTransactionSetting> TransactionSettingValue;
+        TSharedPtr<FTransactionSettingV2> TransactionSettingV2Value;
         TSharedPtr<FScriptSetting> UpdateMoldScriptValue;
         TSharedPtr<FScriptSetting> UpdateFormScriptValue;
         TSharedPtr<FScriptSetting> UpdatePropertyFormScriptValue;
@@ -49,6 +51,7 @@ namespace Gs2::Formation::Model
         TSharedPtr<FNamespace> WithName(const TOptional<FString> Name);
         TSharedPtr<FNamespace> WithDescription(const TOptional<FString> Description);
         TSharedPtr<FNamespace> WithTransactionSetting(const TSharedPtr<FTransactionSetting> TransactionSetting);
+        TSharedPtr<FNamespace> WithTransactionSettingV2(const TSharedPtr<FTransactionSettingV2> TransactionSettingV2);
         TSharedPtr<FNamespace> WithUpdateMoldScript(const TSharedPtr<FScriptSetting> UpdateMoldScript);
         TSharedPtr<FNamespace> WithUpdateFormScript(const TSharedPtr<FScriptSetting> UpdateFormScript);
         TSharedPtr<FNamespace> WithUpdatePropertyFormScript(const TSharedPtr<FScriptSetting> UpdatePropertyFormScript);
@@ -61,6 +64,7 @@ namespace Gs2::Formation::Model
         TOptional<FString> GetName() const;
         TOptional<FString> GetDescription() const;
         TSharedPtr<FTransactionSetting> GetTransactionSetting() const;
+        TSharedPtr<FTransactionSettingV2> GetTransactionSettingV2() const;
         TSharedPtr<FScriptSetting> GetUpdateMoldScript() const;
         TSharedPtr<FScriptSetting> GetUpdateFormScript() const;
         TSharedPtr<FScriptSetting> GetUpdatePropertyFormScript() const;

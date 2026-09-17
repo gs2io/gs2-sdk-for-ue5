@@ -12,6 +12,8 @@
  * on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either
  * express or implied. See the License for the specific language governing
  * permissions and limitations under the License.
+ *
+ * deny overwrite
  */
 
 // ReSharper disable CppUnusedIncludeDirective
@@ -30,6 +32,11 @@ namespace Gs2::Core::Domain
     typedef TSharedPtr<FGs2> FGs2Ptr;
 }
 
+namespace Gs2::Core::Domain::SpeculativeExecutor
+{
+    class FPreparedSpeculativeCommit;
+}
+
 namespace Gs2::Matchmaking::Domain
 {
     class FGs2MatchmakingDomain;
@@ -42,7 +49,7 @@ namespace Gs2::Matchmaking::Domain::SpeculativeExecutor
     {
     public:
         class FCommitTask final :
-            public Gs2::Core::Util::TGs2Future<TFunction<void()>>,
+            public Gs2::Core::Util::TGs2Future<Gs2::Core::Domain::SpeculativeExecutor::FPreparedSpeculativeCommit>,
             public TSharedFromThis<FCommitTask>
         {
             const Gs2::Core::Domain::FGs2Ptr Domain;
@@ -50,6 +57,7 @@ namespace Gs2::Matchmaking::Domain::SpeculativeExecutor
             const Gs2::Auth::Model::FAccessTokenPtr AccessToken;
             const Gs2::Core::Model::FVerifyActionPtr VerifyAction;
             TBigInt<1024, false> Rate;
+            const bool Inverse;
 
         public:
             explicit FCommitTask(
@@ -57,7 +65,8 @@ namespace Gs2::Matchmaking::Domain::SpeculativeExecutor
                 const Gs2::Matchmaking::Domain::FGs2MatchmakingDomainPtr& Service,
                 const Gs2::Auth::Model::FAccessTokenPtr& AccessToken,
                 const Gs2::Core::Model::FVerifyActionPtr& VerifyAction,
-                TBigInt<1024, false> Rate
+                TBigInt<1024, false> Rate,
+                bool Inverse = false
             );
 
             FCommitTask(
@@ -65,12 +74,20 @@ namespace Gs2::Matchmaking::Domain::SpeculativeExecutor
             );
 
             virtual Gs2::Core::Model::FGs2ErrorPtr Action(
-                TSharedPtr<TSharedPtr<TFunction<void()>>> Result
+                TSharedPtr<TSharedPtr<Gs2::Core::Domain::SpeculativeExecutor::FPreparedSpeculativeCommit>> Result
             ) override;
         };
         friend FCommitTask;
 
         static TSharedPtr<FAsyncTask<FVerifyActionSpeculativeExecutorIndex::FCommitTask>> Execute(
+            const Gs2::Core::Domain::FGs2Ptr& Domain,
+            const Gs2::Matchmaking::Domain::FGs2MatchmakingDomainPtr& Service,
+            const Gs2::Auth::Model::FAccessTokenPtr& AccessToken,
+            const Gs2::Core::Model::FVerifyActionPtr& VerifyAction,
+            TBigInt<1024, false> Rate
+        );
+
+        static TSharedPtr<FAsyncTask<FVerifyActionSpeculativeExecutorIndex::FCommitTask>> ExecuteInverse(
             const Gs2::Core::Domain::FGs2Ptr& Domain,
             const Gs2::Matchmaking::Domain::FGs2MatchmakingDomainPtr& Service,
             const Gs2::Auth::Model::FAccessTokenPtr& AccessToken,

@@ -293,7 +293,7 @@ namespace Gs2::UE5::Enhance::Domain::Model
     Gs2::Core::Domain::CallbackID FEzProgressGameSessionDomain::Subscribe(TFunction<void(Gs2::UE5::Enhance::Model::FEzProgressPtr)> Callback)
     {
         return Domain->Subscribe(
-            [&](Gs2::Enhance::Model::FProgressPtr Item)
+            [Callback](Gs2::Enhance::Model::FProgressPtr Item)
             {
                 Callback(Gs2::UE5::Enhance::Model::FEzProgress::FromModel(Item));
             }

@@ -26,7 +26,10 @@
 
 #include "Inbox/Domain/SpeculativeExecutor/Transaction/BatchReadMessagesByUserIdSpeculativeExecutor.h"
 
+#include "Auth/Model/AccessToken.h"
 #include "Core/Domain/Gs2.h"
+#include "Core/Domain/SpeculativeExecutor/PreparedSpeculativeCommit.h"
+#include "Inbox/Domain/SpeculativeExecutor/Transaction/ReadMessageByUserIdSpeculativeExecutor.h"
 
 namespace Gs2::Inbox::Domain::Transaction::SpeculativeExecutor
 {
@@ -58,11 +61,75 @@ namespace Gs2::Inbox::Domain::Transaction::SpeculativeExecutor
     }
 
     Gs2::Core::Model::FGs2ErrorPtr FBatchReadMessagesByUserIdSpeculativeExecutor::FCommitTask::Action(
-        TSharedPtr<TSharedPtr<TFunction<void()>>> Result)
+        TSharedPtr<TSharedPtr<Gs2::Core::Domain::SpeculativeExecutor::FPreparedSpeculativeCommit>> Result)
     {
-        // TODO: Speculative execution not supported
-        UE_LOG(Gs2Log, Warning, TEXT("Speculative execution not supported on this action: %s"), ToCStr(FBatchReadMessagesByUserIdSpeculativeExecutor::Action()))
+        *Result = nullptr;
+        if (!Domain.IsValid() || !Domain->RestSession.IsValid() || !AccessToken.IsValid() || !Request.IsValid()) return nullptr;
 
+        Gs2::Auth::Model::FAccessTokenPtr PreparedToken = nullptr;
+        if (AccessToken.IsValid()) PreparedToken = MakeShared<Gs2::Auth::Model::FAccessToken>(*AccessToken);
+        Gs2::Inbox::Request::FBatchReadMessagesByUserIdRequestPtr PreparedRequest = nullptr;
+        const auto MessageNames = Request->GetMessageNames();
+        if (Request.IsValid())
+        {
+            const auto Config = Request->GetConfig();
+            const Gs2::Inbox::Request::FBatchReadMessagesByUserIdRequestPtr RequestForJson = MakeShared<Gs2::Inbox::Request::FBatchReadMessagesByUserIdRequest>()
+                ->WithContextStack(Request->GetContextStack())
+                ->WithNamespaceName(Request->GetNamespaceName())
+                ->WithUserId(Request->GetUserId())
+                ->WithTimeOffsetToken(Request->GetTimeOffsetToken())
+                ->WithDuplicationAvoider(Request->GetDuplicationAvoider());
+            if (MessageNames.IsValid())
+            {
+                const TSharedPtr<TArray<FString>> MessageNamesCopy = MakeShared<TArray<FString>>();
+                *MessageNamesCopy = *MessageNames;
+                RequestForJson->WithMessageNames(MessageNamesCopy);
+            }
+            if (Config.IsValid())
+            {
+                const TSharedPtr<TArray<TSharedPtr<Gs2::Inbox::Model::FConfig>>> FilteredConfig = MakeShared<TArray<TSharedPtr<Gs2::Inbox::Model::FConfig>>>();
+                for (const auto& Item : *Config)
+                {
+                    if (Item.IsValid()) FilteredConfig->Add(MakeShared<Gs2::Inbox::Model::FConfig>(*Item));
+                }
+                RequestForJson->WithConfig(FilteredConfig);
+            }
+            PreparedRequest = Gs2::Inbox::Request::FBatchReadMessagesByUserIdRequest::FromJson(RequestForJson->ToJson());
+        }
+        if (!PreparedToken.IsValid() || !PreparedRequest.IsValid() || !PreparedToken->GetUserId().IsSet() ||
+            PreparedToken->GetUserId().Get(FString()).IsEmpty() || !MessageNames.IsValid()) return nullptr;
+        if (PreparedRequest->GetUserId().IsSet() && PreparedRequest->GetUserId().Get(FString()) == TEXT("#{userId}"))
+        {
+            PreparedRequest->WithUserId(PreparedToken->GetUserId());
+        }
+        if (!PreparedRequest->GetUserId().IsSet() || PreparedRequest->GetUserId().Get(FString()) != PreparedToken->GetUserId().Get(FString()) ||
+            !PreparedRequest->GetNamespaceName().IsSet() || PreparedRequest->GetNamespaceName().Get(FString()).IsEmpty() ||
+            !PreparedRequest->GetMessageNames().IsValid()) return nullptr;
+
+        const TSharedPtr<Gs2::Core::Domain::SpeculativeExecutor::FPreparedSpeculativeCommit::FPreparedCommitArray> PreparedCommits =
+            MakeShared<Gs2::Core::Domain::SpeculativeExecutor::FPreparedSpeculativeCommit::FPreparedCommitArray>();
+        for (const auto& MessageName : *PreparedRequest->GetMessageNames())
+        {
+            if (MessageName.IsEmpty()) continue;
+            const Gs2::Inbox::Request::FReadMessageByUserIdRequestPtr ReadRequest =
+                MakeShared<Gs2::Inbox::Request::FReadMessageByUserIdRequest>()
+                    ->WithNamespaceName(PreparedRequest->GetNamespaceName())
+                    ->WithUserId(PreparedToken->GetUserId())
+                    ->WithMessageName(TOptional<FString>(MessageName))
+                    ->WithConfig(PreparedRequest->GetConfig())
+                    ->WithTimeOffsetToken(PreparedRequest->GetTimeOffsetToken());
+            const auto Future = Gs2::Inbox::Domain::Transaction::SpeculativeExecutor::FReadMessageByUserIdSpeculativeExecutor::Execute(
+                Domain, Service, PreparedToken, ReadRequest);
+            Future->StartSynchronousTask();
+            if (Future->GetTask().IsError()) return Future->GetTask().Error();
+            const auto ChildCommit = Future->GetTask().Result();
+            if (ChildCommit.IsValid()) PreparedCommits->Add(ChildCommit);
+        }
+        if (PreparedCommits->Num() == 0) return nullptr;
+        const auto AtomicCommit = Gs2::Core::Domain::SpeculativeExecutor::FPreparedSpeculativeCommit::BuildAtomicCommit(
+            PreparedCommits, PreparedCommits->Num());
+        if (!AtomicCommit.IsValid()) return nullptr;
+        *Result = Gs2::Core::Domain::SpeculativeExecutor::FPreparedSpeculativeCommit::WrapLegacy(AtomicCommit);
         return nullptr;
     }
 

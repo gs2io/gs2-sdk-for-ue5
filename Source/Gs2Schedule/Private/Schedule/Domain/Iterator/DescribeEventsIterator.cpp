@@ -1,3 +1,4 @@
+
 /*
  * Copyright 2016 Game Server Services, Inc. or its affiliates. All Rights
  * Reserved.
@@ -25,10 +26,15 @@
 // ReSharper disable CppUnusedIncludeDirective
 
 #include "Schedule/Domain/Iterator/DescribeEventsIterator.h"
+
+// deny overwrite
+
 #include "Schedule/Domain/Model/Event.h"
 #include "Schedule/Domain/Model/User.h"
 
 #include "Core/Domain/Gs2.h"
+
+#include "Schedule/Model/Cache/Event.h"
 
 namespace Gs2::Schedule::Domain::Iterator
 {
@@ -77,7 +83,7 @@ namespace Gs2::Schedule::Domain::Iterator
 
     FDescribeEventsIterator::FIterator& FDescribeEventsIterator::FIterator::operator++()
     {
-        
+
 
         if (bEnd) return *this;
 
@@ -87,16 +93,18 @@ namespace Gs2::Schedule::Domain::Iterator
             return *this;
         }
 
-        if (RangeIteratorOpt) ++*RangeIteratorOpt;
+        if (RangeIteratorOpt && *RangeIteratorOpt) ++*RangeIteratorOpt;
 
+        // Keep the previous page alive until its iterator has been replaced.
+        const auto PreviousRange = Range;
         if (!RangeIteratorOpt || (!*RangeIteratorOpt && !bLast))
         {
-            const auto ListParentKey = Gs2::Schedule::Domain::Model::FUserDomain::CreateCacheParentKey(
+            const auto ListParentKey = Gs2::Schedule::Model::Cache::FEventCache::CreateCacheParentKey(
                 Self->NamespaceName,
-                Self->UserId(),
-                "Event"
+                Self->AccessToken.IsValid() ? Self->AccessToken->GetUserId() : TOptional<FString>(),
+                TOptional<bool>(true),
+                Self->AccessToken.IsValid() ? Self->AccessToken->GetTimeOffset() : TOptional<int32>()
             );
-
             if (!RangeIteratorOpt)
             {
                 Range = Self->Gs2->Cache->TryGetList<Gs2::Schedule::Model::FEvent>(ListParentKey);
@@ -109,13 +117,13 @@ namespace Gs2::Schedule::Domain::Iterator
                     return *this;
                 }
             }
-
-            const auto Future = Self->Client->DescribeEvents(
+            const auto Request =
                 MakeShared<Gs2::Schedule::Request::FDescribeEventsRequest>()
                     ->WithContextStack(Self->Gs2->DefaultContextStack)
                     ->WithNamespaceName(Self->NamespaceName)
                     ->WithAccessToken(Self->AccessToken == nullptr ? TOptional<FString>() : Self->AccessToken->GetToken())
-            );
+            ;
+            const auto Future = Self->Client->DescribeEvents(Request);
             Future->StartSynchronousTask();
             if (Future->GetTask().IsError())
             {
@@ -129,18 +137,24 @@ namespace Gs2::Schedule::Domain::Iterator
             }
             const auto R = Future->GetTask().Result();
             Future->EnsureCompletion();
-            Range = R->GetItems();
-            for (auto Item : *R->GetItems())
+            Range = R->GetItems().IsValid() ? R->GetItems() : MakeShared<TArray<Gs2::Schedule::Model::FEventPtr>>();
+            const auto CacheOwnerSnapshotUserId = Self->AccessToken.IsValid() ? Self->UserId() : TOptional<FString>();
+            const auto CacheOwnerSnapshotTimeOffset = Self->AccessToken.IsValid() ? Self->AccessToken->GetTimeOffset() : TOptional<int32>();
+            const auto ResultModel = R;
+
+
+            if (Range.IsValid())
             {
-                Self->Gs2->Cache->Put(
-                    Gs2::Schedule::Model::FEvent::TypeName,
-                    ListParentKey,
-                    Gs2::Schedule::Domain::Model::FEventDomain::CreateCacheKey(
-                        Item->GetName()
-                    ),
-                    Item,
-                    FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
-                );
+                for (const auto& Item : *Range)
+                {
+                    if (!Item.IsValid()) continue;
+                    Gs2::Schedule::Model::Cache::FEventCache::Put(
+                        Self->Gs2->Cache,
+                        Request->GetNamespaceName(), CacheOwnerSnapshotUserId, Item->GetName(),
+                        TOptional<bool>(true),
+                        CacheOwnerSnapshotTimeOffset, Item
+                    );
+                }
             }
             if (Range)
             {
@@ -150,7 +164,12 @@ namespace Gs2::Schedule::Domain::Iterator
             if (bLast) {
                 Self->Gs2->Cache->SetListCached(
                     Gs2::Schedule::Model::FEvent::TypeName,
-                    ListParentKey
+                    Gs2::Schedule::Model::Cache::FEventCache::CreateCacheParentKey(
+                        Self->NamespaceName,
+                        Self->AccessToken.IsValid() ? Self->AccessToken->GetUserId() : TOptional<FString>(),
+                        TOptional<bool>(true),
+                        Self->AccessToken.IsValid() ? Self->AccessToken->GetTimeOffset() : TOptional<int32>()
+                    )
                 );
             }
         }
@@ -180,4 +199,3 @@ namespace Gs2::Schedule::Domain::Iterator
 #elif defined(__clang__)
 #pragma clang diagnostic pop
 #endif
-

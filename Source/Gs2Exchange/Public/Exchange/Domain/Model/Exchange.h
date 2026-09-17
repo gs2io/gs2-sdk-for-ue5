@@ -83,6 +83,8 @@ namespace Gs2::Exchange::Domain::Model
             const FExchangeDomain& From
         );
 
+
+
         class GS2EXCHANGE_API FExchangeTask final :
             public Gs2::Core::Util::TGs2Future<Gs2::Core::Domain::FTransactionDomain>,
             public TSharedFromThis<FExchangeTask>
@@ -108,6 +110,8 @@ namespace Gs2::Exchange::Domain::Model
         TSharedPtr<FAsyncTask<FExchangeTask>> Exchange(
             Request::FExchangeByUserIdRequestPtr Request
         );
+
+
 
         class GS2EXCHANGE_API FIncrementalTask final :
             public Gs2::Core::Util::TGs2Future<Gs2::Core::Domain::FTransactionDomain>,

@@ -95,6 +95,8 @@ namespace Gs2::Showcase::Domain::Model
             const FRandomShowcaseStatusAccessTokenDomain& From
         );
 
+
+
         class GS2SHOWCASE_API FIncrementPurchaseCountTask final :
             public Gs2::Core::Util::TGs2Future<Gs2::Showcase::Domain::Model::FRandomDisplayItemAccessTokenDomain>,
             public TSharedFromThis<FIncrementPurchaseCountTask>

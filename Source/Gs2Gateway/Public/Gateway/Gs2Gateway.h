@@ -21,8 +21,10 @@
 #include "Model/WebSocketSession.h"
 #include "Model/FirebaseToken.h"
 #include "Model/SendNotificationEntry.h"
+#include "Model/MobileNotificationMessage.h"
 #include "Model/LogSetting.h"
 #include "Model/TransactionSetting.h"
+#include "Model/TransactionSettingV2.h"
 
 // DescribeNamespaces
 #include "Request/DescribeNamespacesRequest.h"

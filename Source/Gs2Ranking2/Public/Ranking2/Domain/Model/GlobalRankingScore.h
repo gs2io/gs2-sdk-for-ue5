@@ -131,6 +131,8 @@ namespace Gs2::Ranking2::Domain::Model
             const FGlobalRankingScoreDomain& From
         );
 
+
+
         class GS2RANKING2_API FGetTask final :
             public Gs2::Core::Util::TGs2Future<Gs2::Ranking2::Model::FGlobalRankingScore>,
             public TSharedFromThis<FGetTask>
@@ -157,6 +159,8 @@ namespace Gs2::Ranking2::Domain::Model
             Request::FGetGlobalRankingScoreByUserIdRequestPtr Request
         );
 
+
+
         class GS2RANKING2_API FDeleteTask final :
             public Gs2::Core::Util::TGs2Future<Gs2::Ranking2::Domain::Model::FGlobalRankingScoreDomain>,
             public TSharedFromThis<FDeleteTask>
@@ -182,6 +186,8 @@ namespace Gs2::Ranking2::Domain::Model
         TSharedPtr<FAsyncTask<FDeleteTask>> Delete(
             Request::FDeleteGlobalRankingScoreByUserIdRequestPtr Request
         );
+
+
 
         class GS2RANKING2_API FVerifyTask final :
             public Gs2::Core::Util::TGs2Future<Gs2::Ranking2::Domain::Model::FGlobalRankingScoreDomain>,

@@ -38,7 +38,8 @@ namespace Gs2::Core::Domain
 		const Gs2::JobQueue::Result::FPushByUserIdResultPtr& Result
 	)
 	{
-		auto NewJobQueueDomain = [&GS2, NewTransactionDomain, &AccessToken](const Gs2::JobQueue::Result::FPushByUserIdResultPtr& Result)
+		const auto Dispatch = GS2->DispatchAccessToken;
+		auto NewJobQueueDomain = [GS2, NewTransactionDomain, AccessToken](const Gs2::JobQueue::Result::FPushByUserIdResultPtr& Result)
 		{
 			return ToTransaction(
 				GS2,
@@ -47,13 +48,14 @@ namespace Gs2::Core::Domain
 				Result
 			);
 		};
-		if (Result->GetAutoRun().GetValue()) {
+		if (Result->GetAutoRun().Get(false)) {
 			return MakeShared<FTransactionAccessTokenDomain>(
 				GS2,
 				NewJobQueueDomain,
 				NewTransactionDomain,
+				Dispatch,
 				AccessToken,
-				[&GS2, NewJobQueueDomain, NewTransactionDomain, &AccessToken, &Result]
+				[&GS2, NewJobQueueDomain, NewTransactionDomain, Dispatch, &AccessToken, &Result]
 				{
 					auto Arr = MakeShared<TArray<FTransactionAccessTokenDomainPtr>>();
 					for (auto Item : *Result->GetItems())
@@ -63,6 +65,7 @@ namespace Gs2::Core::Domain
 								GS2,
 								NewJobQueueDomain,
 								NewTransactionDomain,
+								Dispatch,
 								AccessToken,
 								*Gs2::JobQueue::Model::FJob::GetNamespaceNameFromGrn(*Item->GetJobId()),
 								*Gs2::JobQueue::Model::FJob::GetJobNameFromGrn(*Item->GetJobId())
@@ -76,14 +79,21 @@ namespace Gs2::Core::Domain
 		else {
 			for (auto Item : *Result->GetItems())
 			{
-				GS2->JobQueueDomain->Push(*Gs2::JobQueue::Model::FJob::GetNamespaceNameFromGrn(*Item->GetJobId()));
+				if (AccessToken.IsValid() && AccessToken->GetUserId().IsSet())
+				{
+					GS2->JobQueueDomain->PushForUser(
+						*Gs2::JobQueue::Model::FJob::GetNamespaceNameFromGrn(*Item->GetJobId()),
+						AccessToken->GetUserId().GetValue()
+					);
+				}
 			}
 			return MakeShared<FTransactionAccessTokenDomain>(
 				GS2,
 				NewJobQueueDomain,
 				NewTransactionDomain,
+				Dispatch,
 				AccessToken,
-				[&GS2, NewJobQueueDomain, NewTransactionDomain, &AccessToken, &Result]
+				[&GS2, NewJobQueueDomain, NewTransactionDomain, Dispatch, &AccessToken, &Result]
 				{
 					auto Arr = MakeShared<TArray<FTransactionAccessTokenDomainPtr>>();
 					for (auto Item : *Result->GetItems())
@@ -93,6 +103,7 @@ namespace Gs2::Core::Domain
 								GS2,
 								NewJobQueueDomain,
 								NewTransactionDomain,
+								Dispatch,
 								AccessToken,
 								*Gs2::JobQueue::Model::FJob::GetNamespaceNameFromGrn(*Item->GetJobId()),
 								*Gs2::JobQueue::Model::FJob::GetJobNameFromGrn(*Item->GetJobId())
@@ -119,7 +130,7 @@ namespace Gs2::Core::Domain
 		const Gs2::JobQueue::Result::FPushByUserIdResultPtr& Result
 	)
 	{
-		auto NewJobQueueDomain = [&GS2, NewTransactionDomain, UserId](const Gs2::JobQueue::Result::FPushByUserIdResultPtr& Result)
+		auto NewJobQueueDomain = [GS2, NewTransactionDomain, UserId](const Gs2::JobQueue::Result::FPushByUserIdResultPtr& Result)
 		{
 			return ToTransaction(
 				GS2,
@@ -128,7 +139,7 @@ namespace Gs2::Core::Domain
 				Result
 			);
 		};
-		if (Result->GetAutoRun().GetValue()) {
+		if (Result->GetAutoRun().Get(false)) {
 			return MakeShared<FTransactionDomain>(
 				GS2,
 				NewJobQueueDomain,
@@ -157,7 +168,13 @@ namespace Gs2::Core::Domain
 		else {
 			for (auto Item : *Result->GetItems())
 			{
-				GS2->JobQueueDomain->Push(*Gs2::JobQueue::Model::FJob::GetNamespaceNameFromGrn(*Item->GetJobId()));
+				if (!UserId.IsEmpty())
+				{
+					GS2->JobQueueDomain->PushForUser(
+						*Gs2::JobQueue::Model::FJob::GetNamespaceNameFromGrn(*Item->GetJobId()),
+						UserId
+					);
+				}
 			}
 			return MakeShared<FTransactionDomain>(
 				GS2,
@@ -202,7 +219,8 @@ namespace Gs2::Core::Domain
 		FString JobName
 	)
 	{
-		auto NewJobQueueDomain = [&GS2, NewTransactionDomain, &AccessToken](const Gs2::JobQueue::Result::FPushByUserIdResultPtr& Result)
+		const auto Dispatch = GS2->DispatchAccessToken;
+		auto NewJobQueueDomain = [GS2, NewTransactionDomain, AccessToken](const Gs2::JobQueue::Result::FPushByUserIdResultPtr& Result)
 		{
 			return ToTransaction(
 				GS2,
@@ -216,8 +234,9 @@ namespace Gs2::Core::Domain
 				GS2,
 				NewJobQueueDomain,
 				NewTransactionDomain,
+				Dispatch,
 				AccessToken,
-				[&GS2, NewJobQueueDomain, NewTransactionDomain, &AccessToken, NamespaceName, JobName]
+				[&GS2, NewJobQueueDomain, NewTransactionDomain, Dispatch, &AccessToken, NamespaceName, JobName]
 				{
 					auto Arr = MakeShared<TArray<FTransactionAccessTokenDomainPtr>>();
 					Arr->Add(
@@ -225,6 +244,7 @@ namespace Gs2::Core::Domain
 							GS2,
 							NewJobQueueDomain,
 							NewTransactionDomain,
+							Dispatch,
 							AccessToken,
 							NamespaceName,
 							JobName
@@ -235,13 +255,20 @@ namespace Gs2::Core::Domain
 			);
 		}
 		else {
-			GS2->JobQueueDomain->Push(NamespaceName);
+			if (AccessToken.IsValid() && AccessToken->GetUserId().IsSet())
+			{
+				GS2->JobQueueDomain->PushForUser(
+					NamespaceName,
+					AccessToken->GetUserId().GetValue()
+				);
+			}
 			return MakeShared<FTransactionAccessTokenDomain>(
 				GS2,
 				NewJobQueueDomain,
 				NewTransactionDomain,
+				Dispatch,
 				AccessToken,
-				[&GS2, NewJobQueueDomain, NewTransactionDomain, &AccessToken, NamespaceName, JobName]
+				[&GS2, NewJobQueueDomain, NewTransactionDomain, Dispatch, &AccessToken, NamespaceName, JobName]
 				{
 					auto Arr = MakeShared<TArray<FTransactionAccessTokenDomainPtr>>();
 					Arr->Add(
@@ -249,6 +276,7 @@ namespace Gs2::Core::Domain
 							GS2,
 							NewJobQueueDomain,
 							NewTransactionDomain,
+							Dispatch,
 							AccessToken,
 							NamespaceName,
 							JobName
@@ -276,7 +304,7 @@ namespace Gs2::Core::Domain
 		FString JobName
 	)
 	{
-		auto NewJobQueueDomain = [&GS2, NewTransactionDomain, UserId](const Gs2::JobQueue::Result::FPushByUserIdResultPtr& Result)
+		auto NewJobQueueDomain = [GS2, NewTransactionDomain, UserId](const Gs2::JobQueue::Result::FPushByUserIdResultPtr& Result)
 		{
 			return ToTransaction(
 				GS2,
@@ -309,7 +337,13 @@ namespace Gs2::Core::Domain
 			);
 		}
 		else {
-			GS2->JobQueueDomain->Push(NamespaceName);
+			if (!UserId.IsEmpty())
+			{
+				GS2->JobQueueDomain->PushForUser(
+					NamespaceName,
+					UserId
+				);
+			}
 			return MakeShared<FTransactionDomain>(
 				GS2,
 				NewJobQueueDomain,

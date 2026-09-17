@@ -22,6 +22,7 @@ namespace Gs2::Gateway::Request
         NamespaceNameValue(TOptional<FString>()),
         UserIdValue(TOptional<FString>()),
         TokenValue(TOptional<FString>()),
+        LocaleValue(TOptional<FString>()),
         TimeOffsetTokenValue(TOptional<FString>())
     {
     }
@@ -32,6 +33,7 @@ namespace Gs2::Gateway::Request
         NamespaceNameValue(From.NamespaceNameValue),
         UserIdValue(From.UserIdValue),
         TokenValue(From.TokenValue),
+        LocaleValue(From.LocaleValue),
         TimeOffsetTokenValue(From.TimeOffsetTokenValue)
     {
     }
@@ -65,6 +67,14 @@ namespace Gs2::Gateway::Request
     )
     {
         this->TokenValue = Token;
+        return SharedThis(this);
+    }
+
+    TSharedPtr<FSetFirebaseTokenByUserIdRequest> FSetFirebaseTokenByUserIdRequest::WithLocale(
+        const TOptional<FString> Locale
+    )
+    {
+        this->LocaleValue = Locale;
         return SharedThis(this);
     }
 
@@ -102,6 +112,11 @@ namespace Gs2::Gateway::Request
     TOptional<FString> FSetFirebaseTokenByUserIdRequest::GetToken() const
     {
         return TokenValue;
+    }
+
+    TOptional<FString> FSetFirebaseTokenByUserIdRequest::GetLocale() const
+    {
+        return LocaleValue;
     }
 
     TOptional<FString> FSetFirebaseTokenByUserIdRequest::GetTimeOffsetToken() const
@@ -148,6 +163,15 @@ namespace Gs2::Gateway::Request
                   }
                   return TOptional<FString>();
               }() : TOptional<FString>())
+            ->WithLocale(Data->HasField(ANSI_TO_TCHAR("locale")) ? [Data]() -> TOptional<FString>
+              {
+                  FString v("");
+                    if (Data->TryGetStringField(ANSI_TO_TCHAR("locale"), v))
+                  {
+                        return TOptional(v);
+                  }
+                  return TOptional<FString>();
+              }() : TOptional<FString>())
             ->WithTimeOffsetToken(Data->HasField(ANSI_TO_TCHAR("timeOffsetToken")) ? [Data]() -> TOptional<FString>
               {
                   FString v("");
@@ -178,6 +202,10 @@ namespace Gs2::Gateway::Request
         if (TokenValue.IsSet())
         {
             JsonRootObject->SetStringField(TEXT("token"), TokenValue.GetValue());
+        }
+        if (LocaleValue.IsSet())
+        {
+            JsonRootObject->SetStringField(TEXT("locale"), LocaleValue.GetValue());
         }
         if (TimeOffsetTokenValue.IsSet())
         {

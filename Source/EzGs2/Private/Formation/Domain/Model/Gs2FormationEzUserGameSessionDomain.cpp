@@ -63,7 +63,8 @@ namespace Gs2::UE5::Formation::Domain::Model
         );
     }
 
-    void FEzUserGameSessionDomain::UnsubscribeMolds(Gs2::Core::Domain::CallbackID CallbackId)
+    void FEzUserGameSessionDomain::UnsubscribeMolds(
+            Gs2::Core::Domain::CallbackID CallbackId)
     {
         Domain->UnsubscribeMolds(
             CallbackId
@@ -82,17 +83,19 @@ namespace Gs2::UE5::Formation::Domain::Model
         );
     }
 
-    Gs2::Core::Domain::CallbackID FEzUserGameSessionDomain::SubscribePropertyForms(TFunction<void()> Callback)
+    Gs2::Core::Domain::CallbackID FEzUserGameSessionDomain::SubscribePropertyForms(TFunction<void()> Callback, const FString PropertyFormModelName)
     {
         return Domain->SubscribePropertyForms(
-            Callback
+            Callback, PropertyFormModelName
         );
     }
 
-    void FEzUserGameSessionDomain::UnsubscribePropertyForms(Gs2::Core::Domain::CallbackID CallbackId)
+    void FEzUserGameSessionDomain::UnsubscribePropertyForms(
+            const FString PropertyFormModelName,
+            Gs2::Core::Domain::CallbackID CallbackId)
     {
         Domain->UnsubscribePropertyForms(
-            CallbackId
+            PropertyFormModelName, CallbackId
         );
     }
 

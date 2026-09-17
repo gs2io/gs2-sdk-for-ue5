@@ -186,7 +186,8 @@ namespace Gs2::UE5::Ranking2::Domain::Model
         );
     }
 
-    void FEzClusterRankingSeasonGameSessionDomain::UnsubscribeClusterRankings(Gs2::Core::Domain::CallbackID CallbackId)
+    void FEzClusterRankingSeasonGameSessionDomain::UnsubscribeClusterRankings(
+            Gs2::Core::Domain::CallbackID CallbackId)
     {
         Domain->UnsubscribeClusterRankings(
             CallbackId
@@ -210,7 +211,8 @@ namespace Gs2::UE5::Ranking2::Domain::Model
         );
     }
 
-    void FEzClusterRankingSeasonGameSessionDomain::UnsubscribeClusterRankingReceivedRewards(Gs2::Core::Domain::CallbackID CallbackId)
+    void FEzClusterRankingSeasonGameSessionDomain::UnsubscribeClusterRankingReceivedRewards(
+            Gs2::Core::Domain::CallbackID CallbackId)
     {
         Domain->UnsubscribeClusterRankingReceivedRewards(
             CallbackId
@@ -234,7 +236,8 @@ namespace Gs2::UE5::Ranking2::Domain::Model
         );
     }
 
-    void FEzClusterRankingSeasonGameSessionDomain::UnsubscribeClusterRankingScores(Gs2::Core::Domain::CallbackID CallbackId)
+    void FEzClusterRankingSeasonGameSessionDomain::UnsubscribeClusterRankingScores(
+            Gs2::Core::Domain::CallbackID CallbackId)
     {
         Domain->UnsubscribeClusterRankingScores(
             CallbackId

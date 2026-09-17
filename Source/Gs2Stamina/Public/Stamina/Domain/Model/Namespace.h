@@ -106,6 +106,8 @@ namespace Gs2::Stamina::Domain::Model
             const FNamespaceDomain& From
         );
 
+
+
         class GS2STAMINA_API FGetStatusTask final :
             public Gs2::Core::Util::TGs2Future<Gs2::Stamina::Domain::Model::FNamespaceDomain>,
             public TSharedFromThis<FGetStatusTask>
@@ -131,6 +133,8 @@ namespace Gs2::Stamina::Domain::Model
         TSharedPtr<FAsyncTask<FGetStatusTask>> GetStatus(
             Request::FGetNamespaceStatusRequestPtr Request
         );
+
+
 
         class GS2STAMINA_API FGetTask final :
             public Gs2::Core::Util::TGs2Future<Gs2::Stamina::Model::FNamespace>,
@@ -158,6 +162,8 @@ namespace Gs2::Stamina::Domain::Model
             Request::FGetNamespaceRequestPtr Request
         );
 
+
+
         class GS2STAMINA_API FUpdateTask final :
             public Gs2::Core::Util::TGs2Future<Gs2::Stamina::Domain::Model::FNamespaceDomain>,
             public TSharedFromThis<FUpdateTask>
@@ -183,6 +189,8 @@ namespace Gs2::Stamina::Domain::Model
         TSharedPtr<FAsyncTask<FUpdateTask>> Update(
             Request::FUpdateNamespaceRequestPtr Request
         );
+
+
 
         class GS2STAMINA_API FDeleteTask final :
             public Gs2::Core::Util::TGs2Future<Gs2::Stamina::Domain::Model::FNamespaceDomain>,
@@ -210,6 +218,8 @@ namespace Gs2::Stamina::Domain::Model
             Request::FDeleteNamespaceRequestPtr Request
         );
 
+
+
         class GS2STAMINA_API FCreateMaxStaminaTableMasterTask final :
             public Gs2::Core::Util::TGs2Future<Gs2::Stamina::Domain::Model::FMaxStaminaTableMasterDomain>,
             public TSharedFromThis<FCreateMaxStaminaTableMasterTask>
@@ -235,6 +245,8 @@ namespace Gs2::Stamina::Domain::Model
         TSharedPtr<FAsyncTask<FCreateMaxStaminaTableMasterTask>> CreateMaxStaminaTableMaster(
             Request::FCreateMaxStaminaTableMasterRequestPtr Request
         );
+
+
 
         class GS2STAMINA_API FCreateRecoverIntervalTableMasterTask final :
             public Gs2::Core::Util::TGs2Future<Gs2::Stamina::Domain::Model::FRecoverIntervalTableMasterDomain>,
@@ -262,6 +274,8 @@ namespace Gs2::Stamina::Domain::Model
             Request::FCreateRecoverIntervalTableMasterRequestPtr Request
         );
 
+
+
         class GS2STAMINA_API FCreateRecoverValueTableMasterTask final :
             public Gs2::Core::Util::TGs2Future<Gs2::Stamina::Domain::Model::FRecoverValueTableMasterDomain>,
             public TSharedFromThis<FCreateRecoverValueTableMasterTask>
@@ -287,6 +301,8 @@ namespace Gs2::Stamina::Domain::Model
         TSharedPtr<FAsyncTask<FCreateRecoverValueTableMasterTask>> CreateRecoverValueTableMaster(
             Request::FCreateRecoverValueTableMasterRequestPtr Request
         );
+
+
 
         class GS2STAMINA_API FCreateStaminaModelMasterTask final :
             public Gs2::Core::Util::TGs2Future<Gs2::Stamina::Domain::Model::FStaminaModelMasterDomain>,
@@ -322,8 +338,33 @@ namespace Gs2::Stamina::Domain::Model
 
         Gs2::Core::Domain::CallbackID SubscribeMaxStaminaTableMasters(
             TFunction<void()> Callback
+
         );
 
+        class FCollectMaxStaminaTableMastersTask;
+
+        Gs2::Core::Domain::CallbackID SubscribeMaxStaminaTableMasters(
+            TFunction<void(TArray<Gs2::Stamina::Model::FMaxStaminaTableMasterPtr>)> Callback
+        );
+
+        void InvalidateMaxStaminaTableMasters();
+
+        class GS2STAMINA_API FSubscribeMaxStaminaTableMastersWithInitialCallTask final :
+            public Gs2::Core::Util::TGs2Future<Gs2::Core::Domain::CallbackID>,
+            public TSharedFromThis<FSubscribeMaxStaminaTableMastersWithInitialCallTask>
+        {
+            const TSharedPtr<FNamespaceDomain> Self;
+            const TFunction<void(TArray<Gs2::Stamina::Model::FMaxStaminaTableMasterPtr>)> Callback;
+
+        public:
+            FSubscribeMaxStaminaTableMastersWithInitialCallTask(const TSharedPtr<FNamespaceDomain>& Self, TFunction<void(TArray<Gs2::Stamina::Model::FMaxStaminaTableMasterPtr>)> Callback);
+            FSubscribeMaxStaminaTableMastersWithInitialCallTask(const FSubscribeMaxStaminaTableMastersWithInitialCallTask& From);
+            virtual Gs2::Core::Model::FGs2ErrorPtr Action(TSharedPtr<TSharedPtr<Gs2::Core::Domain::CallbackID>> Result) override;
+        };
+
+        TSharedPtr<FAsyncTask<FSubscribeMaxStaminaTableMastersWithInitialCallTask>> SubscribeMaxStaminaTableMastersWithInitialCall(
+            TFunction<void(TArray<Gs2::Stamina::Model::FMaxStaminaTableMasterPtr>)> Callback
+        );
         void UnsubscribeMaxStaminaTableMasters(
             Gs2::Core::Domain::CallbackID CallbackID
         );
@@ -337,8 +378,33 @@ namespace Gs2::Stamina::Domain::Model
 
         Gs2::Core::Domain::CallbackID SubscribeStaminaModels(
             TFunction<void()> Callback
+
         );
 
+        class FCollectStaminaModelsTask;
+
+        Gs2::Core::Domain::CallbackID SubscribeStaminaModels(
+            TFunction<void(TArray<Gs2::Stamina::Model::FStaminaModelPtr>)> Callback
+        );
+
+        void InvalidateStaminaModels();
+
+        class GS2STAMINA_API FSubscribeStaminaModelsWithInitialCallTask final :
+            public Gs2::Core::Util::TGs2Future<Gs2::Core::Domain::CallbackID>,
+            public TSharedFromThis<FSubscribeStaminaModelsWithInitialCallTask>
+        {
+            const TSharedPtr<FNamespaceDomain> Self;
+            const TFunction<void(TArray<Gs2::Stamina::Model::FStaminaModelPtr>)> Callback;
+
+        public:
+            FSubscribeStaminaModelsWithInitialCallTask(const TSharedPtr<FNamespaceDomain>& Self, TFunction<void(TArray<Gs2::Stamina::Model::FStaminaModelPtr>)> Callback);
+            FSubscribeStaminaModelsWithInitialCallTask(const FSubscribeStaminaModelsWithInitialCallTask& From);
+            virtual Gs2::Core::Model::FGs2ErrorPtr Action(TSharedPtr<TSharedPtr<Gs2::Core::Domain::CallbackID>> Result) override;
+        };
+
+        TSharedPtr<FAsyncTask<FSubscribeStaminaModelsWithInitialCallTask>> SubscribeStaminaModelsWithInitialCall(
+            TFunction<void(TArray<Gs2::Stamina::Model::FStaminaModelPtr>)> Callback
+        );
         void UnsubscribeStaminaModels(
             Gs2::Core::Domain::CallbackID CallbackID
         );
@@ -361,8 +427,33 @@ namespace Gs2::Stamina::Domain::Model
 
         Gs2::Core::Domain::CallbackID SubscribeRecoverIntervalTableMasters(
             TFunction<void()> Callback
+
         );
 
+        class FCollectRecoverIntervalTableMastersTask;
+
+        Gs2::Core::Domain::CallbackID SubscribeRecoverIntervalTableMasters(
+            TFunction<void(TArray<Gs2::Stamina::Model::FRecoverIntervalTableMasterPtr>)> Callback,const TOptional<FString> NamePrefix = TOptional<FString>()
+        );
+
+        void InvalidateRecoverIntervalTableMasters(const TOptional<FString> NamePrefix = TOptional<FString>());
+
+        class GS2STAMINA_API FSubscribeRecoverIntervalTableMastersWithInitialCallTask final :
+            public Gs2::Core::Util::TGs2Future<Gs2::Core::Domain::CallbackID>,
+            public TSharedFromThis<FSubscribeRecoverIntervalTableMastersWithInitialCallTask>
+        {
+            const TSharedPtr<FNamespaceDomain> Self;
+            const TFunction<void(TArray<Gs2::Stamina::Model::FRecoverIntervalTableMasterPtr>)> Callback;
+        const TOptional<FString> QueryNamePrefix;
+        public:
+            FSubscribeRecoverIntervalTableMastersWithInitialCallTask(const TSharedPtr<FNamespaceDomain>& Self, TFunction<void(TArray<Gs2::Stamina::Model::FRecoverIntervalTableMasterPtr>)> Callback,const TOptional<FString> NamePrefix);
+            FSubscribeRecoverIntervalTableMastersWithInitialCallTask(const FSubscribeRecoverIntervalTableMastersWithInitialCallTask& From);
+            virtual Gs2::Core::Model::FGs2ErrorPtr Action(TSharedPtr<TSharedPtr<Gs2::Core::Domain::CallbackID>> Result) override;
+        };
+
+        TSharedPtr<FAsyncTask<FSubscribeRecoverIntervalTableMastersWithInitialCallTask>> SubscribeRecoverIntervalTableMastersWithInitialCall(
+            TFunction<void(TArray<Gs2::Stamina::Model::FRecoverIntervalTableMasterPtr>)> Callback,const TOptional<FString> NamePrefix = TOptional<FString>()
+        );
         void UnsubscribeRecoverIntervalTableMasters(
             Gs2::Core::Domain::CallbackID CallbackID
         );
@@ -377,8 +468,33 @@ namespace Gs2::Stamina::Domain::Model
 
         Gs2::Core::Domain::CallbackID SubscribeRecoverValueTableMasters(
             TFunction<void()> Callback
+
         );
 
+        class FCollectRecoverValueTableMastersTask;
+
+        Gs2::Core::Domain::CallbackID SubscribeRecoverValueTableMasters(
+            TFunction<void(TArray<Gs2::Stamina::Model::FRecoverValueTableMasterPtr>)> Callback,const TOptional<FString> NamePrefix = TOptional<FString>()
+        );
+
+        void InvalidateRecoverValueTableMasters(const TOptional<FString> NamePrefix = TOptional<FString>());
+
+        class GS2STAMINA_API FSubscribeRecoverValueTableMastersWithInitialCallTask final :
+            public Gs2::Core::Util::TGs2Future<Gs2::Core::Domain::CallbackID>,
+            public TSharedFromThis<FSubscribeRecoverValueTableMastersWithInitialCallTask>
+        {
+            const TSharedPtr<FNamespaceDomain> Self;
+            const TFunction<void(TArray<Gs2::Stamina::Model::FRecoverValueTableMasterPtr>)> Callback;
+        const TOptional<FString> QueryNamePrefix;
+        public:
+            FSubscribeRecoverValueTableMastersWithInitialCallTask(const TSharedPtr<FNamespaceDomain>& Self, TFunction<void(TArray<Gs2::Stamina::Model::FRecoverValueTableMasterPtr>)> Callback,const TOptional<FString> NamePrefix);
+            FSubscribeRecoverValueTableMastersWithInitialCallTask(const FSubscribeRecoverValueTableMastersWithInitialCallTask& From);
+            virtual Gs2::Core::Model::FGs2ErrorPtr Action(TSharedPtr<TSharedPtr<Gs2::Core::Domain::CallbackID>> Result) override;
+        };
+
+        TSharedPtr<FAsyncTask<FSubscribeRecoverValueTableMastersWithInitialCallTask>> SubscribeRecoverValueTableMastersWithInitialCall(
+            TFunction<void(TArray<Gs2::Stamina::Model::FRecoverValueTableMasterPtr>)> Callback,const TOptional<FString> NamePrefix = TOptional<FString>()
+        );
         void UnsubscribeRecoverValueTableMasters(
             Gs2::Core::Domain::CallbackID CallbackID
         );
@@ -393,8 +509,33 @@ namespace Gs2::Stamina::Domain::Model
 
         Gs2::Core::Domain::CallbackID SubscribeStaminaModelMasters(
             TFunction<void()> Callback
+
         );
 
+        class FCollectStaminaModelMastersTask;
+
+        Gs2::Core::Domain::CallbackID SubscribeStaminaModelMasters(
+            TFunction<void(TArray<Gs2::Stamina::Model::FStaminaModelMasterPtr>)> Callback,const TOptional<FString> NamePrefix = TOptional<FString>()
+        );
+
+        void InvalidateStaminaModelMasters(const TOptional<FString> NamePrefix = TOptional<FString>());
+
+        class GS2STAMINA_API FSubscribeStaminaModelMastersWithInitialCallTask final :
+            public Gs2::Core::Util::TGs2Future<Gs2::Core::Domain::CallbackID>,
+            public TSharedFromThis<FSubscribeStaminaModelMastersWithInitialCallTask>
+        {
+            const TSharedPtr<FNamespaceDomain> Self;
+            const TFunction<void(TArray<Gs2::Stamina::Model::FStaminaModelMasterPtr>)> Callback;
+        const TOptional<FString> QueryNamePrefix;
+        public:
+            FSubscribeStaminaModelMastersWithInitialCallTask(const TSharedPtr<FNamespaceDomain>& Self, TFunction<void(TArray<Gs2::Stamina::Model::FStaminaModelMasterPtr>)> Callback,const TOptional<FString> NamePrefix);
+            FSubscribeStaminaModelMastersWithInitialCallTask(const FSubscribeStaminaModelMastersWithInitialCallTask& From);
+            virtual Gs2::Core::Model::FGs2ErrorPtr Action(TSharedPtr<TSharedPtr<Gs2::Core::Domain::CallbackID>> Result) override;
+        };
+
+        TSharedPtr<FAsyncTask<FSubscribeStaminaModelMastersWithInitialCallTask>> SubscribeStaminaModelMastersWithInitialCall(
+            TFunction<void(TArray<Gs2::Stamina::Model::FStaminaModelMasterPtr>)> Callback,const TOptional<FString> NamePrefix = TOptional<FString>()
+        );
         void UnsubscribeStaminaModelMasters(
             Gs2::Core::Domain::CallbackID CallbackID
         );
@@ -434,7 +575,34 @@ namespace Gs2::Stamina::Domain::Model
 
         TSharedPtr<FAsyncTask<FModelTask>> Model();
 
+        void Invalidate();
+
         Gs2::Core::Domain::CallbackID Subscribe(
+            TFunction<void(Gs2::Stamina::Model::FNamespacePtr)> Callback
+        );
+
+        class GS2STAMINA_API FSubscribeWithInitialCallTask final :
+            public Gs2::Core::Util::TGs2Future<Gs2::Core::Domain::CallbackID>,
+            public TSharedFromThis<FSubscribeWithInitialCallTask>
+        {
+            const TSharedPtr<FNamespaceDomain> Self;
+            const TFunction<void(Gs2::Stamina::Model::FNamespacePtr)> Callback;
+        public:
+            FSubscribeWithInitialCallTask(
+                const TSharedPtr<FNamespaceDomain>& Self,
+                TFunction<void(Gs2::Stamina::Model::FNamespacePtr)> Callback
+            );
+
+            FSubscribeWithInitialCallTask(
+                const FSubscribeWithInitialCallTask& From
+            );
+
+            virtual Gs2::Core::Model::FGs2ErrorPtr Action(
+                TSharedPtr<TSharedPtr<Gs2::Core::Domain::CallbackID>> Result
+            ) override;
+        };
+
+        TSharedPtr<FAsyncTask<FSubscribeWithInitialCallTask>> SubscribeWithInitialCall(
             TFunction<void(Gs2::Stamina::Model::FNamespacePtr)> Callback
         );
 

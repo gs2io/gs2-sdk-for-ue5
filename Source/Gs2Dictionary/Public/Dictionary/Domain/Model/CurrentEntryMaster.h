@@ -89,6 +89,8 @@ namespace Gs2::Dictionary::Domain::Model
             const FCurrentEntryMasterDomain& From
         );
 
+
+
         class GS2DICTIONARY_API FExportMasterTask final :
             public Gs2::Core::Util::TGs2Future<Gs2::Dictionary::Domain::Model::FCurrentEntryMasterDomain>,
             public TSharedFromThis<FExportMasterTask>
@@ -114,6 +116,8 @@ namespace Gs2::Dictionary::Domain::Model
         TSharedPtr<FAsyncTask<FExportMasterTask>> ExportMaster(
             Request::FExportMasterRequestPtr Request
         );
+
+
 
         class GS2DICTIONARY_API FGetTask final :
             public Gs2::Core::Util::TGs2Future<Gs2::Dictionary::Model::FCurrentEntryMaster>,
@@ -141,6 +145,8 @@ namespace Gs2::Dictionary::Domain::Model
             Request::FGetCurrentEntryMasterRequestPtr Request
         );
 
+
+
         class GS2DICTIONARY_API FPreUpdateTask final :
             public Gs2::Core::Util::TGs2Future<Gs2::Dictionary::Domain::Model::FCurrentEntryMasterDomain>,
             public TSharedFromThis<FPreUpdateTask>
@@ -167,6 +173,8 @@ namespace Gs2::Dictionary::Domain::Model
             Request::FPreUpdateCurrentEntryMasterRequestPtr Request
         );
 
+
+
         class GS2DICTIONARY_API FUpdateTask final :
             public Gs2::Core::Util::TGs2Future<Gs2::Dictionary::Domain::Model::FCurrentEntryMasterDomain>,
             public TSharedFromThis<FUpdateTask>
@@ -192,6 +200,8 @@ namespace Gs2::Dictionary::Domain::Model
         TSharedPtr<FAsyncTask<FUpdateTask>> Update(
             Request::FUpdateCurrentEntryMasterRequestPtr Request
         );
+
+
 
         class GS2DICTIONARY_API FUpdateFromGitHubTask final :
             public Gs2::Core::Util::TGs2Future<Gs2::Dictionary::Domain::Model::FCurrentEntryMasterDomain>,
@@ -249,7 +259,34 @@ namespace Gs2::Dictionary::Domain::Model
 
         TSharedPtr<FAsyncTask<FModelTask>> Model();
 
+        void Invalidate();
+
         Gs2::Core::Domain::CallbackID Subscribe(
+            TFunction<void(Gs2::Dictionary::Model::FCurrentEntryMasterPtr)> Callback
+        );
+
+        class GS2DICTIONARY_API FSubscribeWithInitialCallTask final :
+            public Gs2::Core::Util::TGs2Future<Gs2::Core::Domain::CallbackID>,
+            public TSharedFromThis<FSubscribeWithInitialCallTask>
+        {
+            const TSharedPtr<FCurrentEntryMasterDomain> Self;
+            const TFunction<void(Gs2::Dictionary::Model::FCurrentEntryMasterPtr)> Callback;
+        public:
+            FSubscribeWithInitialCallTask(
+                const TSharedPtr<FCurrentEntryMasterDomain>& Self,
+                TFunction<void(Gs2::Dictionary::Model::FCurrentEntryMasterPtr)> Callback
+            );
+
+            FSubscribeWithInitialCallTask(
+                const FSubscribeWithInitialCallTask& From
+            );
+
+            virtual Gs2::Core::Model::FGs2ErrorPtr Action(
+                TSharedPtr<TSharedPtr<Gs2::Core::Domain::CallbackID>> Result
+            ) override;
+        };
+
+        TSharedPtr<FAsyncTask<FSubscribeWithInitialCallTask>> SubscribeWithInitialCall(
             TFunction<void(Gs2::Dictionary::Model::FCurrentEntryMasterPtr)> Callback
         );
 

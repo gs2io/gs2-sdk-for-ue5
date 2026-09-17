@@ -1,3 +1,4 @@
+
 /*
  * Copyright 2016 Game Server Services, Inc. or its affiliates. All Rights
  * Reserved.
@@ -28,6 +29,8 @@
 #include "Log/Domain/Model/Namespace.h"
 
 #include "Core/Domain/Gs2.h"
+
+#include "Log/Model/Cache/Namespace.h"
 
 namespace Gs2::Log::Domain::Iterator
 {
@@ -71,7 +74,7 @@ namespace Gs2::Log::Domain::Iterator
 
     FDescribeNamespacesIterator::FIterator& FDescribeNamespacesIterator::FIterator::operator++()
     {
-        
+
 
         if (bEnd) return *this;
 
@@ -81,12 +84,15 @@ namespace Gs2::Log::Domain::Iterator
             return *this;
         }
 
-        if (RangeIteratorOpt) ++*RangeIteratorOpt;
+        if (RangeIteratorOpt && *RangeIteratorOpt) ++*RangeIteratorOpt;
 
+        // Keep the previous page alive until its iterator has been replaced.
+        const auto PreviousRange = Range;
         if (!RangeIteratorOpt || (!*RangeIteratorOpt && !bLast))
         {
-            const auto ListParentKey = "log:Namespace";
-
+            const auto ListParentKey = Gs2::Log::Model::Cache::FNamespaceCache::CreateCacheParentKey(
+                TOptional<int32>()
+            );
             if (!RangeIteratorOpt)
             {
                 Range = Self->Gs2->Cache->TryGetList<Gs2::Log::Model::FNamespace>(ListParentKey);
@@ -100,13 +106,13 @@ namespace Gs2::Log::Domain::Iterator
                     return *this;
                 }
             }
-
-            const auto Future = Self->Client->DescribeNamespaces(
+            const auto Request =
                 MakeShared<Gs2::Log::Request::FDescribeNamespacesRequest>()
                     ->WithContextStack(Self->Gs2->DefaultContextStack)
                     ->WithPageToken(PageToken)
                     ->WithLimit(FetchSize)
-            );
+            ;
+            const auto Future = Self->Client->DescribeNamespaces(Request);
             Future->StartSynchronousTask();
             if (Future->GetTask().IsError())
             {
@@ -120,18 +126,21 @@ namespace Gs2::Log::Domain::Iterator
             }
             const auto R = Future->GetTask().Result();
             Future->EnsureCompletion();
-            Range = R->GetItems();
-            for (auto Item : *R->GetItems())
+            Range = R->GetItems().IsValid() ? R->GetItems() : MakeShared<TArray<Gs2::Log::Model::FNamespacePtr>>();
+            const auto ResultModel = R;
+
+
+            if (Range.IsValid())
             {
-                Self->Gs2->Cache->Put(
-                    Gs2::Log::Model::FNamespace::TypeName,
-                    ListParentKey,
-                    Gs2::Log::Domain::Model::FNamespaceDomain::CreateCacheKey(
-                        Item->GetName()
-                    ),
-                    Item,
-                    FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
-                );
+                for (const auto& Item : *Range)
+                {
+                    if (!Item.IsValid()) continue;
+                    Gs2::Log::Model::Cache::FNamespaceCache::Put(
+                        Self->Gs2->Cache,
+                        Item->GetName(),
+                        TOptional<int32>(), Item
+                    );
+                }
             }
             if (Range)
             {

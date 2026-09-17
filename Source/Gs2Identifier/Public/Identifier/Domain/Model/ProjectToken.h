@@ -90,6 +90,8 @@ namespace Gs2::Identifier::Domain::Model
             const FProjectTokenDomain& From
         );
 
+
+
         class GS2IDENTIFIER_API FLoginTask final :
             public Gs2::Core::Util::TGs2Future<Gs2::Identifier::Domain::Model::FProjectTokenDomain>,
             public TSharedFromThis<FLoginTask>
@@ -115,6 +117,8 @@ namespace Gs2::Identifier::Domain::Model
         TSharedPtr<FAsyncTask<FLoginTask>> Login(
             Request::FLoginRequestPtr Request
         );
+
+
 
         class GS2IDENTIFIER_API FLoginByUserTask final :
             public Gs2::Core::Util::TGs2Future<Gs2::Identifier::Domain::Model::FProjectTokenDomain>,
@@ -171,7 +175,34 @@ namespace Gs2::Identifier::Domain::Model
 
         TSharedPtr<FAsyncTask<FModelTask>> Model();
 
+        void Invalidate();
+
         Gs2::Core::Domain::CallbackID Subscribe(
+            TFunction<void(Gs2::Identifier::Model::FProjectTokenPtr)> Callback
+        );
+
+        class GS2IDENTIFIER_API FSubscribeWithInitialCallTask final :
+            public Gs2::Core::Util::TGs2Future<Gs2::Core::Domain::CallbackID>,
+            public TSharedFromThis<FSubscribeWithInitialCallTask>
+        {
+            const TSharedPtr<FProjectTokenDomain> Self;
+            const TFunction<void(Gs2::Identifier::Model::FProjectTokenPtr)> Callback;
+        public:
+            FSubscribeWithInitialCallTask(
+                const TSharedPtr<FProjectTokenDomain>& Self,
+                TFunction<void(Gs2::Identifier::Model::FProjectTokenPtr)> Callback
+            );
+
+            FSubscribeWithInitialCallTask(
+                const FSubscribeWithInitialCallTask& From
+            );
+
+            virtual Gs2::Core::Model::FGs2ErrorPtr Action(
+                TSharedPtr<TSharedPtr<Gs2::Core::Domain::CallbackID>> Result
+            ) override;
+        };
+
+        TSharedPtr<FAsyncTask<FSubscribeWithInitialCallTask>> SubscribeWithInitialCall(
             TFunction<void(Gs2::Identifier::Model::FProjectTokenPtr)> Callback
         );
 

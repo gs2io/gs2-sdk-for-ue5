@@ -144,7 +144,8 @@ namespace Gs2::UE5::Account::Domain::Model
         );
     }
 
-    void FEzAccountGameSessionDomain::UnsubscribeTakeOvers(Gs2::Core::Domain::CallbackID CallbackId)
+    void FEzAccountGameSessionDomain::UnsubscribeTakeOvers(
+            Gs2::Core::Domain::CallbackID CallbackId)
     {
         Domain->UnsubscribeTakeOvers(
             CallbackId
@@ -168,7 +169,8 @@ namespace Gs2::UE5::Account::Domain::Model
         );
     }
 
-    void FEzAccountGameSessionDomain::UnsubscribePlatformIds(Gs2::Core::Domain::CallbackID CallbackId)
+    void FEzAccountGameSessionDomain::UnsubscribePlatformIds(
+            Gs2::Core::Domain::CallbackID CallbackId)
     {
         Domain->UnsubscribePlatformIds(
             CallbackId
@@ -244,7 +246,7 @@ namespace Gs2::UE5::Account::Domain::Model
     Gs2::Core::Domain::CallbackID FEzAccountGameSessionDomain::Subscribe(TFunction<void(Gs2::UE5::Account::Model::FEzAccountPtr)> Callback)
     {
         return Domain->Subscribe(
-            [&](Gs2::Account::Model::FAccountPtr Item)
+            [Callback](Gs2::Account::Model::FAccountPtr Item)
             {
                 Callback(Gs2::UE5::Account::Model::FEzAccount::FromModel(Item));
             }

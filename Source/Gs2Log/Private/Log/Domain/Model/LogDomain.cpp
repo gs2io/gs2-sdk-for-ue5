@@ -98,4 +98,3 @@ namespace Gs2::Log::Domain::Model
 #elif defined(__clang__)
 #pragma clang diagnostic pop
 #endif
-

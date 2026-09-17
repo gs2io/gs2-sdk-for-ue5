@@ -82,7 +82,7 @@ namespace Gs2::UE5::Grade::Domain::Model
     Gs2::Core::Domain::CallbackID FEzGradeModelDomain::Subscribe(TFunction<void(Gs2::UE5::Grade::Model::FEzGradeModelPtr)> Callback)
     {
         return Domain->Subscribe(
-            [&](Gs2::Grade::Model::FGradeModelPtr Item)
+            [Callback](Gs2::Grade::Model::FGradeModelPtr Item)
             {
                 Callback(Gs2::UE5::Grade::Model::FEzGradeModel::FromModel(Item));
             }

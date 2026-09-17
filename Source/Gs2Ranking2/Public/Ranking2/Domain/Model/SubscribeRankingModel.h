@@ -127,6 +127,8 @@ namespace Gs2::Ranking2::Domain::Model
             const FSubscribeRankingModelDomain& From
         );
 
+
+
         class GS2RANKING2_API FGetTask final :
             public Gs2::Core::Util::TGs2Future<Gs2::Ranking2::Model::FSubscribeRankingModel>,
             public TSharedFromThis<FGetTask>

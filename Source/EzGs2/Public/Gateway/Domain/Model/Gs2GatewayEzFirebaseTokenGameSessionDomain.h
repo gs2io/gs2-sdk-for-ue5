@@ -19,6 +19,7 @@
 #include "CoreMinimal.h"
 #include "Gateway/Domain/Model/FirebaseTokenAccessToken.h"
 #include "Gateway/Model/Gs2GatewayEzWebSocketSession.h"
+#include "Gateway/Model/Gs2GatewayEzFirebaseToken.h"
 #include "Gs2GatewayEzFirebaseTokenGameSessionDomain.h"
 #include "Core/EzTransactionGameSessionDomain.h"
 #include "Util/Net/GameSession.h"
@@ -43,6 +44,74 @@ namespace Gs2::UE5::Gateway::Domain::Model
             Gs2::UE5::Util::IGameSessionPtr GameSession,
             Gs2::UE5::Util::FGs2ConnectionPtr Connection
         );
+
+        class EZGS2_API FSetFirebaseTokenTask :
+            public Gs2::Core::Util::TGs2Future<Gs2::UE5::Gateway::Domain::Model::FEzFirebaseTokenGameSessionDomain>,
+            public TSharedFromThis<FSetFirebaseTokenTask>
+        {
+            TSharedPtr<FEzFirebaseTokenGameSessionDomain> Self;
+            FString Token;
+            TOptional<FString> Locale;
+
+        public:
+            explicit FSetFirebaseTokenTask(
+                TSharedPtr<FEzFirebaseTokenGameSessionDomain> Self,
+                FString Token,
+                TOptional<FString> Locale = TOptional<FString>()
+            );
+
+            virtual Gs2::Core::Model::FGs2ErrorPtr Action(
+                TSharedPtr<TSharedPtr<Gs2::UE5::Gateway::Domain::Model::FEzFirebaseTokenGameSessionDomain>> Result
+            ) override;
+        };
+        friend FSetFirebaseTokenTask;
+
+        TSharedPtr<FAsyncTask<FSetFirebaseTokenTask>> SetFirebaseToken(
+            FString Token,
+            TOptional<FString> Locale = TOptional<FString>()
+        );
+
+        class EZGS2_API FDeleteFirebaseTokenTask :
+            public Gs2::Core::Util::TGs2Future<Gs2::UE5::Gateway::Domain::Model::FEzFirebaseTokenGameSessionDomain>,
+            public TSharedFromThis<FDeleteFirebaseTokenTask>
+        {
+            TSharedPtr<FEzFirebaseTokenGameSessionDomain> Self;
+
+        public:
+            explicit FDeleteFirebaseTokenTask(
+                TSharedPtr<FEzFirebaseTokenGameSessionDomain> Self
+            );
+
+            virtual Gs2::Core::Model::FGs2ErrorPtr Action(
+                TSharedPtr<TSharedPtr<Gs2::UE5::Gateway::Domain::Model::FEzFirebaseTokenGameSessionDomain>> Result
+            ) override;
+        };
+        friend FDeleteFirebaseTokenTask;
+
+        TSharedPtr<FAsyncTask<FDeleteFirebaseTokenTask>> DeleteFirebaseToken(
+        );
+
+        class EZGS2_API FModelTask :
+            public Gs2::Core::Util::TGs2Future<Gs2::UE5::Gateway::Model::FEzFirebaseToken>,
+            public TSharedFromThis<FModelTask>
+        {
+            TSharedPtr<FEzFirebaseTokenGameSessionDomain> Self;
+
+        public:
+            explicit FModelTask(
+                TSharedPtr<FEzFirebaseTokenGameSessionDomain> Self
+            );
+
+            virtual Gs2::Core::Model::FGs2ErrorPtr Action(
+                TSharedPtr<Gs2::UE5::Gateway::Model::FEzFirebaseTokenPtr> Result
+            ) override;
+        };
+
+        TSharedPtr<FAsyncTask<FModelTask>> Model();
+
+        Gs2::Core::Domain::CallbackID Subscribe(TFunction<void(Gs2::UE5::Gateway::Model::FEzFirebaseTokenPtr)> Callback);
+
+        void Unsubscribe(Gs2::Core::Domain::CallbackID CallbackId);
 
     };
     typedef TSharedPtr<FEzFirebaseTokenGameSessionDomain> FEzFirebaseTokenGameSessionDomainPtr;

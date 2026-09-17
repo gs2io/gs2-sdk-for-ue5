@@ -19,6 +19,7 @@
 #include "CoreMinimal.h"
 #include "Dom/JsonObject.h"
 #include "../Model/TransactionSetting.h"
+#include "../Model/TransactionSettingV2.h"
 #include "../Model/ScriptSetting.h"
 #include "../Model/NotificationSetting.h"
 #include "../Model/LogSetting.h"
@@ -34,6 +35,7 @@ namespace Gs2::Inbox::Request
         TOptional<FString> DescriptionValue;
         TOptional<bool> IsAutomaticDeletingEnabledValue;
         TSharedPtr<Model::FTransactionSetting> TransactionSettingValue;
+        TSharedPtr<Model::FTransactionSettingV2> TransactionSettingV2Value;
         TSharedPtr<Model::FScriptSetting> ReceiveMessageScriptValue;
         TSharedPtr<Model::FScriptSetting> ReadMessageScriptValue;
         TSharedPtr<Model::FScriptSetting> DeleteMessageScriptValue;
@@ -55,6 +57,7 @@ namespace Gs2::Inbox::Request
         TSharedPtr<FUpdateNamespaceRequest> WithDescription(const TOptional<FString> Description);
         TSharedPtr<FUpdateNamespaceRequest> WithIsAutomaticDeletingEnabled(const TOptional<bool> IsAutomaticDeletingEnabled);
         TSharedPtr<FUpdateNamespaceRequest> WithTransactionSetting(const TSharedPtr<Model::FTransactionSetting> TransactionSetting);
+        TSharedPtr<FUpdateNamespaceRequest> WithTransactionSettingV2(const TSharedPtr<Model::FTransactionSettingV2> TransactionSettingV2);
         TSharedPtr<FUpdateNamespaceRequest> WithReceiveMessageScript(const TSharedPtr<Model::FScriptSetting> ReceiveMessageScript);
         TSharedPtr<FUpdateNamespaceRequest> WithReadMessageScript(const TSharedPtr<Model::FScriptSetting> ReadMessageScript);
         TSharedPtr<FUpdateNamespaceRequest> WithDeleteMessageScript(const TSharedPtr<Model::FScriptSetting> DeleteMessageScript);
@@ -69,6 +72,7 @@ namespace Gs2::Inbox::Request
         TOptional<bool> GetIsAutomaticDeletingEnabled() const;
         FString GetIsAutomaticDeletingEnabledString() const;
         TSharedPtr<Model::FTransactionSetting> GetTransactionSetting() const;
+        TSharedPtr<Model::FTransactionSettingV2> GetTransactionSettingV2() const;
         TSharedPtr<Model::FScriptSetting> GetReceiveMessageScript() const;
         TSharedPtr<Model::FScriptSetting> GetReadMessageScript() const;
         TSharedPtr<Model::FScriptSetting> GetDeleteMessageScript() const;

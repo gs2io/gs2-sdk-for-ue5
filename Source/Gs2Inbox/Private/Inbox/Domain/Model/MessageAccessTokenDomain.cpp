@@ -37,6 +37,7 @@
 #include "Inbox/Domain/Model/Received.h"
 #include "Inbox/Domain/Model/ReceivedAccessToken.h"
 #include "Inbox/Domain/SpeculativeExecutor/Transaction/ReadMessageByUserIdSpeculativeExecutor.h"
+#include "Inbox/Model/Cache/Message.h"
 
 #include "Core/Domain/Gs2.h"
 #include "Core/Domain/Transaction/JobQueueJobDomainFactory.h"
@@ -60,10 +61,10 @@ namespace Gs2::Inbox::Domain::Model
         NamespaceName(NamespaceName),
         AccessToken(AccessToken),
         MessageName(MessageName),
-        ParentKey(Gs2::Inbox::Domain::Model::FUserDomain::CreateCacheParentKey(
+        ParentKey(Gs2::Inbox::Model::Cache::FMessageCache::CreateCacheParentKey(
             NamespaceName,
             UserId(),
-            "Message"
+            AccessToken.IsValid() ? AccessToken->GetTimeOffset() : TOptional<int32>()
         ))
     {
     }
@@ -158,22 +159,20 @@ namespace Gs2::Inbox::Domain::Model
         }
         const auto ResultModel = Future->GetTask().Result();
         Future->EnsureCompletion();
-        if (ResultModel->GetItem() != nullptr)
-        {
-            const auto Key = Gs2::Inbox::Domain::Model::FMessageDomain::CreateCacheKey(
-                ResultModel->GetItem()->GetName()
-            );
-            Self->Gs2->Cache->Put(
-                Gs2::Inbox::Model::FMessage::TypeName,
-                Self->ParentKey,
-                Key,
-                ResultModel->GetItem(),
-                ResultModel->GetItem()->GetExpiresAt().IsSet() && *ResultModel->GetItem()->GetExpiresAt() != 0 ? FDateTime::FromUnixTimestamp(*ResultModel->GetItem()->GetExpiresAt() / 1000) : FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
-            );
-        }
+        Gs2::Inbox::Model::Cache::FMessageCache::Delete(
+            Self->Gs2->Cache,
+            Request->GetNamespaceName(),
+            Self->UserId(),
+            Request->GetMessageName(),
+            Self->AccessToken.IsValid() ? Self->AccessToken->GetTimeOffset() : TOptional<int32>()
+        );
         Self->Gs2->Cache->ClearListCache(
             Gs2::Inbox::Model::FMessage::TypeName,
-            Self->ParentKey
+            Gs2::Inbox::Model::Cache::FMessageCache::CreateCacheParentKey(
+                Request->GetNamespaceName(),
+                Self->UserId(),
+                Self->AccessToken.IsValid() ? Self->AccessToken->GetTimeOffset() : TOptional<int32>()
+            )
         );
         auto Domain = Self;
 
@@ -363,52 +362,79 @@ namespace Gs2::Inbox::Domain::Model
         TSharedPtr<TSharedPtr<Gs2::Inbox::Model::FMessage>> Result
     )
     {
-        // ReSharper disable once CppLocalVariableMayBeConst
-        TSharedPtr<Gs2::Inbox::Model::FMessage> Value;
-        auto bCacheHit = Self->Gs2->Cache->TryGet<Gs2::Inbox::Model::FMessage>(
-            Self->ParentKey,
-            Gs2::Inbox::Domain::Model::FMessageDomain::CreateCacheKey(
-                Self->MessageName
-            ),
-            &Value
+        const FString CacheKey = Gs2::Inbox::Domain::Model::FMessageDomain::CreateCacheKey(
+            Self->MessageName
         );
-        if (!bCacheHit) {
-            const auto Future = Self->Get(
-                MakeShared<Gs2::Inbox::Request::FGetMessageRequest>()
-            );
-            Future->StartSynchronousTask();
-            if (Future->GetTask().IsError())
+        return Self->Gs2->Cache->ExecuteWithKeyLock(
+            Gs2::Inbox::Model::FMessage::TypeName,
+            Self->ParentKey,
+            CacheKey,
+            [this, Result, CacheKey]() -> Gs2::Core::Model::FGs2ErrorPtr
             {
-                if (Future->GetTask().Error()->Type() != Gs2::Core::Model::FNotFoundError::TypeString)
-                {
-                    return Future->GetTask().Error();
-                }
-
-                const auto Key = Gs2::Inbox::Domain::Model::FMessageDomain::CreateCacheKey(
-                    Self->MessageName
-                );
-                Self->Gs2->Cache->Put(
-                    Gs2::Inbox::Model::FMessage::TypeName,
+                // ReSharper disable once CppLocalVariableMayBeConst
+                TSharedPtr<Gs2::Inbox::Model::FMessage> Value;
+                auto bCacheHit = Self->Gs2->Cache->TryGet<Gs2::Inbox::Model::FMessage>(
                     Self->ParentKey,
-                    Key,
-                    nullptr,
-                    FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
+                    CacheKey,
+                    &Value
                 );
+                if (!bCacheHit) {
+                    const auto Future = Self->Get(
+                        MakeShared<Gs2::Inbox::Request::FGetMessageRequest>()
+                    );
+                    Future->StartSynchronousTask();
+                    if (Future->GetTask().IsError())
+                    {
+                        const auto Error = Future->GetTask().Error();
+                        if (!Error.IsValid() || Error->Type() != Gs2::Core::Model::FNotFoundError::TypeString)
+                        {
+                            return Error;
+                        }
+                        Self->Gs2->Cache->Put(
+                            Gs2::Inbox::Model::FMessage::TypeName,
+                            Self->ParentKey,
+                            CacheKey,
+                            nullptr,
+                            FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
+                        );
 
-                if (Future->GetTask().Error()->Detail(0)->GetComponent() != "message")
-                {
-                    return Future->GetTask().Error();
+                        if (!Error->GetErrors().IsValid() || Error->Count() == 0 || !Error->Detail(0).IsValid() || Error->Detail(0)->GetComponent() != "message")
+                        {
+                            return Error;
+                        }
+                    }
+                    else
+                    {
+                        Value = Future->GetTask().Result();
+                    }
+                    Future->EnsureCompletion();
                 }
-            }
-            else
-            {
-                Value = Future->GetTask().Result();
-            }
-            Future->EnsureCompletion();
-        }
-        *Result = Value;
+                if (!bCacheHit)
+                {
+                    FGs2ObjectPtr ExistingObject;
+                    const bool Existing = Self->Gs2->Cache->TryGet(
+                        Gs2::Inbox::Model::FMessage::TypeName,
+                        Self->ParentKey,
+                        CacheKey,
+                        &ExistingObject
+                    );
+                    if (!Existing || ExistingObject != Value)
+                    {
+                        Self->Gs2->Cache->Put(
+                            Gs2::Inbox::Model::FMessage::TypeName,
+                            Self->ParentKey,
+                            CacheKey,
+                            Value,
+                            FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
+                        );
+                    }
+                }
 
-        return nullptr;
+                *Result = Value;
+
+                return nullptr;
+            }
+        );
     }
 
     TSharedPtr<FAsyncTask<FMessageAccessTokenDomain::FModelTask>> FMessageAccessTokenDomain::Model() {
@@ -419,6 +445,16 @@ namespace Gs2::Inbox::Domain::Model
         TFunction<void(Gs2::Inbox::Model::FMessagePtr)> Callback
     )
     {
+        const TWeakPtr<Gs2::Core::Domain::FGs2> WeakGs2 = Gs2;
+        const TWeakPtr<Inbox::Domain::FGs2InboxDomain> WeakService = Service;
+        const FString RegisteredParentKey = ParentKey;
+        const TOptional<FString> QueryNamespaceName = NamespaceName;
+        const TOptional<FString> QueryMessageName = MessageName;
+        const auto SourceToken = AccessToken;
+        const TOptional<FString> RegisteredUserId = SourceToken.IsValid()
+            ? TOptional<FString>(SourceToken->GetUserId())
+            : TOptional<FString>();
+
         return Gs2->Cache->Subscribe(
             Gs2::Inbox::Model::FMessage::TypeName,
             ParentKey,
@@ -428,6 +464,29 @@ namespace Gs2::Inbox::Domain::Model
             [Callback](TSharedPtr<FGs2Object> obj)
             {
                 Callback(StaticCastSharedPtr<Gs2::Inbox::Model::FMessage>(obj));
+            },
+            [WeakGs2, WeakService, RegisteredParentKey, QueryNamespaceName, QueryMessageName, SourceToken, RegisteredUserId]()
+            {
+                const auto Owner = WeakGs2.Pin();
+                if (!Owner.IsValid() || !SourceToken.IsValid() || !RegisteredUserId.IsSet())
+                {
+                    return;
+                }
+                const auto TokenSnapshot = MakeShared<Gs2::Auth::Model::FAccessToken>(*SourceToken);
+                if (TokenSnapshot->GetUserId() != RegisteredUserId)
+                {
+                    return;
+                }
+                const auto Domain = MakeShared<FMessageAccessTokenDomain>(
+                    Owner,
+                    WeakService.Pin(),
+                    QueryNamespaceName,
+                    TokenSnapshot,
+                    QueryMessageName
+                );
+                Domain->ParentKey = RegisteredParentKey;
+                const auto Task = Domain->Model();
+                Task->StartBackgroundTask();
             }
         );
     }

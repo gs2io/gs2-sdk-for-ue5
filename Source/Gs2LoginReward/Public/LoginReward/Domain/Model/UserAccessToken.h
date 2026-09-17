@@ -94,8 +94,33 @@ namespace Gs2::LoginReward::Domain::Model
 
         Gs2::Core::Domain::CallbackID SubscribeReceiveStatuses(
             TFunction<void()> Callback
+
         );
 
+        class FCollectReceiveStatusesTask;
+
+        Gs2::Core::Domain::CallbackID SubscribeReceiveStatuses(
+            TFunction<void(TArray<Gs2::LoginReward::Model::FReceiveStatusPtr>)> Callback
+        );
+
+        void InvalidateReceiveStatuses();
+
+        class GS2LOGINREWARD_API FSubscribeReceiveStatusesWithInitialCallTask final :
+            public Gs2::Core::Util::TGs2Future<Gs2::Core::Domain::CallbackID>,
+            public TSharedFromThis<FSubscribeReceiveStatusesWithInitialCallTask>
+        {
+            const TSharedPtr<FUserAccessTokenDomain> Self;
+            const TFunction<void(TArray<Gs2::LoginReward::Model::FReceiveStatusPtr>)> Callback;
+
+        public:
+            FSubscribeReceiveStatusesWithInitialCallTask(const TSharedPtr<FUserAccessTokenDomain>& Self, TFunction<void(TArray<Gs2::LoginReward::Model::FReceiveStatusPtr>)> Callback);
+            FSubscribeReceiveStatusesWithInitialCallTask(const FSubscribeReceiveStatusesWithInitialCallTask& From);
+            virtual Gs2::Core::Model::FGs2ErrorPtr Action(TSharedPtr<TSharedPtr<Gs2::Core::Domain::CallbackID>> Result) override;
+        };
+
+        TSharedPtr<FAsyncTask<FSubscribeReceiveStatusesWithInitialCallTask>> SubscribeReceiveStatusesWithInitialCall(
+            TFunction<void(TArray<Gs2::LoginReward::Model::FReceiveStatusPtr>)> Callback
+        );
         void UnsubscribeReceiveStatuses(
             Gs2::Core::Domain::CallbackID CallbackID
         );

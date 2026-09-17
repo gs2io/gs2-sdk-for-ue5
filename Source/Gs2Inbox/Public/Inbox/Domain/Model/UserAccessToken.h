@@ -86,6 +86,8 @@ namespace Gs2::Inbox::Domain::Model
             const FUserAccessTokenDomain& From
         );
 
+
+
         class GS2INBOX_API FReceiveGlobalMessageTask final :
             public Gs2::Core::Util::TGs2Future<TArray<TSharedPtr<Gs2::Inbox::Domain::Model::FMessageAccessTokenDomain>>>,
             public TSharedFromThis<FReceiveGlobalMessageTask>
@@ -111,6 +113,8 @@ namespace Gs2::Inbox::Domain::Model
         TSharedPtr<FAsyncTask<FReceiveGlobalMessageTask>> ReceiveGlobalMessage(
             Request::FReceiveGlobalMessageRequestPtr Request
         );
+
+
 
         class GS2INBOX_API FBatchReadMessagesTask final :
             public Gs2::Core::Util::TGs2Future<Gs2::Core::Domain::FTransactionAccessTokenDomain>,
@@ -147,8 +151,33 @@ namespace Gs2::Inbox::Domain::Model
 
         Gs2::Core::Domain::CallbackID SubscribeMessages(
             TFunction<void()> Callback
+
         );
 
+        class FCollectMessagesTask;
+
+        Gs2::Core::Domain::CallbackID SubscribeMessages(
+            TFunction<void(TArray<Gs2::Inbox::Model::FMessagePtr>)> Callback,const TOptional<bool> IsRead = TOptional<bool>()
+        );
+
+        void InvalidateMessages(const TOptional<bool> IsRead = TOptional<bool>());
+
+        class GS2INBOX_API FSubscribeMessagesWithInitialCallTask final :
+            public Gs2::Core::Util::TGs2Future<Gs2::Core::Domain::CallbackID>,
+            public TSharedFromThis<FSubscribeMessagesWithInitialCallTask>
+        {
+            const TSharedPtr<FUserAccessTokenDomain> Self;
+            const TFunction<void(TArray<Gs2::Inbox::Model::FMessagePtr>)> Callback;
+        const TOptional<bool> QueryIsRead;
+        public:
+            FSubscribeMessagesWithInitialCallTask(const TSharedPtr<FUserAccessTokenDomain>& Self, TFunction<void(TArray<Gs2::Inbox::Model::FMessagePtr>)> Callback,const TOptional<bool> IsRead);
+            FSubscribeMessagesWithInitialCallTask(const FSubscribeMessagesWithInitialCallTask& From);
+            virtual Gs2::Core::Model::FGs2ErrorPtr Action(TSharedPtr<TSharedPtr<Gs2::Core::Domain::CallbackID>> Result) override;
+        };
+
+        TSharedPtr<FAsyncTask<FSubscribeMessagesWithInitialCallTask>> SubscribeMessagesWithInitialCall(
+            TFunction<void(TArray<Gs2::Inbox::Model::FMessagePtr>)> Callback,const TOptional<bool> IsRead = TOptional<bool>()
+        );
         void UnsubscribeMessages(
             Gs2::Core::Domain::CallbackID CallbackID
         );

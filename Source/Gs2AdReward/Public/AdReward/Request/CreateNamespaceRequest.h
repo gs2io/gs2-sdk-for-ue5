@@ -19,6 +19,7 @@
 #include "CoreMinimal.h"
 #include "Dom/JsonObject.h"
 #include "../Model/TransactionSetting.h"
+#include "../Model/TransactionSettingV2.h"
 #include "../Model/AdMob.h"
 #include "../Model/UnityAd.h"
 #include "../Model/AppLovinMax.h"
@@ -36,6 +37,7 @@ namespace Gs2::AdReward::Request
         TOptional<FString> NameValue;
         TOptional<FString> DescriptionValue;
         TSharedPtr<Model::FTransactionSetting> TransactionSettingValue;
+        TSharedPtr<Model::FTransactionSettingV2> TransactionSettingV2Value;
         TSharedPtr<Model::FAdMob> AdmobValue;
         TSharedPtr<Model::FUnityAd> UnityAdValue;
         TSharedPtr<TArray<TSharedPtr<Model::FAppLovinMax>>> AppLovinMaxesValue;
@@ -56,6 +58,7 @@ namespace Gs2::AdReward::Request
         TSharedPtr<FCreateNamespaceRequest> WithName(const TOptional<FString> Name);
         TSharedPtr<FCreateNamespaceRequest> WithDescription(const TOptional<FString> Description);
         TSharedPtr<FCreateNamespaceRequest> WithTransactionSetting(const TSharedPtr<Model::FTransactionSetting> TransactionSetting);
+        TSharedPtr<FCreateNamespaceRequest> WithTransactionSettingV2(const TSharedPtr<Model::FTransactionSettingV2> TransactionSettingV2);
         TSharedPtr<FCreateNamespaceRequest> WithAdmob(const TSharedPtr<Model::FAdMob> Admob);
         TSharedPtr<FCreateNamespaceRequest> WithUnityAd(const TSharedPtr<Model::FUnityAd> UnityAd);
         TSharedPtr<FCreateNamespaceRequest> WithAppLovinMaxes(const TSharedPtr<TArray<TSharedPtr<Model::FAppLovinMax>>> AppLovinMaxes);
@@ -68,6 +71,7 @@ namespace Gs2::AdReward::Request
         TOptional<FString> GetName() const;
         TOptional<FString> GetDescription() const;
         TSharedPtr<Model::FTransactionSetting> GetTransactionSetting() const;
+        TSharedPtr<Model::FTransactionSettingV2> GetTransactionSettingV2() const;
         TSharedPtr<Model::FAdMob> GetAdmob() const;
         TSharedPtr<Model::FUnityAd> GetUnityAd() const;TSharedPtr<TArray<TSharedPtr<Model::FAppLovinMax>>> GetAppLovinMaxes() const;
         TSharedPtr<Model::FScriptSetting> GetAcquirePointScript() const;

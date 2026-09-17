@@ -90,6 +90,8 @@ namespace Gs2::Ranking::Domain::Model
             const FCategoryModelMasterDomain& From
         );
 
+
+
         class GS2RANKING_API FGetTask final :
             public Gs2::Core::Util::TGs2Future<Gs2::Ranking::Model::FCategoryModelMaster>,
             public TSharedFromThis<FGetTask>
@@ -116,6 +118,8 @@ namespace Gs2::Ranking::Domain::Model
             Request::FGetCategoryModelMasterRequestPtr Request
         );
 
+
+
         class GS2RANKING_API FUpdateTask final :
             public Gs2::Core::Util::TGs2Future<Gs2::Ranking::Domain::Model::FCategoryModelMasterDomain>,
             public TSharedFromThis<FUpdateTask>
@@ -141,6 +145,8 @@ namespace Gs2::Ranking::Domain::Model
         TSharedPtr<FAsyncTask<FUpdateTask>> Update(
             Request::FUpdateCategoryModelMasterRequestPtr Request
         );
+
+
 
         class GS2RANKING_API FDeleteTask final :
             public Gs2::Core::Util::TGs2Future<Gs2::Ranking::Domain::Model::FCategoryModelMasterDomain>,

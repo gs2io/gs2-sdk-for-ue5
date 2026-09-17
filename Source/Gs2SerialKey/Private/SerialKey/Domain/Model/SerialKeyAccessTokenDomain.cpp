@@ -33,6 +33,8 @@
 #include "SerialKey/Domain/Model/CampaignModel.h"
 #include "SerialKey/Domain/Model/CampaignModelMaster.h"
 #include "SerialKey/Domain/Model/CurrentCampaignMaster.h"
+#include "SerialKey/Model/Cache/SerialKey.h"
+#include "SerialKey/Model/Cache/CampaignModel.h"
 
 #include "Core/Domain/Gs2.h"
 #include "Core/Domain/Transaction/JobQueueJobDomainFactory.h"
@@ -100,6 +102,8 @@ namespace Gs2::SerialKey::Domain::Model
             ->WithContextStack((!Request->GetContextStack().IsSet() || Request->GetContextStack()->IsEmpty()) ? Self->Gs2->DefaultContextStack : Request->GetContextStack())
             ->WithNamespaceName(Self->NamespaceName)
             ->WithAccessToken(Self->AccessToken->GetToken());
+        const auto CacheOwnerSnapshotUserId = Self->AccessToken.IsValid() ? Self->UserId() : TOptional<FString>();
+        const auto CacheOwnerSnapshotTimeOffset = Self->AccessToken.IsValid() ? Self->AccessToken->GetTimeOffset() : TOptional<int32>();
         const auto Future = Self->Client->Use(
             Request
         );
@@ -110,19 +114,44 @@ namespace Gs2::SerialKey::Domain::Model
         }
         const auto ResultModel = Future->GetTask().Result();
         Future->EnsureCompletion();
-        if (ResultModel->GetItem() != nullptr)
-        {
-            const auto Key = Gs2::SerialKey::Domain::Model::FSerialKeyDomain::CreateCacheKey(
-                ResultModel->GetItem()->GetCode()
-            );
-            Self->Gs2->Cache->Put(
-                Gs2::SerialKey::Model::FSerialKey::TypeName,
-                Self->ParentKey,
-                Key,
-                ResultModel->GetItem(),
-                FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
-            );
-        }
+
+            if (ResultModel.IsValid() && ResultModel->GetItem() != nullptr)
+            {
+
+        if (!((CacheOwnerSnapshotUserId)).IsSet())
+            {
+              const auto Details = MakeShared<TArray<TSharedPtr<Gs2::Core::Model::FGs2ErrorDetail>>>();
+                Details->Add(MakeShared<Gs2::Core::Model::FGs2ErrorDetail>(TEXT("userId"), TEXT("userId is invalid."), TEXT("invalid_response")));
+                return MakeShared<Gs2::Core::Model::FUnknownError>(Details);
+              }
+        Gs2::SerialKey::Model::Cache::FSerialKeyCache::Put(
+            Self->Gs2->Cache,
+
+            Request->GetNamespaceName(),
+            (CacheOwnerSnapshotUserId),
+            ResultModel->GetItem()->GetCode(),
+            CacheOwnerSnapshotTimeOffset,
+            ResultModel->GetItem()
+        );
+            }
+            if (ResultModel.IsValid() && ResultModel->GetCampaignModel() != nullptr)
+            {
+
+        if (!ResultModel.IsValid() || !ResultModel->GetItem().IsValid())
+            {
+              const auto Details = MakeShared<TArray<TSharedPtr<Gs2::Core::Model::FGs2ErrorDetail>>>();
+                Details->Add(MakeShared<Gs2::Core::Model::FGs2ErrorDetail>(TEXT("result.item"), TEXT("result.item is invalid."), TEXT("invalid_response")));
+                return MakeShared<Gs2::Core::Model::FUnknownError>(Details);
+              }
+        Gs2::SerialKey::Model::Cache::FCampaignModelCache::Put(
+            Self->Gs2->Cache,
+
+            Request->GetNamespaceName(),
+            ResultModel->GetItem()->GetCampaignModelName(),
+            CacheOwnerSnapshotTimeOffset,
+            ResultModel->GetCampaignModel()
+        );
+            }
         auto Domain = Self;
 
         *Result = Domain;
@@ -175,37 +204,153 @@ namespace Gs2::SerialKey::Domain::Model
         TSharedPtr<TSharedPtr<Gs2::SerialKey::Model::FSerialKey>> Result
     )
     {
-        // ReSharper disable once CppLocalVariableMayBeConst
-        TSharedPtr<Gs2::SerialKey::Model::FSerialKey> Value;
-        auto bCacheHit = Self->Gs2->Cache->TryGet<Gs2::SerialKey::Model::FSerialKey>(
-            Self->ParentKey,
-            Gs2::SerialKey::Domain::Model::FSerialKeyDomain::CreateCacheKey(
-                Self->SerialKeyCode
-            ),
-            &Value
-        );
-        *Result = Value;
+        const auto CacheParentKey = Gs2::SerialKey::Model::Cache::FSerialKeyCache::CreateCacheParentKey(
 
-        return nullptr;
+            Self->NamespaceName,
+            Self->AccessToken.IsValid() ? Self->UserId() : TOptional<FString>(),
+            Self->AccessToken.IsValid() ? Self->AccessToken->GetTimeOffset() : TOptional<int32>()
+        );
+        const auto CacheKey = Gs2::SerialKey::Model::Cache::FSerialKeyCache::CreateCacheKey(
+
+            Self->SerialKeyCode
+        );
+        return Self->Gs2->Cache->ExecuteWithKeyLock(
+            Gs2::SerialKey::Model::FSerialKey::TypeName,
+            CacheParentKey,
+            CacheKey,
+            [Self = Self, Result]() -> Gs2::Core::Model::FGs2ErrorPtr
+            {
+                Gs2::SerialKey::Model::FSerialKeyPtr Value;
+                const auto CacheHit = Gs2::SerialKey::Model::Cache::FSerialKeyCache::TryGet(
+                    Self->Gs2->Cache,
+
+                    Self->NamespaceName,
+                    Self->AccessToken.IsValid() ? Self->UserId() : TOptional<FString>(),
+                    Self->SerialKeyCode,
+                    Self->AccessToken.IsValid() ? Self->AccessToken->GetTimeOffset() : TOptional<int32>(),
+                    &Value
+                );
+                if (CacheHit)
+                {
+                    *Result = Value;
+                    return nullptr;
+                }
+                *Result = Value;
+                return nullptr;
+            }
+        );
     }
 
     TSharedPtr<FAsyncTask<FSerialKeyAccessTokenDomain::FModelTask>> FSerialKeyAccessTokenDomain::Model() {
         return Gs2::Core::Util::New<FAsyncTask<FSerialKeyAccessTokenDomain::FModelTask>>(this->AsShared());
     }
 
+    void FSerialKeyAccessTokenDomain::Invalidate()
+    {
+        Gs2::SerialKey::Model::Cache::FSerialKeyCache::Delete(
+            Gs2->Cache,
+
+            NamespaceName,
+            AccessToken.IsValid() ? UserId() : TOptional<FString>(),
+            SerialKeyCode,
+            AccessToken.IsValid() ? AccessToken->GetTimeOffset() : TOptional<int32>()
+        );
+    }
+
+    FSerialKeyAccessTokenDomain::FSubscribeWithInitialCallTask::FSubscribeWithInitialCallTask(
+        const TSharedPtr<FSerialKeyAccessTokenDomain>& Self,
+        TFunction<void(Gs2::SerialKey::Model::FSerialKeyPtr)> Callback
+    ):
+        Self(Self),
+        Callback(Callback)
+    {
+    }
+
+    FSerialKeyAccessTokenDomain::FSubscribeWithInitialCallTask::FSubscribeWithInitialCallTask(
+        const FSubscribeWithInitialCallTask& From
+    ):
+        TGs2Future(From),
+        Self(From.Self),
+        Callback(From.Callback)
+    {
+    }
+
+    Gs2::Core::Model::FGs2ErrorPtr FSerialKeyAccessTokenDomain::FSubscribeWithInitialCallTask::Action(
+        TSharedPtr<TSharedPtr<Gs2::Core::Domain::CallbackID>> Result
+    )
+    {
+        const auto Task = Self->Model();
+        Task->StartSynchronousTask();
+        Task->EnsureCompletion();
+        if (Task->GetTask().IsError()) return Task->GetTask().Error();
+        const auto Item = Task->GetTask().Result();
+        const auto CallbackId = Self->Subscribe(Callback);
+        Callback(Item);
+        *Result = MakeShared<Gs2::Core::Domain::CallbackID>(CallbackId);
+        return nullptr;
+    }
+
+    TSharedPtr<FAsyncTask<FSerialKeyAccessTokenDomain::FSubscribeWithInitialCallTask>> FSerialKeyAccessTokenDomain::SubscribeWithInitialCall(
+        TFunction<void(Gs2::SerialKey::Model::FSerialKeyPtr)> Callback
+    )
+    {
+        return Gs2::Core::Util::New<FAsyncTask<FSubscribeWithInitialCallTask>>(this->AsShared(), Callback);
+    }
+
     Gs2::Core::Domain::CallbackID FSerialKeyAccessTokenDomain::Subscribe(
         TFunction<void(Gs2::SerialKey::Model::FSerialKeyPtr)> Callback
     )
     {
+        const auto SubscriptionParentKey = Gs2::SerialKey::Model::Cache::FSerialKeyCache::CreateCacheParentKey(
+
+            NamespaceName,
+            AccessToken.IsValid() ? UserId() : TOptional<FString>(),
+            AccessToken.IsValid() ? AccessToken->GetTimeOffset() : TOptional<int32>()
+        );
+        const auto SubscriptionCacheKey = Gs2::SerialKey::Model::Cache::FSerialKeyCache::CreateCacheKey(
+
+            SerialKeyCode
+        );
+        const TWeakPtr<Gs2::Core::Domain::FGs2> WeakGs2 = Gs2;
+        const TWeakPtr<SerialKey::Domain::FGs2SerialKeyDomain> WeakService = Service;
+        const FString RegisteredParentKey = SubscriptionParentKey;
+        const TOptional<FString> QueryNamespaceName = NamespaceName;
+        const TOptional<FString> QuerySerialKeyCode = SerialKeyCode;
+        const auto SourceToken = AccessToken;
+        const TOptional<FString> RegisteredUserId = SourceToken.IsValid()
+            ? TOptional<FString>(SourceToken->GetUserId())
+            : TOptional<FString>();
+        const int32 RegisteredTimeOffset = SourceToken.IsValid() ? SourceToken->GetTimeOffset().Get(0) : 0;
         return Gs2->Cache->Subscribe(
             Gs2::SerialKey::Model::FSerialKey::TypeName,
-            ParentKey,
-            Gs2::SerialKey::Domain::Model::FSerialKeyDomain::CreateCacheKey(
-                SerialKeyCode
-            ),
+            SubscriptionParentKey,
+            SubscriptionCacheKey,
             [Callback](TSharedPtr<FGs2Object> obj)
             {
                 Callback(StaticCastSharedPtr<Gs2::SerialKey::Model::FSerialKey>(obj));
+            },
+            [WeakGs2, WeakService, RegisteredParentKey, QueryNamespaceName, QuerySerialKeyCode, SourceToken, RegisteredUserId, RegisteredTimeOffset]()
+            {
+                const auto Owner = WeakGs2.Pin();
+                if (!Owner.IsValid() || !SourceToken.IsValid() || !RegisteredUserId.IsSet())
+                {
+                    return;
+                }
+                const auto TokenSnapshot = MakeShared<Gs2::Auth::Model::FAccessToken>(*SourceToken);
+                if (TokenSnapshot->GetUserId() != RegisteredUserId || TokenSnapshot->GetTimeOffset().Get(0) != RegisteredTimeOffset)
+                {
+                    return;
+                }
+                const auto Domain = MakeShared<FSerialKeyAccessTokenDomain>(
+                    Owner,
+                    WeakService.Pin(),
+                    QueryNamespaceName,
+                    TokenSnapshot,
+                    QuerySerialKeyCode
+                );
+                Domain->ParentKey = RegisteredParentKey;
+                const auto Task = Domain->Model();
+                Task->StartBackgroundTask();
             }
         );
     }
@@ -214,12 +359,20 @@ namespace Gs2::SerialKey::Domain::Model
         Gs2::Core::Domain::CallbackID CallbackID
     )
     {
+        const auto SubscriptionParentKey = Gs2::SerialKey::Model::Cache::FSerialKeyCache::CreateCacheParentKey(
+
+            NamespaceName,
+            AccessToken.IsValid() ? UserId() : TOptional<FString>(),
+            AccessToken.IsValid() ? AccessToken->GetTimeOffset() : TOptional<int32>()
+        );
+        const auto SubscriptionCacheKey = Gs2::SerialKey::Model::Cache::FSerialKeyCache::CreateCacheKey(
+
+            SerialKeyCode
+        );
         Gs2->Cache->Unsubscribe(
             Gs2::SerialKey::Model::FSerialKey::TypeName,
-            ParentKey,
-            Gs2::SerialKey::Domain::Model::FSerialKeyDomain::CreateCacheKey(
-                SerialKeyCode
-            ),
+            SubscriptionParentKey,
+            SubscriptionCacheKey,
             CallbackID
         );
     }
@@ -230,4 +383,3 @@ namespace Gs2::SerialKey::Domain::Model
 #elif defined(__clang__)
 #pragma clang diagnostic pop
 #endif
-

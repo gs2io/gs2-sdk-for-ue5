@@ -83,6 +83,8 @@ namespace Gs2::Exchange::Domain::Model
             const FRateModelDomain& From
         );
 
+
+
         class GS2EXCHANGE_API FGetTask final :
             public Gs2::Core::Util::TGs2Future<Gs2::Exchange::Model::FRateModel>,
             public TSharedFromThis<FGetTask>
@@ -141,7 +143,34 @@ namespace Gs2::Exchange::Domain::Model
 
         TSharedPtr<FAsyncTask<FModelTask>> Model();
 
+        void Invalidate();
+
         Gs2::Core::Domain::CallbackID Subscribe(
+            TFunction<void(Gs2::Exchange::Model::FRateModelPtr)> Callback
+        );
+
+        class GS2EXCHANGE_API FSubscribeWithInitialCallTask final :
+            public Gs2::Core::Util::TGs2Future<Gs2::Core::Domain::CallbackID>,
+            public TSharedFromThis<FSubscribeWithInitialCallTask>
+        {
+            const TSharedPtr<FRateModelDomain> Self;
+            const TFunction<void(Gs2::Exchange::Model::FRateModelPtr)> Callback;
+        public:
+            FSubscribeWithInitialCallTask(
+                const TSharedPtr<FRateModelDomain>& Self,
+                TFunction<void(Gs2::Exchange::Model::FRateModelPtr)> Callback
+            );
+
+            FSubscribeWithInitialCallTask(
+                const FSubscribeWithInitialCallTask& From
+            );
+
+            virtual Gs2::Core::Model::FGs2ErrorPtr Action(
+                TSharedPtr<TSharedPtr<Gs2::Core::Domain::CallbackID>> Result
+            ) override;
+        };
+
+        TSharedPtr<FAsyncTask<FSubscribeWithInitialCallTask>> SubscribeWithInitialCall(
             TFunction<void(Gs2::Exchange::Model::FRateModelPtr)> Callback
         );
 

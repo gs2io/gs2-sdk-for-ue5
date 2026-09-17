@@ -38,6 +38,7 @@
 #include "Log/Domain/Model/Dashboard.h"
 #include "Log/Domain/Model/LogEntry.h"
 #include "Log/Domain/Model/MetricModel.h"
+#include "Log/Model/Cache/InGameLog.h"
 
 #include "Core/Domain/Gs2.h"
 #include "Core/Domain/Transaction/JobQueueJobDomainFactory.h"
@@ -123,37 +124,144 @@ namespace Gs2::Log::Domain::Model
         TSharedPtr<TSharedPtr<Gs2::Log::Model::FInGameLog>> Result
     )
     {
-        // ReSharper disable once CppLocalVariableMayBeConst
-        TSharedPtr<Gs2::Log::Model::FInGameLog> Value;
-        auto bCacheHit = Self->Gs2->Cache->TryGet<Gs2::Log::Model::FInGameLog>(
-            Self->ParentKey,
-            Gs2::Log::Domain::Model::FInGameLogDomain::CreateCacheKey(
-                Self->RequestId
-            ),
-            &Value
-        );
-        *Result = Value;
+        const auto CacheParentKey = Gs2::Log::Model::Cache::FInGameLogCache::CreateCacheParentKey(
 
-        return nullptr;
+            Self->NamespaceName,
+            Self->UserId,
+            TOptional<int32>()
+        );
+        const auto CacheKey = Gs2::Log::Model::Cache::FInGameLogCache::CreateCacheKey(
+
+            Self->RequestId
+        );
+        return Self->Gs2->Cache->ExecuteWithKeyLock(
+            Gs2::Log::Model::FInGameLog::TypeName,
+            CacheParentKey,
+            CacheKey,
+            [Self = Self, Result]() -> Gs2::Core::Model::FGs2ErrorPtr
+            {
+                Gs2::Log::Model::FInGameLogPtr Value;
+                const auto CacheHit = Gs2::Log::Model::Cache::FInGameLogCache::TryGet(
+                    Self->Gs2->Cache,
+
+                    Self->NamespaceName,
+                    Self->UserId,
+                    Self->RequestId,
+                    TOptional<int32>(),
+                    &Value
+                );
+                if (CacheHit)
+                {
+                    *Result = Value;
+                    return nullptr;
+                }
+                *Result = Value;
+                return nullptr;
+            }
+        );
     }
 
     TSharedPtr<FAsyncTask<FInGameLogDomain::FModelTask>> FInGameLogDomain::Model() {
         return Gs2::Core::Util::New<FAsyncTask<FInGameLogDomain::FModelTask>>(this->AsShared());
     }
 
+    void FInGameLogDomain::Invalidate()
+    {
+        Gs2::Log::Model::Cache::FInGameLogCache::Delete(
+            Gs2->Cache,
+
+            NamespaceName,
+            UserId,
+            RequestId,
+            TOptional<int32>()
+        );
+    }
+
+    FInGameLogDomain::FSubscribeWithInitialCallTask::FSubscribeWithInitialCallTask(
+        const TSharedPtr<FInGameLogDomain>& Self,
+        TFunction<void(Gs2::Log::Model::FInGameLogPtr)> Callback
+    ):
+        Self(Self),
+        Callback(Callback)
+    {
+    }
+
+    FInGameLogDomain::FSubscribeWithInitialCallTask::FSubscribeWithInitialCallTask(
+        const FSubscribeWithInitialCallTask& From
+    ):
+        TGs2Future(From),
+        Self(From.Self),
+        Callback(From.Callback)
+    {
+    }
+
+    Gs2::Core::Model::FGs2ErrorPtr FInGameLogDomain::FSubscribeWithInitialCallTask::Action(
+        TSharedPtr<TSharedPtr<Gs2::Core::Domain::CallbackID>> Result
+    )
+    {
+        const auto Task = Self->Model();
+        Task->StartSynchronousTask();
+        Task->EnsureCompletion();
+        if (Task->GetTask().IsError()) return Task->GetTask().Error();
+        const auto Item = Task->GetTask().Result();
+        const auto CallbackId = Self->Subscribe(Callback);
+        Callback(Item);
+        *Result = MakeShared<Gs2::Core::Domain::CallbackID>(CallbackId);
+        return nullptr;
+    }
+
+    TSharedPtr<FAsyncTask<FInGameLogDomain::FSubscribeWithInitialCallTask>> FInGameLogDomain::SubscribeWithInitialCall(
+        TFunction<void(Gs2::Log::Model::FInGameLogPtr)> Callback
+    )
+    {
+        return Gs2::Core::Util::New<FAsyncTask<FSubscribeWithInitialCallTask>>(this->AsShared(), Callback);
+    }
+
     Gs2::Core::Domain::CallbackID FInGameLogDomain::Subscribe(
         TFunction<void(Gs2::Log::Model::FInGameLogPtr)> Callback
     )
     {
+        const auto SubscriptionParentKey = Gs2::Log::Model::Cache::FInGameLogCache::CreateCacheParentKey(
+
+            NamespaceName,
+            UserId,
+            TOptional<int32>()
+        );
+        const auto SubscriptionCacheKey = Gs2::Log::Model::Cache::FInGameLogCache::CreateCacheKey(
+
+            RequestId
+        );
+        const TWeakPtr<Gs2::Core::Domain::FGs2> WeakGs2 = Gs2;
+        const TWeakPtr<Log::Domain::FGs2LogDomain> WeakService = Service;
+        const FString RegisteredParentKey = SubscriptionParentKey;
+        const TOptional<FString> QueryNamespaceName = NamespaceName;
+        const TOptional<FString> QueryUserId = UserId;
+        const TOptional<FString> QueryRequestId = RequestId;
         return Gs2->Cache->Subscribe(
             Gs2::Log::Model::FInGameLog::TypeName,
-            ParentKey,
-            Gs2::Log::Domain::Model::FInGameLogDomain::CreateCacheKey(
-                RequestId
-            ),
+            SubscriptionParentKey,
+            SubscriptionCacheKey,
             [Callback](TSharedPtr<FGs2Object> obj)
             {
                 Callback(StaticCastSharedPtr<Gs2::Log::Model::FInGameLog>(obj));
+            },
+            [WeakGs2, WeakService, RegisteredParentKey, QueryNamespaceName, QueryUserId, QueryRequestId]()
+            {
+                const auto Owner = WeakGs2.Pin();
+                if (!Owner.IsValid())
+                {
+                    return;
+                }
+                const auto Domain = MakeShared<FInGameLogDomain>(
+                    Owner,
+                    WeakService.Pin(),
+                    QueryNamespaceName,
+                    QueryUserId,
+                    QueryRequestId
+                );
+                Domain->ParentKey = RegisteredParentKey;
+                const auto Task = Domain->Model();
+                Task->StartBackgroundTask();
             }
         );
     }
@@ -162,12 +270,20 @@ namespace Gs2::Log::Domain::Model
         Gs2::Core::Domain::CallbackID CallbackID
     )
     {
+        const auto SubscriptionParentKey = Gs2::Log::Model::Cache::FInGameLogCache::CreateCacheParentKey(
+
+            NamespaceName,
+            UserId,
+            TOptional<int32>()
+        );
+        const auto SubscriptionCacheKey = Gs2::Log::Model::Cache::FInGameLogCache::CreateCacheKey(
+
+            RequestId
+        );
         Gs2->Cache->Unsubscribe(
             Gs2::Log::Model::FInGameLog::TypeName,
-            ParentKey,
-            Gs2::Log::Domain::Model::FInGameLogDomain::CreateCacheKey(
-                RequestId
-            ),
+            SubscriptionParentKey,
+            SubscriptionCacheKey,
             CallbackID
         );
     }
@@ -178,4 +294,3 @@ namespace Gs2::Log::Domain::Model
 #elif defined(__clang__)
 #pragma clang diagnostic pop
 #endif
-

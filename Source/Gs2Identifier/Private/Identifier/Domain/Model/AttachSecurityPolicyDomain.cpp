@@ -28,6 +28,8 @@
 #include "Identifier/Domain/Model/Identifier.h"
 #include "Identifier/Domain/Model/Password.h"
 #include "Identifier/Domain/Model/AttachSecurityPolicy.h"
+#include "Identifier/Model/Cache/AttachSecurityPolicy.h"
+#include "Identifier/Model/Cache/SecurityPolicy.h"
 
 #include "Core/Domain/Gs2.h"
 #include "Core/Domain/Transaction/JobQueueJobDomainFactory.h"
@@ -97,7 +99,22 @@ namespace Gs2::Identifier::Domain::Model
         }
         const auto ResultModel = Future->GetTask().Result();
         Future->EnsureCompletion();
+        if (ResultModel.IsValid() && ResultModel->GetItems().IsValid())
+        {
+            for (const auto& Item : *ResultModel->GetItems())
+            {
+                if (!Item.IsValid()) continue;
+                Gs2::Identifier::Model::Cache::FSecurityPolicyCache::Put(
+                    Self->Gs2->Cache,
+                    Item->GetName(),
+                    TOptional<int32>(), Item
+                );
+            }
+        }
+
         auto Domain = MakeShared<TArray<TSharedPtr<Gs2::Identifier::Domain::Model::FSecurityPolicyDomain>>>();
+        if (ResultModel.IsValid() && ResultModel->GetItems().IsValid())
+        {
         for (auto i=0; i<ResultModel->GetItems()->Num(); i++)
         {
             Domain->Add(
@@ -107,17 +124,7 @@ namespace Gs2::Identifier::Domain::Model
                     (*ResultModel->GetItems())[i]->GetName()
                 )
             );
-            const auto ParentKey = "identifier:SecurityPolicy";
-            const auto Key = Gs2::Identifier::Domain::Model::FSecurityPolicyDomain::CreateCacheKey(
-                (*ResultModel->GetItems())[i]->GetName()
-            );
-            Self->Gs2->Cache->Put(
-                Gs2::Identifier::Model::FSecurityPolicy::TypeName,
-                ParentKey,
-                Key,
-                (*ResultModel->GetItems())[i],
-                FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
-            );
+        }
         }
         *Result = Domain;
         return nullptr;
@@ -160,7 +167,22 @@ namespace Gs2::Identifier::Domain::Model
         }
         const auto ResultModel = Future->GetTask().Result();
         Future->EnsureCompletion();
+        if (ResultModel.IsValid() && ResultModel->GetItems().IsValid())
+        {
+            for (const auto& Item : *ResultModel->GetItems())
+            {
+                if (!Item.IsValid()) continue;
+                Gs2::Identifier::Model::Cache::FSecurityPolicyCache::Put(
+                    Self->Gs2->Cache,
+                    Item->GetName(),
+                    TOptional<int32>(), Item
+                );
+            }
+        }
+
         auto Domain = MakeShared<TArray<TSharedPtr<Gs2::Identifier::Domain::Model::FSecurityPolicyDomain>>>();
+        if (ResultModel.IsValid() && ResultModel->GetItems().IsValid())
+        {
         for (auto i=0; i<ResultModel->GetItems()->Num(); i++)
         {
             Domain->Add(
@@ -170,17 +192,7 @@ namespace Gs2::Identifier::Domain::Model
                     (*ResultModel->GetItems())[i]->GetName()
                 )
             );
-            const auto ParentKey = "identifier:SecurityPolicy";
-            const auto Key = Gs2::Identifier::Domain::Model::FSecurityPolicyDomain::CreateCacheKey(
-                (*ResultModel->GetItems())[i]->GetName()
-            );
-            Self->Gs2->Cache->Put(
-                Gs2::Identifier::Model::FSecurityPolicy::TypeName,
-                ParentKey,
-                Key,
-                (*ResultModel->GetItems())[i],
-                FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
-            );
+        }
         }
         *Result = Domain;
         return nullptr;
@@ -223,7 +235,22 @@ namespace Gs2::Identifier::Domain::Model
         }
         const auto ResultModel = Future->GetTask().Result();
         Future->EnsureCompletion();
+        if (ResultModel.IsValid() && ResultModel->GetItems().IsValid())
+        {
+            for (const auto& Item : *ResultModel->GetItems())
+            {
+                if (!Item.IsValid()) continue;
+                Gs2::Identifier::Model::Cache::FSecurityPolicyCache::Put(
+                    Self->Gs2->Cache,
+                    Item->GetName(),
+                    TOptional<int32>(), Item
+                );
+            }
+        }
+
         auto Domain = MakeShared<TArray<TSharedPtr<Gs2::Identifier::Domain::Model::FSecurityPolicyDomain>>>();
+        if (ResultModel.IsValid() && ResultModel->GetItems().IsValid())
+        {
         for (auto i=0; i<ResultModel->GetItems()->Num(); i++)
         {
             Domain->Add(
@@ -233,17 +260,7 @@ namespace Gs2::Identifier::Domain::Model
                     (*ResultModel->GetItems())[i]->GetName()
                 )
             );
-            const auto ParentKey = "identifier:SecurityPolicy";
-            const auto Key = Gs2::Identifier::Domain::Model::FSecurityPolicyDomain::CreateCacheKey(
-                (*ResultModel->GetItems())[i]->GetName()
-            );
-            Self->Gs2->Cache->Put(
-                Gs2::Identifier::Model::FSecurityPolicy::TypeName,
-                ParentKey,
-                Key,
-                (*ResultModel->GetItems())[i],
-                FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
-            );
+        }
         }
         *Result = Domain;
         return nullptr;
@@ -289,35 +306,132 @@ namespace Gs2::Identifier::Domain::Model
         TSharedPtr<TSharedPtr<Gs2::Identifier::Model::FAttachSecurityPolicy>> Result
     )
     {
-        // ReSharper disable once CppLocalVariableMayBeConst
-        TSharedPtr<Gs2::Identifier::Model::FAttachSecurityPolicy> Value;
-        auto bCacheHit = Self->Gs2->Cache->TryGet<Gs2::Identifier::Model::FAttachSecurityPolicy>(
-            Self->ParentKey,
-            Gs2::Identifier::Domain::Model::FAttachSecurityPolicyDomain::CreateCacheKey(
-            ),
-            &Value
-        );
-        *Result = Value;
+        const auto CacheParentKey = Gs2::Identifier::Model::Cache::FAttachSecurityPolicyCache::CreateCacheParentKey(
 
-        return nullptr;
+            Self->UserName,
+            TOptional<int32>()
+        );
+        const auto CacheKey = Gs2::Identifier::Model::Cache::FAttachSecurityPolicyCache::CreateCacheKey(
+
+        );
+        return Self->Gs2->Cache->ExecuteWithKeyLock(
+            Gs2::Identifier::Model::FAttachSecurityPolicy::TypeName,
+            CacheParentKey,
+            CacheKey,
+            [Self = Self, Result]() -> Gs2::Core::Model::FGs2ErrorPtr
+            {
+                Gs2::Identifier::Model::FAttachSecurityPolicyPtr Value;
+                const auto CacheHit = Gs2::Identifier::Model::Cache::FAttachSecurityPolicyCache::TryGet(
+                    Self->Gs2->Cache,
+
+                    Self->UserName,
+                    TOptional<int32>(),
+                    &Value
+                );
+                if (CacheHit)
+                {
+                    *Result = Value;
+                    return nullptr;
+                }
+                *Result = Value;
+                return nullptr;
+            }
+        );
     }
 
     TSharedPtr<FAsyncTask<FAttachSecurityPolicyDomain::FModelTask>> FAttachSecurityPolicyDomain::Model() {
         return Gs2::Core::Util::New<FAsyncTask<FAttachSecurityPolicyDomain::FModelTask>>(this->AsShared());
     }
 
+    void FAttachSecurityPolicyDomain::Invalidate()
+    {
+        Gs2::Identifier::Model::Cache::FAttachSecurityPolicyCache::Delete(
+            Gs2->Cache,
+
+            UserName,
+            TOptional<int32>()
+        );
+    }
+
+    FAttachSecurityPolicyDomain::FSubscribeWithInitialCallTask::FSubscribeWithInitialCallTask(
+        const TSharedPtr<FAttachSecurityPolicyDomain>& Self,
+        TFunction<void(Gs2::Identifier::Model::FAttachSecurityPolicyPtr)> Callback
+    ):
+        Self(Self),
+        Callback(Callback)
+    {
+    }
+
+    FAttachSecurityPolicyDomain::FSubscribeWithInitialCallTask::FSubscribeWithInitialCallTask(
+        const FSubscribeWithInitialCallTask& From
+    ):
+        TGs2Future(From),
+        Self(From.Self),
+        Callback(From.Callback)
+    {
+    }
+
+    Gs2::Core::Model::FGs2ErrorPtr FAttachSecurityPolicyDomain::FSubscribeWithInitialCallTask::Action(
+        TSharedPtr<TSharedPtr<Gs2::Core::Domain::CallbackID>> Result
+    )
+    {
+        const auto Task = Self->Model();
+        Task->StartSynchronousTask();
+        Task->EnsureCompletion();
+        if (Task->GetTask().IsError()) return Task->GetTask().Error();
+        const auto Item = Task->GetTask().Result();
+        const auto CallbackId = Self->Subscribe(Callback);
+        Callback(Item);
+        *Result = MakeShared<Gs2::Core::Domain::CallbackID>(CallbackId);
+        return nullptr;
+    }
+
+    TSharedPtr<FAsyncTask<FAttachSecurityPolicyDomain::FSubscribeWithInitialCallTask>> FAttachSecurityPolicyDomain::SubscribeWithInitialCall(
+        TFunction<void(Gs2::Identifier::Model::FAttachSecurityPolicyPtr)> Callback
+    )
+    {
+        return Gs2::Core::Util::New<FAsyncTask<FSubscribeWithInitialCallTask>>(this->AsShared(), Callback);
+    }
+
     Gs2::Core::Domain::CallbackID FAttachSecurityPolicyDomain::Subscribe(
         TFunction<void(Gs2::Identifier::Model::FAttachSecurityPolicyPtr)> Callback
     )
     {
+        const auto SubscriptionParentKey = Gs2::Identifier::Model::Cache::FAttachSecurityPolicyCache::CreateCacheParentKey(
+
+            UserName,
+            TOptional<int32>()
+        );
+        const auto SubscriptionCacheKey = Gs2::Identifier::Model::Cache::FAttachSecurityPolicyCache::CreateCacheKey(
+
+        );
+        const TWeakPtr<Gs2::Core::Domain::FGs2> WeakGs2 = Gs2;
+        const TWeakPtr<Identifier::Domain::FGs2IdentifierDomain> WeakService = Service;
+        const FString RegisteredParentKey = SubscriptionParentKey;
+        const TOptional<FString> QueryUserName = UserName;
         return Gs2->Cache->Subscribe(
             Gs2::Identifier::Model::FAttachSecurityPolicy::TypeName,
-            ParentKey,
-            Gs2::Identifier::Domain::Model::FAttachSecurityPolicyDomain::CreateCacheKey(
-            ),
+            SubscriptionParentKey,
+            SubscriptionCacheKey,
             [Callback](TSharedPtr<FGs2Object> obj)
             {
                 Callback(StaticCastSharedPtr<Gs2::Identifier::Model::FAttachSecurityPolicy>(obj));
+            },
+            [WeakGs2, WeakService, RegisteredParentKey, QueryUserName]()
+            {
+                const auto Owner = WeakGs2.Pin();
+                if (!Owner.IsValid())
+                {
+                    return;
+                }
+                const auto Domain = MakeShared<FAttachSecurityPolicyDomain>(
+                    Owner,
+                    WeakService.Pin(),
+                    QueryUserName
+                );
+                Domain->ParentKey = RegisteredParentKey;
+                const auto Task = Domain->Model();
+                Task->StartBackgroundTask();
             }
         );
     }
@@ -326,11 +440,18 @@ namespace Gs2::Identifier::Domain::Model
         Gs2::Core::Domain::CallbackID CallbackID
     )
     {
+        const auto SubscriptionParentKey = Gs2::Identifier::Model::Cache::FAttachSecurityPolicyCache::CreateCacheParentKey(
+
+            UserName,
+            TOptional<int32>()
+        );
+        const auto SubscriptionCacheKey = Gs2::Identifier::Model::Cache::FAttachSecurityPolicyCache::CreateCacheKey(
+
+        );
         Gs2->Cache->Unsubscribe(
             Gs2::Identifier::Model::FAttachSecurityPolicy::TypeName,
-            ParentKey,
-            Gs2::Identifier::Domain::Model::FAttachSecurityPolicyDomain::CreateCacheKey(
-            ),
+            SubscriptionParentKey,
+            SubscriptionCacheKey,
             CallbackID
         );
     }
@@ -341,4 +462,3 @@ namespace Gs2::Identifier::Domain::Model
 #elif defined(__clang__)
 #pragma clang diagnostic pop
 #endif
-

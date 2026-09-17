@@ -12,6 +12,7 @@
  * on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either
  * express or implied. See the License for the specific language governing
  * permissions and limitations under the License.
+ * deny overwrite
  */
 
 #if defined(_MSC_VER)
@@ -24,11 +25,40 @@
 
 #include "Schedule/Domain/SpeculativeExecutor/Verify/VerifyEventByUserIdSpeculativeExecutor.h"
 #include "Schedule/Domain/Gs2Schedule.h"
+#include "Schedule/Model/Cache/Event.h"
 
 #include "Core/Domain/Gs2.h"
+#include "Core/Domain/SpeculativeExecutor/PreparedSpeculativeCommit.h"
 
 namespace Gs2::Schedule::Domain::SpeculativeExecutor
 {
+    namespace
+    {
+        using FEventPtr = Gs2::Schedule::Model::FEventPtr;
+        using FEventCache = Gs2::Schedule::Model::Cache::FEventCache;
+
+        bool ScheduleVerifyEventTypeIsValid(const FString& VerifyType)
+        {
+            return VerifyType == TEXT("inSchedule") || VerifyType == TEXT("notInSchedule");
+        }
+
+        bool ScheduleVerifyEventIsExpected(
+            const FEventPtr& Item,
+            const FString& ExpectedEventId,
+            const FString& EventName
+        )
+        {
+            return Item.IsValid() && Item->GetEventId().IsSet() && *Item->GetEventId() == ExpectedEventId &&
+                Item->GetName().IsSet() && *Item->GetName() == EventName;
+        }
+
+        Gs2::Core::Model::FGs2ErrorPtr ScheduleVerifyEventFailure(const FString& Reason)
+        {
+            const auto Details = MakeShared<TArray<Gs2::Core::Model::FGs2ErrorDetailPtr>>();
+            Details->Add(MakeShared<Gs2::Core::Model::FGs2ErrorDetail>(TEXT("event"), Reason, TEXT("")));
+            return MakeShared<Gs2::Core::Model::FBadRequestError>(Details);
+        }
+    }
 
     FString FVerifyEventByUserIdSpeculativeExecutor::Action()
     {
@@ -42,22 +72,14 @@ namespace Gs2::Schedule::Domain::SpeculativeExecutor
         Gs2::Schedule::Model::FEventPtr Item
     )
     {
-        // TODO: Speculative execution not supported
-        UE_LOG(Gs2Log, Warning, TEXT("Speculative execution not supported on this action: %s"), ToCStr(Action()))
-        if (Request->GetVerifyType().IsSet()) {
-            if (*Request->GetVerifyType() == "inSchedule")
-            {
-            } else if (*Request->GetVerifyType() == "notInSchedule")
-            {
-            } else {
-                return MakeShared<Gs2::Core::Model::FBadRequestError>([]
-                {
-                    auto Arr = MakeShared<TArray<Gs2::Core::Model::FGs2ErrorDetailPtr>>();
-                    Arr->Add(MakeShared<Gs2::Core::Model::FGs2ErrorDetail>("verifyType", "invalid", ""));
-                    return Arr;
-                }());
-            }
+        if (!Request.IsValid() || !Request->GetVerifyType().IsSet() ||
+            !ScheduleVerifyEventTypeIsValid(*Request->GetVerifyType()))
+        {
+            const auto Details = MakeShared<TArray<Gs2::Core::Model::FGs2ErrorDetailPtr>>();
+            Details->Add(MakeShared<Gs2::Core::Model::FGs2ErrorDetail>(TEXT("verifyType"), TEXT("invalid"), TEXT("")));
+            return MakeShared<Gs2::Core::Model::FBadRequestError>(Details);
         }
+        if (!Item.IsValid()) return ScheduleVerifyEventFailure(TEXT("notInSchedule"));
         return nullptr;
     }
 
@@ -87,41 +109,54 @@ namespace Gs2::Schedule::Domain::SpeculativeExecutor
     }
 
     Gs2::Core::Model::FGs2ErrorPtr FVerifyEventByUserIdSpeculativeExecutor::FCommitTask::Action(
-        TSharedPtr<TSharedPtr<TFunction<void()>>> Result
+        TSharedPtr<TSharedPtr<Gs2::Core::Domain::SpeculativeExecutor::FPreparedSpeculativeCommit>> Result
     )
     {
-        const auto Future = Domain->Schedule->Namespace(
-                Request->GetNamespaceName().IsSet() ? *Request->GetNamespaceName() : FString("")
-            )->AccessToken(
-                AccessToken
-            )->Event(
-                Request->GetEventName().IsSet() ? *Request->GetEventName() : FString("")
-            )->Model();
-        Future->StartSynchronousTask();
-        if (Future->GetTask().IsError())
-        {
-            return Future->GetTask().Error();
-        }
-        auto Item = Future->GetTask().Result();
+        *Result = nullptr;
+        if (!Domain.IsValid() || !Domain->RestSession.IsValid() || !AccessToken.IsValid() || !Request.IsValid()) return nullptr;
+        Gs2::Auth::Model::FAccessTokenPtr PreparedToken = MakeShared<Gs2::Auth::Model::FAccessToken>(*AccessToken);
+        const auto PreparedRequest = Gs2::Schedule::Request::FVerifyEventByUserIdRequest::FromJson(Request->ToJson());
+        if (!PreparedToken.IsValid() || !PreparedRequest.IsValid() || !PreparedToken->GetUserId().IsSet() ||
+            PreparedToken->GetUserId().Get(FString()).IsEmpty() || Domain->RestSession->OwnerId().IsEmpty()) return nullptr;
+        if (PreparedRequest->GetUserId().IsSet() && *PreparedRequest->GetUserId() == TEXT("#{userId}"))
+            PreparedRequest->WithUserId(PreparedToken->GetUserId());
+        if (!PreparedRequest->GetUserId().IsSet() || PreparedRequest->GetUserId().Get(FString()) != PreparedToken->GetUserId().Get(FString()) ||
+            !PreparedRequest->GetNamespaceName().IsSet() || PreparedRequest->GetNamespaceName().Get(FString()).IsEmpty() ||
+            !PreparedRequest->GetEventName().IsSet() || PreparedRequest->GetEventName().Get(FString()).IsEmpty() ||
+            !PreparedRequest->GetVerifyType().IsSet() || !ScheduleVerifyEventTypeIsValid(PreparedRequest->GetVerifyType().Get(FString()))) return nullptr;
 
-        if (!Item.IsValid())
+        const auto NamespaceName = PreparedRequest->GetNamespaceName();
+        const auto EventName = PreparedRequest->GetEventName();
+        const auto UserId = PreparedToken->GetUserId().Get(FString());
+        const auto TimeOffset = PreparedToken->GetTimeOffset();
+        const FString ExpectedEventId = FString::Printf(
+            TEXT("grn:gs2:%s:%s:schedule:%s:event:%s"), *Domain->RestSession->RegionName(), *Domain->RestSession->OwnerId(),
+            *NamespaceName.Get(FString()), *EventName.Get(FString()));
+        FEventPtr Active;
+        FEventPtr Inactive;
+        if (!FEventCache::TryGet(Domain->Cache, NamespaceName, UserId, EventName, TOptional<bool>(true), TimeOffset, &Active)) return nullptr;
+        const bool InSchedule = Active.IsValid();
+        if (!InSchedule && !FEventCache::TryGet(Domain->Cache, NamespaceName, UserId, EventName, TOptional<bool>(false), TimeOffset, &Inactive)) return nullptr;
+        const auto Item = InSchedule ? Active : Inactive;
+        if (!ScheduleVerifyEventIsExpected(Item, ExpectedEventId, EventName.Get(FString()))) return nullptr;
+        const bool Satisfied = PreparedRequest->GetVerifyType().Get(FString()) == TEXT("inSchedule") ? InSchedule : !InSchedule;
+        if (!Satisfied)
         {
-            *Result = MakeShared<TFunction<void()>>([&]()
-            {
-                return nullptr;
-            });
-            return nullptr;
+            return ScheduleVerifyEventFailure(PreparedRequest->GetVerifyType().Get(FString()) == TEXT("inSchedule") ? TEXT("notInSchedule") : TEXT("inSchedule"));
         }
-        auto Err = Transform(Domain, AccessToken, Request, Item);
-        if (Err != nullptr)
+        const auto Guard = [Cache = Domain->Cache, NamespaceName, UserId, EventName, TimeOffset, ExpectedEventId, VerifyType = PreparedRequest->GetVerifyType().Get(FString())]()
         {
-            return Err;
-        }
-
-        *Result = MakeShared<TFunction<void()>>([&]()
-        {
-            return nullptr;
-        });
+            FEventPtr CurrentActive;
+            FEventPtr CurrentInactive;
+            if (!FEventCache::TryGet(Cache, NamespaceName, UserId, EventName, TOptional<bool>(true), TimeOffset, &CurrentActive)) return false;
+            const bool CurrentInSchedule = CurrentActive.IsValid();
+            if (!CurrentInSchedule && !FEventCache::TryGet(Cache, NamespaceName, UserId, EventName, TOptional<bool>(false), TimeOffset, &CurrentInactive)) return false;
+            const auto Current = CurrentInSchedule ? CurrentActive : CurrentInactive;
+            if (!ScheduleVerifyEventIsExpected(Current, ExpectedEventId, EventName.Get(FString()))) return false;
+            return VerifyType == TEXT("inSchedule") ? CurrentInSchedule : !CurrentInSchedule;
+        };
+        *Result = Gs2::Core::Domain::SpeculativeExecutor::FPreparedSpeculativeCommit::CreateGuarded(
+            MakeShared<TFunction<void()>>([]() {}), Guard);
         return nullptr;
     }
 
@@ -133,6 +168,23 @@ namespace Gs2::Schedule::Domain::SpeculativeExecutor
     )
     {
         return Gs2::Core::Util::New<FAsyncTask<FCommitTask>>(Domain, Service, AccessToken, Request);
+    }
+
+    TSharedPtr<FAsyncTask<FVerifyEventByUserIdSpeculativeExecutor::FCommitTask>> FVerifyEventByUserIdSpeculativeExecutor::ExecuteInverse(
+        const Gs2::Core::Domain::FGs2Ptr& Domain,
+        const Gs2::Schedule::Domain::FGs2ScheduleDomainPtr& Service,
+        const Gs2::Auth::Model::FAccessTokenPtr& AccessToken,
+        const Gs2::Schedule::Request::FVerifyEventByUserIdRequestPtr& Request
+    )
+    {
+        if (!Request.IsValid()) return nullptr;
+        auto Inverse = Gs2::Schedule::Request::FVerifyEventByUserIdRequest::FromJson(Request->ToJson());
+        if (!Inverse.IsValid() || !Inverse->GetVerifyType().IsSet()) return nullptr;
+        const FString VerifyType = Inverse->GetVerifyType().Get(FString());
+        if (VerifyType == TEXT("inSchedule")) Inverse->WithVerifyType(TOptional<FString>(TEXT("notInSchedule")));
+        else if (VerifyType == TEXT("notInSchedule")) Inverse->WithVerifyType(TOptional<FString>(TEXT("inSchedule")));
+        else return nullptr;
+        return Execute(Domain, Service, AccessToken, Inverse);
     }
 
     Gs2::Schedule::Request::FVerifyEventByUserIdRequestPtr FVerifyEventByUserIdSpeculativeExecutor::Rate(

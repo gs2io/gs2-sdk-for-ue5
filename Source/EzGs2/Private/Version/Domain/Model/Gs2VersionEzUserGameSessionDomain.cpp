@@ -73,7 +73,8 @@ namespace Gs2::UE5::Version::Domain::Model
         );
     }
 
-    void FEzUserGameSessionDomain::UnsubscribeAcceptVersions(Gs2::Core::Domain::CallbackID CallbackId)
+    void FEzUserGameSessionDomain::UnsubscribeAcceptVersions(
+            Gs2::Core::Domain::CallbackID CallbackId)
     {
         Domain->UnsubscribeAcceptVersions(
             CallbackId

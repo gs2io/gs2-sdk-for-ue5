@@ -82,7 +82,7 @@ namespace Gs2::UE5::Lottery::Domain::Model
     Gs2::Core::Domain::CallbackID FEzLotteryModelDomain::Subscribe(TFunction<void(Gs2::UE5::Lottery::Model::FEzLotteryModelPtr)> Callback)
     {
         return Domain->Subscribe(
-            [&](Gs2::Lottery::Model::FLotteryModelPtr Item)
+            [Callback](Gs2::Lottery::Model::FLotteryModelPtr Item)
             {
                 Callback(Gs2::UE5::Lottery::Model::FEzLotteryModel::FromModel(Item));
             }

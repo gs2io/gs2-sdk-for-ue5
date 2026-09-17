@@ -27,6 +27,7 @@
 #include "Showcase/Domain/SpeculativeExecutor/Acquire/ForceReDrawByUserIdSpeculativeExecutor.h"
 
 #include "Core/Domain/Gs2.h"
+#include "Core/Domain/SpeculativeExecutor/PreparedSpeculativeCommit.h"
 
 namespace Gs2::Showcase::Domain::SpeculativeExecutor
 {
@@ -59,7 +60,7 @@ namespace Gs2::Showcase::Domain::SpeculativeExecutor
     }
 
     Gs2::Core::Model::FGs2ErrorPtr FAcquireActionSpeculativeExecutorIndex::FCommitTask::Action(
-        TSharedPtr<TSharedPtr<TFunction<void()>>> Result
+        TSharedPtr<TSharedPtr<Gs2::Core::Domain::SpeculativeExecutor::FPreparedSpeculativeCommit>> Result
     )
     {
         auto NewAcquireAction = AcquireAction->WithAction(AcquireAction->GetAction()->Replace(TEXT("{region}"), ToCStr(Domain->RestSession->RegionName())));
@@ -73,7 +74,23 @@ namespace Gs2::Showcase::Domain::SpeculativeExecutor
                 return nullptr;
             }
             auto Request = Request::FDecrementPurchaseCountByUserIdRequest::FromJson(RequestModelJson);
-            Request = FDecrementPurchaseCountByUserIdSpeculativeExecutor::Rate(Request, Rate);
+            const int64 Count = Request->GetCount().IsSet() ? static_cast<int64>(*Request->GetCount()) : 1;
+            if (Count == 0)
+            {
+                Request->WithCount(0);
+            }
+            else
+            {
+                const uint64 Magnitude = Count < 0 ? static_cast<uint64>(-Count) : static_cast<uint64>(Count);
+                const uint64 MaxMagnitude = Count < 0 ? 2147483648ULL : 2147483647ULL;
+                const uint64 MaxRate = MaxMagnitude / Magnitude;
+                if (Rate > TBigInt<1024, false>(static_cast<int64>(MaxRate)))
+                {
+                    return nullptr;
+                }
+                const int64 Scaled = Count * Rate.ToInt();
+                Request->WithCount(static_cast<int32>(Scaled));
+            }
             auto Future = FDecrementPurchaseCountByUserIdSpeculativeExecutor::Execute(
                 Domain,
                 Service,
@@ -86,6 +103,7 @@ namespace Gs2::Showcase::Domain::SpeculativeExecutor
                 return Future->GetTask().Error();
             }
             *Result = Future->GetTask().Result();
+            return nullptr;
         }
         if (FForceReDrawByUserIdSpeculativeExecutor::Action() == NewAcquireAction->GetAction()) {
             TSharedPtr<FJsonObject> RequestModelJson;
@@ -108,6 +126,7 @@ namespace Gs2::Showcase::Domain::SpeculativeExecutor
                 return Future->GetTask().Error();
             }
             *Result = Future->GetTask().Result();
+            return nullptr;
         }
         return nullptr;
     }

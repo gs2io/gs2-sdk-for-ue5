@@ -25,49 +25,54 @@
 #endif
 
 #include "Ranking2/Domain/SpeculativeExecutor/Verify/VerifySubscribeRankingScoreByUserIdSpeculativeExecutor.h"
-#include "Ranking2/Domain/Gs2Ranking2.h"
-
+#include "Ranking2/Model/Cache/SubscribeRankingScore.h"
 #include "Core/Domain/Gs2.h"
-
+#include "Core/Domain/SpeculativeExecutor/PreparedSpeculativeCommit.h"
 namespace Gs2::Ranking2::Domain::SpeculativeExecutor
 {
+namespace
+{
+    bool Ranking2VerifySubscribePredicate(const Gs2::Ranking2::Model::FSubscribeRankingScorePtr& Item, const FString& ExpectedId, const FString& UserId,
+        const FString& RankingName, const int64 ExpectedSeason, const TOptional<int64>& RequestSeason, const FString& VerifyType, const int64 RequestValue)
+    {
+        if (!Item.IsValid() || !Item->GetSubscribeRankingScoreId().IsSet() || Item->GetSubscribeRankingScoreId().Get(FString()) != ExpectedId ||
+            !Item->GetUserId().IsSet() || Item->GetUserId().Get(FString()) != UserId ||
+            !Item->GetRankingName().IsSet() || Item->GetRankingName().Get(FString()) != RankingName ||
+            !Item->GetSeason().IsSet() || Item->GetSeason().Get(0) != ExpectedSeason || !Item->GetScore().IsSet() ||
+            (RequestSeason.IsSet() && Item->GetSeason().Get(0) != RequestSeason.Get(0))) return false;
+        const int64 Current = Item->GetScore().Get(0);
+        if (VerifyType == TEXT("less")) return Current < RequestValue;
+        if (VerifyType == TEXT("lessEqual")) return Current <= RequestValue;
+        if (VerifyType == TEXT("greater")) return Current > RequestValue;
+        if (VerifyType == TEXT("greaterEqual")) return Current >= RequestValue;
+        if (VerifyType == TEXT("equal")) return Current == RequestValue;
+        if (VerifyType == TEXT("notEqual")) return Current != RequestValue;
+        return false;
+    }
 
+    FString Ranking2SubscribeFailureReason(const FString& VerifyType)
+    {
+        if (VerifyType == TEXT("less")) return TEXT("greaterEqual");
+        if (VerifyType == TEXT("lessEqual")) return TEXT("greater");
+        if (VerifyType == TEXT("greater")) return TEXT("lessEqual");
+        if (VerifyType == TEXT("greaterEqual")) return TEXT("less");
+        if (VerifyType == TEXT("equal")) return TEXT("notEqual");
+        if (VerifyType == TEXT("notEqual")) return TEXT("equal");
+        return TEXT("invalid");
+    }
+}
     FString FVerifySubscribeRankingScoreByUserIdSpeculativeExecutor::Action()
     {
         return FString("Gs2Ranking2:VerifySubscribeRankingScoreByUserId");
     }
 
     Gs2::Core::Model::FGs2ErrorPtr FVerifySubscribeRankingScoreByUserIdSpeculativeExecutor::Transform(
-        const Gs2::Core::Domain::FGs2Ptr& Domain,
-        const Gs2::Auth::Model::FAccessTokenPtr& AccessToken,
-        const Gs2::Ranking2::Request::FVerifySubscribeRankingScoreByUserIdRequestPtr& Request,
-        Gs2::Ranking2::Model::FSubscribeRankingScorePtr Item
+        const Gs2::Core::Domain::FGs2Ptr&,
+        const Gs2::Auth::Model::FAccessTokenPtr&,
+        const Gs2::Ranking2::Request::FVerifySubscribeRankingScoreByUserIdRequestPtr&,
+        Gs2::Ranking2::Model::FSubscribeRankingScorePtr
     )
     {
-        // TODO: Speculative execution not supported
-        UE_LOG(Gs2Log, Warning, TEXT("Speculative execution not supported on this action: %s"), ToCStr(Action()))
-        if (Request->GetVerifyType().IsSet()) {
-            if (*Request->GetVerifyType() == "less")
-            {
-            } else if (*Request->GetVerifyType() == "lessEqual")
-            {
-            } else if (*Request->GetVerifyType() == "greater")
-            {
-            } else if (*Request->GetVerifyType() == "greaterEqual")
-            {
-            } else if (*Request->GetVerifyType() == "equal")
-            {
-            } else if (*Request->GetVerifyType() == "notEqual")
-            {
-            } else {
-                return MakeShared<Gs2::Core::Model::FBadRequestError>([]
-                {
-                    auto Arr = MakeShared<TArray<Gs2::Core::Model::FGs2ErrorDetailPtr>>();
-                    Arr->Add(MakeShared<Gs2::Core::Model::FGs2ErrorDetail>("verifyType", "invalid", ""));
-                    return Arr;
-                }());
-            }
-        }
         return nullptr;
     }
 
@@ -77,62 +82,52 @@ namespace Gs2::Ranking2::Domain::SpeculativeExecutor
         const Gs2::Auth::Model::FAccessTokenPtr& AccessToken,
         const Gs2::Ranking2::Request::FVerifySubscribeRankingScoreByUserIdRequestPtr& Request
     ):
-        Domain(Domain),
-        Service(Service),
-        AccessToken(AccessToken),
-        Request(Request)
+        Domain(Domain), Service(Service), AccessToken(AccessToken), Request(Request)
     {
 
     }
 
-    FVerifySubscribeRankingScoreByUserIdSpeculativeExecutor::FCommitTask::FCommitTask(
-        const FCommitTask& From
-    ):
-        Domain(From.Domain),
-        Service(From.Service),
-        AccessToken(From.AccessToken),
-        Request(From.Request)
+    FVerifySubscribeRankingScoreByUserIdSpeculativeExecutor::FCommitTask::FCommitTask(const FCommitTask& From):
+        Domain(From.Domain), Service(From.Service), AccessToken(From.AccessToken), Request(From.Request)
     {
 
     }
 
     Gs2::Core::Model::FGs2ErrorPtr FVerifySubscribeRankingScoreByUserIdSpeculativeExecutor::FCommitTask::Action(
-        TSharedPtr<TSharedPtr<TFunction<void()>>> Result
+        TSharedPtr<TSharedPtr<Gs2::Core::Domain::SpeculativeExecutor::FPreparedSpeculativeCommit>> Result
     )
     {
-        const auto Future = Domain->Ranking2->Namespace(
-                Request->GetNamespaceName().IsSet() ? *Request->GetNamespaceName() : FString("")
-            )->User(
-                AccessToken->GetUserId().IsSet() ? *AccessToken->GetUserId() : FString("")
-            )->SubscribeRankingSeason(
-                Request->GetRankingName().IsSet() ? *Request->GetRankingName() : FString(""),
-                Request->GetSeason().IsSet() ? *Request->GetSeason() : 0
-            )->SubscribeRankingScore()->Model();
-        Future->StartSynchronousTask();
-        if (Future->GetTask().IsError())
+        *Result = nullptr;
+        Gs2::Auth::Model::FAccessTokenPtr PreparedToken = nullptr;
+        if (AccessToken.IsValid()) PreparedToken = MakeShared<Gs2::Auth::Model::FAccessToken>(*AccessToken);
+        Gs2::Ranking2::Request::FVerifySubscribeRankingScoreByUserIdRequestPtr PreparedRequest = nullptr;
+        if (Request.IsValid()) PreparedRequest = MakeShared<Gs2::Ranking2::Request::FVerifySubscribeRankingScoreByUserIdRequest>(*Request);
+        if (!Domain.IsValid() || !Domain->RestSession.IsValid() || Domain->RestSession->OwnerId().IsEmpty() || !PreparedToken.IsValid() || !PreparedRequest.IsValid() || !PreparedToken->GetUserId().IsSet() || PreparedToken->GetUserId().Get(FString()).IsEmpty()) return nullptr;
+        if (PreparedRequest->GetUserId().IsSet() && PreparedRequest->GetUserId().Get(FString()) == TEXT("#{userId}")) PreparedRequest->WithUserId(PreparedToken->GetUserId());
+        if (!PreparedRequest->GetUserId().IsSet() || PreparedRequest->GetUserId().Get(FString()).IsEmpty() || PreparedRequest->GetUserId().Get(FString()) != PreparedToken->GetUserId().Get(FString()) || !PreparedRequest->GetScore().IsSet() || !PreparedRequest->GetVerifyType().IsSet()) return nullptr;
+        const FString VerifyType = PreparedRequest->GetVerifyType().Get(FString());
+        if (VerifyType != TEXT("less") && VerifyType != TEXT("lessEqual") && VerifyType != TEXT("greater") && VerifyType != TEXT("greaterEqual") && VerifyType != TEXT("equal") && VerifyType != TEXT("notEqual")) return nullptr;
+        const FString NamespaceName = PreparedRequest->GetNamespaceName().Get(FString()), RankingName = PreparedRequest->GetRankingName().Get(FString()), UserId = PreparedRequest->GetUserId().Get(FString()); const TOptional<int64> RequestSeason = PreparedRequest->GetSeason(); const int64 RequestValue = PreparedRequest->GetScore().Get(0); const auto TimeOffset = PreparedToken->GetTimeOffset();
+        Gs2::Ranking2::Model::FSubscribeRankingScorePtr Cached;
+        if (!Gs2::Ranking2::Model::Cache::FSubscribeRankingScoreCache::TryGet(Domain->Cache, NamespaceName, RankingName, RequestSeason, UserId, TimeOffset, &Cached) || !Cached.IsValid() || !Cached->GetSeason().IsSet()) return nullptr;
+        const int64 ExpectedSeason = Cached->GetSeason().Get(0);
+        const FString ExpectedId = FString::Printf(TEXT("grn:gs2:%s:%s:ranking2:%s:user:%s:ranking:subscribe:%s:%lld:score"), *Domain->RestSession->RegionName(), *Domain->RestSession->OwnerId(), *NamespaceName, *UserId, *RankingName, Cached->GetSeason().Get(0));
+        if (!Ranking2VerifySubscribePredicate(Cached, ExpectedId, UserId, RankingName, ExpectedSeason, RequestSeason, VerifyType, RequestValue))
         {
-            return Future->GetTask().Error();
+            const auto Details = MakeShared<TArray<Gs2::Core::Model::FGs2ErrorDetailPtr>>();
+            Details->Add(MakeShared<Gs2::Core::Model::FGs2ErrorDetail>(
+                TEXT("score"),
+                FString::Printf(TEXT("ranking2.subscribeRankingScore.score.error.%s"), *Ranking2SubscribeFailureReason(VerifyType)),
+                TEXT("")));
+            return MakeShared<Gs2::Core::Model::FBadRequestError>(Details);
         }
-        auto Item = Future->GetTask().Result();
-
-        if (!Item.IsValid())
+        const auto Guard = [Cache = Domain->Cache, NamespaceName, RankingName, RequestSeason, UserId, TimeOffset, ExpectedId, ExpectedSeason, VerifyType, RequestValue]()
         {
-            *Result = MakeShared<TFunction<void()>>([&]()
-            {
-                return nullptr;
-            });
-            return nullptr;
-        }
-        auto Err = Transform(Domain, AccessToken, Request, Item);
-        if (Err != nullptr)
-        {
-            return Err;
-        }
-
-        *Result = MakeShared<TFunction<void()>>([&]()
-        {
-            return nullptr;
-        });
+            Gs2::Ranking2::Model::FSubscribeRankingScorePtr Current;
+            if (!Gs2::Ranking2::Model::Cache::FSubscribeRankingScoreCache::TryGet(Cache, NamespaceName, RankingName, RequestSeason, UserId, TimeOffset, &Current) || !Current.IsValid()) return false;
+            return Ranking2VerifySubscribePredicate(Current, ExpectedId, UserId, RankingName, ExpectedSeason, RequestSeason, VerifyType, RequestValue);
+        };
+        *Result = Gs2::Core::Domain::SpeculativeExecutor::FPreparedSpeculativeCommit::CreateGuarded(MakeShared<TFunction<void()>>([]() {}), Guard);
         return nullptr;
     }
 
@@ -146,15 +141,32 @@ namespace Gs2::Ranking2::Domain::SpeculativeExecutor
         return Gs2::Core::Util::New<FAsyncTask<FCommitTask>>(Domain, Service, AccessToken, Request);
     }
 
+    TSharedPtr<FAsyncTask<FVerifySubscribeRankingScoreByUserIdSpeculativeExecutor::FCommitTask>> FVerifySubscribeRankingScoreByUserIdSpeculativeExecutor::ExecuteInverse(
+        const Gs2::Core::Domain::FGs2Ptr& Domain,
+        const Gs2::Ranking2::Domain::FGs2Ranking2DomainPtr& Service,
+        const Gs2::Auth::Model::FAccessTokenPtr& AccessToken,
+        const Gs2::Ranking2::Request::FVerifySubscribeRankingScoreByUserIdRequestPtr& Request
+    )
+    {
+        if (!Request.IsValid()) return nullptr;
+        auto Inverse = Gs2::Ranking2::Request::FVerifySubscribeRankingScoreByUserIdRequest::FromJson(Request->ToJson());
+        if (!Inverse.IsValid() || !Inverse->GetVerifyType().IsSet()) return nullptr;
+        const FString VerifyType = Inverse->GetVerifyType().Get(FString());
+        if (VerifyType == TEXT("less")) Inverse->WithVerifyType(TOptional<FString>(TEXT("greaterEqual")));
+        else if (VerifyType == TEXT("lessEqual")) Inverse->WithVerifyType(TOptional<FString>(TEXT("greater")));
+        else if (VerifyType == TEXT("greater")) Inverse->WithVerifyType(TOptional<FString>(TEXT("lessEqual")));
+        else if (VerifyType == TEXT("greaterEqual")) Inverse->WithVerifyType(TOptional<FString>(TEXT("less")));
+        else if (VerifyType == TEXT("equal")) Inverse->WithVerifyType(TOptional<FString>(TEXT("notEqual")));
+        else if (VerifyType == TEXT("notEqual")) Inverse->WithVerifyType(TOptional<FString>(TEXT("equal")));
+        else return nullptr;
+        return Execute(Domain, Service, AccessToken, Inverse);
+    }
+
     Gs2::Ranking2::Request::FVerifySubscribeRankingScoreByUserIdRequestPtr FVerifySubscribeRankingScoreByUserIdSpeculativeExecutor::Rate(
         const Gs2::Ranking2::Request::FVerifySubscribeRankingScoreByUserIdRequestPtr& Request,
         const double Rate
     )
     {
-        if (Request->GetScore().IsSet())
-        {
-            Request->WithScore(*Request->GetScore() * Rate);
-        }
         return Request;
     }
 
@@ -163,11 +175,6 @@ namespace Gs2::Ranking2::Domain::SpeculativeExecutor
         TBigInt<1024, false> Rate
     )
     {
-        if (Request->GetScore().IsSet())
-        {
-            Rate.Multiply(*Request->GetScore());
-            Request->WithScore(Rate.ToInt());
-        }
         return Request;
     }
 }

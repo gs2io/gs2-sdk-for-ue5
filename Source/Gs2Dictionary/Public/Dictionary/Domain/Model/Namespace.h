@@ -104,6 +104,8 @@ namespace Gs2::Dictionary::Domain::Model
             const FNamespaceDomain& From
         );
 
+
+
         class GS2DICTIONARY_API FGetStatusTask final :
             public Gs2::Core::Util::TGs2Future<Gs2::Dictionary::Domain::Model::FNamespaceDomain>,
             public TSharedFromThis<FGetStatusTask>
@@ -129,6 +131,8 @@ namespace Gs2::Dictionary::Domain::Model
         TSharedPtr<FAsyncTask<FGetStatusTask>> GetStatus(
             Request::FGetNamespaceStatusRequestPtr Request
         );
+
+
 
         class GS2DICTIONARY_API FGetTask final :
             public Gs2::Core::Util::TGs2Future<Gs2::Dictionary::Model::FNamespace>,
@@ -156,6 +160,8 @@ namespace Gs2::Dictionary::Domain::Model
             Request::FGetNamespaceRequestPtr Request
         );
 
+
+
         class GS2DICTIONARY_API FUpdateTask final :
             public Gs2::Core::Util::TGs2Future<Gs2::Dictionary::Domain::Model::FNamespaceDomain>,
             public TSharedFromThis<FUpdateTask>
@@ -181,6 +187,8 @@ namespace Gs2::Dictionary::Domain::Model
         TSharedPtr<FAsyncTask<FUpdateTask>> Update(
             Request::FUpdateNamespaceRequestPtr Request
         );
+
+
 
         class GS2DICTIONARY_API FDeleteTask final :
             public Gs2::Core::Util::TGs2Future<Gs2::Dictionary::Domain::Model::FNamespaceDomain>,
@@ -208,6 +216,8 @@ namespace Gs2::Dictionary::Domain::Model
             Request::FDeleteNamespaceRequestPtr Request
         );
 
+
+
         class GS2DICTIONARY_API FCreateEntryModelMasterTask final :
             public Gs2::Core::Util::TGs2Future<Gs2::Dictionary::Domain::Model::FEntryModelMasterDomain>,
             public TSharedFromThis<FCreateEntryModelMasterTask>
@@ -233,6 +243,8 @@ namespace Gs2::Dictionary::Domain::Model
         TSharedPtr<FAsyncTask<FCreateEntryModelMasterTask>> CreateEntryModelMaster(
             Request::FCreateEntryModelMasterRequestPtr Request
         );
+
+
 
         class GS2DICTIONARY_API FGetEntryModelMasterTask final :
             public Gs2::Core::Util::TGs2Future<Gs2::Dictionary::Model::FEntryModelMaster>,
@@ -260,6 +272,8 @@ namespace Gs2::Dictionary::Domain::Model
             Request::FGetEntryModelMasterRequestPtr Request
         );
 
+
+
         class GS2DICTIONARY_API FUpdateEntryModelMasterTask final :
             public Gs2::Core::Util::TGs2Future<Gs2::Dictionary::Domain::Model::FEntryModelMasterDomain>,
             public TSharedFromThis<FUpdateEntryModelMasterTask>
@@ -285,6 +299,8 @@ namespace Gs2::Dictionary::Domain::Model
         TSharedPtr<FAsyncTask<FUpdateEntryModelMasterTask>> UpdateEntryModelMaster(
             Request::FUpdateEntryModelMasterRequestPtr Request
         );
+
+
 
         class GS2DICTIONARY_API FDeleteEntryModelMasterTask final :
             public Gs2::Core::Util::TGs2Future<Gs2::Dictionary::Domain::Model::FEntryModelMasterDomain>,
@@ -320,8 +336,33 @@ namespace Gs2::Dictionary::Domain::Model
 
         Gs2::Core::Domain::CallbackID SubscribeEntryModels(
             TFunction<void()> Callback
+
         );
 
+        class FCollectEntryModelsTask;
+
+        Gs2::Core::Domain::CallbackID SubscribeEntryModels(
+            TFunction<void(TArray<Gs2::Dictionary::Model::FEntryModelPtr>)> Callback
+        );
+
+        void InvalidateEntryModels();
+
+        class GS2DICTIONARY_API FSubscribeEntryModelsWithInitialCallTask final :
+            public Gs2::Core::Util::TGs2Future<Gs2::Core::Domain::CallbackID>,
+            public TSharedFromThis<FSubscribeEntryModelsWithInitialCallTask>
+        {
+            const TSharedPtr<FNamespaceDomain> Self;
+            const TFunction<void(TArray<Gs2::Dictionary::Model::FEntryModelPtr>)> Callback;
+
+        public:
+            FSubscribeEntryModelsWithInitialCallTask(const TSharedPtr<FNamespaceDomain>& Self, TFunction<void(TArray<Gs2::Dictionary::Model::FEntryModelPtr>)> Callback);
+            FSubscribeEntryModelsWithInitialCallTask(const FSubscribeEntryModelsWithInitialCallTask& From);
+            virtual Gs2::Core::Model::FGs2ErrorPtr Action(TSharedPtr<TSharedPtr<Gs2::Core::Domain::CallbackID>> Result) override;
+        };
+
+        TSharedPtr<FAsyncTask<FSubscribeEntryModelsWithInitialCallTask>> SubscribeEntryModelsWithInitialCall(
+            TFunction<void(TArray<Gs2::Dictionary::Model::FEntryModelPtr>)> Callback
+        );
         void UnsubscribeEntryModels(
             Gs2::Core::Domain::CallbackID CallbackID
         );
@@ -344,8 +385,33 @@ namespace Gs2::Dictionary::Domain::Model
 
         Gs2::Core::Domain::CallbackID SubscribeEntryModelMasters(
             TFunction<void()> Callback
+
         );
 
+        class FCollectEntryModelMastersTask;
+
+        Gs2::Core::Domain::CallbackID SubscribeEntryModelMasters(
+            TFunction<void(TArray<Gs2::Dictionary::Model::FEntryModelMasterPtr>)> Callback,const TOptional<FString> NamePrefix = TOptional<FString>()
+        );
+
+        void InvalidateEntryModelMasters(const TOptional<FString> NamePrefix = TOptional<FString>());
+
+        class GS2DICTIONARY_API FSubscribeEntryModelMastersWithInitialCallTask final :
+            public Gs2::Core::Util::TGs2Future<Gs2::Core::Domain::CallbackID>,
+            public TSharedFromThis<FSubscribeEntryModelMastersWithInitialCallTask>
+        {
+            const TSharedPtr<FNamespaceDomain> Self;
+            const TFunction<void(TArray<Gs2::Dictionary::Model::FEntryModelMasterPtr>)> Callback;
+        const TOptional<FString> QueryNamePrefix;
+        public:
+            FSubscribeEntryModelMastersWithInitialCallTask(const TSharedPtr<FNamespaceDomain>& Self, TFunction<void(TArray<Gs2::Dictionary::Model::FEntryModelMasterPtr>)> Callback,const TOptional<FString> NamePrefix);
+            FSubscribeEntryModelMastersWithInitialCallTask(const FSubscribeEntryModelMastersWithInitialCallTask& From);
+            virtual Gs2::Core::Model::FGs2ErrorPtr Action(TSharedPtr<TSharedPtr<Gs2::Core::Domain::CallbackID>> Result) override;
+        };
+
+        TSharedPtr<FAsyncTask<FSubscribeEntryModelMastersWithInitialCallTask>> SubscribeEntryModelMastersWithInitialCall(
+            TFunction<void(TArray<Gs2::Dictionary::Model::FEntryModelMasterPtr>)> Callback,const TOptional<FString> NamePrefix = TOptional<FString>()
+        );
         void UnsubscribeEntryModelMasters(
             Gs2::Core::Domain::CallbackID CallbackID
         );

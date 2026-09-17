@@ -12,144 +12,158 @@
  * on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either
  * express or implied. See the License for the specific language governing
  * permissions and limitations under the License.
+ *
+ * deny overwrite
  */
 
-#if defined(_MSC_VER)
-#pragma warning (push)
-#pragma warning (disable: 4458) // Declaration hides class member
-#elif defined(__clang__)
-#pragma clang diagnostic push
-#pragma clang diagnostic ignored "-Wshadow" // declaration shadows a field of
-#endif
-
 #include "Mission/Domain/SpeculativeExecutor/Consume/ResetCounterByUserIdSpeculativeExecutor.h"
-#include "Mission/Domain/Gs2Mission.h"
 
+#include "Auth/Model/AccessToken.h"
 #include "Core/Domain/Gs2.h"
+#include "Core/Domain/SpeculativeExecutor/PreparedSpeculativeCommit.h"
+#include "Mission/Domain/SpeculativeExecutor/CounterMutationSpeculativeCommit.h"
+#include "Mission/Model/Cache/Counter.h"
 
 namespace Gs2::Mission::Domain::SpeculativeExecutor
 {
+using Private::FCounterMutationSpeculativeCommit;
 
-    FString FResetCounterByUserIdSpeculativeExecutor::Action()
+FString FResetCounterByUserIdSpeculativeExecutor::Action()
+{
+    return FString("Gs2Mission:ResetCounterByUserId");
+}
+
+Gs2::Core::Model::FGs2ErrorPtr FResetCounterByUserIdSpeculativeExecutor::Transform(
+    const Gs2::Core::Domain::FGs2Ptr&, const Gs2::Auth::Model::FAccessTokenPtr&,
+    const Gs2::Mission::Request::FResetCounterByUserIdRequestPtr&, Gs2::Mission::Model::FCounterPtr
+)
+{
+    return nullptr;
+}
+
+FResetCounterByUserIdSpeculativeExecutor::FCommitTask::FCommitTask(
+    const Gs2::Core::Domain::FGs2Ptr& Domain,
+    const Gs2::Mission::Domain::FGs2MissionDomainPtr& Service,
+    const Gs2::Auth::Model::FAccessTokenPtr& AccessToken,
+    const Gs2::Mission::Request::FResetCounterByUserIdRequestPtr& Request
+): Domain(Domain), Service(Service), AccessToken(AccessToken), Request(Request) {}
+
+FResetCounterByUserIdSpeculativeExecutor::FCommitTask::FCommitTask(const FCommitTask& From):
+    Domain(From.Domain), Service(From.Service), AccessToken(From.AccessToken), Request(From.Request) {}
+
+Gs2::Core::Model::FGs2ErrorPtr FResetCounterByUserIdSpeculativeExecutor::FCommitTask::Action(
+    TSharedPtr<TSharedPtr<Gs2::Core::Domain::SpeculativeExecutor::FPreparedSpeculativeCommit>> Result
+)
+{
+    *Result = nullptr;
+    Gs2::Auth::Model::FAccessTokenPtr Token = nullptr;
+    if (AccessToken.IsValid()) Token = MakeShared<Gs2::Auth::Model::FAccessToken>(*AccessToken);
+    Gs2::Mission::Request::FResetCounterByUserIdRequestPtr Prepared = nullptr;
+    if (Request.IsValid()) Prepared = MakeShared<Gs2::Mission::Request::FResetCounterByUserIdRequest>(*Request);
+    if (!Domain.IsValid() || !Domain->RestSession.IsValid() || !Domain->Cache.IsValid() ||
+        !Token.IsValid() || !Prepared.IsValid() || !Token->GetUserId().IsSet() ||
+        Token->GetUserId().Get(FString()).IsEmpty()) return nullptr;
+    if (Prepared->GetUserId().IsSet() && Prepared->GetUserId().Get(FString()) == TEXT("#{userId}"))
+        Prepared->WithUserId(Token->GetUserId());
+    if (!Prepared->GetUserId().IsSet() || Prepared->GetUserId().Get(FString()) != Token->GetUserId().Get(FString()) ||
+        !Prepared->GetNamespaceName().IsSet() || Prepared->GetNamespaceName().Get(FString()).IsEmpty() ||
+        !Prepared->GetCounterName().IsSet() || Prepared->GetCounterName().Get(FString()).IsEmpty()) return nullptr;
+
+    const auto RequestedScopes = MakeShared<TArray<Gs2::Mission::Model::FScopedValuePtr>>();
+    if (Prepared->GetScopes().IsValid())
     {
-        return FString("Gs2Mission:ResetCounterByUserId");
-    }
-
-    Gs2::Core::Model::FGs2ErrorPtr FResetCounterByUserIdSpeculativeExecutor::Transform(
-        const Gs2::Core::Domain::FGs2Ptr& Domain,
-        const Gs2::Auth::Model::FAccessTokenPtr& AccessToken,
-        const Gs2::Mission::Request::FResetCounterByUserIdRequestPtr& Request,
-        Gs2::Mission::Model::FCounterPtr Item
-    )
-    {
-        // TODO: Speculative execution not supported
-        UE_LOG(Gs2Log, Warning, TEXT("Speculative execution not supported on this action: %s"), ToCStr(Action()))
-        return nullptr;
-    }
-
-    FResetCounterByUserIdSpeculativeExecutor::FCommitTask::FCommitTask(
-        const Gs2::Core::Domain::FGs2Ptr& Domain,
-        const Gs2::Mission::Domain::FGs2MissionDomainPtr& Service,
-        const Gs2::Auth::Model::FAccessTokenPtr& AccessToken,
-        const Gs2::Mission::Request::FResetCounterByUserIdRequestPtr& Request
-    ):
-        Domain(Domain),
-        Service(Service),
-        AccessToken(AccessToken),
-        Request(Request)
-    {
-
-    }
-
-    FResetCounterByUserIdSpeculativeExecutor::FCommitTask::FCommitTask(
-        const FCommitTask& From
-    ):
-        Domain(From.Domain),
-        Service(From.Service),
-        AccessToken(From.AccessToken),
-        Request(From.Request)
-    {
-
-    }
-
-    Gs2::Core::Model::FGs2ErrorPtr FResetCounterByUserIdSpeculativeExecutor::FCommitTask::Action(
-        TSharedPtr<TSharedPtr<TFunction<void()>>> Result
-    )
-    {
-        const auto Future = Domain->Mission->Namespace(
-                Request->GetNamespaceName().IsSet() ? *Request->GetNamespaceName() : FString("")
-            )->AccessToken(
-                AccessToken
-            )->Counter(
-                Request->GetCounterName().IsSet() ? *Request->GetCounterName() : FString("")
-            )->Model();
-        Future->StartSynchronousTask();
-        if (Future->GetTask().IsError())
+        for (const auto& Scope : *Prepared->GetScopes())
         {
-            return Future->GetTask().Error();
+            if (Scope.IsValid()) RequestedScopes->Add(MakeShared<Gs2::Mission::Model::FScopedValue>(*Scope));
         }
-        auto Item = Future->GetTask().Result();
+    }
+    Prepared->WithScopes(RequestedScopes);
+    const auto NamespaceName = Prepared->GetNamespaceName();
+    const auto UserId = Token->GetUserId();
+    const auto CounterName = Prepared->GetCounterName();
+    const auto TimeOffset = Token->GetTimeOffset();
+    const FString ExpectedId = FString::Printf(
+        TEXT("grn:gs2:%s:%s:mission:%s:user:%s:counter:%s"),
+        *Domain->RestSession->RegionName(), *Domain->RestSession->OwnerId(), *NamespaceName.Get(FString()),
+        *UserId.Get(FString()), *CounterName.Get(FString())
+    );
+    Gs2::Mission::Model::FCounterPtr Cached;
+    if (!Gs2::Mission::Model::Cache::FCounterCache::TryGet(
+        Domain->Cache, NamespaceName, UserId, CounterName, TimeOffset, &Cached
+    ) || !Cached.IsValid() || !Cached->GetCounterId().IsSet() || Cached->GetCounterId().Get(FString()) != ExpectedId ||
+        !Cached->GetUserId().IsSet() || Cached->GetUserId().Get(FString()) != UserId.Get(FString()) ||
+        !Cached->GetName().IsSet() || Cached->GetName().Get(FString()) != CounterName.Get(FString()) ||
+        !Cached->GetValues().IsValid()) return nullptr;
 
-        if (!Item.IsValid())
+    const int64 CurrentTimeMillis = static_cast<int64>(FDateTime::UtcNow().ToUnixTimestampDecimal() * 1000.0) +
+        static_cast<int64>(TimeOffset.Get(0)) * 1000;
+    const auto Commit = MakeShared<FCounterMutationSpeculativeCommit>(
+        Domain->Cache, NamespaceName, UserId.Get(FString()), CounterName.Get(FString()), TimeOffset, ExpectedId,
+        Cached->GetRevision(),
+        [RequestedScopes, CurrentTimeMillis](const Gs2::Mission::Model::FCounterPtr& Current)
         {
-            *Result = MakeShared<TFunction<void()>>([&]()
+            if (RequestedScopes->Num() == 0) return Current;
+            const auto Changed = FCounterMutationSpeculativeCommit::Clone(Current);
+            const auto Values = MakeShared<TArray<Gs2::Mission::Model::FScopedValuePtr>>();
+            for (const auto& Existing : *Current->GetValues())
             {
-                return nullptr;
-            });
-            return nullptr;
+                if (!Existing.IsValid()) continue;
+                const FString ExistingScope = Existing->GetScopeType().Get(FString()).IsEmpty()
+                    ? TEXT("resetTiming") : Existing->GetScopeType().Get(FString());
+                const FString ExistingReset = Existing->GetResetType().Get(FString()).IsEmpty()
+                    ? TEXT("notReset") : Existing->GetResetType().Get(FString());
+                const FString ExistingCondition = Existing->GetConditionName().Get(FString());
+                bool Remove = false;
+                for (const auto& Requested : *RequestedScopes)
+                {
+                    const FString RequestedScope = Requested->GetScopeType().Get(FString()).IsEmpty()
+                        ? TEXT("resetTiming") : Requested->GetScopeType().Get(FString());
+                    const FString RequestedReset = Requested->GetResetType().Get(FString()).IsEmpty()
+                        ? TEXT("notReset") : Requested->GetResetType().Get(FString());
+                    if (ExistingScope == RequestedScope && ExistingReset == RequestedReset &&
+                        ExistingCondition == Requested->GetConditionName().Get(FString())) { Remove = true; break; }
+                }
+                if (!Remove) Values->Add(MakeShared<Gs2::Mission::Model::FScopedValue>(*Existing));
+            }
+            for (const auto& Requested : *RequestedScopes)
+            {
+                Values->Add(MakeShared<Gs2::Mission::Model::FScopedValue>(*Requested)
+                    ->WithScopeType(Requested->GetScopeType().IsSet() && !Requested->GetScopeType().Get(FString()).IsEmpty()
+                        ? Requested->GetScopeType() : TOptional<FString>(TEXT("resetTiming")))
+                    ->WithResetType(Requested->GetResetType().IsSet() && !Requested->GetResetType().Get(FString()).IsEmpty()
+                        ? Requested->GetResetType() : TOptional<FString>(TEXT("notReset")))
+                    ->WithValue(TOptional<int64>(0))
+                    ->WithNextResetAt(TOptional<int64>())
+                    ->WithUpdatedAt(CurrentTimeMillis));
+            }
+            Changed->WithValues(Values)->WithUpdatedAt(CurrentTimeMillis)->WithRevision(0);
+            return Changed;
         }
-        auto Err = Transform(Domain, AccessToken, Request, Item);
-        if (Err != nullptr)
-        {
-            return Err;
-        }
+    );
+    *Result = Gs2::Core::Domain::SpeculativeExecutor::FPreparedSpeculativeCommit::CreateComposable(
+        Commit->CompositionKey(),
+        [Commit](const TSharedPtr<void>& Current, const bool HasCurrent, TSharedPtr<void>& Next)
+        { return Commit->TryCompose(Current, HasCurrent, Next); },
+        [Commit](const TSharedPtr<void>& State) { Commit->Commit(State); }
+    );
+    return nullptr;
+}
 
-        const auto ParentKey = Model::FUserDomain::CreateCacheParentKey(
-            Request->GetNamespaceName(),
-            AccessToken->GetUserId(),
-            FString("Counter")
-        );
-        const auto Key = Model::FCounterDomain::CreateCacheKey(
-            Request->GetCounterName()
-        );
+TSharedPtr<FAsyncTask<FResetCounterByUserIdSpeculativeExecutor::FCommitTask>> FResetCounterByUserIdSpeculativeExecutor::Execute(
+    const Gs2::Core::Domain::FGs2Ptr& Domain,
+    const Gs2::Mission::Domain::FGs2MissionDomainPtr& Service,
+    const Gs2::Auth::Model::FAccessTokenPtr& AccessToken,
+    const Gs2::Mission::Request::FResetCounterByUserIdRequestPtr& Request
+)
+{
+    return Gs2::Core::Util::New<FAsyncTask<FCommitTask>>(Domain, Service, AccessToken, Request);
+}
 
-        *Result = MakeShared<TFunction<void()>>([&]()
-        {
-            Domain->Cache->Put(
-                Mission::Model::FCounter::TypeName,
-                ParentKey,
-                Key,
-                Item,
-                FDateTime::Now() + FTimespan::FromSeconds(10)
-            );
-            return nullptr;
-        });
-        return nullptr;
-    }
+Gs2::Mission::Request::FResetCounterByUserIdRequestPtr FResetCounterByUserIdSpeculativeExecutor::Rate(
+    const Gs2::Mission::Request::FResetCounterByUserIdRequestPtr& Request, const double)
+{ return Request; }
 
-    TSharedPtr<FAsyncTask<FResetCounterByUserIdSpeculativeExecutor::FCommitTask>> FResetCounterByUserIdSpeculativeExecutor::Execute(
-        const Gs2::Core::Domain::FGs2Ptr& Domain,
-        const Gs2::Mission::Domain::FGs2MissionDomainPtr& Service,
-        const Gs2::Auth::Model::FAccessTokenPtr& AccessToken,
-        const Gs2::Mission::Request::FResetCounterByUserIdRequestPtr& Request
-    )
-    {
-        return Gs2::Core::Util::New<FAsyncTask<FCommitTask>>(Domain, Service, AccessToken, Request);
-    }
-
-    Gs2::Mission::Request::FResetCounterByUserIdRequestPtr FResetCounterByUserIdSpeculativeExecutor::Rate(
-        const Gs2::Mission::Request::FResetCounterByUserIdRequestPtr& Request,
-        const double Rate
-    )
-    {
-        return Request;
-    }
-
-    Gs2::Mission::Request::FResetCounterByUserIdRequestPtr FResetCounterByUserIdSpeculativeExecutor::Rate(
-        const Gs2::Mission::Request::FResetCounterByUserIdRequestPtr& Request,
-        TBigInt<1024, false> Rate
-    )
-    {
-        return Request;
-    }
+Gs2::Mission::Request::FResetCounterByUserIdRequestPtr FResetCounterByUserIdSpeculativeExecutor::Rate(
+    const Gs2::Mission::Request::FResetCounterByUserIdRequestPtr& Request, TBigInt<1024, false>)
+{ return Request; }
 }

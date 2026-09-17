@@ -1,3 +1,4 @@
+
 /*
  * Copyright 2016 Game Server Services, Inc. or its affiliates. All Rights
  * Reserved.
@@ -29,6 +30,8 @@
 #include "Chat/Domain/Model/User.h"
 
 #include "Core/Domain/Gs2.h"
+
+#include "Chat/Model/Cache/Subscribe.h"
 
 namespace Gs2::Chat::Domain::Iterator
 {
@@ -78,7 +81,7 @@ namespace Gs2::Chat::Domain::Iterator
 
     FDescribeSubscribesByRoomNameIterator::FIterator& FDescribeSubscribesByRoomNameIterator::FIterator::operator++()
     {
-        
+
 
         if (bEnd) return *this;
 
@@ -88,19 +91,21 @@ namespace Gs2::Chat::Domain::Iterator
             return *this;
         }
 
-        if (RangeIteratorOpt) ++*RangeIteratorOpt;
+        if (RangeIteratorOpt && *RangeIteratorOpt) ++*RangeIteratorOpt;
 
+        // Keep the previous page alive until its iterator has been replaced.
+        const auto PreviousRange = Range;
         if (!RangeIteratorOpt || (!*RangeIteratorOpt && !bLast))
         {
-
-            const auto Future = Self->Client->DescribeSubscribesByRoomName(
+            const auto Request =
                 MakeShared<Gs2::Chat::Request::FDescribeSubscribesByRoomNameRequest>()
                     ->WithContextStack(Self->Gs2->DefaultContextStack)
                     ->WithNamespaceName(Self->NamespaceName)
                     ->WithRoomName(Self->RoomName)
                     ->WithPageToken(PageToken)
                     ->WithLimit(FetchSize)
-            );
+            ;
+            const auto Future = Self->Client->DescribeSubscribesByRoomName(Request);
             Future->StartSynchronousTask();
             if (Future->GetTask().IsError())
             {
@@ -114,7 +119,7 @@ namespace Gs2::Chat::Domain::Iterator
             }
             const auto R = Future->GetTask().Result();
             Future->EnsureCompletion();
-            Range = R->GetItems();
+            Range = R->GetItems().IsValid() ? R->GetItems() : MakeShared<TArray<Gs2::Chat::Model::FSubscribePtr>>();
             if (Range)
             {
                 Range->RemoveAll([this](const Gs2::Chat::Model::FSubscribePtr& Item) { return Self->RoomName && Item->GetRoomName() != Self->RoomName; });

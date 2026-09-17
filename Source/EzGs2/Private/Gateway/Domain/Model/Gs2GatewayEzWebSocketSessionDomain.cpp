@@ -92,7 +92,7 @@ namespace Gs2::UE5::Gateway::Domain::Model
     Gs2::Core::Domain::CallbackID FEzWebSocketSessionDomain::Subscribe(TFunction<void(Gs2::UE5::Gateway::Model::FEzWebSocketSessionPtr)> Callback)
     {
         return Domain->Subscribe(
-            [&](Gs2::Gateway::Model::FWebSocketSessionPtr Item)
+            [Callback](Gs2::Gateway::Model::FWebSocketSessionPtr Item)
             {
                 Callback(Gs2::UE5::Gateway::Model::FEzWebSocketSession::FromModel(Item));
             }

@@ -84,6 +84,8 @@ namespace Gs2::Quest::Domain::Model
             const FQuestGroupModelDomain& From
         );
 
+
+
         class GS2QUEST_API FGetTask final :
             public Gs2::Core::Util::TGs2Future<Gs2::Quest::Model::FQuestGroupModel>,
             public TSharedFromThis<FGetTask>
@@ -115,8 +117,33 @@ namespace Gs2::Quest::Domain::Model
 
         Gs2::Core::Domain::CallbackID SubscribeQuestModels(
             TFunction<void()> Callback
+
         );
 
+        class FCollectQuestModelsTask;
+
+        Gs2::Core::Domain::CallbackID SubscribeQuestModels(
+            TFunction<void(TArray<Gs2::Quest::Model::FQuestModelPtr>)> Callback
+        );
+
+        void InvalidateQuestModels();
+
+        class GS2QUEST_API FSubscribeQuestModelsWithInitialCallTask final :
+            public Gs2::Core::Util::TGs2Future<Gs2::Core::Domain::CallbackID>,
+            public TSharedFromThis<FSubscribeQuestModelsWithInitialCallTask>
+        {
+            const TSharedPtr<FQuestGroupModelDomain> Self;
+            const TFunction<void(TArray<Gs2::Quest::Model::FQuestModelPtr>)> Callback;
+
+        public:
+            FSubscribeQuestModelsWithInitialCallTask(const TSharedPtr<FQuestGroupModelDomain>& Self, TFunction<void(TArray<Gs2::Quest::Model::FQuestModelPtr>)> Callback);
+            FSubscribeQuestModelsWithInitialCallTask(const FSubscribeQuestModelsWithInitialCallTask& From);
+            virtual Gs2::Core::Model::FGs2ErrorPtr Action(TSharedPtr<TSharedPtr<Gs2::Core::Domain::CallbackID>> Result) override;
+        };
+
+        TSharedPtr<FAsyncTask<FSubscribeQuestModelsWithInitialCallTask>> SubscribeQuestModelsWithInitialCall(
+            TFunction<void(TArray<Gs2::Quest::Model::FQuestModelPtr>)> Callback
+        );
         void UnsubscribeQuestModels(
             Gs2::Core::Domain::CallbackID CallbackID
         );
@@ -157,7 +184,34 @@ namespace Gs2::Quest::Domain::Model
 
         TSharedPtr<FAsyncTask<FModelTask>> Model();
 
+        void Invalidate();
+
         Gs2::Core::Domain::CallbackID Subscribe(
+            TFunction<void(Gs2::Quest::Model::FQuestGroupModelPtr)> Callback
+        );
+
+        class GS2QUEST_API FSubscribeWithInitialCallTask final :
+            public Gs2::Core::Util::TGs2Future<Gs2::Core::Domain::CallbackID>,
+            public TSharedFromThis<FSubscribeWithInitialCallTask>
+        {
+            const TSharedPtr<FQuestGroupModelDomain> Self;
+            const TFunction<void(Gs2::Quest::Model::FQuestGroupModelPtr)> Callback;
+        public:
+            FSubscribeWithInitialCallTask(
+                const TSharedPtr<FQuestGroupModelDomain>& Self,
+                TFunction<void(Gs2::Quest::Model::FQuestGroupModelPtr)> Callback
+            );
+
+            FSubscribeWithInitialCallTask(
+                const FSubscribeWithInitialCallTask& From
+            );
+
+            virtual Gs2::Core::Model::FGs2ErrorPtr Action(
+                TSharedPtr<TSharedPtr<Gs2::Core::Domain::CallbackID>> Result
+            ) override;
+        };
+
+        TSharedPtr<FAsyncTask<FSubscribeWithInitialCallTask>> SubscribeWithInitialCall(
             TFunction<void(Gs2::Quest::Model::FQuestGroupModelPtr)> Callback
         );
 

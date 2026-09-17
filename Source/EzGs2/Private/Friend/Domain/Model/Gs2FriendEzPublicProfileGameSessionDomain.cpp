@@ -84,7 +84,7 @@ namespace Gs2::UE5::Friend::Domain::Model
     Gs2::Core::Domain::CallbackID FEzPublicProfileGameSessionDomain::Subscribe(TFunction<void(Gs2::UE5::Friend::Model::FEzPublicProfilePtr)> Callback)
     {
         return Domain->Subscribe(
-            [&](Gs2::Friend::Model::FPublicProfilePtr Item)
+            [Callback](Gs2::Friend::Model::FPublicProfilePtr Item)
             {
                 Callback(Gs2::UE5::Friend::Model::FEzPublicProfile::FromModel(Item));
             }

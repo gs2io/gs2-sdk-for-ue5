@@ -108,7 +108,34 @@ namespace Gs2::Stamina::Domain::Model
 
         TSharedPtr<FAsyncTask<FModelTask>> Model();
 
+        void Invalidate();
+
         Gs2::Core::Domain::CallbackID Subscribe(
+            TFunction<void(Gs2::Stamina::Model::FMaxStaminaTablePtr)> Callback
+        );
+
+        class GS2STAMINA_API FSubscribeWithInitialCallTask final :
+            public Gs2::Core::Util::TGs2Future<Gs2::Core::Domain::CallbackID>,
+            public TSharedFromThis<FSubscribeWithInitialCallTask>
+        {
+            const TSharedPtr<FMaxStaminaTableDomain> Self;
+            const TFunction<void(Gs2::Stamina::Model::FMaxStaminaTablePtr)> Callback;
+        public:
+            FSubscribeWithInitialCallTask(
+                const TSharedPtr<FMaxStaminaTableDomain>& Self,
+                TFunction<void(Gs2::Stamina::Model::FMaxStaminaTablePtr)> Callback
+            );
+
+            FSubscribeWithInitialCallTask(
+                const FSubscribeWithInitialCallTask& From
+            );
+
+            virtual Gs2::Core::Model::FGs2ErrorPtr Action(
+                TSharedPtr<TSharedPtr<Gs2::Core::Domain::CallbackID>> Result
+            ) override;
+        };
+
+        TSharedPtr<FAsyncTask<FSubscribeWithInitialCallTask>> SubscribeWithInitialCall(
             TFunction<void(Gs2::Stamina::Model::FMaxStaminaTablePtr)> Callback
         );
 

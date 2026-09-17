@@ -88,6 +88,8 @@ namespace Gs2::SerialKey::Domain::Model
             const FUserDomain& From
         );
 
+
+
         class GS2SERIALKEY_API FDownloadSerialCodesTask final :
             public Gs2::Core::Util::TGs2Future<Gs2::SerialKey::Domain::Model::FUserDomain>,
             public TSharedFromThis<FDownloadSerialCodesTask>
@@ -113,6 +115,8 @@ namespace Gs2::SerialKey::Domain::Model
         TSharedPtr<FAsyncTask<FDownloadSerialCodesTask>> DownloadSerialCodes(
             Request::FDownloadSerialCodesRequestPtr Request
         );
+
+
 
         class GS2SERIALKEY_API FIssueOnceTask final :
             public Gs2::Core::Util::TGs2Future<Gs2::SerialKey::Domain::Model::FSerialKeyDomain>,
@@ -140,6 +144,8 @@ namespace Gs2::SerialKey::Domain::Model
             Request::FIssueOnceRequestPtr Request
         );
 
+
+
         class GS2SERIALKEY_API FVerifyCodeTask final :
             public Gs2::Core::Util::TGs2Future<Gs2::SerialKey::Domain::Model::FSerialKeyDomain>,
             public TSharedFromThis<FVerifyCodeTask>
@@ -165,6 +171,8 @@ namespace Gs2::SerialKey::Domain::Model
         TSharedPtr<FAsyncTask<FVerifyCodeTask>> VerifyCode(
             Request::FVerifyCodeByUserIdRequestPtr Request
         );
+
+
 
         class GS2SERIALKEY_API FRevertUseTask final :
             public Gs2::Core::Util::TGs2Future<Gs2::SerialKey::Domain::Model::FSerialKeyDomain>,
@@ -199,8 +207,33 @@ namespace Gs2::SerialKey::Domain::Model
 
         Gs2::Core::Domain::CallbackID SubscribeSerialKeys(
             TFunction<void()> Callback
+
         );
 
+        class FCollectSerialKeysTask;
+
+        Gs2::Core::Domain::CallbackID SubscribeSerialKeys(
+            TFunction<void(TArray<Gs2::SerialKey::Model::FSerialKeyPtr>)> Callback,const FString CampaignModelName,const TOptional<FString> IssueJobName = TOptional<FString>()
+        );
+
+        void InvalidateSerialKeys(const FString CampaignModelName,const TOptional<FString> IssueJobName = TOptional<FString>());
+
+        class GS2SERIALKEY_API FSubscribeSerialKeysWithInitialCallTask final :
+            public Gs2::Core::Util::TGs2Future<Gs2::Core::Domain::CallbackID>,
+            public TSharedFromThis<FSubscribeSerialKeysWithInitialCallTask>
+        {
+            const TSharedPtr<FUserDomain> Self;
+            const TFunction<void(TArray<Gs2::SerialKey::Model::FSerialKeyPtr>)> Callback;
+        const FString QueryCampaignModelName;const TOptional<FString> QueryIssueJobName;
+        public:
+            FSubscribeSerialKeysWithInitialCallTask(const TSharedPtr<FUserDomain>& Self, TFunction<void(TArray<Gs2::SerialKey::Model::FSerialKeyPtr>)> Callback,const FString CampaignModelName,const TOptional<FString> IssueJobName);
+            FSubscribeSerialKeysWithInitialCallTask(const FSubscribeSerialKeysWithInitialCallTask& From);
+            virtual Gs2::Core::Model::FGs2ErrorPtr Action(TSharedPtr<TSharedPtr<Gs2::Core::Domain::CallbackID>> Result) override;
+        };
+
+        TSharedPtr<FAsyncTask<FSubscribeSerialKeysWithInitialCallTask>> SubscribeSerialKeysWithInitialCall(
+            TFunction<void(TArray<Gs2::SerialKey::Model::FSerialKeyPtr>)> Callback,const FString CampaignModelName,const TOptional<FString> IssueJobName = TOptional<FString>()
+        );
         void UnsubscribeSerialKeys(
             Gs2::Core::Domain::CallbackID CallbackID
         );

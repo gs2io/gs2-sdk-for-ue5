@@ -19,6 +19,7 @@
 // Model
 #include "Model/Complete.h"
 #include "Model/NotificationSetting.h"
+#include "Model/MobileNotificationMessage.h"
 #include "Model/CounterModelMaster.h"
 #include "Model/CounterScopeModel.h"
 #include "Model/MissionGroupModelMaster.h"
@@ -43,6 +44,7 @@
 #include "Model/GitHubCheckoutSetting.h"
 #include "Model/ScriptSetting.h"
 #include "Model/TransactionSetting.h"
+#include "Model/TransactionSettingV2.h"
 
 // DescribeCompletes
 #include "Request/DescribeCompletesRequest.h"

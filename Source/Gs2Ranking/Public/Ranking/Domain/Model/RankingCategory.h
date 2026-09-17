@@ -104,6 +104,8 @@ namespace Gs2::Ranking::Domain::Model
             const FRankingCategoryDomain& From
         );
 
+
+
         class GS2RANKING_API FSubscribeTask final :
             public Gs2::Core::Util::TGs2Future<Gs2::Ranking::Domain::Model::FSubscribeUserDomain>,
             public TSharedFromThis<FSubscribeTask>
@@ -129,6 +131,8 @@ namespace Gs2::Ranking::Domain::Model
         TSharedPtr<FAsyncTask<FSubscribeTask>> Subscribe(
             Request::FSubscribeByUserIdRequestPtr Request
         );
+
+
 
         class GS2RANKING_API FPutScoreTask final :
             public Gs2::Core::Util::TGs2Future<Gs2::Ranking::Domain::Model::FScoreDomain>,
@@ -162,8 +166,33 @@ namespace Gs2::Ranking::Domain::Model
 
         Gs2::Core::Domain::CallbackID SubscribeSubscribesByCategoryName(
             TFunction<void()> Callback
+
         );
 
+        class FCollectSubscribesByCategoryNameTask;
+
+        Gs2::Core::Domain::CallbackID SubscribeSubscribesByCategoryName(
+            TFunction<void(TArray<Gs2::Ranking::Model::FSubscribeUserPtr>)> Callback,const TOptional<FString> TimeOffsetToken = TOptional<FString>()
+        );
+
+        void InvalidateSubscribesByCategoryName(const TOptional<FString> TimeOffsetToken = TOptional<FString>());
+
+        class GS2RANKING_API FSubscribeSubscribesByCategoryNameWithInitialCallTask final :
+            public Gs2::Core::Util::TGs2Future<Gs2::Core::Domain::CallbackID>,
+            public TSharedFromThis<FSubscribeSubscribesByCategoryNameWithInitialCallTask>
+        {
+            const TSharedPtr<FRankingCategoryDomain> Self;
+            const TFunction<void(TArray<Gs2::Ranking::Model::FSubscribeUserPtr>)> Callback;
+        const TOptional<FString> QueryTimeOffsetToken;
+        public:
+            FSubscribeSubscribesByCategoryNameWithInitialCallTask(const TSharedPtr<FRankingCategoryDomain>& Self, TFunction<void(TArray<Gs2::Ranking::Model::FSubscribeUserPtr>)> Callback,const TOptional<FString> TimeOffsetToken);
+            FSubscribeSubscribesByCategoryNameWithInitialCallTask(const FSubscribeSubscribesByCategoryNameWithInitialCallTask& From);
+            virtual Gs2::Core::Model::FGs2ErrorPtr Action(TSharedPtr<TSharedPtr<Gs2::Core::Domain::CallbackID>> Result) override;
+        };
+
+        TSharedPtr<FAsyncTask<FSubscribeSubscribesByCategoryNameWithInitialCallTask>> SubscribeSubscribesByCategoryNameWithInitialCall(
+            TFunction<void(TArray<Gs2::Ranking::Model::FSubscribeUserPtr>)> Callback,const TOptional<FString> TimeOffsetToken = TOptional<FString>()
+        );
         void UnsubscribeSubscribesByCategoryName(
             Gs2::Core::Domain::CallbackID CallbackID
         );
@@ -178,8 +207,33 @@ namespace Gs2::Ranking::Domain::Model
 
         Gs2::Core::Domain::CallbackID SubscribeRankings(
             TFunction<void()> Callback
+
         );
 
+        class FCollectRankingsTask;
+
+        Gs2::Core::Domain::CallbackID SubscribeRankings(
+            TFunction<void(TArray<Gs2::Ranking::Model::FRankingPtr>)> Callback,const TOptional<FString> TimeOffsetToken = TOptional<FString>()
+        );
+
+        void InvalidateRankings(const TOptional<FString> TimeOffsetToken = TOptional<FString>());
+
+        class GS2RANKING_API FSubscribeRankingsWithInitialCallTask final :
+            public Gs2::Core::Util::TGs2Future<Gs2::Core::Domain::CallbackID>,
+            public TSharedFromThis<FSubscribeRankingsWithInitialCallTask>
+        {
+            const TSharedPtr<FRankingCategoryDomain> Self;
+            const TFunction<void(TArray<Gs2::Ranking::Model::FRankingPtr>)> Callback;
+        const TOptional<FString> QueryTimeOffsetToken;
+        public:
+            FSubscribeRankingsWithInitialCallTask(const TSharedPtr<FRankingCategoryDomain>& Self, TFunction<void(TArray<Gs2::Ranking::Model::FRankingPtr>)> Callback,const TOptional<FString> TimeOffsetToken);
+            FSubscribeRankingsWithInitialCallTask(const FSubscribeRankingsWithInitialCallTask& From);
+            virtual Gs2::Core::Model::FGs2ErrorPtr Action(TSharedPtr<TSharedPtr<Gs2::Core::Domain::CallbackID>> Result) override;
+        };
+
+        TSharedPtr<FAsyncTask<FSubscribeRankingsWithInitialCallTask>> SubscribeRankingsWithInitialCall(
+            TFunction<void(TArray<Gs2::Ranking::Model::FRankingPtr>)> Callback,const TOptional<FString> TimeOffsetToken = TOptional<FString>()
+        );
         void UnsubscribeRankings(
             Gs2::Core::Domain::CallbackID CallbackID
         );
@@ -190,8 +244,33 @@ namespace Gs2::Ranking::Domain::Model
 
         Gs2::Core::Domain::CallbackID SubscribeNearRankings(
             TFunction<void()> Callback
+
         );
 
+        class FCollectNearRankingsTask;
+
+        Gs2::Core::Domain::CallbackID SubscribeNearRankings(
+            TFunction<void(TArray<Gs2::Ranking::Model::FRankingPtr>)> Callback,const int64 Score
+        );
+
+        void InvalidateNearRankings(const int64 Score);
+
+        class GS2RANKING_API FSubscribeNearRankingsWithInitialCallTask final :
+            public Gs2::Core::Util::TGs2Future<Gs2::Core::Domain::CallbackID>,
+            public TSharedFromThis<FSubscribeNearRankingsWithInitialCallTask>
+        {
+            const TSharedPtr<FRankingCategoryDomain> Self;
+            const TFunction<void(TArray<Gs2::Ranking::Model::FRankingPtr>)> Callback;
+        const int64 QueryScore;
+        public:
+            FSubscribeNearRankingsWithInitialCallTask(const TSharedPtr<FRankingCategoryDomain>& Self, TFunction<void(TArray<Gs2::Ranking::Model::FRankingPtr>)> Callback,const int64 Score);
+            FSubscribeNearRankingsWithInitialCallTask(const FSubscribeNearRankingsWithInitialCallTask& From);
+            virtual Gs2::Core::Model::FGs2ErrorPtr Action(TSharedPtr<TSharedPtr<Gs2::Core::Domain::CallbackID>> Result) override;
+        };
+
+        TSharedPtr<FAsyncTask<FSubscribeNearRankingsWithInitialCallTask>> SubscribeNearRankingsWithInitialCall(
+            TFunction<void(TArray<Gs2::Ranking::Model::FRankingPtr>)> Callback,const int64 Score
+        );
         void UnsubscribeNearRankings(
             Gs2::Core::Domain::CallbackID CallbackID
         );

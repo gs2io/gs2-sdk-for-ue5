@@ -89,7 +89,7 @@ namespace Gs2::UE5::Friend::Domain::Model
     Gs2::Core::Domain::CallbackID FEzSendFriendRequestDomain::Subscribe(TFunction<void(Gs2::UE5::Friend::Model::FEzFriendRequestPtr)> Callback)
     {
         return Domain->Subscribe(
-            [&](Gs2::Friend::Model::FFriendRequestPtr Item)
+            [Callback](Gs2::Friend::Model::FSendFriendRequestPtr Item)
             {
                 Callback(Gs2::UE5::Friend::Model::FEzFriendRequest::FromModel(Item));
             }

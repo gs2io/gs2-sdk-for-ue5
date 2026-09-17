@@ -103,6 +103,8 @@ namespace Gs2::Formation::Domain
             const FGs2FormationDomain& From
         );
 
+
+
         class GS2FORMATION_API FCreateNamespaceTask final :
             public Gs2::Core::Util::TGs2Future<Gs2::Formation::Domain::Model::FNamespaceDomain>,
             public TSharedFromThis<FCreateNamespaceTask>
@@ -128,6 +130,8 @@ namespace Gs2::Formation::Domain
         TSharedPtr<FAsyncTask<FCreateNamespaceTask>> CreateNamespace(
             Request::FCreateNamespaceRequestPtr Request
         );
+
+
 
         class GS2FORMATION_API FDumpUserDataTask final :
             public Gs2::Core::Util::TGs2Future<FGs2FormationDomain>,
@@ -155,6 +159,8 @@ namespace Gs2::Formation::Domain
             Request::FDumpUserDataByUserIdRequestPtr Request
         );
 
+
+
         class GS2FORMATION_API FCheckDumpUserDataTask final :
             public Gs2::Core::Util::TGs2Future<FGs2FormationDomain>,
             public TSharedFromThis<FCheckDumpUserDataTask>
@@ -180,6 +186,8 @@ namespace Gs2::Formation::Domain
         TSharedPtr<FAsyncTask<FCheckDumpUserDataTask>> CheckDumpUserData(
             Request::FCheckDumpUserDataByUserIdRequestPtr Request
         );
+
+
 
         class GS2FORMATION_API FCleanUserDataTask final :
             public Gs2::Core::Util::TGs2Future<FGs2FormationDomain>,
@@ -207,6 +215,8 @@ namespace Gs2::Formation::Domain
             Request::FCleanUserDataByUserIdRequestPtr Request
         );
 
+
+
         class GS2FORMATION_API FCheckCleanUserDataTask final :
             public Gs2::Core::Util::TGs2Future<FGs2FormationDomain>,
             public TSharedFromThis<FCheckCleanUserDataTask>
@@ -232,6 +242,8 @@ namespace Gs2::Formation::Domain
         TSharedPtr<FAsyncTask<FCheckCleanUserDataTask>> CheckCleanUserData(
             Request::FCheckCleanUserDataByUserIdRequestPtr Request
         );
+
+
 
         class GS2FORMATION_API FPrepareImportUserDataTask final :
             public Gs2::Core::Util::TGs2Future<FGs2FormationDomain>,
@@ -259,6 +271,8 @@ namespace Gs2::Formation::Domain
             Request::FPrepareImportUserDataByUserIdRequestPtr Request
         );
 
+
+
         class GS2FORMATION_API FImportUserDataTask final :
             public Gs2::Core::Util::TGs2Future<FGs2FormationDomain>,
             public TSharedFromThis<FImportUserDataTask>
@@ -284,6 +298,8 @@ namespace Gs2::Formation::Domain
         TSharedPtr<FAsyncTask<FImportUserDataTask>> ImportUserData(
             Request::FImportUserDataByUserIdRequestPtr Request
         );
+
+
 
         class GS2FORMATION_API FCheckImportUserDataTask final :
             public Gs2::Core::Util::TGs2Future<FGs2FormationDomain>,
@@ -317,8 +333,33 @@ namespace Gs2::Formation::Domain
 
         Gs2::Core::Domain::CallbackID SubscribeNamespaces(
             TFunction<void()> Callback
+
         );
 
+        class FCollectNamespacesTask;
+
+        Gs2::Core::Domain::CallbackID SubscribeNamespaces(
+            TFunction<void(TArray<Gs2::Formation::Model::FNamespacePtr>)> Callback,const TOptional<FString> NamePrefix = TOptional<FString>()
+        );
+
+        void InvalidateNamespaces(const TOptional<FString> NamePrefix = TOptional<FString>());
+
+        class GS2FORMATION_API FSubscribeNamespacesWithInitialCallTask final :
+            public Gs2::Core::Util::TGs2Future<Gs2::Core::Domain::CallbackID>,
+            public TSharedFromThis<FSubscribeNamespacesWithInitialCallTask>
+        {
+            const TSharedPtr<FGs2FormationDomain> Self;
+            const TFunction<void(TArray<Gs2::Formation::Model::FNamespacePtr>)> Callback;
+        const TOptional<FString> QueryNamePrefix;
+        public:
+            FSubscribeNamespacesWithInitialCallTask(const TSharedPtr<FGs2FormationDomain>& Self, TFunction<void(TArray<Gs2::Formation::Model::FNamespacePtr>)> Callback,const TOptional<FString> NamePrefix);
+            FSubscribeNamespacesWithInitialCallTask(const FSubscribeNamespacesWithInitialCallTask& From);
+            virtual Gs2::Core::Model::FGs2ErrorPtr Action(TSharedPtr<TSharedPtr<Gs2::Core::Domain::CallbackID>> Result) override;
+        };
+
+        TSharedPtr<FAsyncTask<FSubscribeNamespacesWithInitialCallTask>> SubscribeNamespacesWithInitialCall(
+            TFunction<void(TArray<Gs2::Formation::Model::FNamespacePtr>)> Callback,const TOptional<FString> NamePrefix = TOptional<FString>()
+        );
         void UnsubscribeNamespaces(
             Gs2::Core::Domain::CallbackID CallbackID
         );
@@ -330,19 +371,22 @@ namespace Gs2::Formation::Domain
         void UpdateCacheFromStampSheet(
             const FString Method,
             const FString Request,
-            const FString Result
+            const FString Result,
+            const TOptional<int32> TimeOffset = TOptional<int32>()
         );
 
         void UpdateCacheFromStampTask(
             const FString Method,
             const FString Request,
-            const FString Result
+            const FString Result,
+            const TOptional<int32> TimeOffset = TOptional<int32>()
         );
 
         void UpdateCacheFromJobResult(
             const FString Method,
             const Gs2::JobQueue::Model::FJobPtr Job,
-            const Gs2::JobQueue::Model::FJobResultBodyPtr Result
+            const Gs2::JobQueue::Model::FJobResultBodyPtr Result,
+            const TOptional<int32> TimeOffset = TOptional<int32>()
         );
 
         void HandleNotification(

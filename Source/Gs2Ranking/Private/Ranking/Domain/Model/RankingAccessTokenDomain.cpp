@@ -40,6 +40,7 @@
 #include "Ranking/Domain/Model/SubscribeUserAccessToken.h"
 #include "Ranking/Domain/Model/User.h"
 #include "Ranking/Domain/Model/UserAccessToken.h"
+#include "Ranking/Model/Cache/Ranking.h"
 
 #include "Core/Domain/Gs2.h"
 #include "Core/Domain/Transaction/JobQueueJobDomainFactory.h"
@@ -69,12 +70,12 @@ namespace Gs2::Ranking::Domain::Model
         AdditionalScopeName(AdditionalScopeName),
         ScorerUserId(ScorerUserId),
         Index(Index),
-        ParentKey(Gs2::Ranking::Domain::Model::FRankingCategoryDomain::CreateCacheParentKey(
+        ParentKey(Gs2::Ranking::Model::Cache::FRankingCache::CreateCacheParentKey(
             NamespaceName,
             UserId(),
             CategoryName,
             AdditionalScopeName,
-            "Ranking"
+            AccessToken.IsValid() ? AccessToken->GetTimeOffset() : TOptional<int32>()
         ))
     {
     }
@@ -131,6 +132,7 @@ namespace Gs2::Ranking::Domain::Model
         }
         const auto ResultModel = Future->GetTask().Result();
         Future->EnsureCompletion();
+
         *Result = ResultModel->GetItem();
         return nullptr;
     }
@@ -167,7 +169,7 @@ namespace Gs2::Ranking::Domain::Model
     )
     {
         return FString("") +
-            (ScorerUserId.IsSet() ? *ScorerUserId : "null") + ":" + 
+            (ScorerUserId.IsSet() ? *ScorerUserId : "null") + ":" +
             (Index.IsSet() ? FString::FromInt(*Index) : "null");
     }
 
@@ -189,79 +191,193 @@ namespace Gs2::Ranking::Domain::Model
         TSharedPtr<TSharedPtr<Gs2::Ranking::Model::FRanking>> Result
     )
     {
-        const auto ParentKey = FString("") +
-            (Self->NamespaceName.IsSet() ? *Self->NamespaceName : "null") + ":" +
-            (Self->UserId().IsSet() ? *Self->UserId() : "null") + ":" +
-            (Self->CategoryName.IsSet() ? *Self->CategoryName : "null") + ":" +
-            "Ranking";
-        // ReSharper disable once CppLocalVariableMayBeConst
-        TSharedPtr<Gs2::Ranking::Model::FRanking> Value;
-        auto bCacheHit = Self->Gs2->Cache->TryGet<Gs2::Ranking::Model::FRanking>(
-            ParentKey,
-            Gs2::Ranking::Domain::Model::FRankingDomain::CreateCacheKey(
-                Self->ScorerUserId,
-                Self->Index
-            ),
-            &Value
+        const FString CacheKey = Gs2::Ranking::Model::Cache::FRankingCache::CreateCacheKey(
+            Self->ScorerUserId,
+            Self->Index
         );
-        if (!bCacheHit) {
-            const auto Future = Self->Get(
-                MakeShared<Gs2::Ranking::Request::FGetRankingRequest>()
-            );
-            Future->StartSynchronousTask();
-            if (Future->GetTask().IsError())
+        return Self->Gs2->Cache->ExecuteWithKeyLock(
+            Gs2::Ranking::Model::FRanking::TypeName,
+            Self->ParentKey,
+            CacheKey,
+            [this, Result, CacheKey]() -> Gs2::Core::Model::FGs2ErrorPtr
             {
-                if (Future->GetTask().Error()->Type() != Gs2::Core::Model::FNotFoundError::TypeString)
-                {
-                    return Future->GetTask().Error();
+                // ReSharper disable once CppLocalVariableMayBeConst
+                TSharedPtr<Gs2::Ranking::Model::FRanking> Value;
+                auto bCacheHit = Self->Gs2->Cache->TryGet<Gs2::Ranking::Model::FRanking>(
+                    Self->ParentKey,
+                    CacheKey,
+                    &Value
+                );
+                if (!bCacheHit) {
+                    const auto Future = Self->Get(
+                        MakeShared<Gs2::Ranking::Request::FGetRankingRequest>()
+                    );
+                    Future->StartSynchronousTask();
+                    if (Future->GetTask().IsError())
+                    {
+                        const auto Error = Future->GetTask().Error();
+                        if (!Error.IsValid() || Error->Type() != Gs2::Core::Model::FNotFoundError::TypeString)
+                        {
+                            return Error;
+                        }
+
+                        Self->Gs2->Cache->Put(
+                            Gs2::Ranking::Model::FRanking::TypeName,
+                            Self->ParentKey,
+                            CacheKey,
+                            nullptr,
+                            FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
+                        );
+
+                        if (!Error->GetErrors().IsValid() || Error->Count() == 0 || !Error->Detail(0).IsValid() || Error->Detail(0)->GetComponent() != "ranking")
+                        {
+                            return Error;
+                        }
+                    }
+                    else
+                    {
+                        Value = Future->GetTask().Result();
+                    }
+                    Future->EnsureCompletion();
                 }
 
-                const auto Key = Gs2::Ranking::Domain::Model::FRankingDomain::CreateCacheKey(
-                    Self->ScorerUserId,
-                    Self->Index
-                );
-                Self->Gs2->Cache->Put(
-                    Gs2::Ranking::Model::FRanking::TypeName,
-                    ParentKey,
-                    Key,
-                    nullptr,
-                    FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
-                );
-
-                if (Future->GetTask().Error()->Detail(0)->GetComponent() != "ranking")
+                if (!bCacheHit)
                 {
-                    return Future->GetTask().Error();
+                    FGs2ObjectPtr ExistingObject;
+                    const bool Existing = Self->Gs2->Cache->TryGet(
+                        Gs2::Ranking::Model::FRanking::TypeName,
+                        Self->ParentKey,
+                        CacheKey,
+                        &ExistingObject
+                    );
+                    if (!Existing || ExistingObject != Value)
+                    {
+                        Self->Gs2->Cache->Put(
+                            Gs2::Ranking::Model::FRanking::TypeName,
+                            Self->ParentKey,
+                            CacheKey,
+                            Value,
+                            FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
+                        );
+                    }
                 }
-            }
-            else
-            {
-                Value = Future->GetTask().Result();
-            }
-            Future->EnsureCompletion();
-        }
-        *Result = Value;
+                *Result = Value;
 
-        return nullptr;
+                return nullptr;
+            }
+        );
     }
 
     TSharedPtr<FAsyncTask<FRankingAccessTokenDomain::FModelTask>> FRankingAccessTokenDomain::Model() {
         return Gs2::Core::Util::New<FAsyncTask<FRankingAccessTokenDomain::FModelTask>>(this->AsShared());
     }
 
+
+    FRankingAccessTokenDomain::FSubscribeWithInitialCallTask::FSubscribeWithInitialCallTask(
+        const TSharedPtr<FRankingAccessTokenDomain> Self,
+        const TFunction<void(Gs2::Ranking::Model::FRankingPtr)>& Callback
+    ): Self(Self), Callback(Callback)
+    {
+    }
+
+    FRankingAccessTokenDomain::FSubscribeWithInitialCallTask::FSubscribeWithInitialCallTask(
+        const FSubscribeWithInitialCallTask& From
+    ): TGs2Future(From), Self(From.Self), Callback(From.Callback)
+    {
+    }
+
+    Gs2::Core::Model::FGs2ErrorPtr FRankingAccessTokenDomain::FSubscribeWithInitialCallTask::Action(
+        TSharedPtr<TSharedPtr<Gs2::Core::Domain::CallbackID>> Result
+    )
+    {
+        const auto Future = Self->Model();
+        Future->StartSynchronousTask();
+        Future->EnsureCompletion();
+        if (Future->GetTask().IsError())
+        {
+            return Future->GetTask().Error();
+        }
+        const auto Item = Future->GetTask().Result();
+        const auto ID = Self->Subscribe(Callback);
+        Callback(Item);
+        *Result = MakeShared<Gs2::Core::Domain::CallbackID>(ID);
+        return nullptr;
+    }
+
+    TSharedPtr<FAsyncTask<FRankingAccessTokenDomain::FSubscribeWithInitialCallTask>> FRankingAccessTokenDomain::SubscribeWithInitialCall(
+        TFunction<void(Gs2::Ranking::Model::FRankingPtr)> Callback
+    )
+    {
+        return Gs2::Core::Util::New<FAsyncTask<FRankingAccessTokenDomain::FSubscribeWithInitialCallTask>>(this->AsShared(), Callback);
+    }
+
+    void FRankingAccessTokenDomain::Invalidate()
+    {
+        Gs2::Ranking::Model::Cache::FRankingCache::Delete(
+            Gs2->Cache,
+            NamespaceName,
+            AccessToken.IsValid() ? UserId() : TOptional<FString>(),
+            CategoryName,
+            AdditionalScopeName,
+            ScorerUserId,
+            Index,
+            AccessToken.IsValid() ? AccessToken->GetTimeOffset() : TOptional<int32>()
+        );
+    }
+
     Gs2::Core::Domain::CallbackID FRankingAccessTokenDomain::Subscribe(
         TFunction<void(Gs2::Ranking::Model::FRankingPtr)> Callback
     )
     {
+        const TWeakPtr<Gs2::Core::Domain::FGs2> WeakGs2 = Gs2;
+        const TWeakPtr<Ranking::Domain::FGs2RankingDomain> WeakService = Service;
+        const FString RegisteredParentKey = ParentKey;
+        const TOptional<FString> QueryNamespaceName = NamespaceName;
+        const TOptional<FString> QueryCategoryName = CategoryName;
+        const TOptional<FString> QueryAdditionalScopeName = AdditionalScopeName;
+        const TOptional<FString> QueryScorerUserId = ScorerUserId;
+        const TOptional<int64> QueryIndex = Index;
+        const auto SourceToken = AccessToken;
+        const TOptional<FString> RegisteredUserId = SourceToken.IsValid()
+            ? TOptional<FString>(SourceToken->GetUserId())
+            : TOptional<FString>();
+        const int32 RegisteredTimeOffset = SourceToken.IsValid() ? SourceToken->GetTimeOffset().Get(0) : 0;
         return Gs2->Cache->Subscribe(
             Gs2::Ranking::Model::FRanking::TypeName,
             ParentKey,
-            Gs2::Ranking::Domain::Model::FRankingDomain::CreateCacheKey(
+            Gs2::Ranking::Model::Cache::FRankingCache::CreateCacheKey(
                 ScorerUserId,
                 Index
             ),
             [Callback](TSharedPtr<FGs2Object> obj)
             {
                 Callback(StaticCastSharedPtr<Gs2::Ranking::Model::FRanking>(obj));
+            },
+            [WeakGs2, WeakService, RegisteredParentKey, QueryNamespaceName, QueryCategoryName, QueryAdditionalScopeName, QueryScorerUserId, QueryIndex, SourceToken, RegisteredUserId, RegisteredTimeOffset]()
+            {
+                const auto Owner = WeakGs2.Pin();
+                if (!Owner.IsValid() || !SourceToken.IsValid() || !RegisteredUserId.IsSet())
+                {
+                    return;
+                }
+                const auto TokenSnapshot = MakeShared<Gs2::Auth::Model::FAccessToken>(*SourceToken);
+                if (TokenSnapshot->GetUserId() != RegisteredUserId || TokenSnapshot->GetTimeOffset().Get(0) != RegisteredTimeOffset)
+                {
+                    return;
+                }
+                const auto Domain = MakeShared<FRankingAccessTokenDomain>(
+                    Owner,
+                    WeakService.Pin(),
+                    QueryNamespaceName,
+                    TokenSnapshot,
+                    QueryCategoryName,
+                    QueryAdditionalScopeName,
+                    QueryScorerUserId,
+                    QueryIndex
+                );
+                Domain->ParentKey = RegisteredParentKey;
+                const auto Task = Domain->Model();
+                Task->StartBackgroundTask();
             }
         );
     }
@@ -273,7 +389,7 @@ namespace Gs2::Ranking::Domain::Model
         Gs2->Cache->Unsubscribe(
             Gs2::Ranking::Model::FRanking::TypeName,
             ParentKey,
-            Gs2::Ranking::Domain::Model::FRankingDomain::CreateCacheKey(
+            Gs2::Ranking::Model::Cache::FRankingCache::CreateCacheKey(
                 ScorerUserId,
                 Index
             ),
@@ -287,4 +403,3 @@ namespace Gs2::Ranking::Domain::Model
 #elif defined(__clang__)
 #pragma clang diagnostic pop
 #endif
-

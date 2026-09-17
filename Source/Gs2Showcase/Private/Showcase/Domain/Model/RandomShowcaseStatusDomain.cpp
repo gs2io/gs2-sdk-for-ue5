@@ -119,28 +119,6 @@ namespace Gs2::Showcase::Domain::Model
         const auto RequestModel = Request;
         const auto ResultModel = Future->GetTask().Result();
         Future->EnsureCompletion();
-        if (ResultModel != nullptr) {
-            
-            if (ResultModel->GetItem() != nullptr)
-            {
-                const auto ParentKey = Gs2::Showcase::Domain::Model::FRandomShowcaseDomain::CreateCacheParentKey(
-                    Self->NamespaceName,
-                    Self->UserId,
-                    Self->ShowcaseName,
-                    "RandomDisplayItem"
-                );
-                const auto Key = Gs2::Showcase::Domain::Model::FRandomDisplayItemDomain::CreateCacheKey(
-                    ResultModel->GetItem()->GetName()
-                );
-                Self->Gs2->Cache->Put(
-                    Gs2::Showcase::Model::FRandomDisplayItem::TypeName,
-                    ParentKey,
-                    Key,
-                    ResultModel->GetItem(),
-                    FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
-                );
-            }
-        }
         auto Domain = MakeShared<Gs2::Showcase::Domain::Model::FRandomDisplayItemDomain>(
             Self->Gs2,
             Self->Service,
@@ -194,28 +172,6 @@ namespace Gs2::Showcase::Domain::Model
         const auto RequestModel = Request;
         const auto ResultModel = Future->GetTask().Result();
         Future->EnsureCompletion();
-        if (ResultModel != nullptr) {
-            
-            if (ResultModel->GetItem() != nullptr)
-            {
-                const auto ParentKey = Gs2::Showcase::Domain::Model::FRandomShowcaseDomain::CreateCacheParentKey(
-                    Self->NamespaceName,
-                    Self->UserId,
-                    Self->ShowcaseName,
-                    "RandomDisplayItem"
-                );
-                const auto Key = Gs2::Showcase::Domain::Model::FRandomDisplayItemDomain::CreateCacheKey(
-                    ResultModel->GetItem()->GetName()
-                );
-                Self->Gs2->Cache->Put(
-                    Gs2::Showcase::Model::FRandomDisplayItem::TypeName,
-                    ParentKey,
-                    Key,
-                    ResultModel->GetItem(),
-                    FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
-                );
-            }
-        }
         auto Domain = MakeShared<Gs2::Showcase::Domain::Model::FRandomDisplayItemDomain>(
             Self->Gs2,
             Self->Service,
@@ -360,4 +316,3 @@ namespace Gs2::Showcase::Domain::Model
 #elif defined(__clang__)
 #pragma clang diagnostic pop
 #endif
-

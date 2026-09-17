@@ -89,6 +89,8 @@ namespace Gs2::Enchant::Domain::Model
             const FBalanceParameterStatusDomain& From
         );
 
+
+
         class GS2ENCHANT_API FGetTask final :
             public Gs2::Core::Util::TGs2Future<Gs2::Enchant::Model::FBalanceParameterStatus>,
             public TSharedFromThis<FGetTask>
@@ -114,6 +116,8 @@ namespace Gs2::Enchant::Domain::Model
         TSharedPtr<FAsyncTask<FGetTask>> Get(
             Request::FGetBalanceParameterStatusByUserIdRequestPtr Request
         );
+
+
 
         class GS2ENCHANT_API FDeleteTask final :
             public Gs2::Core::Util::TGs2Future<Gs2::Enchant::Domain::Model::FBalanceParameterStatusDomain>,
@@ -141,6 +145,8 @@ namespace Gs2::Enchant::Domain::Model
             Request::FDeleteBalanceParameterStatusByUserIdRequestPtr Request
         );
 
+
+
         class GS2ENCHANT_API FReDrawTask final :
             public Gs2::Core::Util::TGs2Future<Gs2::Enchant::Domain::Model::FBalanceParameterStatusDomain>,
             public TSharedFromThis<FReDrawTask>
@@ -166,6 +172,8 @@ namespace Gs2::Enchant::Domain::Model
         TSharedPtr<FAsyncTask<FReDrawTask>> ReDraw(
             Request::FReDrawBalanceParameterStatusByUserIdRequestPtr Request
         );
+
+
 
         class GS2ENCHANT_API FSetTask final :
             public Gs2::Core::Util::TGs2Future<Gs2::Enchant::Domain::Model::FBalanceParameterStatusDomain>,
@@ -228,7 +236,34 @@ namespace Gs2::Enchant::Domain::Model
 
         TSharedPtr<FAsyncTask<FModelTask>> Model();
 
+        void Invalidate();
+
         Gs2::Core::Domain::CallbackID Subscribe(
+            TFunction<void(Gs2::Enchant::Model::FBalanceParameterStatusPtr)> Callback
+        );
+
+        class GS2ENCHANT_API FSubscribeWithInitialCallTask final :
+            public Gs2::Core::Util::TGs2Future<Gs2::Core::Domain::CallbackID>,
+            public TSharedFromThis<FSubscribeWithInitialCallTask>
+        {
+            const TSharedPtr<FBalanceParameterStatusDomain> Self;
+            const TFunction<void(Gs2::Enchant::Model::FBalanceParameterStatusPtr)> Callback;
+        public:
+            FSubscribeWithInitialCallTask(
+                const TSharedPtr<FBalanceParameterStatusDomain>& Self,
+                TFunction<void(Gs2::Enchant::Model::FBalanceParameterStatusPtr)> Callback
+            );
+
+            FSubscribeWithInitialCallTask(
+                const FSubscribeWithInitialCallTask& From
+            );
+
+            virtual Gs2::Core::Model::FGs2ErrorPtr Action(
+                TSharedPtr<TSharedPtr<Gs2::Core::Domain::CallbackID>> Result
+            ) override;
+        };
+
+        TSharedPtr<FAsyncTask<FSubscribeWithInitialCallTask>> SubscribeWithInitialCall(
             TFunction<void(Gs2::Enchant::Model::FBalanceParameterStatusPtr)> Callback
         );
 

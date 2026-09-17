@@ -35,6 +35,8 @@
 #include "Distributor/Domain/Model/StampSheetResultAccessToken.h"
 #include "Distributor/Domain/Model/TransactionResult.h"
 #include "Distributor/Domain/Model/TransactionResultAccessToken.h"
+#include "Distributor/Model/Cache/TransactionResult.h"
+#include "Distributor/Model/Cache/StampSheetResult.h"
 
 #include "Core/Domain/Gs2.h"
 #include "Core/Domain/Transaction/JobQueueJobDomainFactory.h"
@@ -108,19 +110,31 @@ namespace Gs2::Distributor::Domain::Model
         }
         const auto ResultModel = Future->GetTask().Result();
         Future->EnsureCompletion();
-        if (ResultModel->GetItem() != nullptr)
-        {
-            const auto Key = Gs2::Distributor::Domain::Model::FTransactionResultDomain::CreateCacheKey(
-                ResultModel->GetItem()->GetTransactionId()
-            );
-            Self->Gs2->Cache->Put(
-                Gs2::Distributor::Model::FTransactionResult::TypeName,
-                Self->ParentKey,
-                Key,
-                ResultModel->GetItem(),
-                FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
-            );
-        }
+
+            if (ResultModel.IsValid() && ResultModel->GetItem() != nullptr)
+            {
+
+        if (!ResultModel.IsValid() || !ResultModel->GetItem().IsValid())
+            {
+              const auto Details = MakeShared<TArray<TSharedPtr<Gs2::Core::Model::FGs2ErrorDetail>>>();
+                Details->Add(MakeShared<Gs2::Core::Model::FGs2ErrorDetail>(TEXT("result.item"), TEXT("result.item is invalid."), TEXT("invalid_response")));
+                return MakeShared<Gs2::Core::Model::FUnknownError>(Details);
+              }if (!ResultModel.IsValid() || !((ResultModel.IsValid() && ResultModel->GetItem().IsValid() ? ResultModel->GetItem()->GetUserId() : TOptional<FString>())).IsSet())
+            {
+              const auto Details = MakeShared<TArray<TSharedPtr<Gs2::Core::Model::FGs2ErrorDetail>>>();
+                Details->Add(MakeShared<Gs2::Core::Model::FGs2ErrorDetail>(TEXT("userId"), TEXT("userId is invalid."), TEXT("invalid_response")));
+                return MakeShared<Gs2::Core::Model::FUnknownError>(Details);
+              }
+        Gs2::Distributor::Model::Cache::FTransactionResultCache::Put(
+            Self->Gs2->Cache,
+
+            Request->GetNamespaceName(),
+            (ResultModel.IsValid() && ResultModel->GetItem().IsValid() ? ResultModel->GetItem()->GetUserId() : TOptional<FString>()),
+            ResultModel->GetItem()->GetTransactionId(),
+            TOptional<int32>(),
+            ResultModel->GetItem()
+        );
+            }
         auto Domain = MakeShared<Gs2::Distributor::Domain::Model::FTransactionResultDomain>(
             Self->Gs2,
             Self->Service,
@@ -191,4 +205,3 @@ namespace Gs2::Distributor::Domain::Model
 #elif defined(__clang__)
 #pragma clang diagnostic pop
 #endif
-

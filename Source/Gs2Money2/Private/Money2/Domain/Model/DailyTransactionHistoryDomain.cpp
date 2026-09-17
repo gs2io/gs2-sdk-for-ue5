@@ -40,6 +40,7 @@
 #include "Money2/Domain/Model/CurrentModelMaster.h"
 #include "Money2/Domain/Model/DailyTransactionHistory.h"
 #include "Money2/Domain/Model/UnusedBalance.h"
+#include "Money2/Model/Cache/DailyTransactionHistory.h"
 
 #include "Core/Domain/Gs2.h"
 #include "Core/Domain/Transaction/JobQueueJobDomainFactory.h"
@@ -125,6 +126,28 @@ namespace Gs2::Money2::Domain::Model
         }
         const auto ResultModel = Future->GetTask().Result();
         Future->EnsureCompletion();
+
+            if (ResultModel.IsValid() && ResultModel->GetItem() != nullptr)
+            {
+
+        if (!ResultModel.IsValid() || !ResultModel->GetItem().IsValid())
+            {
+              const auto Details = MakeShared<TArray<TSharedPtr<Gs2::Core::Model::FGs2ErrorDetail>>>();
+                Details->Add(MakeShared<Gs2::Core::Model::FGs2ErrorDetail>(TEXT("result.item"), TEXT("result.item is invalid."), TEXT("invalid_response")));
+                return MakeShared<Gs2::Core::Model::FUnknownError>(Details);
+              }
+        Gs2::Money2::Model::Cache::FDailyTransactionHistoryCache::Put(
+            Self->Gs2->Cache,
+
+            Request->GetNamespaceName(),
+            ResultModel->GetItem()->GetYear().Get(int32{}),
+            ResultModel->GetItem()->GetMonth().Get(int32{}),
+            ResultModel->GetItem()->GetDay().Get(int32{}),
+            ResultModel->GetItem()->GetCurrency(),
+            TOptional<int32>(),
+            ResultModel->GetItem()
+        );
+            }
         *Result = ResultModel->GetItem();
         return nullptr;
     }
@@ -161,9 +184,9 @@ namespace Gs2::Money2::Domain::Model
     )
     {
         return FString("") +
-            (Year.IsSet() ? FString::FromInt(*Year) : "null") + ":" + 
-            (Month.IsSet() ? FString::FromInt(*Month) : "null") + ":" + 
-            (Day.IsSet() ? FString::FromInt(*Day) : "null") + ":" + 
+            (Year.IsSet() ? FString::FromInt(*Year) : "null") + ":" +
+            (Month.IsSet() ? FString::FromInt(*Month) : "null") + ":" +
+            (Day.IsSet() ? FString::FromInt(*Day) : "null") + ":" +
             (Currency.IsSet() ? *Currency : "null");
     }
 
@@ -185,80 +208,179 @@ namespace Gs2::Money2::Domain::Model
         TSharedPtr<TSharedPtr<Gs2::Money2::Model::FDailyTransactionHistory>> Result
     )
     {
-        // ReSharper disable once CppLocalVariableMayBeConst
-        TSharedPtr<Gs2::Money2::Model::FDailyTransactionHistory> Value;
-        auto bCacheHit = Self->Gs2->Cache->TryGet<Gs2::Money2::Model::FDailyTransactionHistory>(
-            Self->ParentKey,
-            Gs2::Money2::Domain::Model::FDailyTransactionHistoryDomain::CreateCacheKey(
-                Self->Year,
-                Self->Month,
-                Self->Day,
-                Self->Currency
-            ),
-            &Value
-        );
-        if (!bCacheHit) {
-            const auto Future = Self->Get(
-                MakeShared<Gs2::Money2::Request::FGetDailyTransactionHistoryRequest>()
-            );
-            Future->StartSynchronousTask();
-            if (Future->GetTask().IsError())
-            {
-                if (Future->GetTask().Error()->Type() != Gs2::Core::Model::FNotFoundError::TypeString)
-                {
-                    return Future->GetTask().Error();
-                }
+        const auto CacheParentKey = Gs2::Money2::Model::Cache::FDailyTransactionHistoryCache::CreateCacheParentKey(
 
-                const auto Key = Gs2::Money2::Domain::Model::FDailyTransactionHistoryDomain::CreateCacheKey(
+            Self->NamespaceName,
+            TOptional<int32>()
+        );
+        const auto CacheKey = Gs2::Money2::Model::Cache::FDailyTransactionHistoryCache::CreateCacheKey(
+
+            Self->Year,
+            Self->Month,
+            Self->Day,
+            Self->Currency
+        );
+        return Self->Gs2->Cache->ExecuteWithKeyLock(
+            Gs2::Money2::Model::FDailyTransactionHistory::TypeName,
+            CacheParentKey,
+            CacheKey,
+            [Self = Self, Result]() -> Gs2::Core::Model::FGs2ErrorPtr
+            {
+                Gs2::Money2::Model::FDailyTransactionHistoryPtr Value;
+                const auto CacheHit = Gs2::Money2::Model::Cache::FDailyTransactionHistoryCache::TryGet(
+                    Self->Gs2->Cache,
+
+                    Self->NamespaceName,
                     Self->Year,
                     Self->Month,
                     Self->Day,
-                    Self->Currency
+                    Self->Currency,
+                    TOptional<int32>(),
+                    &Value
                 );
-                Self->Gs2->Cache->Put(
-                    Gs2::Money2::Model::FDailyTransactionHistory::TypeName,
-                    Self->ParentKey,
-                    Key,
-                    nullptr,
-                    FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
-                );
-
-                if (Future->GetTask().Error()->Detail(0)->GetComponent() != "dailyTransactionHistory")
+                if (CacheHit)
                 {
-                    return Future->GetTask().Error();
+                    *Result = Value;
+                    return nullptr;
                 }
-            }
-            else
-            {
-                Value = Future->GetTask().Result();
-            }
-            Future->EnsureCompletion();
-        }
-        *Result = Value;
+                const auto Error = Gs2::Money2::Model::Cache::FDailyTransactionHistoryCache::Fetch(
+                    Self->Gs2->Cache,
 
-        return nullptr;
+                    Self->NamespaceName,
+                    Self->Year,
+                    Self->Month,
+                    Self->Day,
+                    Self->Currency,
+                    TOptional<int32>(),
+                    [Self](Gs2::Money2::Model::FDailyTransactionHistoryPtr* OutItem) -> Gs2::Core::Model::FGs2ErrorPtr
+                    {
+                        const auto Future = Self->Get(
+                            MakeShared<Gs2::Money2::Request::FGetDailyTransactionHistoryRequest>()
+                        );
+                        Future->StartSynchronousTask();
+                        if (Future->GetTask().IsError()) return Future->GetTask().Error();
+                        *OutItem = Future->GetTask().Result();
+                        Future->EnsureCompletion();
+                        return nullptr;
+                    },
+                    &Value
+                );
+                if (Error.IsValid()) return Error;
+                *Result = Value;
+                return nullptr;
+            }
+        );
     }
 
     TSharedPtr<FAsyncTask<FDailyTransactionHistoryDomain::FModelTask>> FDailyTransactionHistoryDomain::Model() {
         return Gs2::Core::Util::New<FAsyncTask<FDailyTransactionHistoryDomain::FModelTask>>(this->AsShared());
     }
 
+    void FDailyTransactionHistoryDomain::Invalidate()
+    {
+        Gs2::Money2::Model::Cache::FDailyTransactionHistoryCache::Delete(
+            Gs2->Cache,
+
+            NamespaceName,
+            Year,
+            Month,
+            Day,
+            Currency,
+            TOptional<int32>()
+        );
+    }
+
+    FDailyTransactionHistoryDomain::FSubscribeWithInitialCallTask::FSubscribeWithInitialCallTask(
+        const TSharedPtr<FDailyTransactionHistoryDomain>& Self,
+        TFunction<void(Gs2::Money2::Model::FDailyTransactionHistoryPtr)> Callback
+    ):
+        Self(Self),
+        Callback(Callback)
+    {
+    }
+
+    FDailyTransactionHistoryDomain::FSubscribeWithInitialCallTask::FSubscribeWithInitialCallTask(
+        const FSubscribeWithInitialCallTask& From
+    ):
+        TGs2Future(From),
+        Self(From.Self),
+        Callback(From.Callback)
+    {
+    }
+
+    Gs2::Core::Model::FGs2ErrorPtr FDailyTransactionHistoryDomain::FSubscribeWithInitialCallTask::Action(
+        TSharedPtr<TSharedPtr<Gs2::Core::Domain::CallbackID>> Result
+    )
+    {
+        const auto Task = Self->Model();
+        Task->StartSynchronousTask();
+        Task->EnsureCompletion();
+        if (Task->GetTask().IsError()) return Task->GetTask().Error();
+        const auto Item = Task->GetTask().Result();
+        const auto CallbackId = Self->Subscribe(Callback);
+        Callback(Item);
+        *Result = MakeShared<Gs2::Core::Domain::CallbackID>(CallbackId);
+        return nullptr;
+    }
+
+    TSharedPtr<FAsyncTask<FDailyTransactionHistoryDomain::FSubscribeWithInitialCallTask>> FDailyTransactionHistoryDomain::SubscribeWithInitialCall(
+        TFunction<void(Gs2::Money2::Model::FDailyTransactionHistoryPtr)> Callback
+    )
+    {
+        return Gs2::Core::Util::New<FAsyncTask<FSubscribeWithInitialCallTask>>(this->AsShared(), Callback);
+    }
+
     Gs2::Core::Domain::CallbackID FDailyTransactionHistoryDomain::Subscribe(
         TFunction<void(Gs2::Money2::Model::FDailyTransactionHistoryPtr)> Callback
     )
     {
+        const auto SubscriptionParentKey = Gs2::Money2::Model::Cache::FDailyTransactionHistoryCache::CreateCacheParentKey(
+
+            NamespaceName,
+            TOptional<int32>()
+        );
+        const auto SubscriptionCacheKey = Gs2::Money2::Model::Cache::FDailyTransactionHistoryCache::CreateCacheKey(
+
+            Year,
+            Month,
+            Day,
+            Currency
+        );
+        const TWeakPtr<Gs2::Core::Domain::FGs2> WeakGs2 = Gs2;
+        const TWeakPtr<Money2::Domain::FGs2Money2Domain> WeakService = Service;
+        const FString RegisteredParentKey = SubscriptionParentKey;
+        const TOptional<FString> QueryNamespaceName = NamespaceName;
+        const TOptional<int32> QueryYear = Year;
+        const TOptional<int32> QueryMonth = Month;
+        const TOptional<int32> QueryDay = Day;
+        const TOptional<FString> QueryCurrency = Currency;
         return Gs2->Cache->Subscribe(
             Gs2::Money2::Model::FDailyTransactionHistory::TypeName,
-            ParentKey,
-            Gs2::Money2::Domain::Model::FDailyTransactionHistoryDomain::CreateCacheKey(
-                Year,
-                Month,
-                Day,
-                Currency
-            ),
+            SubscriptionParentKey,
+            SubscriptionCacheKey,
             [Callback](TSharedPtr<FGs2Object> obj)
             {
                 Callback(StaticCastSharedPtr<Gs2::Money2::Model::FDailyTransactionHistory>(obj));
+            },
+            [WeakGs2, WeakService, RegisteredParentKey, QueryNamespaceName, QueryYear, QueryMonth, QueryDay, QueryCurrency]()
+            {
+                const auto Owner = WeakGs2.Pin();
+                if (!Owner.IsValid())
+                {
+                    return;
+                }
+                const auto Domain = MakeShared<FDailyTransactionHistoryDomain>(
+                    Owner,
+                    WeakService.Pin(),
+                    QueryNamespaceName,
+                    QueryYear,
+                    QueryMonth,
+                    QueryDay,
+                    QueryCurrency
+                );
+                Domain->ParentKey = RegisteredParentKey;
+                const auto Task = Domain->Model();
+                Task->StartBackgroundTask();
             }
         );
     }
@@ -267,15 +389,22 @@ namespace Gs2::Money2::Domain::Model
         Gs2::Core::Domain::CallbackID CallbackID
     )
     {
+        const auto SubscriptionParentKey = Gs2::Money2::Model::Cache::FDailyTransactionHistoryCache::CreateCacheParentKey(
+
+            NamespaceName,
+            TOptional<int32>()
+        );
+        const auto SubscriptionCacheKey = Gs2::Money2::Model::Cache::FDailyTransactionHistoryCache::CreateCacheKey(
+
+            Year,
+            Month,
+            Day,
+            Currency
+        );
         Gs2->Cache->Unsubscribe(
             Gs2::Money2::Model::FDailyTransactionHistory::TypeName,
-            ParentKey,
-            Gs2::Money2::Domain::Model::FDailyTransactionHistoryDomain::CreateCacheKey(
-                Year,
-                Month,
-                Day,
-                Currency
-            ),
+            SubscriptionParentKey,
+            SubscriptionCacheKey,
             CallbackID
         );
     }
@@ -286,4 +415,3 @@ namespace Gs2::Money2::Domain::Model
 #elif defined(__clang__)
 #pragma clang diagnostic pop
 #endif
-

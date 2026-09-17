@@ -115,27 +115,91 @@ namespace Gs2::Guild::Domain::Model
         TSharedPtr<TSharedPtr<Gs2::Guild::Model::FRoleModel>> Result
     )
     {
-        // ReSharper disable once CppLocalVariableMayBeConst
-        TSharedPtr<Gs2::Guild::Model::FRoleModel> Value;
-        auto bCacheHit = Self->Gs2->Cache->TryGet<Gs2::Guild::Model::FRoleModel>(
-            Self->ParentKey,
-            Gs2::Guild::Domain::Model::FRoleModelDomain::CreateCacheKey(
-            ),
-            &Value
+        const FString CacheKey = Gs2::Guild::Domain::Model::FRoleModelDomain::CreateCacheKey(
         );
-        *Result = Value;
+        return Self->Gs2->Cache->ExecuteWithKeyLock(
+            Gs2::Guild::Model::FRoleModel::TypeName,
+            Self->ParentKey,
+            CacheKey,
+            [this, Result, CacheKey]() -> Gs2::Core::Model::FGs2ErrorPtr
+            {
+                // ReSharper disable once CppLocalVariableMayBeConst
+                TSharedPtr<Gs2::Guild::Model::FRoleModel> Value;
+                auto bCacheHit = Self->Gs2->Cache->TryGet<Gs2::Guild::Model::FRoleModel>(
+                    Self->ParentKey,
+                    CacheKey,
+                    &Value
+                );
+                *Result = Value;
 
-        return nullptr;
+                return nullptr;
+            }
+        );
     }
 
     TSharedPtr<FAsyncTask<FRoleModelDomain::FModelTask>> FRoleModelDomain::Model() {
         return Gs2::Core::Util::New<FAsyncTask<FRoleModelDomain::FModelTask>>(this->AsShared());
     }
 
+    void FRoleModelDomain::Invalidate()
+    {
+        Gs2->Cache->Delete(
+            Gs2::Guild::Model::FRoleModel::TypeName,
+            ParentKey,
+            Gs2::Guild::Domain::Model::FRoleModelDomain::CreateCacheKey(
+            )
+        );
+    }
+
+    FRoleModelDomain::FSubscribeWithInitialCallTask::FSubscribeWithInitialCallTask(
+        const TSharedPtr<FRoleModelDomain>& Self,
+        TFunction<void(Gs2::Guild::Model::FRoleModelPtr)> Callback
+    ):
+        Self(Self),
+        Callback(Callback)
+    {
+    }
+
+    FRoleModelDomain::FSubscribeWithInitialCallTask::FSubscribeWithInitialCallTask(
+        const FSubscribeWithInitialCallTask& From
+    ):
+        TGs2Future(From),
+        Self(From.Self),
+        Callback(From.Callback)
+    {
+    }
+
+    Gs2::Core::Model::FGs2ErrorPtr FRoleModelDomain::FSubscribeWithInitialCallTask::Action(
+        TSharedPtr<TSharedPtr<Gs2::Core::Domain::CallbackID>> Result
+    )
+    {
+        const auto Task = Self->Model();
+        Task->StartSynchronousTask();
+        Task->EnsureCompletion();
+        if (Task->GetTask().IsError()) return Task->GetTask().Error();
+        const auto Item = Task->GetTask().Result();
+        const auto CallbackId = Self->Subscribe(Callback);
+        Callback(Item);
+        *Result = MakeShared<Gs2::Core::Domain::CallbackID>(CallbackId);
+        return nullptr;
+    }
+
+    TSharedPtr<FAsyncTask<FRoleModelDomain::FSubscribeWithInitialCallTask>> FRoleModelDomain::SubscribeWithInitialCall(
+        TFunction<void(Gs2::Guild::Model::FRoleModelPtr)> Callback
+    )
+    {
+        return Gs2::Core::Util::New<FAsyncTask<FSubscribeWithInitialCallTask>>(this->AsShared(), Callback);
+    }
+
     Gs2::Core::Domain::CallbackID FRoleModelDomain::Subscribe(
         TFunction<void(Gs2::Guild::Model::FRoleModelPtr)> Callback
     )
     {
+        const TWeakPtr<Gs2::Core::Domain::FGs2> WeakGs2 = Gs2;
+        const TWeakPtr<Guild::Domain::FGs2GuildDomain> WeakService = Service;
+        const FString RegisteredParentKey = ParentKey;
+        const TOptional<FString> QueryNamespaceName = NamespaceName;
+        const TOptional<FString> QueryGuildModelName = GuildModelName;
         return Gs2->Cache->Subscribe(
             Gs2::Guild::Model::FRoleModel::TypeName,
             ParentKey,
@@ -144,6 +208,23 @@ namespace Gs2::Guild::Domain::Model
             [Callback](TSharedPtr<FGs2Object> obj)
             {
                 Callback(StaticCastSharedPtr<Gs2::Guild::Model::FRoleModel>(obj));
+            },
+            [WeakGs2, WeakService, RegisteredParentKey, QueryNamespaceName, QueryGuildModelName]()
+            {
+                const auto Owner = WeakGs2.Pin();
+                if (!Owner.IsValid())
+                {
+                    return;
+                }
+                const auto Domain = MakeShared<FRoleModelDomain>(
+                    Owner,
+                    WeakService.Pin(),
+                    QueryNamespaceName,
+                    QueryGuildModelName
+                );
+                Domain->ParentKey = RegisteredParentKey;
+                const auto Task = Domain->Model();
+                Task->StartBackgroundTask();
             }
         );
     }
@@ -167,4 +248,3 @@ namespace Gs2::Guild::Domain::Model
 #elif defined(__clang__)
 #pragma clang diagnostic pop
 #endif
-

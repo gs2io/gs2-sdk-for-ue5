@@ -19,6 +19,7 @@
 #include "CoreMinimal.h"
 #include "Core/Gs2Object.h"
 #include "TransactionSetting.h"
+#include "TransactionSettingV2.h"
 #include "ScriptSetting.h"
 #include "LogSetting.h"
 
@@ -31,6 +32,7 @@ namespace Gs2::StateMachine::Model
         TOptional<FString> DescriptionValue;
         TOptional<FString> SupportSpeculativeExecutionValue;
         TSharedPtr<FTransactionSetting> TransactionSettingValue;
+        TSharedPtr<FTransactionSettingV2> TransactionSettingV2Value;
         TSharedPtr<FScriptSetting> StartScriptValue;
         TSharedPtr<FScriptSetting> PassScriptValue;
         TSharedPtr<FScriptSetting> ErrorScriptValue;
@@ -52,6 +54,7 @@ namespace Gs2::StateMachine::Model
         TSharedPtr<FNamespace> WithDescription(const TOptional<FString> Description);
         TSharedPtr<FNamespace> WithSupportSpeculativeExecution(const TOptional<FString> SupportSpeculativeExecution);
         TSharedPtr<FNamespace> WithTransactionSetting(const TSharedPtr<FTransactionSetting> TransactionSetting);
+        TSharedPtr<FNamespace> WithTransactionSettingV2(const TSharedPtr<FTransactionSettingV2> TransactionSettingV2);
         TSharedPtr<FNamespace> WithStartScript(const TSharedPtr<FScriptSetting> StartScript);
         TSharedPtr<FNamespace> WithPassScript(const TSharedPtr<FScriptSetting> PassScript);
         TSharedPtr<FNamespace> WithErrorScript(const TSharedPtr<FScriptSetting> ErrorScript);
@@ -66,6 +69,7 @@ namespace Gs2::StateMachine::Model
         TOptional<FString> GetDescription() const;
         TOptional<FString> GetSupportSpeculativeExecution() const;
         TSharedPtr<FTransactionSetting> GetTransactionSetting() const;
+        TSharedPtr<FTransactionSettingV2> GetTransactionSettingV2() const;
         TSharedPtr<FScriptSetting> GetStartScript() const;
         TSharedPtr<FScriptSetting> GetPassScript() const;
         TSharedPtr<FScriptSetting> GetErrorScript() const;

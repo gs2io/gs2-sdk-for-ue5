@@ -152,7 +152,7 @@ namespace Gs2::UE5::Money::Domain::Model
     Gs2::Core::Domain::CallbackID FEzWalletGameSessionDomain::Subscribe(TFunction<void(Gs2::UE5::Money::Model::FEzWalletPtr)> Callback)
     {
         return Domain->Subscribe(
-            [&](Gs2::Money::Model::FWalletPtr Item)
+            [Callback](Gs2::Money::Model::FWalletPtr Item)
             {
                 Callback(Gs2::UE5::Money::Model::FEzWallet::FromModel(Item));
             }

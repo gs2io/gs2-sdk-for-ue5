@@ -78,21 +78,24 @@ namespace Gs2::UE5::Ranking2::Domain::Model
 
         Gs2::Core::Domain::CallbackID SubscribeGlobalRankingModels(TFunction<void()> Callback);
 
-        void UnsubscribeGlobalRankingModels(Gs2::Core::Domain::CallbackID CallbackId);
+        void UnsubscribeGlobalRankingModels(
+                Gs2::Core::Domain::CallbackID CallbackId);
 
         Gs2::UE5::Ranking2::Domain::Iterator::FEzDescribeClusterRankingModelsIteratorPtr ClusterRankingModels(
         ) const;
 
         Gs2::Core::Domain::CallbackID SubscribeClusterRankingModels(TFunction<void()> Callback);
 
-        void UnsubscribeClusterRankingModels(Gs2::Core::Domain::CallbackID CallbackId);
+        void UnsubscribeClusterRankingModels(
+                Gs2::Core::Domain::CallbackID CallbackId);
 
         Gs2::UE5::Ranking2::Domain::Iterator::FEzDescribeSubscribeRankingModelsIteratorPtr SubscribeRankingModels(
         ) const;
 
         Gs2::Core::Domain::CallbackID SubscribeSubscribeRankingModels(TFunction<void()> Callback);
 
-        void UnsubscribeSubscribeRankingModels(Gs2::Core::Domain::CallbackID CallbackId);
+        void UnsubscribeSubscribeRankingModels(
+                Gs2::Core::Domain::CallbackID CallbackId);
 
         Gs2::UE5::Ranking2::Domain::Model::FEzGlobalRankingModelDomainPtr GlobalRankingModel(
             const FString RankingName

@@ -265,7 +265,7 @@ namespace Gs2::UE5::Chat::Domain::Model
     Gs2::Core::Domain::CallbackID FEzSubscribeGameSessionDomain::Subscribe(TFunction<void(Gs2::UE5::Chat::Model::FEzSubscribePtr)> Callback)
     {
         return Domain->Subscribe(
-            [&](Gs2::Chat::Model::FSubscribePtr Item)
+            [Callback](Gs2::Chat::Model::FSubscribePtr Item)
             {
                 Callback(Gs2::UE5::Chat::Model::FEzSubscribe::FromModel(Item));
             }

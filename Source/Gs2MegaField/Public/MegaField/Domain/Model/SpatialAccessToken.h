@@ -87,6 +87,8 @@ namespace Gs2::MegaField::Domain::Model
             const FSpatialAccessTokenDomain& From
         );
 
+
+
         class GS2MEGAFIELD_API FPutPositionTask final :
             public Gs2::Core::Util::TGs2Future<Gs2::MegaField::Domain::Model::FSpatialAccessTokenDomain>,
             public TSharedFromThis<FPutPositionTask>
@@ -112,6 +114,8 @@ namespace Gs2::MegaField::Domain::Model
         TSharedPtr<FAsyncTask<FPutPositionTask>> PutPosition(
             Request::FPutPositionRequestPtr Request
         );
+
+
 
         class GS2MEGAFIELD_API FFetchPositionTask final :
             public Gs2::Core::Util::TGs2Future<TArray<TSharedPtr<Gs2::MegaField::Domain::Model::FSpatialDomain>>>,
@@ -139,6 +143,8 @@ namespace Gs2::MegaField::Domain::Model
             Request::FFetchPositionRequestPtr Request
         );
 
+
+
         class GS2MEGAFIELD_API FNearUserIdsTask final :
             public Gs2::Core::Util::TGs2Future<TArray<TSharedPtr<Gs2::MegaField::Domain::Model::FSpatialAccessTokenDomain>>>,
             public TSharedFromThis<FNearUserIdsTask>
@@ -164,6 +170,8 @@ namespace Gs2::MegaField::Domain::Model
         TSharedPtr<FAsyncTask<FNearUserIdsTask>> NearUserIds(
             Request::FNearUserIdsRequestPtr Request
         );
+
+
 
         class GS2MEGAFIELD_API FActionTask final :
             public Gs2::Core::Util::TGs2Future<TArray<TSharedPtr<Gs2::MegaField::Domain::Model::FSpatialDomain>>>,

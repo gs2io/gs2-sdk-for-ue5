@@ -89,7 +89,7 @@ namespace Gs2::UE5::Dictionary::Domain::Model
     Gs2::Core::Domain::CallbackID FEzLikeGameSessionDomain::Subscribe(TFunction<void(Gs2::UE5::Dictionary::Model::FEzLikePtr)> Callback)
     {
         return Domain->Subscribe(
-            [&](Gs2::Dictionary::Model::FLikePtr Item)
+            [Callback](Gs2::Dictionary::Model::FLikePtr Item)
             {
                 Callback(Gs2::UE5::Dictionary::Model::FEzLike::FromModel(Item));
             }

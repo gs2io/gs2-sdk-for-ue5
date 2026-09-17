@@ -1,3 +1,4 @@
+
 /*
  * Copyright 2016 Game Server Services, Inc. or its affiliates. All Rights
  * Reserved.
@@ -102,7 +103,6 @@ namespace Gs2::Account::Domain::Iterator
                 Self->UserId,
                 "PlatformId"
             );
-
             if (!RangeIteratorOpt)
             {
                 Range = Self->Gs2->Cache->TryGetList<Gs2::Account::Model::FPlatformId>(ListParentKey);
@@ -117,14 +117,15 @@ namespace Gs2::Account::Domain::Iterator
                 }
             }
 
-            const auto Future = Self->Client->DescribePlatformIdsByUserId(
+            const auto Request =
                 MakeShared<Gs2::Account::Request::FDescribePlatformIdsByUserIdRequest>()
                     ->WithContextStack(Self->Gs2->DefaultContextStack)
                     ->WithNamespaceName(Self->NamespaceName)
                     ->WithUserId(Self->UserId)
                     ->WithPageToken(PageToken)
                     ->WithLimit(FetchSize)
-            );
+            ;
+            const auto Future = Self->Client->DescribePlatformIdsByUserId(Request);
             Future->StartSynchronousTask();
             if (Future->GetTask().IsError())
             {
@@ -138,18 +139,21 @@ namespace Gs2::Account::Domain::Iterator
             }
             const auto R = Future->GetTask().Result();
             Future->EnsureCompletion();
-            Range = R->GetItems();
-            for (auto Item : *R->GetItems())
+            Range = R->GetItems().IsValid() ? R->GetItems() : MakeShared<TArray<Gs2::Account::Model::FPlatformIdPtr>>();
+            const auto ResultModel = R;
+
+
+            if (Range.IsValid())
             {
-                Self->Gs2->Cache->Put(
-                    Gs2::Account::Model::FPlatformId::TypeName,
-                    ListParentKey,
-                    Gs2::Account::Domain::Model::FPlatformIdDomain::CreateCacheKey(
-                        *Item->GetType()
-                    ),
-                    Item,
-                    FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
-                );
+                for (const auto& Item : *Range)
+                {
+                    if (!Item.IsValid()) continue;
+                    Gs2::Account::Model::Cache::FPlatformIdCache::Put(
+                        Self->Gs2->Cache,
+                        Request->GetNamespaceName(), Request->GetUserId(), Item->GetType(),
+                        TOptional<int32>(), Item
+                    );
+                }
             }
             if (Range)
             {

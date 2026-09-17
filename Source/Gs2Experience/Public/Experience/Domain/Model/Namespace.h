@@ -102,6 +102,8 @@ namespace Gs2::Experience::Domain::Model
             const FNamespaceDomain& From
         );
 
+
+
         class GS2EXPERIENCE_API FGetStatusTask final :
             public Gs2::Core::Util::TGs2Future<Gs2::Experience::Domain::Model::FNamespaceDomain>,
             public TSharedFromThis<FGetStatusTask>
@@ -127,6 +129,8 @@ namespace Gs2::Experience::Domain::Model
         TSharedPtr<FAsyncTask<FGetStatusTask>> GetStatus(
             Request::FGetNamespaceStatusRequestPtr Request
         );
+
+
 
         class GS2EXPERIENCE_API FGetTask final :
             public Gs2::Core::Util::TGs2Future<Gs2::Experience::Model::FNamespace>,
@@ -154,6 +158,8 @@ namespace Gs2::Experience::Domain::Model
             Request::FGetNamespaceRequestPtr Request
         );
 
+
+
         class GS2EXPERIENCE_API FUpdateTask final :
             public Gs2::Core::Util::TGs2Future<Gs2::Experience::Domain::Model::FNamespaceDomain>,
             public TSharedFromThis<FUpdateTask>
@@ -179,6 +185,8 @@ namespace Gs2::Experience::Domain::Model
         TSharedPtr<FAsyncTask<FUpdateTask>> Update(
             Request::FUpdateNamespaceRequestPtr Request
         );
+
+
 
         class GS2EXPERIENCE_API FDeleteTask final :
             public Gs2::Core::Util::TGs2Future<Gs2::Experience::Domain::Model::FNamespaceDomain>,
@@ -206,6 +214,8 @@ namespace Gs2::Experience::Domain::Model
             Request::FDeleteNamespaceRequestPtr Request
         );
 
+
+
         class GS2EXPERIENCE_API FCreateThresholdMasterTask final :
             public Gs2::Core::Util::TGs2Future<Gs2::Experience::Domain::Model::FThresholdMasterDomain>,
             public TSharedFromThis<FCreateThresholdMasterTask>
@@ -231,6 +241,8 @@ namespace Gs2::Experience::Domain::Model
         TSharedPtr<FAsyncTask<FCreateThresholdMasterTask>> CreateThresholdMaster(
             Request::FCreateThresholdMasterRequestPtr Request
         );
+
+
 
         class GS2EXPERIENCE_API FCreateExperienceModelMasterTask final :
             public Gs2::Core::Util::TGs2Future<Gs2::Experience::Domain::Model::FExperienceModelMasterDomain>,
@@ -266,8 +278,33 @@ namespace Gs2::Experience::Domain::Model
 
         Gs2::Core::Domain::CallbackID SubscribeExperienceModels(
             TFunction<void()> Callback
+
         );
 
+        class FCollectExperienceModelsTask;
+
+        Gs2::Core::Domain::CallbackID SubscribeExperienceModels(
+            TFunction<void(TArray<Gs2::Experience::Model::FExperienceModelPtr>)> Callback
+        );
+
+        void InvalidateExperienceModels();
+
+        class GS2EXPERIENCE_API FSubscribeExperienceModelsWithInitialCallTask final :
+            public Gs2::Core::Util::TGs2Future<Gs2::Core::Domain::CallbackID>,
+            public TSharedFromThis<FSubscribeExperienceModelsWithInitialCallTask>
+        {
+            const TSharedPtr<FNamespaceDomain> Self;
+            const TFunction<void(TArray<Gs2::Experience::Model::FExperienceModelPtr>)> Callback;
+
+        public:
+            FSubscribeExperienceModelsWithInitialCallTask(const TSharedPtr<FNamespaceDomain>& Self, TFunction<void(TArray<Gs2::Experience::Model::FExperienceModelPtr>)> Callback);
+            FSubscribeExperienceModelsWithInitialCallTask(const FSubscribeExperienceModelsWithInitialCallTask& From);
+            virtual Gs2::Core::Model::FGs2ErrorPtr Action(TSharedPtr<TSharedPtr<Gs2::Core::Domain::CallbackID>> Result) override;
+        };
+
+        TSharedPtr<FAsyncTask<FSubscribeExperienceModelsWithInitialCallTask>> SubscribeExperienceModelsWithInitialCall(
+            TFunction<void(TArray<Gs2::Experience::Model::FExperienceModelPtr>)> Callback
+        );
         void UnsubscribeExperienceModels(
             Gs2::Core::Domain::CallbackID CallbackID
         );
@@ -290,8 +327,33 @@ namespace Gs2::Experience::Domain::Model
 
         Gs2::Core::Domain::CallbackID SubscribeThresholdMasters(
             TFunction<void()> Callback
+
         );
 
+        class FCollectThresholdMastersTask;
+
+        Gs2::Core::Domain::CallbackID SubscribeThresholdMasters(
+            TFunction<void(TArray<Gs2::Experience::Model::FThresholdMasterPtr>)> Callback,const TOptional<FString> NamePrefix = TOptional<FString>()
+        );
+
+        void InvalidateThresholdMasters(const TOptional<FString> NamePrefix = TOptional<FString>());
+
+        class GS2EXPERIENCE_API FSubscribeThresholdMastersWithInitialCallTask final :
+            public Gs2::Core::Util::TGs2Future<Gs2::Core::Domain::CallbackID>,
+            public TSharedFromThis<FSubscribeThresholdMastersWithInitialCallTask>
+        {
+            const TSharedPtr<FNamespaceDomain> Self;
+            const TFunction<void(TArray<Gs2::Experience::Model::FThresholdMasterPtr>)> Callback;
+        const TOptional<FString> QueryNamePrefix;
+        public:
+            FSubscribeThresholdMastersWithInitialCallTask(const TSharedPtr<FNamespaceDomain>& Self, TFunction<void(TArray<Gs2::Experience::Model::FThresholdMasterPtr>)> Callback,const TOptional<FString> NamePrefix);
+            FSubscribeThresholdMastersWithInitialCallTask(const FSubscribeThresholdMastersWithInitialCallTask& From);
+            virtual Gs2::Core::Model::FGs2ErrorPtr Action(TSharedPtr<TSharedPtr<Gs2::Core::Domain::CallbackID>> Result) override;
+        };
+
+        TSharedPtr<FAsyncTask<FSubscribeThresholdMastersWithInitialCallTask>> SubscribeThresholdMastersWithInitialCall(
+            TFunction<void(TArray<Gs2::Experience::Model::FThresholdMasterPtr>)> Callback,const TOptional<FString> NamePrefix = TOptional<FString>()
+        );
         void UnsubscribeThresholdMasters(
             Gs2::Core::Domain::CallbackID CallbackID
         );
@@ -306,8 +368,33 @@ namespace Gs2::Experience::Domain::Model
 
         Gs2::Core::Domain::CallbackID SubscribeExperienceModelMasters(
             TFunction<void()> Callback
+
         );
 
+        class FCollectExperienceModelMastersTask;
+
+        Gs2::Core::Domain::CallbackID SubscribeExperienceModelMasters(
+            TFunction<void(TArray<Gs2::Experience::Model::FExperienceModelMasterPtr>)> Callback,const TOptional<FString> NamePrefix = TOptional<FString>()
+        );
+
+        void InvalidateExperienceModelMasters(const TOptional<FString> NamePrefix = TOptional<FString>());
+
+        class GS2EXPERIENCE_API FSubscribeExperienceModelMastersWithInitialCallTask final :
+            public Gs2::Core::Util::TGs2Future<Gs2::Core::Domain::CallbackID>,
+            public TSharedFromThis<FSubscribeExperienceModelMastersWithInitialCallTask>
+        {
+            const TSharedPtr<FNamespaceDomain> Self;
+            const TFunction<void(TArray<Gs2::Experience::Model::FExperienceModelMasterPtr>)> Callback;
+        const TOptional<FString> QueryNamePrefix;
+        public:
+            FSubscribeExperienceModelMastersWithInitialCallTask(const TSharedPtr<FNamespaceDomain>& Self, TFunction<void(TArray<Gs2::Experience::Model::FExperienceModelMasterPtr>)> Callback,const TOptional<FString> NamePrefix);
+            FSubscribeExperienceModelMastersWithInitialCallTask(const FSubscribeExperienceModelMastersWithInitialCallTask& From);
+            virtual Gs2::Core::Model::FGs2ErrorPtr Action(TSharedPtr<TSharedPtr<Gs2::Core::Domain::CallbackID>> Result) override;
+        };
+
+        TSharedPtr<FAsyncTask<FSubscribeExperienceModelMastersWithInitialCallTask>> SubscribeExperienceModelMastersWithInitialCall(
+            TFunction<void(TArray<Gs2::Experience::Model::FExperienceModelMasterPtr>)> Callback,const TOptional<FString> NamePrefix = TOptional<FString>()
+        );
         void UnsubscribeExperienceModelMasters(
             Gs2::Core::Domain::CallbackID CallbackID
         );
@@ -347,7 +434,34 @@ namespace Gs2::Experience::Domain::Model
 
         TSharedPtr<FAsyncTask<FModelTask>> Model();
 
+        void Invalidate();
+
         Gs2::Core::Domain::CallbackID Subscribe(
+            TFunction<void(Gs2::Experience::Model::FNamespacePtr)> Callback
+        );
+
+        class GS2EXPERIENCE_API FSubscribeWithInitialCallTask final :
+            public Gs2::Core::Util::TGs2Future<Gs2::Core::Domain::CallbackID>,
+            public TSharedFromThis<FSubscribeWithInitialCallTask>
+        {
+            const TSharedPtr<FNamespaceDomain> Self;
+            const TFunction<void(Gs2::Experience::Model::FNamespacePtr)> Callback;
+        public:
+            FSubscribeWithInitialCallTask(
+                const TSharedPtr<FNamespaceDomain>& Self,
+                TFunction<void(Gs2::Experience::Model::FNamespacePtr)> Callback
+            );
+
+            FSubscribeWithInitialCallTask(
+                const FSubscribeWithInitialCallTask& From
+            );
+
+            virtual Gs2::Core::Model::FGs2ErrorPtr Action(
+                TSharedPtr<TSharedPtr<Gs2::Core::Domain::CallbackID>> Result
+            ) override;
+        };
+
+        TSharedPtr<FAsyncTask<FSubscribeWithInitialCallTask>> SubscribeWithInitialCall(
             TFunction<void(Gs2::Experience::Model::FNamespacePtr)> Callback
         );
 

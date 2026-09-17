@@ -110,6 +110,11 @@ namespace Gs2::JobQueue::Domain::Model
         {
             if (ResultModel->GetItem() != nullptr)
             {
+                Self->Gs2->JobQueueDomain->JobQueueExecutedEventHandler(
+                    ResultModel->GetItem(),
+                    ResultModel->GetResult(),
+                    Self->AccessToken.IsValid() ? Self->AccessToken->GetTimeOffset() : TOptional<int32>()
+                );
                 const auto Key = Gs2::JobQueue::Domain::Model::FJobDomain::CreateCacheKey(
                     ResultModel->GetItem()->GetName()
                 );
@@ -139,6 +144,7 @@ namespace Gs2::JobQueue::Domain::Model
                 {
                     Domain->IsLastJob = *ResultModel->GetIsLastJob();
                 }
+                Domain->Item = ResultModel->GetItem();
                 Domain->Result = ResultModel->GetResult();
 
                 *Result = Domain;
@@ -205,4 +211,3 @@ namespace Gs2::JobQueue::Domain::Model
 #elif defined(__clang__)
 #pragma clang diagnostic pop
 #endif
-

@@ -82,7 +82,7 @@ namespace Gs2::UE5::Version::Domain::Model
     Gs2::Core::Domain::CallbackID FEzVersionModelDomain::Subscribe(TFunction<void(Gs2::UE5::Version::Model::FEzVersionModelPtr)> Callback)
     {
         return Domain->Subscribe(
-            [&](Gs2::Version::Model::FVersionModelPtr Item)
+            [Callback](Gs2::Version::Model::FVersionModelPtr Item)
             {
                 Callback(Gs2::UE5::Version::Model::FEzVersionModel::FromModel(Item));
             }

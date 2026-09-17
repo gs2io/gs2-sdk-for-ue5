@@ -107,7 +107,7 @@ namespace Gs2::UE5::Ranking2::Domain::Model
     Gs2::Core::Domain::CallbackID FEzGlobalRankingReceivedRewardDomain::Subscribe(TFunction<void(Gs2::UE5::Ranking2::Model::FEzGlobalRankingReceivedRewardPtr)> Callback)
     {
         return Domain->Subscribe(
-            [&](Gs2::Ranking2::Model::FGlobalRankingReceivedRewardPtr Item)
+            [Callback](Gs2::Ranking2::Model::FGlobalRankingReceivedRewardPtr Item)
             {
                 Callback(Gs2::UE5::Ranking2::Model::FEzGlobalRankingReceivedReward::FromModel(Item));
             }

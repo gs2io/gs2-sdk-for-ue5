@@ -19,7 +19,8 @@ namespace Gs2::UE5::Util
 	public:
 		FGs2Connection(
 			Gs2::Core::Model::FGs2CredentialPtr Credential,
-			Gs2::Core::Model::ERegion Region
+			Gs2::Core::Model::ERegion Region,
+			const FString SteadyEndpoint = FString()
 		);
 		FGs2Connection(
 			const FGs2Connection& From
@@ -29,6 +30,14 @@ namespace Gs2::UE5::Util
 		Gs2::Core::Net::Rest::FGs2RestSessionPtr RestSession();
 		Gs2::Core::Net::WebSocket::FGs2WebSocketSessionPtr WebSocketSession();
 		Gs2::Core::Model::ERegion Region() const;
+
+		/**
+		 * Steady（専用フリート）の基点（https://<host>）。Connect の前に設定する。空で共有クラウド。
+		 * REST と WebSocket の両セッションに同じ値を入れる。
+		 */
+		void SetSteadyEndpoint(const FString& SteadyEndpoint);
+		FString SteadyEndpoint() const;
+		bool HasSteadyEndpoint() const;
 		
 		class EZGS2_API FConnectTask final :
 			public Gs2::Core::Util::TGs2Future<void>,

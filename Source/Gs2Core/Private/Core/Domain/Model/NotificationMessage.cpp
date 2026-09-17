@@ -76,6 +76,18 @@ namespace Gs2::Core::Domain::Model
         if (Data == nullptr) {
             return nullptr;
         }
+        const auto HasInvalidType = [Data](const TCHAR* Field)
+        {
+            return Data->HasField(Field) &&
+                !Data->HasTypedField<EJson::String>(Field) &&
+                !Data->HasTypedField<EJson::Null>(Field);
+        };
+        if (HasInvalidType(ANSI_TO_TCHAR("issuer")) ||
+            HasInvalidType(ANSI_TO_TCHAR("subject")) ||
+            HasInvalidType(ANSI_TO_TCHAR("payload")))
+        {
+            return nullptr;
+        }
         return MakeShared<FNotificationMessage>()
             ->WithIssuer(Data->HasField(ANSI_TO_TCHAR("issuer")) ? [Data]() -> TOptional<FString>
                 {
@@ -112,4 +124,3 @@ namespace Gs2::Core::Domain::Model
 #elif defined(__clang__)
 #pragma clang diagnostic pop
 #endif
-

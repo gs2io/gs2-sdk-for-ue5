@@ -55,6 +55,7 @@ namespace Gs2::JobQueue::Domain::Model
         Client(MakeShared<Gs2::JobQueue::FGs2JobQueueRestClient>(Gs2->RestSession)),
         AutoRun(TOptional<bool>()),
         IsLastJob(TOptional<bool>()),
+        Item(nullptr),
         Result(nullptr),
         NeedRetry(TOptional<bool>()),
         NamespaceName(NamespaceName),
@@ -76,6 +77,7 @@ namespace Gs2::JobQueue::Domain::Model
         Client(From.Client),
         AutoRun(From.AutoRun),
         IsLastJob(From.IsLastJob),
+        Item(From.Item),
         Result(From.Result),
         NeedRetry(From.NeedRetry),
         NamespaceName(From.NamespaceName),
@@ -185,18 +187,27 @@ namespace Gs2::JobQueue::Domain::Model
         TSharedPtr<TSharedPtr<Gs2::JobQueue::Model::FJob>> Result
     )
     {
-        // ReSharper disable once CppLocalVariableMayBeConst
-        TSharedPtr<Gs2::JobQueue::Model::FJob> Value;
-        auto bCacheHit = Self->Gs2->Cache->TryGet<Gs2::JobQueue::Model::FJob>(
-            Self->ParentKey,
-            Gs2::JobQueue::Domain::Model::FJobDomain::CreateCacheKey(
-                Self->JobName
-            ),
-            &Value
+        const FString CacheKey = Gs2::JobQueue::Domain::Model::FJobDomain::CreateCacheKey(
+            Self->JobName
         );
-        *Result = Value;
+        return Self->Gs2->Cache->ExecuteWithKeyLock(
+            Gs2::JobQueue::Model::FJob::TypeName,
+            Self->ParentKey,
+            CacheKey,
+            [this, Result, CacheKey]() -> Gs2::Core::Model::FGs2ErrorPtr
+            {
+                // ReSharper disable once CppLocalVariableMayBeConst
+                TSharedPtr<Gs2::JobQueue::Model::FJob> Value;
+                auto bCacheHit = Self->Gs2->Cache->TryGet<Gs2::JobQueue::Model::FJob>(
+                    Self->ParentKey,
+                    CacheKey,
+                    &Value
+                );
+                *Result = Value;
 
-        return nullptr;
+                return nullptr;
+            }
+        );
     }
 
     TSharedPtr<FAsyncTask<FJobAccessTokenDomain::FModelTask>> FJobAccessTokenDomain::Model() {
@@ -240,4 +251,3 @@ namespace Gs2::JobQueue::Domain::Model
 #elif defined(__clang__)
 #pragma clang diagnostic pop
 #endif
-

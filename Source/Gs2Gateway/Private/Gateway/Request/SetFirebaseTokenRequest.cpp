@@ -21,7 +21,8 @@ namespace Gs2::Gateway::Request
     FSetFirebaseTokenRequest::FSetFirebaseTokenRequest():
         NamespaceNameValue(TOptional<FString>()),
         AccessTokenValue(TOptional<FString>()),
-        TokenValue(TOptional<FString>())
+        TokenValue(TOptional<FString>()),
+        LocaleValue(TOptional<FString>())
     {
     }
 
@@ -30,7 +31,8 @@ namespace Gs2::Gateway::Request
     ):
         NamespaceNameValue(From.NamespaceNameValue),
         AccessTokenValue(From.AccessTokenValue),
-        TokenValue(From.TokenValue)
+        TokenValue(From.TokenValue),
+        LocaleValue(From.LocaleValue)
     {
     }
 
@@ -66,6 +68,14 @@ namespace Gs2::Gateway::Request
         return SharedThis(this);
     }
 
+    TSharedPtr<FSetFirebaseTokenRequest> FSetFirebaseTokenRequest::WithLocale(
+        const TOptional<FString> Locale
+    )
+    {
+        this->LocaleValue = Locale;
+        return SharedThis(this);
+    }
+
     TSharedPtr<FSetFirebaseTokenRequest> FSetFirebaseTokenRequest::WithDuplicationAvoider(
         const TOptional<FString> DuplicationAvoider
     )
@@ -92,6 +102,11 @@ namespace Gs2::Gateway::Request
     TOptional<FString> FSetFirebaseTokenRequest::GetToken() const
     {
         return TokenValue;
+    }
+
+    TOptional<FString> FSetFirebaseTokenRequest::GetLocale() const
+    {
+        return LocaleValue;
     }
 
     TOptional<FString> FSetFirebaseTokenRequest::GetDuplicationAvoider() const
@@ -133,6 +148,15 @@ namespace Gs2::Gateway::Request
                   }
                   return TOptional<FString>();
               }() : TOptional<FString>())
+            ->WithLocale(Data->HasField(ANSI_TO_TCHAR("locale")) ? [Data]() -> TOptional<FString>
+              {
+                  FString v("");
+                    if (Data->TryGetStringField(ANSI_TO_TCHAR("locale"), v))
+                  {
+                        return TOptional(v);
+                  }
+                  return TOptional<FString>();
+              }() : TOptional<FString>())
           ->WithDuplicationAvoider(Data->HasField(ANSI_TO_TCHAR("duplicationAvoider")) ? TOptional<FString>(Data->GetStringField(ANSI_TO_TCHAR("duplicationAvoider"))) : TOptional<FString>());
     }
 
@@ -154,6 +178,10 @@ namespace Gs2::Gateway::Request
         if (TokenValue.IsSet())
         {
             JsonRootObject->SetStringField(TEXT("token"), TokenValue.GetValue());
+        }
+        if (LocaleValue.IsSet())
+        {
+            JsonRootObject->SetStringField(TEXT("locale"), LocaleValue.GetValue());
         }
         if (DuplicationAvoiderValue.IsSet())
         {

@@ -37,6 +37,7 @@ inline FGs2SeasonRatingSignedBallot EzSignedBallotToFGs2SeasonRatingSignedBallot
 )
 {
     FGs2SeasonRatingSignedBallot Value;
+    if (!Model.IsValid()) return Value;
     Value.Body = Model->GetBody() ? *Model->GetBody() : "";
     Value.Signature = Model->GetSignature() ? *Model->GetSignature() : "";
     return Value;

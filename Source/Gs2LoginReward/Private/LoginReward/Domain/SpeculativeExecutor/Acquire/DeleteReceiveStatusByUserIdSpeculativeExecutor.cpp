@@ -28,6 +28,22 @@
 #include "LoginReward/Domain/Gs2LoginReward.h"
 
 #include "Core/Domain/Gs2.h"
+#include "Core/Domain/SpeculativeExecutor/PreparedSpeculativeCommit.h"
+#include "Auth/Model/AccessToken.h"
+#include "LoginReward/Model/Cache/ReceiveStatus.h"
+#include "Serialization/JsonSerializer.h"
+#include "Serialization/JsonWriter.h"
+
+namespace
+{
+    FString ReceiveStatusSnapshot(const Gs2::LoginReward::Model::FReceiveStatusPtr& Item)
+    {
+        FString Value;
+        auto Writer = TJsonWriterFactory<TCHAR, TCondensedJsonPrintPolicy<TCHAR>>::Create(&Value);
+        FJsonSerializer::Serialize(Item->ToJson().ToSharedRef(), Writer);
+        return Value;
+    }
+}
 
 namespace Gs2::LoginReward::Domain::SpeculativeExecutor
 {
@@ -73,29 +89,31 @@ namespace Gs2::LoginReward::Domain::SpeculativeExecutor
     }
 
     Gs2::Core::Model::FGs2ErrorPtr FDeleteReceiveStatusByUserIdSpeculativeExecutor::FCommitTask::Action(
-        TSharedPtr<TSharedPtr<TFunction<void()>>> Result
+        TSharedPtr<TSharedPtr<Gs2::Core::Domain::SpeculativeExecutor::FPreparedSpeculativeCommit>> Result
     )
     {
-        const auto ParentKey = Model::FUserDomain::CreateCacheParentKey(
-            Request->GetNamespaceName(),
-            AccessToken->GetUserId(),
-            FString("ReceiveStatus")
-        );
-        const auto Key = Model::FReceiveStatusDomain::CreateCacheKey(
-            Request->GetBonusModelName()
-        );
-
-        *Result = MakeShared<TFunction<void()>>([&]()
+        *Result = nullptr;
+        Gs2::Auth::Model::FAccessTokenPtr Token = nullptr;
+        if (AccessToken.IsValid()) Token = MakeShared<Gs2::Auth::Model::FAccessToken>(*AccessToken);
+        Gs2::LoginReward::Request::FDeleteReceiveStatusByUserIdRequestPtr Prepared = nullptr;
+        if (Request.IsValid()) Prepared = MakeShared<Gs2::LoginReward::Request::FDeleteReceiveStatusByUserIdRequest>(*Request);
+        if (!Domain.IsValid() || !Domain->RestSession.IsValid() || !Token.IsValid() || !Token->GetUserId().IsSet() || Token->GetUserId().Get(FString()).IsEmpty() || !Prepared.IsValid()) return nullptr;
+        if (Prepared->GetUserId().IsSet() && Prepared->GetUserId().Get(FString()) == TEXT("#{userId}")) Prepared->WithUserId(Token->GetUserId());
+        if (!Prepared->GetUserId().IsSet() || Prepared->GetUserId().Get(FString()) != Token->GetUserId().Get(FString()) || !Prepared->GetNamespaceName().IsSet() || Prepared->GetNamespaceName().Get(FString()).IsEmpty() || !Prepared->GetBonusModelName().IsSet() || Prepared->GetBonusModelName().Get(FString()).IsEmpty()) return nullptr;
+        const auto NamespaceName = Prepared->GetNamespaceName();
+        const auto BonusModelName = Prepared->GetBonusModelName();
+        const auto UserId = Token->GetUserId();
+        const auto TimeOffset = Token->GetTimeOffset();
+        const auto ExpectedId = FString::Printf(TEXT("grn:gs2:%s:%s:loginReward:%s:user:%s:status:%s"), *Domain->RestSession->RegionName(), *Domain->RestSession->OwnerId(), *NamespaceName.Get(FString()), *UserId.Get(FString()), *BonusModelName.Get(FString()));
+        Gs2::LoginReward::Model::FReceiveStatusPtr Expected;
+        if (!Gs2::LoginReward::Model::Cache::FReceiveStatusCache::TryGet(Domain->Cache, NamespaceName, UserId, BonusModelName, TimeOffset, &Expected) || !Expected.IsValid() || Expected->GetReceiveStatusId().Get(FString()) != ExpectedId || Expected->GetUserId().Get(FString()) != UserId.Get(FString()) || Expected->GetBonusModelName().Get(FString()) != BonusModelName.Get(FString())) return nullptr;
+        const auto Snapshot = ReceiveStatusSnapshot(Expected);
+        *Result = Gs2::Core::Domain::SpeculativeExecutor::FPreparedSpeculativeCommit::WrapLegacy(MakeShared<TFunction<void()>>([DomainCopy = Domain, NamespaceName, BonusModelName, UserId = UserId.Get(FString()), TimeOffset, ExpectedId, Snapshot]()
         {
-            Domain->Cache->Put(
-                LoginReward::Model::FReceiveStatus::TypeName,
-                ParentKey,
-                Key,
-                nullptr,
-                FDateTime::Now() + FTimespan::FromSeconds(10)
-            );
-            return nullptr;
-        });
+            Gs2::LoginReward::Model::FReceiveStatusPtr Current;
+            if (!Gs2::LoginReward::Model::Cache::FReceiveStatusCache::TryGet(DomainCopy->Cache, NamespaceName, UserId, BonusModelName, TimeOffset, &Current) || !Current.IsValid() || Current->GetReceiveStatusId().Get(FString()) != ExpectedId || (Current->GetRevision().Get(0) > 0 && ReceiveStatusSnapshot(Current) != Snapshot)) return;
+            Gs2::LoginReward::Model::Cache::FReceiveStatusCache::Put(DomainCopy->Cache, NamespaceName, UserId, BonusModelName, TimeOffset, nullptr);
+        }));
         return nullptr;
     }
 

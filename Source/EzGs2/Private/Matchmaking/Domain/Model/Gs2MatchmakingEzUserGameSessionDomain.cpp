@@ -183,7 +183,8 @@ namespace Gs2::UE5::Matchmaking::Domain::Model
         );
     }
 
-    void FEzUserGameSessionDomain::UnsubscribeRatings(Gs2::Core::Domain::CallbackID CallbackId)
+    void FEzUserGameSessionDomain::UnsubscribeRatings(
+            Gs2::Core::Domain::CallbackID CallbackId)
     {
         Domain->UnsubscribeRatings(
             CallbackId

@@ -19,6 +19,7 @@
 #include "CoreMinimal.h"
 #include "Core/Gs2Object.h"
 #include "TransactionSetting.h"
+#include "TransactionSettingV2.h"
 #include "NotificationSetting.h"
 #include "ScriptSetting.h"
 #include "LogSetting.h"
@@ -31,6 +32,7 @@ namespace Gs2::Guild::Model
         TOptional<FString> NameValue;
         TOptional<FString> DescriptionValue;
         TSharedPtr<FTransactionSetting> TransactionSettingValue;
+        TSharedPtr<FTransactionSettingV2> TransactionSettingV2Value;
         TSharedPtr<FNotificationSetting> ChangeNotificationValue;
         TSharedPtr<FNotificationSetting> JoinNotificationValue;
         TSharedPtr<FNotificationSetting> LeaveNotificationValue;
@@ -61,6 +63,7 @@ namespace Gs2::Guild::Model
         TSharedPtr<FNamespace> WithName(const TOptional<FString> Name);
         TSharedPtr<FNamespace> WithDescription(const TOptional<FString> Description);
         TSharedPtr<FNamespace> WithTransactionSetting(const TSharedPtr<FTransactionSetting> TransactionSetting);
+        TSharedPtr<FNamespace> WithTransactionSettingV2(const TSharedPtr<FTransactionSettingV2> TransactionSettingV2);
         TSharedPtr<FNamespace> WithChangeNotification(const TSharedPtr<FNotificationSetting> ChangeNotification);
         TSharedPtr<FNamespace> WithJoinNotification(const TSharedPtr<FNotificationSetting> JoinNotification);
         TSharedPtr<FNamespace> WithLeaveNotification(const TSharedPtr<FNotificationSetting> LeaveNotification);
@@ -84,6 +87,7 @@ namespace Gs2::Guild::Model
         TOptional<FString> GetName() const;
         TOptional<FString> GetDescription() const;
         TSharedPtr<FTransactionSetting> GetTransactionSetting() const;
+        TSharedPtr<FTransactionSettingV2> GetTransactionSettingV2() const;
         TSharedPtr<FNotificationSetting> GetChangeNotification() const;
         TSharedPtr<FNotificationSetting> GetJoinNotification() const;
         TSharedPtr<FNotificationSetting> GetLeaveNotification() const;

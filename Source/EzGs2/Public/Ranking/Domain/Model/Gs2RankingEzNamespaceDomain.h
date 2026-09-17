@@ -61,7 +61,8 @@ namespace Gs2::UE5::Ranking::Domain::Model
 
         Gs2::Core::Domain::CallbackID SubscribeCategoryModels(TFunction<void()> Callback);
 
-        void UnsubscribeCategoryModels(Gs2::Core::Domain::CallbackID CallbackId);
+        void UnsubscribeCategoryModels(
+                Gs2::Core::Domain::CallbackID CallbackId);
 
         Gs2::UE5::Ranking::Domain::Model::FEzCategoryModelDomainPtr CategoryModel(
             const FString CategoryName

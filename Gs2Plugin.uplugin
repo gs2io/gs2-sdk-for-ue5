@@ -1,7 +1,7 @@
 {
 	"FileVersion": 3,
 	"Version": 1,
-	"VersionName": "2026.8.1",
+	"VersionName": "2026.9.1",
 	"FriendlyName": "GS2 Plugin",
 	"Description": "Plugin for Game Server Services",
 	"Category": "Online Service",
@@ -208,6 +208,16 @@
 		},
 		{
 			"Name": "Gs2Schedule",
+			"Type": "Runtime",
+			"LoadingPhase": "Default"
+		},
+		{
+			"Name": "Gs2Freeze",
+			"Type": "Runtime",
+			"LoadingPhase": "Default"
+		},
+		{
+			"Name": "Gs2Guard",
 			"Type": "Runtime",
 			"LoadingPhase": "Default"
 		},

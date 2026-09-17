@@ -17,11 +17,13 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "Core/Domain/CacheDatabase.h"
 
 namespace Gs2::Core::Domain::Model
 {
     typedef TFunction<void (FString, FString, FString)> FStampTaskEvent;
     typedef TFunction<void (FString, FString, FString)> FStampSheetEvent;
+    typedef TFunction<void (Gs2::Core::Domain::FCacheDatabasePtr, FString, TOptional<int32>, FString, FString, FString)> FTransactionActionEvent;
     
     class GS2CORE_API FTransactionConfiguration
     {
@@ -30,11 +32,20 @@ namespace Gs2::Core::Domain::Model
     
         FStampTaskEvent StampTaskEventHandler;
         FStampSheetEvent StampSheetEventHandler;
+        FTransactionActionEvent VerifyActionEventHandler;
+        FTransactionActionEvent ConsumeActionEventHandler;
+        FTransactionActionEvent AcquireActionEventHandler;
     
         FTransactionConfiguration(
             TOptional<FString> NamespaceName,
             FStampTaskEvent StampTaskEventHandler,
             FStampSheetEvent StampSheetEventHandler
+        );
+        FTransactionConfiguration(
+            TOptional<FString> NamespaceName,
+            FTransactionActionEvent VerifyActionEventHandler,
+            FTransactionActionEvent ConsumeActionEventHandler,
+            FTransactionActionEvent AcquireActionEventHandler
         );
         FTransactionConfiguration(const FTransactionConfiguration& From);
         ~FTransactionConfiguration() = default;

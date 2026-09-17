@@ -27,6 +27,22 @@
 #include "Inventory/Domain/SpeculativeExecutor/Acquire/AcquireItemSetWithGradeByUserIdSpeculativeExecutor.h"
 
 #include "Core/Domain/Gs2.h"
+#include "Core/Domain/SpeculativeExecutor/PreparedSpeculativeCommit.h"
+#include "Auth/Model/AccessToken.h"
+#include "Inventory/Model/Cache/Inventory.h"
+#include "Serialization/JsonSerializer.h"
+#include "Serialization/JsonWriter.h"
+
+namespace
+{
+    FString InventorySnapshot(const Gs2::Inventory::Model::FInventoryPtr& Item)
+    {
+        FString Value;
+        auto Writer = TJsonWriterFactory<TCHAR, TCondensedJsonPrintPolicy<TCHAR>>::Create(&Value);
+        FJsonSerializer::Serialize(Item->ToJson().ToSharedRef(), Writer);
+        return Value;
+    }
+}
 
 namespace Gs2::Inventory::Domain::SpeculativeExecutor
 {
@@ -73,13 +89,54 @@ namespace Gs2::Inventory::Domain::SpeculativeExecutor
     }
 
     Gs2::Core::Model::FGs2ErrorPtr FAcquireItemSetWithGradeByUserIdSpeculativeExecutor::FCommitTask::Action(
-        TSharedPtr<TSharedPtr<TFunction<void()>>> Result
+        TSharedPtr<TSharedPtr<Gs2::Core::Domain::SpeculativeExecutor::FPreparedSpeculativeCommit>> Result
     )
     {
-        *Result = MakeShared<TFunction<void()>>([&]()
+        *Result = nullptr;
+        Gs2::Auth::Model::FAccessTokenPtr Token = nullptr;
+        if (AccessToken.IsValid()) Token = MakeShared<Gs2::Auth::Model::FAccessToken>(*AccessToken);
+        Gs2::Inventory::Request::FAcquireItemSetWithGradeByUserIdRequestPtr Prepared = nullptr;
+        if (Request.IsValid()) Prepared = MakeShared<Gs2::Inventory::Request::FAcquireItemSetWithGradeByUserIdRequest>(*Request);
+        if (!Domain.IsValid() || !Domain->RestSession.IsValid() || !Token.IsValid() ||
+            !Token->GetUserId().IsSet() || Token->GetUserId().Get(FString()).IsEmpty() || !Prepared.IsValid()) return nullptr;
+        if (Prepared->GetUserId().IsSet() && Prepared->GetUserId().Get(FString()) == TEXT("#{userId}")) Prepared->WithUserId(Token->GetUserId());
+        if (!Prepared->GetUserId().IsSet() || Prepared->GetUserId().Get(FString()) != Token->GetUserId().Get(FString())) return nullptr;
+        const auto NamespaceName = Prepared->GetNamespaceName();
+        const auto InventoryName = Prepared->GetInventoryName();
+        const auto UserId = Token->GetUserId();
+        const auto TimeOffset = Token->GetTimeOffset();
+        const auto ExpectedId = FString::Printf(TEXT("grn:gs2:%s:%s:inventory:%s:user:%s:inventory:%s"),
+            *Domain->RestSession->RegionName(), *Domain->RestSession->OwnerId(), *NamespaceName.Get(FString()), *UserId.Get(FString()), *InventoryName.Get(FString()));
+        Gs2::Inventory::Model::FInventoryPtr Item;
+        if (!Gs2::Inventory::Model::Cache::FInventoryCache::TryGet(Domain->Cache, NamespaceName, UserId.Get(FString()), InventoryName, TimeOffset, &Item) ||
+            !Item.IsValid() || Item->GetInventoryId().Get(FString()) != ExpectedId || Item->GetUserId().Get(FString()) != UserId.Get(FString()) ||
+            Item->GetInventoryName().Get(FString()) != InventoryName.Get(FString()) || !Item->GetCurrentInventoryCapacityUsage().IsSet() ||
+            !Item->GetCurrentInventoryMaxCapacity().IsSet() || Item->GetCurrentInventoryCapacityUsage().Get(0) >= Item->GetCurrentInventoryMaxCapacity().Get(0) ||
+            !Item->GetRevision().IsSet() || Item->GetRevision().Get(0) < 0) return nullptr;
+        const auto Snapshot = InventorySnapshot(Item);
+        const int64 UpdatedAt = static_cast<int64>(FDateTime::UtcNow().ToUnixTimestampDecimal() * 1000.0) + static_cast<int64>(TimeOffset.Get(0)) * 1000;
+        *Result = Gs2::Core::Domain::SpeculativeExecutor::FPreparedSpeculativeCommit::WrapLegacy(MakeShared<TFunction<void()>>(
+            [DomainCopy = Domain, NamespaceName, InventoryName, UserId = UserId.Get(FString()), TimeOffset, ExpectedId, Snapshot, UpdatedAt]()
         {
-            return nullptr;
-        });
+            Gs2::Inventory::Model::FInventoryPtr Live;
+            if (!Gs2::Inventory::Model::Cache::FInventoryCache::TryGet(DomainCopy->Cache, NamespaceName, UserId, InventoryName, TimeOffset, &Live) ||
+                !Live.IsValid() || Live->GetInventoryId().Get(FString()) != ExpectedId || Live->GetUserId().Get(FString()) != UserId ||
+                Live->GetInventoryName().Get(FString()) != InventoryName || !Live->GetCurrentInventoryCapacityUsage().IsSet() ||
+                !Live->GetCurrentInventoryMaxCapacity().IsSet() || Live->GetCurrentInventoryCapacityUsage().Get(0) >= Live->GetCurrentInventoryMaxCapacity().Get(0) ||
+                !Live->GetRevision().IsSet() || Live->GetRevision().Get(0) < 0 ||
+                (Live->GetRevision().Get(0) > 0 && InventorySnapshot(Live) != Snapshot)) return;
+            const int64 Usage = static_cast<int64>(Live->GetCurrentInventoryCapacityUsage().Get(0)) + 1;
+            if (Usage < TNumericLimits<int32>::Min() || Usage > TNumericLimits<int32>::Max()) return;
+            auto Changed = MakeShared<Gs2::Inventory::Model::FInventory>(*Live);
+            Changed->WithCurrentInventoryCapacityUsage(static_cast<int32>(Usage))->WithUpdatedAt(UpdatedAt)->WithRevision(0);
+            DomainCopy->Cache->Put(
+                Gs2::Inventory::Model::FInventory::TypeName,
+                Gs2::Inventory::Model::Cache::FInventoryCache::CreateCacheParentKey(NamespaceName, UserId, TimeOffset),
+                Gs2::Inventory::Model::Cache::FInventoryCache::CreateCacheKey(InventoryName),
+                Changed,
+                FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
+            );
+        }));
         return nullptr;
     }
 

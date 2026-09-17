@@ -20,6 +20,9 @@ public class Gs2Enhance : ModuleRules
 			"Gs2Auth",
 			"Gs2Distributor",
 			"Gs2JobQueue",
+			"Gs2Experience",
+			"Gs2Grade",
+			"Gs2Inventory",
 		});
 		PublicDependencyModuleNames.AddRange(new string[] {
 			"Core",

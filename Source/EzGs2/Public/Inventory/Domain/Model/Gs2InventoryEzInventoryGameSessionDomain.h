@@ -66,7 +66,8 @@ namespace Gs2::UE5::Inventory::Domain::Model
 
         Gs2::Core::Domain::CallbackID SubscribeItemSets(TFunction<void()> Callback);
 
-        void UnsubscribeItemSets(Gs2::Core::Domain::CallbackID CallbackId);
+        void UnsubscribeItemSets(
+                Gs2::Core::Domain::CallbackID CallbackId);
 
         Gs2::UE5::Inventory::Domain::Model::FEzItemSetGameSessionDomainPtr ItemSet(
             const FString ItemName,

@@ -99,6 +99,8 @@ namespace Gs2::Friend::Domain::Model
             const FReceiveFriendRequestDomain& From
         );
 
+
+
         class GS2FRIEND_API FGetTask final :
             public Gs2::Core::Util::TGs2Future<Gs2::Friend::Model::FFriendRequest>,
             public TSharedFromThis<FGetTask>
@@ -125,6 +127,8 @@ namespace Gs2::Friend::Domain::Model
             Request::FGetReceiveRequestByUserIdRequestPtr Request
         );
 
+
+
         class GS2FRIEND_API FAcceptTask final :
             public Gs2::Core::Util::TGs2Future<Gs2::Friend::Domain::Model::FReceiveFriendRequestDomain>,
             public TSharedFromThis<FAcceptTask>
@@ -150,6 +154,8 @@ namespace Gs2::Friend::Domain::Model
         TSharedPtr<FAsyncTask<FAcceptTask>> Accept(
             Request::FAcceptRequestByUserIdRequestPtr Request
         );
+
+
 
         class GS2FRIEND_API FRejectTask final :
             public Gs2::Core::Util::TGs2Future<Gs2::Friend::Domain::Model::FReceiveFriendRequestDomain>,
@@ -189,7 +195,7 @@ namespace Gs2::Friend::Domain::Model
         );
 
         class GS2FRIEND_API FModelTask final :
-            public Gs2::Core::Util::TGs2Future<Gs2::Friend::Model::FFriendRequest>,
+            public Gs2::Core::Util::TGs2Future<Gs2::Friend::Model::FReceiveFriendRequest>,
             public TSharedFromThis<FModelTask>
         {
             const TSharedPtr<FReceiveFriendRequestDomain> Self;
@@ -203,15 +209,42 @@ namespace Gs2::Friend::Domain::Model
             );
 
             virtual Gs2::Core::Model::FGs2ErrorPtr Action(
-                TSharedPtr<TSharedPtr<Gs2::Friend::Model::FFriendRequest>> Result
+                TSharedPtr<TSharedPtr<Gs2::Friend::Model::FReceiveFriendRequest>> Result
             ) override;
         };
         friend FModelTask;
 
         TSharedPtr<FAsyncTask<FModelTask>> Model();
 
+        void Invalidate();
+
         Gs2::Core::Domain::CallbackID Subscribe(
-            TFunction<void(Gs2::Friend::Model::FFriendRequestPtr)> Callback
+            TFunction<void(Gs2::Friend::Model::FReceiveFriendRequestPtr)> Callback
+        );
+
+        class GS2FRIEND_API FSubscribeWithInitialCallTask final :
+            public Gs2::Core::Util::TGs2Future<Gs2::Core::Domain::CallbackID>,
+            public TSharedFromThis<FSubscribeWithInitialCallTask>
+        {
+            const TSharedPtr<FReceiveFriendRequestDomain> Self;
+            const TFunction<void(Gs2::Friend::Model::FReceiveFriendRequestPtr)> Callback;
+        public:
+            FSubscribeWithInitialCallTask(
+                const TSharedPtr<FReceiveFriendRequestDomain>& Self,
+                TFunction<void(Gs2::Friend::Model::FReceiveFriendRequestPtr)> Callback
+            );
+
+            FSubscribeWithInitialCallTask(
+                const FSubscribeWithInitialCallTask& From
+            );
+
+            virtual Gs2::Core::Model::FGs2ErrorPtr Action(
+                TSharedPtr<TSharedPtr<Gs2::Core::Domain::CallbackID>> Result
+            ) override;
+        };
+
+        TSharedPtr<FAsyncTask<FSubscribeWithInitialCallTask>> SubscribeWithInitialCall(
+            TFunction<void(Gs2::Friend::Model::FReceiveFriendRequestPtr)> Callback
         );
 
         void Unsubscribe(

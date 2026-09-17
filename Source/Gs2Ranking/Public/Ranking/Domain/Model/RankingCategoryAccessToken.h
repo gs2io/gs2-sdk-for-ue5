@@ -106,6 +106,8 @@ namespace Gs2::Ranking::Domain::Model
             const FRankingCategoryAccessTokenDomain& From
         );
 
+
+
         class GS2RANKING_API FSubscribeTask final :
             public Gs2::Core::Util::TGs2Future<Gs2::Ranking::Domain::Model::FSubscribeUserAccessTokenDomain>,
             public TSharedFromThis<FSubscribeTask>
@@ -131,6 +133,8 @@ namespace Gs2::Ranking::Domain::Model
         TSharedPtr<FAsyncTask<FSubscribeTask>> Subscribe(
             Request::FSubscribeRequestPtr Request
         );
+
+
 
         class GS2RANKING_API FPutScoreTask final :
             public Gs2::Core::Util::TGs2Future<Gs2::Ranking::Domain::Model::FScoreAccessTokenDomain>,
@@ -163,8 +167,33 @@ namespace Gs2::Ranking::Domain::Model
 
         Gs2::Core::Domain::CallbackID SubscribeSubscribeUsers(
             TFunction<void()> Callback
+
         );
 
+        class FCollectSubscribeUsersTask;
+
+        Gs2::Core::Domain::CallbackID SubscribeSubscribeUsers(
+            TFunction<void(TArray<Gs2::Ranking::Model::FSubscribeUserPtr>)> Callback
+        );
+
+        void InvalidateSubscribeUsers();
+
+        class GS2RANKING_API FSubscribeSubscribeUsersWithInitialCallTask final :
+            public Gs2::Core::Util::TGs2Future<Gs2::Core::Domain::CallbackID>,
+            public TSharedFromThis<FSubscribeSubscribeUsersWithInitialCallTask>
+        {
+            const TSharedPtr<FRankingCategoryAccessTokenDomain> Self;
+            const TFunction<void(TArray<Gs2::Ranking::Model::FSubscribeUserPtr>)> Callback;
+
+        public:
+            FSubscribeSubscribeUsersWithInitialCallTask(const TSharedPtr<FRankingCategoryAccessTokenDomain>& Self, TFunction<void(TArray<Gs2::Ranking::Model::FSubscribeUserPtr>)> Callback);
+            FSubscribeSubscribeUsersWithInitialCallTask(const FSubscribeSubscribeUsersWithInitialCallTask& From);
+            virtual Gs2::Core::Model::FGs2ErrorPtr Action(TSharedPtr<TSharedPtr<Gs2::Core::Domain::CallbackID>> Result) override;
+        };
+
+        TSharedPtr<FAsyncTask<FSubscribeSubscribeUsersWithInitialCallTask>> SubscribeSubscribeUsersWithInitialCall(
+            TFunction<void(TArray<Gs2::Ranking::Model::FSubscribeUserPtr>)> Callback
+        );
         void UnsubscribeSubscribeUsers(
             Gs2::Core::Domain::CallbackID CallbackID
         );
@@ -178,8 +207,33 @@ namespace Gs2::Ranking::Domain::Model
 
         Gs2::Core::Domain::CallbackID SubscribeRankings(
             TFunction<void()> Callback
+
         );
 
+        class FCollectRankingsTask;
+
+        Gs2::Core::Domain::CallbackID SubscribeRankings(
+            TFunction<void(TArray<Gs2::Ranking::Model::FRankingPtr>)> Callback
+        );
+
+        void InvalidateRankings();
+
+        class GS2RANKING_API FSubscribeRankingsWithInitialCallTask final :
+            public Gs2::Core::Util::TGs2Future<Gs2::Core::Domain::CallbackID>,
+            public TSharedFromThis<FSubscribeRankingsWithInitialCallTask>
+        {
+            const TSharedPtr<FRankingCategoryAccessTokenDomain> Self;
+            const TFunction<void(TArray<Gs2::Ranking::Model::FRankingPtr>)> Callback;
+
+        public:
+            FSubscribeRankingsWithInitialCallTask(const TSharedPtr<FRankingCategoryAccessTokenDomain>& Self, TFunction<void(TArray<Gs2::Ranking::Model::FRankingPtr>)> Callback);
+            FSubscribeRankingsWithInitialCallTask(const FSubscribeRankingsWithInitialCallTask& From);
+            virtual Gs2::Core::Model::FGs2ErrorPtr Action(TSharedPtr<TSharedPtr<Gs2::Core::Domain::CallbackID>> Result) override;
+        };
+
+        TSharedPtr<FAsyncTask<FSubscribeRankingsWithInitialCallTask>> SubscribeRankingsWithInitialCall(
+            TFunction<void(TArray<Gs2::Ranking::Model::FRankingPtr>)> Callback
+        );
         void UnsubscribeRankings(
             Gs2::Core::Domain::CallbackID CallbackID
         );

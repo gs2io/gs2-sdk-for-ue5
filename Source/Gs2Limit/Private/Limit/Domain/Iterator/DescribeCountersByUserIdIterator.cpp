@@ -1,3 +1,4 @@
+
 /*
  * Copyright 2016 Game Server Services, Inc. or its affiliates. All Rights
  * Reserved.
@@ -29,6 +30,8 @@
 #include "Limit/Domain/Model/User.h"
 
 #include "Core/Domain/Gs2.h"
+
+#include "Limit/Model/Cache/Counter.h"
 
 namespace Gs2::Limit::Domain::Iterator
 {
@@ -84,7 +87,7 @@ namespace Gs2::Limit::Domain::Iterator
 
     FDescribeCountersByUserIdIterator::FIterator& FDescribeCountersByUserIdIterator::FIterator::operator++()
     {
-        
+
 
         if (bEnd) return *this;
 
@@ -94,16 +97,17 @@ namespace Gs2::Limit::Domain::Iterator
             return *this;
         }
 
-        if (RangeIteratorOpt) ++*RangeIteratorOpt;
+        if (RangeIteratorOpt && *RangeIteratorOpt) ++*RangeIteratorOpt;
 
+        // Keep the previous page alive until its iterator has been replaced.
+        const auto PreviousRange = Range;
         if (!RangeIteratorOpt || (!*RangeIteratorOpt && !bLast))
         {
-            const auto ListParentKey = Gs2::Limit::Domain::Model::FUserDomain::CreateCacheParentKey(
+            const auto ListParentKey = Gs2::Limit::Model::Cache::FCounterCache::CreateCacheParentKey(
                 Self->NamespaceName,
                 Self->UserId,
-                "Counter"
+                TOptional<int32>()
             );
-
             if (!RangeIteratorOpt)
             {
                 Range = Self->Gs2->Cache->TryGetList<Gs2::Limit::Model::FCounter>(ListParentKey);
@@ -118,15 +122,15 @@ namespace Gs2::Limit::Domain::Iterator
                     return *this;
                 }
             }
-
-            const auto Future = Self->Client->DescribeCountersByUserId(
+            const auto Request =
                 MakeShared<Gs2::Limit::Request::FDescribeCountersByUserIdRequest>()
                     ->WithContextStack(Self->Gs2->DefaultContextStack)
                     ->WithNamespaceName(Self->NamespaceName)
                     ->WithUserId(Self->UserId)
                     ->WithPageToken(PageToken)
                     ->WithLimit(FetchSize)
-            );
+            ;
+            const auto Future = Self->Client->DescribeCountersByUserId(Request);
             Future->StartSynchronousTask();
             if (Future->GetTask().IsError())
             {
@@ -140,19 +144,21 @@ namespace Gs2::Limit::Domain::Iterator
             }
             const auto R = Future->GetTask().Result();
             Future->EnsureCompletion();
-            Range = R->GetItems();
-            for (auto Item : *R->GetItems())
+            Range = R->GetItems().IsValid() ? R->GetItems() : MakeShared<TArray<Gs2::Limit::Model::FCounterPtr>>();
+            const auto ResultModel = R;
+
+
+            if (Range.IsValid())
             {
-                Self->Gs2->Cache->Put(
-                    Gs2::Limit::Model::FCounter::TypeName,
-                    ListParentKey,
-                    Gs2::Limit::Domain::Model::FCounterDomain::CreateCacheKey(
-                        Item->GetLimitName(),
-                        Item->GetName()
-                    ),
-                    Item,
-                    FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
-                );
+                for (const auto& Item : *Range)
+                {
+                    if (!Item.IsValid()) continue;
+                    Gs2::Limit::Model::Cache::FCounterCache::Put(
+                        Self->Gs2->Cache,
+                        Request->GetNamespaceName(), Request->GetUserId(), Item->GetLimitName(), Item->GetName(),
+                        TOptional<int32>(), Item
+                    );
+                }
             }
             if (Range)
             {

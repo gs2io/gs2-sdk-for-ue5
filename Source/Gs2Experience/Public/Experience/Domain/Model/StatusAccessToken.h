@@ -95,6 +95,8 @@ namespace Gs2::Experience::Domain::Model
             const FStatusAccessTokenDomain& From
         );
 
+
+
         class GS2EXPERIENCE_API FGetTask final :
             public Gs2::Core::Util::TGs2Future<Gs2::Experience::Model::FStatus>,
             public TSharedFromThis<FGetTask>
@@ -120,6 +122,8 @@ namespace Gs2::Experience::Domain::Model
         TSharedPtr<FAsyncTask<FGetTask>> Get(
             Request::FGetStatusRequestPtr Request
         );
+
+
 
         class GS2EXPERIENCE_API FGetWithSignatureTask final :
             public Gs2::Core::Util::TGs2Future<Gs2::Experience::Domain::Model::FStatusAccessTokenDomain>,
@@ -147,6 +151,8 @@ namespace Gs2::Experience::Domain::Model
             Request::FGetStatusWithSignatureRequestPtr Request
         );
 
+
+
         class GS2EXPERIENCE_API FSubExperienceTask final :
             public Gs2::Core::Util::TGs2Future<Gs2::Experience::Domain::Model::FStatusAccessTokenDomain>,
             public TSharedFromThis<FSubExperienceTask>
@@ -172,6 +178,8 @@ namespace Gs2::Experience::Domain::Model
         TSharedPtr<FAsyncTask<FSubExperienceTask>> SubExperience(
             Request::FSubExperienceRequestPtr Request
         );
+
+
 
         class GS2EXPERIENCE_API FSubRankCapTask final :
             public Gs2::Core::Util::TGs2Future<Gs2::Experience::Domain::Model::FStatusAccessTokenDomain>,
@@ -199,6 +207,8 @@ namespace Gs2::Experience::Domain::Model
             Request::FSubRankCapRequestPtr Request
         );
 
+
+
         class GS2EXPERIENCE_API FVerifyRankTask final :
             public Gs2::Core::Util::TGs2Future<Gs2::Experience::Domain::Model::FStatusAccessTokenDomain>,
             public TSharedFromThis<FVerifyRankTask>
@@ -224,6 +234,8 @@ namespace Gs2::Experience::Domain::Model
         TSharedPtr<FAsyncTask<FVerifyRankTask>> VerifyRank(
             Request::FVerifyRankRequestPtr Request
         );
+
+
 
         class GS2EXPERIENCE_API FVerifyRankCapTask final :
             public Gs2::Core::Util::TGs2Future<Gs2::Experience::Domain::Model::FStatusAccessTokenDomain>,
@@ -286,7 +298,34 @@ namespace Gs2::Experience::Domain::Model
 
         TSharedPtr<FAsyncTask<FModelTask>> Model();
 
+        void Invalidate();
+
         Gs2::Core::Domain::CallbackID Subscribe(
+            TFunction<void(Gs2::Experience::Model::FStatusPtr)> Callback
+        );
+
+        class GS2EXPERIENCE_API FSubscribeWithInitialCallTask final :
+            public Gs2::Core::Util::TGs2Future<Gs2::Core::Domain::CallbackID>,
+            public TSharedFromThis<FSubscribeWithInitialCallTask>
+        {
+            const TSharedPtr<FStatusAccessTokenDomain> Self;
+            const TFunction<void(Gs2::Experience::Model::FStatusPtr)> Callback;
+        public:
+            FSubscribeWithInitialCallTask(
+                const TSharedPtr<FStatusAccessTokenDomain>& Self,
+                TFunction<void(Gs2::Experience::Model::FStatusPtr)> Callback
+            );
+
+            FSubscribeWithInitialCallTask(
+                const FSubscribeWithInitialCallTask& From
+            );
+
+            virtual Gs2::Core::Model::FGs2ErrorPtr Action(
+                TSharedPtr<TSharedPtr<Gs2::Core::Domain::CallbackID>> Result
+            ) override;
+        };
+
+        TSharedPtr<FAsyncTask<FSubscribeWithInitialCallTask>> SubscribeWithInitialCall(
             TFunction<void(Gs2::Experience::Model::FStatusPtr)> Callback
         );
 

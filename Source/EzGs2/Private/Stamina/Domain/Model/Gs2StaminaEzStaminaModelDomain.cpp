@@ -82,7 +82,7 @@ namespace Gs2::UE5::Stamina::Domain::Model
     Gs2::Core::Domain::CallbackID FEzStaminaModelDomain::Subscribe(TFunction<void(Gs2::UE5::Stamina::Model::FEzStaminaModelPtr)> Callback)
     {
         return Domain->Subscribe(
-            [&](Gs2::Stamina::Model::FStaminaModelPtr Item)
+            [Callback](Gs2::Stamina::Model::FStaminaModelPtr Item)
             {
                 Callback(Gs2::UE5::Stamina::Model::FEzStaminaModel::FromModel(Item));
             }

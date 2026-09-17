@@ -62,6 +62,9 @@
 #include "Ranking2/Domain/Model/User.h"
 #include "Ranking2/Domain/Model/UserAccessToken.h"
 
+#include "Ranking2/Model/Cache/GlobalRankingReceivedReward.h"
+#include "Ranking2/Model/Cache/GlobalRankingScore.h"
+#include "Ranking2/Model/Cache/GlobalRankingData.h"
 #include "Core/Domain/Gs2.h"
 #include "Core/Domain/Transaction/JobQueueJobDomainFactory.h"
 #include "Core/Domain/Transaction/InternalTransactionDomainFactory.h"
@@ -235,30 +238,122 @@ namespace Gs2::Ranking2::Domain::Model
     {
         return Gs2->Cache->ListSubscribe(
             Gs2::Ranking2::Model::FGlobalRankingScore::TypeName,
-            Gs2::Ranking2::Domain::Model::FGlobalRankingSeasonDomain::CreateCacheParentKey(
+            Gs2::Ranking2::Model::Cache::FGlobalRankingScoreCache::CreateCacheParentKey(
                 NamespaceName,
+                UserId,
                 RankingName,
-                Season,
-                "GlobalRankingScore"
+                TOptional<int32>()
             ),
+            Callback,
             Callback
         );
     }
-
     void FGlobalRankingSeasonDomain::UnsubscribeGlobalRankingScores(
         Gs2::Core::Domain::CallbackID CallbackID
     )
     {
         Gs2->Cache->ListUnsubscribe(
             Gs2::Ranking2::Model::FGlobalRankingScore::TypeName,
-            Gs2::Ranking2::Domain::Model::FGlobalRankingSeasonDomain::CreateCacheParentKey(
+            Gs2::Ranking2::Model::Cache::FGlobalRankingScoreCache::CreateCacheParentKey(
                 NamespaceName,
+                UserId,
                 RankingName,
-                Season,
-                "GlobalRankingScore"
+                TOptional<int32>()
             ),
             CallbackID
         );
+    }
+    class FGlobalRankingSeasonDomain::FCollectGlobalRankingScoresTask : public Gs2::Core::Util::TGs2Future<TArray<Gs2::Ranking2::Model::FGlobalRankingScorePtr>>, public TSharedFromThis<FCollectGlobalRankingScoresTask>
+    {
+        const TSharedPtr<FGlobalRankingSeasonDomain> Self;
+        const TFunction<void(TArray<Gs2::Ranking2::Model::FGlobalRankingScorePtr>)> OnCollected;
+    const TOptional<FString> QueryTimeOffsetToken;
+    public:
+        explicit FCollectGlobalRankingScoresTask(const TSharedPtr<FGlobalRankingSeasonDomain>& Self, TFunction<void(TArray<Gs2::Ranking2::Model::FGlobalRankingScorePtr>)> OnCollected,const TOptional<FString> TimeOffsetToken) : Self(Self), OnCollected(OnCollected), QueryTimeOffsetToken(TimeOffsetToken) {}
+        FCollectGlobalRankingScoresTask(const FCollectGlobalRankingScoresTask& From) : TGs2Future(From), Self(From.Self), OnCollected(From.OnCollected), QueryTimeOffsetToken(From.QueryTimeOffsetToken) {}
+        virtual Gs2::Core::Model::FGs2ErrorPtr Action(TSharedPtr<TSharedPtr<TArray<Gs2::Ranking2::Model::FGlobalRankingScorePtr>>> Result) override
+        {
+            TArray<Gs2::Ranking2::Model::FGlobalRankingScorePtr> Items;
+            auto Iterator = Self->GlobalRankingScores(QueryTimeOffsetToken)->begin();
+            while (Iterator.HasNext())
+            {
+                if (Iterator.IsError()) return Iterator.Error();
+                if (Iterator.IsCurrentValid()) Items.Add(Iterator.Current());
+                ++Iterator;
+            }
+            if (Iterator.IsError()) return Iterator.Error();
+            *Result = MakeShared<TArray<Gs2::Ranking2::Model::FGlobalRankingScorePtr>>(Items);
+            if (OnCollected) OnCollected(Items);
+            return nullptr;
+        }
+    };
+
+    Gs2::Core::Domain::CallbackID FGlobalRankingSeasonDomain::SubscribeGlobalRankingScores(
+        TFunction<void(TArray<Gs2::Ranking2::Model::FGlobalRankingScorePtr>)> Callback,const TOptional<FString> TimeOffsetToken
+    )
+    {
+        const TWeakPtr<Gs2::Core::Domain::FGs2> WeakGs2 = this->Gs2;
+        const TWeakPtr<Ranking2::Domain::FGs2Ranking2Domain> WeakService = this->Service;
+        const auto QueryNamespaceName = NamespaceName;
+        const auto QueryRankingName = RankingName;
+        const auto QuerySeason = Season;
+        const auto QueryUserId = UserId;
+        const auto QueryTimeOffsetToken = TimeOffsetToken;
+        const auto Parent = Gs2::Ranking2::Model::Cache::FGlobalRankingScoreCache::CreateCacheParentKey(
+        NamespaceName,
+        UserId,
+        RankingName,
+        TOptional<int32>()
+    );
+        return Gs2->Cache->ListSubscribeTyped(
+            Gs2::Ranking2::Model::FGlobalRankingScore::TypeName,
+            Parent,
+            [Callback, WeakGs2](const TArray<FGs2ObjectPtr>& Values)
+            {
+                if (!WeakGs2.Pin().IsValid()) return;
+                TArray<Gs2::Ranking2::Model::FGlobalRankingScorePtr> TypedValues;
+                for (const auto& Value : Values) if (Value.IsValid()) TypedValues.Add(StaticCastSharedPtr<Gs2::Ranking2::Model::FGlobalRankingScore>(Value));
+                Callback(TypedValues);
+            },
+            [WeakGs2, WeakService, Callback, QueryNamespaceName, QueryRankingName, QuerySeason, QueryUserId, QueryTimeOffsetToken]()
+            {
+                const auto Owner = WeakGs2.Pin();
+                if (!Owner.IsValid()) return;
+                const auto Domain = MakeShared<FGlobalRankingSeasonDomain>(Owner, WeakService.Pin(), QueryNamespaceName, QueryRankingName, QuerySeason, QueryUserId);
+                const auto Task = Gs2::Core::Util::New<FAsyncTask<FCollectGlobalRankingScoresTask>>(Domain, Callback, QueryTimeOffsetToken);
+                Task->StartBackgroundTask();
+            }
+        );
+    }
+
+    void FGlobalRankingSeasonDomain::InvalidateGlobalRankingScores(const TOptional<FString> TimeOffsetToken)
+    {
+        Gs2->Cache->ClearListCache(
+            Gs2::Ranking2::Model::FGlobalRankingScore::TypeName,
+            Gs2::Ranking2::Model::Cache::FGlobalRankingScoreCache::CreateCacheParentKey(
+        NamespaceName,
+        UserId,
+        RankingName,
+        TOptional<int32>()
+    )
+        );
+    }
+
+    FGlobalRankingSeasonDomain::FSubscribeGlobalRankingScoresWithInitialCallTask::FSubscribeGlobalRankingScoresWithInitialCallTask(const TSharedPtr<FGlobalRankingSeasonDomain>& Self, TFunction<void(TArray<Gs2::Ranking2::Model::FGlobalRankingScorePtr>)> Callback,const TOptional<FString> TimeOffsetToken) : Self(Self), Callback(Callback), QueryTimeOffsetToken(TimeOffsetToken) {}
+    FGlobalRankingSeasonDomain::FSubscribeGlobalRankingScoresWithInitialCallTask::FSubscribeGlobalRankingScoresWithInitialCallTask(const FSubscribeGlobalRankingScoresWithInitialCallTask& From) : TGs2Future(From), Self(From.Self), Callback(From.Callback), QueryTimeOffsetToken(From.QueryTimeOffsetToken) {}
+    Gs2::Core::Model::FGs2ErrorPtr FGlobalRankingSeasonDomain::FSubscribeGlobalRankingScoresWithInitialCallTask::Action(TSharedPtr<TSharedPtr<Gs2::Core::Domain::CallbackID>> Result)
+    {
+        const auto Task = Gs2::Core::Util::New<FAsyncTask<FCollectGlobalRankingScoresTask>>(Self, TFunction<void(TArray<Gs2::Ranking2::Model::FGlobalRankingScorePtr>)>(), QueryTimeOffsetToken);
+        Task->StartSynchronousTask(); Task->EnsureCompletion();
+        if (Task->GetTask().IsError()) return Task->GetTask().Error();
+        const auto Values = Task->GetTask().Result();
+        const auto CallbackId = Self->SubscribeGlobalRankingScores(Callback, QueryTimeOffsetToken);
+        Callback(*Values); *Result = MakeShared<Gs2::Core::Domain::CallbackID>(CallbackId);
+        return nullptr;
+    }
+    TSharedPtr<FAsyncTask<FGlobalRankingSeasonDomain::FSubscribeGlobalRankingScoresWithInitialCallTask>> FGlobalRankingSeasonDomain::SubscribeGlobalRankingScoresWithInitialCall(TFunction<void(TArray<Gs2::Ranking2::Model::FGlobalRankingScorePtr>)> Callback,const TOptional<FString> TimeOffsetToken)
+    {
+        return Gs2::Core::Util::New<FAsyncTask<FSubscribeGlobalRankingScoresWithInitialCallTask>>(this->AsShared(), Callback, TimeOffsetToken);
     }
 
     TSharedPtr<Gs2::Ranking2::Domain::Model::FGlobalRankingScoreDomain> FGlobalRankingSeasonDomain::GlobalRankingScore(
@@ -295,30 +390,122 @@ namespace Gs2::Ranking2::Domain::Model
     {
         return Gs2->Cache->ListSubscribe(
             Gs2::Ranking2::Model::FGlobalRankingData::TypeName,
-            Gs2::Ranking2::Domain::Model::FGlobalRankingSeasonDomain::CreateCacheParentKey(
+            Gs2::Ranking2::Model::Cache::FGlobalRankingDataCache::CreateCacheParentKey(
                 NamespaceName,
                 RankingName,
                 Season,
-                "GlobalRankingData"
+                TOptional<int32>()
             ),
+            Callback,
             Callback
         );
     }
-
     void FGlobalRankingSeasonDomain::UnsubscribeGlobalRankings(
         Gs2::Core::Domain::CallbackID CallbackID
     )
     {
         Gs2->Cache->ListUnsubscribe(
             Gs2::Ranking2::Model::FGlobalRankingData::TypeName,
-            Gs2::Ranking2::Domain::Model::FGlobalRankingSeasonDomain::CreateCacheParentKey(
+            Gs2::Ranking2::Model::Cache::FGlobalRankingDataCache::CreateCacheParentKey(
                 NamespaceName,
                 RankingName,
                 Season,
-                "GlobalRankingData"
+                TOptional<int32>()
             ),
             CallbackID
         );
+    }
+    class FGlobalRankingSeasonDomain::FCollectGlobalRankingsTask : public Gs2::Core::Util::TGs2Future<TArray<Gs2::Ranking2::Model::FGlobalRankingDataPtr>>, public TSharedFromThis<FCollectGlobalRankingsTask>
+    {
+        const TSharedPtr<FGlobalRankingSeasonDomain> Self;
+        const TFunction<void(TArray<Gs2::Ranking2::Model::FGlobalRankingDataPtr>)> OnCollected;
+    const TOptional<FString> QueryTimeOffsetToken;
+    public:
+        explicit FCollectGlobalRankingsTask(const TSharedPtr<FGlobalRankingSeasonDomain>& Self, TFunction<void(TArray<Gs2::Ranking2::Model::FGlobalRankingDataPtr>)> OnCollected,const TOptional<FString> TimeOffsetToken) : Self(Self), OnCollected(OnCollected), QueryTimeOffsetToken(TimeOffsetToken) {}
+        FCollectGlobalRankingsTask(const FCollectGlobalRankingsTask& From) : TGs2Future(From), Self(From.Self), OnCollected(From.OnCollected), QueryTimeOffsetToken(From.QueryTimeOffsetToken) {}
+        virtual Gs2::Core::Model::FGs2ErrorPtr Action(TSharedPtr<TSharedPtr<TArray<Gs2::Ranking2::Model::FGlobalRankingDataPtr>>> Result) override
+        {
+            TArray<Gs2::Ranking2::Model::FGlobalRankingDataPtr> Items;
+            auto Iterator = Self->GlobalRankings(QueryTimeOffsetToken)->begin();
+            while (Iterator.HasNext())
+            {
+                if (Iterator.IsError()) return Iterator.Error();
+                if (Iterator.IsCurrentValid()) Items.Add(Iterator.Current());
+                ++Iterator;
+            }
+            if (Iterator.IsError()) return Iterator.Error();
+            *Result = MakeShared<TArray<Gs2::Ranking2::Model::FGlobalRankingDataPtr>>(Items);
+            if (OnCollected) OnCollected(Items);
+            return nullptr;
+        }
+    };
+
+    Gs2::Core::Domain::CallbackID FGlobalRankingSeasonDomain::SubscribeGlobalRankings(
+        TFunction<void(TArray<Gs2::Ranking2::Model::FGlobalRankingDataPtr>)> Callback,const TOptional<FString> TimeOffsetToken
+    )
+    {
+        const TWeakPtr<Gs2::Core::Domain::FGs2> WeakGs2 = this->Gs2;
+        const TWeakPtr<Ranking2::Domain::FGs2Ranking2Domain> WeakService = this->Service;
+        const auto QueryNamespaceName = NamespaceName;
+        const auto QueryRankingName = RankingName;
+        const auto QuerySeason = Season;
+        const auto QueryUserId = UserId;
+        const auto QueryTimeOffsetToken = TimeOffsetToken;
+        const auto Parent = Gs2::Ranking2::Model::Cache::FGlobalRankingDataCache::CreateCacheParentKey(
+        NamespaceName,
+        RankingName,
+        Season,
+        TOptional<int32>()
+    );
+        return Gs2->Cache->ListSubscribeTyped(
+            Gs2::Ranking2::Model::FGlobalRankingData::TypeName,
+            Parent,
+            [Callback, WeakGs2](const TArray<FGs2ObjectPtr>& Values)
+            {
+                if (!WeakGs2.Pin().IsValid()) return;
+                TArray<Gs2::Ranking2::Model::FGlobalRankingDataPtr> TypedValues;
+                for (const auto& Value : Values) if (Value.IsValid()) TypedValues.Add(StaticCastSharedPtr<Gs2::Ranking2::Model::FGlobalRankingData>(Value));
+                Callback(TypedValues);
+            },
+            [WeakGs2, WeakService, Callback, QueryNamespaceName, QueryRankingName, QuerySeason, QueryUserId, QueryTimeOffsetToken]()
+            {
+                const auto Owner = WeakGs2.Pin();
+                if (!Owner.IsValid()) return;
+                const auto Domain = MakeShared<FGlobalRankingSeasonDomain>(Owner, WeakService.Pin(), QueryNamespaceName, QueryRankingName, QuerySeason, QueryUserId);
+                const auto Task = Gs2::Core::Util::New<FAsyncTask<FCollectGlobalRankingsTask>>(Domain, Callback, QueryTimeOffsetToken);
+                Task->StartBackgroundTask();
+            }
+        );
+    }
+
+    void FGlobalRankingSeasonDomain::InvalidateGlobalRankings(const TOptional<FString> TimeOffsetToken)
+    {
+        Gs2->Cache->ClearListCache(
+            Gs2::Ranking2::Model::FGlobalRankingData::TypeName,
+            Gs2::Ranking2::Model::Cache::FGlobalRankingDataCache::CreateCacheParentKey(
+        NamespaceName,
+        RankingName,
+        Season,
+        TOptional<int32>()
+    )
+        );
+    }
+
+    FGlobalRankingSeasonDomain::FSubscribeGlobalRankingsWithInitialCallTask::FSubscribeGlobalRankingsWithInitialCallTask(const TSharedPtr<FGlobalRankingSeasonDomain>& Self, TFunction<void(TArray<Gs2::Ranking2::Model::FGlobalRankingDataPtr>)> Callback,const TOptional<FString> TimeOffsetToken) : Self(Self), Callback(Callback), QueryTimeOffsetToken(TimeOffsetToken) {}
+    FGlobalRankingSeasonDomain::FSubscribeGlobalRankingsWithInitialCallTask::FSubscribeGlobalRankingsWithInitialCallTask(const FSubscribeGlobalRankingsWithInitialCallTask& From) : TGs2Future(From), Self(From.Self), Callback(From.Callback), QueryTimeOffsetToken(From.QueryTimeOffsetToken) {}
+    Gs2::Core::Model::FGs2ErrorPtr FGlobalRankingSeasonDomain::FSubscribeGlobalRankingsWithInitialCallTask::Action(TSharedPtr<TSharedPtr<Gs2::Core::Domain::CallbackID>> Result)
+    {
+        const auto Task = Gs2::Core::Util::New<FAsyncTask<FCollectGlobalRankingsTask>>(Self, TFunction<void(TArray<Gs2::Ranking2::Model::FGlobalRankingDataPtr>)>(), QueryTimeOffsetToken);
+        Task->StartSynchronousTask(); Task->EnsureCompletion();
+        if (Task->GetTask().IsError()) return Task->GetTask().Error();
+        const auto Values = Task->GetTask().Result();
+        const auto CallbackId = Self->SubscribeGlobalRankings(Callback, QueryTimeOffsetToken);
+        Callback(*Values); *Result = MakeShared<Gs2::Core::Domain::CallbackID>(CallbackId);
+        return nullptr;
+    }
+    TSharedPtr<FAsyncTask<FGlobalRankingSeasonDomain::FSubscribeGlobalRankingsWithInitialCallTask>> FGlobalRankingSeasonDomain::SubscribeGlobalRankingsWithInitialCall(TFunction<void(TArray<Gs2::Ranking2::Model::FGlobalRankingDataPtr>)> Callback,const TOptional<FString> TimeOffsetToken)
+    {
+        return Gs2::Core::Util::New<FAsyncTask<FSubscribeGlobalRankingsWithInitialCallTask>>(this->AsShared(), Callback, TimeOffsetToken);
     }
 
     TSharedPtr<Gs2::Ranking2::Domain::Model::FGlobalRankingDataDomain> FGlobalRankingSeasonDomain::GlobalRankingData(
@@ -357,30 +544,122 @@ namespace Gs2::Ranking2::Domain::Model
     {
         return Gs2->Cache->ListSubscribe(
             Gs2::Ranking2::Model::FGlobalRankingReceivedReward::TypeName,
-            Gs2::Ranking2::Domain::Model::FGlobalRankingSeasonDomain::CreateCacheParentKey(
+            Gs2::Ranking2::Model::Cache::FGlobalRankingReceivedRewardCache::CreateCacheParentKey(
                 NamespaceName,
+                UserId,
                 RankingName,
-                Season,
-                "GlobalRankingReceivedReward"
+                TOptional<int32>()
             ),
+            Callback,
             Callback
         );
     }
-
     void FGlobalRankingSeasonDomain::UnsubscribeGlobalRankingReceivedRewards(
         Gs2::Core::Domain::CallbackID CallbackID
     )
     {
         Gs2->Cache->ListUnsubscribe(
             Gs2::Ranking2::Model::FGlobalRankingReceivedReward::TypeName,
-            Gs2::Ranking2::Domain::Model::FGlobalRankingSeasonDomain::CreateCacheParentKey(
+            Gs2::Ranking2::Model::Cache::FGlobalRankingReceivedRewardCache::CreateCacheParentKey(
                 NamespaceName,
+                UserId,
                 RankingName,
-                Season,
-                "GlobalRankingReceivedReward"
+                TOptional<int32>()
             ),
             CallbackID
         );
+    }
+    class FGlobalRankingSeasonDomain::FCollectGlobalRankingReceivedRewardsTask : public Gs2::Core::Util::TGs2Future<TArray<Gs2::Ranking2::Model::FGlobalRankingReceivedRewardPtr>>, public TSharedFromThis<FCollectGlobalRankingReceivedRewardsTask>
+    {
+        const TSharedPtr<FGlobalRankingSeasonDomain> Self;
+        const TFunction<void(TArray<Gs2::Ranking2::Model::FGlobalRankingReceivedRewardPtr>)> OnCollected;
+    const TOptional<FString> QueryTimeOffsetToken;
+    public:
+        explicit FCollectGlobalRankingReceivedRewardsTask(const TSharedPtr<FGlobalRankingSeasonDomain>& Self, TFunction<void(TArray<Gs2::Ranking2::Model::FGlobalRankingReceivedRewardPtr>)> OnCollected,const TOptional<FString> TimeOffsetToken) : Self(Self), OnCollected(OnCollected), QueryTimeOffsetToken(TimeOffsetToken) {}
+        FCollectGlobalRankingReceivedRewardsTask(const FCollectGlobalRankingReceivedRewardsTask& From) : TGs2Future(From), Self(From.Self), OnCollected(From.OnCollected), QueryTimeOffsetToken(From.QueryTimeOffsetToken) {}
+        virtual Gs2::Core::Model::FGs2ErrorPtr Action(TSharedPtr<TSharedPtr<TArray<Gs2::Ranking2::Model::FGlobalRankingReceivedRewardPtr>>> Result) override
+        {
+            TArray<Gs2::Ranking2::Model::FGlobalRankingReceivedRewardPtr> Items;
+            auto Iterator = Self->GlobalRankingReceivedRewards(QueryTimeOffsetToken)->begin();
+            while (Iterator.HasNext())
+            {
+                if (Iterator.IsError()) return Iterator.Error();
+                if (Iterator.IsCurrentValid()) Items.Add(Iterator.Current());
+                ++Iterator;
+            }
+            if (Iterator.IsError()) return Iterator.Error();
+            *Result = MakeShared<TArray<Gs2::Ranking2::Model::FGlobalRankingReceivedRewardPtr>>(Items);
+            if (OnCollected) OnCollected(Items);
+            return nullptr;
+        }
+    };
+
+    Gs2::Core::Domain::CallbackID FGlobalRankingSeasonDomain::SubscribeGlobalRankingReceivedRewards(
+        TFunction<void(TArray<Gs2::Ranking2::Model::FGlobalRankingReceivedRewardPtr>)> Callback,const TOptional<FString> TimeOffsetToken
+    )
+    {
+        const TWeakPtr<Gs2::Core::Domain::FGs2> WeakGs2 = this->Gs2;
+        const TWeakPtr<Ranking2::Domain::FGs2Ranking2Domain> WeakService = this->Service;
+        const auto QueryNamespaceName = NamespaceName;
+        const auto QueryRankingName = RankingName;
+        const auto QuerySeason = Season;
+        const auto QueryUserId = UserId;
+        const auto QueryTimeOffsetToken = TimeOffsetToken;
+        const auto Parent = Gs2::Ranking2::Model::Cache::FGlobalRankingReceivedRewardCache::CreateCacheParentKey(
+        NamespaceName,
+        UserId,
+        RankingName,
+        TOptional<int32>()
+    );
+        return Gs2->Cache->ListSubscribeTyped(
+            Gs2::Ranking2::Model::FGlobalRankingReceivedReward::TypeName,
+            Parent,
+            [Callback, WeakGs2](const TArray<FGs2ObjectPtr>& Values)
+            {
+                if (!WeakGs2.Pin().IsValid()) return;
+                TArray<Gs2::Ranking2::Model::FGlobalRankingReceivedRewardPtr> TypedValues;
+                for (const auto& Value : Values) if (Value.IsValid()) TypedValues.Add(StaticCastSharedPtr<Gs2::Ranking2::Model::FGlobalRankingReceivedReward>(Value));
+                Callback(TypedValues);
+            },
+            [WeakGs2, WeakService, Callback, QueryNamespaceName, QueryRankingName, QuerySeason, QueryUserId, QueryTimeOffsetToken]()
+            {
+                const auto Owner = WeakGs2.Pin();
+                if (!Owner.IsValid()) return;
+                const auto Domain = MakeShared<FGlobalRankingSeasonDomain>(Owner, WeakService.Pin(), QueryNamespaceName, QueryRankingName, QuerySeason, QueryUserId);
+                const auto Task = Gs2::Core::Util::New<FAsyncTask<FCollectGlobalRankingReceivedRewardsTask>>(Domain, Callback, QueryTimeOffsetToken);
+                Task->StartBackgroundTask();
+            }
+        );
+    }
+
+    void FGlobalRankingSeasonDomain::InvalidateGlobalRankingReceivedRewards(const TOptional<FString> TimeOffsetToken)
+    {
+        Gs2->Cache->ClearListCache(
+            Gs2::Ranking2::Model::FGlobalRankingReceivedReward::TypeName,
+            Gs2::Ranking2::Model::Cache::FGlobalRankingReceivedRewardCache::CreateCacheParentKey(
+        NamespaceName,
+        UserId,
+        RankingName,
+        TOptional<int32>()
+    )
+        );
+    }
+
+    FGlobalRankingSeasonDomain::FSubscribeGlobalRankingReceivedRewardsWithInitialCallTask::FSubscribeGlobalRankingReceivedRewardsWithInitialCallTask(const TSharedPtr<FGlobalRankingSeasonDomain>& Self, TFunction<void(TArray<Gs2::Ranking2::Model::FGlobalRankingReceivedRewardPtr>)> Callback,const TOptional<FString> TimeOffsetToken) : Self(Self), Callback(Callback), QueryTimeOffsetToken(TimeOffsetToken) {}
+    FGlobalRankingSeasonDomain::FSubscribeGlobalRankingReceivedRewardsWithInitialCallTask::FSubscribeGlobalRankingReceivedRewardsWithInitialCallTask(const FSubscribeGlobalRankingReceivedRewardsWithInitialCallTask& From) : TGs2Future(From), Self(From.Self), Callback(From.Callback), QueryTimeOffsetToken(From.QueryTimeOffsetToken) {}
+    Gs2::Core::Model::FGs2ErrorPtr FGlobalRankingSeasonDomain::FSubscribeGlobalRankingReceivedRewardsWithInitialCallTask::Action(TSharedPtr<TSharedPtr<Gs2::Core::Domain::CallbackID>> Result)
+    {
+        const auto Task = Gs2::Core::Util::New<FAsyncTask<FCollectGlobalRankingReceivedRewardsTask>>(Self, TFunction<void(TArray<Gs2::Ranking2::Model::FGlobalRankingReceivedRewardPtr>)>(), QueryTimeOffsetToken);
+        Task->StartSynchronousTask(); Task->EnsureCompletion();
+        if (Task->GetTask().IsError()) return Task->GetTask().Error();
+        const auto Values = Task->GetTask().Result();
+        const auto CallbackId = Self->SubscribeGlobalRankingReceivedRewards(Callback, QueryTimeOffsetToken);
+        Callback(*Values); *Result = MakeShared<Gs2::Core::Domain::CallbackID>(CallbackId);
+        return nullptr;
+    }
+    TSharedPtr<FAsyncTask<FGlobalRankingSeasonDomain::FSubscribeGlobalRankingReceivedRewardsWithInitialCallTask>> FGlobalRankingSeasonDomain::SubscribeGlobalRankingReceivedRewardsWithInitialCall(TFunction<void(TArray<Gs2::Ranking2::Model::FGlobalRankingReceivedRewardPtr>)> Callback,const TOptional<FString> TimeOffsetToken)
+    {
+        return Gs2::Core::Util::New<FAsyncTask<FSubscribeGlobalRankingReceivedRewardsWithInitialCallTask>>(this->AsShared(), Callback, TimeOffsetToken);
     }
 
     TSharedPtr<Gs2::Ranking2::Domain::Model::FGlobalRankingReceivedRewardDomain> FGlobalRankingSeasonDomain::GlobalRankingReceivedReward(

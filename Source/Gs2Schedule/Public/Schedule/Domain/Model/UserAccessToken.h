@@ -111,8 +111,33 @@ namespace Gs2::Schedule::Domain::Model
 
         Gs2::Core::Domain::CallbackID SubscribeTriggers(
             TFunction<void()> Callback
+
         );
 
+        class FCollectTriggersTask;
+
+        Gs2::Core::Domain::CallbackID SubscribeTriggers(
+            TFunction<void(TArray<Gs2::Schedule::Model::FTriggerPtr>)> Callback
+        );
+
+        void InvalidateTriggers();
+
+        class GS2SCHEDULE_API FSubscribeTriggersWithInitialCallTask final :
+            public Gs2::Core::Util::TGs2Future<Gs2::Core::Domain::CallbackID>,
+            public TSharedFromThis<FSubscribeTriggersWithInitialCallTask>
+        {
+            const TSharedPtr<FUserAccessTokenDomain> Self;
+            const TFunction<void(TArray<Gs2::Schedule::Model::FTriggerPtr>)> Callback;
+
+        public:
+            FSubscribeTriggersWithInitialCallTask(const TSharedPtr<FUserAccessTokenDomain>& Self, TFunction<void(TArray<Gs2::Schedule::Model::FTriggerPtr>)> Callback);
+            FSubscribeTriggersWithInitialCallTask(const FSubscribeTriggersWithInitialCallTask& From);
+            virtual Gs2::Core::Model::FGs2ErrorPtr Action(TSharedPtr<TSharedPtr<Gs2::Core::Domain::CallbackID>> Result) override;
+        };
+
+        TSharedPtr<FAsyncTask<FSubscribeTriggersWithInitialCallTask>> SubscribeTriggersWithInitialCall(
+            TFunction<void(TArray<Gs2::Schedule::Model::FTriggerPtr>)> Callback
+        );
         void UnsubscribeTriggers(
             Gs2::Core::Domain::CallbackID CallbackID
         );
@@ -126,8 +151,33 @@ namespace Gs2::Schedule::Domain::Model
 
         Gs2::Core::Domain::CallbackID SubscribeEvents(
             TFunction<void()> Callback
+
         );
 
+        class FCollectEventsTask;
+
+        Gs2::Core::Domain::CallbackID SubscribeEvents(
+            TFunction<void(TArray<Gs2::Schedule::Model::FEventPtr>)> Callback
+        );
+
+        void InvalidateEvents();
+
+        class GS2SCHEDULE_API FSubscribeEventsWithInitialCallTask final :
+            public Gs2::Core::Util::TGs2Future<Gs2::Core::Domain::CallbackID>,
+            public TSharedFromThis<FSubscribeEventsWithInitialCallTask>
+        {
+            const TSharedPtr<FUserAccessTokenDomain> Self;
+            const TFunction<void(TArray<Gs2::Schedule::Model::FEventPtr>)> Callback;
+
+        public:
+            FSubscribeEventsWithInitialCallTask(const TSharedPtr<FUserAccessTokenDomain>& Self, TFunction<void(TArray<Gs2::Schedule::Model::FEventPtr>)> Callback);
+            FSubscribeEventsWithInitialCallTask(const FSubscribeEventsWithInitialCallTask& From);
+            virtual Gs2::Core::Model::FGs2ErrorPtr Action(TSharedPtr<TSharedPtr<Gs2::Core::Domain::CallbackID>> Result) override;
+        };
+
+        TSharedPtr<FAsyncTask<FSubscribeEventsWithInitialCallTask>> SubscribeEventsWithInitialCall(
+            TFunction<void(TArray<Gs2::Schedule::Model::FEventPtr>)> Callback
+        );
         void UnsubscribeEvents(
             Gs2::Core::Domain::CallbackID CallbackID
         );

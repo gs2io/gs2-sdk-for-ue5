@@ -101,6 +101,8 @@ namespace Gs2::Formation::Domain::Model
             const FMoldAccessTokenDomain& From
         );
 
+
+
         class GS2FORMATION_API FGetTask final :
             public Gs2::Core::Util::TGs2Future<Gs2::Formation::Model::FMold>,
             public TSharedFromThis<FGetTask>
@@ -127,6 +129,8 @@ namespace Gs2::Formation::Domain::Model
             Request::FGetMoldRequestPtr Request
         );
 
+
+
         class GS2FORMATION_API FSubCapacityTask final :
             public Gs2::Core::Util::TGs2Future<Gs2::Formation::Domain::Model::FMoldAccessTokenDomain>,
             public TSharedFromThis<FSubCapacityTask>
@@ -152,6 +156,8 @@ namespace Gs2::Formation::Domain::Model
         TSharedPtr<FAsyncTask<FSubCapacityTask>> SubCapacity(
             Request::FSubMoldCapacityRequestPtr Request
         );
+
+
 
         class GS2FORMATION_API FDeleteTask final :
             public Gs2::Core::Util::TGs2Future<Gs2::Formation::Domain::Model::FMoldAccessTokenDomain>,
@@ -184,8 +190,33 @@ namespace Gs2::Formation::Domain::Model
 
         Gs2::Core::Domain::CallbackID SubscribeForms(
             TFunction<void()> Callback
+
         );
 
+        class FCollectFormsTask;
+
+        Gs2::Core::Domain::CallbackID SubscribeForms(
+            TFunction<void(TArray<Gs2::Formation::Model::FFormPtr>)> Callback
+        );
+
+        void InvalidateForms();
+
+        class GS2FORMATION_API FSubscribeFormsWithInitialCallTask final :
+            public Gs2::Core::Util::TGs2Future<Gs2::Core::Domain::CallbackID>,
+            public TSharedFromThis<FSubscribeFormsWithInitialCallTask>
+        {
+            const TSharedPtr<FMoldAccessTokenDomain> Self;
+            const TFunction<void(TArray<Gs2::Formation::Model::FFormPtr>)> Callback;
+
+        public:
+            FSubscribeFormsWithInitialCallTask(const TSharedPtr<FMoldAccessTokenDomain>& Self, TFunction<void(TArray<Gs2::Formation::Model::FFormPtr>)> Callback);
+            FSubscribeFormsWithInitialCallTask(const FSubscribeFormsWithInitialCallTask& From);
+            virtual Gs2::Core::Model::FGs2ErrorPtr Action(TSharedPtr<TSharedPtr<Gs2::Core::Domain::CallbackID>> Result) override;
+        };
+
+        TSharedPtr<FAsyncTask<FSubscribeFormsWithInitialCallTask>> SubscribeFormsWithInitialCall(
+            TFunction<void(TArray<Gs2::Formation::Model::FFormPtr>)> Callback
+        );
         void UnsubscribeForms(
             Gs2::Core::Domain::CallbackID CallbackID
         );
@@ -227,7 +258,34 @@ namespace Gs2::Formation::Domain::Model
 
         TSharedPtr<FAsyncTask<FModelTask>> Model();
 
+        void Invalidate();
+
         Gs2::Core::Domain::CallbackID Subscribe(
+            TFunction<void(Gs2::Formation::Model::FMoldPtr)> Callback
+        );
+
+        class GS2FORMATION_API FSubscribeWithInitialCallTask final :
+            public Gs2::Core::Util::TGs2Future<Gs2::Core::Domain::CallbackID>,
+            public TSharedFromThis<FSubscribeWithInitialCallTask>
+        {
+            const TSharedPtr<FMoldAccessTokenDomain> Self;
+            const TFunction<void(Gs2::Formation::Model::FMoldPtr)> Callback;
+        public:
+            FSubscribeWithInitialCallTask(
+                const TSharedPtr<FMoldAccessTokenDomain>& Self,
+                TFunction<void(Gs2::Formation::Model::FMoldPtr)> Callback
+            );
+
+            FSubscribeWithInitialCallTask(
+                const FSubscribeWithInitialCallTask& From
+            );
+
+            virtual Gs2::Core::Model::FGs2ErrorPtr Action(
+                TSharedPtr<TSharedPtr<Gs2::Core::Domain::CallbackID>> Result
+            ) override;
+        };
+
+        TSharedPtr<FAsyncTask<FSubscribeWithInitialCallTask>> SubscribeWithInitialCall(
             TFunction<void(Gs2::Formation::Model::FMoldPtr)> Callback
         );
 

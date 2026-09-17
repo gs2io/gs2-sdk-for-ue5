@@ -28,6 +28,9 @@
 
 #include "AdReward/Domain/Gs2AdReward.h"
 #include "Core/Domain/Gs2.h"
+#include "Core/Domain/SpeculativeExecutor/PreparedSpeculativeCommit.h"
+#include "Auth/Model/AccessToken.h"
+#include "AdReward/Model/Cache/Point.h"
 
 namespace Gs2::AdReward::Domain::SpeculativeExecutor
 {
@@ -44,7 +47,10 @@ namespace Gs2::AdReward::Domain::SpeculativeExecutor
         Gs2::AdReward::Model::FPointPtr Item
     )
     {
-        Item->WithPoint(*Item->GetPoint() + *Request->GetPoint());
+        (void)Domain;
+        (void)AccessToken;
+        (void)Request;
+        (void)Item;
         return nullptr;
     }
 
@@ -74,55 +80,58 @@ namespace Gs2::AdReward::Domain::SpeculativeExecutor
     }
 
     Gs2::Core::Model::FGs2ErrorPtr FAcquirePointByUserIdSpeculativeExecutor::FCommitTask::Action(
-        TSharedPtr<TSharedPtr<TFunction<void()>>> Result
+        TSharedPtr<TSharedPtr<Gs2::Core::Domain::SpeculativeExecutor::FPreparedSpeculativeCommit>> Result
     )
     {
-        const auto Future = Domain->AdReward->Namespace(
-                Request->GetNamespaceName().IsSet() ? *Request->GetNamespaceName() : FString("")
-            )->AccessToken(
-                AccessToken
-            )->Point(
-            )->Model();
-        Future->StartSynchronousTask();
-        if (Future->GetTask().IsError())
-        {
-            return Future->GetTask().Error();
-        }
-        auto Item = Future->GetTask().Result();
-
-        if (!Item.IsValid())
-        {
-            *Result = MakeShared<TFunction<void()>>([&]()
+        *Result = nullptr;
+        Gs2::Auth::Model::FAccessTokenPtr PreparedToken = nullptr;
+        if (AccessToken.IsValid()) PreparedToken = MakeShared<Gs2::Auth::Model::FAccessToken>(*AccessToken);
+        Gs2::AdReward::Request::FAcquirePointByUserIdRequestPtr PreparedRequest = nullptr;
+        if (Request.IsValid()) PreparedRequest = MakeShared<Gs2::AdReward::Request::FAcquirePointByUserIdRequest>(*Request);
+        if (!Domain.IsValid() || !Domain->RestSession.IsValid() || !Domain->Cache.IsValid() || !PreparedToken.IsValid() || !PreparedRequest.IsValid() || !PreparedToken->GetUserId().IsSet() || PreparedToken->GetUserId().Get(FString()).IsEmpty()) return nullptr;
+        if (PreparedRequest->GetUserId().IsSet() && PreparedRequest->GetUserId().Get(FString()) == TEXT("#{userId}")) PreparedRequest->WithUserId(PreparedToken->GetUserId());
+        if (!PreparedRequest->GetUserId().IsSet() || PreparedRequest->GetUserId().Get(FString()) != PreparedToken->GetUserId().Get(FString()) || !PreparedRequest->GetNamespaceName().IsSet() || PreparedRequest->GetNamespaceName().Get(FString()).IsEmpty() || !PreparedRequest->GetPoint().IsSet()) return nullptr;
+        const auto NamespaceName = PreparedRequest->GetNamespaceName();
+        const auto UserId = PreparedToken->GetUserId();
+        const auto TimeOffset = PreparedToken->GetTimeOffset();
+        const FString ExpectedId = FString::Printf(TEXT("grn:gs2:%s:%s:adReward:%s:user:%s:point"), *Domain->RestSession->RegionName(), *Domain->RestSession->OwnerId(), *NamespaceName.Get(FString()), *UserId.Get(FString()));
+        Gs2::AdReward::Model::FPointPtr Item;
+        if (!Gs2::AdReward::Model::Cache::FPointCache::TryGet(Domain->Cache, NamespaceName, UserId, TimeOffset, &Item) || !Item.IsValid() || !Item->GetPointId().IsSet() || Item->GetPointId().Get(FString()) != ExpectedId || !Item->GetUserId().IsSet() || Item->GetUserId().Get(FString()) != UserId.Get(FString())) return nullptr;
+        const auto PreparedRevision = Item->GetRevision();
+        const int64 CurrentTimeMillis = static_cast<int64>(FDateTime::UtcNow().ToUnixTimestampDecimal() * 1000.0) + static_cast<int64>(TimeOffset.Get(0)) * 1000;
+        const int64 PointValue = PreparedRequest->GetPoint().Get(0);
+        const FString CompositionKey = FString::Printf(TEXT("adReward:%s:%s:%d:Point:Singleton"), *NamespaceName.Get(FString()), *UserId.Get(FString()), TimeOffset.Get(0));
+        *Result = Gs2::Core::Domain::SpeculativeExecutor::FPreparedSpeculativeCommit::CreateComposable(
+            CompositionKey,
+            [DomainCopy = Domain, NamespaceName, UserId = UserId.Get(FString()), TimeOffset, ExpectedId, PreparedRevision, PointValue, CurrentTimeMillis](const TSharedPtr<void>& Current, const bool HasCurrent, TSharedPtr<void>& Next)
             {
-                return nullptr;
-            });
-            return nullptr;
-        }
-        auto Err = Transform(Domain, AccessToken, Request, Item);
-        if (Err != nullptr)
-        {
-            return Err;
-        }
-
-        const auto ParentKey = Model::FUserDomain::CreateCacheParentKey(
-            Request->GetNamespaceName(),
-            AccessToken->GetUserId(),
-            FString("Point")
+                Gs2::AdReward::Model::FPointPtr CurrentItem;
+                if (HasCurrent)
+                {
+                    if (!Current.IsValid()) { Next = nullptr; return false; }
+                    CurrentItem = StaticCastSharedPtr<Gs2::AdReward::Model::FPoint>(Current);
+                }
+                else
+                {
+                    if (!Gs2::AdReward::Model::Cache::FPointCache::TryGet(DomainCopy->Cache, NamespaceName, UserId, TimeOffset, &CurrentItem)) { Next = nullptr; return false; }
+                    const auto CachedRevision = CurrentItem.IsValid() ? CurrentItem->GetRevision() : TOptional<int64>();
+                    if (CachedRevision.IsSet() && CachedRevision.Get(0) > 0 && (!PreparedRevision.IsSet() || CachedRevision.Get(0) != PreparedRevision.Get(0))) { Next = nullptr; return false; }
+                }
+                if (!CurrentItem.IsValid() || !CurrentItem->GetPointId().IsSet() || CurrentItem->GetPointId().Get(FString()) != ExpectedId || !CurrentItem->GetUserId().IsSet() || CurrentItem->GetUserId().Get(FString()) != UserId || !CurrentItem->GetPoint().IsSet()) { Next = nullptr; return false; }
+                const int64 Base = CurrentItem->GetPoint().Get(0);
+                if ((PointValue > 0 && Base > TNumericLimits<int64>::Max() - PointValue) || (PointValue < 0 && Base < TNumericLimits<int64>::Min() - PointValue)) { Next = nullptr; return false; }
+                auto Changed = MakeShared<Gs2::AdReward::Model::FPoint>(*CurrentItem);
+                Changed->WithPoint(Base + PointValue)->WithUpdatedAt(CurrentTimeMillis)->WithRevision(0);
+                Next = Changed;
+                return Changed->GetPointId().IsSet() && Changed->GetPointId().Get(FString()) == ExpectedId && Changed->GetUserId().IsSet() && Changed->GetUserId().Get(FString()) == UserId && Changed->GetRevision().IsSet() && Changed->GetRevision().Get(0) == 0;
+            },
+            [DomainCopy = Domain, NamespaceName, UserId = UserId.Get(FString()), TimeOffset, ExpectedId](const TSharedPtr<void>& State)
+            {
+                if (!State.IsValid()) return;
+                const auto ItemToCommit = StaticCastSharedPtr<Gs2::AdReward::Model::FPoint>(State);
+                if (ItemToCommit.IsValid() && ItemToCommit->GetPointId().IsSet() && ItemToCommit->GetPointId().Get(FString()) == ExpectedId && ItemToCommit->GetUserId().IsSet() && ItemToCommit->GetUserId().Get(FString()) == UserId && ItemToCommit->GetRevision().IsSet() && ItemToCommit->GetRevision().Get(0) == 0) Gs2::AdReward::Model::Cache::FPointCache::Put(DomainCopy->Cache, NamespaceName, UserId, TimeOffset, ItemToCommit);
+            }
         );
-        const auto Key = Model::FPointDomain::CreateCacheKey(
-        );
-
-        *Result = MakeShared<TFunction<void()>>([&]()
-        {
-            Domain->Cache->Put(
-                AdReward::Model::FPoint::TypeName,
-                ParentKey,
-                Key,
-                Item,
-                FDateTime::Now() + FTimespan::FromSeconds(10)
-            );
-            return nullptr;
-        });
         return nullptr;
     }
 

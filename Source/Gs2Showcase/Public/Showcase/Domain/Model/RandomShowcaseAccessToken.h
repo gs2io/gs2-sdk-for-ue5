@@ -100,8 +100,60 @@ namespace Gs2::Showcase::Domain::Model
 
         Gs2::Core::Domain::CallbackID SubscribeRandomDisplayItems(
             TFunction<void()> Callback
+
         );
 
+        class GS2SHOWCASE_API FSubscribeWithInitialCallTask final :
+            public Gs2::Core::Util::TGs2Future<Gs2::Core::Domain::CallbackID>,
+            public TSharedFromThis<FSubscribeWithInitialCallTask>
+        {
+            const TSharedPtr<FRandomShowcaseAccessTokenDomain> Self;
+            const TFunction<void(Gs2::Showcase::Model::FRandomShowcasePtr)> Callback;
+        public:
+            explicit FSubscribeWithInitialCallTask(
+                const TSharedPtr<FRandomShowcaseAccessTokenDomain> Self,
+                const TFunction<void(Gs2::Showcase::Model::FRandomShowcasePtr)> Callback
+            );
+
+            FSubscribeWithInitialCallTask(
+                const FSubscribeWithInitialCallTask& From
+            );
+
+            virtual Gs2::Core::Model::FGs2ErrorPtr Action(
+                TSharedPtr<TSharedPtr<Gs2::Core::Domain::CallbackID>> Result
+            ) override;
+        };
+        friend FSubscribeWithInitialCallTask;
+
+        TSharedPtr<FAsyncTask<FRandomShowcaseAccessTokenDomain::FSubscribeWithInitialCallTask>> SubscribeWithInitialCall(
+            TFunction<void(Gs2::Showcase::Model::FRandomShowcasePtr)> Callback
+        );
+        void Invalidate();
+
+        class FCollectRandomDisplayItemsTask;
+
+        Gs2::Core::Domain::CallbackID SubscribeRandomDisplayItems(
+            TFunction<void(TArray<Gs2::Showcase::Model::FRandomDisplayItemPtr>)> Callback
+        );
+
+        void InvalidateRandomDisplayItems();
+
+        class GS2SHOWCASE_API FSubscribeRandomDisplayItemsWithInitialCallTask final :
+            public Gs2::Core::Util::TGs2Future<Gs2::Core::Domain::CallbackID>,
+            public TSharedFromThis<FSubscribeRandomDisplayItemsWithInitialCallTask>
+        {
+            const TSharedPtr<FRandomShowcaseAccessTokenDomain> Self;
+            const TFunction<void(TArray<Gs2::Showcase::Model::FRandomDisplayItemPtr>)> Callback;
+
+        public:
+            FSubscribeRandomDisplayItemsWithInitialCallTask(const TSharedPtr<FRandomShowcaseAccessTokenDomain>& Self, TFunction<void(TArray<Gs2::Showcase::Model::FRandomDisplayItemPtr>)> Callback);
+            FSubscribeRandomDisplayItemsWithInitialCallTask(const FSubscribeRandomDisplayItemsWithInitialCallTask& From);
+            virtual Gs2::Core::Model::FGs2ErrorPtr Action(TSharedPtr<TSharedPtr<Gs2::Core::Domain::CallbackID>> Result) override;
+        };
+
+        TSharedPtr<FAsyncTask<FSubscribeRandomDisplayItemsWithInitialCallTask>> SubscribeRandomDisplayItemsWithInitialCall(
+            TFunction<void(TArray<Gs2::Showcase::Model::FRandomDisplayItemPtr>)> Callback
+        );
         void UnsubscribeRandomDisplayItems(
             Gs2::Core::Domain::CallbackID CallbackID
         );

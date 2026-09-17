@@ -27,6 +27,7 @@
 #include "Grade/Domain/SpeculativeExecutor/Transaction/MultiplyAcquireActionsByUserIdSpeculativeExecutor.h"
 
 #include "Core/Domain/Gs2.h"
+#include "Core/Domain/SpeculativeExecutor/PreparedSpeculativeCommit.h"
 
 namespace Gs2::Grade::Domain::SpeculativeExecutor
 {
@@ -62,7 +63,7 @@ namespace Gs2::Grade::Domain::SpeculativeExecutor
     }
 
     Gs2::Core::Model::FGs2ErrorPtr FMultiplyAcquireActionsByUserIdSpeculativeExecutor::FCommitTask::Action(
-        TSharedPtr<TSharedPtr<TFunction<void()>>> Result
+        TSharedPtr<TSharedPtr<Gs2::Core::Domain::SpeculativeExecutor::FPreparedSpeculativeCommit>> Result
     )
     {
         const auto Future = Transaction::SpeculativeExecutor::FMultiplyAcquireActionsByUserIdSpeculativeExecutor::Execute(
@@ -76,16 +77,7 @@ namespace Gs2::Grade::Domain::SpeculativeExecutor
         {
             return Future->GetTask().Error();
         }
-        const auto Commit = Future->GetTask().Result();
-
-        *Result = MakeShared<TFunction<void()>>([&]()
-        {
-            if (Commit.IsValid())
-            {
-                (*Commit)();
-            }
-            return nullptr;
-        });
+        *Result = Future->GetTask().Result();
         return nullptr;
     }
 

@@ -66,6 +66,7 @@
 #include "Core/Domain/Transaction/JobQueueJobDomainFactory.h"
 #include "Core/Domain/Transaction/InternalTransactionDomainFactory.h"
 #include "Core/Domain/Transaction/ManualTransactionDomain.h"
+#include "Ranking2/Model/Cache/SubscribeUser.h"
 
 namespace Gs2::Ranking2::Domain::Model
 {
@@ -141,21 +142,14 @@ namespace Gs2::Ranking2::Domain::Model
         Future->EnsureCompletion();
         if (ResultModel->GetItem() != nullptr)
         {
-            const auto SubscribeUserParentKey = Gs2::Ranking2::Domain::Model::FSubscribeDomain::CreateCacheParentKey(
-                Self->NamespaceName,
-                Self->UserId,
-                ResultModel->GetItem()->GetRankingName(),
-                "SubscribeUser"
-            );
-            const auto Key = Gs2::Ranking2::Domain::Model::FSubscribeUserDomain::CreateCacheKey(
-                ResultModel->GetItem()->GetTargetUserId()
-            );
-            Self->Gs2->Cache->Put(
-                Gs2::Ranking2::Model::FSubscribeUser::TypeName,
-                SubscribeUserParentKey,
-                Key,
-                ResultModel->GetItem(),
-                FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
+            Gs2::Ranking2::Model::Cache::FSubscribeUserCache::Put(
+                Self->Gs2->Cache,
+                Request->GetNamespaceName(),
+                Request->GetUserId(),
+                Request->GetRankingName(),
+                ResultModel->GetItem()->GetTargetUserId(),
+                TOptional<int32>(),
+                ResultModel->GetItem()
             );
         }
         auto Domain = MakeShared<Gs2::Ranking2::Domain::Model::FSubscribeUserDomain>(
@@ -231,18 +225,27 @@ namespace Gs2::Ranking2::Domain::Model
         TSharedPtr<TSharedPtr<Gs2::Ranking2::Model::FSubscribe>> Result
     )
     {
-        // ReSharper disable once CppLocalVariableMayBeConst
-        TSharedPtr<Gs2::Ranking2::Model::FSubscribe> Value;
-        auto bCacheHit = Self->Gs2->Cache->TryGet<Gs2::Ranking2::Model::FSubscribe>(
-            Self->ParentKey,
-            Gs2::Ranking2::Domain::Model::FSubscribeDomain::CreateCacheKey(
-                Self->RankingName
-            ),
-            &Value
+        const FString CacheKey = Gs2::Ranking2::Domain::Model::FSubscribeDomain::CreateCacheKey(
+            Self->RankingName
         );
-        *Result = Value;
+        return Self->Gs2->Cache->ExecuteWithKeyLock(
+            Gs2::Ranking2::Model::FSubscribe::TypeName,
+            Self->ParentKey,
+            CacheKey,
+            [this, Result, CacheKey]() -> Gs2::Core::Model::FGs2ErrorPtr
+            {
+                // ReSharper disable once CppLocalVariableMayBeConst
+                TSharedPtr<Gs2::Ranking2::Model::FSubscribe> Value;
+                auto bCacheHit = Self->Gs2->Cache->TryGet<Gs2::Ranking2::Model::FSubscribe>(
+                    Self->ParentKey,
+                    CacheKey,
+                    &Value
+                );
+                *Result = Value;
 
-        return nullptr;
+                return nullptr;
+            }
+        );
     }
 
     TSharedPtr<FAsyncTask<FSubscribeDomain::FModelTask>> FSubscribeDomain::Model() {
@@ -286,4 +289,3 @@ namespace Gs2::Ranking2::Domain::Model
 #elif defined(__clang__)
 #pragma clang diagnostic pop
 #endif
-

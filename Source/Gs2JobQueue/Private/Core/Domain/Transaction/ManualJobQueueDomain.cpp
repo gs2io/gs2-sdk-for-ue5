@@ -20,30 +20,23 @@
 #include "JobQueue/Domain/Gs2JobQueue.h"
 #include "JobQueue/Request/RunByUserIdRequest.h"
 
+namespace
+{
+    Gs2::Core::Model::FGs2ErrorPtr InvalidResultError()
+    {
+        return MakeShared<Gs2::Core::Model::FUnknownError>(
+            MakeShared<TArray<TSharedPtr<Gs2::Core::Model::FGs2ErrorDetail>>>()
+        );
+    }
+}
+
 namespace Gs2::Core::Domain
 {
-	TMap<FString, FDateTime> FManualJobQueueDomain::Handled;
-	
 	FTransactionDomainPtr FManualJobQueueDomain::HandleResult(
 		const Gs2::JobQueue::Model::FJobPtr& Job,
 		const Gs2::JobQueue::Model::FJobResultBodyPtr& Result
 	)
 	{
-		auto bSkipCallback = false;
-		if (Handled.Contains(JobName)) {
-			// TODO: expire handled
-		}
-		else {
-			Handled.Add(JobName, FDateTime::Now() + FTimespan::FromMinutes(3));
-		}
-            
-		if (!bSkipCallback) {
-			Gs2->JobQueueDomain->JobQueueExecutedEventHandler(
-				Job,
-				Result
-			);
-		}
-            
 		TSharedPtr<FJsonObject> ResultModelJson;
 		if (const TSharedRef<TJsonReader<>> JsonReader = TJsonReaderFactory<>::Create(*Result->GetResult());
 			!FJsonSerializer::Deserialize(JsonReader, ResultModelJson))
@@ -145,25 +138,69 @@ namespace Gs2::Core::Domain
 			return Future->GetTask().Error();
 		}
 		const auto FutureResult = Future->GetTask().Result();
-		if (FutureResult.IsValid() && FutureResult->GetIsLastJob().GetValue()) {
+		if (!FutureResult.IsValid()) {
+			return InvalidResultError();
+		}
+		if (!FutureResult->JobName.IsSet()) {
 			return nullptr;
 		}
-		const auto Future2 = FutureResult->Model();
-		Future2->StartSynchronousTask();
-		if (Future2->GetTask().IsError())
-		{
-			return Future2->GetTask().Error();
-		}
-		auto Job = Future2->GetTask().Result();
+		auto Job = FutureResult->Item;
 		if (!Job.IsValid()) {
 			return nullptr;
 		}
+		const auto JobResult = FutureResult->GetResult();
+		if (!JobResult.IsValid() || !JobResult->GetResult().IsSet()) {
+			return InvalidResultError();
+		}
+		const auto StatusCode = JobResult->GetStatusCode();
+		if (!StatusCode.IsSet() || StatusCode.Get(0) / 100 != 2) {
+			return Gs2::Core::Model::FGs2Error::FromResponse(
+				StatusCode.Get(0), JobResult->GetResult().Get(FString())
+			);
+		}
+		if (Job->GetScriptId().IsSet() && Job->GetScriptId()->EndsWith("push_by_user_id"))
+		{
+			TSharedPtr<FJsonObject> ResultModelJson;
+			if (const TSharedRef<TJsonReader<>> JsonReader = TJsonReaderFactory<>::Create(*JobResult->GetResult());
+				!FJsonSerializer::Deserialize(JsonReader, ResultModelJson) || !ResultModelJson.IsValid())
+			{
+				return InvalidResultError();
+			}
+			const auto PushResult = Gs2::JobQueue::Result::FPushByUserIdResult::FromJson(ResultModelJson);
+			if (!PushResult.IsValid() || !PushResult->GetItems().IsValid())
+			{
+				return InvalidResultError();
+			}
+			for (const auto& Item : *PushResult->GetItems())
+			{
+				if (!Item.IsValid() || !Item->GetJobId().IsSet())
+				{
+					return InvalidResultError();
+				}
+				if (!Gs2::JobQueue::Model::FJob::GetNamespaceNameFromGrn(*Item->GetJobId()).IsSet() ||
+					!Gs2::JobQueue::Model::FJob::GetJobNameFromGrn(*Item->GetJobId()).IsSet())
+				{
+					return InvalidResultError();
+				}
+			}
+		}
 		if (Job->GetName() != JobName) {
-			HandleResult(Job, FutureResult->GetResult());
+			const auto Transaction = HandleResult(Job, JobResult);
+			if (Transaction.IsValid()) {
+				const auto Future3 = Transaction->Wait(true);
+				Future3->StartSynchronousTask();
+				if (Future3->GetTask().IsError())
+				{
+					return Future3->GetTask().Error();
+				}
+			}
+			if (FutureResult->GetIsLastJob().Get(true)) {
+				return nullptr;
+			}
 			goto RETRY;
 		}
 
-		const auto Transaction = HandleResult(Job, FutureResult->GetResult());
+		const auto Transaction = HandleResult(Job, JobResult);
 		if (All && Transaction.IsValid()) {
 			const auto Future3 = Transaction->Wait(true);
 			Future3->StartSynchronousTask();

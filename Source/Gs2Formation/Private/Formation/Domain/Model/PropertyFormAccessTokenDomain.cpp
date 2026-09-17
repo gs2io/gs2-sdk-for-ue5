@@ -41,6 +41,8 @@
 #include "Formation/Domain/Model/User.h"
 #include "Formation/Domain/Model/UserAccessToken.h"
 #include "Formation/Domain/SpeculativeExecutor/Transaction/AcquireActionsToPropertyFormPropertiesSpeculativeExecutor.h"
+#include "Formation/Model/Cache/PropertyForm.h"
+#include "Formation/Model/Cache/PropertyFormModel.h"
 
 #include "Core/Domain/Gs2.h"
 #include "Core/Domain/Transaction/JobQueueJobDomainFactory.h"
@@ -113,6 +115,8 @@ namespace Gs2::Formation::Domain::Model
             ->WithAccessToken(Self->AccessToken->GetToken())
             ->WithPropertyFormModelName(Self->PropertyFormModelName)
             ->WithPropertyId(Self->PropertyId);
+        const auto CacheOwnerSnapshotUserId = Self->AccessToken.IsValid() ? Self->UserId() : TOptional<FString>();
+        const auto CacheOwnerSnapshotTimeOffset = Self->AccessToken.IsValid() ? Self->AccessToken->GetTimeOffset() : TOptional<int32>();
         const auto Future = Self->Client->GetPropertyForm(
             Request
         );
@@ -123,6 +127,45 @@ namespace Gs2::Formation::Domain::Model
         }
         const auto ResultModel = Future->GetTask().Result();
         Future->EnsureCompletion();
+
+            if (ResultModel.IsValid() && ResultModel->GetItem() != nullptr)
+            {
+
+        if (!ResultModel.IsValid() || !ResultModel->GetItem().IsValid())
+            {
+              const auto Details = MakeShared<TArray<TSharedPtr<Gs2::Core::Model::FGs2ErrorDetail>>>();
+                Details->Add(MakeShared<Gs2::Core::Model::FGs2ErrorDetail>(TEXT("result.item"), TEXT("result.item is invalid."), TEXT("invalid_response")));
+                return MakeShared<Gs2::Core::Model::FUnknownError>(Details);
+              }if (!((CacheOwnerSnapshotUserId)).IsSet())
+            {
+              const auto Details = MakeShared<TArray<TSharedPtr<Gs2::Core::Model::FGs2ErrorDetail>>>();
+                Details->Add(MakeShared<Gs2::Core::Model::FGs2ErrorDetail>(TEXT("userId"), TEXT("userId is invalid."), TEXT("invalid_response")));
+                return MakeShared<Gs2::Core::Model::FUnknownError>(Details);
+              }
+        Gs2::Formation::Model::Cache::FPropertyFormCache::Put(
+            Self->Gs2->Cache,
+
+            Request->GetNamespaceName(),
+            (CacheOwnerSnapshotUserId),
+            Request->GetPropertyFormModelName(),
+            ResultModel->GetItem()->GetPropertyId(),
+            CacheOwnerSnapshotTimeOffset,
+            ResultModel->GetItem()
+        );
+            }
+            if (ResultModel.IsValid() && ResultModel->GetPropertyFormModel() != nullptr)
+            {
+
+
+        Gs2::Formation::Model::Cache::FPropertyFormModelCache::Put(
+            Self->Gs2->Cache,
+
+            Request->GetNamespaceName(),
+            Request->GetPropertyFormModelName(),
+            CacheOwnerSnapshotTimeOffset,
+            ResultModel->GetPropertyFormModel()
+        );
+            }
         *Result = ResultModel->GetItem();
         return nullptr;
     }
@@ -157,6 +200,8 @@ namespace Gs2::Formation::Domain::Model
             ->WithAccessToken(Self->AccessToken->GetToken())
             ->WithPropertyFormModelName(Self->PropertyFormModelName)
             ->WithPropertyId(Self->PropertyId);
+        const auto CacheOwnerSnapshotUserId = Self->AccessToken.IsValid() ? Self->UserId() : TOptional<FString>();
+        const auto CacheOwnerSnapshotTimeOffset = Self->AccessToken.IsValid() ? Self->AccessToken->GetTimeOffset() : TOptional<int32>();
         const auto Future = Self->Client->GetPropertyFormWithSignature(
             Request
         );
@@ -167,20 +212,45 @@ namespace Gs2::Formation::Domain::Model
         }
         const auto ResultModel = Future->GetTask().Result();
         Future->EnsureCompletion();
-        if (ResultModel->GetItem() != nullptr)
-        {
-            const auto Key = Gs2::Formation::Domain::Model::FPropertyFormDomain::CreateCacheKey(
-                ResultModel->GetItem()->GetName(),
-                ResultModel->GetItem()->GetPropertyId()
-            );
-            Self->Gs2->Cache->Put(
-                Gs2::Formation::Model::FPropertyForm::TypeName,
-                Self->ParentKey,
-                Key,
-                ResultModel->GetItem(),
-                FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
-            );
-        }
+
+            if (ResultModel.IsValid() && ResultModel->GetItem() != nullptr)
+            {
+
+        if (!ResultModel.IsValid() || !ResultModel->GetItem().IsValid())
+            {
+              const auto Details = MakeShared<TArray<TSharedPtr<Gs2::Core::Model::FGs2ErrorDetail>>>();
+                Details->Add(MakeShared<Gs2::Core::Model::FGs2ErrorDetail>(TEXT("result.item"), TEXT("result.item is invalid."), TEXT("invalid_response")));
+                return MakeShared<Gs2::Core::Model::FUnknownError>(Details);
+              }if (!((CacheOwnerSnapshotUserId)).IsSet())
+            {
+              const auto Details = MakeShared<TArray<TSharedPtr<Gs2::Core::Model::FGs2ErrorDetail>>>();
+                Details->Add(MakeShared<Gs2::Core::Model::FGs2ErrorDetail>(TEXT("userId"), TEXT("userId is invalid."), TEXT("invalid_response")));
+                return MakeShared<Gs2::Core::Model::FUnknownError>(Details);
+              }
+        Gs2::Formation::Model::Cache::FPropertyFormCache::Put(
+            Self->Gs2->Cache,
+
+            Request->GetNamespaceName(),
+            (CacheOwnerSnapshotUserId),
+            Request->GetPropertyFormModelName(),
+            ResultModel->GetItem()->GetPropertyId(),
+            CacheOwnerSnapshotTimeOffset,
+            ResultModel->GetItem()
+        );
+            }
+            if (ResultModel.IsValid() && ResultModel->GetPropertyFormModel() != nullptr)
+            {
+
+
+        Gs2::Formation::Model::Cache::FPropertyFormModelCache::Put(
+            Self->Gs2->Cache,
+
+            Request->GetNamespaceName(),
+            Request->GetPropertyFormModelName(),
+            CacheOwnerSnapshotTimeOffset,
+            ResultModel->GetPropertyFormModel()
+        );
+            }
         auto Domain = Self;
         if (ResultModel != nullptr)
         {
@@ -228,6 +298,8 @@ namespace Gs2::Formation::Domain::Model
             ->WithAccessToken(Self->AccessToken->GetToken())
             ->WithPropertyFormModelName(Self->PropertyFormModelName)
             ->WithPropertyId(Self->PropertyId);
+        const auto CacheOwnerSnapshotUserId = Self->AccessToken.IsValid() ? Self->UserId() : TOptional<FString>();
+        const auto CacheOwnerSnapshotTimeOffset = Self->AccessToken.IsValid() ? Self->AccessToken->GetTimeOffset() : TOptional<int32>();
         const auto Future = Self->Client->SetPropertyForm(
             Request
         );
@@ -238,20 +310,45 @@ namespace Gs2::Formation::Domain::Model
         }
         const auto ResultModel = Future->GetTask().Result();
         Future->EnsureCompletion();
-        if (ResultModel->GetItem() != nullptr)
-        {
-            const auto Key = Gs2::Formation::Domain::Model::FPropertyFormDomain::CreateCacheKey(
-                ResultModel->GetItem()->GetName(),
-                ResultModel->GetItem()->GetPropertyId()
-            );
-            Self->Gs2->Cache->Put(
-                Gs2::Formation::Model::FPropertyForm::TypeName,
-                Self->ParentKey,
-                Key,
-                ResultModel->GetItem(),
-                FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
-            );
-        }
+
+            if (ResultModel.IsValid() && ResultModel->GetItem() != nullptr)
+            {
+
+        if (!ResultModel.IsValid() || !ResultModel->GetItem().IsValid())
+            {
+              const auto Details = MakeShared<TArray<TSharedPtr<Gs2::Core::Model::FGs2ErrorDetail>>>();
+                Details->Add(MakeShared<Gs2::Core::Model::FGs2ErrorDetail>(TEXT("result.item"), TEXT("result.item is invalid."), TEXT("invalid_response")));
+                return MakeShared<Gs2::Core::Model::FUnknownError>(Details);
+              }if (!((CacheOwnerSnapshotUserId)).IsSet())
+            {
+              const auto Details = MakeShared<TArray<TSharedPtr<Gs2::Core::Model::FGs2ErrorDetail>>>();
+                Details->Add(MakeShared<Gs2::Core::Model::FGs2ErrorDetail>(TEXT("userId"), TEXT("userId is invalid."), TEXT("invalid_response")));
+                return MakeShared<Gs2::Core::Model::FUnknownError>(Details);
+              }
+        Gs2::Formation::Model::Cache::FPropertyFormCache::Put(
+            Self->Gs2->Cache,
+
+            Request->GetNamespaceName(),
+            (CacheOwnerSnapshotUserId),
+            Request->GetPropertyFormModelName(),
+            ResultModel->GetItem()->GetPropertyId(),
+            CacheOwnerSnapshotTimeOffset,
+            ResultModel->GetItem()
+        );
+            }
+            if (ResultModel.IsValid() && ResultModel->GetPropertyFormModel() != nullptr)
+            {
+
+
+        Gs2::Formation::Model::Cache::FPropertyFormModelCache::Put(
+            Self->Gs2->Cache,
+
+            Request->GetNamespaceName(),
+            Request->GetPropertyFormModelName(),
+            CacheOwnerSnapshotTimeOffset,
+            ResultModel->GetPropertyFormModel()
+        );
+            }
         auto Domain = Self;
 
         *Result = Domain;
@@ -288,6 +385,8 @@ namespace Gs2::Formation::Domain::Model
             ->WithAccessToken(Self->AccessToken->GetToken())
             ->WithPropertyFormModelName(Self->PropertyFormModelName)
             ->WithPropertyId(Self->PropertyId);
+        const auto CacheOwnerSnapshotUserId = Self->AccessToken.IsValid() ? Self->UserId() : TOptional<FString>();
+        const auto CacheOwnerSnapshotTimeOffset = Self->AccessToken.IsValid() ? Self->AccessToken->GetTimeOffset() : TOptional<int32>();
         const auto Future = Self->Client->SetPropertyFormWithSignature(
             Request
         );
@@ -298,20 +397,45 @@ namespace Gs2::Formation::Domain::Model
         }
         const auto ResultModel = Future->GetTask().Result();
         Future->EnsureCompletion();
-        if (ResultModel->GetItem() != nullptr)
-        {
-            const auto Key = Gs2::Formation::Domain::Model::FPropertyFormDomain::CreateCacheKey(
-                ResultModel->GetItem()->GetName(),
-                ResultModel->GetItem()->GetPropertyId()
-            );
-            Self->Gs2->Cache->Put(
-                Gs2::Formation::Model::FPropertyForm::TypeName,
-                Self->ParentKey,
-                Key,
-                ResultModel->GetItem(),
-                FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
-            );
-        }
+
+            if (ResultModel.IsValid() && ResultModel->GetItem() != nullptr)
+            {
+
+        if (!ResultModel.IsValid() || !ResultModel->GetItem().IsValid())
+            {
+              const auto Details = MakeShared<TArray<TSharedPtr<Gs2::Core::Model::FGs2ErrorDetail>>>();
+                Details->Add(MakeShared<Gs2::Core::Model::FGs2ErrorDetail>(TEXT("result.item"), TEXT("result.item is invalid."), TEXT("invalid_response")));
+                return MakeShared<Gs2::Core::Model::FUnknownError>(Details);
+              }if (!((CacheOwnerSnapshotUserId)).IsSet())
+            {
+              const auto Details = MakeShared<TArray<TSharedPtr<Gs2::Core::Model::FGs2ErrorDetail>>>();
+                Details->Add(MakeShared<Gs2::Core::Model::FGs2ErrorDetail>(TEXT("userId"), TEXT("userId is invalid."), TEXT("invalid_response")));
+                return MakeShared<Gs2::Core::Model::FUnknownError>(Details);
+              }
+        Gs2::Formation::Model::Cache::FPropertyFormCache::Put(
+            Self->Gs2->Cache,
+
+            Request->GetNamespaceName(),
+            (CacheOwnerSnapshotUserId),
+            Request->GetPropertyFormModelName(),
+            ResultModel->GetItem()->GetPropertyId(),
+            CacheOwnerSnapshotTimeOffset,
+            ResultModel->GetItem()
+        );
+            }
+            if (ResultModel.IsValid() && ResultModel->GetProeprtyFormModel() != nullptr)
+            {
+
+
+        Gs2::Formation::Model::Cache::FPropertyFormModelCache::Put(
+            Self->Gs2->Cache,
+
+            Request->GetNamespaceName(),
+            Request->GetPropertyFormModelName(),
+            CacheOwnerSnapshotTimeOffset,
+            ResultModel->GetProeprtyFormModel()
+        );
+            }
         auto Domain = Self;
 
         *Result = Domain;
@@ -348,28 +472,53 @@ namespace Gs2::Formation::Domain::Model
             ->WithAccessToken(Self->AccessToken->GetToken())
             ->WithPropertyFormModelName(Self->PropertyFormModelName)
             ->WithPropertyId(Self->PropertyId);
+        const auto CacheOwnerSnapshotUserId = Self->AccessToken.IsValid() ? Self->UserId() : TOptional<FString>();
+        const auto CacheOwnerSnapshotTimeOffset = Self->AccessToken.IsValid() ? Self->AccessToken->GetTimeOffset() : TOptional<int32>();
         const auto Future = Self->Client->DeletePropertyForm(
             Request
         );
         Future->StartSynchronousTask();
         if (Future->GetTask().IsError())
         {
-            return Future->GetTask().Error();
+            const auto Error = Future->GetTask().Error();
+            if (Error.IsValid() && Error->IsChildOf(Gs2::Core::Model::FNotFoundError::Class))
+            {
+                *Result = Self;
+                return nullptr;
+            }
+            return Error;
         }
         const auto ResultModel = Future->GetTask().Result();
         Future->EnsureCompletion();
-        if (ResultModel->GetItem() != nullptr)
-        {
-            const auto Key = Gs2::Formation::Domain::Model::FPropertyFormDomain::CreateCacheKey(
-                ResultModel->GetItem()->GetName(),
-                ResultModel->GetItem()->GetPropertyId()
-            );
-            Self->Gs2->Cache->Delete(
-                Gs2::Formation::Model::FPropertyForm::TypeName,
-                Self->ParentKey,
-                Key
-            );
-        }
+
+              if (!ResultModel.IsValid() || !ResultModel->GetItem().IsValid())
+                  {
+                    const auto Details = MakeShared<TArray<TSharedPtr<Gs2::Core::Model::FGs2ErrorDetail>>>();
+                      Details->Add(MakeShared<Gs2::Core::Model::FGs2ErrorDetail>(TEXT("result.item"), TEXT("result.item is invalid."), TEXT("invalid_response")));
+                      return MakeShared<Gs2::Core::Model::FUnknownError>(Details);
+                    }if (!((CacheOwnerSnapshotUserId)).IsSet())
+                  {
+                    const auto Details = MakeShared<TArray<TSharedPtr<Gs2::Core::Model::FGs2ErrorDetail>>>();
+                      Details->Add(MakeShared<Gs2::Core::Model::FGs2ErrorDetail>(TEXT("userId"), TEXT("userId is invalid."), TEXT("invalid_response")));
+                      return MakeShared<Gs2::Core::Model::FUnknownError>(Details);
+                    }
+              Gs2::Formation::Model::Cache::FPropertyFormCache::Delete(
+            Self->Gs2->Cache,
+
+            Request->GetNamespaceName(),
+            (CacheOwnerSnapshotUserId),
+            Request->GetPropertyFormModelName(),
+            ResultModel->GetItem()->GetPropertyId(),
+            CacheOwnerSnapshotTimeOffset
+        );
+
+              Gs2::Formation::Model::Cache::FPropertyFormModelCache::Delete(
+            Self->Gs2->Cache,
+
+            Request->GetNamespaceName(),
+            Request->GetPropertyFormModelName(),
+            CacheOwnerSnapshotTimeOffset
+        );
         auto Domain = Self;
 
         *Result = Domain;
@@ -404,7 +553,7 @@ namespace Gs2::Formation::Domain::Model
     )
     {
         return FString("") +
-            (PropertyFormModelName.IsSet() ? *PropertyFormModelName : "null") + ":" + 
+            (PropertyFormModelName.IsSet() ? *PropertyFormModelName : "null") + ":" +
             (PropertyId.IsSet() ? *PropertyId : "null");
     }
 
@@ -426,74 +575,181 @@ namespace Gs2::Formation::Domain::Model
         TSharedPtr<TSharedPtr<Gs2::Formation::Model::FPropertyForm>> Result
     )
     {
-        // ReSharper disable once CppLocalVariableMayBeConst
-        TSharedPtr<Gs2::Formation::Model::FPropertyForm> Value;
-        auto bCacheHit = Self->Gs2->Cache->TryGet<Gs2::Formation::Model::FPropertyForm>(
-            Self->ParentKey,
-            Gs2::Formation::Domain::Model::FPropertyFormDomain::CreateCacheKey(
-                Self->PropertyFormModelName,
-                Self->PropertyId
-            ),
-            &Value
+        const auto CacheParentKey = Gs2::Formation::Model::Cache::FPropertyFormCache::CreateCacheParentKey(
+
+            Self->NamespaceName,
+            Self->AccessToken.IsValid() ? Self->UserId() : TOptional<FString>(),
+            Self->AccessToken.IsValid() ? Self->AccessToken->GetTimeOffset() : TOptional<int32>()
         );
-        if (!bCacheHit) {
-            const auto Future = Self->Get(
-                MakeShared<Gs2::Formation::Request::FGetPropertyFormRequest>()
-            );
-            Future->StartSynchronousTask();
-            if (Future->GetTask().IsError())
-            {
-                if (Future->GetTask().Error()->Type() != Gs2::Core::Model::FNotFoundError::TypeString)
-                {
-                    return Future->GetTask().Error();
-                }
+        const auto CacheKey = Gs2::Formation::Model::Cache::FPropertyFormCache::CreateCacheKey(
 
-                const auto Key = Gs2::Formation::Domain::Model::FPropertyFormDomain::CreateCacheKey(
+            Self->PropertyFormModelName,
+            Self->PropertyId
+        );
+        return Self->Gs2->Cache->ExecuteWithKeyLock(
+            Gs2::Formation::Model::FPropertyForm::TypeName,
+            CacheParentKey,
+            CacheKey,
+            [Self = Self, Result]() -> Gs2::Core::Model::FGs2ErrorPtr
+            {
+                Gs2::Formation::Model::FPropertyFormPtr Value;
+                const auto CacheHit = Gs2::Formation::Model::Cache::FPropertyFormCache::TryGet(
+                    Self->Gs2->Cache,
+
+                    Self->NamespaceName,
+                    Self->AccessToken.IsValid() ? Self->UserId() : TOptional<FString>(),
                     Self->PropertyFormModelName,
-                    Self->PropertyId
+                    Self->PropertyId,
+                    Self->AccessToken.IsValid() ? Self->AccessToken->GetTimeOffset() : TOptional<int32>(),
+                    &Value
                 );
-                Self->Gs2->Cache->Put(
-                    Gs2::Formation::Model::FPropertyForm::TypeName,
-                    Self->ParentKey,
-                    Key,
-                    nullptr,
-                    FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
-                );
-
-                if (Future->GetTask().Error()->Detail(0)->GetComponent() != "propertyForm")
+                if (CacheHit)
                 {
-                    return Future->GetTask().Error();
+                    *Result = Value;
+                    return nullptr;
                 }
-            }
-            else
-            {
-                Value = Future->GetTask().Result();
-            }
-            Future->EnsureCompletion();
-        }
-        *Result = Value;
+                const auto Error = Gs2::Formation::Model::Cache::FPropertyFormCache::Fetch(
+                    Self->Gs2->Cache,
 
-        return nullptr;
+                    Self->NamespaceName,
+                    Self->AccessToken.IsValid() ? Self->UserId() : TOptional<FString>(),
+                    Self->PropertyFormModelName,
+                    Self->PropertyId,
+                    Self->AccessToken.IsValid() ? Self->AccessToken->GetTimeOffset() : TOptional<int32>(),
+                    [Self](Gs2::Formation::Model::FPropertyFormPtr* OutItem) -> Gs2::Core::Model::FGs2ErrorPtr
+                    {
+                        const auto Future = Self->Get(
+                            MakeShared<Gs2::Formation::Request::FGetPropertyFormRequest>()
+                        );
+                        Future->StartSynchronousTask();
+                        if (Future->GetTask().IsError()) return Future->GetTask().Error();
+                        *OutItem = Future->GetTask().Result();
+                        Future->EnsureCompletion();
+                        return nullptr;
+                    },
+                    &Value
+                );
+                if (Error.IsValid()) return Error;
+                *Result = Value;
+                return nullptr;
+            }
+        );
     }
 
     TSharedPtr<FAsyncTask<FPropertyFormAccessTokenDomain::FModelTask>> FPropertyFormAccessTokenDomain::Model() {
         return Gs2::Core::Util::New<FAsyncTask<FPropertyFormAccessTokenDomain::FModelTask>>(this->AsShared());
     }
 
+    void FPropertyFormAccessTokenDomain::Invalidate()
+    {
+        Gs2::Formation::Model::Cache::FPropertyFormCache::Delete(
+            Gs2->Cache,
+
+            NamespaceName,
+            AccessToken.IsValid() ? UserId() : TOptional<FString>(),
+            PropertyFormModelName,
+            PropertyId,
+            AccessToken.IsValid() ? AccessToken->GetTimeOffset() : TOptional<int32>()
+        );
+    }
+
+    FPropertyFormAccessTokenDomain::FSubscribeWithInitialCallTask::FSubscribeWithInitialCallTask(
+        const TSharedPtr<FPropertyFormAccessTokenDomain>& Self,
+        TFunction<void(Gs2::Formation::Model::FPropertyFormPtr)> Callback
+    ):
+        Self(Self),
+        Callback(Callback)
+    {
+    }
+
+    FPropertyFormAccessTokenDomain::FSubscribeWithInitialCallTask::FSubscribeWithInitialCallTask(
+        const FSubscribeWithInitialCallTask& From
+    ):
+        TGs2Future(From),
+        Self(From.Self),
+        Callback(From.Callback)
+    {
+    }
+
+    Gs2::Core::Model::FGs2ErrorPtr FPropertyFormAccessTokenDomain::FSubscribeWithInitialCallTask::Action(
+        TSharedPtr<TSharedPtr<Gs2::Core::Domain::CallbackID>> Result
+    )
+    {
+        const auto Task = Self->Model();
+        Task->StartSynchronousTask();
+        Task->EnsureCompletion();
+        if (Task->GetTask().IsError()) return Task->GetTask().Error();
+        const auto Item = Task->GetTask().Result();
+        const auto CallbackId = Self->Subscribe(Callback);
+        Callback(Item);
+        *Result = MakeShared<Gs2::Core::Domain::CallbackID>(CallbackId);
+        return nullptr;
+    }
+
+    TSharedPtr<FAsyncTask<FPropertyFormAccessTokenDomain::FSubscribeWithInitialCallTask>> FPropertyFormAccessTokenDomain::SubscribeWithInitialCall(
+        TFunction<void(Gs2::Formation::Model::FPropertyFormPtr)> Callback
+    )
+    {
+        return Gs2::Core::Util::New<FAsyncTask<FSubscribeWithInitialCallTask>>(this->AsShared(), Callback);
+    }
+
     Gs2::Core::Domain::CallbackID FPropertyFormAccessTokenDomain::Subscribe(
         TFunction<void(Gs2::Formation::Model::FPropertyFormPtr)> Callback
     )
     {
+        const auto SubscriptionParentKey = Gs2::Formation::Model::Cache::FPropertyFormCache::CreateCacheParentKey(
+
+            NamespaceName,
+            AccessToken.IsValid() ? UserId() : TOptional<FString>(),
+            AccessToken.IsValid() ? AccessToken->GetTimeOffset() : TOptional<int32>()
+        );
+        const auto SubscriptionCacheKey = Gs2::Formation::Model::Cache::FPropertyFormCache::CreateCacheKey(
+
+            PropertyFormModelName,
+            PropertyId
+        );
+        const TWeakPtr<Gs2::Core::Domain::FGs2> WeakGs2 = Gs2;
+        const TWeakPtr<Formation::Domain::FGs2FormationDomain> WeakService = Service;
+        const FString RegisteredParentKey = SubscriptionParentKey;
+        const TOptional<FString> QueryNamespaceName = NamespaceName;
+        const TOptional<FString> QueryPropertyFormModelName = PropertyFormModelName;
+        const TOptional<FString> QueryPropertyId = PropertyId;
+        const auto SourceToken = AccessToken;
+        const TOptional<FString> RegisteredUserId = SourceToken.IsValid()
+            ? TOptional<FString>(SourceToken->GetUserId())
+            : TOptional<FString>();
+        const int32 RegisteredTimeOffset = SourceToken.IsValid() ? SourceToken->GetTimeOffset().Get(0) : 0;
         return Gs2->Cache->Subscribe(
             Gs2::Formation::Model::FPropertyForm::TypeName,
-            ParentKey,
-            Gs2::Formation::Domain::Model::FPropertyFormDomain::CreateCacheKey(
-                PropertyFormModelName,
-                PropertyId
-            ),
+            SubscriptionParentKey,
+            SubscriptionCacheKey,
             [Callback](TSharedPtr<FGs2Object> obj)
             {
                 Callback(StaticCastSharedPtr<Gs2::Formation::Model::FPropertyForm>(obj));
+            },
+            [WeakGs2, WeakService, RegisteredParentKey, QueryNamespaceName, QueryPropertyFormModelName, QueryPropertyId, SourceToken, RegisteredUserId, RegisteredTimeOffset]()
+            {
+                const auto Owner = WeakGs2.Pin();
+                if (!Owner.IsValid() || !SourceToken.IsValid() || !RegisteredUserId.IsSet())
+                {
+                    return;
+                }
+                const auto TokenSnapshot = MakeShared<Gs2::Auth::Model::FAccessToken>(*SourceToken);
+                if (TokenSnapshot->GetUserId() != RegisteredUserId || TokenSnapshot->GetTimeOffset().Get(0) != RegisteredTimeOffset)
+                {
+                    return;
+                }
+                const auto Domain = MakeShared<FPropertyFormAccessTokenDomain>(
+                    Owner,
+                    WeakService.Pin(),
+                    QueryNamespaceName,
+                    TokenSnapshot,
+                    QueryPropertyFormModelName,
+                    QueryPropertyId
+                );
+                Domain->ParentKey = RegisteredParentKey;
+                const auto Task = Domain->Model();
+                Task->StartBackgroundTask();
             }
         );
     }
@@ -502,13 +758,21 @@ namespace Gs2::Formation::Domain::Model
         Gs2::Core::Domain::CallbackID CallbackID
     )
     {
+        const auto SubscriptionParentKey = Gs2::Formation::Model::Cache::FPropertyFormCache::CreateCacheParentKey(
+
+            NamespaceName,
+            AccessToken.IsValid() ? UserId() : TOptional<FString>(),
+            AccessToken.IsValid() ? AccessToken->GetTimeOffset() : TOptional<int32>()
+        );
+        const auto SubscriptionCacheKey = Gs2::Formation::Model::Cache::FPropertyFormCache::CreateCacheKey(
+
+            PropertyFormModelName,
+            PropertyId
+        );
         Gs2->Cache->Unsubscribe(
             Gs2::Formation::Model::FPropertyForm::TypeName,
-            ParentKey,
-            Gs2::Formation::Domain::Model::FPropertyFormDomain::CreateCacheKey(
-                PropertyFormModelName,
-                PropertyId
-            ),
+            SubscriptionParentKey,
+            SubscriptionCacheKey,
             CallbackID
         );
     }
@@ -519,4 +783,3 @@ namespace Gs2::Formation::Domain::Model
 #elif defined(__clang__)
 #pragma clang diagnostic pop
 #endif
-

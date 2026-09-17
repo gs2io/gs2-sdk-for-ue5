@@ -83,6 +83,8 @@ namespace Gs2::Distributor::Domain::Model
             const FTransactionResultDomain& From
         );
 
+
+
         class GS2DISTRIBUTOR_API FGetTask final :
             public Gs2::Core::Util::TGs2Future<Gs2::Distributor::Model::FTransactionResult>,
             public TSharedFromThis<FGetTask>

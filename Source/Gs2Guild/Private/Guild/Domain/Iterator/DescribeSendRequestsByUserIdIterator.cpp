@@ -31,6 +31,8 @@
 #include "Core/Domain/Gs2.h"
 #include "Guild/Domain/Model/SendMemberRequest.h"
 #include "Guild/Domain/Model/User.h"
+#include "Guild/Model/Cache/SendMemberRequest.h"
+
 
 namespace Gs2::Guild::Domain::Iterator
 {
@@ -96,14 +98,23 @@ namespace Gs2::Guild::Domain::Iterator
             return *this;
         }
 
-        if (RangeIteratorOpt) ++*RangeIteratorOpt;
+        if (RangeIteratorOpt && *RangeIteratorOpt) ++*RangeIteratorOpt;
+
+
+        // Keep the previous page alive until its iterator has been replaced.
+
+        const auto PreviousRange = Range;
 
         if (!RangeIteratorOpt || (!*RangeIteratorOpt && !bLast))
         {
-            const auto ListParentKey = Gs2::Guild::Domain::Model::FUserDomain::CreateCacheParentKey(
+            const auto ListParentKey = Gs2::Guild::Model::Cache::FSendMemberRequestCache::CreateCacheParentKey(
+
                 Self->NamespaceName,
+                Self->GuildModelName,
+
                 Self->UserId,
-                "SendMemberRequest::" + *Self->GuildModelName
+                TOptional<int32>()
+
             );
 
             if (!RangeIteratorOpt)
@@ -120,15 +131,18 @@ namespace Gs2::Guild::Domain::Iterator
                 }
             }
 
-            const auto Future = Self->Client->DescribeSendRequestsByUserId(
+            const auto Request =
+
                 MakeShared<Gs2::Guild::Request::FDescribeSendRequestsByUserIdRequest>()
                     ->WithContextStack(Self->Gs2->DefaultContextStack)
                     ->WithNamespaceName(Self->NamespaceName)
                     ->WithUserId(Self->UserId)
                     ->WithGuildModelName(Self->GuildModelName)
                     ->WithPageToken(PageToken)
-                    ->WithLimit(FetchSize)
-            );
+                    ->WithLimit(FetchSize);
+
+            const auto Future = Self->Client->DescribeSendRequestsByUserId(Request);
+
             Future->StartSynchronousTask();
             if (Future->GetTask().IsError())
             {
@@ -142,18 +156,29 @@ namespace Gs2::Guild::Domain::Iterator
             }
             const auto R = Future->GetTask().Result();
             Future->EnsureCompletion();
-            Range = R->GetItems();
-            for (auto Item : *R->GetItems())
+            Range = R->GetItems().IsValid() ? R->GetItems() : MakeShared<TArray<Gs2::Guild::Model::FSendMemberRequestPtr>>();
+
+            if (R.IsValid() && R->GetItems().IsValid())
+
+            if (Range.IsValid())
             {
-                Self->Gs2->Cache->Put(
-                    Gs2::Guild::Model::FSendMemberRequest::TypeName,
-                    ListParentKey,
-                    Gs2::Guild::Domain::Model::FSendMemberRequestDomain::CreateCacheKey(
-                        Item->GetTargetGuildName().IsSet() ? Item->GetTargetGuildName() : TOptional<FString>()
-                    ),
-                    Item,
-                    FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
-                );
+                for (const auto& Item : *Range)
+                {
+
+                    if (!Item.IsValid()) continue;
+
+                    Gs2::Guild::Model::Cache::FSendMemberRequestCache::Put(
+
+                        Self->Gs2->Cache,
+
+                        Request->GetNamespaceName(), Request->GetUserId(), Self->GuildModelName, Item->GetTargetGuildName(),
+
+                        TOptional<int32>(), Item
+
+                    );
+
+                }
+
             }
             RangeIteratorOpt = Range->CreateIterator();
             PageToken = R->GetNextPageToken();
@@ -191,4 +216,3 @@ namespace Gs2::Guild::Domain::Iterator
 #elif defined(__clang__)
 #pragma clang diagnostic pop
 #endif
-

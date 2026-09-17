@@ -87,7 +87,7 @@ namespace Gs2::UE5::MegaField::Domain::Model
     Gs2::Core::Domain::CallbackID FEzLayerModelDomain::Subscribe(TFunction<void(Gs2::UE5::MegaField::Model::FEzLayerModelPtr)> Callback)
     {
         return Domain->Subscribe(
-            [&](Gs2::MegaField::Model::FLayerModelPtr Item)
+            [Callback](Gs2::MegaField::Model::FLayerModelPtr Item)
             {
                 Callback(Gs2::UE5::MegaField::Model::FEzLayerModel::FromModel(Item));
             }

@@ -112,6 +112,8 @@ namespace Gs2::Matchmaking::Domain::Model
             const FUserDomain& From
         );
 
+
+
         class GS2MATCHMAKING_API FCreateGatheringTask final :
             public Gs2::Core::Util::TGs2Future<Gs2::Matchmaking::Domain::Model::FGatheringDomain>,
             public TSharedFromThis<FCreateGatheringTask>
@@ -138,6 +140,8 @@ namespace Gs2::Matchmaking::Domain::Model
             Request::FCreateGatheringByUserIdRequestPtr Request
         );
 
+
+
         class GS2MATCHMAKING_API FDeleteGatheringTask final :
             public Gs2::Core::Util::TGs2Future<Gs2::Matchmaking::Domain::Model::FGatheringDomain>,
             public TSharedFromThis<FDeleteGatheringTask>
@@ -163,6 +167,8 @@ namespace Gs2::Matchmaking::Domain::Model
         TSharedPtr<FAsyncTask<FDeleteGatheringTask>> DeleteGathering(
             Request::FDeleteGatheringRequestPtr Request
         );
+
+
 
         class GS2MATCHMAKING_API FPutResultTask final :
             public Gs2::Core::Util::TGs2Future<TArray<TSharedPtr<Gs2::Matchmaking::Domain::Model::FRatingDomain>>>,
@@ -195,8 +201,33 @@ namespace Gs2::Matchmaking::Domain::Model
 
         Gs2::Core::Domain::CallbackID SubscribeGatherings(
             TFunction<void()> Callback
+
         );
 
+        class FCollectGatheringsTask;
+
+        Gs2::Core::Domain::CallbackID SubscribeGatherings(
+            TFunction<void(TArray<Gs2::Matchmaking::Model::FGatheringPtr>)> Callback
+        );
+
+        void InvalidateGatherings();
+
+        class GS2MATCHMAKING_API FSubscribeGatheringsWithInitialCallTask final :
+            public Gs2::Core::Util::TGs2Future<Gs2::Core::Domain::CallbackID>,
+            public TSharedFromThis<FSubscribeGatheringsWithInitialCallTask>
+        {
+            const TSharedPtr<FUserDomain> Self;
+            const TFunction<void(TArray<Gs2::Matchmaking::Model::FGatheringPtr>)> Callback;
+
+        public:
+            FSubscribeGatheringsWithInitialCallTask(const TSharedPtr<FUserDomain>& Self, TFunction<void(TArray<Gs2::Matchmaking::Model::FGatheringPtr>)> Callback);
+            FSubscribeGatheringsWithInitialCallTask(const FSubscribeGatheringsWithInitialCallTask& From);
+            virtual Gs2::Core::Model::FGs2ErrorPtr Action(TSharedPtr<TSharedPtr<Gs2::Core::Domain::CallbackID>> Result) override;
+        };
+
+        TSharedPtr<FAsyncTask<FSubscribeGatheringsWithInitialCallTask>> SubscribeGatheringsWithInitialCall(
+            TFunction<void(TArray<Gs2::Matchmaking::Model::FGatheringPtr>)> Callback
+        );
         void UnsubscribeGatherings(
             Gs2::Core::Domain::CallbackID CallbackID
         );
@@ -210,6 +241,29 @@ namespace Gs2::Matchmaking::Domain::Model
             const TOptional<FString> TimeOffsetToken = TOptional<FString>()
         ) const;
 
+        Gs2::Core::Domain::CallbackID SubscribeDoMatchmakingByPlayer(TFunction<void()> Callback,const TSharedPtr<Gs2::Matchmaking::Model::FPlayer> Player);
+        class FCollectDoMatchmakingByPlayerTask;
+        Gs2::Core::Domain::CallbackID SubscribeDoMatchmakingByPlayer(TFunction<void(TArray<Gs2::Matchmaking::Model::FGatheringPtr>)> Callback,const TSharedPtr<Gs2::Matchmaking::Model::FPlayer> Player);
+        void InvalidateDoMatchmakingByPlayer(const TSharedPtr<Gs2::Matchmaking::Model::FPlayer> Player);
+        class GS2MATCHMAKING_API FSubscribeDoMatchmakingByPlayerWithInitialCallTask final : public Gs2::Core::Util::TGs2Future<Gs2::Core::Domain::CallbackID>, public TSharedFromThis<FSubscribeDoMatchmakingByPlayerWithInitialCallTask>
+        { const TSharedPtr<FUserDomain> Self; const TFunction<void(TArray<Gs2::Matchmaking::Model::FGatheringPtr>)> Callback; const TSharedPtr<Gs2::Matchmaking::Model::FPlayer> QueryPlayer; public:
+            FSubscribeDoMatchmakingByPlayerWithInitialCallTask(const TSharedPtr<FUserDomain>& Self,TFunction<void(TArray<Gs2::Matchmaking::Model::FGatheringPtr>)> Callback,const TSharedPtr<Gs2::Matchmaking::Model::FPlayer> Player);
+            FSubscribeDoMatchmakingByPlayerWithInitialCallTask(const FSubscribeDoMatchmakingByPlayerWithInitialCallTask& From);
+            virtual Gs2::Core::Model::FGs2ErrorPtr Action(TSharedPtr<TSharedPtr<Gs2::Core::Domain::CallbackID>> Result) override; };
+        TSharedPtr<FAsyncTask<FSubscribeDoMatchmakingByPlayerWithInitialCallTask>> SubscribeDoMatchmakingByPlayerWithInitialCall(TFunction<void(TArray<Gs2::Matchmaking::Model::FGatheringPtr>)> Callback,const TSharedPtr<Gs2::Matchmaking::Model::FPlayer> Player);
+        void UnsubscribeDoMatchmakingByPlayer(Gs2::Core::Domain::CallbackID CallbackID,const TSharedPtr<Gs2::Matchmaking::Model::FPlayer> Player);
+        Gs2::Core::Domain::CallbackID SubscribeDoMatchmaking(TFunction<void()> Callback,const TSharedPtr<Gs2::Matchmaking::Model::FPlayer> Player);
+        class FCollectDoMatchmakingTask;
+        Gs2::Core::Domain::CallbackID SubscribeDoMatchmaking(TFunction<void(TArray<Gs2::Matchmaking::Model::FGatheringPtr>)> Callback,const TSharedPtr<Gs2::Matchmaking::Model::FPlayer> Player);
+        void InvalidateDoMatchmaking(const TSharedPtr<Gs2::Matchmaking::Model::FPlayer> Player);
+        class GS2MATCHMAKING_API FSubscribeDoMatchmakingWithInitialCallTask final : public Gs2::Core::Util::TGs2Future<Gs2::Core::Domain::CallbackID>, public TSharedFromThis<FSubscribeDoMatchmakingWithInitialCallTask>
+        { const TSharedPtr<FUserDomain> Self; const TFunction<void(TArray<Gs2::Matchmaking::Model::FGatheringPtr>)> Callback; const TSharedPtr<Gs2::Matchmaking::Model::FPlayer> QueryPlayer; public:
+            FSubscribeDoMatchmakingWithInitialCallTask(const TSharedPtr<FUserDomain>& Self,TFunction<void(TArray<Gs2::Matchmaking::Model::FGatheringPtr>)> Callback,const TSharedPtr<Gs2::Matchmaking::Model::FPlayer> Player);
+            FSubscribeDoMatchmakingWithInitialCallTask(const FSubscribeDoMatchmakingWithInitialCallTask& From);
+            virtual Gs2::Core::Model::FGs2ErrorPtr Action(TSharedPtr<TSharedPtr<Gs2::Core::Domain::CallbackID>> Result) override; };
+        TSharedPtr<FAsyncTask<FSubscribeDoMatchmakingWithInitialCallTask>> SubscribeDoMatchmakingWithInitialCall(TFunction<void(TArray<Gs2::Matchmaking::Model::FGatheringPtr>)> Callback,const TSharedPtr<Gs2::Matchmaking::Model::FPlayer> Player);
+        void UnsubscribeDoMatchmaking(Gs2::Core::Domain::CallbackID CallbackID,const TSharedPtr<Gs2::Matchmaking::Model::FPlayer> Player);
+
         TSharedPtr<Gs2::Matchmaking::Domain::Model::FGatheringDomain> Gathering(
             const FString GatheringName
         );
@@ -220,8 +274,33 @@ namespace Gs2::Matchmaking::Domain::Model
 
         Gs2::Core::Domain::CallbackID SubscribeRatings(
             TFunction<void()> Callback
+
         );
 
+        class FCollectRatingsTask;
+
+        Gs2::Core::Domain::CallbackID SubscribeRatings(
+            TFunction<void(TArray<Gs2::Matchmaking::Model::FRatingPtr>)> Callback,const TOptional<FString> TimeOffsetToken = TOptional<FString>()
+        );
+
+        void InvalidateRatings(const TOptional<FString> TimeOffsetToken = TOptional<FString>());
+
+        class GS2MATCHMAKING_API FSubscribeRatingsWithInitialCallTask final :
+            public Gs2::Core::Util::TGs2Future<Gs2::Core::Domain::CallbackID>,
+            public TSharedFromThis<FSubscribeRatingsWithInitialCallTask>
+        {
+            const TSharedPtr<FUserDomain> Self;
+            const TFunction<void(TArray<Gs2::Matchmaking::Model::FRatingPtr>)> Callback;
+        const TOptional<FString> QueryTimeOffsetToken;
+        public:
+            FSubscribeRatingsWithInitialCallTask(const TSharedPtr<FUserDomain>& Self, TFunction<void(TArray<Gs2::Matchmaking::Model::FRatingPtr>)> Callback,const TOptional<FString> TimeOffsetToken);
+            FSubscribeRatingsWithInitialCallTask(const FSubscribeRatingsWithInitialCallTask& From);
+            virtual Gs2::Core::Model::FGs2ErrorPtr Action(TSharedPtr<TSharedPtr<Gs2::Core::Domain::CallbackID>> Result) override;
+        };
+
+        TSharedPtr<FAsyncTask<FSubscribeRatingsWithInitialCallTask>> SubscribeRatingsWithInitialCall(
+            TFunction<void(TArray<Gs2::Matchmaking::Model::FRatingPtr>)> Callback,const TOptional<FString> TimeOffsetToken = TOptional<FString>()
+        );
         void UnsubscribeRatings(
             Gs2::Core::Domain::CallbackID CallbackID
         );

@@ -18,12 +18,12 @@
 
 #include "CoreMinimal.h"
 #include "SeasonRating/Model/Gs2SeasonRatingBallot.h"
-#include "SeasonRating/Model/Gs2SeasonRatingBallot.h"
+#include "SeasonRating/Model/Gs2SeasonRatingSignedBallot.h"
 #include "../../Core/Model/Gs2Error.h"
 #include "Kismet/BlueprintAsyncActionBase.h"
 #include "Gs2SeasonRatingBallotGetValue.generated.h"
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FGs2SeasonRatingBallotGetValueSuccessDelegate, FGs2SeasonRatingBallotValue, Value, const FGs2Error, Error);
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FGs2SeasonRatingBallotGetValueErrorDelegate, FGs2SeasonRatingBallotValue, Value, const FGs2Error, Error);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FGs2SeasonRatingBallotGetValueSuccessDelegate, FGs2SeasonRatingSignedBallot, Value, const FGs2Error, Error);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FGs2SeasonRatingBallotGetValueErrorDelegate, FGs2SeasonRatingSignedBallot, Value, const FGs2Error, Error);
 
 UCLASS()
 class BPGS2_API UGs2SeasonRatingBallotGetValueAsyncFunction : public UBlueprintAsyncActionBase

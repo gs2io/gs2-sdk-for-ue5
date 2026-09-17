@@ -85,6 +85,8 @@ namespace Gs2::Exchange::Domain::Model
             const FExchangeAccessTokenDomain& From
         );
 
+
+
         class GS2EXCHANGE_API FExchangeTask final :
             public Gs2::Core::Util::TGs2Future<Gs2::Core::Domain::FTransactionAccessTokenDomain>,
             public TSharedFromThis<FExchangeTask>
@@ -113,6 +115,8 @@ namespace Gs2::Exchange::Domain::Model
             Request::FExchangeRequestPtr Request,
             bool SpeculativeExecute = true
         );
+
+
 
         class GS2EXCHANGE_API FIncrementalTask final :
             public Gs2::Core::Util::TGs2Future<Gs2::Core::Domain::FTransactionAccessTokenDomain>,

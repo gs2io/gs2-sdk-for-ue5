@@ -193,7 +193,8 @@ namespace Gs2::UE5::Ranking::Domain::Model
         );
     }
 
-    void FEzRankingCategoryGameSessionDomain::UnsubscribeSubscribeUsers(Gs2::Core::Domain::CallbackID CallbackId)
+    void FEzRankingCategoryGameSessionDomain::UnsubscribeSubscribeUsers(
+            Gs2::Core::Domain::CallbackID CallbackId)
     {
         Domain->UnsubscribeSubscribeUsers(
             CallbackId
@@ -230,7 +231,8 @@ namespace Gs2::UE5::Ranking::Domain::Model
         );
     }
 
-    void FEzRankingCategoryGameSessionDomain::UnsubscribeRankings(Gs2::Core::Domain::CallbackID CallbackId)
+    void FEzRankingCategoryGameSessionDomain::UnsubscribeRankings(
+            Gs2::Core::Domain::CallbackID CallbackId)
     {
         Domain->UnsubscribeRankings(
             CallbackId

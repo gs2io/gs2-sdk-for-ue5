@@ -21,6 +21,7 @@
 #include "GenericPlatform/GenericPlatformHttp.h"
 #include "Core/Gs2Constant.h"
 #include "Core/Net/Rest/Gs2RestSession.h"
+#include "Core/Net/Rest/RestResponseState.h"
 #include "Interfaces/IHttpResponse.h"
 
 namespace Gs2::Gateway::Task::Rest
@@ -49,21 +50,20 @@ namespace Gs2::Gateway::Task::Rest
             return MakeShared<Core::Model::FSessionNotOpenError>(Details);
         }
 
-        auto Processing = true;
-        int32 ResponseCode;
-        FString ResponseBody;
+        const auto Completion = MakeShared<Core::Net::Rest::FRestResponseState, ESPMode::ThreadSafe>();
         {
             const auto request = FHttpModule::Get().CreateRequest();
             request->OnProcessRequestComplete().BindLambda(
-                [&Processing, &ResponseCode, &ResponseBody](FHttpRequestPtr _, FHttpResponsePtr Response, bool Successful)
+                [Completion](FHttpRequestPtr _, FHttpResponsePtr Response, bool Successful)
                 {
-                    if (Successful) {
-                        ResponseCode = Response->GetResponseCode();
-                        ResponseBody = Response->GetContentAsString();
-                    } else {
-                        ResponseCode = 999;
+                    if (Successful && Response.IsValid())
+                    {
+                        Completion->Complete(Response->GetResponseCode(), Response->GetContentAsString());
                     }
-                    Processing = false;
+                    else
+                    {
+                        Completion->Complete(999, FString());
+                    }
                 }
             );
             auto Url = Core::FGs2Constant::EndpointHost
@@ -105,6 +105,15 @@ namespace Gs2::Gateway::Task::Rest
             {
                 JsonRootObject->SetStringField(TEXT("sound"), this->Request->GetSound().GetValue());
             }
+            if (this->Request->GetMobileNotificationMessages() != nullptr && this->Request->GetMobileNotificationMessages().IsValid())
+            {
+                TArray<TSharedPtr<FJsonValue>> v;
+                for (auto JsonObjectValue : *this->Request->GetMobileNotificationMessages())
+                {
+                    v.Add(MakeShared<FJsonValueObject>(JsonObjectValue->ToJson()));
+                }
+                JsonRootObject->SetArrayField(TEXT("mobileNotificationMessages"), v);
+            }
             if (this->Request->GetContextStack().IsSet())
             {
                 JsonRootObject->SetStringField(TEXT("contextStack"), this->Request->GetContextStack().GetValue());
@@ -134,10 +143,18 @@ namespace Gs2::Gateway::Task::Rest
         }
         else
         {
-            while (Processing)
+            while (!Completion->IsComplete())
             {
                 FPlatformProcess::Sleep(0.01f);
             }
+        }
+
+        int32 ResponseCode = 999;
+        FString ResponseBody;
+        if (!Completion->TryGetResponse(ResponseCode, ResponseBody))
+        {
+            const auto Details = MakeShared<TArray<TSharedPtr<Core::Model::FGs2ErrorDetail>>>();
+            return MakeShared<Core::Model::FUnknownError>(Details);
         }
 
         if (ResponseCode / 100 == 2)

@@ -56,7 +56,8 @@ namespace Gs2::UE5::MegaField::Domain::Model
 
         Gs2::Core::Domain::CallbackID SubscribeLayerModels(TFunction<void()> Callback);
 
-        void UnsubscribeLayerModels(Gs2::Core::Domain::CallbackID CallbackId);
+        void UnsubscribeLayerModels(
+                Gs2::Core::Domain::CallbackID CallbackId);
 
         Gs2::UE5::MegaField::Domain::Model::FEzLayerModelDomainPtr LayerModel(
             const FString LayerModelName

@@ -65,7 +65,8 @@ namespace Gs2::UE5::Guild::Domain::Model
 
         Gs2::Core::Domain::CallbackID SubscribeGuildModels(TFunction<void()> Callback);
 
-        void UnsubscribeGuildModels(Gs2::Core::Domain::CallbackID CallbackId);
+        void UnsubscribeGuildModels(
+                Gs2::Core::Domain::CallbackID CallbackId);
 
         Gs2::UE5::Guild::Domain::Model::FEzGuildModelDomainPtr GuildModel(
             const FString GuildModelName

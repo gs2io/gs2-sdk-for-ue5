@@ -39,6 +39,8 @@
 #include "Lottery/Domain/Model/BoxItemsAccessToken.h"
 #include "Lottery/Domain/Model/User.h"
 #include "Lottery/Domain/Model/UserAccessToken.h"
+#include "Lottery/Model/Cache/DrawnPrize.h"
+#include "Lottery/Model/Cache/BoxItems.h"
 
 #include "Core/Domain/Gs2.h"
 #include "Core/Domain/Transaction/JobQueueJobDomainFactory.h"
@@ -106,32 +108,124 @@ namespace Gs2::Lottery::Domain::Model
 
     Gs2::Core::Domain::CallbackID FUserAccessTokenDomain::SubscribeBoxes(
     TFunction<void()> Callback
+
     )
     {
         return Gs2->Cache->ListSubscribe(
             Gs2::Lottery::Model::FBoxItems::TypeName,
-            Gs2::Lottery::Domain::Model::FUserDomain::CreateCacheParentKey(
+            Gs2::Lottery::Model::Cache::FBoxItemsCache::CreateCacheParentKey(
                 NamespaceName,
-                UserId(),
-                "BoxItems"
+                AccessToken.IsValid() ? AccessToken->GetUserId() : TOptional<FString>(),
+                AccessToken.IsValid() ? AccessToken->GetTimeOffset() : TOptional<int32>()
             ),
+            Callback,
             Callback
         );
     }
-
     void FUserAccessTokenDomain::UnsubscribeBoxes(
         Gs2::Core::Domain::CallbackID CallbackID
     )
     {
         Gs2->Cache->ListUnsubscribe(
             Gs2::Lottery::Model::FBoxItems::TypeName,
-            Gs2::Lottery::Domain::Model::FUserDomain::CreateCacheParentKey(
+            Gs2::Lottery::Model::Cache::FBoxItemsCache::CreateCacheParentKey(
                 NamespaceName,
-                UserId(),
-                "BoxItems"
+                AccessToken.IsValid() ? AccessToken->GetUserId() : TOptional<FString>(),
+                AccessToken.IsValid() ? AccessToken->GetTimeOffset() : TOptional<int32>()
             ),
             CallbackID
         );
+    }
+    class FUserAccessTokenDomain::FCollectBoxesTask : public Gs2::Core::Util::TGs2Future<TArray<Gs2::Lottery::Model::FBoxItemsPtr>>, public TSharedFromThis<FCollectBoxesTask>
+    {
+        const TSharedPtr<FUserAccessTokenDomain> Self;
+        const TFunction<void(TArray<Gs2::Lottery::Model::FBoxItemsPtr>)> OnCollected;
+
+    public:
+        explicit FCollectBoxesTask(const TSharedPtr<FUserAccessTokenDomain>& Self, TFunction<void(TArray<Gs2::Lottery::Model::FBoxItemsPtr>)> OnCollected) : Self(Self), OnCollected(OnCollected) {}
+        FCollectBoxesTask(const FCollectBoxesTask& From) : TGs2Future(From), Self(From.Self), OnCollected(From.OnCollected) {}
+        virtual Gs2::Core::Model::FGs2ErrorPtr Action(TSharedPtr<TSharedPtr<TArray<Gs2::Lottery::Model::FBoxItemsPtr>>> Result) override
+        {
+            TArray<Gs2::Lottery::Model::FBoxItemsPtr> Items;
+            auto Iterator = Self->Boxes()->begin();
+            while (Iterator.HasNext())
+            {
+                if (Iterator.IsError()) return Iterator.Error();
+                if (Iterator.IsCurrentValid()) Items.Add(Iterator.Current());
+                ++Iterator;
+            }
+            if (Iterator.IsError()) return Iterator.Error();
+            *Result = MakeShared<TArray<Gs2::Lottery::Model::FBoxItemsPtr>>(Items);
+            if (OnCollected) OnCollected(Items);
+            return nullptr;
+        }
+    };
+
+    Gs2::Core::Domain::CallbackID FUserAccessTokenDomain::SubscribeBoxes(
+        TFunction<void(TArray<Gs2::Lottery::Model::FBoxItemsPtr>)> Callback
+    )
+    {
+        const TWeakPtr<Gs2::Core::Domain::FGs2> WeakGs2 = this->Gs2;
+        const TWeakPtr<Lottery::Domain::FGs2LotteryDomain> WeakService = this->Service;
+        const auto SourceToken = this->AccessToken;
+        const TOptional<FString> RegisteredUserId = SourceToken.IsValid() ? TOptional<FString>(SourceToken->GetUserId()) : TOptional<FString>();
+        const int32 RegisteredTimeOffset = SourceToken.IsValid() ? SourceToken->GetTimeOffset().Get(0) : 0;
+        const auto QueryNamespaceName = NamespaceName;
+        const auto Parent = Gs2::Lottery::Model::Cache::FBoxItemsCache::CreateCacheParentKey(
+        NamespaceName,
+        AccessToken.IsValid() ? AccessToken->GetUserId() : TOptional<FString>(),
+        AccessToken.IsValid() ? AccessToken->GetTimeOffset() : TOptional<int32>()
+    );
+        return Gs2->Cache->ListSubscribeTyped(
+            Gs2::Lottery::Model::FBoxItems::TypeName,
+            Parent,
+            [Callback, WeakGs2](const TArray<FGs2ObjectPtr>& Values)
+            {
+                if (!WeakGs2.Pin().IsValid()) return;
+                TArray<Gs2::Lottery::Model::FBoxItemsPtr> TypedValues;
+                for (const auto& Value : Values) if (Value.IsValid()) TypedValues.Add(StaticCastSharedPtr<Gs2::Lottery::Model::FBoxItems>(Value));
+                Callback(TypedValues);
+            },
+            [WeakGs2, WeakService, Callback, QueryNamespaceName, SourceToken, RegisteredUserId, RegisteredTimeOffset]()
+            {
+                const auto Owner = WeakGs2.Pin();
+                if (!Owner.IsValid() || !SourceToken.IsValid() || !RegisteredUserId.IsSet()) return;
+                const auto TokenSnapshot = MakeShared<Gs2::Auth::Model::FAccessToken>(*SourceToken);
+                if (TokenSnapshot->GetUserId() != RegisteredUserId || TokenSnapshot->GetTimeOffset().Get(0) != RegisteredTimeOffset) return;
+                const auto Domain = MakeShared<FUserAccessTokenDomain>(Owner, WeakService.Pin(), QueryNamespaceName, TokenSnapshot);
+                const auto Task = Gs2::Core::Util::New<FAsyncTask<FCollectBoxesTask>>(Domain, Callback);
+                Task->StartBackgroundTask();
+            }
+        );
+    }
+
+    void FUserAccessTokenDomain::InvalidateBoxes()
+    {
+        Gs2->Cache->ClearListCache(
+            Gs2::Lottery::Model::FBoxItems::TypeName,
+            Gs2::Lottery::Model::Cache::FBoxItemsCache::CreateCacheParentKey(
+        NamespaceName,
+        AccessToken.IsValid() ? AccessToken->GetUserId() : TOptional<FString>(),
+        AccessToken.IsValid() ? AccessToken->GetTimeOffset() : TOptional<int32>()
+    )
+        );
+    }
+
+    FUserAccessTokenDomain::FSubscribeBoxesWithInitialCallTask::FSubscribeBoxesWithInitialCallTask(const TSharedPtr<FUserAccessTokenDomain>& Self, TFunction<void(TArray<Gs2::Lottery::Model::FBoxItemsPtr>)> Callback) : Self(Self), Callback(Callback) {}
+    FUserAccessTokenDomain::FSubscribeBoxesWithInitialCallTask::FSubscribeBoxesWithInitialCallTask(const FSubscribeBoxesWithInitialCallTask& From) : TGs2Future(From), Self(From.Self), Callback(From.Callback) {}
+    Gs2::Core::Model::FGs2ErrorPtr FUserAccessTokenDomain::FSubscribeBoxesWithInitialCallTask::Action(TSharedPtr<TSharedPtr<Gs2::Core::Domain::CallbackID>> Result)
+    {
+        const auto Task = Gs2::Core::Util::New<FAsyncTask<FCollectBoxesTask>>(Self, TFunction<void(TArray<Gs2::Lottery::Model::FBoxItemsPtr>)>());
+        Task->StartSynchronousTask(); Task->EnsureCompletion();
+        if (Task->GetTask().IsError()) return Task->GetTask().Error();
+        const auto Values = Task->GetTask().Result();
+        const auto CallbackId = Self->SubscribeBoxes(Callback);
+        Callback(*Values); *Result = MakeShared<Gs2::Core::Domain::CallbackID>(CallbackId);
+        return nullptr;
+    }
+    TSharedPtr<FAsyncTask<FUserAccessTokenDomain::FSubscribeBoxesWithInitialCallTask>> FUserAccessTokenDomain::SubscribeBoxesWithInitialCall(TFunction<void(TArray<Gs2::Lottery::Model::FBoxItemsPtr>)> Callback)
+    {
+        return Gs2::Core::Util::New<FAsyncTask<FSubscribeBoxesWithInitialCallTask>>(this->AsShared(), Callback);
     }
 
     TSharedPtr<Gs2::Lottery::Domain::Model::FBoxItemsAccessTokenDomain> FUserAccessTokenDomain::BoxItems(
@@ -173,4 +267,3 @@ namespace Gs2::Lottery::Domain::Model
 #elif defined(__clang__)
 #pragma clang diagnostic pop
 #endif
-

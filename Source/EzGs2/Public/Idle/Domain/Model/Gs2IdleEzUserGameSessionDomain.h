@@ -60,7 +60,8 @@ namespace Gs2::UE5::Idle::Domain::Model
 
         Gs2::Core::Domain::CallbackID SubscribeStatuses(TFunction<void()> Callback);
 
-        void UnsubscribeStatuses(Gs2::Core::Domain::CallbackID CallbackId);
+        void UnsubscribeStatuses(
+                Gs2::Core::Domain::CallbackID CallbackId);
 
         Gs2::UE5::Idle::Domain::Model::FEzStatusGameSessionDomainPtr Status(
             const FString CategoryName

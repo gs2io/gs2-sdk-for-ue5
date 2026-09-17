@@ -82,7 +82,7 @@ namespace Gs2::UE5::Exchange::Domain::Model
     Gs2::Core::Domain::CallbackID FEzRateModelDomain::Subscribe(TFunction<void(Gs2::UE5::Exchange::Model::FEzRateModelPtr)> Callback)
     {
         return Domain->Subscribe(
-            [&](Gs2::Exchange::Model::FRateModelPtr Item)
+            [Callback](Gs2::Exchange::Model::FRateModelPtr Item)
             {
                 Callback(Gs2::UE5::Exchange::Model::FEzRateModel::FromModel(Item));
             }

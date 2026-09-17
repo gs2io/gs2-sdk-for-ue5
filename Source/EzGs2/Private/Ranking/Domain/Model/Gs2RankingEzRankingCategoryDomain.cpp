@@ -77,7 +77,8 @@ namespace Gs2::UE5::Ranking::Domain::Model
         );
     }
 
-    void FEzRankingCategoryDomain::UnsubscribeNearRankings(Gs2::Core::Domain::CallbackID CallbackId)
+    void FEzRankingCategoryDomain::UnsubscribeNearRankings(
+            Gs2::Core::Domain::CallbackID CallbackId)
     {
         Domain->UnsubscribeNearRankings(
             CallbackId

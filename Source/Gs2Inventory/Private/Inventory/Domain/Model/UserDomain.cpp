@@ -53,7 +53,17 @@
 #include "Inventory/Domain/Model/BigItemAccessToken.h"
 #include "Inventory/Domain/Model/User.h"
 #include "Inventory/Domain/Model/UserAccessToken.h"
-#include "Inventory/Domain/Model/ItemSetEntry.h"
+#include "Inventory/Model/Cache/Inventory.h"
+#include "Inventory/Model/Cache/ItemSet.h"
+#include "Grade/Model/Cache/Status.h"
+#include "Inventory/Model/Cache/ItemModel.h"
+#include "Inventory/Model/Cache/ReferenceOf.h"
+#include "Inventory/Model/Cache/SimpleItem.h"
+#include "Inventory/Model/Cache/SimpleInventory.h"
+#include "Inventory/Model/Cache/SimpleItemModel.h"
+#include "Inventory/Model/Cache/BigItem.h"
+#include "Inventory/Model/Cache/BigInventory.h"
+#include "Inventory/Model/Cache/BigItemModel.h"
 
 #include "Core/Domain/Gs2.h"
 #include "Core/Domain/Transaction/JobQueueJobDomainFactory.h"
@@ -110,32 +120,121 @@ namespace Gs2::Inventory::Domain::Model
 
     Gs2::Core::Domain::CallbackID FUserDomain::SubscribeInventories(
     TFunction<void()> Callback
+
     )
     {
         return Gs2->Cache->ListSubscribe(
             Gs2::Inventory::Model::FInventory::TypeName,
-            Gs2::Inventory::Domain::Model::FUserDomain::CreateCacheParentKey(
+            Gs2::Inventory::Model::Cache::FInventoryCache::CreateCacheParentKey(
                 NamespaceName,
                 UserId,
-                "Inventory"
+                TOptional<int32>()
             ),
+            Callback,
             Callback
         );
     }
-
     void FUserDomain::UnsubscribeInventories(
         Gs2::Core::Domain::CallbackID CallbackID
     )
     {
         Gs2->Cache->ListUnsubscribe(
             Gs2::Inventory::Model::FInventory::TypeName,
-            Gs2::Inventory::Domain::Model::FUserDomain::CreateCacheParentKey(
+            Gs2::Inventory::Model::Cache::FInventoryCache::CreateCacheParentKey(
                 NamespaceName,
                 UserId,
-                "Inventory"
+                TOptional<int32>()
             ),
             CallbackID
         );
+    }
+    class FUserDomain::FCollectInventoriesTask : public Gs2::Core::Util::TGs2Future<TArray<Gs2::Inventory::Model::FInventoryPtr>>, public TSharedFromThis<FCollectInventoriesTask>
+    {
+        const TSharedPtr<FUserDomain> Self;
+        const TFunction<void(TArray<Gs2::Inventory::Model::FInventoryPtr>)> OnCollected;
+    const TOptional<FString> QueryTimeOffsetToken;
+    public:
+        explicit FCollectInventoriesTask(const TSharedPtr<FUserDomain>& Self, TFunction<void(TArray<Gs2::Inventory::Model::FInventoryPtr>)> OnCollected,const TOptional<FString> TimeOffsetToken) : Self(Self), OnCollected(OnCollected), QueryTimeOffsetToken(TimeOffsetToken) {}
+        FCollectInventoriesTask(const FCollectInventoriesTask& From) : TGs2Future(From), Self(From.Self), OnCollected(From.OnCollected), QueryTimeOffsetToken(From.QueryTimeOffsetToken) {}
+        virtual Gs2::Core::Model::FGs2ErrorPtr Action(TSharedPtr<TSharedPtr<TArray<Gs2::Inventory::Model::FInventoryPtr>>> Result) override
+        {
+            TArray<Gs2::Inventory::Model::FInventoryPtr> Items;
+            auto Iterator = Self->Inventories(QueryTimeOffsetToken)->begin();
+            while (Iterator.HasNext())
+            {
+                if (Iterator.IsError()) return Iterator.Error();
+                if (Iterator.IsCurrentValid()) Items.Add(Iterator.Current());
+                ++Iterator;
+            }
+            if (Iterator.IsError()) return Iterator.Error();
+            *Result = MakeShared<TArray<Gs2::Inventory::Model::FInventoryPtr>>(Items);
+            if (OnCollected) OnCollected(Items);
+            return nullptr;
+        }
+    };
+
+    Gs2::Core::Domain::CallbackID FUserDomain::SubscribeInventories(
+        TFunction<void(TArray<Gs2::Inventory::Model::FInventoryPtr>)> Callback,const TOptional<FString> TimeOffsetToken
+    )
+    {
+        const TWeakPtr<Gs2::Core::Domain::FGs2> WeakGs2 = this->Gs2;
+        const TWeakPtr<Inventory::Domain::FGs2InventoryDomain> WeakService = this->Service;
+        const auto QueryNamespaceName = NamespaceName;
+        const auto QueryUserId = UserId;
+        const auto QueryTimeOffsetToken = TimeOffsetToken;
+        const auto Parent = Gs2::Inventory::Model::Cache::FInventoryCache::CreateCacheParentKey(
+        NamespaceName,
+        UserId,
+        TOptional<int32>()
+    );
+        return Gs2->Cache->ListSubscribeTyped(
+            Gs2::Inventory::Model::FInventory::TypeName,
+            Parent,
+            [Callback, WeakGs2](const TArray<FGs2ObjectPtr>& Values)
+            {
+                if (!WeakGs2.Pin().IsValid()) return;
+                TArray<Gs2::Inventory::Model::FInventoryPtr> TypedValues;
+                for (const auto& Value : Values) if (Value.IsValid()) TypedValues.Add(StaticCastSharedPtr<Gs2::Inventory::Model::FInventory>(Value));
+                Callback(TypedValues);
+            },
+            [WeakGs2, WeakService, Callback, QueryNamespaceName, QueryUserId, QueryTimeOffsetToken]()
+            {
+                const auto Owner = WeakGs2.Pin();
+                if (!Owner.IsValid()) return;
+                const auto Domain = MakeShared<FUserDomain>(Owner, WeakService.Pin(), QueryNamespaceName, QueryUserId);
+                const auto Task = Gs2::Core::Util::New<FAsyncTask<FCollectInventoriesTask>>(Domain, Callback, QueryTimeOffsetToken);
+                Task->StartBackgroundTask();
+            }
+        );
+    }
+
+    void FUserDomain::InvalidateInventories(const TOptional<FString> TimeOffsetToken)
+    {
+        Gs2->Cache->ClearListCache(
+            Gs2::Inventory::Model::FInventory::TypeName,
+            Gs2::Inventory::Model::Cache::FInventoryCache::CreateCacheParentKey(
+        NamespaceName,
+        UserId,
+        TOptional<int32>()
+    )
+        );
+    }
+
+    FUserDomain::FSubscribeInventoriesWithInitialCallTask::FSubscribeInventoriesWithInitialCallTask(const TSharedPtr<FUserDomain>& Self, TFunction<void(TArray<Gs2::Inventory::Model::FInventoryPtr>)> Callback,const TOptional<FString> TimeOffsetToken) : Self(Self), Callback(Callback), QueryTimeOffsetToken(TimeOffsetToken) {}
+    FUserDomain::FSubscribeInventoriesWithInitialCallTask::FSubscribeInventoriesWithInitialCallTask(const FSubscribeInventoriesWithInitialCallTask& From) : TGs2Future(From), Self(From.Self), Callback(From.Callback), QueryTimeOffsetToken(From.QueryTimeOffsetToken) {}
+    Gs2::Core::Model::FGs2ErrorPtr FUserDomain::FSubscribeInventoriesWithInitialCallTask::Action(TSharedPtr<TSharedPtr<Gs2::Core::Domain::CallbackID>> Result)
+    {
+        const auto Task = Gs2::Core::Util::New<FAsyncTask<FCollectInventoriesTask>>(Self, TFunction<void(TArray<Gs2::Inventory::Model::FInventoryPtr>)>(), QueryTimeOffsetToken);
+        Task->StartSynchronousTask(); Task->EnsureCompletion();
+        if (Task->GetTask().IsError()) return Task->GetTask().Error();
+        const auto Values = Task->GetTask().Result();
+        const auto CallbackId = Self->SubscribeInventories(Callback, QueryTimeOffsetToken);
+        Callback(*Values); *Result = MakeShared<Gs2::Core::Domain::CallbackID>(CallbackId);
+        return nullptr;
+    }
+    TSharedPtr<FAsyncTask<FUserDomain::FSubscribeInventoriesWithInitialCallTask>> FUserDomain::SubscribeInventoriesWithInitialCall(TFunction<void(TArray<Gs2::Inventory::Model::FInventoryPtr>)> Callback,const TOptional<FString> TimeOffsetToken)
+    {
+        return Gs2::Core::Util::New<FAsyncTask<FSubscribeInventoriesWithInitialCallTask>>(this->AsShared(), Callback, TimeOffsetToken);
     }
 
     TSharedPtr<Gs2::Inventory::Domain::Model::FInventoryDomain> FUserDomain::Inventory(
@@ -203,4 +302,3 @@ namespace Gs2::Inventory::Domain::Model
 #elif defined(__clang__)
 #pragma clang diagnostic pop
 #endif
-

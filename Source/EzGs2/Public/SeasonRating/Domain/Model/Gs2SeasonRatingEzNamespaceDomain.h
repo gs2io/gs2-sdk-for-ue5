@@ -125,7 +125,8 @@ namespace Gs2::UE5::SeasonRating::Domain::Model
 
         Gs2::Core::Domain::CallbackID SubscribeSeasonModels(TFunction<void()> Callback);
 
-        void UnsubscribeSeasonModels(Gs2::Core::Domain::CallbackID CallbackId);
+        void UnsubscribeSeasonModels(
+                Gs2::Core::Domain::CallbackID CallbackId);
 
         Gs2::UE5::SeasonRating::Domain::Model::FEzSeasonModelDomainPtr SeasonModel(
             const FString SeasonName

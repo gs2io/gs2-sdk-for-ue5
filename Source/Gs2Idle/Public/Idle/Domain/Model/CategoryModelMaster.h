@@ -77,6 +77,8 @@ namespace Gs2::Idle::Domain::Model
             const FCategoryModelMasterDomain& From
         );
 
+
+
         class GS2IDLE_API FGetTask final :
             public Gs2::Core::Util::TGs2Future<Gs2::Idle::Model::FCategoryModelMaster>,
             public TSharedFromThis<FGetTask>
@@ -103,6 +105,8 @@ namespace Gs2::Idle::Domain::Model
             Request::FGetCategoryModelMasterRequestPtr Request
         );
 
+
+
         class GS2IDLE_API FUpdateTask final :
             public Gs2::Core::Util::TGs2Future<Gs2::Idle::Domain::Model::FCategoryModelMasterDomain>,
             public TSharedFromThis<FUpdateTask>
@@ -128,6 +132,8 @@ namespace Gs2::Idle::Domain::Model
         TSharedPtr<FAsyncTask<FUpdateTask>> Update(
             Request::FUpdateCategoryModelMasterRequestPtr Request
         );
+
+
 
         class GS2IDLE_API FDeleteTask final :
             public Gs2::Core::Util::TGs2Future<Gs2::Idle::Domain::Model::FCategoryModelMasterDomain>,

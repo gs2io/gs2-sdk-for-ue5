@@ -98,7 +98,8 @@ namespace Gs2::UE5::Quest::Domain::Model
 
         Gs2::Core::Domain::CallbackID SubscribeCompletedQuestLists(TFunction<void()> Callback);
 
-        void UnsubscribeCompletedQuestLists(Gs2::Core::Domain::CallbackID CallbackId);
+        void UnsubscribeCompletedQuestLists(
+                Gs2::Core::Domain::CallbackID CallbackId);
 
         Gs2::UE5::Quest::Domain::Model::FEzCompletedQuestListGameSessionDomainPtr CompletedQuestList(
             const FString QuestGroupName

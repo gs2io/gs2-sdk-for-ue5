@@ -77,6 +77,8 @@ namespace Gs2::Grade::Domain::Model
             const FGradeModelMasterDomain& From
         );
 
+
+
         class GS2GRADE_API FGetTask final :
             public Gs2::Core::Util::TGs2Future<Gs2::Grade::Model::FGradeModelMaster>,
             public TSharedFromThis<FGetTask>
@@ -103,6 +105,8 @@ namespace Gs2::Grade::Domain::Model
             Request::FGetGradeModelMasterRequestPtr Request
         );
 
+
+
         class GS2GRADE_API FUpdateTask final :
             public Gs2::Core::Util::TGs2Future<Gs2::Grade::Domain::Model::FGradeModelMasterDomain>,
             public TSharedFromThis<FUpdateTask>
@@ -128,6 +132,8 @@ namespace Gs2::Grade::Domain::Model
         TSharedPtr<FAsyncTask<FUpdateTask>> Update(
             Request::FUpdateGradeModelMasterRequestPtr Request
         );
+
+
 
         class GS2GRADE_API FDeleteTask final :
             public Gs2::Core::Util::TGs2Future<Gs2::Grade::Domain::Model::FGradeModelMasterDomain>,
@@ -187,7 +193,34 @@ namespace Gs2::Grade::Domain::Model
 
         TSharedPtr<FAsyncTask<FModelTask>> Model();
 
+        void Invalidate();
+
         Gs2::Core::Domain::CallbackID Subscribe(
+            TFunction<void(Gs2::Grade::Model::FGradeModelMasterPtr)> Callback
+        );
+
+        class GS2GRADE_API FSubscribeWithInitialCallTask final :
+            public Gs2::Core::Util::TGs2Future<Gs2::Core::Domain::CallbackID>,
+            public TSharedFromThis<FSubscribeWithInitialCallTask>
+        {
+            const TSharedPtr<FGradeModelMasterDomain> Self;
+            const TFunction<void(Gs2::Grade::Model::FGradeModelMasterPtr)> Callback;
+        public:
+            FSubscribeWithInitialCallTask(
+                const TSharedPtr<FGradeModelMasterDomain>& Self,
+                TFunction<void(Gs2::Grade::Model::FGradeModelMasterPtr)> Callback
+            );
+
+            FSubscribeWithInitialCallTask(
+                const FSubscribeWithInitialCallTask& From
+            );
+
+            virtual Gs2::Core::Model::FGs2ErrorPtr Action(
+                TSharedPtr<TSharedPtr<Gs2::Core::Domain::CallbackID>> Result
+            ) override;
+        };
+
+        TSharedPtr<FAsyncTask<FSubscribeWithInitialCallTask>> SubscribeWithInitialCall(
             TFunction<void(Gs2::Grade::Model::FGradeModelMasterPtr)> Callback
         );
 

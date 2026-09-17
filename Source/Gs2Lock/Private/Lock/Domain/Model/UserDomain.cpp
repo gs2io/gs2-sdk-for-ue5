@@ -28,6 +28,7 @@
 #include "Lock/Domain/Model/MutexAccessToken.h"
 #include "Lock/Domain/Model/User.h"
 #include "Lock/Domain/Model/UserAccessToken.h"
+#include "Lock/Model/Cache/Mutex.h"
 
 #include "Core/Domain/Gs2.h"
 #include "Core/Domain/Transaction/JobQueueJobDomainFactory.h"
@@ -108,4 +109,3 @@ namespace Gs2::Lock::Domain::Model
 #elif defined(__clang__)
 #pragma clang diagnostic pop
 #endif
-

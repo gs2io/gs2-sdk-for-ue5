@@ -87,6 +87,8 @@ namespace Gs2::MegaField::Domain::Model
             const FCurrentFieldMasterDomain& From
         );
 
+
+
         class GS2MEGAFIELD_API FExportMasterTask final :
             public Gs2::Core::Util::TGs2Future<Gs2::MegaField::Domain::Model::FCurrentFieldMasterDomain>,
             public TSharedFromThis<FExportMasterTask>
@@ -112,6 +114,8 @@ namespace Gs2::MegaField::Domain::Model
         TSharedPtr<FAsyncTask<FExportMasterTask>> ExportMaster(
             Request::FExportMasterRequestPtr Request
         );
+
+
 
         class GS2MEGAFIELD_API FGetTask final :
             public Gs2::Core::Util::TGs2Future<Gs2::MegaField::Model::FCurrentFieldMaster>,
@@ -139,6 +143,8 @@ namespace Gs2::MegaField::Domain::Model
             Request::FGetCurrentFieldMasterRequestPtr Request
         );
 
+
+
         class GS2MEGAFIELD_API FPreUpdateTask final :
             public Gs2::Core::Util::TGs2Future<Gs2::MegaField::Domain::Model::FCurrentFieldMasterDomain>,
             public TSharedFromThis<FPreUpdateTask>
@@ -165,6 +171,8 @@ namespace Gs2::MegaField::Domain::Model
             Request::FPreUpdateCurrentFieldMasterRequestPtr Request
         );
 
+
+
         class GS2MEGAFIELD_API FUpdateTask final :
             public Gs2::Core::Util::TGs2Future<Gs2::MegaField::Domain::Model::FCurrentFieldMasterDomain>,
             public TSharedFromThis<FUpdateTask>
@@ -190,6 +198,8 @@ namespace Gs2::MegaField::Domain::Model
         TSharedPtr<FAsyncTask<FUpdateTask>> Update(
             Request::FUpdateCurrentFieldMasterRequestPtr Request
         );
+
+
 
         class GS2MEGAFIELD_API FUpdateFromGitHubTask final :
             public Gs2::Core::Util::TGs2Future<Gs2::MegaField::Domain::Model::FCurrentFieldMasterDomain>,
@@ -247,7 +257,34 @@ namespace Gs2::MegaField::Domain::Model
 
         TSharedPtr<FAsyncTask<FModelTask>> Model();
 
+        void Invalidate();
+
         Gs2::Core::Domain::CallbackID Subscribe(
+            TFunction<void(Gs2::MegaField::Model::FCurrentFieldMasterPtr)> Callback
+        );
+
+        class GS2MEGAFIELD_API FSubscribeWithInitialCallTask final :
+            public Gs2::Core::Util::TGs2Future<Gs2::Core::Domain::CallbackID>,
+            public TSharedFromThis<FSubscribeWithInitialCallTask>
+        {
+            const TSharedPtr<FCurrentFieldMasterDomain> Self;
+            const TFunction<void(Gs2::MegaField::Model::FCurrentFieldMasterPtr)> Callback;
+        public:
+            FSubscribeWithInitialCallTask(
+                const TSharedPtr<FCurrentFieldMasterDomain>& Self,
+                TFunction<void(Gs2::MegaField::Model::FCurrentFieldMasterPtr)> Callback
+            );
+
+            FSubscribeWithInitialCallTask(
+                const FSubscribeWithInitialCallTask& From
+            );
+
+            virtual Gs2::Core::Model::FGs2ErrorPtr Action(
+                TSharedPtr<TSharedPtr<Gs2::Core::Domain::CallbackID>> Result
+            ) override;
+        };
+
+        TSharedPtr<FAsyncTask<FSubscribeWithInitialCallTask>> SubscribeWithInitialCall(
             TFunction<void(Gs2::MegaField::Model::FCurrentFieldMasterPtr)> Callback
         );
 

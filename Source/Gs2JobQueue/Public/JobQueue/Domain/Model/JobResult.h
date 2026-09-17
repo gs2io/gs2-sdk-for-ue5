@@ -79,6 +79,8 @@ namespace Gs2::JobQueue::Domain::Model
             const FJobResultDomain& From
         );
 
+
+
         class GS2JOBQUEUE_API FGetTask final :
             public Gs2::Core::Util::TGs2Future<Gs2::JobQueue::Model::FJobResult>,
             public TSharedFromThis<FGetTask>
@@ -111,6 +113,13 @@ namespace Gs2::JobQueue::Domain::Model
             TOptional<FString> JobName,
             TOptional<FString> TryNumber,
             FString ChildType
+        );
+
+        static FString CreateResultCacheParentKey(
+            TOptional<FString> NamespaceName,
+            TOptional<FString> UserId,
+            TOptional<FString> JobName,
+            TOptional<int32> TimeOffset = TOptional<int32>()
         );
 
         static FString CreateCacheKey(
@@ -160,6 +169,34 @@ namespace Gs2::JobQueue::Domain::Model
         friend FModelNoCacheTask;
 
         TSharedPtr<FAsyncTask<FModelNoCacheTask>> ModelNoCache();
+
+        class GS2JOBQUEUE_API FSubscribeWithInitialCallTask final :
+            public Gs2::Core::Util::TGs2Future<Gs2::Core::Domain::CallbackID>,
+            public TSharedFromThis<FSubscribeWithInitialCallTask>
+        {
+            const TSharedPtr<FJobResultDomain> Self;
+            const TFunction<void(Gs2::JobQueue::Model::FJobResultPtr)> Callback;
+        public:
+            explicit FSubscribeWithInitialCallTask(
+                const TSharedPtr<FJobResultDomain> Self,
+                const TFunction<void(Gs2::JobQueue::Model::FJobResultPtr)>& Callback
+            );
+
+            FSubscribeWithInitialCallTask(
+                const FSubscribeWithInitialCallTask& From
+            );
+
+            virtual Gs2::Core::Model::FGs2ErrorPtr Action(
+                TSharedPtr<TSharedPtr<Gs2::Core::Domain::CallbackID>> Result
+            ) override;
+        };
+        friend FSubscribeWithInitialCallTask;
+
+        TSharedPtr<FAsyncTask<FSubscribeWithInitialCallTask>> SubscribeWithInitialCall(
+            TFunction<void(Gs2::JobQueue::Model::FJobResultPtr)> Callback
+        );
+
+        void Invalidate();
 
         Gs2::Core::Domain::CallbackID Subscribe(
             TFunction<void(Gs2::JobQueue::Model::FJobResultPtr)> Callback

@@ -87,7 +87,7 @@ namespace Gs2::UE5::Mission::Domain::Model
     Gs2::Core::Domain::CallbackID FEzMissionTaskModelDomain::Subscribe(TFunction<void(Gs2::UE5::Mission::Model::FEzMissionTaskModelPtr)> Callback)
     {
         return Domain->Subscribe(
-            [&](Gs2::Mission::Model::FMissionTaskModelPtr Item)
+            [Callback](Gs2::Mission::Model::FMissionTaskModelPtr Item)
             {
                 Callback(Gs2::UE5::Mission::Model::FEzMissionTaskModel::FromModel(Item));
             }

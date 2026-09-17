@@ -23,6 +23,7 @@
 #include "Model/StackEntry.h"
 #include "Model/Variable.h"
 #include "Model/TransactionSetting.h"
+#include "Model/TransactionSettingV2.h"
 #include "Model/Event.h"
 #include "Model/ChangeStateEvent.h"
 #include "Model/EmitEvent.h"

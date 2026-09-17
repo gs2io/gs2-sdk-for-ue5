@@ -1,3 +1,4 @@
+
 /*
  * Copyright 2016 Game Server Services, Inc. or its affiliates. All Rights
  * Reserved.
@@ -29,6 +30,9 @@
 #include "Limit/Domain/Model/Namespace.h"
 
 #include "Core/Domain/Gs2.h"
+
+#include "Limit/Model/Cache/LimitModel.h"
+#include "Limit/Model/Cache/Namespace.h"
 
 namespace Gs2::Limit::Domain::Iterator
 {
@@ -74,7 +78,7 @@ namespace Gs2::Limit::Domain::Iterator
 
     FDescribeLimitModelsIterator::FIterator& FDescribeLimitModelsIterator::FIterator::operator++()
     {
-        
+
 
         if (bEnd) return *this;
 
@@ -84,15 +88,16 @@ namespace Gs2::Limit::Domain::Iterator
             return *this;
         }
 
-        if (RangeIteratorOpt) ++*RangeIteratorOpt;
+        if (RangeIteratorOpt && *RangeIteratorOpt) ++*RangeIteratorOpt;
 
+        // Keep the previous page alive until its iterator has been replaced.
+        const auto PreviousRange = Range;
         if (!RangeIteratorOpt || (!*RangeIteratorOpt && !bLast))
         {
-            const auto ListParentKey = Gs2::Limit::Domain::Model::FNamespaceDomain::CreateCacheParentKey(
+            const auto ListParentKey = Gs2::Limit::Model::Cache::FLimitModelCache::CreateCacheParentKey(
                 Self->NamespaceName,
-                "LimitModel"
+                TOptional<int32>()
             );
-
             if (!RangeIteratorOpt)
             {
                 Range = Self->Gs2->Cache->TryGetList<Gs2::Limit::Model::FLimitModel>(ListParentKey);
@@ -105,12 +110,12 @@ namespace Gs2::Limit::Domain::Iterator
                     return *this;
                 }
             }
-
-            const auto Future = Self->Client->DescribeLimitModels(
+            const auto Request =
                 MakeShared<Gs2::Limit::Request::FDescribeLimitModelsRequest>()
                     ->WithContextStack(Self->Gs2->DefaultContextStack)
                     ->WithNamespaceName(Self->NamespaceName)
-            );
+            ;
+            const auto Future = Self->Client->DescribeLimitModels(Request);
             Future->StartSynchronousTask();
             if (Future->GetTask().IsError())
             {
@@ -124,18 +129,21 @@ namespace Gs2::Limit::Domain::Iterator
             }
             const auto R = Future->GetTask().Result();
             Future->EnsureCompletion();
-            Range = R->GetItems();
-            for (auto Item : *R->GetItems())
+            Range = R->GetItems().IsValid() ? R->GetItems() : MakeShared<TArray<Gs2::Limit::Model::FLimitModelPtr>>();
+            const auto ResultModel = R;
+
+
+            if (Range.IsValid())
             {
-                Self->Gs2->Cache->Put(
-                    Gs2::Limit::Model::FLimitModel::TypeName,
-                    ListParentKey,
-                    Gs2::Limit::Domain::Model::FLimitModelDomain::CreateCacheKey(
-                        Item->GetName()
-                    ),
-                    Item,
-                    FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
-                );
+                for (const auto& Item : *Range)
+                {
+                    if (!Item.IsValid()) continue;
+                    Gs2::Limit::Model::Cache::FLimitModelCache::Put(
+                        Self->Gs2->Cache,
+                        Request->GetNamespaceName(), Item->GetName(),
+                        TOptional<int32>(), Item
+                    );
+                }
             }
             if (Range)
             {

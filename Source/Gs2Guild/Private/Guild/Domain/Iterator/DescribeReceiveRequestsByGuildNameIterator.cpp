@@ -1,3 +1,4 @@
+
 /*
  * Copyright 2016 Game Server Services, Inc. or its affiliates. All Rights
  * Reserved.
@@ -29,6 +30,8 @@
 #include "Guild/Domain/Iterator/DescribeReceiveRequestsByGuildNameIterator.h"
 
 #include "Core/Domain/Gs2.h"
+#include "Guild/Model/Cache/ReceiveMemberRequest.h"
+#include "Guild/Model/Cache/Guild.h"
 #include "Guild/Domain/Model/ReceiveMemberRequest.h"
 #include "Guild/Domain/Model/Guild.h"
 
@@ -97,13 +100,12 @@ namespace Gs2::Guild::Domain::Iterator
 
         if (!RangeIteratorOpt || (!*RangeIteratorOpt && !bLast))
         {
-            const auto ListParentKey = Gs2::Guild::Domain::Model::FGuildDomain::CreateCacheParentKey(
+            const auto ListParentKey = Gs2::Guild::Model::Cache::FReceiveMemberRequestCache::CreateCacheParentKey(
                 Self->NamespaceName,
                 Self->GuildModelName,
                 Self->GuildName,
-                "ReceiveMemberRequest"
+                TOptional<int32>()
             );
-
             if (!RangeIteratorOpt)
             {
                 Range = Self->Gs2->Cache->TryGetList<Gs2::Guild::Model::FReceiveMemberRequest>(ListParentKey);
@@ -118,7 +120,7 @@ namespace Gs2::Guild::Domain::Iterator
                 }
             }
 
-            const auto Future = Self->Client->DescribeReceiveRequestsByGuildName(
+            const auto Request =
                 MakeShared<Gs2::Guild::Request::FDescribeReceiveRequestsByGuildNameRequest>()
                     ->WithContextStack(Self->Gs2->DefaultContextStack)
                     ->WithNamespaceName(Self->NamespaceName)
@@ -126,7 +128,8 @@ namespace Gs2::Guild::Domain::Iterator
                     ->WithGuildName(Self->GuildName)
                     ->WithPageToken(PageToken)
                     ->WithLimit(FetchSize)
-            );
+            ;
+            const auto Future = Self->Client->DescribeReceiveRequestsByGuildName(Request);
             Future->StartSynchronousTask();
             if (Future->GetTask().IsError())
             {
@@ -140,18 +143,21 @@ namespace Gs2::Guild::Domain::Iterator
             }
             const auto R = Future->GetTask().Result();
             Future->EnsureCompletion();
-            Range = R->GetItems();
-            for (auto Item : *R->GetItems())
+            Range = R->GetItems().IsValid() ? R->GetItems() : MakeShared<TArray<Gs2::Guild::Model::FReceiveMemberRequestPtr>>();
+            const auto ResultModel = R;
+
+
+            if (Range.IsValid())
             {
-                Self->Gs2->Cache->Put(
-                    Gs2::Guild::Model::FReceiveMemberRequest::TypeName,
-                    ListParentKey,
-                    Gs2::Guild::Domain::Model::FReceiveMemberRequestDomain::CreateCacheKey(
-                        Item->GetUserId()
-                    ),
-                    Item,
-                    FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
-                );
+                for (const auto& Item : *Range)
+                {
+                    if (!Item.IsValid()) continue;
+                    Gs2::Guild::Model::Cache::FReceiveMemberRequestCache::Put(
+                        Self->Gs2->Cache,
+                        Request->GetNamespaceName(), Request->GetGuildModelName(), Request->GetGuildName(), Item->GetUserId(),
+                        TOptional<int32>(), Item
+                    );
+                }
             }
             if (Range)
             {

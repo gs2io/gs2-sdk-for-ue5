@@ -25,141 +25,99 @@
 #endif
 
 #include "Guild/Domain/SpeculativeExecutor/Acquire/IncreaseMaximumCurrentMaximumMemberCountByGuildNameSpeculativeExecutor.h"
-
 #include "Core/Domain/Gs2.h"
-#include "Guild/Domain/Gs2Guild.h"
+#include "Core/Domain/SpeculativeExecutor/PreparedSpeculativeCommit.h"
+#include "Guild/Domain/SpeculativeExecutor/GuildMaximumMemberCountMutationSpeculativeCommit.h"
+#include "Guild/Model/Cache/Guild.h"
+#include "Guild/Model/Cache/GuildModel.h"
 
 namespace Gs2::Guild::Domain::SpeculativeExecutor
 {
+using Private::FGuildMaximumMemberCountMutationSpeculativeCommit;
 
-    FString FIncreaseMaximumCurrentMaximumMemberCountByGuildNameSpeculativeExecutor::Action()
-    {
-        return FString("Gs2Guild:IncreaseMaximumCurrentMaximumMemberCountByGuildName");
-    }
+FString FIncreaseMaximumCurrentMaximumMemberCountByGuildNameSpeculativeExecutor::Action() { return FString("Gs2Guild:IncreaseMaximumCurrentMaximumMemberCountByGuildName"); }
+Gs2::Core::Model::FGs2ErrorPtr FIncreaseMaximumCurrentMaximumMemberCountByGuildNameSpeculativeExecutor::Transform(
+    const Gs2::Core::Domain::FGs2Ptr&, const Gs2::Auth::Model::FAccessTokenPtr&,
+    const Gs2::Guild::Request::FIncreaseMaximumCurrentMaximumMemberCountByGuildNameRequestPtr&, Gs2::Guild::Model::FGuildPtr
+) { return nullptr; }
 
-    Gs2::Core::Model::FGs2ErrorPtr FIncreaseMaximumCurrentMaximumMemberCountByGuildNameSpeculativeExecutor::Transform(
-        const Gs2::Core::Domain::FGs2Ptr& Domain,
-        const Gs2::Auth::Model::FAccessTokenPtr& AccessToken,
-        const Gs2::Guild::Request::FIncreaseMaximumCurrentMaximumMemberCountByGuildNameRequestPtr& Request,
-        Gs2::Guild::Model::FGuildPtr Item
-    )
-    {
-        // TODO: Speculative execution not supported
-        UE_LOG(Gs2Log, Warning, TEXT("Speculative execution not supported on this action: %s"), ToCStr(Action()))
-        return nullptr;
-    }
+FIncreaseMaximumCurrentMaximumMemberCountByGuildNameSpeculativeExecutor::FCommitTask::FCommitTask(
+    const Gs2::Core::Domain::FGs2Ptr& Domain, const Gs2::Guild::Domain::FGs2GuildDomainPtr& Service,
+    const Gs2::Auth::Model::FAccessTokenPtr& AccessToken,
+    const Gs2::Guild::Request::FIncreaseMaximumCurrentMaximumMemberCountByGuildNameRequestPtr& Request
+): Domain(Domain), Service(Service), AccessToken(AccessToken), Request(Request) {}
+FIncreaseMaximumCurrentMaximumMemberCountByGuildNameSpeculativeExecutor::FCommitTask::FCommitTask(const FCommitTask& From):
+    Domain(From.Domain), Service(From.Service), AccessToken(From.AccessToken), Request(From.Request) {}
 
-    FIncreaseMaximumCurrentMaximumMemberCountByGuildNameSpeculativeExecutor::FCommitTask::FCommitTask(
-        const Gs2::Core::Domain::FGs2Ptr& Domain,
-        const Gs2::Guild::Domain::FGs2GuildDomainPtr& Service,
-        const Gs2::Auth::Model::FAccessTokenPtr& AccessToken,
-        const Gs2::Guild::Request::FIncreaseMaximumCurrentMaximumMemberCountByGuildNameRequestPtr& Request
-    ):
-        Domain(Domain),
-        Service(Service),
-        AccessToken(AccessToken),
-        Request(Request)
-    {
-
-    }
-
-    FIncreaseMaximumCurrentMaximumMemberCountByGuildNameSpeculativeExecutor::FCommitTask::FCommitTask(
-        const FCommitTask& From
-    ):
-        Domain(From.Domain),
-        Service(From.Service),
-        AccessToken(From.AccessToken),
-        Request(From.Request)
-    {
-
-    }
-
-    Gs2::Core::Model::FGs2ErrorPtr FIncreaseMaximumCurrentMaximumMemberCountByGuildNameSpeculativeExecutor::FCommitTask::Action(
-        TSharedPtr<TSharedPtr<TFunction<void()>>> Result
-    )
-    {
-        const auto Future = Domain->Guild->Namespace(
-                Request->GetNamespaceName().IsSet() ? *Request->GetNamespaceName() : FString("")
-            )->Guild(
-                Request->GetGuildModelName().IsSet() ? *Request->GetGuildModelName() : FString(""),
-                Request->GetGuildName().IsSet() ? *Request->GetGuildName() : FString("")
-            )->Model(AccessToken);
-        Future->StartSynchronousTask();
-        if (Future->GetTask().IsError())
+Gs2::Core::Model::FGs2ErrorPtr FIncreaseMaximumCurrentMaximumMemberCountByGuildNameSpeculativeExecutor::FCommitTask::Action(
+    TSharedPtr<TSharedPtr<Gs2::Core::Domain::SpeculativeExecutor::FPreparedSpeculativeCommit>> Result
+)
+{
+    *Result = nullptr;
+    Gs2::Auth::Model::FAccessTokenPtr Token = nullptr;
+    if (AccessToken.IsValid()) Token = MakeShared<Gs2::Auth::Model::FAccessToken>(*AccessToken);
+    Gs2::Guild::Request::FIncreaseMaximumCurrentMaximumMemberCountByGuildNameRequestPtr Prepared = nullptr;
+    if (Request.IsValid()) Prepared = MakeShared<Gs2::Guild::Request::FIncreaseMaximumCurrentMaximumMemberCountByGuildNameRequest>(*Request);
+    if (!Domain.IsValid() || !Domain->RestSession.IsValid() || !Token.IsValid() || !Prepared.IsValid() ||
+        !Prepared->GetValue().IsSet()) return nullptr;
+    const auto NamespaceName = Prepared->GetNamespaceName();
+    const auto GuildModelName = Prepared->GetGuildModelName();
+    const auto GuildName = Prepared->GetGuildName();
+    const auto TimeOffset = Token->GetTimeOffset();
+    const FString ExpectedGuildId = FString::Printf(
+        TEXT("grn:gs2:%s:%s:guild:%s:guild:%s:%s"), *Domain->RestSession->RegionName(),
+        *Domain->RestSession->OwnerId(), *NamespaceName.Get(FString()), *GuildModelName.Get(FString()), *GuildName.Get(FString())
+    );
+    const FString ExpectedModelId = FString::Printf(
+        TEXT("grn:gs2:%s:%s:guild:%s:model:%s"), *Domain->RestSession->RegionName(),
+        *Domain->RestSession->OwnerId(), *NamespaceName.Get(FString()), *GuildModelName.Get(FString())
+    );
+    Gs2::Guild::Model::FGuildPtr Guild;
+    if (!Gs2::Guild::Model::Cache::FGuildCache::TryGet(
+        Domain->Cache, NamespaceName, GuildModelName, GuildName, TimeOffset, &Guild
+    ) || !Guild.IsValid() || !Guild->GetGuildId().IsSet() || Guild->GetGuildId().Get(FString()) != ExpectedGuildId ||
+        Guild->GetGuildModelName() != GuildModelName || Guild->GetName() != GuildName ||
+        !Guild->GetCurrentMaximumMemberCount().IsSet()) return nullptr;
+    Gs2::Guild::Model::FGuildModelPtr Model;
+    if (!Gs2::Guild::Model::Cache::FGuildModelCache::TryGet(
+        Domain->Cache, NamespaceName, GuildModelName, TOptional<int32>(), &Model
+    ) || !Model.IsValid() || !Model->GetGuildModelId().IsSet() || Model->GetGuildModelId().Get(FString()) != ExpectedModelId ||
+        Model->GetName() != GuildModelName) return nullptr;
+    const auto PreparedRevision = Guild->GetRevision();
+    const int32 RequestedValue = Prepared->GetValue().Get(0);
+    const auto Commit = MakeShared<FGuildMaximumMemberCountMutationSpeculativeCommit>(
+        Domain->Cache, NamespaceName, GuildModelName, GuildName, TimeOffset,
+        ExpectedGuildId, ExpectedModelId, PreparedRevision, true,
+        [RequestedValue](const Gs2::Guild::Model::FGuildPtr& Current, const int32 Maximum) -> Gs2::Guild::Model::FGuildPtr
         {
-            return Future->GetTask().Error();
+            if (!Current.IsValid() || !Current->GetCurrentMaximumMemberCount().IsSet()) return Gs2::Guild::Model::FGuildPtr(nullptr);
+            const int64 Previous = Current->GetCurrentMaximumMemberCount().Get(0);
+            int64 Value = Previous + static_cast<int64>(RequestedValue);
+            if (Value > Maximum) Value = Maximum;
+            if (Value < Previous) Value = Previous;
+            if (Value > 2147483647 || Value < -2147483648) return Gs2::Guild::Model::FGuildPtr(nullptr);
+            Gs2::Guild::Model::FGuildPtr Changed = MakeShared<Gs2::Guild::Model::FGuild>(*Current);
+            return Changed->WithCurrentMaximumMemberCount(static_cast<int32>(Value));
         }
-        auto Item = Future->GetTask().Result();
+    );
+    *Result = Gs2::Core::Domain::SpeculativeExecutor::FPreparedSpeculativeCommit::CreateComposable(
+        Commit->CompositionKey(),
+        [Commit](const TSharedPtr<void>& Current, const bool HasCurrent, TSharedPtr<void>& Next)
+        { return Commit->TryCompose(Current, HasCurrent, Next); },
+        [Commit](const TSharedPtr<void>& State) { Commit->Commit(State); }
+    );
+    return nullptr;
+}
 
-        if (!Item.IsValid())
-        {
-            *Result = MakeShared<TFunction<void()>>([&]()
-            {
-                return nullptr;
-            });
-            return nullptr;
-        }
-        auto Err = Transform(Domain, AccessToken, Request, Item);
-        if (Err != nullptr)
-        {
-            return Err;
-        }
-
-        const auto ParentKey = Model::FNamespaceDomain::CreateCacheParentKey(
-            Request->GetNamespaceName(),
-            FString("Guild")
-        );
-        const auto Key = Model::FGuildDomain::CreateCacheKey(
-            Request->GetGuildModelName(),
-            Request->GetGuildName()
-        );
-
-        *Result = MakeShared<TFunction<void()>>([&]()
-        {
-            Domain->Cache->Put(
-                Guild::Model::FGuild::TypeName,
-                ParentKey,
-                Key,
-                Item,
-                FDateTime::Now() + FTimespan::FromSeconds(10)
-            );
-            return nullptr;
-        });
-        return nullptr;
-    }
-
-    TSharedPtr<FAsyncTask<FIncreaseMaximumCurrentMaximumMemberCountByGuildNameSpeculativeExecutor::FCommitTask>> FIncreaseMaximumCurrentMaximumMemberCountByGuildNameSpeculativeExecutor::Execute(
-        const Gs2::Core::Domain::FGs2Ptr& Domain,
-        const Gs2::Guild::Domain::FGs2GuildDomainPtr& Service,
-        const Gs2::Auth::Model::FAccessTokenPtr& AccessToken,
-        const Gs2::Guild::Request::FIncreaseMaximumCurrentMaximumMemberCountByGuildNameRequestPtr& Request
-    )
-    {
-        return Gs2::Core::Util::New<FAsyncTask<FCommitTask>>(Domain, Service, AccessToken, Request);
-    }
-
-    Gs2::Guild::Request::FIncreaseMaximumCurrentMaximumMemberCountByGuildNameRequestPtr FIncreaseMaximumCurrentMaximumMemberCountByGuildNameSpeculativeExecutor::Rate(
-        const Gs2::Guild::Request::FIncreaseMaximumCurrentMaximumMemberCountByGuildNameRequestPtr& Request,
-        const double Rate
-    )
-    {
-        if (Request->GetValue().IsSet())
-        {
-            Request->WithValue(*Request->GetValue() * Rate);
-        }
-        return Request;
-    }
-
-    Gs2::Guild::Request::FIncreaseMaximumCurrentMaximumMemberCountByGuildNameRequestPtr FIncreaseMaximumCurrentMaximumMemberCountByGuildNameSpeculativeExecutor::Rate(
-        const Gs2::Guild::Request::FIncreaseMaximumCurrentMaximumMemberCountByGuildNameRequestPtr& Request,
-        TBigInt<1024, false> Rate
-    )
-    {
-        if (Request->GetValue().IsSet())
-        {
-            Rate.Multiply(*Request->GetValue());
-            Request->WithValue(Rate.ToInt());
-        }
-        return Request;
-    }
+TSharedPtr<FAsyncTask<FIncreaseMaximumCurrentMaximumMemberCountByGuildNameSpeculativeExecutor::FCommitTask>> FIncreaseMaximumCurrentMaximumMemberCountByGuildNameSpeculativeExecutor::Execute(
+    const Gs2::Core::Domain::FGs2Ptr& Domain, const Gs2::Guild::Domain::FGs2GuildDomainPtr& Service,
+    const Gs2::Auth::Model::FAccessTokenPtr& AccessToken,
+    const Gs2::Guild::Request::FIncreaseMaximumCurrentMaximumMemberCountByGuildNameRequestPtr& Request
+) { return Gs2::Core::Util::New<FAsyncTask<FCommitTask>>(Domain, Service, AccessToken, Request); }
+Gs2::Guild::Request::FIncreaseMaximumCurrentMaximumMemberCountByGuildNameRequestPtr FIncreaseMaximumCurrentMaximumMemberCountByGuildNameSpeculativeExecutor::Rate(
+    const Gs2::Guild::Request::FIncreaseMaximumCurrentMaximumMemberCountByGuildNameRequestPtr& Request, const double
+) { return Request; }
+Gs2::Guild::Request::FIncreaseMaximumCurrentMaximumMemberCountByGuildNameRequestPtr FIncreaseMaximumCurrentMaximumMemberCountByGuildNameSpeculativeExecutor::Rate(
+    const Gs2::Guild::Request::FIncreaseMaximumCurrentMaximumMemberCountByGuildNameRequestPtr& Request, TBigInt<1024, false>
+) { return Request; }
 }

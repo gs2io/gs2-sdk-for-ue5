@@ -26,10 +26,17 @@
 
 #include "SerialKey/Domain/SpeculativeExecutor/Consume/UseByUserIdSpeculativeExecutor.h"
 
+#include "Auth/Model/AccessToken.h"
 #include "Core/Domain/Gs2.h"
+#include "Core/Domain/SpeculativeExecutor/PreparedSpeculativeCommit.h"
+#include "SerialKey/Domain/SpeculativeExecutor/SerialKeySpeculativeCommit.h"
+#include "SerialKey/Model/Cache/CampaignModel.h"
+#include "SerialKey/Model/Cache/SerialKey.h"
+#include "SerialKey/Model/SerialKey.h"
 
 namespace Gs2::SerialKey::Domain::SpeculativeExecutor
 {
+    using Private::FSerialKeySpeculativeCommit;
 
     FString FUseByUserIdSpeculativeExecutor::Action()
     {
@@ -43,7 +50,6 @@ namespace Gs2::SerialKey::Domain::SpeculativeExecutor
         Gs2::SerialKey::Model::FSerialKeyPtr Item
     )
     {
-        UE_LOG(Gs2Log, Warning, TEXT("Speculative execution not supported on this action: %s"), ToCStr(Action()))
         return nullptr;
     }
 
@@ -73,19 +79,130 @@ namespace Gs2::SerialKey::Domain::SpeculativeExecutor
     }
 
     Gs2::Core::Model::FGs2ErrorPtr FUseByUserIdSpeculativeExecutor::FCommitTask::Action(
-        TSharedPtr<TSharedPtr<TFunction<void()>>> Result
+        TSharedPtr<TSharedPtr<Gs2::Core::Domain::SpeculativeExecutor::FPreparedSpeculativeCommit>> Result
     )
     {
-        auto Err = Transform(Domain, AccessToken, Request, nullptr);
-        if (Err != nullptr)
+        *Result = nullptr;
+        Gs2::SerialKey::Request::FUseByUserIdRequestPtr PreparedRequest;
+        if (Request.IsValid())
         {
-            return Err;
+            PreparedRequest = Gs2::SerialKey::Request::FUseByUserIdRequest::FromJson(Request->ToJson());
         }
-
-        *Result = MakeShared<TFunction<void()>>([&]()
+        Gs2::Auth::Model::FAccessTokenPtr PreparedAccessToken;
+        if (AccessToken.IsValid())
+        {
+            PreparedAccessToken = Gs2::Auth::Model::FAccessToken::FromJson(AccessToken->ToJson());
+        }
+        if (PreparedRequest.IsValid() && PreparedRequest->GetUserId().IsSet() &&
+            *PreparedRequest->GetUserId() == TEXT("#{userId}"))
+        {
+            if (PreparedAccessToken.IsValid() && PreparedAccessToken->GetUserId().IsSet())
+            {
+                PreparedRequest->WithUserId(PreparedAccessToken->GetUserId());
+            }
+            else
+            {
+                PreparedRequest->WithUserId(TOptional<FString>());
+            }
+        }
+        if (!Domain.IsValid() || !Domain->RestSession.IsValid() || !Domain->Cache.IsValid() ||
+            !PreparedRequest.IsValid() || !PreparedAccessToken.IsValid() ||
+            !PreparedAccessToken->GetUserId().IsSet() || PreparedAccessToken->GetUserId()->IsEmpty() ||
+            !PreparedRequest->GetUserId().IsSet() ||
+            *PreparedRequest->GetUserId() != *PreparedAccessToken->GetUserId() ||
+            !PreparedRequest->GetNamespaceName().IsSet() || PreparedRequest->GetNamespaceName()->IsEmpty() ||
+            !PreparedRequest->GetCode().IsSet() || PreparedRequest->GetCode()->IsEmpty())
         {
             return nullptr;
-        });
+        }
+
+        const auto NamespaceName = PreparedRequest->GetNamespaceName();
+        const FString UserId = *PreparedAccessToken->GetUserId();
+        const FString Code = *PreparedRequest->GetCode();
+        const auto TimeOffset = PreparedAccessToken->GetTimeOffset();
+        Gs2::SerialKey::Model::FCampaignModelPtr Campaign;
+        if (!Gs2::SerialKey::Model::Cache::FCampaignModelCache::TryGet(
+            Domain->Cache, NamespaceName, Code, TOptional<int32>(), &Campaign
+        ))
+        {
+            return nullptr;
+        }
+        if (Campaign.IsValid())
+        {
+            const FString ExpectedCampaignId = FString::Printf(
+                TEXT("grn:gs2:%s:%s:serialKey:%s:model:campaign:%s"),
+                *Domain->RestSession->RegionName(), *Domain->RestSession->OwnerId(),
+                *NamespaceName.Get(FString()), *Code
+            );
+            if (!Campaign->GetCampaignId().IsSet() || *Campaign->GetCampaignId() != ExpectedCampaignId ||
+                !Campaign->GetName().IsSet() || *Campaign->GetName() != Code)
+            {
+                return nullptr;
+            }
+            *Result = Gs2::Core::Domain::SpeculativeExecutor::FPreparedSpeculativeCommit::CreateGuarded(
+                MakeShared<TFunction<void()>>([]() {}),
+                [DomainCopy = Domain, NamespaceName, Code]()
+                {
+                    Gs2::SerialKey::Model::FCampaignModelPtr Current;
+                    if (!Gs2::SerialKey::Model::Cache::FCampaignModelCache::TryGet(
+                        DomainCopy->Cache, NamespaceName, Code, TOptional<int32>(), &Current
+                    ) || !Current.IsValid()) return false;
+                    const FString ExpectedId = FString::Printf(
+                        TEXT("grn:gs2:%s:%s:serialKey:%s:model:campaign:%s"),
+                        *DomainCopy->RestSession->RegionName(), *DomainCopy->RestSession->OwnerId(),
+                        *NamespaceName.Get(FString()), *Code
+                    );
+                    return Current->GetCampaignId().IsSet() && *Current->GetCampaignId() == ExpectedId &&
+                        Current->GetName().IsSet() && *Current->GetName() == Code;
+                }
+            );
+            return nullptr;
+        }
+
+        Gs2::SerialKey::Model::FSerialKeyPtr Item;
+        const bool Found = Gs2::SerialKey::Model::Cache::FSerialKeyCache::TryGet(
+            Domain->Cache, NamespaceName, UserId, Code, TimeOffset, &Item
+        );
+        const FString ExpectedSerialKeyId = FString::Printf(
+            TEXT("grn:gs2:%s:%s:serialKey:%s:serialKey:%s"),
+            *Domain->RestSession->RegionName(), *Domain->RestSession->OwnerId(),
+            *NamespaceName.Get(FString()), *Code
+        );
+        if (!Found || !Item.IsValid() || !Item->GetSerialKeyId().IsSet() ||
+            *Item->GetSerialKeyId() != ExpectedSerialKeyId || !Item->GetCode().IsSet() ||
+            *Item->GetCode() != Code)
+        {
+            return nullptr;
+        }
+
+        const int64 LogicalTime = static_cast<int64>(FDateTime::UtcNow().ToUnixTimestampDecimal() * 1000.0) +
+            static_cast<int64>(TimeOffset.Get(0)) * 1000;
+        TSharedPtr<FSerialKeySpeculativeCommit> Commit;
+        Commit = MakeShared<FSerialKeySpeculativeCommit>(
+            Domain->Cache, NamespaceName, UserId, Code, TimeOffset, ExpectedSerialKeyId,
+            [LogicalTime, UserId, Code](const Gs2::SerialKey::Model::FSerialKeyPtr& Current)
+                -> Gs2::SerialKey::Model::FSerialKeyPtr
+            {
+                if (!Current.IsValid() || !Current->GetStatus().IsSet() ||
+                    *Current->GetStatus() != TEXT("ACTIVE") || !Current->GetCode().IsSet() ||
+                    *Current->GetCode() != Code)
+                {
+                    return nullptr;
+                }
+                Gs2::SerialKey::Model::FSerialKeyPtr Changed;
+                Changed = Gs2::SerialKey::Model::FSerialKey::FromJson(Current->ToJson());
+                if (!Changed.IsValid()) return nullptr;
+                Changed->WithStatus(FString(TEXT("USED")))->WithUsedUserId(UserId)->WithUsedAt(LogicalTime)
+                    ->WithUpdatedAt(LogicalTime)->WithRevision(0);
+                return Changed;
+            }
+        );
+        *Result = Gs2::Core::Domain::SpeculativeExecutor::FPreparedSpeculativeCommit::CreateComposable(
+            Commit->CompositionKey(),
+            [Commit](const TSharedPtr<void>& Current, const bool HasCurrent, TSharedPtr<void>& Next)
+            { return Commit->TryCompose(Current, HasCurrent, Next); },
+            [Commit](const TSharedPtr<void>& State) { Commit->Commit(State); }
+        );
         return nullptr;
     }
 

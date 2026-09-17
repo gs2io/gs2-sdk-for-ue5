@@ -22,23 +22,8 @@
 
 #include "Core/Domain/Gs2Core.h"
 #include "Auth/Gs2Auth.h"
-#include "Matchmaking/Domain/Iterator/DescribeNamespacesIterator.h"
-#include "Matchmaking/Domain/Iterator/DescribeGatheringsIterator.h"
-#include "Matchmaking/Domain/Iterator/DoMatchmakingByPlayerIterator.h"
-#include "Matchmaking/Domain/Iterator/DoMatchmakingIterator.h"
-#include "Matchmaking/Domain/Iterator/DoMatchmakingByUserIdIterator.h"
-#include "Matchmaking/Domain/Iterator/DescribeRatingModelMastersIterator.h"
-#include "Matchmaking/Domain/Iterator/DescribeRatingModelsIterator.h"
-#include "Matchmaking/Domain/Iterator/DescribeSeasonModelsIterator.h"
-#include "Matchmaking/Domain/Iterator/DescribeSeasonModelMastersIterator.h"
-#include "Matchmaking/Domain/Iterator/DescribeSeasonGatheringsIterator.h"
-#include "Matchmaking/Domain/Iterator/DescribeMatchmakingSeasonGatheringsIterator.h"
-#include "Matchmaking/Domain/Iterator/DoSeasonMatchmakingIterator.h"
-#include "Matchmaking/Domain/Iterator/DoSeasonMatchmakingByUserIdIterator.h"
-#include "Matchmaking/Domain/Iterator/DescribeJoinedSeasonGatheringsIterator.h"
-#include "Matchmaking/Domain/Iterator/DescribeJoinedSeasonGatheringsByUserIdIterator.h"
-#include "Matchmaking/Domain/Iterator/DescribeRatingsIterator.h"
-#include "Matchmaking/Domain/Iterator/DescribeRatingsByUserIdIterator.h"
+#include "Matchmaking/Gs2MatchmakingRestClient.h"
+#include "Matchmaking/Model/SignedBallot.h"
 
 namespace Gs2::Core::Domain
 {
@@ -54,28 +39,6 @@ namespace Gs2::Matchmaking::Domain
 
 namespace Gs2::Matchmaking::Domain::Model
 {
-    class FNamespaceDomain;
-    class FGatheringDomain;
-    class FGatheringAccessTokenDomain;
-    class FRatingModelMasterDomain;
-    class FRatingModelDomain;
-    class FCurrentModelMasterDomain;
-    class FUserDomain;
-    class FUserAccessTokenDomain;
-    class FSeasonDomain;
-    class FSeasonAccessTokenDomain;
-    class FSeasonModelDomain;
-    class FSeasonModelMasterDomain;
-    class FSeasonGatheringDomain;
-    class FSeasonGatheringAccessTokenDomain;
-    class FJoinedSeasonGatheringDomain;
-    class FJoinedSeasonGatheringAccessTokenDomain;
-    class FRatingDomain;
-    class FRatingAccessTokenDomain;
-    class FBallotDomain;
-    class FBallotAccessTokenDomain;
-    class FVoteDomain;
-
     class GS2MATCHMAKING_API FBallotDomain:
         public TSharedFromThis<FBallotDomain>
     {
@@ -123,7 +86,7 @@ namespace Gs2::Matchmaking::Domain::Model
         );
 
         class GS2MATCHMAKING_API FGetTask final :
-            public Gs2::Core::Util::TGs2Future<Gs2::Matchmaking::Domain::Model::FBallotDomain>,
+            public Gs2::Core::Util::TGs2Future<Gs2::Matchmaking::Model::FSignedBallot>,
             public TSharedFromThis<FGetTask>
         {
             const TSharedPtr<FBallotDomain> Self;
@@ -139,7 +102,7 @@ namespace Gs2::Matchmaking::Domain::Model
             );
 
             virtual Gs2::Core::Model::FGs2ErrorPtr Action(
-                TSharedPtr<TSharedPtr<Gs2::Matchmaking::Domain::Model::FBallotDomain>> Result
+                TSharedPtr<TSharedPtr<Gs2::Matchmaking::Model::FSignedBallot>> Result
             ) override;
         };
         friend FGetTask;
@@ -158,15 +121,21 @@ namespace Gs2::Matchmaking::Domain::Model
             FString ChildType
         );
 
+        static FString CreateSignedCacheParentKey(
+            TOptional<FString> NamespaceName,
+            TOptional<FString> UserId,
+            TOptional<int32> TimeOffset = TOptional<int32>()
+        );
+
         static FString CreateCacheKey(
             TOptional<FString> RatingName,
             TOptional<FString> GatheringName,
-            TOptional<int32> NumberOfPlayer,
-            TOptional<FString> KeyId
+            TOptional<int32> NumberOfPlayer = TOptional<int32>(),
+            TOptional<FString> KeyId = TOptional<FString>()
         );
 
         class GS2MATCHMAKING_API FModelTask final :
-            public Gs2::Core::Util::TGs2Future<Gs2::Matchmaking::Model::FBallot>,
+            public Gs2::Core::Util::TGs2Future<Gs2::Matchmaking::Model::FSignedBallot>,
             public TSharedFromThis<FModelTask>
         {
             const TSharedPtr<FBallotDomain> Self;
@@ -180,7 +149,7 @@ namespace Gs2::Matchmaking::Domain::Model
             );
 
             virtual Gs2::Core::Model::FGs2ErrorPtr Action(
-                TSharedPtr<TSharedPtr<Gs2::Matchmaking::Model::FBallot>> Result
+                TSharedPtr<TSharedPtr<Gs2::Matchmaking::Model::FSignedBallot>> Result
             ) override;
         };
         friend FModelTask;
@@ -188,7 +157,7 @@ namespace Gs2::Matchmaking::Domain::Model
         TSharedPtr<FAsyncTask<FModelTask>> Model();
 
         Gs2::Core::Domain::CallbackID Subscribe(
-            TFunction<void(Gs2::Matchmaking::Model::FBallotPtr)> Callback
+            TFunction<void(Gs2::Matchmaking::Model::FSignedBallotPtr)> Callback
         );
 
         void Unsubscribe(

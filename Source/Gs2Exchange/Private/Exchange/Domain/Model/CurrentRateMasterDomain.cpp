@@ -35,6 +35,7 @@
 #include "Exchange/Domain/Model/AwaitAccessToken.h"
 #include "Exchange/Domain/Model/User.h"
 #include "Exchange/Domain/Model/UserAccessToken.h"
+#include "Exchange/Model/Cache/CurrentRateMaster.h"
 
 #include "Core/Domain/Gs2.h"
 #include "Core/Domain/Transaction/JobQueueJobDomainFactory.h"
@@ -104,18 +105,19 @@ namespace Gs2::Exchange::Domain::Model
         }
         const auto ResultModel = Future->GetTask().Result();
         Future->EnsureCompletion();
-        if (ResultModel->GetItem() != nullptr)
-        {
-            const auto Key = Gs2::Exchange::Domain::Model::FCurrentRateMasterDomain::CreateCacheKey(
-            );
-            Self->Gs2->Cache->Put(
-                Gs2::Exchange::Model::FCurrentRateMaster::TypeName,
-                Self->ParentKey,
-                Key,
-                ResultModel->GetItem(),
-                FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
-            );
-        }
+
+            if (ResultModel.IsValid() && ResultModel->GetItem() != nullptr)
+            {
+
+
+        Gs2::Exchange::Model::Cache::FCurrentRateMasterCache::Put(
+            Self->Gs2->Cache,
+
+            Request->GetNamespaceName(),
+            TOptional<int32>(),
+            ResultModel->GetItem()
+        );
+            }
         auto Domain = Self;
 
         *Result = Domain;
@@ -159,6 +161,19 @@ namespace Gs2::Exchange::Domain::Model
         }
         const auto ResultModel = Future->GetTask().Result();
         Future->EnsureCompletion();
+
+            if (ResultModel.IsValid() && ResultModel->GetItem() != nullptr)
+            {
+
+
+        Gs2::Exchange::Model::Cache::FCurrentRateMasterCache::Put(
+            Self->Gs2->Cache,
+
+            Request->GetNamespaceName(),
+            TOptional<int32>(),
+            ResultModel->GetItem()
+        );
+            }
         *Result = ResultModel->GetItem();
         return nullptr;
     }
@@ -200,6 +215,7 @@ namespace Gs2::Exchange::Domain::Model
         }
         const auto ResultModel = Future->GetTask().Result();
         Future->EnsureCompletion();
+
         const auto Domain = Self;
         if (ResultModel != nullptr)
         {
@@ -253,18 +269,19 @@ namespace Gs2::Exchange::Domain::Model
         }
         const auto ResultModel = Future->GetTask().Result();
         Future->EnsureCompletion();
-        if (ResultModel->GetItem() != nullptr)
-        {
-            const auto Key = Gs2::Exchange::Domain::Model::FCurrentRateMasterDomain::CreateCacheKey(
-            );
-            Self->Gs2->Cache->Put(
-                Gs2::Exchange::Model::FCurrentRateMaster::TypeName,
-                Self->ParentKey,
-                Key,
-                ResultModel->GetItem(),
-                FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
-            );
-        }
+
+            if (ResultModel.IsValid() && ResultModel->GetItem() != nullptr)
+            {
+
+
+        Gs2::Exchange::Model::Cache::FCurrentRateMasterCache::Put(
+            Self->Gs2->Cache,
+
+            Request->GetNamespaceName(),
+            TOptional<int32>(),
+            ResultModel->GetItem()
+        );
+            }
         auto Domain = Self;
 
         *Result = Domain;
@@ -308,18 +325,19 @@ namespace Gs2::Exchange::Domain::Model
         }
         const auto ResultModel = Future->GetTask().Result();
         Future->EnsureCompletion();
-        if (ResultModel->GetItem() != nullptr)
-        {
-            const auto Key = Gs2::Exchange::Domain::Model::FCurrentRateMasterDomain::CreateCacheKey(
-            );
-            Self->Gs2->Cache->Put(
-                Gs2::Exchange::Model::FCurrentRateMaster::TypeName,
-                Self->ParentKey,
-                Key,
-                ResultModel->GetItem(),
-                FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
-            );
-        }
+
+            if (ResultModel.IsValid() && ResultModel->GetItem() != nullptr)
+            {
+
+
+        Gs2::Exchange::Model::Cache::FCurrentRateMasterCache::Put(
+            Self->Gs2->Cache,
+
+            Request->GetNamespaceName(),
+            TOptional<int32>(),
+            ResultModel->GetItem()
+        );
+            }
         auto Domain = Self;
 
         *Result = Domain;
@@ -366,68 +384,151 @@ namespace Gs2::Exchange::Domain::Model
         TSharedPtr<TSharedPtr<Gs2::Exchange::Model::FCurrentRateMaster>> Result
     )
     {
-        // ReSharper disable once CppLocalVariableMayBeConst
-        TSharedPtr<Gs2::Exchange::Model::FCurrentRateMaster> Value;
-        auto bCacheHit = Self->Gs2->Cache->TryGet<Gs2::Exchange::Model::FCurrentRateMaster>(
-            Self->ParentKey,
-            Gs2::Exchange::Domain::Model::FCurrentRateMasterDomain::CreateCacheKey(
-            ),
-            &Value
+        const auto CacheParentKey = Gs2::Exchange::Model::Cache::FCurrentRateMasterCache::CreateCacheParentKey(
+
+            Self->NamespaceName,
+            TOptional<int32>()
         );
-        if (!bCacheHit) {
-            const auto Future = Self->Get(
-                MakeShared<Gs2::Exchange::Request::FGetCurrentRateMasterRequest>()
-            );
-            Future->StartSynchronousTask();
-            if (Future->GetTask().IsError())
+        const auto CacheKey = Gs2::Exchange::Model::Cache::FCurrentRateMasterCache::CreateCacheKey(
+
+        );
+        return Self->Gs2->Cache->ExecuteWithKeyLock(
+            Gs2::Exchange::Model::FCurrentRateMaster::TypeName,
+            CacheParentKey,
+            CacheKey,
+            [Self = Self, Result]() -> Gs2::Core::Model::FGs2ErrorPtr
             {
-                if (Future->GetTask().Error()->Type() != Gs2::Core::Model::FNotFoundError::TypeString)
-                {
-                    return Future->GetTask().Error();
-                }
+                Gs2::Exchange::Model::FCurrentRateMasterPtr Value;
+                const auto CacheHit = Gs2::Exchange::Model::Cache::FCurrentRateMasterCache::TryGet(
+                    Self->Gs2->Cache,
 
-                const auto Key = Gs2::Exchange::Domain::Model::FCurrentRateMasterDomain::CreateCacheKey(
+                    Self->NamespaceName,
+                    TOptional<int32>(),
+                    &Value
                 );
-                Self->Gs2->Cache->Put(
-                    Gs2::Exchange::Model::FCurrentRateMaster::TypeName,
-                    Self->ParentKey,
-                    Key,
-                    nullptr,
-                    FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
-                );
-
-                if (Future->GetTask().Error()->Detail(0)->GetComponent() != "currentRateMaster")
+                if (CacheHit)
                 {
-                    return Future->GetTask().Error();
+                    *Result = Value;
+                    return nullptr;
                 }
-            }
-            else
-            {
-                Value = Future->GetTask().Result();
-            }
-            Future->EnsureCompletion();
-        }
-        *Result = Value;
+                const auto Error = Gs2::Exchange::Model::Cache::FCurrentRateMasterCache::Fetch(
+                    Self->Gs2->Cache,
 
-        return nullptr;
+                    Self->NamespaceName,
+                    TOptional<int32>(),
+                    [Self](Gs2::Exchange::Model::FCurrentRateMasterPtr* OutItem) -> Gs2::Core::Model::FGs2ErrorPtr
+                    {
+                        const auto Future = Self->Get(
+                            MakeShared<Gs2::Exchange::Request::FGetCurrentRateMasterRequest>()
+                        );
+                        Future->StartSynchronousTask();
+                        if (Future->GetTask().IsError()) return Future->GetTask().Error();
+                        *OutItem = Future->GetTask().Result();
+                        Future->EnsureCompletion();
+                        return nullptr;
+                    },
+                    &Value
+                );
+                if (Error.IsValid()) return Error;
+                *Result = Value;
+                return nullptr;
+            }
+        );
     }
 
     TSharedPtr<FAsyncTask<FCurrentRateMasterDomain::FModelTask>> FCurrentRateMasterDomain::Model() {
         return Gs2::Core::Util::New<FAsyncTask<FCurrentRateMasterDomain::FModelTask>>(this->AsShared());
     }
 
+    void FCurrentRateMasterDomain::Invalidate()
+    {
+        Gs2::Exchange::Model::Cache::FCurrentRateMasterCache::Delete(
+            Gs2->Cache,
+
+            NamespaceName,
+            TOptional<int32>()
+        );
+    }
+
+    FCurrentRateMasterDomain::FSubscribeWithInitialCallTask::FSubscribeWithInitialCallTask(
+        const TSharedPtr<FCurrentRateMasterDomain>& Self,
+        TFunction<void(Gs2::Exchange::Model::FCurrentRateMasterPtr)> Callback
+    ):
+        Self(Self),
+        Callback(Callback)
+    {
+    }
+
+    FCurrentRateMasterDomain::FSubscribeWithInitialCallTask::FSubscribeWithInitialCallTask(
+        const FSubscribeWithInitialCallTask& From
+    ):
+        TGs2Future(From),
+        Self(From.Self),
+        Callback(From.Callback)
+    {
+    }
+
+    Gs2::Core::Model::FGs2ErrorPtr FCurrentRateMasterDomain::FSubscribeWithInitialCallTask::Action(
+        TSharedPtr<TSharedPtr<Gs2::Core::Domain::CallbackID>> Result
+    )
+    {
+        const auto Task = Self->Model();
+        Task->StartSynchronousTask();
+        Task->EnsureCompletion();
+        if (Task->GetTask().IsError()) return Task->GetTask().Error();
+        const auto Item = Task->GetTask().Result();
+        const auto CallbackId = Self->Subscribe(Callback);
+        Callback(Item);
+        *Result = MakeShared<Gs2::Core::Domain::CallbackID>(CallbackId);
+        return nullptr;
+    }
+
+    TSharedPtr<FAsyncTask<FCurrentRateMasterDomain::FSubscribeWithInitialCallTask>> FCurrentRateMasterDomain::SubscribeWithInitialCall(
+        TFunction<void(Gs2::Exchange::Model::FCurrentRateMasterPtr)> Callback
+    )
+    {
+        return Gs2::Core::Util::New<FAsyncTask<FSubscribeWithInitialCallTask>>(this->AsShared(), Callback);
+    }
+
     Gs2::Core::Domain::CallbackID FCurrentRateMasterDomain::Subscribe(
         TFunction<void(Gs2::Exchange::Model::FCurrentRateMasterPtr)> Callback
     )
     {
+        const auto SubscriptionParentKey = Gs2::Exchange::Model::Cache::FCurrentRateMasterCache::CreateCacheParentKey(
+
+            NamespaceName,
+            TOptional<int32>()
+        );
+        const auto SubscriptionCacheKey = Gs2::Exchange::Model::Cache::FCurrentRateMasterCache::CreateCacheKey(
+
+        );
+        const TWeakPtr<Gs2::Core::Domain::FGs2> WeakGs2 = Gs2;
+        const TWeakPtr<Exchange::Domain::FGs2ExchangeDomain> WeakService = Service;
+        const FString RegisteredParentKey = SubscriptionParentKey;
+        const TOptional<FString> QueryNamespaceName = NamespaceName;
         return Gs2->Cache->Subscribe(
             Gs2::Exchange::Model::FCurrentRateMaster::TypeName,
-            ParentKey,
-            Gs2::Exchange::Domain::Model::FCurrentRateMasterDomain::CreateCacheKey(
-            ),
+            SubscriptionParentKey,
+            SubscriptionCacheKey,
             [Callback](TSharedPtr<FGs2Object> obj)
             {
                 Callback(StaticCastSharedPtr<Gs2::Exchange::Model::FCurrentRateMaster>(obj));
+            },
+            [WeakGs2, WeakService, RegisteredParentKey, QueryNamespaceName]()
+            {
+                const auto Owner = WeakGs2.Pin();
+                if (!Owner.IsValid())
+                {
+                    return;
+                }
+                const auto Domain = MakeShared<FCurrentRateMasterDomain>(
+                    Owner,
+                    WeakService.Pin(),
+                    QueryNamespaceName
+                );
+                Domain->ParentKey = RegisteredParentKey;
+                const auto Task = Domain->Model();
+                Task->StartBackgroundTask();
             }
         );
     }
@@ -436,11 +537,18 @@ namespace Gs2::Exchange::Domain::Model
         Gs2::Core::Domain::CallbackID CallbackID
     )
     {
+        const auto SubscriptionParentKey = Gs2::Exchange::Model::Cache::FCurrentRateMasterCache::CreateCacheParentKey(
+
+            NamespaceName,
+            TOptional<int32>()
+        );
+        const auto SubscriptionCacheKey = Gs2::Exchange::Model::Cache::FCurrentRateMasterCache::CreateCacheKey(
+
+        );
         Gs2->Cache->Unsubscribe(
             Gs2::Exchange::Model::FCurrentRateMaster::TypeName,
-            ParentKey,
-            Gs2::Exchange::Domain::Model::FCurrentRateMasterDomain::CreateCacheKey(
-            ),
+            SubscriptionParentKey,
+            SubscriptionCacheKey,
             CallbackID
         );
     }
@@ -451,4 +559,3 @@ namespace Gs2::Exchange::Domain::Model
 #elif defined(__clang__)
 #pragma clang diagnostic pop
 #endif
-

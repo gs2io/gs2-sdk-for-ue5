@@ -33,6 +33,8 @@
 #include "Dictionary/Domain/Model/CurrentEntryMaster.h"
 #include "Dictionary/Domain/Model/User.h"
 #include "Dictionary/Domain/Model/UserAccessToken.h"
+#include "Dictionary/Model/Cache/Entry.h"
+#include "Dictionary/Model/Cache/Like.h"
 
 #include "Core/Domain/Gs2.h"
 #include "Core/Domain/Transaction/JobQueueJobDomainFactory.h"
@@ -106,7 +108,22 @@ namespace Gs2::Dictionary::Domain::Model
         }
         const auto ResultModel = Future->GetTask().Result();
         Future->EnsureCompletion();
+        if (ResultModel.IsValid() && ResultModel->GetItems().IsValid())
+        {
+            for (const auto& Item : *ResultModel->GetItems())
+            {
+                if (!Item.IsValid()) continue;
+                Gs2::Dictionary::Model::Cache::FEntryCache::Put(
+                    Self->Gs2->Cache,
+                    Request->GetNamespaceName(), Request->GetUserId(), Item->GetName(),
+                    TOptional<int32>(), Item
+                );
+            }
+        }
+
         auto Domain = MakeShared<TArray<TSharedPtr<Gs2::Dictionary::Domain::Model::FEntryDomain>>>();
+        if (ResultModel.IsValid() && ResultModel->GetItems().IsValid())
+        {
         for (auto i=0; i<ResultModel->GetItems()->Num(); i++)
         {
             Domain->Add(
@@ -118,21 +135,7 @@ namespace Gs2::Dictionary::Domain::Model
                     (*ResultModel->GetItems())[i]->GetName()
                 )
             );
-            const auto ParentKey = Gs2::Dictionary::Domain::Model::FUserDomain::CreateCacheParentKey(
-                Self->NamespaceName,
-                Self->UserId,
-                "Entry"
-            );
-            const auto Key = Gs2::Dictionary::Domain::Model::FEntryDomain::CreateCacheKey(
-                (*ResultModel->GetItems())[i]->GetName()
-            );
-            Self->Gs2->Cache->Put(
-                Gs2::Dictionary::Model::FEntry::TypeName,
-                ParentKey,
-                Key,
-                (*ResultModel->GetItems())[i],
-                FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
-            );
+        }
         }
         *Result = Domain;
         return nullptr;
@@ -176,6 +179,24 @@ namespace Gs2::Dictionary::Domain::Model
         }
         const auto ResultModel = Future->GetTask().Result();
         Future->EnsureCompletion();
+
+        const auto Entries = Self->Gs2->Cache->TryGetList<Gs2::Dictionary::Model::FEntry>(
+            Gs2::Dictionary::Model::Cache::FEntryCache::CreateCacheParentKey(
+                Request->GetNamespaceName(), Request->GetUserId(), TOptional<int32>()
+            )
+        );
+        if (Entries.IsValid())
+        {
+            for (const auto& Item : *Entries)
+            {
+                if (!Item.IsValid()) continue;
+                Gs2::Dictionary::Model::Cache::FEntryCache::Delete(
+                    Self->Gs2->Cache,
+                    Request->GetNamespaceName(), Request->GetUserId(), Item->GetName(), TOptional<int32>()
+                );
+            }
+        }
+
         const auto Domain = Self;
         *Result = Domain;
         return nullptr;
@@ -215,11 +236,32 @@ namespace Gs2::Dictionary::Domain::Model
         Future->StartSynchronousTask();
         if (Future->GetTask().IsError())
         {
-            return Future->GetTask().Error();
+            const auto Error = Future->GetTask().Error();
+            if (Error.IsValid() && Error->IsChildOf(Gs2::Core::Model::FNotFoundError::Class))
+            {
+                *Result = MakeShared<TArray<TSharedPtr<Gs2::Dictionary::Domain::Model::FEntryDomain>>>();
+                return nullptr;
+            }
+            return Error;
         }
         const auto ResultModel = Future->GetTask().Result();
         Future->EnsureCompletion();
+        if (ResultModel.IsValid() && ResultModel->GetItems().IsValid())
+        {
+            for (const auto& Item : *ResultModel->GetItems())
+            {
+                if (!Item.IsValid()) continue;
+                Gs2::Dictionary::Model::Cache::FEntryCache::Delete(
+                    Self->Gs2->Cache,
+                    Request->GetNamespaceName(), Request->GetUserId(), Item->GetName(),
+                    TOptional<int32>()
+                );
+            }
+        }
+
         auto Domain = MakeShared<TArray<TSharedPtr<Gs2::Dictionary::Domain::Model::FEntryDomain>>>();
+        if (ResultModel.IsValid() && ResultModel->GetItems().IsValid())
+        {
         for (auto i=0; i<ResultModel->GetItems()->Num(); i++)
         {
             Domain->Add(
@@ -231,21 +273,7 @@ namespace Gs2::Dictionary::Domain::Model
                     (*ResultModel->GetItems())[i]->GetName()
                 )
             );
-            const auto ParentKey = Gs2::Dictionary::Domain::Model::FUserDomain::CreateCacheParentKey(
-                Self->NamespaceName,
-                Self->UserId,
-                "Entry"
-            );
-            const auto Key = Gs2::Dictionary::Domain::Model::FEntryDomain::CreateCacheKey(
-                (*ResultModel->GetItems())[i]->GetName()
-            );
-            Self->Gs2->Cache->Put(
-                Gs2::Dictionary::Model::FEntry::TypeName,
-                ParentKey,
-                Key,
-                (*ResultModel->GetItems())[i],
-                FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
-            );
+        }
         }
         *Result = Domain;
         return nullptr;
@@ -289,7 +317,22 @@ namespace Gs2::Dictionary::Domain::Model
         }
         const auto ResultModel = Future->GetTask().Result();
         Future->EnsureCompletion();
+        if (ResultModel.IsValid() && ResultModel->GetItems().IsValid())
+        {
+            for (const auto& Item : *ResultModel->GetItems())
+            {
+                if (!Item.IsValid()) continue;
+                Gs2::Dictionary::Model::Cache::FLikeCache::Put(
+                    Self->Gs2->Cache,
+                    Request->GetNamespaceName(), Request->GetUserId(), Item->GetName(),
+                    TOptional<int32>(), Item
+                );
+            }
+        }
+
         auto Domain = MakeShared<TArray<TSharedPtr<Gs2::Dictionary::Domain::Model::FLikeDomain>>>();
+        if (ResultModel.IsValid() && ResultModel->GetItems().IsValid())
+        {
         for (auto i=0; i<ResultModel->GetItems()->Num(); i++)
         {
             Domain->Add(
@@ -301,21 +344,7 @@ namespace Gs2::Dictionary::Domain::Model
                     (*ResultModel->GetItems())[i]->GetName()
                 )
             );
-            const auto ParentKey = Gs2::Dictionary::Domain::Model::FUserDomain::CreateCacheParentKey(
-                Self->NamespaceName,
-                Self->UserId,
-                "Like"
-            );
-            const auto Key = Gs2::Dictionary::Domain::Model::FLikeDomain::CreateCacheKey(
-                (*ResultModel->GetItems())[i]->GetName()
-            );
-            Self->Gs2->Cache->Put(
-                Gs2::Dictionary::Model::FLike::TypeName,
-                ParentKey,
-                Key,
-                (*ResultModel->GetItems())[i],
-                FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
-            );
+        }
         }
         *Result = Domain;
         return nullptr;
@@ -359,6 +388,7 @@ namespace Gs2::Dictionary::Domain::Model
         }
         const auto ResultModel = Future->GetTask().Result();
         Future->EnsureCompletion();
+
         const auto Domain = Self;
         *Result = Domain;
         return nullptr;
@@ -398,11 +428,32 @@ namespace Gs2::Dictionary::Domain::Model
         Future->StartSynchronousTask();
         if (Future->GetTask().IsError())
         {
-            return Future->GetTask().Error();
+            const auto Error = Future->GetTask().Error();
+            if (Error.IsValid() && Error->IsChildOf(Gs2::Core::Model::FNotFoundError::Class))
+            {
+                *Result = MakeShared<TArray<TSharedPtr<Gs2::Dictionary::Domain::Model::FLikeDomain>>>();
+                return nullptr;
+            }
+            return Error;
         }
         const auto ResultModel = Future->GetTask().Result();
         Future->EnsureCompletion();
+        if (ResultModel.IsValid() && ResultModel->GetItems().IsValid())
+        {
+            for (const auto& Item : *ResultModel->GetItems())
+            {
+                if (!Item.IsValid()) continue;
+                Gs2::Dictionary::Model::Cache::FLikeCache::Delete(
+                    Self->Gs2->Cache,
+                    Request->GetNamespaceName(), Request->GetUserId(), Item->GetName(),
+                    TOptional<int32>()
+                );
+            }
+        }
+
         auto Domain = MakeShared<TArray<TSharedPtr<Gs2::Dictionary::Domain::Model::FLikeDomain>>>();
+        if (ResultModel.IsValid() && ResultModel->GetItems().IsValid())
+        {
         for (auto i=0; i<ResultModel->GetItems()->Num(); i++)
         {
             Domain->Add(
@@ -414,21 +465,7 @@ namespace Gs2::Dictionary::Domain::Model
                     (*ResultModel->GetItems())[i]->GetName()
                 )
             );
-            const auto ParentKey = Gs2::Dictionary::Domain::Model::FUserDomain::CreateCacheParentKey(
-                Self->NamespaceName,
-                Self->UserId,
-                "Like"
-            );
-            const auto Key = Gs2::Dictionary::Domain::Model::FLikeDomain::CreateCacheKey(
-                (*ResultModel->GetItems())[i]->GetName()
-            );
-            Self->Gs2->Cache->Put(
-                Gs2::Dictionary::Model::FLike::TypeName,
-                ParentKey,
-                Key,
-                (*ResultModel->GetItems())[i],
-                FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
-            );
+        }
         }
         *Result = Domain;
         return nullptr;
@@ -455,32 +492,121 @@ namespace Gs2::Dictionary::Domain::Model
 
     Gs2::Core::Domain::CallbackID FUserDomain::SubscribeEntries(
     TFunction<void()> Callback
+
     )
     {
         return Gs2->Cache->ListSubscribe(
             Gs2::Dictionary::Model::FEntry::TypeName,
-            Gs2::Dictionary::Domain::Model::FUserDomain::CreateCacheParentKey(
+            Gs2::Dictionary::Model::Cache::FEntryCache::CreateCacheParentKey(
                 NamespaceName,
                 UserId,
-                "Entry"
+                TOptional<int32>()
             ),
+            Callback,
             Callback
         );
     }
-
     void FUserDomain::UnsubscribeEntries(
         Gs2::Core::Domain::CallbackID CallbackID
     )
     {
         Gs2->Cache->ListUnsubscribe(
             Gs2::Dictionary::Model::FEntry::TypeName,
-            Gs2::Dictionary::Domain::Model::FUserDomain::CreateCacheParentKey(
+            Gs2::Dictionary::Model::Cache::FEntryCache::CreateCacheParentKey(
                 NamespaceName,
                 UserId,
-                "Entry"
+                TOptional<int32>()
             ),
             CallbackID
         );
+    }
+    class FUserDomain::FCollectEntriesTask : public Gs2::Core::Util::TGs2Future<TArray<Gs2::Dictionary::Model::FEntryPtr>>, public TSharedFromThis<FCollectEntriesTask>
+    {
+        const TSharedPtr<FUserDomain> Self;
+        const TFunction<void(TArray<Gs2::Dictionary::Model::FEntryPtr>)> OnCollected;
+    const TOptional<FString> QueryTimeOffsetToken;
+    public:
+        explicit FCollectEntriesTask(const TSharedPtr<FUserDomain>& Self, TFunction<void(TArray<Gs2::Dictionary::Model::FEntryPtr>)> OnCollected,const TOptional<FString> TimeOffsetToken) : Self(Self), OnCollected(OnCollected), QueryTimeOffsetToken(TimeOffsetToken) {}
+        FCollectEntriesTask(const FCollectEntriesTask& From) : TGs2Future(From), Self(From.Self), OnCollected(From.OnCollected), QueryTimeOffsetToken(From.QueryTimeOffsetToken) {}
+        virtual Gs2::Core::Model::FGs2ErrorPtr Action(TSharedPtr<TSharedPtr<TArray<Gs2::Dictionary::Model::FEntryPtr>>> Result) override
+        {
+            TArray<Gs2::Dictionary::Model::FEntryPtr> Items;
+            auto Iterator = Self->Entries(QueryTimeOffsetToken)->begin();
+            while (Iterator.HasNext())
+            {
+                if (Iterator.IsError()) return Iterator.Error();
+                if (Iterator.IsCurrentValid()) Items.Add(Iterator.Current());
+                ++Iterator;
+            }
+            if (Iterator.IsError()) return Iterator.Error();
+            *Result = MakeShared<TArray<Gs2::Dictionary::Model::FEntryPtr>>(Items);
+            if (OnCollected) OnCollected(Items);
+            return nullptr;
+        }
+    };
+
+    Gs2::Core::Domain::CallbackID FUserDomain::SubscribeEntries(
+        TFunction<void(TArray<Gs2::Dictionary::Model::FEntryPtr>)> Callback,const TOptional<FString> TimeOffsetToken
+    )
+    {
+        const TWeakPtr<Gs2::Core::Domain::FGs2> WeakGs2 = this->Gs2;
+        const TWeakPtr<Dictionary::Domain::FGs2DictionaryDomain> WeakService = this->Service;
+        const auto QueryNamespaceName = NamespaceName;
+        const auto QueryUserId = UserId;
+        const auto QueryTimeOffsetToken = TimeOffsetToken;
+        const auto Parent = Gs2::Dictionary::Model::Cache::FEntryCache::CreateCacheParentKey(
+        NamespaceName,
+        UserId,
+        TOptional<int32>()
+    );
+        return Gs2->Cache->ListSubscribeTyped(
+            Gs2::Dictionary::Model::FEntry::TypeName,
+            Parent,
+            [Callback, WeakGs2](const TArray<FGs2ObjectPtr>& Values)
+            {
+                if (!WeakGs2.Pin().IsValid()) return;
+                TArray<Gs2::Dictionary::Model::FEntryPtr> TypedValues;
+                for (const auto& Value : Values) if (Value.IsValid()) TypedValues.Add(StaticCastSharedPtr<Gs2::Dictionary::Model::FEntry>(Value));
+                Callback(TypedValues);
+            },
+            [WeakGs2, WeakService, Callback, QueryNamespaceName, QueryUserId, QueryTimeOffsetToken]()
+            {
+                const auto Owner = WeakGs2.Pin();
+                if (!Owner.IsValid()) return;
+                const auto Domain = MakeShared<FUserDomain>(Owner, WeakService.Pin(), QueryNamespaceName, QueryUserId);
+                const auto Task = Gs2::Core::Util::New<FAsyncTask<FCollectEntriesTask>>(Domain, Callback, QueryTimeOffsetToken);
+                Task->StartBackgroundTask();
+            }
+        );
+    }
+
+    void FUserDomain::InvalidateEntries(const TOptional<FString> TimeOffsetToken)
+    {
+        Gs2->Cache->ClearListCache(
+            Gs2::Dictionary::Model::FEntry::TypeName,
+            Gs2::Dictionary::Model::Cache::FEntryCache::CreateCacheParentKey(
+        NamespaceName,
+        UserId,
+        TOptional<int32>()
+    )
+        );
+    }
+
+    FUserDomain::FSubscribeEntriesWithInitialCallTask::FSubscribeEntriesWithInitialCallTask(const TSharedPtr<FUserDomain>& Self, TFunction<void(TArray<Gs2::Dictionary::Model::FEntryPtr>)> Callback,const TOptional<FString> TimeOffsetToken) : Self(Self), Callback(Callback), QueryTimeOffsetToken(TimeOffsetToken) {}
+    FUserDomain::FSubscribeEntriesWithInitialCallTask::FSubscribeEntriesWithInitialCallTask(const FSubscribeEntriesWithInitialCallTask& From) : TGs2Future(From), Self(From.Self), Callback(From.Callback), QueryTimeOffsetToken(From.QueryTimeOffsetToken) {}
+    Gs2::Core::Model::FGs2ErrorPtr FUserDomain::FSubscribeEntriesWithInitialCallTask::Action(TSharedPtr<TSharedPtr<Gs2::Core::Domain::CallbackID>> Result)
+    {
+        const auto Task = Gs2::Core::Util::New<FAsyncTask<FCollectEntriesTask>>(Self, TFunction<void(TArray<Gs2::Dictionary::Model::FEntryPtr>)>(), QueryTimeOffsetToken);
+        Task->StartSynchronousTask(); Task->EnsureCompletion();
+        if (Task->GetTask().IsError()) return Task->GetTask().Error();
+        const auto Values = Task->GetTask().Result();
+        const auto CallbackId = Self->SubscribeEntries(Callback, QueryTimeOffsetToken);
+        Callback(*Values); *Result = MakeShared<Gs2::Core::Domain::CallbackID>(CallbackId);
+        return nullptr;
+    }
+    TSharedPtr<FAsyncTask<FUserDomain::FSubscribeEntriesWithInitialCallTask>> FUserDomain::SubscribeEntriesWithInitialCall(TFunction<void(TArray<Gs2::Dictionary::Model::FEntryPtr>)> Callback,const TOptional<FString> TimeOffsetToken)
+    {
+        return Gs2::Core::Util::New<FAsyncTask<FSubscribeEntriesWithInitialCallTask>>(this->AsShared(), Callback, TimeOffsetToken);
     }
 
     TSharedPtr<Gs2::Dictionary::Domain::Model::FEntryDomain> FUserDomain::Entry(
@@ -511,32 +637,121 @@ namespace Gs2::Dictionary::Domain::Model
 
     Gs2::Core::Domain::CallbackID FUserDomain::SubscribeLikes(
     TFunction<void()> Callback
+
     )
     {
         return Gs2->Cache->ListSubscribe(
             Gs2::Dictionary::Model::FLike::TypeName,
-            Gs2::Dictionary::Domain::Model::FUserDomain::CreateCacheParentKey(
+            Gs2::Dictionary::Model::Cache::FLikeCache::CreateCacheParentKey(
                 NamespaceName,
                 UserId,
-                "Like"
+                TOptional<int32>()
             ),
+            Callback,
             Callback
         );
     }
-
     void FUserDomain::UnsubscribeLikes(
         Gs2::Core::Domain::CallbackID CallbackID
     )
     {
         Gs2->Cache->ListUnsubscribe(
             Gs2::Dictionary::Model::FLike::TypeName,
-            Gs2::Dictionary::Domain::Model::FUserDomain::CreateCacheParentKey(
+            Gs2::Dictionary::Model::Cache::FLikeCache::CreateCacheParentKey(
                 NamespaceName,
                 UserId,
-                "Like"
+                TOptional<int32>()
             ),
             CallbackID
         );
+    }
+    class FUserDomain::FCollectLikesTask : public Gs2::Core::Util::TGs2Future<TArray<Gs2::Dictionary::Model::FLikePtr>>, public TSharedFromThis<FCollectLikesTask>
+    {
+        const TSharedPtr<FUserDomain> Self;
+        const TFunction<void(TArray<Gs2::Dictionary::Model::FLikePtr>)> OnCollected;
+    const TOptional<FString> QueryTimeOffsetToken;
+    public:
+        explicit FCollectLikesTask(const TSharedPtr<FUserDomain>& Self, TFunction<void(TArray<Gs2::Dictionary::Model::FLikePtr>)> OnCollected,const TOptional<FString> TimeOffsetToken) : Self(Self), OnCollected(OnCollected), QueryTimeOffsetToken(TimeOffsetToken) {}
+        FCollectLikesTask(const FCollectLikesTask& From) : TGs2Future(From), Self(From.Self), OnCollected(From.OnCollected), QueryTimeOffsetToken(From.QueryTimeOffsetToken) {}
+        virtual Gs2::Core::Model::FGs2ErrorPtr Action(TSharedPtr<TSharedPtr<TArray<Gs2::Dictionary::Model::FLikePtr>>> Result) override
+        {
+            TArray<Gs2::Dictionary::Model::FLikePtr> Items;
+            auto Iterator = Self->Likes(QueryTimeOffsetToken)->begin();
+            while (Iterator.HasNext())
+            {
+                if (Iterator.IsError()) return Iterator.Error();
+                if (Iterator.IsCurrentValid()) Items.Add(Iterator.Current());
+                ++Iterator;
+            }
+            if (Iterator.IsError()) return Iterator.Error();
+            *Result = MakeShared<TArray<Gs2::Dictionary::Model::FLikePtr>>(Items);
+            if (OnCollected) OnCollected(Items);
+            return nullptr;
+        }
+    };
+
+    Gs2::Core::Domain::CallbackID FUserDomain::SubscribeLikes(
+        TFunction<void(TArray<Gs2::Dictionary::Model::FLikePtr>)> Callback,const TOptional<FString> TimeOffsetToken
+    )
+    {
+        const TWeakPtr<Gs2::Core::Domain::FGs2> WeakGs2 = this->Gs2;
+        const TWeakPtr<Dictionary::Domain::FGs2DictionaryDomain> WeakService = this->Service;
+        const auto QueryNamespaceName = NamespaceName;
+        const auto QueryUserId = UserId;
+        const auto QueryTimeOffsetToken = TimeOffsetToken;
+        const auto Parent = Gs2::Dictionary::Model::Cache::FLikeCache::CreateCacheParentKey(
+        NamespaceName,
+        UserId,
+        TOptional<int32>()
+    );
+        return Gs2->Cache->ListSubscribeTyped(
+            Gs2::Dictionary::Model::FLike::TypeName,
+            Parent,
+            [Callback, WeakGs2](const TArray<FGs2ObjectPtr>& Values)
+            {
+                if (!WeakGs2.Pin().IsValid()) return;
+                TArray<Gs2::Dictionary::Model::FLikePtr> TypedValues;
+                for (const auto& Value : Values) if (Value.IsValid()) TypedValues.Add(StaticCastSharedPtr<Gs2::Dictionary::Model::FLike>(Value));
+                Callback(TypedValues);
+            },
+            [WeakGs2, WeakService, Callback, QueryNamespaceName, QueryUserId, QueryTimeOffsetToken]()
+            {
+                const auto Owner = WeakGs2.Pin();
+                if (!Owner.IsValid()) return;
+                const auto Domain = MakeShared<FUserDomain>(Owner, WeakService.Pin(), QueryNamespaceName, QueryUserId);
+                const auto Task = Gs2::Core::Util::New<FAsyncTask<FCollectLikesTask>>(Domain, Callback, QueryTimeOffsetToken);
+                Task->StartBackgroundTask();
+            }
+        );
+    }
+
+    void FUserDomain::InvalidateLikes(const TOptional<FString> TimeOffsetToken)
+    {
+        Gs2->Cache->ClearListCache(
+            Gs2::Dictionary::Model::FLike::TypeName,
+            Gs2::Dictionary::Model::Cache::FLikeCache::CreateCacheParentKey(
+        NamespaceName,
+        UserId,
+        TOptional<int32>()
+    )
+        );
+    }
+
+    FUserDomain::FSubscribeLikesWithInitialCallTask::FSubscribeLikesWithInitialCallTask(const TSharedPtr<FUserDomain>& Self, TFunction<void(TArray<Gs2::Dictionary::Model::FLikePtr>)> Callback,const TOptional<FString> TimeOffsetToken) : Self(Self), Callback(Callback), QueryTimeOffsetToken(TimeOffsetToken) {}
+    FUserDomain::FSubscribeLikesWithInitialCallTask::FSubscribeLikesWithInitialCallTask(const FSubscribeLikesWithInitialCallTask& From) : TGs2Future(From), Self(From.Self), Callback(From.Callback), QueryTimeOffsetToken(From.QueryTimeOffsetToken) {}
+    Gs2::Core::Model::FGs2ErrorPtr FUserDomain::FSubscribeLikesWithInitialCallTask::Action(TSharedPtr<TSharedPtr<Gs2::Core::Domain::CallbackID>> Result)
+    {
+        const auto Task = Gs2::Core::Util::New<FAsyncTask<FCollectLikesTask>>(Self, TFunction<void(TArray<Gs2::Dictionary::Model::FLikePtr>)>(), QueryTimeOffsetToken);
+        Task->StartSynchronousTask(); Task->EnsureCompletion();
+        if (Task->GetTask().IsError()) return Task->GetTask().Error();
+        const auto Values = Task->GetTask().Result();
+        const auto CallbackId = Self->SubscribeLikes(Callback, QueryTimeOffsetToken);
+        Callback(*Values); *Result = MakeShared<Gs2::Core::Domain::CallbackID>(CallbackId);
+        return nullptr;
+    }
+    TSharedPtr<FAsyncTask<FUserDomain::FSubscribeLikesWithInitialCallTask>> FUserDomain::SubscribeLikesWithInitialCall(TFunction<void(TArray<Gs2::Dictionary::Model::FLikePtr>)> Callback,const TOptional<FString> TimeOffsetToken)
+    {
+        return Gs2::Core::Util::New<FAsyncTask<FSubscribeLikesWithInitialCallTask>>(this->AsShared(), Callback, TimeOffsetToken);
     }
 
     TSharedPtr<Gs2::Dictionary::Domain::Model::FLikeDomain> FUserDomain::Like(
@@ -578,4 +793,3 @@ namespace Gs2::Dictionary::Domain::Model
 #elif defined(__clang__)
 #pragma clang diagnostic pop
 #endif
-

@@ -177,7 +177,8 @@ namespace Gs2::UE5::Inbox::Domain::Model
         );
     }
 
-    void FEzUserGameSessionDomain::UnsubscribeMessages(Gs2::Core::Domain::CallbackID CallbackId)
+    void FEzUserGameSessionDomain::UnsubscribeMessages(
+            Gs2::Core::Domain::CallbackID CallbackId)
     {
         Domain->UnsubscribeMessages(
             CallbackId

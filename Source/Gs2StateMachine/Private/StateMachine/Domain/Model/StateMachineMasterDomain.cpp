@@ -29,6 +29,7 @@
 #include "StateMachine/Domain/Model/StatusAccessToken.h"
 #include "StateMachine/Domain/Model/User.h"
 #include "StateMachine/Domain/Model/UserAccessToken.h"
+#include "StateMachine/Model/Cache/StateMachineMaster.h"
 
 #include "Core/Domain/Gs2.h"
 #include "Core/Domain/Transaction/JobQueueJobDomainFactory.h"
@@ -102,6 +103,25 @@ namespace Gs2::StateMachine::Domain::Model
         }
         const auto ResultModel = Future->GetTask().Result();
         Future->EnsureCompletion();
+
+            if (ResultModel.IsValid() && ResultModel->GetItem() != nullptr)
+            {
+
+        if (!ResultModel.IsValid() || !ResultModel->GetItem().IsValid())
+            {
+              const auto Details = MakeShared<TArray<TSharedPtr<Gs2::Core::Model::FGs2ErrorDetail>>>();
+                Details->Add(MakeShared<Gs2::Core::Model::FGs2ErrorDetail>(TEXT("result.item"), TEXT("result.item is invalid."), TEXT("invalid_response")));
+                return MakeShared<Gs2::Core::Model::FUnknownError>(Details);
+              }
+        Gs2::StateMachine::Model::Cache::FStateMachineMasterCache::Put(
+            Self->Gs2->Cache,
+
+            Request->GetNamespaceName(),
+            ResultModel->GetItem()->GetVersion().Get(int64{}),
+            TOptional<int32>(),
+            ResultModel->GetItem()
+        );
+            }
         *Result = ResultModel->GetItem();
         return nullptr;
     }
@@ -140,21 +160,30 @@ namespace Gs2::StateMachine::Domain::Model
         Future->StartSynchronousTask();
         if (Future->GetTask().IsError())
         {
-            return Future->GetTask().Error();
+            const auto Error = Future->GetTask().Error();
+            if (Error.IsValid() && Error->IsChildOf(Gs2::Core::Model::FNotFoundError::Class))
+            {
+                *Result = Self;
+                return nullptr;
+            }
+            return Error;
         }
         const auto ResultModel = Future->GetTask().Result();
         Future->EnsureCompletion();
-        if (ResultModel->GetItem() != nullptr)
-        {
-            const auto Key = Gs2::StateMachine::Domain::Model::FStateMachineMasterDomain::CreateCacheKey(
-                ResultModel->GetItem()->GetVersion()
-            );
-            Self->Gs2->Cache->Delete(
-                Gs2::StateMachine::Model::FStateMachineMaster::TypeName,
-                Self->ParentKey,
-                Key
-            );
-        }
+
+              if (!ResultModel.IsValid() || !ResultModel->GetItem().IsValid())
+                  {
+                    const auto Details = MakeShared<TArray<TSharedPtr<Gs2::Core::Model::FGs2ErrorDetail>>>();
+                      Details->Add(MakeShared<Gs2::Core::Model::FGs2ErrorDetail>(TEXT("result.item"), TEXT("result.item is invalid."), TEXT("invalid_response")));
+                      return MakeShared<Gs2::Core::Model::FUnknownError>(Details);
+                    }
+              Gs2::StateMachine::Model::Cache::FStateMachineMasterCache::Delete(
+            Self->Gs2->Cache,
+
+            Request->GetNamespaceName(),
+            ResultModel->GetItem()->GetVersion().Get(int64{}),
+            TOptional<int32>()
+        );
         auto Domain = Self;
 
         *Result = Domain;
@@ -205,71 +234,158 @@ namespace Gs2::StateMachine::Domain::Model
         TSharedPtr<TSharedPtr<Gs2::StateMachine::Model::FStateMachineMaster>> Result
     )
     {
-        // ReSharper disable once CppLocalVariableMayBeConst
-        TSharedPtr<Gs2::StateMachine::Model::FStateMachineMaster> Value;
-        auto bCacheHit = Self->Gs2->Cache->TryGet<Gs2::StateMachine::Model::FStateMachineMaster>(
-            Self->ParentKey,
-            Gs2::StateMachine::Domain::Model::FStateMachineMasterDomain::CreateCacheKey(
-                Self->Version
-            ),
-            &Value
+        const auto CacheParentKey = Gs2::StateMachine::Model::Cache::FStateMachineMasterCache::CreateCacheParentKey(
+
+            Self->NamespaceName,
+            TOptional<int32>()
         );
-        if (!bCacheHit) {
-            const auto Future = Self->Get(
-                MakeShared<Gs2::StateMachine::Request::FGetStateMachineMasterRequest>()
-            );
-            Future->StartSynchronousTask();
-            if (Future->GetTask().IsError())
+        const auto CacheKey = Gs2::StateMachine::Model::Cache::FStateMachineMasterCache::CreateCacheKey(
+
+            Self->Version
+        );
+        return Self->Gs2->Cache->ExecuteWithKeyLock(
+            Gs2::StateMachine::Model::FStateMachineMaster::TypeName,
+            CacheParentKey,
+            CacheKey,
+            [Self = Self, Result]() -> Gs2::Core::Model::FGs2ErrorPtr
             {
-                if (Future->GetTask().Error()->Type() != Gs2::Core::Model::FNotFoundError::TypeString)
-                {
-                    return Future->GetTask().Error();
-                }
+                Gs2::StateMachine::Model::FStateMachineMasterPtr Value;
+                const auto CacheHit = Gs2::StateMachine::Model::Cache::FStateMachineMasterCache::TryGet(
+                    Self->Gs2->Cache,
 
-                const auto Key = Gs2::StateMachine::Domain::Model::FStateMachineMasterDomain::CreateCacheKey(
-                    Self->Version
+                    Self->NamespaceName,
+                    Self->Version,
+                    TOptional<int32>(),
+                    &Value
                 );
-                Self->Gs2->Cache->Put(
-                    Gs2::StateMachine::Model::FStateMachineMaster::TypeName,
-                    Self->ParentKey,
-                    Key,
-                    nullptr,
-                    FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
-                );
-
-                if (Future->GetTask().Error()->Detail(0)->GetComponent() != "stateMachineMaster")
+                if (CacheHit)
                 {
-                    return Future->GetTask().Error();
+                    *Result = Value;
+                    return nullptr;
                 }
-            }
-            else
-            {
-                Value = Future->GetTask().Result();
-            }
-            Future->EnsureCompletion();
-        }
-        *Result = Value;
+                const auto Error = Gs2::StateMachine::Model::Cache::FStateMachineMasterCache::Fetch(
+                    Self->Gs2->Cache,
 
-        return nullptr;
+                    Self->NamespaceName,
+                    Self->Version,
+                    TOptional<int32>(),
+                    [Self](Gs2::StateMachine::Model::FStateMachineMasterPtr* OutItem) -> Gs2::Core::Model::FGs2ErrorPtr
+                    {
+                        const auto Future = Self->Get(
+                            MakeShared<Gs2::StateMachine::Request::FGetStateMachineMasterRequest>()
+                        );
+                        Future->StartSynchronousTask();
+                        if (Future->GetTask().IsError()) return Future->GetTask().Error();
+                        *OutItem = Future->GetTask().Result();
+                        Future->EnsureCompletion();
+                        return nullptr;
+                    },
+                    &Value
+                );
+                if (Error.IsValid()) return Error;
+                *Result = Value;
+                return nullptr;
+            }
+        );
     }
 
     TSharedPtr<FAsyncTask<FStateMachineMasterDomain::FModelTask>> FStateMachineMasterDomain::Model() {
         return Gs2::Core::Util::New<FAsyncTask<FStateMachineMasterDomain::FModelTask>>(this->AsShared());
     }
 
+    void FStateMachineMasterDomain::Invalidate()
+    {
+        Gs2::StateMachine::Model::Cache::FStateMachineMasterCache::Delete(
+            Gs2->Cache,
+
+            NamespaceName,
+            Version,
+            TOptional<int32>()
+        );
+    }
+
+    FStateMachineMasterDomain::FSubscribeWithInitialCallTask::FSubscribeWithInitialCallTask(
+        const TSharedPtr<FStateMachineMasterDomain>& Self,
+        TFunction<void(Gs2::StateMachine::Model::FStateMachineMasterPtr)> Callback
+    ):
+        Self(Self),
+        Callback(Callback)
+    {
+    }
+
+    FStateMachineMasterDomain::FSubscribeWithInitialCallTask::FSubscribeWithInitialCallTask(
+        const FSubscribeWithInitialCallTask& From
+    ):
+        TGs2Future(From),
+        Self(From.Self),
+        Callback(From.Callback)
+    {
+    }
+
+    Gs2::Core::Model::FGs2ErrorPtr FStateMachineMasterDomain::FSubscribeWithInitialCallTask::Action(
+        TSharedPtr<TSharedPtr<Gs2::Core::Domain::CallbackID>> Result
+    )
+    {
+        const auto Task = Self->Model();
+        Task->StartSynchronousTask();
+        Task->EnsureCompletion();
+        if (Task->GetTask().IsError()) return Task->GetTask().Error();
+        const auto Item = Task->GetTask().Result();
+        const auto CallbackId = Self->Subscribe(Callback);
+        Callback(Item);
+        *Result = MakeShared<Gs2::Core::Domain::CallbackID>(CallbackId);
+        return nullptr;
+    }
+
+    TSharedPtr<FAsyncTask<FStateMachineMasterDomain::FSubscribeWithInitialCallTask>> FStateMachineMasterDomain::SubscribeWithInitialCall(
+        TFunction<void(Gs2::StateMachine::Model::FStateMachineMasterPtr)> Callback
+    )
+    {
+        return Gs2::Core::Util::New<FAsyncTask<FSubscribeWithInitialCallTask>>(this->AsShared(), Callback);
+    }
+
     Gs2::Core::Domain::CallbackID FStateMachineMasterDomain::Subscribe(
         TFunction<void(Gs2::StateMachine::Model::FStateMachineMasterPtr)> Callback
     )
     {
+        const auto SubscriptionParentKey = Gs2::StateMachine::Model::Cache::FStateMachineMasterCache::CreateCacheParentKey(
+
+            NamespaceName,
+            TOptional<int32>()
+        );
+        const auto SubscriptionCacheKey = Gs2::StateMachine::Model::Cache::FStateMachineMasterCache::CreateCacheKey(
+
+            Version
+        );
+        const TWeakPtr<Gs2::Core::Domain::FGs2> WeakGs2 = Gs2;
+        const TWeakPtr<StateMachine::Domain::FGs2StateMachineDomain> WeakService = Service;
+        const FString RegisteredParentKey = SubscriptionParentKey;
+        const TOptional<FString> QueryNamespaceName = NamespaceName;
+        const TOptional<int64> QueryVersion = Version;
         return Gs2->Cache->Subscribe(
             Gs2::StateMachine::Model::FStateMachineMaster::TypeName,
-            ParentKey,
-            Gs2::StateMachine::Domain::Model::FStateMachineMasterDomain::CreateCacheKey(
-                Version
-            ),
+            SubscriptionParentKey,
+            SubscriptionCacheKey,
             [Callback](TSharedPtr<FGs2Object> obj)
             {
                 Callback(StaticCastSharedPtr<Gs2::StateMachine::Model::FStateMachineMaster>(obj));
+            },
+            [WeakGs2, WeakService, RegisteredParentKey, QueryNamespaceName, QueryVersion]()
+            {
+                const auto Owner = WeakGs2.Pin();
+                if (!Owner.IsValid())
+                {
+                    return;
+                }
+                const auto Domain = MakeShared<FStateMachineMasterDomain>(
+                    Owner,
+                    WeakService.Pin(),
+                    QueryNamespaceName,
+                    QueryVersion
+                );
+                Domain->ParentKey = RegisteredParentKey;
+                const auto Task = Domain->Model();
+                Task->StartBackgroundTask();
             }
         );
     }
@@ -278,12 +394,19 @@ namespace Gs2::StateMachine::Domain::Model
         Gs2::Core::Domain::CallbackID CallbackID
     )
     {
+        const auto SubscriptionParentKey = Gs2::StateMachine::Model::Cache::FStateMachineMasterCache::CreateCacheParentKey(
+
+            NamespaceName,
+            TOptional<int32>()
+        );
+        const auto SubscriptionCacheKey = Gs2::StateMachine::Model::Cache::FStateMachineMasterCache::CreateCacheKey(
+
+            Version
+        );
         Gs2->Cache->Unsubscribe(
             Gs2::StateMachine::Model::FStateMachineMaster::TypeName,
-            ParentKey,
-            Gs2::StateMachine::Domain::Model::FStateMachineMasterDomain::CreateCacheKey(
-                Version
-            ),
+            SubscriptionParentKey,
+            SubscriptionCacheKey,
             CallbackID
         );
     }
@@ -294,4 +417,3 @@ namespace Gs2::StateMachine::Domain::Model
 #elif defined(__clang__)
 #pragma clang diagnostic pop
 #endif
-

@@ -84,7 +84,7 @@ namespace Gs2::UE5::AdReward::Domain::Model
     Gs2::Core::Domain::CallbackID FEzPointGameSessionDomain::Subscribe(TFunction<void(Gs2::UE5::AdReward::Model::FEzPointPtr)> Callback)
     {
         return Domain->Subscribe(
-            [&](Gs2::AdReward::Model::FPointPtr Item)
+            [Callback](Gs2::AdReward::Model::FPointPtr Item)
             {
                 Callback(Gs2::UE5::AdReward::Model::FEzPoint::FromModel(Item));
             }

@@ -77,7 +77,7 @@ namespace Gs2::UE5::SeasonRating::Domain::Model
     }
 
     Gs2::Core::Model::FGs2ErrorPtr FEzBallotDomain::FModelTask::Action(
-        TSharedPtr<Gs2::UE5::SeasonRating::Model::FEzBallotPtr> Result
+        TSharedPtr<Gs2::UE5::SeasonRating::Model::FEzSignedBallotPtr> Result
     )
     {
         const auto Future = Self->ConnectionValue->Run(
@@ -89,7 +89,7 @@ namespace Gs2::UE5::SeasonRating::Domain::Model
                     Task->EnsureCompletion();
                     return Task->GetTask().Error();
                 }
-                *Result = Gs2::UE5::SeasonRating::Model::FEzBallot::FromModel(Task->GetTask().Result());
+                *Result = Gs2::UE5::SeasonRating::Model::FEzSignedBallot::FromModel(Task->GetTask().Result());
                 Task->EnsureCompletion();
                 return nullptr;
             },
@@ -109,12 +109,12 @@ namespace Gs2::UE5::SeasonRating::Domain::Model
         return Gs2::Core::Util::New<FAsyncTask<FModelTask>>(this->AsShared());
     }
 
-    Gs2::Core::Domain::CallbackID FEzBallotDomain::Subscribe(TFunction<void(Gs2::UE5::SeasonRating::Model::FEzBallotPtr)> Callback)
+    Gs2::Core::Domain::CallbackID FEzBallotDomain::Subscribe(TFunction<void(Gs2::UE5::SeasonRating::Model::FEzSignedBallotPtr)> Callback)
     {
         return Domain->Subscribe(
-            [&](Gs2::SeasonRating::Model::FBallotPtr Item)
+            [Callback](Gs2::SeasonRating::Model::FSignedBallotPtr Item)
             {
-                Callback(Gs2::UE5::SeasonRating::Model::FEzBallot::FromModel(Item));
+                Callback(Gs2::UE5::SeasonRating::Model::FEzSignedBallot::FromModel(Item));
             }
         );
     }

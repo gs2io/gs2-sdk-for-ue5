@@ -95,6 +95,8 @@ namespace Gs2::Guild::Domain::Model
             const FIgnoreUserDomain& From
         );
 
+
+
         class GS2GUILD_API FGetTask final :
             public Gs2::Core::Util::TGs2Future<Gs2::Guild::Model::FIgnoreUser>,
             public TSharedFromThis<FGetTask>
@@ -121,6 +123,8 @@ namespace Gs2::Guild::Domain::Model
             Request::FGetIgnoreUserByGuildNameRequestPtr Request
         );
 
+
+
         class GS2GUILD_API FAddTask final :
             public Gs2::Core::Util::TGs2Future<Gs2::Guild::Domain::Model::FIgnoreUserDomain>,
             public TSharedFromThis<FAddTask>
@@ -146,6 +150,8 @@ namespace Gs2::Guild::Domain::Model
         TSharedPtr<FAsyncTask<FAddTask>> Add(
             Request::FAddIgnoreUserByGuildNameRequestPtr Request
         );
+
+
 
         class GS2GUILD_API FDeleteTask final :
             public Gs2::Core::Util::TGs2Future<Gs2::Guild::Domain::Model::FIgnoreUserDomain>,
@@ -205,7 +211,34 @@ namespace Gs2::Guild::Domain::Model
 
         TSharedPtr<FAsyncTask<FModelTask>> Model();
 
+        void Invalidate();
+
         Gs2::Core::Domain::CallbackID Subscribe(
+            TFunction<void(Gs2::Guild::Model::FIgnoreUserPtr)> Callback
+        );
+
+        class GS2GUILD_API FSubscribeWithInitialCallTask final :
+            public Gs2::Core::Util::TGs2Future<Gs2::Core::Domain::CallbackID>,
+            public TSharedFromThis<FSubscribeWithInitialCallTask>
+        {
+            const TSharedPtr<FIgnoreUserDomain> Self;
+            const TFunction<void(Gs2::Guild::Model::FIgnoreUserPtr)> Callback;
+        public:
+            FSubscribeWithInitialCallTask(
+                const TSharedPtr<FIgnoreUserDomain>& Self,
+                TFunction<void(Gs2::Guild::Model::FIgnoreUserPtr)> Callback
+            );
+
+            FSubscribeWithInitialCallTask(
+                const FSubscribeWithInitialCallTask& From
+            );
+
+            virtual Gs2::Core::Model::FGs2ErrorPtr Action(
+                TSharedPtr<TSharedPtr<Gs2::Core::Domain::CallbackID>> Result
+            ) override;
+        };
+
+        TSharedPtr<FAsyncTask<FSubscribeWithInitialCallTask>> SubscribeWithInitialCall(
             TFunction<void(Gs2::Guild::Model::FIgnoreUserPtr)> Callback
         );
 

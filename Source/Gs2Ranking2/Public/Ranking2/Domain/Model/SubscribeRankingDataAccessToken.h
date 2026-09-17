@@ -133,6 +133,8 @@ namespace Gs2::Ranking2::Domain::Model
             const FSubscribeRankingDataAccessTokenDomain& From
         );
 
+
+
         class GS2RANKING2_API FGetSubscribeRankingTask final :
             public Gs2::Core::Util::TGs2Future<Gs2::Ranking2::Domain::Model::FSubscribeRankingDataAccessTokenDomain>,
             public TSharedFromThis<FGetSubscribeRankingTask>

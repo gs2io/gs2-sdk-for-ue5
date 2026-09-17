@@ -27,7 +27,10 @@
 #include "LoginReward/Domain/SpeculativeExecutor/Acquire/UnmarkReceivedByUserIdSpeculativeExecutor.h"
 
 #include "Core/Domain/Gs2.h"
+#include "Core/Domain/SpeculativeExecutor/PreparedSpeculativeCommit.h"
 #include "LoginReward/Domain/Gs2LoginReward.h"
+#include "LoginReward/Domain/SpeculativeExecutor/ReceiveStatusSpeculativeCommit.h"
+#include "LoginReward/Model/Cache/ReceiveStatus.h"
 
 namespace Gs2::LoginReward::Domain::SpeculativeExecutor
 {
@@ -44,7 +47,6 @@ namespace Gs2::LoginReward::Domain::SpeculativeExecutor
         Gs2::LoginReward::Model::FReceiveStatusPtr Item
     )
     {
-        UE_LOG(Gs2Log, Warning, TEXT("Speculative execution not supported on this action: %s"), ToCStr(Action()))
         return nullptr;
     }
 
@@ -74,57 +76,65 @@ namespace Gs2::LoginReward::Domain::SpeculativeExecutor
     }
 
     Gs2::Core::Model::FGs2ErrorPtr FUnmarkReceivedByUserIdSpeculativeExecutor::FCommitTask::Action(
-        TSharedPtr<TSharedPtr<TFunction<void()>>> Result
+        TSharedPtr<TSharedPtr<Gs2::Core::Domain::SpeculativeExecutor::FPreparedSpeculativeCommit>> Result
     )
     {
-        const auto Future = Domain->LoginReward->Namespace(
-                Request->GetNamespaceName().IsSet() ? *Request->GetNamespaceName() : FString("")
-            )->AccessToken(
-                AccessToken
-            )->ReceiveStatus(
-                Request->GetBonusModelName().IsSet() ? *Request->GetBonusModelName() : FString("")
-            )->Model();
-        Future->StartSynchronousTask();
-        if (Future->GetTask().IsError())
-        {
-            return Future->GetTask().Error();
-        }
-        auto Item = Future->GetTask().Result();
+        *Result = nullptr;
+        if (!Domain.IsValid() || !Domain->RestSession.IsValid() ||
+            !AccessToken.IsValid() || !Request.IsValid()) return nullptr;
 
-        if (!Item.IsValid())
+        const auto Prepared = Gs2::LoginReward::Request::FUnmarkReceivedByUserIdRequest::FromJson(
+            Request->ToJson()
+        );
+        if (!Prepared.IsValid() || !AccessToken->GetUserId().IsSet() ||
+            AccessToken->GetUserId().Get(FString()).IsEmpty()) return nullptr;
+        if (Prepared->GetUserId().IsSet() &&
+            Prepared->GetUserId().Get(FString()) == TEXT("#{userId}"))
         {
-            *Result = MakeShared<TFunction<void()>>([&]()
+            Prepared->WithUserId(AccessToken->GetUserId());
+        }
+        if (!Prepared->GetUserId().IsSet() ||
+            Prepared->GetUserId().Get(FString()) != AccessToken->GetUserId().Get(FString()) ||
+            !Prepared->GetStepNumber().IsSet() || Prepared->GetStepNumber().Get(0) < 0) return nullptr;
+
+        const auto NamespaceName = Prepared->GetNamespaceName();
+        const auto BonusModelName = Prepared->GetBonusModelName();
+        const auto UserId = AccessToken->GetUserId();
+        const auto TimeOffset = AccessToken->GetTimeOffset();
+        const int64 CurrentTimeMillis = static_cast<int64>(
+            FDateTime::UtcNow().ToUnixTimestampDecimal() * 1000.0
+        ) + static_cast<int64>(TimeOffset.Get(0)) * 1000;
+        const FString ExpectedId = FString::Printf(
+            TEXT("grn:gs2:%s:%s:loginReward:%s:user:%s:status:%s"),
+            *Domain->RestSession->RegionName(), *Domain->RestSession->OwnerId(),
+            *NamespaceName.Get(FString()), *UserId.Get(FString()), *BonusModelName.Get(FString())
+        );
+        const int32 StepNumber = Prepared->GetStepNumber().Get(0);
+        auto Commit = MakeShared<FReceiveStatusSpeculativeCommit>(
+            Domain->Cache, NamespaceName, UserId.Get(FString()), BonusModelName, TimeOffset,
+            ExpectedId,
+            [StepNumber, CurrentTimeMillis](const Gs2::LoginReward::Model::FReceiveStatusPtr& Source)
+                -> Gs2::LoginReward::Model::FReceiveStatusPtr
             {
-                return nullptr;
-            });
-            return nullptr;
-        }
-        auto Err = Transform(Domain, AccessToken, Request, Item);
-        if (Err != nullptr)
-        {
-            return Err;
-        }
-
-        const auto ParentKey = Model::FUserDomain::CreateCacheParentKey(
-            Request->GetNamespaceName(),
-            AccessToken->GetUserId(),
-            FString("ReceiveStatus")
+                if (!Source.IsValid()) return nullptr;
+                const auto ReceivedSteps = Source->GetReceivedSteps();
+                if (!ReceivedSteps.IsValid() || StepNumber >= ReceivedSteps->Num() ||
+                    !(*ReceivedSteps)[StepNumber]) return nullptr;
+                const auto Changed = MakeShared<Gs2::LoginReward::Model::FReceiveStatus>(*Source);
+                const auto Steps = MakeShared<TArray<bool>>(*ReceivedSteps);
+                (*Steps)[StepNumber] = false;
+                return Changed->WithReceivedSteps(Steps)
+                    ->WithUpdatedAt(CurrentTimeMillis)
+                    ->WithRevision(0);
+            }
         );
-        const auto Key = Model::FReceiveStatusDomain::CreateCacheKey(
-            Request->GetBonusModelName()
+        if (!Commit->CanPrepare()) return nullptr;
+        *Result = Gs2::Core::Domain::SpeculativeExecutor::FPreparedSpeculativeCommit::CreateComposable(
+            Commit->CompositionKey(),
+            [Commit](const TSharedPtr<void>& Current, const bool HasCurrent, TSharedPtr<void>& Next)
+            { return Commit->TryCompose(Current, HasCurrent, Next); },
+            [Commit](const TSharedPtr<void>& State) { Commit->Commit(State); }
         );
-
-        *Result = MakeShared<TFunction<void()>>([&]()
-        {
-            Domain->Cache->Put(
-                LoginReward::Model::FReceiveStatus::TypeName,
-                ParentKey,
-                Key,
-                Item,
-                FDateTime::Now() + FTimespan::FromSeconds(10)
-            );
-            return nullptr;
-        });
         return nullptr;
     }
 

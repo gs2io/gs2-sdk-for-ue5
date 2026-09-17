@@ -87,6 +87,8 @@ namespace Gs2::Experience::Domain::Model
             const FCurrentExperienceMasterDomain& From
         );
 
+
+
         class GS2EXPERIENCE_API FExportMasterTask final :
             public Gs2::Core::Util::TGs2Future<Gs2::Experience::Domain::Model::FCurrentExperienceMasterDomain>,
             public TSharedFromThis<FExportMasterTask>
@@ -112,6 +114,8 @@ namespace Gs2::Experience::Domain::Model
         TSharedPtr<FAsyncTask<FExportMasterTask>> ExportMaster(
             Request::FExportMasterRequestPtr Request
         );
+
+
 
         class GS2EXPERIENCE_API FGetTask final :
             public Gs2::Core::Util::TGs2Future<Gs2::Experience::Model::FCurrentExperienceMaster>,
@@ -139,6 +143,8 @@ namespace Gs2::Experience::Domain::Model
             Request::FGetCurrentExperienceMasterRequestPtr Request
         );
 
+
+
         class GS2EXPERIENCE_API FPreUpdateTask final :
             public Gs2::Core::Util::TGs2Future<Gs2::Experience::Domain::Model::FCurrentExperienceMasterDomain>,
             public TSharedFromThis<FPreUpdateTask>
@@ -165,6 +171,8 @@ namespace Gs2::Experience::Domain::Model
             Request::FPreUpdateCurrentExperienceMasterRequestPtr Request
         );
 
+
+
         class GS2EXPERIENCE_API FUpdateTask final :
             public Gs2::Core::Util::TGs2Future<Gs2::Experience::Domain::Model::FCurrentExperienceMasterDomain>,
             public TSharedFromThis<FUpdateTask>
@@ -190,6 +198,8 @@ namespace Gs2::Experience::Domain::Model
         TSharedPtr<FAsyncTask<FUpdateTask>> Update(
             Request::FUpdateCurrentExperienceMasterRequestPtr Request
         );
+
+
 
         class GS2EXPERIENCE_API FUpdateFromGitHubTask final :
             public Gs2::Core::Util::TGs2Future<Gs2::Experience::Domain::Model::FCurrentExperienceMasterDomain>,
@@ -247,7 +257,34 @@ namespace Gs2::Experience::Domain::Model
 
         TSharedPtr<FAsyncTask<FModelTask>> Model();
 
+        void Invalidate();
+
         Gs2::Core::Domain::CallbackID Subscribe(
+            TFunction<void(Gs2::Experience::Model::FCurrentExperienceMasterPtr)> Callback
+        );
+
+        class GS2EXPERIENCE_API FSubscribeWithInitialCallTask final :
+            public Gs2::Core::Util::TGs2Future<Gs2::Core::Domain::CallbackID>,
+            public TSharedFromThis<FSubscribeWithInitialCallTask>
+        {
+            const TSharedPtr<FCurrentExperienceMasterDomain> Self;
+            const TFunction<void(Gs2::Experience::Model::FCurrentExperienceMasterPtr)> Callback;
+        public:
+            FSubscribeWithInitialCallTask(
+                const TSharedPtr<FCurrentExperienceMasterDomain>& Self,
+                TFunction<void(Gs2::Experience::Model::FCurrentExperienceMasterPtr)> Callback
+            );
+
+            FSubscribeWithInitialCallTask(
+                const FSubscribeWithInitialCallTask& From
+            );
+
+            virtual Gs2::Core::Model::FGs2ErrorPtr Action(
+                TSharedPtr<TSharedPtr<Gs2::Core::Domain::CallbackID>> Result
+            ) override;
+        };
+
+        TSharedPtr<FAsyncTask<FSubscribeWithInitialCallTask>> SubscribeWithInitialCall(
             TFunction<void(Gs2::Experience::Model::FCurrentExperienceMasterPtr)> Callback
         );
 

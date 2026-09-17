@@ -68,7 +68,8 @@ namespace Gs2::UE5::News::Domain::Model
         );
     }
 
-    void FEzUserGameSessionDomain::UnsubscribeNewses(Gs2::Core::Domain::CallbackID CallbackId)
+    void FEzUserGameSessionDomain::UnsubscribeNewses(
+            Gs2::Core::Domain::CallbackID CallbackId)
     {
         Domain->UnsubscribeNewses(
             CallbackId

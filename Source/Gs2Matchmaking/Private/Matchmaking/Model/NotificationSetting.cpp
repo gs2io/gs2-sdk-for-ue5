@@ -22,6 +22,7 @@ namespace Gs2::Matchmaking::Model
         GatewayNamespaceIdValue(TOptional<FString>()),
         EnableTransferMobileNotificationValue(TOptional<bool>()),
         SoundValue(TOptional<FString>()),
+        MobileNotificationMessagesValue(nullptr),
         EnableValue(TOptional<FString>())
     {
     }
@@ -32,6 +33,7 @@ namespace Gs2::Matchmaking::Model
         GatewayNamespaceIdValue(From.GatewayNamespaceIdValue),
         EnableTransferMobileNotificationValue(From.EnableTransferMobileNotificationValue),
         SoundValue(From.SoundValue),
+        MobileNotificationMessagesValue(From.MobileNotificationMessagesValue),
         EnableValue(From.EnableValue)
     {
     }
@@ -57,6 +59,14 @@ namespace Gs2::Matchmaking::Model
     )
     {
         this->SoundValue = Sound;
+        return SharedThis(this);
+    }
+
+    TSharedPtr<FNotificationSetting> FNotificationSetting::WithMobileNotificationMessages(
+        const TSharedPtr<TArray<TSharedPtr<Model::FMobileNotificationMessage>>> MobileNotificationMessages
+    )
+    {
+        this->MobileNotificationMessagesValue = MobileNotificationMessages;
         return SharedThis(this);
     }
 
@@ -87,6 +97,10 @@ namespace Gs2::Matchmaking::Model
     TOptional<FString> FNotificationSetting::GetSound() const
     {
         return SoundValue;
+    }
+    TSharedPtr<TArray<TSharedPtr<Model::FMobileNotificationMessage>>> FNotificationSetting::GetMobileNotificationMessages() const
+    {
+        return MobileNotificationMessagesValue;
     }
     TOptional<FString> FNotificationSetting::GetEnable() const
     {
@@ -126,6 +140,18 @@ namespace Gs2::Matchmaking::Model
                     }
                     return TOptional<FString>();
                 }() : TOptional<FString>())
+            ->WithMobileNotificationMessages(Data->HasField(ANSI_TO_TCHAR("mobileNotificationMessages")) ? [Data]() -> TSharedPtr<TArray<Model::FMobileNotificationMessagePtr>>
+                {
+                    auto v = MakeShared<TArray<Model::FMobileNotificationMessagePtr>>();
+                    if (!Data->HasTypedField<EJson::Null>(ANSI_TO_TCHAR("mobileNotificationMessages")) && Data->HasTypedField<EJson::Array>(ANSI_TO_TCHAR("mobileNotificationMessages")))
+                    {
+                        for (auto JsonObjectValue : Data->GetArrayField(ANSI_TO_TCHAR("mobileNotificationMessages")))
+                        {
+                            v->Add(Model::FMobileNotificationMessage::FromJson(JsonObjectValue->AsObject()));
+                        }
+                    }
+                    return v;
+                 }() : MakeShared<TArray<Model::FMobileNotificationMessagePtr>>())
             ->WithEnable(Data->HasField(ANSI_TO_TCHAR("enable")) ? [Data]() -> TOptional<FString>
                 {
                     FString v("");
@@ -151,6 +177,15 @@ namespace Gs2::Matchmaking::Model
         if (SoundValue.IsSet())
         {
             JsonRootObject->SetStringField(TEXT("sound"), SoundValue.GetValue());
+        }
+        if (MobileNotificationMessagesValue != nullptr && MobileNotificationMessagesValue.IsValid())
+        {
+            TArray<TSharedPtr<FJsonValue>> v;
+            for (auto JsonObjectValue : *MobileNotificationMessagesValue)
+            {
+                v.Add(MakeShared<FJsonValueObject>(JsonObjectValue->ToJson()));
+            }
+            JsonRootObject->SetArrayField(TEXT("mobileNotificationMessages"), v);
         }
         if (EnableValue.IsSet())
         {

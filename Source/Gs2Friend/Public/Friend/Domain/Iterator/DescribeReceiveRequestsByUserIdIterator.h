@@ -12,8 +12,6 @@
  * on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either
  * express or implied. See the License for the specific language governing
  * permissions and limitations under the License.
- *
- * deny overwrite
  */
 
 // ReSharper disable CppUnusedIncludeDirective
@@ -34,7 +32,6 @@ namespace Gs2::Friend::Domain::Iterator
         const Gs2::Friend::FGs2FriendRestClientPtr Client;
         const TOptional<FString> NamespaceName;
         const TOptional<FString> UserId;
-        const TOptional<bool> WithProfile;
         const TOptional<FString> TimeOffsetToken;
 
     public:
@@ -43,7 +40,6 @@ namespace Gs2::Friend::Domain::Iterator
             const Gs2::Friend::FGs2FriendRestClientPtr Client,
             const TOptional<FString> NamespaceName,
             const TOptional<FString> UserId,
-            const TOptional<bool> WithProfile = TOptional<bool>(),
             const TOptional<FString> TimeOffsetToken = TOptional<FString>()
         );
 

@@ -25,6 +25,7 @@
 #endif
 
 #include "Lottery/Domain/Model/ProbabilityAccessToken.h"
+#include "Lottery/Model/Cache/Probability.h"
 #include "Lottery/Domain/Model/Probability.h"
 #include "Lottery/Domain/Model/Namespace.h"
 #include "Lottery/Domain/Model/LotteryModelMaster.h"
@@ -65,13 +66,7 @@ namespace Gs2::Lottery::Domain::Model
         NamespaceName(NamespaceName),
         AccessToken(AccessToken),
         LotteryName(LotteryName),
-        PrizeId(PrizeId),
-        ParentKey(Gs2::Lottery::Domain::Model::FLotteryDomain::CreateCacheParentKey(
-            NamespaceName,
-            UserId(),
-            LotteryName,
-            "Probability"
-        ))
+        PrizeId(PrizeId)
     {
     }
 
@@ -84,8 +79,7 @@ namespace Gs2::Lottery::Domain::Model
         NamespaceName(From.NamespaceName),
         AccessToken(From.AccessToken),
         LotteryName(From.LotteryName),
-        PrizeId(From.PrizeId),
-        ParentKey(From.ParentKey)
+        PrizeId(From.PrizeId)
     {
 
     }
@@ -132,17 +126,17 @@ namespace Gs2::Lottery::Domain::Model
         TSharedPtr<TSharedPtr<Gs2::Lottery::Model::FProbability>> Result
     )
     {
-        // ReSharper disable once CppLocalVariableMayBeConst
-        TSharedPtr<Gs2::Lottery::Model::FProbability> Value;
-        auto bCacheHit = Self->Gs2->Cache->TryGet<Gs2::Lottery::Model::FProbability>(
-            Self->ParentKey,
-            Gs2::Lottery::Domain::Model::FProbabilityDomain::CreateCacheKey(
-                Self->PrizeId
-            ),
+        Gs2::Lottery::Model::FProbabilityPtr Value;
+        Gs2::Lottery::Model::Cache::FProbabilityCache::TryGet(
+            Self->Gs2->Cache,
+            Self->NamespaceName,
+            Self->AccessToken.IsValid() ? Self->UserId() : TOptional<FString>(),
+            Self->LotteryName,
+            Self->PrizeId,
+            Self->AccessToken.IsValid() ? Self->AccessToken->GetTimeOffset() : TOptional<int32>(),
             &Value
         );
         *Result = Value;
-
         return nullptr;
     }
 
@@ -150,16 +144,68 @@ namespace Gs2::Lottery::Domain::Model
         return Gs2::Core::Util::New<FAsyncTask<FProbabilityAccessTokenDomain::FModelTask>>(this->AsShared());
     }
 
+    FProbabilityAccessTokenDomain::FSubscribeWithInitialCallTask::FSubscribeWithInitialCallTask(
+        const TSharedPtr<FProbabilityAccessTokenDomain> Self,
+        const TFunction<void(Gs2::Lottery::Model::FProbabilityPtr)>& Callback
+    ): Self(Self), Callback(Callback)
+    {
+    }
+
+    FProbabilityAccessTokenDomain::FSubscribeWithInitialCallTask::FSubscribeWithInitialCallTask(
+        const FSubscribeWithInitialCallTask& From
+    ): TGs2Future(From), Self(From.Self), Callback(From.Callback)
+    {
+    }
+
+    Gs2::Core::Model::FGs2ErrorPtr FProbabilityAccessTokenDomain::FSubscribeWithInitialCallTask::Action(
+        TSharedPtr<TSharedPtr<Gs2::Core::Domain::CallbackID>> Result
+    )
+    {
+        const auto Future = Self->Model();
+        Future->StartSynchronousTask();
+        Future->EnsureCompletion();
+        if (Future->GetTask().IsError()) return Future->GetTask().Error();
+        const auto Item = Future->GetTask().Result();
+        const auto ID = Self->Subscribe(Callback);
+        Callback(Item);
+        *Result = MakeShared<Gs2::Core::Domain::CallbackID>(ID);
+        return nullptr;
+    }
+
+    TSharedPtr<FAsyncTask<FProbabilityAccessTokenDomain::FSubscribeWithInitialCallTask>> FProbabilityAccessTokenDomain::SubscribeWithInitialCall(
+        TFunction<void(Gs2::Lottery::Model::FProbabilityPtr)> Callback
+    )
+    {
+        return Gs2::Core::Util::New<FAsyncTask<FProbabilityAccessTokenDomain::FSubscribeWithInitialCallTask>>(this->AsShared(), Callback);
+    }
+
+    void FProbabilityAccessTokenDomain::Invalidate()
+    {
+        const auto SourceToken = AccessToken;
+        Gs2::Lottery::Model::Cache::FProbabilityCache::Delete(
+            Gs2->Cache,
+            NamespaceName,
+            SourceToken.IsValid() ? SourceToken->GetUserId() : TOptional<FString>(),
+            LotteryName,
+            PrizeId,
+            SourceToken.IsValid() ? SourceToken->GetTimeOffset() : TOptional<int32>()
+        );
+    }
+
     Gs2::Core::Domain::CallbackID FProbabilityAccessTokenDomain::Subscribe(
         TFunction<void(Gs2::Lottery::Model::FProbabilityPtr)> Callback
     )
     {
+        const auto SourceToken = AccessToken;
         return Gs2->Cache->Subscribe(
             Gs2::Lottery::Model::FProbability::TypeName,
-            ParentKey,
-            Gs2::Lottery::Domain::Model::FProbabilityDomain::CreateCacheKey(
-                PrizeId
+            Gs2::Lottery::Model::Cache::FProbabilityCache::CreateCacheParentKey(
+                NamespaceName,
+                SourceToken.IsValid() ? SourceToken->GetUserId() : TOptional<FString>(),
+                LotteryName,
+                SourceToken.IsValid() ? SourceToken->GetTimeOffset() : TOptional<int32>()
             ),
+            Gs2::Lottery::Model::Cache::FProbabilityCache::CreateCacheKey(PrizeId),
             [Callback](TSharedPtr<FGs2Object> obj)
             {
                 Callback(StaticCastSharedPtr<Gs2::Lottery::Model::FProbability>(obj));
@@ -171,15 +217,20 @@ namespace Gs2::Lottery::Domain::Model
         Gs2::Core::Domain::CallbackID CallbackID
     )
     {
+        const auto SourceToken = AccessToken;
         Gs2->Cache->Unsubscribe(
             Gs2::Lottery::Model::FProbability::TypeName,
-            ParentKey,
-            Gs2::Lottery::Domain::Model::FProbabilityDomain::CreateCacheKey(
-                PrizeId
+            Gs2::Lottery::Model::Cache::FProbabilityCache::CreateCacheParentKey(
+                NamespaceName,
+                SourceToken.IsValid() ? SourceToken->GetUserId() : TOptional<FString>(),
+                LotteryName,
+                SourceToken.IsValid() ? SourceToken->GetTimeOffset() : TOptional<int32>()
             ),
+            Gs2::Lottery::Model::Cache::FProbabilityCache::CreateCacheKey(PrizeId),
             CallbackID
         );
     }
+
 }
 
 #if defined(_MSC_VER)
@@ -187,4 +238,3 @@ namespace Gs2::Lottery::Domain::Model
 #elif defined(__clang__)
 #pragma clang diagnostic pop
 #endif
-

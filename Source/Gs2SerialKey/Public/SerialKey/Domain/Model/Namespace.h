@@ -101,6 +101,8 @@ namespace Gs2::SerialKey::Domain::Model
             const FNamespaceDomain& From
         );
 
+
+
         class GS2SERIALKEY_API FGetStatusTask final :
             public Gs2::Core::Util::TGs2Future<Gs2::SerialKey::Domain::Model::FNamespaceDomain>,
             public TSharedFromThis<FGetStatusTask>
@@ -126,6 +128,8 @@ namespace Gs2::SerialKey::Domain::Model
         TSharedPtr<FAsyncTask<FGetStatusTask>> GetStatus(
             Request::FGetNamespaceStatusRequestPtr Request
         );
+
+
 
         class GS2SERIALKEY_API FGetTask final :
             public Gs2::Core::Util::TGs2Future<Gs2::SerialKey::Model::FNamespace>,
@@ -153,6 +157,8 @@ namespace Gs2::SerialKey::Domain::Model
             Request::FGetNamespaceRequestPtr Request
         );
 
+
+
         class GS2SERIALKEY_API FUpdateTask final :
             public Gs2::Core::Util::TGs2Future<Gs2::SerialKey::Domain::Model::FNamespaceDomain>,
             public TSharedFromThis<FUpdateTask>
@@ -179,6 +185,8 @@ namespace Gs2::SerialKey::Domain::Model
             Request::FUpdateNamespaceRequestPtr Request
         );
 
+
+
         class GS2SERIALKEY_API FDeleteTask final :
             public Gs2::Core::Util::TGs2Future<Gs2::SerialKey::Domain::Model::FNamespaceDomain>,
             public TSharedFromThis<FDeleteTask>
@@ -204,6 +212,8 @@ namespace Gs2::SerialKey::Domain::Model
         TSharedPtr<FAsyncTask<FDeleteTask>> Delete(
             Request::FDeleteNamespaceRequestPtr Request
         );
+
+
 
         class GS2SERIALKEY_API FCreateCampaignModelMasterTask final :
             public Gs2::Core::Util::TGs2Future<Gs2::SerialKey::Domain::Model::FCampaignModelMasterDomain>,
@@ -239,8 +249,33 @@ namespace Gs2::SerialKey::Domain::Model
 
         Gs2::Core::Domain::CallbackID SubscribeCampaignModels(
             TFunction<void()> Callback
+
         );
 
+        class FCollectCampaignModelsTask;
+
+        Gs2::Core::Domain::CallbackID SubscribeCampaignModels(
+            TFunction<void(TArray<Gs2::SerialKey::Model::FCampaignModelPtr>)> Callback
+        );
+
+        void InvalidateCampaignModels();
+
+        class GS2SERIALKEY_API FSubscribeCampaignModelsWithInitialCallTask final :
+            public Gs2::Core::Util::TGs2Future<Gs2::Core::Domain::CallbackID>,
+            public TSharedFromThis<FSubscribeCampaignModelsWithInitialCallTask>
+        {
+            const TSharedPtr<FNamespaceDomain> Self;
+            const TFunction<void(TArray<Gs2::SerialKey::Model::FCampaignModelPtr>)> Callback;
+
+        public:
+            FSubscribeCampaignModelsWithInitialCallTask(const TSharedPtr<FNamespaceDomain>& Self, TFunction<void(TArray<Gs2::SerialKey::Model::FCampaignModelPtr>)> Callback);
+            FSubscribeCampaignModelsWithInitialCallTask(const FSubscribeCampaignModelsWithInitialCallTask& From);
+            virtual Gs2::Core::Model::FGs2ErrorPtr Action(TSharedPtr<TSharedPtr<Gs2::Core::Domain::CallbackID>> Result) override;
+        };
+
+        TSharedPtr<FAsyncTask<FSubscribeCampaignModelsWithInitialCallTask>> SubscribeCampaignModelsWithInitialCall(
+            TFunction<void(TArray<Gs2::SerialKey::Model::FCampaignModelPtr>)> Callback
+        );
         void UnsubscribeCampaignModels(
             Gs2::Core::Domain::CallbackID CallbackID
         );
@@ -263,8 +298,33 @@ namespace Gs2::SerialKey::Domain::Model
 
         Gs2::Core::Domain::CallbackID SubscribeCampaignModelMasters(
             TFunction<void()> Callback
+
         );
 
+        class FCollectCampaignModelMastersTask;
+
+        Gs2::Core::Domain::CallbackID SubscribeCampaignModelMasters(
+            TFunction<void(TArray<Gs2::SerialKey::Model::FCampaignModelMasterPtr>)> Callback,const TOptional<FString> NamePrefix = TOptional<FString>()
+        );
+
+        void InvalidateCampaignModelMasters(const TOptional<FString> NamePrefix = TOptional<FString>());
+
+        class GS2SERIALKEY_API FSubscribeCampaignModelMastersWithInitialCallTask final :
+            public Gs2::Core::Util::TGs2Future<Gs2::Core::Domain::CallbackID>,
+            public TSharedFromThis<FSubscribeCampaignModelMastersWithInitialCallTask>
+        {
+            const TSharedPtr<FNamespaceDomain> Self;
+            const TFunction<void(TArray<Gs2::SerialKey::Model::FCampaignModelMasterPtr>)> Callback;
+        const TOptional<FString> QueryNamePrefix;
+        public:
+            FSubscribeCampaignModelMastersWithInitialCallTask(const TSharedPtr<FNamespaceDomain>& Self, TFunction<void(TArray<Gs2::SerialKey::Model::FCampaignModelMasterPtr>)> Callback,const TOptional<FString> NamePrefix);
+            FSubscribeCampaignModelMastersWithInitialCallTask(const FSubscribeCampaignModelMastersWithInitialCallTask& From);
+            virtual Gs2::Core::Model::FGs2ErrorPtr Action(TSharedPtr<TSharedPtr<Gs2::Core::Domain::CallbackID>> Result) override;
+        };
+
+        TSharedPtr<FAsyncTask<FSubscribeCampaignModelMastersWithInitialCallTask>> SubscribeCampaignModelMastersWithInitialCall(
+            TFunction<void(TArray<Gs2::SerialKey::Model::FCampaignModelMasterPtr>)> Callback,const TOptional<FString> NamePrefix = TOptional<FString>()
+        );
         void UnsubscribeCampaignModelMasters(
             Gs2::Core::Domain::CallbackID CallbackID
         );
@@ -304,7 +364,34 @@ namespace Gs2::SerialKey::Domain::Model
 
         TSharedPtr<FAsyncTask<FModelTask>> Model();
 
+        void Invalidate();
+
         Gs2::Core::Domain::CallbackID Subscribe(
+            TFunction<void(Gs2::SerialKey::Model::FNamespacePtr)> Callback
+        );
+
+        class GS2SERIALKEY_API FSubscribeWithInitialCallTask final :
+            public Gs2::Core::Util::TGs2Future<Gs2::Core::Domain::CallbackID>,
+            public TSharedFromThis<FSubscribeWithInitialCallTask>
+        {
+            const TSharedPtr<FNamespaceDomain> Self;
+            const TFunction<void(Gs2::SerialKey::Model::FNamespacePtr)> Callback;
+        public:
+            FSubscribeWithInitialCallTask(
+                const TSharedPtr<FNamespaceDomain>& Self,
+                TFunction<void(Gs2::SerialKey::Model::FNamespacePtr)> Callback
+            );
+
+            FSubscribeWithInitialCallTask(
+                const FSubscribeWithInitialCallTask& From
+            );
+
+            virtual Gs2::Core::Model::FGs2ErrorPtr Action(
+                TSharedPtr<TSharedPtr<Gs2::Core::Domain::CallbackID>> Result
+            ) override;
+        };
+
+        TSharedPtr<FAsyncTask<FSubscribeWithInitialCallTask>> SubscribeWithInitialCall(
             TFunction<void(Gs2::SerialKey::Model::FNamespacePtr)> Callback
         );
 

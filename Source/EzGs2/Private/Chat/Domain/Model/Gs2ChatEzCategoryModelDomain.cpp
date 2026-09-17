@@ -82,7 +82,7 @@ namespace Gs2::UE5::Chat::Domain::Model
     Gs2::Core::Domain::CallbackID FEzCategoryModelDomain::Subscribe(TFunction<void(Gs2::UE5::Chat::Model::FEzCategoryModelPtr)> Callback)
     {
         return Domain->Subscribe(
-            [&](Gs2::Chat::Model::FCategoryModelPtr Item)
+            [Callback](Gs2::Chat::Model::FCategoryModelPtr Item)
             {
                 Callback(Gs2::UE5::Chat::Model::FEzCategoryModel::FromModel(Item));
             }

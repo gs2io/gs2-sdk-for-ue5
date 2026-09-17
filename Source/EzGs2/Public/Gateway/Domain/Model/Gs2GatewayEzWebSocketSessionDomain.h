@@ -19,6 +19,7 @@
 #include "CoreMinimal.h"
 #include "Gateway/Domain/Model/WebSocketSession.h"
 #include "Gateway/Model/Gs2GatewayEzWebSocketSession.h"
+#include "Gateway/Model/Gs2GatewayEzFirebaseToken.h"
 #include "Gs2GatewayEzWebSocketSessionDomain.h"
 #include "Core/EzTransactionDomain.h"
 #include "Util/Net/GameSession.h"

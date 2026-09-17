@@ -19,6 +19,7 @@
 #include "CoreMinimal.h"
 #include "Core/Gs2Object.h"
 #include "TransactionSetting.h"
+#include "TransactionSettingV2.h"
 #include "ScriptSetting.h"
 #include "LogSetting.h"
 
@@ -30,6 +31,7 @@ namespace Gs2::Inventory::Model
         TOptional<FString> NameValue;
         TOptional<FString> DescriptionValue;
         TSharedPtr<FTransactionSetting> TransactionSettingValue;
+        TSharedPtr<FTransactionSettingV2> TransactionSettingV2Value;
         TSharedPtr<FScriptSetting> AcquireScriptValue;
         TSharedPtr<FScriptSetting> OverflowScriptValue;
         TSharedPtr<FScriptSetting> ConsumeScriptValue;
@@ -53,6 +55,7 @@ namespace Gs2::Inventory::Model
         TSharedPtr<FNamespace> WithName(const TOptional<FString> Name);
         TSharedPtr<FNamespace> WithDescription(const TOptional<FString> Description);
         TSharedPtr<FNamespace> WithTransactionSetting(const TSharedPtr<FTransactionSetting> TransactionSetting);
+        TSharedPtr<FNamespace> WithTransactionSettingV2(const TSharedPtr<FTransactionSettingV2> TransactionSettingV2);
         TSharedPtr<FNamespace> WithAcquireScript(const TSharedPtr<FScriptSetting> AcquireScript);
         TSharedPtr<FNamespace> WithOverflowScript(const TSharedPtr<FScriptSetting> OverflowScript);
         TSharedPtr<FNamespace> WithConsumeScript(const TSharedPtr<FScriptSetting> ConsumeScript);
@@ -69,6 +72,7 @@ namespace Gs2::Inventory::Model
         TOptional<FString> GetName() const;
         TOptional<FString> GetDescription() const;
         TSharedPtr<FTransactionSetting> GetTransactionSetting() const;
+        TSharedPtr<FTransactionSettingV2> GetTransactionSettingV2() const;
         TSharedPtr<FScriptSetting> GetAcquireScript() const;
         TSharedPtr<FScriptSetting> GetOverflowScript() const;
         TSharedPtr<FScriptSetting> GetConsumeScript() const;

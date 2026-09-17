@@ -224,3 +224,69 @@ namespace Gs2::Schedule::Model
 
     FString FRepeatSchedule::TypeName = "RepeatSchedule";
 }
+
+#include "Schedule/Model/Cache/RepeatSchedule.h"
+
+namespace Gs2::Schedule::Model::Cache
+{
+    FString FRepeatScheduleCache::CreateCacheParentKey(TOptional<FString> NamespaceName, TOptional<FString> UserId, TOptional<bool> IsInSchedule, TOptional<int32> TimeOffset)
+    {
+        return FString("schedule:") + NamespaceName.Get(FString()) + ":" + UserId.Get(FString()) + ":" + (IsInSchedule.Get(true) ? TEXT("True") : TEXT("False")) + ":" + FString::FromInt(TimeOffset.Get(0)) + ":RepeatSchedule";
+    }
+    FString FRepeatScheduleCache::CreateCacheKey(TOptional<FString> EventName) { return EventName.Get(FString()); }
+    bool FRepeatScheduleCache::TryGet(const Gs2::Core::Domain::FCacheDatabasePtr& Cache, TOptional<FString> NamespaceName, TOptional<FString> UserId, TOptional<bool> IsInSchedule, TOptional<FString> EventName, TOptional<int32> TimeOffset, Gs2::Schedule::Model::FRepeatSchedulePtr* Out)
+    {
+        if (Out) *Out = nullptr;
+        if (!Cache.IsValid() || !UserId.IsSet()) return false;
+        Gs2::Schedule::Model::FRepeatSchedulePtr Value;
+        const bool Found = Cache->TryGet<Gs2::Schedule::Model::FRepeatSchedule>(CreateCacheParentKey(NamespaceName, UserId, IsInSchedule, TimeOffset), CreateCacheKey(EventName), &Value);
+        if (Out) *Out = Found ? Value : nullptr;
+        return Found;
+    }
+    void FRepeatScheduleCache::Put(const Gs2::Core::Domain::FCacheDatabasePtr& Cache, TOptional<FString> NamespaceName, TOptional<FString> UserId, TOptional<bool> IsInSchedule, TOptional<FString> EventName, TOptional<int32> TimeOffset, const Gs2::Schedule::Model::FRepeatSchedulePtr& Item)
+    {
+        if (!Cache.IsValid() || !UserId.IsSet()) return;
+        Cache->Put(Gs2::Schedule::Model::FRepeatSchedule::TypeName, CreateCacheParentKey(NamespaceName, UserId, IsInSchedule, TimeOffset), CreateCacheKey(EventName), Item, FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes));
+    }
+    void FRepeatScheduleCache::Delete(const Gs2::Core::Domain::FCacheDatabasePtr& Cache, TOptional<FString> NamespaceName, TOptional<FString> UserId, TOptional<FString> EventName, TOptional<int32> TimeOffset)
+    {
+        if (!Cache.IsValid() || !UserId.IsSet()) return;
+        for (const bool IsInSchedule : {false, true}) Cache->Delete(Gs2::Schedule::Model::FRepeatSchedule::TypeName, CreateCacheParentKey(NamespaceName, UserId, TOptional<bool>(IsInSchedule), TimeOffset), CreateCacheKey(EventName));
+    }
+    Gs2::Core::Model::FGs2ErrorPtr FRepeatScheduleCache::Fetch(const Gs2::Core::Domain::FCacheDatabasePtr& Cache, TOptional<FString> NamespaceName, TOptional<FString> UserId, TOptional<bool> IsInSchedule, TOptional<FString> EventName, TOptional<int32> TimeOffset, const TFunction<Gs2::Core::Model::FGs2ErrorPtr(Gs2::Schedule::Model::FRepeatSchedulePtr*)>& FetchImpl, Gs2::Schedule::Model::FRepeatSchedulePtr* Out)
+    {
+        if (Out) *Out = nullptr;
+        if (!FetchImpl)
+        {
+            auto Details = MakeShared<TArray<TSharedPtr<Gs2::Core::Model::FGs2ErrorDetail>>>();
+            Details->Add(MakeShared<Gs2::Core::Model::FGs2ErrorDetail>(TEXT("fetchImpl"), TEXT("fetchImpl is required."), TEXT("required")));
+            return MakeShared<Gs2::Core::Model::FBadRequestError>(Details);
+        }
+        if (!UserId.IsSet())
+        {
+            auto Details = MakeShared<TArray<TSharedPtr<Gs2::Core::Model::FGs2ErrorDetail>>>();
+            Details->Add(MakeShared<Gs2::Core::Model::FGs2ErrorDetail>(TEXT("userId"), TEXT("userId is required."), TEXT("required")));
+            return MakeShared<Gs2::Core::Model::FBadRequestError>(Details);
+        }
+        Gs2::Schedule::Model::FRepeatSchedulePtr Item;
+        const auto Error = FetchImpl(&Item);
+        if (!Error || Error->IsChildOf(Gs2::Core::Model::FNotFoundError::Class)) Put(Cache, NamespaceName, UserId, IsInSchedule, EventName, TimeOffset, Item);
+        if (!Error) { if (Out) *Out = Item; return nullptr; }
+        if (Error->IsChildOf(Gs2::Core::Model::FNotFoundError::Class))
+        {
+            const auto Details = Error->GetErrors();
+            if (Details.IsValid() && Details->Num() > 0 && (*Details)[0].IsValid() && (*Details)[0]->GetComponent() == TEXT("event")) return nullptr;
+        }
+        return Error;
+    }
+    Gs2::Core::Domain::CallbackID FRepeatScheduleCache::ListSubscribe(const Gs2::Core::Domain::FCacheDatabasePtr& Cache, TOptional<FString> NamespaceName, TOptional<FString> UserId, TOptional<bool> IsInSchedule, TOptional<int32> TimeOffset, TFunction<void(TArray<Gs2::Schedule::Model::FRepeatSchedulePtr>)> Callback)
+    {
+        if (!Cache.IsValid() || !UserId.IsSet()) return 0;
+        return Cache->ListSubscribeTyped(Gs2::Schedule::Model::FRepeatSchedule::TypeName, CreateCacheParentKey(NamespaceName, UserId, IsInSchedule, TimeOffset), [Callback](const TArray<FGs2ObjectPtr>& Values) { TArray<Gs2::Schedule::Model::FRepeatSchedulePtr> Items; for (const auto& Value : Values) if (Value) Items.Add(StaticCastSharedPtr<Gs2::Schedule::Model::FRepeatSchedule>(Value)); if (Callback) Callback(Items); });
+    }
+    void FRepeatScheduleCache::ListUnsubscribe(const Gs2::Core::Domain::FCacheDatabasePtr& Cache, TOptional<FString> NamespaceName, TOptional<FString> UserId, TOptional<bool> IsInSchedule, TOptional<int32> TimeOffset, Gs2::Core::Domain::CallbackID CallbackID)
+    {
+        if (!Cache.IsValid() || !UserId.IsSet()) return;
+        Cache->ListUnsubscribe(Gs2::Schedule::Model::FRepeatSchedule::TypeName, CreateCacheParentKey(NamespaceName, UserId, IsInSchedule, TimeOffset), CallbackID);
+    }
+}

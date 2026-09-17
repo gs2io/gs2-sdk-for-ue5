@@ -22,7 +22,9 @@ namespace Gs2::Gateway::Request
         NamespaceNameValue(TOptional<FString>()),
         DescriptionValue(TOptional<FString>()),
         TransactionSettingValue(nullptr),
+        TransactionSettingV2Value(nullptr),
         FirebaseSecretValue(TOptional<FString>()),
+        FirebaseProjectIdValue(TOptional<FString>()),
         LogSettingValue(nullptr)
     {
     }
@@ -33,7 +35,9 @@ namespace Gs2::Gateway::Request
         NamespaceNameValue(From.NamespaceNameValue),
         DescriptionValue(From.DescriptionValue),
         TransactionSettingValue(From.TransactionSettingValue),
+        TransactionSettingV2Value(From.TransactionSettingV2Value),
         FirebaseSecretValue(From.FirebaseSecretValue),
+        FirebaseProjectIdValue(From.FirebaseProjectIdValue),
         LogSettingValue(From.LogSettingValue)
     {
     }
@@ -70,11 +74,27 @@ namespace Gs2::Gateway::Request
         return SharedThis(this);
     }
 
+    TSharedPtr<FUpdateNamespaceRequest> FUpdateNamespaceRequest::WithTransactionSettingV2(
+        const TSharedPtr<Model::FTransactionSettingV2> TransactionSettingV2
+    )
+    {
+        this->TransactionSettingV2Value = TransactionSettingV2;
+        return SharedThis(this);
+    }
+
     TSharedPtr<FUpdateNamespaceRequest> FUpdateNamespaceRequest::WithFirebaseSecret(
         const TOptional<FString> FirebaseSecret
     )
     {
         this->FirebaseSecretValue = FirebaseSecret;
+        return SharedThis(this);
+    }
+
+    TSharedPtr<FUpdateNamespaceRequest> FUpdateNamespaceRequest::WithFirebaseProjectId(
+        const TOptional<FString> FirebaseProjectId
+    )
+    {
+        this->FirebaseProjectIdValue = FirebaseProjectId;
         return SharedThis(this);
     }
 
@@ -110,9 +130,23 @@ namespace Gs2::Gateway::Request
         return TransactionSettingValue;
     }
 
+    TSharedPtr<Model::FTransactionSettingV2> FUpdateNamespaceRequest::GetTransactionSettingV2() const
+    {
+        if (!TransactionSettingV2Value.IsValid())
+        {
+            return nullptr;
+        }
+        return TransactionSettingV2Value;
+    }
+
     TOptional<FString> FUpdateNamespaceRequest::GetFirebaseSecret() const
     {
         return FirebaseSecretValue;
+    }
+
+    TOptional<FString> FUpdateNamespaceRequest::GetFirebaseProjectId() const
+    {
+        return FirebaseProjectIdValue;
     }
 
     TSharedPtr<Model::FLogSetting> FUpdateNamespaceRequest::GetLogSetting() const
@@ -157,10 +191,27 @@ namespace Gs2::Gateway::Request
                   }
                   return Model::FTransactionSetting::FromJson(Data->GetObjectField(ANSI_TO_TCHAR("transactionSetting")));
               }() : nullptr)
+          ->WithTransactionSettingV2(Data->HasField(ANSI_TO_TCHAR("transactionSettingV2")) ? [Data]() -> Model::FTransactionSettingV2Ptr
+              {
+                  if (Data->HasTypedField<EJson::Null>(ANSI_TO_TCHAR("transactionSettingV2")))
+                  {
+                      return nullptr;
+                  }
+                  return Model::FTransactionSettingV2::FromJson(Data->GetObjectField(ANSI_TO_TCHAR("transactionSettingV2")));
+              }() : nullptr)
             ->WithFirebaseSecret(Data->HasField(ANSI_TO_TCHAR("firebaseSecret")) ? [Data]() -> TOptional<FString>
               {
                   FString v("");
                     if (Data->TryGetStringField(ANSI_TO_TCHAR("firebaseSecret"), v))
+                  {
+                        return TOptional(v);
+                  }
+                  return TOptional<FString>();
+              }() : TOptional<FString>())
+            ->WithFirebaseProjectId(Data->HasField(ANSI_TO_TCHAR("firebaseProjectId")) ? [Data]() -> TOptional<FString>
+              {
+                  FString v("");
+                    if (Data->TryGetStringField(ANSI_TO_TCHAR("firebaseProjectId"), v))
                   {
                         return TOptional(v);
                   }
@@ -195,9 +246,17 @@ namespace Gs2::Gateway::Request
         {
             JsonRootObject->SetObjectField(TEXT("transactionSetting"), TransactionSettingValue->ToJson());
         }
+        if (TransactionSettingV2Value != nullptr && TransactionSettingV2Value.IsValid())
+        {
+            JsonRootObject->SetObjectField(TEXT("transactionSettingV2"), TransactionSettingV2Value->ToJson());
+        }
         if (FirebaseSecretValue.IsSet())
         {
             JsonRootObject->SetStringField(TEXT("firebaseSecret"), FirebaseSecretValue.GetValue());
+        }
+        if (FirebaseProjectIdValue.IsSet())
+        {
+            JsonRootObject->SetStringField(TEXT("firebaseProjectId"), FirebaseProjectIdValue.GetValue());
         }
         if (LogSettingValue != nullptr && LogSettingValue.IsValid())
         {

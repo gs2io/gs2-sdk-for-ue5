@@ -29,6 +29,7 @@ namespace Gs2::Gateway::Request
         TOptional<FString> NamespaceNameValue;
         TOptional<FString> UserIdValue;
         TOptional<FString> TokenValue;
+        TOptional<FString> LocaleValue;
         TOptional<FString> TimeOffsetTokenValue;
         TOptional<FString> DuplicationAvoiderValue;
         
@@ -44,6 +45,7 @@ namespace Gs2::Gateway::Request
         TSharedPtr<FSetFirebaseTokenByUserIdRequest> WithNamespaceName(const TOptional<FString> NamespaceName);
         TSharedPtr<FSetFirebaseTokenByUserIdRequest> WithUserId(const TOptional<FString> UserId);
         TSharedPtr<FSetFirebaseTokenByUserIdRequest> WithToken(const TOptional<FString> Token);
+        TSharedPtr<FSetFirebaseTokenByUserIdRequest> WithLocale(const TOptional<FString> Locale);
         TSharedPtr<FSetFirebaseTokenByUserIdRequest> WithTimeOffsetToken(const TOptional<FString> TimeOffsetToken);
         TSharedPtr<FSetFirebaseTokenByUserIdRequest> WithDuplicationAvoider(const TOptional<FString> DuplicationAvoider);
 
@@ -51,6 +53,7 @@ namespace Gs2::Gateway::Request
         TOptional<FString> GetNamespaceName() const;
         TOptional<FString> GetUserId() const;
         TOptional<FString> GetToken() const;
+        TOptional<FString> GetLocale() const;
         TOptional<FString> GetTimeOffsetToken() const;
         TOptional<FString> GetDuplicationAvoider() const;
 

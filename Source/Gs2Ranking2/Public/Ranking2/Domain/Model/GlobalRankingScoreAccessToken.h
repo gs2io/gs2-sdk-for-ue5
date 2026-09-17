@@ -131,6 +131,8 @@ namespace Gs2::Ranking2::Domain::Model
             const FGlobalRankingScoreAccessTokenDomain& From
         );
 
+
+
         class GS2RANKING2_API FGetTask final :
             public Gs2::Core::Util::TGs2Future<Gs2::Ranking2::Model::FGlobalRankingScore>,
             public TSharedFromThis<FGetTask>
@@ -156,6 +158,8 @@ namespace Gs2::Ranking2::Domain::Model
         TSharedPtr<FAsyncTask<FGetTask>> Get(
             Request::FGetGlobalRankingScoreRequestPtr Request
         );
+
+
 
         class GS2RANKING2_API FVerifyTask final :
             public Gs2::Core::Util::TGs2Future<Gs2::Ranking2::Domain::Model::FGlobalRankingScoreAccessTokenDomain>,
@@ -217,6 +221,8 @@ namespace Gs2::Ranking2::Domain::Model
         friend FModelTask;
 
         TSharedPtr<FAsyncTask<FModelTask>> Model();
+
+        void Invalidate();
 
         Gs2::Core::Domain::CallbackID Subscribe(
             TFunction<void(Gs2::Ranking2::Model::FGlobalRankingScorePtr)> Callback

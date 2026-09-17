@@ -132,14 +132,16 @@ namespace Gs2::UE5::Matchmaking::Domain::Model
 
         Gs2::Core::Domain::CallbackID SubscribeRatingModels(TFunction<void()> Callback);
 
-        void UnsubscribeRatingModels(Gs2::Core::Domain::CallbackID CallbackId);
+        void UnsubscribeRatingModels(
+                Gs2::Core::Domain::CallbackID CallbackId);
 
         Gs2::UE5::Matchmaking::Domain::Iterator::FEzDescribeSeasonModelsIteratorPtr SeasonModels(
         ) const;
 
         Gs2::Core::Domain::CallbackID SubscribeSeasonModels(TFunction<void()> Callback);
 
-        void UnsubscribeSeasonModels(Gs2::Core::Domain::CallbackID CallbackId);
+        void UnsubscribeSeasonModels(
+                Gs2::Core::Domain::CallbackID CallbackId);
 
         Gs2::UE5::Matchmaking::Domain::Model::FEzUserDomainPtr User(
             const FString UserId

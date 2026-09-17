@@ -27,7 +27,9 @@
 #include "Stamina/Domain/SpeculativeExecutor/Acquire/SetRecoverValueByUserIdSpeculativeExecutor.h"
 
 #include "Core/Domain/Gs2.h"
+#include "Core/Domain/SpeculativeExecutor/PreparedSpeculativeCommit.h"
 #include "Stamina/Domain/Gs2Stamina.h"
+#include "Stamina/Domain/SpeculativeExecutor/StaminaMutationSpeculativeCommit.h"
 
 namespace Gs2::Stamina::Domain::SpeculativeExecutor
 {
@@ -44,7 +46,10 @@ namespace Gs2::Stamina::Domain::SpeculativeExecutor
         Gs2::Stamina::Model::FStaminaPtr Item
     )
     {
-        Item->WithRecoverValue(Request->GetRecoverValue());
+        (void)Domain;
+        (void)AccessToken;
+        (void)Request;
+        (void)Item;
         return nullptr;
     }
 
@@ -74,57 +79,36 @@ namespace Gs2::Stamina::Domain::SpeculativeExecutor
     }
 
     Gs2::Core::Model::FGs2ErrorPtr FSetRecoverValueByUserIdSpeculativeExecutor::FCommitTask::Action(
-        TSharedPtr<TSharedPtr<TFunction<void()>>> Result
+        TSharedPtr<TSharedPtr<Gs2::Core::Domain::SpeculativeExecutor::FPreparedSpeculativeCommit>> Result
     )
     {
-        const auto Future = Domain->Stamina->Namespace(
-                Request->GetNamespaceName().IsSet() ? *Request->GetNamespaceName() : FString("")
-            )->AccessToken(
-                AccessToken
-            )->Stamina(
-                Request->GetStaminaName().IsSet() ? *Request->GetStaminaName() : FString("")
-            )->Model();
-        Future->StartSynchronousTask();
-        if (Future->GetTask().IsError())
-        {
-            return Future->GetTask().Error();
-        }
-        auto Item = Future->GetTask().Result();
-
-        if (!Item.IsValid())
-        {
-            *Result = MakeShared<TFunction<void()>>([&]()
+        *Result = nullptr;
+        if (!Domain.IsValid() || !Domain->RestSession.IsValid() || !AccessToken.IsValid() || !Request.IsValid()) return nullptr;
+        const auto Token = MakeShared<Gs2::Auth::Model::FAccessToken>(*AccessToken);
+        const auto Prepared = MakeShared<Gs2::Stamina::Request::FSetRecoverValueByUserIdRequest>(*Request);
+        if (!Token->GetUserId().IsSet() || Token->GetUserId().Get(FString()).IsEmpty()) return nullptr;
+        if (Prepared->GetUserId().IsSet() && Prepared->GetUserId().Get(FString()) == TEXT("#{userId}")) Prepared->WithUserId(Token->GetUserId());
+        if (!Prepared->GetUserId().IsSet() || Prepared->GetUserId().Get(FString()) != Token->GetUserId().Get(FString()) ||
+            !Prepared->GetRecoverValue().IsSet()) return nullptr;
+        const auto NamespaceName = Prepared->GetNamespaceName().Get(FString());
+        const auto UserId = Token->GetUserId().Get(FString());
+        const auto StaminaName = Prepared->GetStaminaName().Get(FString());
+        const auto TimeOffset = Token->GetTimeOffset();
+        const auto ExpectedStaminaId = FString::Printf(TEXT("grn:gs2:%s:%s:stamina:%s:user:%s:stamina:%s"), *Domain->RestSession->RegionName(), *Domain->RestSession->OwnerId(), *NamespaceName, *UserId, *StaminaName);
+        Gs2::Stamina::Model::FStaminaPtr Item;
+        if (!Gs2::Stamina::Model::Cache::FStaminaCache::TryGet(Domain->Cache, NamespaceName, UserId, StaminaName, TimeOffset, &Item) ||
+            !Item.IsValid() || !Item->GetStaminaId().IsSet() || Item->GetStaminaId().Get(FString()) != ExpectedStaminaId ||
+            !Item->GetUserId().IsSet() || Item->GetUserId().Get(FString()) != UserId ||
+            !Item->GetStaminaName().IsSet() || Item->GetStaminaName().Get(FString()) != StaminaName) return nullptr;
+        const int32 RecoverValue = Prepared->GetRecoverValue().Get(0);
+        *Result = FStaminaMutationSpeculativeCommit::Create(
+            Domain, NamespaceName, UserId, StaminaName, TimeOffset, ExpectedStaminaId, FString(), Item->GetRevision(), false,
+            [RecoverValue](const Gs2::Stamina::Model::FStaminaPtr& Current, const TOptional<int32>&)
             {
-                return nullptr;
-            });
-            return nullptr;
-        }
-        auto Err = Transform(Domain, AccessToken, Request, Item);
-        if (Err != nullptr)
-        {
-            return Err;
-        }
-
-        const auto ParentKey = Model::FUserDomain::CreateCacheParentKey(
-            Request->GetNamespaceName(),
-            AccessToken->GetUserId(),
-            FString("Stamina")
+                Current->WithRecoverValue(RecoverValue);
+                return true;
+            }
         );
-        const auto Key = Model::FStaminaDomain::CreateCacheKey(
-            Request->GetStaminaName()
-        );
-
-        *Result = MakeShared<TFunction<void()>>([&]()
-        {
-            Domain->Cache->Put(
-                Stamina::Model::FStamina::TypeName,
-                ParentKey,
-                Key,
-                Item,
-                FDateTime::Now() + FTimespan::FromSeconds(10)
-            );
-            return nullptr;
-        });
         return nullptr;
     }
 

@@ -29,6 +29,7 @@
 #include "Model/GitHubCheckoutSetting.h"
 #include "Model/LogSetting.h"
 #include "Model/TransactionSetting.h"
+#include "Model/TransactionSettingV2.h"
 #include "Model/Version.h"
 #include "Model/ScheduleVersion.h"
 

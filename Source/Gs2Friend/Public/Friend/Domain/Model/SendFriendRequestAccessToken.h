@@ -101,6 +101,8 @@ namespace Gs2::Friend::Domain::Model
             const FSendFriendRequestAccessTokenDomain& From
         );
 
+
+
         class GS2FRIEND_API FGetTask final :
             public Gs2::Core::Util::TGs2Future<Gs2::Friend::Model::FFriendRequest>,
             public TSharedFromThis<FGetTask>
@@ -126,6 +128,8 @@ namespace Gs2::Friend::Domain::Model
         TSharedPtr<FAsyncTask<FGetTask>> Get(
             Request::FGetSendRequestRequestPtr Request
         );
+
+
 
         class GS2FRIEND_API FDeleteTask final :
             public Gs2::Core::Util::TGs2Future<Gs2::Friend::Domain::Model::FSendFriendRequestAccessTokenDomain>,
@@ -165,7 +169,7 @@ namespace Gs2::Friend::Domain::Model
         );
 
         class GS2FRIEND_API FModelTask final :
-            public Gs2::Core::Util::TGs2Future<Gs2::Friend::Model::FFriendRequest>,
+            public Gs2::Core::Util::TGs2Future<Gs2::Friend::Model::FSendFriendRequest>,
             public TSharedFromThis<FModelTask>
         {
             const TSharedPtr<FSendFriendRequestAccessTokenDomain> Self;
@@ -179,15 +183,42 @@ namespace Gs2::Friend::Domain::Model
             );
 
             virtual Gs2::Core::Model::FGs2ErrorPtr Action(
-                TSharedPtr<TSharedPtr<Gs2::Friend::Model::FFriendRequest>> Result
+                TSharedPtr<TSharedPtr<Gs2::Friend::Model::FSendFriendRequest>> Result
             ) override;
         };
         friend FModelTask;
 
         TSharedPtr<FAsyncTask<FModelTask>> Model();
 
+        void Invalidate();
+
         Gs2::Core::Domain::CallbackID Subscribe(
-            TFunction<void(Gs2::Friend::Model::FFriendRequestPtr)> Callback
+            TFunction<void(Gs2::Friend::Model::FSendFriendRequestPtr)> Callback
+        );
+
+        class GS2FRIEND_API FSubscribeWithInitialCallTask final :
+            public Gs2::Core::Util::TGs2Future<Gs2::Core::Domain::CallbackID>,
+            public TSharedFromThis<FSubscribeWithInitialCallTask>
+        {
+            const TSharedPtr<FSendFriendRequestAccessTokenDomain> Self;
+            const TFunction<void(Gs2::Friend::Model::FSendFriendRequestPtr)> Callback;
+        public:
+            FSubscribeWithInitialCallTask(
+                const TSharedPtr<FSendFriendRequestAccessTokenDomain>& Self,
+                TFunction<void(Gs2::Friend::Model::FSendFriendRequestPtr)> Callback
+            );
+
+            FSubscribeWithInitialCallTask(
+                const FSubscribeWithInitialCallTask& From
+            );
+
+            virtual Gs2::Core::Model::FGs2ErrorPtr Action(
+                TSharedPtr<TSharedPtr<Gs2::Core::Domain::CallbackID>> Result
+            ) override;
+        };
+
+        TSharedPtr<FAsyncTask<FSubscribeWithInitialCallTask>> SubscribeWithInitialCall(
+            TFunction<void(Gs2::Friend::Model::FSendFriendRequestPtr)> Callback
         );
 
         void Unsubscribe(

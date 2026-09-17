@@ -87,7 +87,7 @@ namespace Gs2::UE5::Quest::Domain::Model
     Gs2::Core::Domain::CallbackID FEzCompletedQuestListDomain::Subscribe(TFunction<void(Gs2::UE5::Quest::Model::FEzCompletedQuestListPtr)> Callback)
     {
         return Domain->Subscribe(
-            [&](Gs2::Quest::Model::FCompletedQuestListPtr Item)
+            [Callback](Gs2::Quest::Model::FCompletedQuestListPtr Item)
             {
                 Callback(Gs2::UE5::Quest::Model::FEzCompletedQuestList::FromModel(Item));
             }

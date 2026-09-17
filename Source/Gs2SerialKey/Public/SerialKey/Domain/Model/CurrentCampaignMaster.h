@@ -86,6 +86,8 @@ namespace Gs2::SerialKey::Domain::Model
             const FCurrentCampaignMasterDomain& From
         );
 
+
+
         class GS2SERIALKEY_API FExportMasterTask final :
             public Gs2::Core::Util::TGs2Future<Gs2::SerialKey::Domain::Model::FCurrentCampaignMasterDomain>,
             public TSharedFromThis<FExportMasterTask>
@@ -111,6 +113,8 @@ namespace Gs2::SerialKey::Domain::Model
         TSharedPtr<FAsyncTask<FExportMasterTask>> ExportMaster(
             Request::FExportMasterRequestPtr Request
         );
+
+
 
         class GS2SERIALKEY_API FGetTask final :
             public Gs2::Core::Util::TGs2Future<Gs2::SerialKey::Model::FCurrentCampaignMaster>,
@@ -138,6 +142,8 @@ namespace Gs2::SerialKey::Domain::Model
             Request::FGetCurrentCampaignMasterRequestPtr Request
         );
 
+
+
         class GS2SERIALKEY_API FPreUpdateTask final :
             public Gs2::Core::Util::TGs2Future<Gs2::SerialKey::Domain::Model::FCurrentCampaignMasterDomain>,
             public TSharedFromThis<FPreUpdateTask>
@@ -164,6 +170,8 @@ namespace Gs2::SerialKey::Domain::Model
             Request::FPreUpdateCurrentCampaignMasterRequestPtr Request
         );
 
+
+
         class GS2SERIALKEY_API FUpdateTask final :
             public Gs2::Core::Util::TGs2Future<Gs2::SerialKey::Domain::Model::FCurrentCampaignMasterDomain>,
             public TSharedFromThis<FUpdateTask>
@@ -189,6 +197,8 @@ namespace Gs2::SerialKey::Domain::Model
         TSharedPtr<FAsyncTask<FUpdateTask>> Update(
             Request::FUpdateCurrentCampaignMasterRequestPtr Request
         );
+
+
 
         class GS2SERIALKEY_API FUpdateFromGitHubTask final :
             public Gs2::Core::Util::TGs2Future<Gs2::SerialKey::Domain::Model::FCurrentCampaignMasterDomain>,
@@ -246,7 +256,34 @@ namespace Gs2::SerialKey::Domain::Model
 
         TSharedPtr<FAsyncTask<FModelTask>> Model();
 
+        void Invalidate();
+
         Gs2::Core::Domain::CallbackID Subscribe(
+            TFunction<void(Gs2::SerialKey::Model::FCurrentCampaignMasterPtr)> Callback
+        );
+
+        class GS2SERIALKEY_API FSubscribeWithInitialCallTask final :
+            public Gs2::Core::Util::TGs2Future<Gs2::Core::Domain::CallbackID>,
+            public TSharedFromThis<FSubscribeWithInitialCallTask>
+        {
+            const TSharedPtr<FCurrentCampaignMasterDomain> Self;
+            const TFunction<void(Gs2::SerialKey::Model::FCurrentCampaignMasterPtr)> Callback;
+        public:
+            FSubscribeWithInitialCallTask(
+                const TSharedPtr<FCurrentCampaignMasterDomain>& Self,
+                TFunction<void(Gs2::SerialKey::Model::FCurrentCampaignMasterPtr)> Callback
+            );
+
+            FSubscribeWithInitialCallTask(
+                const FSubscribeWithInitialCallTask& From
+            );
+
+            virtual Gs2::Core::Model::FGs2ErrorPtr Action(
+                TSharedPtr<TSharedPtr<Gs2::Core::Domain::CallbackID>> Result
+            ) override;
+        };
+
+        TSharedPtr<FAsyncTask<FSubscribeWithInitialCallTask>> SubscribeWithInitialCall(
             TFunction<void(Gs2::SerialKey::Model::FCurrentCampaignMasterPtr)> Callback
         );
 

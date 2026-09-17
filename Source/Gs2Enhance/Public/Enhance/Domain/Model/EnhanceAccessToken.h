@@ -93,6 +93,8 @@ namespace Gs2::Enhance::Domain::Model
             const FEnhanceAccessTokenDomain& From
         );
 
+
+
         class GS2ENHANCE_API FDirectTask final :
             public Gs2::Core::Util::TGs2Future<Gs2::Core::Domain::FTransactionAccessTokenDomain>,
             public TSharedFromThis<FDirectTask>
@@ -121,6 +123,8 @@ namespace Gs2::Enhance::Domain::Model
             Request::FDirectEnhanceRequestPtr Request,
             bool SpeculativeExecute = true
         );
+
+
 
         class GS2ENHANCE_API FUnleashTask final :
             public Gs2::Core::Util::TGs2Future<Gs2::Core::Domain::FTransactionAccessTokenDomain>,

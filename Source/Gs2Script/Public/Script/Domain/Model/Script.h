@@ -93,6 +93,8 @@ namespace Gs2::Script::Domain::Model
             const FScriptDomain& From
         );
 
+
+
         class GS2SCRIPT_API FGetTask final :
             public Gs2::Core::Util::TGs2Future<Gs2::Script::Model::FScript>,
             public TSharedFromThis<FGetTask>
@@ -118,6 +120,8 @@ namespace Gs2::Script::Domain::Model
         TSharedPtr<FAsyncTask<FGetTask>> Get(
             Request::FGetScriptRequestPtr Request
         );
+
+
 
         class GS2SCRIPT_API FUpdateTask final :
             public Gs2::Core::Util::TGs2Future<Gs2::Script::Domain::Model::FScriptDomain>,
@@ -145,6 +149,8 @@ namespace Gs2::Script::Domain::Model
             Request::FUpdateScriptRequestPtr Request
         );
 
+
+
         class GS2SCRIPT_API FUpdateFromGitHubTask final :
             public Gs2::Core::Util::TGs2Future<Gs2::Script::Domain::Model::FScriptDomain>,
             public TSharedFromThis<FUpdateFromGitHubTask>
@@ -170,6 +176,8 @@ namespace Gs2::Script::Domain::Model
         TSharedPtr<FAsyncTask<FUpdateFromGitHubTask>> UpdateFromGitHub(
             Request::FUpdateScriptFromGitHubRequestPtr Request
         );
+
+
 
         class GS2SCRIPT_API FDeleteTask final :
             public Gs2::Core::Util::TGs2Future<Gs2::Script::Domain::Model::FScriptDomain>,
@@ -229,7 +237,34 @@ namespace Gs2::Script::Domain::Model
 
         TSharedPtr<FAsyncTask<FModelTask>> Model();
 
+        void Invalidate();
+
         Gs2::Core::Domain::CallbackID Subscribe(
+            TFunction<void(Gs2::Script::Model::FScriptPtr)> Callback
+        );
+
+        class GS2SCRIPT_API FSubscribeWithInitialCallTask final :
+            public Gs2::Core::Util::TGs2Future<Gs2::Core::Domain::CallbackID>,
+            public TSharedFromThis<FSubscribeWithInitialCallTask>
+        {
+            const TSharedPtr<FScriptDomain> Self;
+            const TFunction<void(Gs2::Script::Model::FScriptPtr)> Callback;
+        public:
+            FSubscribeWithInitialCallTask(
+                const TSharedPtr<FScriptDomain>& Self,
+                TFunction<void(Gs2::Script::Model::FScriptPtr)> Callback
+            );
+
+            FSubscribeWithInitialCallTask(
+                const FSubscribeWithInitialCallTask& From
+            );
+
+            virtual Gs2::Core::Model::FGs2ErrorPtr Action(
+                TSharedPtr<TSharedPtr<Gs2::Core::Domain::CallbackID>> Result
+            ) override;
+        };
+
+        TSharedPtr<FAsyncTask<FSubscribeWithInitialCallTask>> SubscribeWithInitialCall(
             TFunction<void(Gs2::Script::Model::FScriptPtr)> Callback
         );
 

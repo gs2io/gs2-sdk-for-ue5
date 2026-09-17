@@ -87,6 +87,8 @@ namespace Gs2::MegaField::Domain::Model
             const FNamespaceDomain& From
         );
 
+
+
         class GS2MEGAFIELD_API FGetStatusTask final :
             public Gs2::Core::Util::TGs2Future<Gs2::MegaField::Domain::Model::FNamespaceDomain>,
             public TSharedFromThis<FGetStatusTask>
@@ -112,6 +114,8 @@ namespace Gs2::MegaField::Domain::Model
         TSharedPtr<FAsyncTask<FGetStatusTask>> GetStatus(
             Request::FGetNamespaceStatusRequestPtr Request
         );
+
+
 
         class GS2MEGAFIELD_API FGetTask final :
             public Gs2::Core::Util::TGs2Future<Gs2::MegaField::Model::FNamespace>,
@@ -139,6 +143,8 @@ namespace Gs2::MegaField::Domain::Model
             Request::FGetNamespaceRequestPtr Request
         );
 
+
+
         class GS2MEGAFIELD_API FUpdateTask final :
             public Gs2::Core::Util::TGs2Future<Gs2::MegaField::Domain::Model::FNamespaceDomain>,
             public TSharedFromThis<FUpdateTask>
@@ -165,6 +171,8 @@ namespace Gs2::MegaField::Domain::Model
             Request::FUpdateNamespaceRequestPtr Request
         );
 
+
+
         class GS2MEGAFIELD_API FDeleteTask final :
             public Gs2::Core::Util::TGs2Future<Gs2::MegaField::Domain::Model::FNamespaceDomain>,
             public TSharedFromThis<FDeleteTask>
@@ -190,6 +198,8 @@ namespace Gs2::MegaField::Domain::Model
         TSharedPtr<FAsyncTask<FDeleteTask>> Delete(
             Request::FDeleteNamespaceRequestPtr Request
         );
+
+
 
         class GS2MEGAFIELD_API FCreateAreaModelMasterTask final :
             public Gs2::Core::Util::TGs2Future<Gs2::MegaField::Domain::Model::FAreaModelMasterDomain>,
@@ -225,8 +235,33 @@ namespace Gs2::MegaField::Domain::Model
 
         Gs2::Core::Domain::CallbackID SubscribeAreaModels(
             TFunction<void()> Callback
+
         );
 
+        class FCollectAreaModelsTask;
+
+        Gs2::Core::Domain::CallbackID SubscribeAreaModels(
+            TFunction<void(TArray<Gs2::MegaField::Model::FAreaModelPtr>)> Callback
+        );
+
+        void InvalidateAreaModels();
+
+        class GS2MEGAFIELD_API FSubscribeAreaModelsWithInitialCallTask final :
+            public Gs2::Core::Util::TGs2Future<Gs2::Core::Domain::CallbackID>,
+            public TSharedFromThis<FSubscribeAreaModelsWithInitialCallTask>
+        {
+            const TSharedPtr<FNamespaceDomain> Self;
+            const TFunction<void(TArray<Gs2::MegaField::Model::FAreaModelPtr>)> Callback;
+
+        public:
+            FSubscribeAreaModelsWithInitialCallTask(const TSharedPtr<FNamespaceDomain>& Self, TFunction<void(TArray<Gs2::MegaField::Model::FAreaModelPtr>)> Callback);
+            FSubscribeAreaModelsWithInitialCallTask(const FSubscribeAreaModelsWithInitialCallTask& From);
+            virtual Gs2::Core::Model::FGs2ErrorPtr Action(TSharedPtr<TSharedPtr<Gs2::Core::Domain::CallbackID>> Result) override;
+        };
+
+        TSharedPtr<FAsyncTask<FSubscribeAreaModelsWithInitialCallTask>> SubscribeAreaModelsWithInitialCall(
+            TFunction<void(TArray<Gs2::MegaField::Model::FAreaModelPtr>)> Callback
+        );
         void UnsubscribeAreaModels(
             Gs2::Core::Domain::CallbackID CallbackID
         );
@@ -248,8 +283,33 @@ namespace Gs2::MegaField::Domain::Model
 
         Gs2::Core::Domain::CallbackID SubscribeAreaModelMasters(
             TFunction<void()> Callback
+
         );
 
+        class FCollectAreaModelMastersTask;
+
+        Gs2::Core::Domain::CallbackID SubscribeAreaModelMasters(
+            TFunction<void(TArray<Gs2::MegaField::Model::FAreaModelMasterPtr>)> Callback
+        );
+
+        void InvalidateAreaModelMasters();
+
+        class GS2MEGAFIELD_API FSubscribeAreaModelMastersWithInitialCallTask final :
+            public Gs2::Core::Util::TGs2Future<Gs2::Core::Domain::CallbackID>,
+            public TSharedFromThis<FSubscribeAreaModelMastersWithInitialCallTask>
+        {
+            const TSharedPtr<FNamespaceDomain> Self;
+            const TFunction<void(TArray<Gs2::MegaField::Model::FAreaModelMasterPtr>)> Callback;
+
+        public:
+            FSubscribeAreaModelMastersWithInitialCallTask(const TSharedPtr<FNamespaceDomain>& Self, TFunction<void(TArray<Gs2::MegaField::Model::FAreaModelMasterPtr>)> Callback);
+            FSubscribeAreaModelMastersWithInitialCallTask(const FSubscribeAreaModelMastersWithInitialCallTask& From);
+            virtual Gs2::Core::Model::FGs2ErrorPtr Action(TSharedPtr<TSharedPtr<Gs2::Core::Domain::CallbackID>> Result) override;
+        };
+
+        TSharedPtr<FAsyncTask<FSubscribeAreaModelMastersWithInitialCallTask>> SubscribeAreaModelMastersWithInitialCall(
+            TFunction<void(TArray<Gs2::MegaField::Model::FAreaModelMasterPtr>)> Callback
+        );
         void UnsubscribeAreaModelMasters(
             Gs2::Core::Domain::CallbackID CallbackID
         );
@@ -289,7 +349,34 @@ namespace Gs2::MegaField::Domain::Model
 
         TSharedPtr<FAsyncTask<FModelTask>> Model();
 
+        void Invalidate();
+
         Gs2::Core::Domain::CallbackID Subscribe(
+            TFunction<void(Gs2::MegaField::Model::FNamespacePtr)> Callback
+        );
+
+        class GS2MEGAFIELD_API FSubscribeWithInitialCallTask final :
+            public Gs2::Core::Util::TGs2Future<Gs2::Core::Domain::CallbackID>,
+            public TSharedFromThis<FSubscribeWithInitialCallTask>
+        {
+            const TSharedPtr<FNamespaceDomain> Self;
+            const TFunction<void(Gs2::MegaField::Model::FNamespacePtr)> Callback;
+        public:
+            FSubscribeWithInitialCallTask(
+                const TSharedPtr<FNamespaceDomain>& Self,
+                TFunction<void(Gs2::MegaField::Model::FNamespacePtr)> Callback
+            );
+
+            FSubscribeWithInitialCallTask(
+                const FSubscribeWithInitialCallTask& From
+            );
+
+            virtual Gs2::Core::Model::FGs2ErrorPtr Action(
+                TSharedPtr<TSharedPtr<Gs2::Core::Domain::CallbackID>> Result
+            ) override;
+        };
+
+        TSharedPtr<FAsyncTask<FSubscribeWithInitialCallTask>> SubscribeWithInitialCall(
             TFunction<void(Gs2::MegaField::Model::FNamespacePtr)> Callback
         );
 

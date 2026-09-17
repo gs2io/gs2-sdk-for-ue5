@@ -59,7 +59,8 @@ namespace Gs2::UE5::Buff::Domain::Model
 
         Gs2::Core::Domain::CallbackID SubscribeBuffEntryModels(TFunction<void()> Callback);
 
-        void UnsubscribeBuffEntryModels(Gs2::Core::Domain::CallbackID CallbackId);
+        void UnsubscribeBuffEntryModels(
+                Gs2::Core::Domain::CallbackID CallbackId);
 
         Gs2::UE5::Buff::Domain::Model::FEzBuffEntryModelDomainPtr BuffEntryModel(
             const FString BuffEntryName

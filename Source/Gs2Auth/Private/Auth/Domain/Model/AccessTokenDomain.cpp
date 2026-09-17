@@ -349,17 +349,26 @@ namespace Gs2::Auth::Domain::Model
     )
     {
         const auto ParentKey = FString("auth:AccessToken");
-        // ReSharper disable once CppLocalVariableMayBeConst
-        TSharedPtr<Gs2::Auth::Model::FAccessToken> Value;
-        auto bCacheHit = Self->Gs2->Cache->TryGet<Gs2::Auth::Model::FAccessToken>(
-            ParentKey,
-            Gs2::Auth::Domain::Model::FAccessTokenDomain::CreateCacheKey(
-            ),
-            &Value
+        const FString CacheKey = Gs2::Auth::Domain::Model::FAccessTokenDomain::CreateCacheKey(
         );
-        *Result = Value;
+        return Self->Gs2->Cache->ExecuteWithKeyLock(
+            Gs2::Auth::Model::FAccessToken::TypeName,
+            ParentKey,
+            CacheKey,
+            [this, Result, CacheKey, ParentKey]() -> Gs2::Core::Model::FGs2ErrorPtr
+            {
+                // ReSharper disable once CppLocalVariableMayBeConst
+                TSharedPtr<Gs2::Auth::Model::FAccessToken> Value;
+                auto bCacheHit = Self->Gs2->Cache->TryGet<Gs2::Auth::Model::FAccessToken>(
+                    ParentKey,
+                    CacheKey,
+                    &Value
+                );
+                *Result = Value;
 
-        return nullptr;
+                return nullptr;
+            }
+        );
     }
 
     TSharedPtr<FAsyncTask<FAccessTokenDomain::FModelTask>> FAccessTokenDomain::Model() {

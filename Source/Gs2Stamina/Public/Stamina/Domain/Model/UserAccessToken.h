@@ -100,8 +100,33 @@ namespace Gs2::Stamina::Domain::Model
 
         Gs2::Core::Domain::CallbackID SubscribeStaminas(
             TFunction<void()> Callback
+
         );
 
+        class FCollectStaminasTask;
+
+        Gs2::Core::Domain::CallbackID SubscribeStaminas(
+            TFunction<void(TArray<Gs2::Stamina::Model::FStaminaPtr>)> Callback
+        );
+
+        void InvalidateStaminas();
+
+        class GS2STAMINA_API FSubscribeStaminasWithInitialCallTask final :
+            public Gs2::Core::Util::TGs2Future<Gs2::Core::Domain::CallbackID>,
+            public TSharedFromThis<FSubscribeStaminasWithInitialCallTask>
+        {
+            const TSharedPtr<FUserAccessTokenDomain> Self;
+            const TFunction<void(TArray<Gs2::Stamina::Model::FStaminaPtr>)> Callback;
+
+        public:
+            FSubscribeStaminasWithInitialCallTask(const TSharedPtr<FUserAccessTokenDomain>& Self, TFunction<void(TArray<Gs2::Stamina::Model::FStaminaPtr>)> Callback);
+            FSubscribeStaminasWithInitialCallTask(const FSubscribeStaminasWithInitialCallTask& From);
+            virtual Gs2::Core::Model::FGs2ErrorPtr Action(TSharedPtr<TSharedPtr<Gs2::Core::Domain::CallbackID>> Result) override;
+        };
+
+        TSharedPtr<FAsyncTask<FSubscribeStaminasWithInitialCallTask>> SubscribeStaminasWithInitialCall(
+            TFunction<void(TArray<Gs2::Stamina::Model::FStaminaPtr>)> Callback
+        );
         void UnsubscribeStaminas(
             Gs2::Core::Domain::CallbackID CallbackID
         );

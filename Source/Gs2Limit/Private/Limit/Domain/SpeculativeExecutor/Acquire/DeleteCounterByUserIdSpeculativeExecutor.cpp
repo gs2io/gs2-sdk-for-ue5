@@ -28,6 +28,22 @@
 #include "Limit/Domain/Gs2Limit.h"
 
 #include "Core/Domain/Gs2.h"
+#include "Core/Domain/SpeculativeExecutor/PreparedSpeculativeCommit.h"
+#include "Auth/Model/AccessToken.h"
+#include "Limit/Model/Cache/Counter.h"
+#include "Serialization/JsonSerializer.h"
+#include "Serialization/JsonWriter.h"
+
+namespace
+{
+    FString CounterSnapshot(const Gs2::Limit::Model::FCounterPtr& Item)
+    {
+        FString Value;
+        auto Writer = TJsonWriterFactory<TCHAR, TCondensedJsonPrintPolicy<TCHAR>>::Create(&Value);
+        FJsonSerializer::Serialize(Item->ToJson().ToSharedRef(), Writer);
+        return Value;
+    }
+}
 
 namespace Gs2::Limit::Domain::SpeculativeExecutor
 {
@@ -73,30 +89,34 @@ namespace Gs2::Limit::Domain::SpeculativeExecutor
     }
 
     Gs2::Core::Model::FGs2ErrorPtr FDeleteCounterByUserIdSpeculativeExecutor::FCommitTask::Action(
-        TSharedPtr<TSharedPtr<TFunction<void()>>> Result
+        TSharedPtr<TSharedPtr<Gs2::Core::Domain::SpeculativeExecutor::FPreparedSpeculativeCommit>> Result
     )
     {
-        const auto ParentKey = Model::FUserDomain::CreateCacheParentKey(
-            Request->GetNamespaceName(),
-            AccessToken->GetUserId(),
-            FString("Counter")
-        );
-        const auto Key = Model::FCounterDomain::CreateCacheKey(
-            Request->GetLimitName(),
-            Request->GetCounterName()
-        );
-
-        *Result = MakeShared<TFunction<void()>>([&]()
+        *Result = nullptr;
+        Gs2::Auth::Model::FAccessTokenPtr Token = nullptr;
+        if (AccessToken.IsValid()) Token = MakeShared<Gs2::Auth::Model::FAccessToken>(*AccessToken);
+        Gs2::Limit::Request::FDeleteCounterByUserIdRequestPtr Prepared = nullptr;
+        if (Request.IsValid()) Prepared = MakeShared<Gs2::Limit::Request::FDeleteCounterByUserIdRequest>(*Request);
+        if (!Domain.IsValid() || !Domain->RestSession.IsValid() || !Token.IsValid() || !Token->GetUserId().IsSet() || Token->GetUserId().Get(FString()).IsEmpty() || !Prepared.IsValid()) return nullptr;
+        if (Prepared->GetUserId().IsSet() && Prepared->GetUserId().Get(FString()) == TEXT("#{userId}")) Prepared->WithUserId(Token->GetUserId());
+        if (!Prepared->GetUserId().IsSet() || Prepared->GetUserId().Get(FString()) != Token->GetUserId().Get(FString()) || !Prepared->GetNamespaceName().IsSet() || Prepared->GetNamespaceName().Get(FString()).IsEmpty() || !Prepared->GetLimitName().IsSet() || Prepared->GetLimitName().Get(FString()).IsEmpty() || !Prepared->GetCounterName().IsSet() || Prepared->GetCounterName().Get(FString()).IsEmpty()) return nullptr;
+        const auto NamespaceName = Prepared->GetNamespaceName();
+        const auto LimitName = Prepared->GetLimitName();
+        const auto CounterName = Prepared->GetCounterName();
+        const auto UserId = Token->GetUserId();
+        const auto TimeOffset = Token->GetTimeOffset();
+        const auto ExpectedId = FString::Printf(TEXT("grn:gs2:%s:%s:limit:%s:user:%s:limit:%s:counter:%s"), *Domain->RestSession->RegionName(), *Domain->RestSession->OwnerId(), *NamespaceName.Get(FString()), *UserId.Get(FString()), *LimitName.Get(FString()), *CounterName.Get(FString()));
+        Gs2::Limit::Model::FCounterPtr Expected;
+        const bool Found = Gs2::Limit::Model::Cache::FCounterCache::TryGet(Domain->Cache, NamespaceName, UserId, LimitName, CounterName, TimeOffset, &Expected);
+        if (!Found || (Expected.IsValid() && (Expected->GetCounterId().Get(FString()) != ExpectedId || Expected->GetUserId().Get(FString()) != UserId.Get(FString()) || Expected->GetLimitName().Get(FString()) != LimitName.Get(FString()) || Expected->GetName().Get(FString()) != CounterName.Get(FString())))) return nullptr;
+        const auto Snapshot = Expected.IsValid() ? CounterSnapshot(Expected) : FString();
+        *Result = Gs2::Core::Domain::SpeculativeExecutor::FPreparedSpeculativeCommit::WrapLegacy(MakeShared<TFunction<void()>>([DomainCopy = Domain, NamespaceName, LimitName, CounterName, UserId = UserId.Get(FString()), TimeOffset, ExpectedId, Expected, Snapshot]()
         {
-            Domain->Cache->Put(
-                Limit::Model::FCounter::TypeName,
-                ParentKey,
-                Key,
-                nullptr,
-                FDateTime::Now() + FTimespan::FromSeconds(10)
-            );
-            return nullptr;
-        });
+            Gs2::Limit::Model::FCounterPtr Current;
+            const bool FoundCurrent = Gs2::Limit::Model::Cache::FCounterCache::TryGet(DomainCopy->Cache, NamespaceName, UserId, LimitName, CounterName, TimeOffset, &Current);
+            if (!FoundCurrent || (!Expected.IsValid() && Current.IsValid()) || (Expected.IsValid() && (!Current.IsValid() || Current->GetCounterId().Get(FString()) != ExpectedId || Current->GetUserId().Get(FString()) != UserId || Current->GetLimitName().Get(FString()) != LimitName.Get(FString()) || Current->GetName().Get(FString()) != CounterName.Get(FString()) || (Current->GetRevision().Get(0) > 0 && CounterSnapshot(Current) != Snapshot)))) return;
+            Gs2::Limit::Model::Cache::FCounterCache::Put(DomainCopy->Cache, NamespaceName, UserId, LimitName, CounterName, TimeOffset, nullptr);
+        }));
         return nullptr;
     }
 

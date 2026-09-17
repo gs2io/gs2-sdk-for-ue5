@@ -181,6 +181,7 @@ namespace Gs2::Log::Domain::Model
                 UserId,
                 "InGameLog"
             ),
+            Callback,
             Callback
         );
     }

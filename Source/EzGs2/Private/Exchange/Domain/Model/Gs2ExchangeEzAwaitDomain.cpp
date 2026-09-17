@@ -87,7 +87,7 @@ namespace Gs2::UE5::Exchange::Domain::Model
     Gs2::Core::Domain::CallbackID FEzAwaitDomain::Subscribe(TFunction<void(Gs2::UE5::Exchange::Model::FEzAwaitPtr)> Callback)
     {
         return Domain->Subscribe(
-            [&](Gs2::Exchange::Model::FAwaitPtr Item)
+            [Callback](Gs2::Exchange::Model::FAwaitPtr Item)
             {
                 Callback(Gs2::UE5::Exchange::Model::FEzAwait::FromModel(Item));
             }

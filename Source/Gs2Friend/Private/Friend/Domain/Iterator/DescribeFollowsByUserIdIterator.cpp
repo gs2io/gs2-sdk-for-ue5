@@ -1,3 +1,4 @@
+
 /*
  * Copyright 2016 Game Server Services, Inc. or its affiliates. All Rights
  * Reserved.
@@ -29,6 +30,10 @@
 #include "Friend/Domain/Model/Follow.h"
 
 #include "Core/Domain/Gs2.h"
+
+#include "Friend/Model/Cache/FollowUser.h"
+#include "Friend/Model/Cache/Follow.h"
+#include "Friend/Model/Cache/PublicProfile.h"
 
 namespace Gs2::Friend::Domain::Iterator
 {
@@ -84,9 +89,7 @@ namespace Gs2::Friend::Domain::Iterator
 
     FDescribeFollowsByUserIdIterator::FIterator& FDescribeFollowsByUserIdIterator::FIterator::operator++()
     {
-        
-
-        if (bEnd) return *this;
+                if (bEnd) return *this;
 
         if (ErrorValue && bLast)
         {
@@ -94,17 +97,18 @@ namespace Gs2::Friend::Domain::Iterator
             return *this;
         }
 
-        if (RangeIteratorOpt) ++*RangeIteratorOpt;
+        if (RangeIteratorOpt && *RangeIteratorOpt) ++*RangeIteratorOpt;
 
+        // Keep the previous page alive until its iterator has been replaced.
+        const auto PreviousRange = Range;
         if (!RangeIteratorOpt || (!*RangeIteratorOpt && !bLast))
         {
-            const auto ListParentKey = Gs2::Friend::Domain::Model::FFollowDomain::CreateCacheParentKey(
+            const auto ListParentKey = Gs2::Friend::Model::Cache::FFollowUserCache::CreateCacheParentKey(
                 Self->NamespaceName,
                 Self->UserId,
-                Self->WithProfile.IsSet() ? *Self->WithProfile ? TOptional<FString>("True") : TOptional<FString>("False") : TOptional<FString>("False"),
-                FString("FollowUser:") + (Self->WithProfile.IsSet() ? *Self->WithProfile == true ? "True" : "False" : "False")
+                Self->WithProfile,
+                TOptional<int32>()
             );
-
             if (!RangeIteratorOpt)
             {
                 Range = Self->Gs2->Cache->TryGetList<Gs2::Friend::Model::FFollowUser>(ListParentKey);
@@ -118,8 +122,7 @@ namespace Gs2::Friend::Domain::Iterator
                     return *this;
                 }
             }
-
-            const auto Future = Self->Client->DescribeFollowsByUserId(
+            const auto Request =
                 MakeShared<Gs2::Friend::Request::FDescribeFollowsByUserIdRequest>()
                     ->WithContextStack(Self->Gs2->DefaultContextStack)
                     ->WithNamespaceName(Self->NamespaceName)
@@ -127,7 +130,8 @@ namespace Gs2::Friend::Domain::Iterator
                     ->WithWithProfile(Self->WithProfile)
                     ->WithPageToken(PageToken)
                     ->WithLimit(FetchSize)
-            );
+            ;
+            const auto Future = Self->Client->DescribeFollowsByUserId(Request);
             Future->StartSynchronousTask();
             if (Future->GetTask().IsError())
             {
@@ -141,18 +145,41 @@ namespace Gs2::Friend::Domain::Iterator
             }
             const auto R = Future->GetTask().Result();
             Future->EnsureCompletion();
-            Range = R->GetItems();
-            for (auto Item : *R->GetItems())
+            Range = R->GetItems().IsValid() ? R->GetItems() : MakeShared<TArray<Gs2::Friend::Model::FFollowUserPtr>>();
+            const auto ResultModel = R;
+
+
+            if (Range.IsValid())
             {
-                Self->Gs2->Cache->Put(
-                    Gs2::Friend::Model::FFollowUser::TypeName,
-                    ListParentKey,
-                    Gs2::Friend::Domain::Model::FFollowUserDomain::CreateCacheKey(
-                        Item->GetUserId()
-                    ),
-                    Item,
-                    FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
-                );
+                for (const auto& Item : *Range)
+                {
+                    if (!Item.IsValid()) continue;
+                    if (Request->GetWithProfile().Get(bool{}))
+                    {
+                        Gs2::Friend::Model::Cache::FFollowUserCache::Put(
+                            Self->Gs2->Cache, Request->GetNamespaceName(), Request->GetUserId(), true,
+                            Item->GetUserId(), TOptional<int32>(), Item
+                        );
+                    }
+                    Gs2::Friend::Model::Cache::FFollowUserCache::Put(
+                        Self->Gs2->Cache, Request->GetNamespaceName(), Request->GetUserId(), false,
+                        Item->GetUserId(), TOptional<int32>(),
+                        MakeShared<Gs2::Friend::Model::FFollowUser>()->WithUserId(Item->GetUserId())
+                    );
+                    Gs2::Friend::Model::Cache::FFollowUserCache::Put(
+                        Self->Gs2->Cache, Request->GetNamespaceName(), Request->GetUserId(), TOptional<bool>(),
+                        Item->GetUserId(), TOptional<int32>(),
+                        MakeShared<Gs2::Friend::Model::FFollowUser>()->WithUserId(Item->GetUserId())
+                    );
+                    if (Request->GetWithProfile().Get(bool{}))
+                    {
+                        Gs2::Friend::Model::Cache::FPublicProfileCache::Put(
+                            Self->Gs2->Cache, Request->GetNamespaceName(), Item->GetUserId(), TOptional<int32>(),
+                            MakeShared<Gs2::Friend::Model::FPublicProfile>()
+                                ->WithUserId(Item->GetUserId())->WithPublicProfile(Item->GetPublicProfile())
+                        );
+                    }
+                }
             }
             if (Range)
             {

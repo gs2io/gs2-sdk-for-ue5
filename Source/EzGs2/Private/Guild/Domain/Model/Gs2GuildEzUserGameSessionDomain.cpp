@@ -310,8 +310,8 @@ namespace Gs2::UE5::Guild::Domain::Model
     )
     {
         return Domain->SubscribeSendRequests(
-            GuildModelName,
-            Callback
+            Callback,
+            GuildModelName
         );
     }
 
@@ -353,17 +353,19 @@ namespace Gs2::UE5::Guild::Domain::Model
         );
     }
 
-    Gs2::Core::Domain::CallbackID FEzUserGameSessionDomain::SubscribeJoinedGuilds(TFunction<void()> Callback)
+    Gs2::Core::Domain::CallbackID FEzUserGameSessionDomain::SubscribeJoinedGuilds(TFunction<void()> Callback, const TOptional<FString> GuildModelName)
     {
         return Domain->SubscribeJoinedGuilds(
-            Callback
+            Callback, GuildModelName
         );
     }
 
-    void FEzUserGameSessionDomain::UnsubscribeJoinedGuilds(Gs2::Core::Domain::CallbackID CallbackId)
+    void FEzUserGameSessionDomain::UnsubscribeJoinedGuilds(
+            Gs2::Core::Domain::CallbackID CallbackId
+            , const TOptional<FString> GuildModelName)
     {
         Domain->UnsubscribeJoinedGuilds(
-            CallbackId
+            CallbackId, GuildModelName
         );
     }
 

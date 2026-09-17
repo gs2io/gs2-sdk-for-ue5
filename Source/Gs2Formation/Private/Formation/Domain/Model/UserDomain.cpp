@@ -39,6 +39,12 @@
 #include "Formation/Domain/Model/PropertyFormAccessToken.h"
 #include "Formation/Domain/Model/User.h"
 #include "Formation/Domain/Model/UserAccessToken.h"
+#include "Formation/Model/Cache/Mold.h"
+#include "Formation/Model/Cache/MoldModel.h"
+#include "Formation/Model/Cache/PropertyForm.h"
+#include "Formation/Model/Cache/Form.h"
+#include "Formation/Model/Cache/FormModel.h"
+#include "Formation/Model/Cache/PropertyFormModel.h"
 
 #include "Core/Domain/Gs2.h"
 #include "Core/Domain/Transaction/JobQueueJobDomainFactory.h"
@@ -95,32 +101,121 @@ namespace Gs2::Formation::Domain::Model
 
     Gs2::Core::Domain::CallbackID FUserDomain::SubscribeMolds(
     TFunction<void()> Callback
+
     )
     {
         return Gs2->Cache->ListSubscribe(
             Gs2::Formation::Model::FMold::TypeName,
-            Gs2::Formation::Domain::Model::FUserDomain::CreateCacheParentKey(
+            Gs2::Formation::Model::Cache::FMoldCache::CreateCacheParentKey(
                 NamespaceName,
                 UserId,
-                "Mold"
+                TOptional<int32>()
             ),
+            Callback,
             Callback
         );
     }
-
     void FUserDomain::UnsubscribeMolds(
         Gs2::Core::Domain::CallbackID CallbackID
     )
     {
         Gs2->Cache->ListUnsubscribe(
             Gs2::Formation::Model::FMold::TypeName,
-            Gs2::Formation::Domain::Model::FUserDomain::CreateCacheParentKey(
+            Gs2::Formation::Model::Cache::FMoldCache::CreateCacheParentKey(
                 NamespaceName,
                 UserId,
-                "Mold"
+                TOptional<int32>()
             ),
             CallbackID
         );
+    }
+    class FUserDomain::FCollectMoldsTask : public Gs2::Core::Util::TGs2Future<TArray<Gs2::Formation::Model::FMoldPtr>>, public TSharedFromThis<FCollectMoldsTask>
+    {
+        const TSharedPtr<FUserDomain> Self;
+        const TFunction<void(TArray<Gs2::Formation::Model::FMoldPtr>)> OnCollected;
+    const TOptional<FString> QueryTimeOffsetToken;
+    public:
+        explicit FCollectMoldsTask(const TSharedPtr<FUserDomain>& Self, TFunction<void(TArray<Gs2::Formation::Model::FMoldPtr>)> OnCollected,const TOptional<FString> TimeOffsetToken) : Self(Self), OnCollected(OnCollected), QueryTimeOffsetToken(TimeOffsetToken) {}
+        FCollectMoldsTask(const FCollectMoldsTask& From) : TGs2Future(From), Self(From.Self), OnCollected(From.OnCollected), QueryTimeOffsetToken(From.QueryTimeOffsetToken) {}
+        virtual Gs2::Core::Model::FGs2ErrorPtr Action(TSharedPtr<TSharedPtr<TArray<Gs2::Formation::Model::FMoldPtr>>> Result) override
+        {
+            TArray<Gs2::Formation::Model::FMoldPtr> Items;
+            auto Iterator = Self->Molds(QueryTimeOffsetToken)->begin();
+            while (Iterator.HasNext())
+            {
+                if (Iterator.IsError()) return Iterator.Error();
+                if (Iterator.IsCurrentValid()) Items.Add(Iterator.Current());
+                ++Iterator;
+            }
+            if (Iterator.IsError()) return Iterator.Error();
+            *Result = MakeShared<TArray<Gs2::Formation::Model::FMoldPtr>>(Items);
+            if (OnCollected) OnCollected(Items);
+            return nullptr;
+        }
+    };
+
+    Gs2::Core::Domain::CallbackID FUserDomain::SubscribeMolds(
+        TFunction<void(TArray<Gs2::Formation::Model::FMoldPtr>)> Callback,const TOptional<FString> TimeOffsetToken
+    )
+    {
+        const TWeakPtr<Gs2::Core::Domain::FGs2> WeakGs2 = this->Gs2;
+        const TWeakPtr<Formation::Domain::FGs2FormationDomain> WeakService = this->Service;
+        const auto QueryNamespaceName = NamespaceName;
+        const auto QueryUserId = UserId;
+        const auto QueryTimeOffsetToken = TimeOffsetToken;
+        const auto Parent = Gs2::Formation::Model::Cache::FMoldCache::CreateCacheParentKey(
+        NamespaceName,
+        UserId,
+        TOptional<int32>()
+    );
+        return Gs2->Cache->ListSubscribeTyped(
+            Gs2::Formation::Model::FMold::TypeName,
+            Parent,
+            [Callback, WeakGs2](const TArray<FGs2ObjectPtr>& Values)
+            {
+                if (!WeakGs2.Pin().IsValid()) return;
+                TArray<Gs2::Formation::Model::FMoldPtr> TypedValues;
+                for (const auto& Value : Values) if (Value.IsValid()) TypedValues.Add(StaticCastSharedPtr<Gs2::Formation::Model::FMold>(Value));
+                Callback(TypedValues);
+            },
+            [WeakGs2, WeakService, Callback, QueryNamespaceName, QueryUserId, QueryTimeOffsetToken]()
+            {
+                const auto Owner = WeakGs2.Pin();
+                if (!Owner.IsValid()) return;
+                const auto Domain = MakeShared<FUserDomain>(Owner, WeakService.Pin(), QueryNamespaceName, QueryUserId);
+                const auto Task = Gs2::Core::Util::New<FAsyncTask<FCollectMoldsTask>>(Domain, Callback, QueryTimeOffsetToken);
+                Task->StartBackgroundTask();
+            }
+        );
+    }
+
+    void FUserDomain::InvalidateMolds(const TOptional<FString> TimeOffsetToken)
+    {
+        Gs2->Cache->ClearListCache(
+            Gs2::Formation::Model::FMold::TypeName,
+            Gs2::Formation::Model::Cache::FMoldCache::CreateCacheParentKey(
+        NamespaceName,
+        UserId,
+        TOptional<int32>()
+    )
+        );
+    }
+
+    FUserDomain::FSubscribeMoldsWithInitialCallTask::FSubscribeMoldsWithInitialCallTask(const TSharedPtr<FUserDomain>& Self, TFunction<void(TArray<Gs2::Formation::Model::FMoldPtr>)> Callback,const TOptional<FString> TimeOffsetToken) : Self(Self), Callback(Callback), QueryTimeOffsetToken(TimeOffsetToken) {}
+    FUserDomain::FSubscribeMoldsWithInitialCallTask::FSubscribeMoldsWithInitialCallTask(const FSubscribeMoldsWithInitialCallTask& From) : TGs2Future(From), Self(From.Self), Callback(From.Callback), QueryTimeOffsetToken(From.QueryTimeOffsetToken) {}
+    Gs2::Core::Model::FGs2ErrorPtr FUserDomain::FSubscribeMoldsWithInitialCallTask::Action(TSharedPtr<TSharedPtr<Gs2::Core::Domain::CallbackID>> Result)
+    {
+        const auto Task = Gs2::Core::Util::New<FAsyncTask<FCollectMoldsTask>>(Self, TFunction<void(TArray<Gs2::Formation::Model::FMoldPtr>)>(), QueryTimeOffsetToken);
+        Task->StartSynchronousTask(); Task->EnsureCompletion();
+        if (Task->GetTask().IsError()) return Task->GetTask().Error();
+        const auto Values = Task->GetTask().Result();
+        const auto CallbackId = Self->SubscribeMolds(Callback, QueryTimeOffsetToken);
+        Callback(*Values); *Result = MakeShared<Gs2::Core::Domain::CallbackID>(CallbackId);
+        return nullptr;
+    }
+    TSharedPtr<FAsyncTask<FUserDomain::FSubscribeMoldsWithInitialCallTask>> FUserDomain::SubscribeMoldsWithInitialCall(TFunction<void(TArray<Gs2::Formation::Model::FMoldPtr>)> Callback,const TOptional<FString> TimeOffsetToken)
+    {
+        return Gs2::Core::Util::New<FAsyncTask<FSubscribeMoldsWithInitialCallTask>>(this->AsShared(), Callback, TimeOffsetToken);
     }
 
     TSharedPtr<Gs2::Formation::Domain::Model::FMoldDomain> FUserDomain::Mold(
@@ -153,32 +248,123 @@ namespace Gs2::Formation::Domain::Model
 
     Gs2::Core::Domain::CallbackID FUserDomain::SubscribePropertyForms(
     TFunction<void()> Callback
+        , const FString PropertyFormModelName
     )
     {
         return Gs2->Cache->ListSubscribe(
             Gs2::Formation::Model::FPropertyForm::TypeName,
-            Gs2::Formation::Domain::Model::FUserDomain::CreateCacheParentKey(
+            Gs2::Formation::Model::Cache::FPropertyFormCache::CreateCacheParentKey(
                 NamespaceName,
                 UserId,
-                "PropertyForm"
+                TOptional<int32>()
             ),
+            Callback,
             Callback
         );
     }
-
     void FUserDomain::UnsubscribePropertyForms(
-        Gs2::Core::Domain::CallbackID CallbackID
+        const FString PropertyFormModelName
+        , Gs2::Core::Domain::CallbackID CallbackID, const TOptional<FString> TimeOffsetToken
     )
     {
         Gs2->Cache->ListUnsubscribe(
             Gs2::Formation::Model::FPropertyForm::TypeName,
-            Gs2::Formation::Domain::Model::FUserDomain::CreateCacheParentKey(
+            Gs2::Formation::Model::Cache::FPropertyFormCache::CreateCacheParentKey(
                 NamespaceName,
                 UserId,
-                "PropertyForm"
+                TOptional<int32>()
             ),
             CallbackID
         );
+    }
+    class FUserDomain::FCollectPropertyFormsTask : public Gs2::Core::Util::TGs2Future<TArray<Gs2::Formation::Model::FPropertyFormPtr>>, public TSharedFromThis<FCollectPropertyFormsTask>
+    {
+        const TSharedPtr<FUserDomain> Self;
+        const TFunction<void(TArray<Gs2::Formation::Model::FPropertyFormPtr>)> OnCollected;
+    const FString QueryPropertyFormModelName;const TOptional<FString> QueryTimeOffsetToken;
+    public:
+        explicit FCollectPropertyFormsTask(const TSharedPtr<FUserDomain>& Self, TFunction<void(TArray<Gs2::Formation::Model::FPropertyFormPtr>)> OnCollected,const FString PropertyFormModelName,const TOptional<FString> TimeOffsetToken) : Self(Self), OnCollected(OnCollected), QueryPropertyFormModelName(PropertyFormModelName), QueryTimeOffsetToken(TimeOffsetToken) {}
+        FCollectPropertyFormsTask(const FCollectPropertyFormsTask& From) : TGs2Future(From), Self(From.Self), OnCollected(From.OnCollected), QueryPropertyFormModelName(From.QueryPropertyFormModelName), QueryTimeOffsetToken(From.QueryTimeOffsetToken) {}
+        virtual Gs2::Core::Model::FGs2ErrorPtr Action(TSharedPtr<TSharedPtr<TArray<Gs2::Formation::Model::FPropertyFormPtr>>> Result) override
+        {
+            TArray<Gs2::Formation::Model::FPropertyFormPtr> Items;
+            auto Iterator = Self->PropertyForms(QueryPropertyFormModelName, QueryTimeOffsetToken)->begin();
+            while (Iterator.HasNext())
+            {
+                if (Iterator.IsError()) return Iterator.Error();
+                if (Iterator.IsCurrentValid()) Items.Add(Iterator.Current());
+                ++Iterator;
+            }
+            if (Iterator.IsError()) return Iterator.Error();
+            *Result = MakeShared<TArray<Gs2::Formation::Model::FPropertyFormPtr>>(Items);
+            if (OnCollected) OnCollected(Items);
+            return nullptr;
+        }
+    };
+
+    Gs2::Core::Domain::CallbackID FUserDomain::SubscribePropertyForms(
+        TFunction<void(TArray<Gs2::Formation::Model::FPropertyFormPtr>)> Callback,const FString PropertyFormModelName,const TOptional<FString> TimeOffsetToken
+    )
+    {
+        const TWeakPtr<Gs2::Core::Domain::FGs2> WeakGs2 = this->Gs2;
+        const TWeakPtr<Formation::Domain::FGs2FormationDomain> WeakService = this->Service;
+        const auto QueryNamespaceName = NamespaceName;
+        const auto QueryUserId = UserId;
+        const auto QueryPropertyFormModelName = PropertyFormModelName;
+        const auto QueryTimeOffsetToken = TimeOffsetToken;
+        const auto Parent = Gs2::Formation::Model::Cache::FPropertyFormCache::CreateCacheParentKey(
+        NamespaceName,
+        UserId,
+        TOptional<int32>()
+    );
+        return Gs2->Cache->ListSubscribeTyped(
+            Gs2::Formation::Model::FPropertyForm::TypeName,
+            Parent,
+            [Callback, WeakGs2](const TArray<FGs2ObjectPtr>& Values)
+            {
+                if (!WeakGs2.Pin().IsValid()) return;
+                TArray<Gs2::Formation::Model::FPropertyFormPtr> TypedValues;
+                for (const auto& Value : Values) if (Value.IsValid()) TypedValues.Add(StaticCastSharedPtr<Gs2::Formation::Model::FPropertyForm>(Value));
+                Callback(TypedValues);
+            },
+            [WeakGs2, WeakService, Callback, QueryNamespaceName, QueryUserId, QueryPropertyFormModelName, QueryTimeOffsetToken]()
+            {
+                const auto Owner = WeakGs2.Pin();
+                if (!Owner.IsValid()) return;
+                const auto Domain = MakeShared<FUserDomain>(Owner, WeakService.Pin(), QueryNamespaceName, QueryUserId);
+                const auto Task = Gs2::Core::Util::New<FAsyncTask<FCollectPropertyFormsTask>>(Domain, Callback, QueryPropertyFormModelName, QueryTimeOffsetToken);
+                Task->StartBackgroundTask();
+            }
+        );
+    }
+
+    void FUserDomain::InvalidatePropertyForms(const FString PropertyFormModelName,const TOptional<FString> TimeOffsetToken)
+    {
+        Gs2->Cache->ClearListCache(
+            Gs2::Formation::Model::FPropertyForm::TypeName,
+            Gs2::Formation::Model::Cache::FPropertyFormCache::CreateCacheParentKey(
+        NamespaceName,
+        UserId,
+        TOptional<int32>()
+    )
+        );
+    }
+
+    FUserDomain::FSubscribePropertyFormsWithInitialCallTask::FSubscribePropertyFormsWithInitialCallTask(const TSharedPtr<FUserDomain>& Self, TFunction<void(TArray<Gs2::Formation::Model::FPropertyFormPtr>)> Callback,const FString PropertyFormModelName,const TOptional<FString> TimeOffsetToken) : Self(Self), Callback(Callback), QueryPropertyFormModelName(PropertyFormModelName), QueryTimeOffsetToken(TimeOffsetToken) {}
+    FUserDomain::FSubscribePropertyFormsWithInitialCallTask::FSubscribePropertyFormsWithInitialCallTask(const FSubscribePropertyFormsWithInitialCallTask& From) : TGs2Future(From), Self(From.Self), Callback(From.Callback), QueryPropertyFormModelName(From.QueryPropertyFormModelName), QueryTimeOffsetToken(From.QueryTimeOffsetToken) {}
+    Gs2::Core::Model::FGs2ErrorPtr FUserDomain::FSubscribePropertyFormsWithInitialCallTask::Action(TSharedPtr<TSharedPtr<Gs2::Core::Domain::CallbackID>> Result)
+    {
+        const auto Task = Gs2::Core::Util::New<FAsyncTask<FCollectPropertyFormsTask>>(Self, TFunction<void(TArray<Gs2::Formation::Model::FPropertyFormPtr>)>(), QueryPropertyFormModelName, QueryTimeOffsetToken);
+        Task->StartSynchronousTask(); Task->EnsureCompletion();
+        if (Task->GetTask().IsError()) return Task->GetTask().Error();
+        const auto Values = Task->GetTask().Result();
+        const auto CallbackId = Self->SubscribePropertyForms(Callback, QueryPropertyFormModelName, QueryTimeOffsetToken);
+        Callback(*Values); *Result = MakeShared<Gs2::Core::Domain::CallbackID>(CallbackId);
+        return nullptr;
+    }
+    TSharedPtr<FAsyncTask<FUserDomain::FSubscribePropertyFormsWithInitialCallTask>> FUserDomain::SubscribePropertyFormsWithInitialCall(TFunction<void(TArray<Gs2::Formation::Model::FPropertyFormPtr>)> Callback,const FString PropertyFormModelName,const TOptional<FString> TimeOffsetToken)
+    {
+        return Gs2::Core::Util::New<FAsyncTask<FSubscribePropertyFormsWithInitialCallTask>>(this->AsShared(), Callback, PropertyFormModelName, TimeOffsetToken);
     }
 
     TSharedPtr<Gs2::Formation::Domain::Model::FPropertyFormDomain> FUserDomain::PropertyForm(
@@ -222,4 +408,3 @@ namespace Gs2::Formation::Domain::Model
 #elif defined(__clang__)
 #pragma clang diagnostic pop
 #endif
-

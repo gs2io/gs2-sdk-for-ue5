@@ -68,7 +68,8 @@ namespace Gs2::UE5::Formation::Domain::Model
 
         Gs2::Core::Domain::CallbackID SubscribeForms(TFunction<void()> Callback);
 
-        void UnsubscribeForms(Gs2::Core::Domain::CallbackID CallbackId);
+        void UnsubscribeForms(
+                Gs2::Core::Domain::CallbackID CallbackId);
 
         Gs2::UE5::Formation::Domain::Model::FEzFormGameSessionDomainPtr Form(
             const int32 Index

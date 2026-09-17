@@ -82,6 +82,8 @@ namespace Gs2::Money::Domain::Model
             const FWalletDomain& From
         );
 
+
+
         class GS2MONEY_API FGetTask final :
             public Gs2::Core::Util::TGs2Future<Gs2::Money::Model::FWallet>,
             public TSharedFromThis<FGetTask>
@@ -108,6 +110,8 @@ namespace Gs2::Money::Domain::Model
             Request::FGetWalletByUserIdRequestPtr Request
         );
 
+
+
         class GS2MONEY_API FDepositTask final :
             public Gs2::Core::Util::TGs2Future<Gs2::Money::Domain::Model::FWalletDomain>,
             public TSharedFromThis<FDepositTask>
@@ -133,6 +137,8 @@ namespace Gs2::Money::Domain::Model
         TSharedPtr<FAsyncTask<FDepositTask>> Deposit(
             Request::FDepositByUserIdRequestPtr Request
         );
+
+
 
         class GS2MONEY_API FWithdrawTask final :
             public Gs2::Core::Util::TGs2Future<Gs2::Money::Domain::Model::FWalletDomain>,
@@ -193,7 +199,34 @@ namespace Gs2::Money::Domain::Model
 
         TSharedPtr<FAsyncTask<FModelTask>> Model();
 
+        void Invalidate();
+
         Gs2::Core::Domain::CallbackID Subscribe(
+            TFunction<void(Gs2::Money::Model::FWalletPtr)> Callback
+        );
+
+        class GS2MONEY_API FSubscribeWithInitialCallTask final :
+            public Gs2::Core::Util::TGs2Future<Gs2::Core::Domain::CallbackID>,
+            public TSharedFromThis<FSubscribeWithInitialCallTask>
+        {
+            const TSharedPtr<FWalletDomain> Self;
+            const TFunction<void(Gs2::Money::Model::FWalletPtr)> Callback;
+        public:
+            FSubscribeWithInitialCallTask(
+                const TSharedPtr<FWalletDomain>& Self,
+                TFunction<void(Gs2::Money::Model::FWalletPtr)> Callback
+            );
+
+            FSubscribeWithInitialCallTask(
+                const FSubscribeWithInitialCallTask& From
+            );
+
+            virtual Gs2::Core::Model::FGs2ErrorPtr Action(
+                TSharedPtr<TSharedPtr<Gs2::Core::Domain::CallbackID>> Result
+            ) override;
+        };
+
+        TSharedPtr<FAsyncTask<FSubscribeWithInitialCallTask>> SubscribeWithInitialCall(
             TFunction<void(Gs2::Money::Model::FWalletPtr)> Callback
         );
 

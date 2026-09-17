@@ -15,23 +15,58 @@
  *
  * deny overwrite
  */
-
-#if defined(_MSC_VER)
-#pragma warning (push)
-#pragma warning (disable: 4458) // Declaration hides class member
-#elif defined(__clang__)
-#pragma clang diagnostic push
-#pragma clang diagnostic ignored "-Wshadow" // declaration shadows a field of
-#endif
-
 #include "Formation/Domain/SpeculativeExecutor/Transaction/AcquireActionsToPropertyFormPropertiesSpeculativeExecutor.h"
+#include "Formation/Domain/SpeculativeExecutor/Transaction/AcquireActionsToFormPropertiesSpeculativeExecutor.h"
 
+#include "Auth/Model/AccessToken.h"
 #include "Core/Domain/Gs2.h"
+#include "Core/Domain/SpeculativeExecutor/ActionConfig.h"
+#include "Core/Domain/SpeculativeExecutor/PreparedSpeculativeCommit.h"
+#include "Core/Domain/Model/IssueTransactionEvent.h"
+#include "Formation/Model/Cache/PropertyForm.h"
+#include "Formation/Model/Config.h"
+#include "Formation/Model/Form.h"
+#include "Formation/Model/Slot.h"
+#include "Serialization/JsonSerializer.h"
+#include "Serialization/JsonWriter.h"
 
 namespace Gs2::Formation::Domain::Transaction::SpeculativeExecutor
 {
-    FString FAcquireActionsToPropertyFormPropertiesSpeculativeExecutor::Action() {
-        return "Gs2Formation:AcquireActionsToPropertyFormProperties";
+    namespace
+    {
+        FString PropertyFormSnapshot(
+            const Gs2::Formation::Model::FPropertyFormPtr& Item
+        )
+        {
+            if (!Item.IsValid()) return FString();
+            auto Copy = MakeShared<Gs2::Formation::Model::FPropertyForm>(*Item);
+            const auto Slots =
+                MakeShared<TArray<Gs2::Formation::Model::FSlotPtr>>();
+            if (Item->GetSlots().IsValid())
+            {
+                for (const auto& Slot : *Item->GetSlots())
+                {
+                    if (Slot.IsValid())
+                    {
+                        Slots->Add(
+                            MakeShared<Gs2::Formation::Model::FSlot>(*Slot)
+                        );
+                    }
+                }
+            }
+            Copy->WithSlots(Slots);
+            FString Body;
+            const TSharedRef<TJsonWriter<TCHAR>> Writer =
+                TJsonWriterFactory<TCHAR>::Create(&Body);
+            FJsonSerializer::Serialize(Copy->ToJson().ToSharedRef(), Writer);
+            return Body;
+        }
+    }
+
+    FString
+    FAcquireActionsToPropertyFormPropertiesSpeculativeExecutor::Action()
+    {
+        return TEXT("Gs2Formation:AcquireActionsToPropertyFormProperties");
     }
 
     FAcquireActionsToPropertyFormPropertiesSpeculativeExecutor::FCommitTask::FCommitTask(
@@ -57,60 +92,168 @@ namespace Gs2::Formation::Domain::Transaction::SpeculativeExecutor
     {
     }
 
-    Gs2::Core::Model::FGs2ErrorPtr FAcquireActionsToPropertyFormPropertiesSpeculativeExecutor::FCommitTask::Action(
-        TSharedPtr<TSharedPtr<TFunction<void()>>> Result)
+    Gs2::Core::Model::FGs2ErrorPtr
+    FAcquireActionsToPropertyFormPropertiesSpeculativeExecutor::FCommitTask::Action(
+        TSharedPtr<TSharedPtr<
+            Gs2::Core::Domain::SpeculativeExecutor::FPreparedSpeculativeCommit>> Result
+    )
     {
-        const auto Future = Domain->Formation->Namespace(
-                Request->GetNamespaceName().IsSet() ? *Request->GetNamespaceName() : ""
-            )->AccessToken(
-                AccessToken
-            )->PropertyForm(
-                Request->GetPropertyFormModelName().IsSet() ? *Request->GetPropertyFormModelName() : "",
-                Request->GetPropertyId().IsSet() ? *Request->GetPropertyId() : ""
-            )->Model();
-        Future->StartSynchronousTask();
-        if (Future->GetTask().IsError())
+        *Result = nullptr;
+        Gs2::Auth::Model::FAccessTokenPtr Token = nullptr;
+        if (AccessToken.IsValid())
         {
-            return Future->GetTask().Error();
+            Token = MakeShared<Gs2::Auth::Model::FAccessToken>(*AccessToken);
         }
-        const auto Item = Future->GetTask().Result();
-
-        if (!Item.IsValid())
+        Gs2::Formation::Request::
+            FAcquireActionsToPropertyFormPropertiesRequestPtr Prepared = nullptr;
+        if (Request.IsValid())
         {
-            *Result = MakeShared<TFunction<void()>>([]{});
+            Prepared =
+                Gs2::Formation::Request::
+                    FAcquireActionsToPropertyFormPropertiesRequest::FromJson(
+                        Request->ToJson()
+                    );
+        }
+        if (!Domain.IsValid() || !Domain->RestSession.IsValid() ||
+            !Domain->Cache.IsValid() || !Token.IsValid() ||
+            !Prepared.IsValid() || !Token->GetUserId().IsSet() ||
+            Token->GetUserId().Get(FString()).IsEmpty())
+        {
             return nullptr;
         }
 
-        Service->OnIssueTransaction.Broadcast(
-            MakeShared<Gs2::Core::Domain::Model::FIssueTransactionEvent>(
-                AccessToken,
-                MakeShared<TArray<Gs2::Core::Model::FConsumeActionPtr>>(),
-                [Item, this]{
-                    auto Arr = MakeShared<TArray<Gs2::Core::Model::FAcquireActionPtr>>();
-                    for (auto Slot : *Item->GetSlots())
-                    {
-                        const auto AcquireRequest = Request->GetAcquireAction()->GetRequest();
-                        Arr->Add(
-                            MakeShared<Gs2::Core::Model::FAcquireAction>()
-                                ->WithAction(Request->GetAcquireAction()->GetAction())
-                                ->WithRequest(AcquireRequest->Replace(TEXT("{propertyId}"), ToCStr(*Slot->GetPropertyId())))
-                        );
-                    }
-                    return Arr;
-                }(),
-                1.0
-            )
+        if (Prepared->GetUserId().IsSet() &&
+            Prepared->GetUserId().Get(FString()) == TEXT("#{userId}"))
+        {
+            Prepared->WithUserId(Token->GetUserId());
+        }
+        if (!Prepared->GetUserId().IsSet() ||
+            Prepared->GetUserId().Get(FString()) !=
+                Token->GetUserId().Get(FString()) ||
+            !Prepared->GetNamespaceName().IsSet() ||
+            !Prepared->GetPropertyFormModelName().IsSet() ||
+            !Prepared->GetPropertyId().IsSet() ||
+            !Prepared->GetAcquireAction().IsValid())
+        {
+            return nullptr;
+        }
+
+        const auto Namespace = Prepared->GetNamespaceName();
+        const auto UserId = Token->GetUserId();
+        const auto Name = Prepared->GetPropertyFormModelName();
+        const auto PropertyId = Prepared->GetPropertyId();
+        const auto Offset = Token->GetTimeOffset();
+        const FString ExpectedId = FString::Printf(
+            TEXT("grn:gs2:%s:%s:formation:%s:user:%s:propertyForm:%s:%s"),
+            *Domain->RestSession->RegionName(),
+            *Domain->RestSession->OwnerId(),
+            *Namespace.Get(FString()),
+            *UserId.Get(FString()),
+            *Name.Get(FString()),
+            *PropertyId.Get(FString())
         );
 
+        Gs2::Formation::Model::FPropertyFormPtr Item = nullptr;
+        if (!Gs2::Formation::Model::Cache::FPropertyFormCache::TryGet(
+                Domain->Cache, Namespace, UserId, Name, PropertyId, Offset, &Item
+            ) ||
+            !Item.IsValid() || !Item->GetFormId().IsSet() ||
+            *Item->GetFormId() != ExpectedId || !Item->GetUserId().IsSet() ||
+            *Item->GetUserId() != UserId.Get(FString()) ||
+            !Item->GetName().IsSet() ||
+            *Item->GetName() != Name.Get(FString()) ||
+            !Item->GetPropertyId().IsSet() ||
+            *Item->GetPropertyId() != PropertyId.Get(FString()) ||
+            !Item->GetSlots().IsValid() ||
+            !Prepared->GetAcquireAction()->GetAction().IsSet() ||
+            *Prepared->GetAcquireAction()->GetAction() == FAcquireActionsToPropertyFormPropertiesSpeculativeExecutor::Action() ||
+            *Prepared->GetAcquireAction()->GetAction() ==
+                FAcquireActionsToFormPropertiesSpeculativeExecutor::Action())
+        {
+            return nullptr;
+        }
+
+        const auto Consumes =
+            MakeShared<TArray<Gs2::Core::Model::FConsumeActionPtr>>();
+        const auto Acquires =
+            MakeShared<TArray<Gs2::Core::Model::FAcquireActionPtr>>();
+        for (const auto& Slot : *Item->GetSlots())
+        {
+            if (!Slot.IsValid()) continue;
+            Gs2::Core::Model::FAcquireActionPtr SourceAction =
+                MakeShared<Gs2::Core::Model::FAcquireAction>(
+                    *Prepared->GetAcquireAction()
+                );
+            auto Action =
+                Gs2::Core::Domain::SpeculativeExecutor::ApplyConfig(
+                    SourceAction,
+                    TOptional<FString>(TEXT("propertyId")),
+                    TOptional<FString>(Slot->GetPropertyId().Get(FString()))
+                );
+            Action = Gs2::Core::Domain::SpeculativeExecutor::ApplyConfig(
+                Action, TOptional<FString>(TEXT("userId")), UserId
+            );
+            if (Prepared->GetConfig().IsValid())
+            {
+                for (const auto& Config : *Prepared->GetConfig())
+                {
+                    if (Config.IsValid() && Config->GetValue().IsSet())
+                    {
+                        Action =
+                            Gs2::Core::Domain::SpeculativeExecutor::ApplyConfig(
+                                Action, Config->GetKey(), Config->GetValue()
+                            );
+                    }
+                }
+            }
+            if (Action.IsValid()) Acquires->Add(Action);
+        }
+        if (Item->GetSlots()->Num() > 0 && Acquires->Num() == 0)
+        {
+            return nullptr;
+        }
+
+        const auto Event =
+            MakeShared<Gs2::Core::Domain::Model::FIssueTransactionEvent>(
+                Token, Consumes, Acquires, TBigInt<1024, false>(1)
+            );
+        Service->OnIssueTransaction.Broadcast(Event);
+        if (Event->GetError().IsValid()) return Event->GetError();
+        const auto Child = Event->GetCommit();
+        if (!Child.IsValid()) return nullptr;
+
+        const FString Expected = PropertyFormSnapshot(Item);
+        *Result =
+            Gs2::Core::Domain::SpeculativeExecutor::FPreparedSpeculativeCommit::CreateGuarded(
+                MakeShared<TFunction<void()>>(
+                    [Child] { (*Child)(); }
+                ),
+                [Domain = Domain, Namespace, UserId, Name, PropertyId, Offset,
+                    Expected]
+                {
+                    Gs2::Formation::Model::FPropertyFormPtr Current = nullptr;
+                    return
+                        Gs2::Formation::Model::Cache::FPropertyFormCache::TryGet(
+                            Domain->Cache, Namespace, UserId, Name, PropertyId,
+                            Offset, &Current
+                        ) &&
+                        PropertyFormSnapshot(Current) == Expected;
+                }
+            );
         return nullptr;
     }
 
-    TSharedPtr<FAsyncTask<FAcquireActionsToPropertyFormPropertiesSpeculativeExecutor::FCommitTask>> FAcquireActionsToPropertyFormPropertiesSpeculativeExecutor::Execute(
+    TSharedPtr<FAsyncTask<
+        FAcquireActionsToPropertyFormPropertiesSpeculativeExecutor::FCommitTask>>
+    FAcquireActionsToPropertyFormPropertiesSpeculativeExecutor::Execute(
         const Gs2::Core::Domain::FGs2Ptr& Domain,
         const Gs2::Formation::Domain::FGs2FormationDomainPtr& Service,
         const Gs2::Auth::Model::FAccessTokenPtr& AccessToken,
         const Gs2::Formation::Request::FAcquireActionsToPropertyFormPropertiesRequestPtr& Request
-    ) {
-        return Gs2::Core::Util::New<FAsyncTask<FCommitTask>>(Domain, Service, AccessToken, Request);
+    )
+    {
+        return Gs2::Core::Util::New<FAsyncTask<FCommitTask>>(
+            Domain, Service, AccessToken, Request
+        );
     }
 }

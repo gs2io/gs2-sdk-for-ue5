@@ -79,6 +79,8 @@ namespace Gs2::SkillTree::Domain::Model
             const FStatusDomain& From
         );
 
+
+
         class GS2SKILLTREE_API FMarkReleaseTask final :
             public Gs2::Core::Util::TGs2Future<Gs2::SkillTree::Domain::Model::FStatusDomain>,
             public TSharedFromThis<FMarkReleaseTask>
@@ -104,6 +106,8 @@ namespace Gs2::SkillTree::Domain::Model
         TSharedPtr<FAsyncTask<FMarkReleaseTask>> MarkRelease(
             Request::FMarkReleaseByUserIdRequestPtr Request
         );
+
+
 
         class GS2SKILLTREE_API FReleaseTask final :
             public Gs2::Core::Util::TGs2Future<Gs2::Core::Domain::FTransactionDomain>,
@@ -131,6 +135,8 @@ namespace Gs2::SkillTree::Domain::Model
             Request::FReleaseByUserIdRequestPtr Request
         );
 
+
+
         class GS2SKILLTREE_API FMarkRestrainTask final :
             public Gs2::Core::Util::TGs2Future<Gs2::SkillTree::Domain::Model::FStatusDomain>,
             public TSharedFromThis<FMarkRestrainTask>
@@ -156,6 +162,8 @@ namespace Gs2::SkillTree::Domain::Model
         TSharedPtr<FAsyncTask<FMarkRestrainTask>> MarkRestrain(
             Request::FMarkRestrainByUserIdRequestPtr Request
         );
+
+
 
         class GS2SKILLTREE_API FRestrainTask final :
             public Gs2::Core::Util::TGs2Future<Gs2::Core::Domain::FTransactionDomain>,
@@ -183,6 +191,8 @@ namespace Gs2::SkillTree::Domain::Model
             Request::FRestrainByUserIdRequestPtr Request
         );
 
+
+
         class GS2SKILLTREE_API FGetTask final :
             public Gs2::Core::Util::TGs2Future<Gs2::SkillTree::Model::FStatus>,
             public TSharedFromThis<FGetTask>
@@ -208,6 +218,8 @@ namespace Gs2::SkillTree::Domain::Model
         TSharedPtr<FAsyncTask<FGetTask>> Get(
             Request::FGetStatusByUserIdRequestPtr Request
         );
+
+
 
         class GS2SKILLTREE_API FResetTask final :
             public Gs2::Core::Util::TGs2Future<Gs2::Core::Domain::FTransactionDomain>,
@@ -268,7 +280,34 @@ namespace Gs2::SkillTree::Domain::Model
 
         TSharedPtr<FAsyncTask<FModelTask>> Model();
 
+        void Invalidate();
+
         Gs2::Core::Domain::CallbackID Subscribe(
+            TFunction<void(Gs2::SkillTree::Model::FStatusPtr)> Callback
+        );
+
+        class GS2SKILLTREE_API FSubscribeWithInitialCallTask final :
+            public Gs2::Core::Util::TGs2Future<Gs2::Core::Domain::CallbackID>,
+            public TSharedFromThis<FSubscribeWithInitialCallTask>
+        {
+            const TSharedPtr<FStatusDomain> Self;
+            const TFunction<void(Gs2::SkillTree::Model::FStatusPtr)> Callback;
+        public:
+            FSubscribeWithInitialCallTask(
+                const TSharedPtr<FStatusDomain>& Self,
+                TFunction<void(Gs2::SkillTree::Model::FStatusPtr)> Callback
+            );
+
+            FSubscribeWithInitialCallTask(
+                const FSubscribeWithInitialCallTask& From
+            );
+
+            virtual Gs2::Core::Model::FGs2ErrorPtr Action(
+                TSharedPtr<TSharedPtr<Gs2::Core::Domain::CallbackID>> Result
+            ) override;
+        };
+
+        TSharedPtr<FAsyncTask<FSubscribeWithInitialCallTask>> SubscribeWithInitialCall(
             TFunction<void(Gs2::SkillTree::Model::FStatusPtr)> Callback
         );
 

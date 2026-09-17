@@ -124,21 +124,24 @@ namespace Gs2::UE5::Ranking2::Domain::Model
 
         Gs2::Core::Domain::CallbackID SubscribeGlobalRankings(TFunction<void()> Callback);
 
-        void UnsubscribeGlobalRankings(Gs2::Core::Domain::CallbackID CallbackId);
+        void UnsubscribeGlobalRankings(
+                Gs2::Core::Domain::CallbackID CallbackId);
 
         Gs2::UE5::Ranking2::Domain::Iterator::FEzDescribeGlobalRankingReceivedRewardsIteratorPtr GlobalRankingReceivedRewards(
         ) const;
 
         Gs2::Core::Domain::CallbackID SubscribeGlobalRankingReceivedRewards(TFunction<void()> Callback);
 
-        void UnsubscribeGlobalRankingReceivedRewards(Gs2::Core::Domain::CallbackID CallbackId);
+        void UnsubscribeGlobalRankingReceivedRewards(
+                Gs2::Core::Domain::CallbackID CallbackId);
 
         Gs2::UE5::Ranking2::Domain::Iterator::FEzDescribeGlobalRankingScoresIteratorPtr GlobalRankingScores(
         ) const;
 
         Gs2::Core::Domain::CallbackID SubscribeGlobalRankingScores(TFunction<void()> Callback);
 
-        void UnsubscribeGlobalRankingScores(Gs2::Core::Domain::CallbackID CallbackId);
+        void UnsubscribeGlobalRankingScores(
+                Gs2::Core::Domain::CallbackID CallbackId);
 
         Gs2::UE5::Ranking2::Domain::Model::FEzGlobalRankingScoreGameSessionDomainPtr GlobalRankingScore(
         ) const;

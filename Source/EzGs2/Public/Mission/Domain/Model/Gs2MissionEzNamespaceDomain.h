@@ -73,14 +73,16 @@ namespace Gs2::UE5::Mission::Domain::Model
 
         Gs2::Core::Domain::CallbackID SubscribeCounterModels(TFunction<void()> Callback);
 
-        void UnsubscribeCounterModels(Gs2::Core::Domain::CallbackID CallbackId);
+        void UnsubscribeCounterModels(
+                Gs2::Core::Domain::CallbackID CallbackId);
 
         Gs2::UE5::Mission::Domain::Iterator::FEzDescribeMissionGroupModelsIteratorPtr MissionGroupModels(
         ) const;
 
         Gs2::Core::Domain::CallbackID SubscribeMissionGroupModels(TFunction<void()> Callback);
 
-        void UnsubscribeMissionGroupModels(Gs2::Core::Domain::CallbackID CallbackId);
+        void UnsubscribeMissionGroupModels(
+                Gs2::Core::Domain::CallbackID CallbackId);
 
         Gs2::UE5::Mission::Domain::Model::FEzMissionGroupModelDomainPtr MissionGroupModel(
             const FString MissionGroupName

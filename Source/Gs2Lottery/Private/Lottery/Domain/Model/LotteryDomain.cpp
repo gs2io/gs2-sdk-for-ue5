@@ -41,6 +41,7 @@
 #include "Lottery/Domain/Model/User.h"
 #include "Lottery/Domain/Model/UserAccessToken.h"
 
+#include "Lottery/Model/Cache/Probability.h"
 #include "Core/Domain/Gs2.h"
 #include "Core/Domain/Transaction/JobQueueJobDomainFactory.h"
 #include "Core/Domain/Transaction/InternalTransactionDomainFactory.h"
@@ -263,29 +264,134 @@ namespace Gs2::Lottery::Domain::Model
     {
         return Gs2->Cache->ListSubscribe(
             Gs2::Lottery::Model::FProbability::TypeName,
-            Gs2::Lottery::Domain::Model::FLotteryDomain::CreateCacheParentKey(
+            Gs2::Lottery::Model::Cache::FProbabilityCache::CreateCacheParentKey(
                 NamespaceName,
                 UserId,
                 LotteryName,
-                "Probability"
+                TOptional<int32>()
             ),
+            Callback,
             Callback
         );
     }
-
     void FLotteryDomain::UnsubscribeProbabilities(
         Gs2::Core::Domain::CallbackID CallbackID
     )
     {
         Gs2->Cache->ListUnsubscribe(
             Gs2::Lottery::Model::FProbability::TypeName,
-            Gs2::Lottery::Domain::Model::FLotteryDomain::CreateCacheParentKey(
+            Gs2::Lottery::Model::Cache::FProbabilityCache::CreateCacheParentKey(
                 NamespaceName,
                 UserId,
                 LotteryName,
-                "Probability"
+                TOptional<int32>()
             ),
             CallbackID
+        );
+    }
+    class FLotteryDomain::FCollectProbabilitiesTask : public Gs2::Core::Util::TGs2Future<TArray<Gs2::Lottery::Model::FProbabilityPtr>>, public TSharedFromThis<FCollectProbabilitiesTask>
+    {
+        const TSharedPtr<FLotteryDomain> Self;
+        const TFunction<void(TArray<Gs2::Lottery::Model::FProbabilityPtr>)> OnCollected;
+    const TOptional<FString> QueryTimeOffsetToken;
+    public:
+        explicit FCollectProbabilitiesTask(const TSharedPtr<FLotteryDomain>& Self, TFunction<void(TArray<Gs2::Lottery::Model::FProbabilityPtr>)> OnCollected,const TOptional<FString> TimeOffsetToken) : Self(Self), OnCollected(OnCollected), QueryTimeOffsetToken(TimeOffsetToken) {}
+        FCollectProbabilitiesTask(const FCollectProbabilitiesTask& From) : TGs2Future(From), Self(From.Self), OnCollected(From.OnCollected), QueryTimeOffsetToken(From.QueryTimeOffsetToken) {}
+        virtual Gs2::Core::Model::FGs2ErrorPtr Action(TSharedPtr<TSharedPtr<TArray<Gs2::Lottery::Model::FProbabilityPtr>>> Result) override
+        {
+            TArray<Gs2::Lottery::Model::FProbabilityPtr> Items;
+            auto Iterator = Self->Probabilities(QueryTimeOffsetToken)->begin();
+            while (Iterator.HasNext())
+            {
+                if (Iterator.IsError()) return Iterator.Error();
+                if (Iterator.IsCurrentValid()) Items.Add(Iterator.Current());
+                ++Iterator;
+            }
+            if (Iterator.IsError()) return Iterator.Error();
+            *Result = MakeShared<TArray<Gs2::Lottery::Model::FProbabilityPtr>>(Items);
+            if (OnCollected) OnCollected(Items);
+            return nullptr;
+        }
+    };
+
+    Gs2::Core::Domain::CallbackID FLotteryDomain::SubscribeProbabilities(
+        TFunction<void(TArray<Gs2::Lottery::Model::FProbabilityPtr>)> Callback,const TOptional<FString> TimeOffsetToken
+    )
+    {
+        const TWeakPtr<Gs2::Core::Domain::FGs2> WeakGs2 = this->Gs2;
+        const TWeakPtr<Lottery::Domain::FGs2LotteryDomain> WeakService = this->Service;
+        const auto QueryNamespaceName = NamespaceName;
+        const auto QueryUserId = UserId;
+        const auto QueryLotteryName = LotteryName;
+        const auto QueryTimeOffsetToken = TimeOffsetToken;
+        const auto Parent = Gs2::Lottery::Model::Cache::FProbabilityCache::CreateCacheParentKey(
+        NamespaceName,
+        UserId,
+        LotteryName,
+        TOptional<int32>()
+    );
+        return Gs2->Cache->ListSubscribeTyped(
+            Gs2::Lottery::Model::FProbability::TypeName,
+            Parent,
+            [Callback, WeakGs2](const TArray<FGs2ObjectPtr>& Values)
+            {
+                if (!WeakGs2.Pin().IsValid()) return;
+                TArray<Gs2::Lottery::Model::FProbabilityPtr> TypedValues;
+                for (const auto& Value : Values) if (Value.IsValid()) TypedValues.Add(StaticCastSharedPtr<Gs2::Lottery::Model::FProbability>(Value));
+                Callback(TypedValues);
+            },
+            [WeakGs2, WeakService, Callback, QueryNamespaceName, QueryUserId, QueryLotteryName, QueryTimeOffsetToken]()
+            {
+                const auto Owner = WeakGs2.Pin();
+                if (!Owner.IsValid()) return;
+                const auto Domain = MakeShared<FLotteryDomain>(Owner, WeakService.Pin(), QueryNamespaceName, QueryUserId, QueryLotteryName);
+                const auto Task = Gs2::Core::Util::New<FAsyncTask<FCollectProbabilitiesTask>>(Domain, Callback, QueryTimeOffsetToken);
+                Task->StartBackgroundTask();
+            }
+        );
+    }
+
+    void FLotteryDomain::InvalidateProbabilities(const TOptional<FString> TimeOffsetToken)
+    {
+        Gs2->Cache->ClearListCache(
+            Gs2::Lottery::Model::FProbability::TypeName,
+            Gs2::Lottery::Model::Cache::FProbabilityCache::CreateCacheParentKey(
+        NamespaceName,
+        UserId,
+        LotteryName,
+        TOptional<int32>()
+    )
+        );
+    }
+
+    FLotteryDomain::FSubscribeProbabilitiesWithInitialCallTask::FSubscribeProbabilitiesWithInitialCallTask(const TSharedPtr<FLotteryDomain>& Self, TFunction<void(TArray<Gs2::Lottery::Model::FProbabilityPtr>)> Callback,const TOptional<FString> TimeOffsetToken) : Self(Self), Callback(Callback), QueryTimeOffsetToken(TimeOffsetToken) {}
+    FLotteryDomain::FSubscribeProbabilitiesWithInitialCallTask::FSubscribeProbabilitiesWithInitialCallTask(const FSubscribeProbabilitiesWithInitialCallTask& From) : TGs2Future(From), Self(From.Self), Callback(From.Callback), QueryTimeOffsetToken(From.QueryTimeOffsetToken) {}
+    Gs2::Core::Model::FGs2ErrorPtr FLotteryDomain::FSubscribeProbabilitiesWithInitialCallTask::Action(TSharedPtr<TSharedPtr<Gs2::Core::Domain::CallbackID>> Result)
+    {
+        const auto Task = Gs2::Core::Util::New<FAsyncTask<FCollectProbabilitiesTask>>(Self, TFunction<void(TArray<Gs2::Lottery::Model::FProbabilityPtr>)>(), QueryTimeOffsetToken);
+        Task->StartSynchronousTask(); Task->EnsureCompletion();
+        if (Task->GetTask().IsError()) return Task->GetTask().Error();
+        const auto Values = Task->GetTask().Result();
+        const auto CallbackId = Self->SubscribeProbabilities(Callback, QueryTimeOffsetToken);
+        Callback(*Values); *Result = MakeShared<Gs2::Core::Domain::CallbackID>(CallbackId);
+        return nullptr;
+    }
+    TSharedPtr<FAsyncTask<FLotteryDomain::FSubscribeProbabilitiesWithInitialCallTask>> FLotteryDomain::SubscribeProbabilitiesWithInitialCall(TFunction<void(TArray<Gs2::Lottery::Model::FProbabilityPtr>)> Callback,const TOptional<FString> TimeOffsetToken)
+    {
+        return Gs2::Core::Util::New<FAsyncTask<FSubscribeProbabilitiesWithInitialCallTask>>(this->AsShared(), Callback, TimeOffsetToken);
+    }
+
+    TSharedPtr<Gs2::Lottery::Domain::Model::FProbabilityDomain> FLotteryDomain::Probability(
+        const FString PrizeId
+    )
+    {
+        return MakeShared<Gs2::Lottery::Domain::Model::FProbabilityDomain>(
+            Gs2,
+            Service,
+            NamespaceName,
+            UserId,
+            LotteryName,
+            TOptional<FString>(PrizeId)
         );
     }
 

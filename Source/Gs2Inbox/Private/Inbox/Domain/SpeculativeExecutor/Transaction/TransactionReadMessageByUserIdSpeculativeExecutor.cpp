@@ -26,7 +26,15 @@
 
 #include "Inbox/Domain/SpeculativeExecutor/Transaction/ReadMessageByUserIdSpeculativeExecutor.h"
 
+#include "Auth/Model/AccessToken.h"
 #include "Core/Domain/Gs2.h"
+#include "Core/Model/ConsumeAction.h"
+#include "Core/Domain/SpeculativeExecutor/PreparedSpeculativeCommit.h"
+#include "Inbox/Domain/SpeculativeExecutor/Consume/ConsumeActionSpeculativeExecutorIndex.h"
+#include "Inbox/Model/Cache/Message.h"
+#include "Inbox/Request/OpenMessageByUserIdRequest.h"
+#include "Serialization/JsonSerializer.h"
+#include "Serialization/JsonWriter.h"
 
 namespace Gs2::Inbox::Domain::Transaction::SpeculativeExecutor
 {
@@ -58,58 +66,77 @@ namespace Gs2::Inbox::Domain::Transaction::SpeculativeExecutor
     }
 
     Gs2::Core::Model::FGs2ErrorPtr FReadMessageByUserIdSpeculativeExecutor::FCommitTask::Action(
-        TSharedPtr<TSharedPtr<TFunction<void()>>> Result)
+        TSharedPtr<TSharedPtr<Gs2::Core::Domain::SpeculativeExecutor::FPreparedSpeculativeCommit>> Result)
     {
-        const auto Future = Domain->Inbox->Namespace(
-                Request->GetNamespaceName().IsSet() ? *Request->GetNamespaceName() : ""
-            )->AccessToken(
-                AccessToken
-            )->Message(
-                Request->GetMessageName().IsSet() ? *Request->GetMessageName() : ""
-            )->Model();
+        *Result = nullptr;
+        if (!Domain.IsValid() || !Domain->RestSession.IsValid() || !AccessToken.IsValid() || !Request.IsValid()) return nullptr;
+
+        Gs2::Auth::Model::FAccessTokenPtr PreparedToken = nullptr;
+        if (AccessToken.IsValid()) PreparedToken = MakeShared<Gs2::Auth::Model::FAccessToken>(*AccessToken);
+        Gs2::Inbox::Request::FReadMessageByUserIdRequestPtr PreparedRequest = nullptr;
+        if (Request.IsValid())
+        {
+            const auto Config = Request->GetConfig();
+            const Gs2::Inbox::Request::FReadMessageByUserIdRequestPtr RequestForJson = MakeShared<Gs2::Inbox::Request::FReadMessageByUserIdRequest>()
+                ->WithContextStack(Request->GetContextStack())
+                ->WithNamespaceName(Request->GetNamespaceName())
+                ->WithUserId(Request->GetUserId())
+                ->WithMessageName(Request->GetMessageName())
+                ->WithTimeOffsetToken(Request->GetTimeOffsetToken())
+                ->WithDuplicationAvoider(Request->GetDuplicationAvoider());
+            if (Config.IsValid())
+            {
+                const TSharedPtr<TArray<TSharedPtr<Gs2::Inbox::Model::FConfig>>> FilteredConfig = MakeShared<TArray<TSharedPtr<Gs2::Inbox::Model::FConfig>>>();
+                for (const auto& Item : *Config)
+                {
+                    if (Item.IsValid()) FilteredConfig->Add(MakeShared<Gs2::Inbox::Model::FConfig>(*Item));
+                }
+                RequestForJson->WithConfig(FilteredConfig);
+            }
+            PreparedRequest = Gs2::Inbox::Request::FReadMessageByUserIdRequest::FromJson(RequestForJson->ToJson());
+        }
+        if (!PreparedToken.IsValid() || !PreparedRequest.IsValid() ||
+            !PreparedToken->GetUserId().IsSet() || PreparedToken->GetUserId().Get(FString()).IsEmpty()) return nullptr;
+        if (PreparedRequest->GetUserId().IsSet() && PreparedRequest->GetUserId().Get(FString()) == TEXT("#{userId}"))
+        {
+            PreparedRequest->WithUserId(PreparedToken->GetUserId());
+        }
+        if (!PreparedRequest->GetUserId().IsSet() || PreparedRequest->GetUserId().Get(FString()) != PreparedToken->GetUserId().Get(FString()) ||
+            !PreparedRequest->GetNamespaceName().IsSet() || PreparedRequest->GetNamespaceName().Get(FString()).IsEmpty() ||
+            !PreparedRequest->GetMessageName().IsSet() || PreparedRequest->GetMessageName().Get(FString()).IsEmpty()) return nullptr;
+
+        const auto NamespaceName = PreparedRequest->GetNamespaceName();
+        const auto MessageName = PreparedRequest->GetMessageName();
+        const auto UserId = PreparedToken->GetUserId();
+        const auto TimeOffset = PreparedToken->GetTimeOffset();
+        const FString ExpectedId = FString::Printf(
+            TEXT("grn:gs2:%s:%s:inbox:%s:user:%s:message:%s"),
+            *Domain->RestSession->RegionName(), *Domain->RestSession->OwnerId(),
+            *NamespaceName.Get(FString()), *UserId.Get(FString()), *MessageName.Get(FString()));
+        Gs2::Inbox::Model::FMessagePtr Item;
+        if (!Gs2::Inbox::Model::Cache::FMessageCache::TryGet(
+                Domain->Cache, NamespaceName, UserId, MessageName, TimeOffset, &Item) ||
+            !Item.IsValid() || !Item->GetMessageId().IsSet() || Item->GetMessageId().Get(FString()) != ExpectedId ||
+            !Item->GetName().IsSet() || Item->GetName().Get(FString()) != MessageName.Get(FString()) ||
+            !Item->GetUserId().IsSet() || Item->GetUserId().Get(FString()) != UserId.Get(FString())) return nullptr;
+
+        const Gs2::Inbox::Request::FOpenMessageByUserIdRequestPtr ChildRequest =
+            MakeShared<Gs2::Inbox::Request::FOpenMessageByUserIdRequest>()
+                ->WithNamespaceName(NamespaceName)
+                ->WithUserId(UserId)
+                ->WithMessageName(MessageName);
+        FString ChildRequestBody;
+        const TSharedRef<TJsonWriter<TCHAR>> Writer = TJsonWriterFactory<TCHAR>::Create(&ChildRequestBody);
+        FJsonSerializer::Serialize(ChildRequest->ToJson().ToSharedRef(), Writer);
+        const Gs2::Core::Model::FConsumeActionPtr ChildAction =
+            MakeShared<Gs2::Core::Model::FConsumeAction>()
+                ->WithAction(TOptional<FString>(TEXT("Gs2Inbox:OpenMessageByUserId")))
+                ->WithRequest(TOptional<FString>(ChildRequestBody));
+        const auto Future = Gs2::Inbox::Domain::SpeculativeExecutor::FConsumeActionSpeculativeExecutorIndex::Execute(
+            Domain, Service, PreparedToken, ChildAction, TBigInt<1024, false>(static_cast<int64>(1)));
         Future->StartSynchronousTask();
-        if (Future->GetTask().IsError())
-        {
-            return Future->GetTask().Error();
-        }
-        const auto Item = Future->GetTask().Result();
-
-        if (!Item.IsValid())
-        {
-            *Result = MakeShared<TFunction<void()>>([]{});
-            return nullptr;
-        }
-
-        Service->OnIssueTransaction.Broadcast(
-            MakeShared<Gs2::Core::Domain::Model::FIssueTransactionEvent>(
-                AccessToken,
-                [this]{
-                    auto Arr = MakeShared<TArray<Gs2::Core::Model::FConsumeActionPtr>>();
-                    Arr->Add(
-                        MakeShared<Gs2::Core::Model::FConsumeAction>()
-                            ->WithAction(TOptional<FString>("Gs2Inbox:OpenMessageByUserId"))
-                            ->WithRequest(TOptional<FString>(
-                                [this]
-                                {
-                                    FString Body("");
-                                    const TSharedRef<TJsonWriter<TCHAR>> Writer = TJsonWriterFactory<TCHAR>::Create(&Body);
-                                    FJsonSerializer::Serialize(
-                                    MakeShared<Gs2::Inbox::Request::FOpenMessageByUserIdRequest>()
-                                            ->WithNamespaceName(Request->GetNamespaceName())
-                                            ->WithMessageName(Request->GetMessageName())
-                                            ->WithUserId(AccessToken->GetUserId())
-                                            ->ToJson().ToSharedRef(), Writer);
-                                    return Body;
-                                }()
-                            ))
-                    );
-                    return Arr;
-                }(),
-                Item->GetReadAcquireActions(),
-                1.0
-            )
-        );
-
+        if (Future->GetTask().IsError()) return Future->GetTask().Error();
+        *Result = Future->GetTask().Result();
         return nullptr;
     }
 

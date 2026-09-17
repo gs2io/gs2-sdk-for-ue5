@@ -32,6 +32,8 @@
 #include "Guild/Domain/Model/Guild.h"
 #include "Guild/Domain/Model/Namespace.h"
 
+#include "Guild/Model/Cache/Guild.h"
+
 namespace Gs2::Guild::Domain::Iterator
 {
 
@@ -121,11 +123,26 @@ namespace Gs2::Guild::Domain::Iterator
 
         if (!RangeIteratorOpt || (!*RangeIteratorOpt && !bLast))
         {
-            const auto ListParentKey = Gs2::Guild::Domain::Model::FNamespaceDomain::CreateCacheParentKey(
+            const auto ListParentKey = Gs2::Guild::Model::Cache::FGuildCache::CreateCacheParentKey(
                 Self->NamespaceName,
-                "Guild"
+                Self->AccessToken.IsValid() ? Self->AccessToken->GetTimeOffset() : TOptional<int32>()
             );
-            const auto Future = Self->Client->SearchGuilds(
+            if (!RangeIteratorOpt && (!Self->Attributes1.IsValid() && !Self->Attributes2.IsValid() && !Self->Attributes3.IsValid() && !Self->Attributes4.IsValid() && !Self->Attributes5.IsValid() && !Self->JoinPolicies.IsValid() && !Self->IncludeFullMembersGuild.IsSet()))
+            {
+                Range = Self->Gs2->Cache->TryGetList<Gs2::Guild::Model::FGuild>(ListParentKey);
+
+                if (Range)
+                {
+                    Range->RemoveAll([this](const Gs2::Guild::Model::FGuildPtr& Item) { return Self->GuildModelName && Item->GetGuildModelName() != Self->GuildModelName; });
+                    Range->RemoveAll([this](const Gs2::Guild::Model::FGuildPtr& Item) { return Self->DisplayName && Item->GetDisplayName() != Self->DisplayName; });
+                    bLast = true;
+                    RangeIteratorOpt = Range->CreateIterator();
+                    PageToken = TOptional<FString>();
+                    bEnd = !static_cast<bool>(*RangeIteratorOpt) && bLast;
+                    return *this;
+                }
+            }
+            const auto Request =
                 MakeShared<Gs2::Guild::Request::FSearchGuildsRequest>()
                     ->WithContextStack(Self->Gs2->DefaultContextStack)
                     ->WithNamespaceName(Self->NamespaceName)
@@ -141,7 +158,8 @@ namespace Gs2::Guild::Domain::Iterator
                     ->WithIncludeFullMembersGuild(Self->IncludeFullMembersGuild)
                     ->WithPageToken(PageToken)
                     ->WithLimit(FetchSize)
-            );
+            ;
+            const auto Future = Self->Client->SearchGuilds(Request);
             Future->StartSynchronousTask();
             if (Future->GetTask().IsError())
             {
@@ -155,23 +173,31 @@ namespace Gs2::Guild::Domain::Iterator
             }
             const auto R = Future->GetTask().Result();
             Future->EnsureCompletion();
-            Range = R->GetItems();
-            for (auto Item : *R->GetItems())
+            Range = R->GetItems().IsValid() ? R->GetItems() : MakeShared<TArray<Gs2::Guild::Model::FGuildPtr>>();
+            if (Range.IsValid())
             {
-                Self->Gs2->Cache->Put(
-                    Gs2::Guild::Model::FGuild::TypeName,
-                    ListParentKey,
-                    Gs2::Guild::Domain::Model::FGuildDomain::CreateCacheKey(
-                        Item->GetGuildModelName(),
-                        Item->GetName()
-                    ),
-                    Item,
-                    FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
-                );
+                for (const auto& Item : *Range)
+                {
+                    if (!Item.IsValid()) continue;
+                    Gs2::Guild::Model::Cache::FGuildCache::Put(
+                        Self->Gs2->Cache,
+                        Request->GetNamespaceName(), Item->GetGuildModelName(), Item->GetName(),
+                        Self->AccessToken.IsValid() ? Self->AccessToken->GetTimeOffset() : TOptional<int32>(), Item
+                    );
+                }
             }
+            Range->RemoveAll([this](const Gs2::Guild::Model::FGuildPtr& Item) { return Self->GuildModelName && Item->GetGuildModelName() != Self->GuildModelName; });
+            Range->RemoveAll([this](const Gs2::Guild::Model::FGuildPtr& Item) { return Self->DisplayName && Item->GetDisplayName() != Self->DisplayName; });
             RangeIteratorOpt = Range->CreateIterator();
             PageToken = R->GetNextPageToken();
             bLast = !PageToken.IsSet();
+            if (bLast && (!Self->Attributes1.IsValid() && !Self->Attributes2.IsValid() && !Self->Attributes3.IsValid() && !Self->Attributes4.IsValid() && !Self->Attributes5.IsValid() && !Self->JoinPolicies.IsValid() && !Self->IncludeFullMembersGuild.IsSet()))
+            {
+                Self->Gs2->Cache->SetListCached(
+                    Gs2::Guild::Model::FGuild::TypeName,
+                    ListParentKey
+                );
+            }
         }
 
         bEnd = bLast && !*RangeIteratorOpt;
@@ -199,4 +225,3 @@ namespace Gs2::Guild::Domain::Iterator
 #elif defined(__clang__)
 #pragma clang diagnostic pop
 #endif
-

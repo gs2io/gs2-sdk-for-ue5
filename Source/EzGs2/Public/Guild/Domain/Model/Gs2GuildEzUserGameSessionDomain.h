@@ -199,9 +199,11 @@ namespace Gs2::UE5::Guild::Domain::Model
             const TOptional<FString> GuildModelName = TOptional<FString>()
         ) const;
 
-        Gs2::Core::Domain::CallbackID SubscribeJoinedGuilds(TFunction<void()> Callback);
+        Gs2::Core::Domain::CallbackID SubscribeJoinedGuilds(TFunction<void()> Callback, const TOptional<FString> GuildModelName = TOptional<FString>());
 
-        void UnsubscribeJoinedGuilds(Gs2::Core::Domain::CallbackID CallbackId);
+        void UnsubscribeJoinedGuilds(
+                Gs2::Core::Domain::CallbackID CallbackId
+                , const TOptional<FString> GuildModelName = TOptional<FString>());
 
         Gs2::UE5::Guild::Domain::Model::FEzJoinedGuildGameSessionDomainPtr JoinedGuild(
             const FString GuildModelName,

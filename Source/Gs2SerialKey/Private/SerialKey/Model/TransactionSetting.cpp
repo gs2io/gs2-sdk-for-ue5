@@ -24,6 +24,7 @@ namespace Gs2::SerialKey::Model
         TransactionUseDistributorValue(TOptional<bool>()),
         CommitScriptResultInUseDistributorValue(TOptional<bool>()),
         AcquireActionUseJobQueueValue(TOptional<bool>()),
+        EnableSequentialExecutionValue(TOptional<bool>()),
         DistributorNamespaceIdValue(TOptional<FString>()),
         KeyIdValue(TOptional<FString>()),
         QueueNamespaceIdValue(TOptional<FString>())
@@ -38,6 +39,7 @@ namespace Gs2::SerialKey::Model
         TransactionUseDistributorValue(From.TransactionUseDistributorValue),
         CommitScriptResultInUseDistributorValue(From.CommitScriptResultInUseDistributorValue),
         AcquireActionUseJobQueueValue(From.AcquireActionUseJobQueueValue),
+        EnableSequentialExecutionValue(From.EnableSequentialExecutionValue),
         DistributorNamespaceIdValue(From.DistributorNamespaceIdValue),
         KeyIdValue(From.KeyIdValue),
         QueueNamespaceIdValue(From.QueueNamespaceIdValue)
@@ -81,6 +83,14 @@ namespace Gs2::SerialKey::Model
     )
     {
         this->AcquireActionUseJobQueueValue = AcquireActionUseJobQueue;
+        return SharedThis(this);
+    }
+
+    TSharedPtr<FTransactionSetting> FTransactionSetting::WithEnableSequentialExecution(
+        const TOptional<bool> EnableSequentialExecution
+    )
+    {
+        this->EnableSequentialExecutionValue = EnableSequentialExecution;
         return SharedThis(this);
     }
 
@@ -172,6 +182,19 @@ namespace Gs2::SerialKey::Model
         }
         return FString(AcquireActionUseJobQueueValue.GetValue() ? "true" : "false");
     }
+    TOptional<bool> FTransactionSetting::GetEnableSequentialExecution() const
+    {
+        return EnableSequentialExecutionValue;
+    }
+
+    FString FTransactionSetting::GetEnableSequentialExecutionString() const
+    {
+        if (!EnableSequentialExecutionValue.IsSet())
+        {
+            return FString("null");
+        }
+        return FString(EnableSequentialExecutionValue.GetValue() ? "true" : "false");
+    }
     TOptional<FString> FTransactionSetting::GetDistributorNamespaceId() const
     {
         return DistributorNamespaceIdValue;
@@ -236,6 +259,15 @@ namespace Gs2::SerialKey::Model
                     }
                     return TOptional<bool>();
                 }() : TOptional<bool>())
+            ->WithEnableSequentialExecution(Data->HasField(ANSI_TO_TCHAR("enableSequentialExecution")) ? [Data]() -> TOptional<bool>
+                {
+                    bool v;
+                    if (Data->TryGetBoolField(ANSI_TO_TCHAR("enableSequentialExecution"), v))
+                    {
+                        return TOptional(v);
+                    }
+                    return TOptional<bool>();
+                }() : TOptional<bool>())
             ->WithDistributorNamespaceId(Data->HasField(ANSI_TO_TCHAR("distributorNamespaceId")) ? [Data]() -> TOptional<FString>
                 {
                     FString v("");
@@ -287,6 +319,10 @@ namespace Gs2::SerialKey::Model
         if (AcquireActionUseJobQueueValue.IsSet())
         {
             JsonRootObject->SetBoolField(TEXT("acquireActionUseJobQueue"), AcquireActionUseJobQueueValue.GetValue());
+        }
+        if (EnableSequentialExecutionValue.IsSet())
+        {
+            JsonRootObject->SetBoolField(TEXT("enableSequentialExecution"), EnableSequentialExecutionValue.GetValue());
         }
         if (DistributorNamespaceIdValue.IsSet())
         {

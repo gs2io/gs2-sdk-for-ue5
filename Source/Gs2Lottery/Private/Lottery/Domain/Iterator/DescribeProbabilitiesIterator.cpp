@@ -31,6 +31,7 @@
 #include "Lottery/Domain/Model/Probability.h"
 
 #include "Core/Domain/Gs2.h"
+#include "Lottery/Model/Cache/Probability.h"
 
 namespace Gs2::Lottery::Domain::Iterator
 {
@@ -85,11 +86,11 @@ namespace Gs2::Lottery::Domain::Iterator
 
         if (!RangeIteratorOpt || (!*RangeIteratorOpt && !bLast))
         {
-            const auto ListParentKey = Gs2::Lottery::Domain::Model::FLotteryDomain::CreateCacheParentKey(
+            const auto ListParentKey = Gs2::Lottery::Model::Cache::FProbabilityCache::CreateCacheParentKey(
                 Self->NamespaceName,
-                Self->UserId(),
+                Self->AccessToken.IsValid() ? Self->AccessToken->GetUserId() : TOptional<FString>(),
                 Self->LotteryName,
-                "Probability"
+                Self->AccessToken.IsValid() ? Self->AccessToken->GetTimeOffset() : TOptional<int32>()
             );
 
             if (!RangeIteratorOpt)

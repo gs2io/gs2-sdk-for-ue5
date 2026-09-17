@@ -75,7 +75,8 @@ namespace Gs2::UE5::Buff::Domain::Model
         );
     }
 
-    void FEzNamespaceDomain::UnsubscribeBuffEntryModels(Gs2::Core::Domain::CallbackID CallbackId)
+    void FEzNamespaceDomain::UnsubscribeBuffEntryModels(
+            Gs2::Core::Domain::CallbackID CallbackId)
     {
         Domain->UnsubscribeBuffEntryModels(
             CallbackId

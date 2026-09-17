@@ -58,17 +58,19 @@ namespace Gs2::UE5::Enchant::Domain::Model
         );
     }
 
-    Gs2::Core::Domain::CallbackID FEzUserGameSessionDomain::SubscribeBalanceParameterStatuses(TFunction<void()> Callback)
+    Gs2::Core::Domain::CallbackID FEzUserGameSessionDomain::SubscribeBalanceParameterStatuses(TFunction<void()> Callback, const TOptional<FString> ParameterName)
     {
         return Domain->SubscribeBalanceParameterStatuses(
-            Callback
+            Callback, ParameterName
         );
     }
 
-    void FEzUserGameSessionDomain::UnsubscribeBalanceParameterStatuses(Gs2::Core::Domain::CallbackID CallbackId)
+    void FEzUserGameSessionDomain::UnsubscribeBalanceParameterStatuses(
+            Gs2::Core::Domain::CallbackID CallbackId
+            , const TOptional<FString> ParameterName)
     {
         Domain->UnsubscribeBalanceParameterStatuses(
-            CallbackId
+            CallbackId, ParameterName
         );
     }
 
@@ -84,17 +86,19 @@ namespace Gs2::UE5::Enchant::Domain::Model
         );
     }
 
-    Gs2::Core::Domain::CallbackID FEzUserGameSessionDomain::SubscribeRarityParameterStatuses(TFunction<void()> Callback)
+    Gs2::Core::Domain::CallbackID FEzUserGameSessionDomain::SubscribeRarityParameterStatuses(TFunction<void()> Callback, const TOptional<FString> ParameterName)
     {
         return Domain->SubscribeRarityParameterStatuses(
-            Callback
+            Callback, ParameterName
         );
     }
 
-    void FEzUserGameSessionDomain::UnsubscribeRarityParameterStatuses(Gs2::Core::Domain::CallbackID CallbackId)
+    void FEzUserGameSessionDomain::UnsubscribeRarityParameterStatuses(
+            Gs2::Core::Domain::CallbackID CallbackId
+            , const TOptional<FString> ParameterName)
     {
         Domain->UnsubscribeRarityParameterStatuses(
-            CallbackId
+            CallbackId, ParameterName
         );
     }
 

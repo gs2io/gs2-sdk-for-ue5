@@ -140,7 +140,8 @@ namespace Gs2::UE5::Chat::Domain::Model
         );
     }
 
-    void FEzUserGameSessionDomain::UnsubscribeSubscribes(Gs2::Core::Domain::CallbackID CallbackId)
+    void FEzUserGameSessionDomain::UnsubscribeSubscribes(
+            Gs2::Core::Domain::CallbackID CallbackId)
     {
         Domain->UnsubscribeSubscribes(
             CallbackId

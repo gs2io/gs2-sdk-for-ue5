@@ -97,8 +97,33 @@ namespace Gs2::Showcase::Domain::Model
 
         Gs2::Core::Domain::CallbackID SubscribeShowcases(
             TFunction<void()> Callback
+
         );
 
+        class FCollectShowcasesTask;
+
+        Gs2::Core::Domain::CallbackID SubscribeShowcases(
+            TFunction<void(TArray<Gs2::Showcase::Model::FShowcasePtr>)> Callback,const TOptional<FString> TimeOffsetToken = TOptional<FString>()
+        );
+
+        void InvalidateShowcases(const TOptional<FString> TimeOffsetToken = TOptional<FString>());
+
+        class GS2SHOWCASE_API FSubscribeShowcasesWithInitialCallTask final :
+            public Gs2::Core::Util::TGs2Future<Gs2::Core::Domain::CallbackID>,
+            public TSharedFromThis<FSubscribeShowcasesWithInitialCallTask>
+        {
+            const TSharedPtr<FUserDomain> Self;
+            const TFunction<void(TArray<Gs2::Showcase::Model::FShowcasePtr>)> Callback;
+        const TOptional<FString> QueryTimeOffsetToken;
+        public:
+            FSubscribeShowcasesWithInitialCallTask(const TSharedPtr<FUserDomain>& Self, TFunction<void(TArray<Gs2::Showcase::Model::FShowcasePtr>)> Callback,const TOptional<FString> TimeOffsetToken);
+            FSubscribeShowcasesWithInitialCallTask(const FSubscribeShowcasesWithInitialCallTask& From);
+            virtual Gs2::Core::Model::FGs2ErrorPtr Action(TSharedPtr<TSharedPtr<Gs2::Core::Domain::CallbackID>> Result) override;
+        };
+
+        TSharedPtr<FAsyncTask<FSubscribeShowcasesWithInitialCallTask>> SubscribeShowcasesWithInitialCall(
+            TFunction<void(TArray<Gs2::Showcase::Model::FShowcasePtr>)> Callback,const TOptional<FString> TimeOffsetToken = TOptional<FString>()
+        );
         void UnsubscribeShowcases(
             Gs2::Core::Domain::CallbackID CallbackID
         );

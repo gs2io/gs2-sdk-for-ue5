@@ -39,6 +39,22 @@
 #include "Money2/Domain/Model/CurrentModelMaster.h"
 #include "Money2/Domain/Model/DailyTransactionHistory.h"
 #include "Money2/Domain/Model/UnusedBalance.h"
+#include "Money2/Model/Cache/Wallet.h"
+#include "Money2/Model/Cache/Event.h"
+
+#include "Money2/Model/Cache/Namespace.h"
+#include "Money2/Model/Cache/StoreContentModelMaster.h"
+#include "Money2/Model/Cache/StoreSubscriptionContentModelMaster.h"
+#include "Money2/Model/Cache/DailyTransactionHistory.h"
+#include "Money2/Model/Cache/Wallet.h"
+#include "Money2/Model/Cache/Event.h"
+#include "Money2/Model/Cache/SubscriptionStatus.h"
+#include "Money2/Model/Cache/CurrentModelMaster.h"
+#include "Money2/Model/Cache/StoreContentModel.h"
+#include "Money2/Model/Cache/UnusedBalance.h"
+#include "Money2/Model/Cache/StoreSubscriptionContentModel.h"
+#include "Money2/Model/Cache/SubscriptionStatus.h"
+
 #include "Core/Domain/Gs2.h"
 
 namespace Gs2::Money2::Domain
@@ -92,6 +108,19 @@ namespace Gs2::Money2::Domain
         }
         const auto ResultModel = Future->GetTask().Result();
         Future->EnsureCompletion();
+
+            if (ResultModel.IsValid() && ResultModel->GetItem() != nullptr)
+            {
+
+
+        Gs2::Money2::Model::Cache::FNamespaceCache::Put(
+            Self->Gs2->Cache,
+
+            ResultModel->GetItem()->GetName(),
+            TOptional<int32>(),
+            ResultModel->GetItem()
+        );
+            }
         auto Domain = MakeShared<Gs2::Money2::Domain::Model::FNamespaceDomain>(
             Self->Gs2,
             Self,
@@ -135,6 +164,7 @@ namespace Gs2::Money2::Domain
         }
         const auto ResultModel = Future->GetTask().Result();
         Future->EnsureCompletion();
+
         const auto Domain = Self;
         *Result = Domain;
         return nullptr;
@@ -174,6 +204,7 @@ namespace Gs2::Money2::Domain
         }
         const auto ResultModel = Future->GetTask().Result();
         Future->EnsureCompletion();
+
         const auto Domain = Self;
         if (ResultModel != nullptr)
         {
@@ -220,6 +251,7 @@ namespace Gs2::Money2::Domain
         }
         const auto ResultModel = Future->GetTask().Result();
         Future->EnsureCompletion();
+
         const auto Domain = Self;
         *Result = Domain;
         return nullptr;
@@ -259,6 +291,7 @@ namespace Gs2::Money2::Domain
         }
         const auto ResultModel = Future->GetTask().Result();
         Future->EnsureCompletion();
+
         const auto Domain = Self;
         *Result = Domain;
         return nullptr;
@@ -298,6 +331,7 @@ namespace Gs2::Money2::Domain
         }
         const auto ResultModel = Future->GetTask().Result();
         Future->EnsureCompletion();
+
         const auto Domain = Self;
         if (ResultModel != nullptr)
         {
@@ -348,6 +382,7 @@ namespace Gs2::Money2::Domain
         }
         const auto ResultModel = Future->GetTask().Result();
         Future->EnsureCompletion();
+
         const auto Domain = Self;
         *Result = Domain;
         return nullptr;
@@ -387,6 +422,7 @@ namespace Gs2::Money2::Domain
         }
         const auto ResultModel = Future->GetTask().Result();
         Future->EnsureCompletion();
+
         const auto Domain = Self;
         if (ResultModel != nullptr)
         {
@@ -418,24 +454,110 @@ namespace Gs2::Money2::Domain
 
     Gs2::Core::Domain::CallbackID FGs2Money2Domain::SubscribeNamespaces(
     TFunction<void()> Callback
+
     )
     {
         return Gs2->Cache->ListSubscribe(
             Gs2::Money2::Model::FNamespace::TypeName,
-            "money2:Namespace",
+            Gs2::Money2::Model::Cache::FNamespaceCache::CreateCacheParentKey(
+                TOptional<int32>()
+            ),
+            Callback,
             Callback
         );
     }
-
     void FGs2Money2Domain::UnsubscribeNamespaces(
         Gs2::Core::Domain::CallbackID CallbackID
     )
     {
         Gs2->Cache->ListUnsubscribe(
             Gs2::Money2::Model::FNamespace::TypeName,
-            "money2:Namespace",
+            Gs2::Money2::Model::Cache::FNamespaceCache::CreateCacheParentKey(
+                TOptional<int32>()
+            ),
             CallbackID
         );
+    }
+    class FGs2Money2Domain::FCollectNamespacesTask : public Gs2::Core::Util::TGs2Future<TArray<Gs2::Money2::Model::FNamespacePtr>>, public TSharedFromThis<FCollectNamespacesTask>
+    {
+        const TSharedPtr<FGs2Money2Domain> Self;
+        const TFunction<void(TArray<Gs2::Money2::Model::FNamespacePtr>)> OnCollected;
+    const TOptional<FString> QueryNamePrefix;
+    public:
+        explicit FCollectNamespacesTask(const TSharedPtr<FGs2Money2Domain>& Self, TFunction<void(TArray<Gs2::Money2::Model::FNamespacePtr>)> OnCollected,const TOptional<FString> NamePrefix) : Self(Self), OnCollected(OnCollected), QueryNamePrefix(NamePrefix) {}
+        FCollectNamespacesTask(const FCollectNamespacesTask& From) : TGs2Future(From), Self(From.Self), OnCollected(From.OnCollected), QueryNamePrefix(From.QueryNamePrefix) {}
+        virtual Gs2::Core::Model::FGs2ErrorPtr Action(TSharedPtr<TSharedPtr<TArray<Gs2::Money2::Model::FNamespacePtr>>> Result) override
+        {
+            TArray<Gs2::Money2::Model::FNamespacePtr> Items;
+            auto Iterator = Self->Namespaces(QueryNamePrefix)->begin();
+            while (Iterator.HasNext())
+            {
+                if (Iterator.IsError()) return Iterator.Error();
+                if (Iterator.IsCurrentValid()) Items.Add(Iterator.Current());
+                ++Iterator;
+            }
+            if (Iterator.IsError()) return Iterator.Error();
+            *Result = MakeShared<TArray<Gs2::Money2::Model::FNamespacePtr>>(Items);
+            if (OnCollected) OnCollected(Items);
+            return nullptr;
+        }
+    };
+
+    Gs2::Core::Domain::CallbackID FGs2Money2Domain::SubscribeNamespaces(
+        TFunction<void(TArray<Gs2::Money2::Model::FNamespacePtr>)> Callback,const TOptional<FString> NamePrefix
+    )
+    {
+        const TWeakPtr<Gs2::Core::Domain::FGs2> WeakGs2 = this->Gs2;
+        const auto QueryNamePrefix = NamePrefix;
+        const auto Parent = Gs2::Money2::Model::Cache::FNamespaceCache::CreateCacheParentKey(
+        TOptional<int32>()
+    );
+        return Gs2->Cache->ListSubscribeTyped(
+            Gs2::Money2::Model::FNamespace::TypeName,
+            Parent,
+            [Callback, WeakGs2](const TArray<FGs2ObjectPtr>& Values)
+            {
+                if (!WeakGs2.Pin().IsValid()) return;
+                TArray<Gs2::Money2::Model::FNamespacePtr> TypedValues;
+                for (const auto& Value : Values) if (Value.IsValid()) TypedValues.Add(StaticCastSharedPtr<Gs2::Money2::Model::FNamespace>(Value));
+                Callback(TypedValues);
+            },
+            [WeakGs2, Callback, QueryNamePrefix]()
+            {
+                const auto Owner = WeakGs2.Pin();
+                if (!Owner.IsValid()) return;
+                const auto Domain = MakeShared<FGs2Money2Domain>(Owner);
+                const auto Task = Gs2::Core::Util::New<FAsyncTask<FCollectNamespacesTask>>(Domain, Callback, QueryNamePrefix);
+                Task->StartBackgroundTask();
+            }
+        );
+    }
+
+    void FGs2Money2Domain::InvalidateNamespaces(const TOptional<FString> NamePrefix)
+    {
+        Gs2->Cache->ClearListCache(
+            Gs2::Money2::Model::FNamespace::TypeName,
+            Gs2::Money2::Model::Cache::FNamespaceCache::CreateCacheParentKey(
+        TOptional<int32>()
+    )
+        );
+    }
+
+    FGs2Money2Domain::FSubscribeNamespacesWithInitialCallTask::FSubscribeNamespacesWithInitialCallTask(const TSharedPtr<FGs2Money2Domain>& Self, TFunction<void(TArray<Gs2::Money2::Model::FNamespacePtr>)> Callback,const TOptional<FString> NamePrefix) : Self(Self), Callback(Callback), QueryNamePrefix(NamePrefix) {}
+    FGs2Money2Domain::FSubscribeNamespacesWithInitialCallTask::FSubscribeNamespacesWithInitialCallTask(const FSubscribeNamespacesWithInitialCallTask& From) : TGs2Future(From), Self(From.Self), Callback(From.Callback), QueryNamePrefix(From.QueryNamePrefix) {}
+    Gs2::Core::Model::FGs2ErrorPtr FGs2Money2Domain::FSubscribeNamespacesWithInitialCallTask::Action(TSharedPtr<TSharedPtr<Gs2::Core::Domain::CallbackID>> Result)
+    {
+        const auto Task = Gs2::Core::Util::New<FAsyncTask<FCollectNamespacesTask>>(Self, TFunction<void(TArray<Gs2::Money2::Model::FNamespacePtr>)>(), QueryNamePrefix);
+        Task->StartSynchronousTask(); Task->EnsureCompletion();
+        if (Task->GetTask().IsError()) return Task->GetTask().Error();
+        const auto Values = Task->GetTask().Result();
+        const auto CallbackId = Self->SubscribeNamespaces(Callback, QueryNamePrefix);
+        Callback(*Values); *Result = MakeShared<Gs2::Core::Domain::CallbackID>(CallbackId);
+        return nullptr;
+    }
+    TSharedPtr<FAsyncTask<FGs2Money2Domain::FSubscribeNamespacesWithInitialCallTask>> FGs2Money2Domain::SubscribeNamespacesWithInitialCall(TFunction<void(TArray<Gs2::Money2::Model::FNamespacePtr>)> Callback,const TOptional<FString> NamePrefix)
+    {
+        return Gs2::Core::Util::New<FAsyncTask<FSubscribeNamespacesWithInitialCallTask>>(this->AsShared(), Callback, NamePrefix);
     }
 
     TSharedPtr<Gs2::Money2::Domain::Model::FNamespaceDomain> FGs2Money2Domain::Namespace(
@@ -452,7 +574,8 @@ namespace Gs2::Money2::Domain
     void FGs2Money2Domain::UpdateCacheFromStampSheet(
         const FString Method,
         const FString Request,
-        const FString Result
+        const FString Result,
+        const TOptional<int32> TimeOffset
     ) {
         if (Method == "DepositByUserId") {
             TSharedPtr<FJsonObject> RequestModelJson;
@@ -469,32 +592,36 @@ namespace Gs2::Money2::Domain
             }
             const auto RequestModel = Gs2::Money2::Request::FDepositByUserIdRequest::FromJson(RequestModelJson);
             const auto ResultModel = Gs2::Money2::Result::FDepositByUserIdResult::FromJson(ResultModelJson);
-            
-            if (ResultModel->GetItem() != nullptr)
-            {
-                const auto ParentKey = Gs2::Money2::Domain::Model::FUserDomain::CreateCacheParentKey(
+
+                    if (ResultModel.IsValid() && ResultModel->GetItem() != nullptr)
+                    {
+
+                if (!ResultModel.IsValid() || !ResultModel->GetItem().IsValid())
+                    {
+                      return;
+                      }if (!ResultModel.IsValid() || !((ResultModel.IsValid() && ResultModel->GetItem().IsValid() ? ResultModel->GetItem()->GetUserId() : TOptional<FString>())).IsSet())
+                    {
+                      return;
+                      }
+                Gs2::Money2::Model::Cache::FWalletCache::Put(
+                    Gs2->Cache,
+
                     RequestModel->GetNamespaceName(),
-                    RequestModel->GetUserId(),
-                    "Wallet"
+                    (ResultModel.IsValid() && ResultModel->GetItem().IsValid() ? ResultModel->GetItem()->GetUserId() : TOptional<FString>()),
+                    ResultModel->GetItem()->GetSlot().Get(int32{}),
+                    TimeOffset,
+                    ResultModel->GetItem()
                 );
-                const auto Key = Gs2::Money2::Domain::Model::FWalletDomain::CreateCacheKey(
-                    ResultModel->GetItem()->GetSlot()
-                );
-                Gs2->Cache->Put(
-                    Gs2::Money2::Model::FWallet::TypeName,
-                    ParentKey,
-                    Key,
-                    ResultModel->GetItem(),
-                    FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
-                );
-            }
+                    }
+
         }
     }
 
     void FGs2Money2Domain::UpdateCacheFromStampTask(
         const FString Method,
         const FString Request,
-        const FString Result
+        const FString Result,
+        const TOptional<int32> TimeOffset
     ) {
         if (Method == "WithdrawByUserId") {
             TSharedPtr<FJsonObject> RequestModelJson;
@@ -511,25 +638,28 @@ namespace Gs2::Money2::Domain
             }
             const auto RequestModel = Gs2::Money2::Request::FWithdrawByUserIdRequest::FromJson(RequestModelJson);
             const auto ResultModel = Gs2::Money2::Result::FWithdrawByUserIdResult::FromJson(ResultModelJson);
-            
-            if (ResultModel->GetItem() != nullptr)
-            {
-                const auto ParentKey = Gs2::Money2::Domain::Model::FUserDomain::CreateCacheParentKey(
+
+                    if (ResultModel.IsValid() && ResultModel->GetItem() != nullptr)
+                    {
+
+                if (!ResultModel.IsValid() || !ResultModel->GetItem().IsValid())
+                    {
+                      return;
+                      }if (!ResultModel.IsValid() || !((ResultModel.IsValid() && ResultModel->GetItem().IsValid() ? ResultModel->GetItem()->GetUserId() : TOptional<FString>())).IsSet())
+                    {
+                      return;
+                      }
+                Gs2::Money2::Model::Cache::FWalletCache::Put(
+                    Gs2->Cache,
+
                     RequestModel->GetNamespaceName(),
-                    RequestModel->GetUserId(),
-                    "Wallet"
+                    (ResultModel.IsValid() && ResultModel->GetItem().IsValid() ? ResultModel->GetItem()->GetUserId() : TOptional<FString>()),
+                    ResultModel->GetItem()->GetSlot().Get(int32{}),
+                    TimeOffset,
+                    ResultModel->GetItem()
                 );
-                const auto Key = Gs2::Money2::Domain::Model::FWalletDomain::CreateCacheKey(
-                    ResultModel->GetItem()->GetSlot()
-                );
-                Gs2->Cache->Put(
-                    Gs2::Money2::Model::FWallet::TypeName,
-                    ParentKey,
-                    Key,
-                    ResultModel->GetItem(),
-                    FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
-                );
-            }
+                    }
+
         }
         if (Method == "VerifyReceiptByUserId") {
             TSharedPtr<FJsonObject> RequestModelJson;
@@ -546,32 +676,36 @@ namespace Gs2::Money2::Domain
             }
             const auto RequestModel = Gs2::Money2::Request::FVerifyReceiptByUserIdRequest::FromJson(RequestModelJson);
             const auto ResultModel = Gs2::Money2::Result::FVerifyReceiptByUserIdResult::FromJson(ResultModelJson);
-            
-            if (ResultModel->GetItem() != nullptr)
-            {
-                const auto ParentKey = Gs2::Money2::Domain::Model::FUserDomain::CreateCacheParentKey(
+
+                    if (ResultModel.IsValid() && ResultModel->GetItem() != nullptr)
+                    {
+
+                if (!ResultModel.IsValid() || !ResultModel->GetItem().IsValid())
+                    {
+                      return;
+                      }if (!ResultModel.IsValid() || !((ResultModel.IsValid() && ResultModel->GetItem().IsValid() ? ResultModel->GetItem()->GetUserId() : TOptional<FString>())).IsSet())
+                    {
+                      return;
+                      }
+                Gs2::Money2::Model::Cache::FEventCache::Put(
+                    Gs2->Cache,
+
                     RequestModel->GetNamespaceName(),
-                    RequestModel->GetUserId(),
-                    "Event"
+                    (ResultModel.IsValid() && ResultModel->GetItem().IsValid() ? ResultModel->GetItem()->GetUserId() : TOptional<FString>()),
+                    ResultModel->GetItem()->GetTransactionId(),
+                    TimeOffset,
+                    ResultModel->GetItem()
                 );
-                const auto Key = Gs2::Money2::Domain::Model::FEventDomain::CreateCacheKey(
-                    ResultModel->GetItem()->GetTransactionId()
-                );
-                Gs2->Cache->Put(
-                    Gs2::Money2::Model::FEvent::TypeName,
-                    ParentKey,
-                    Key,
-                    ResultModel->GetItem(),
-                    FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
-                );
-            }
+                    }
+
         }
     }
 
     void FGs2Money2Domain::UpdateCacheFromJobResult(
         const FString Method,
         const Gs2::JobQueue::Model::FJobPtr Job,
-        const Gs2::JobQueue::Model::FJobResultBodyPtr Result
+        const Gs2::JobQueue::Model::FJobResultBodyPtr Result,
+        const TOptional<int32> TimeOffset
     ) {
         if (Method == "deposit_by_user_id") {
             TSharedPtr<FJsonObject> RequestModelJson;
@@ -596,25 +730,28 @@ namespace Gs2::Money2::Domain
             }
             const auto RequestModel = Gs2::Money2::Request::FDepositByUserIdRequest::FromJson(RequestModelJson);
             const auto ResultModel = Gs2::Money2::Result::FDepositByUserIdResult::FromJson(ResultModelJson);
-            
-            if (ResultModel->GetItem() != nullptr)
-            {
-                const auto ParentKey = Gs2::Money2::Domain::Model::FUserDomain::CreateCacheParentKey(
+
+                    if (ResultModel.IsValid() && ResultModel->GetItem() != nullptr)
+                    {
+
+                if (!ResultModel.IsValid() || !ResultModel->GetItem().IsValid())
+                    {
+                      return;
+                      }if (!ResultModel.IsValid() || !((ResultModel.IsValid() && ResultModel->GetItem().IsValid() ? ResultModel->GetItem()->GetUserId() : TOptional<FString>())).IsSet())
+                    {
+                      return;
+                      }
+                Gs2::Money2::Model::Cache::FWalletCache::Put(
+                    Gs2->Cache,
+
                     RequestModel->GetNamespaceName(),
-                    RequestModel->GetUserId(),
-                    "Wallet"
+                    (ResultModel.IsValid() && ResultModel->GetItem().IsValid() ? ResultModel->GetItem()->GetUserId() : TOptional<FString>()),
+                    ResultModel->GetItem()->GetSlot().Get(int32{}),
+                    TimeOffset,
+                    ResultModel->GetItem()
                 );
-                const auto Key = Gs2::Money2::Domain::Model::FWalletDomain::CreateCacheKey(
-                    ResultModel->GetItem()->GetSlot()
-                );
-                Gs2->Cache->Put(
-                    Gs2::Money2::Model::FWallet::TypeName,
-                    ParentKey,
-                    Key,
-                    ResultModel->GetItem(),
-                    FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
-                );
-            }
+                    }
+
         }
     }
 
@@ -629,7 +766,23 @@ namespace Gs2::Money2::Domain
             {
                 return;
             }
-            ChangeSubscriptionStatusEvent.Broadcast(Gs2::Money2::Model::FChangeSubscriptionStatus::FromJson(PayloadJson));
+            const auto Notification = Gs2::Money2::Model::FChangeSubscriptionStatus::FromJson(PayloadJson);
+            Gs2->Cache->ClearListCache(
+                Gs2::Money2::Model::FSubscriptionStatus::TypeName,
+                Gs2::Money2::Model::Cache::FSubscriptionStatusCache::CreateCacheParentKey(
+                    Notification->GetNamespaceName(),
+                    Notification->GetUserId(),
+                    TOptional<int32>()
+                )
+            );
+            Gs2::Money2::Model::Cache::FSubscriptionStatusCache::Delete(
+                Gs2->Cache,
+                Notification->GetNamespaceName(),
+                Notification->GetUserId(),
+                Notification->GetContentName(),
+                TOptional<int32>()
+            );
+            ChangeSubscriptionStatusEvent.Broadcast(Notification);
         }
     }
 
@@ -644,4 +797,3 @@ namespace Gs2::Money2::Domain
 #elif defined(__clang__)
 #pragma clang diagnostic pop
 #endif
-

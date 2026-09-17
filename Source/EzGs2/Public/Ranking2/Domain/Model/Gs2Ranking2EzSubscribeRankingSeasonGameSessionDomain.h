@@ -100,14 +100,16 @@ namespace Gs2::UE5::Ranking2::Domain::Model
 
         Gs2::Core::Domain::CallbackID SubscribeSubscribeRankings(TFunction<void()> Callback);
 
-        void UnsubscribeSubscribeRankings(Gs2::Core::Domain::CallbackID CallbackId);
+        void UnsubscribeSubscribeRankings(
+                Gs2::Core::Domain::CallbackID CallbackId);
 
         Gs2::UE5::Ranking2::Domain::Iterator::FEzDescribeSubscribeRankingScoresIteratorPtr SubscribeRankingScores(
         ) const;
 
         Gs2::Core::Domain::CallbackID SubscribeSubscribeRankingScores(TFunction<void()> Callback);
 
-        void UnsubscribeSubscribeRankingScores(Gs2::Core::Domain::CallbackID CallbackId);
+        void UnsubscribeSubscribeRankingScores(
+                Gs2::Core::Domain::CallbackID CallbackId);
 
         Gs2::UE5::Ranking2::Domain::Model::FEzSubscribeRankingScoreGameSessionDomainPtr SubscribeRankingScore(
         ) const;

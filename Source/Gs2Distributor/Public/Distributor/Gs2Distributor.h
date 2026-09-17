@@ -36,7 +36,9 @@
 #include "Model/DistributeResource.h"
 #include "Model/LogSetting.h"
 #include "Model/TransactionSetting.h"
+#include "Model/TransactionSettingV2.h"
 #include "Model/NotificationSetting.h"
+#include "Model/MobileNotificationMessage.h"
 
 // DescribeNamespaces
 #include "Request/DescribeNamespacesRequest.h"

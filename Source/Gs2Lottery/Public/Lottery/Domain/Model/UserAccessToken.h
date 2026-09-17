@@ -105,8 +105,33 @@ namespace Gs2::Lottery::Domain::Model
 
         Gs2::Core::Domain::CallbackID SubscribeBoxes(
             TFunction<void()> Callback
+
         );
 
+        class FCollectBoxesTask;
+
+        Gs2::Core::Domain::CallbackID SubscribeBoxes(
+            TFunction<void(TArray<Gs2::Lottery::Model::FBoxItemsPtr>)> Callback
+        );
+
+        void InvalidateBoxes();
+
+        class GS2LOTTERY_API FSubscribeBoxesWithInitialCallTask final :
+            public Gs2::Core::Util::TGs2Future<Gs2::Core::Domain::CallbackID>,
+            public TSharedFromThis<FSubscribeBoxesWithInitialCallTask>
+        {
+            const TSharedPtr<FUserAccessTokenDomain> Self;
+            const TFunction<void(TArray<Gs2::Lottery::Model::FBoxItemsPtr>)> Callback;
+
+        public:
+            FSubscribeBoxesWithInitialCallTask(const TSharedPtr<FUserAccessTokenDomain>& Self, TFunction<void(TArray<Gs2::Lottery::Model::FBoxItemsPtr>)> Callback);
+            FSubscribeBoxesWithInitialCallTask(const FSubscribeBoxesWithInitialCallTask& From);
+            virtual Gs2::Core::Model::FGs2ErrorPtr Action(TSharedPtr<TSharedPtr<Gs2::Core::Domain::CallbackID>> Result) override;
+        };
+
+        TSharedPtr<FAsyncTask<FSubscribeBoxesWithInitialCallTask>> SubscribeBoxesWithInitialCall(
+            TFunction<void(TArray<Gs2::Lottery::Model::FBoxItemsPtr>)> Callback
+        );
         void UnsubscribeBoxes(
             Gs2::Core::Domain::CallbackID CallbackID
         );

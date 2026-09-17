@@ -102,7 +102,7 @@ namespace Gs2::UE5::Experience::Domain::Model
     Gs2::Core::Domain::CallbackID FEzStatusDomain::Subscribe(TFunction<void(Gs2::UE5::Experience::Model::FEzStatusPtr)> Callback)
     {
         return Domain->Subscribe(
-            [&](Gs2::Experience::Model::FStatusPtr Item)
+            [Callback](Gs2::Experience::Model::FStatusPtr Item)
             {
                 Callback(Gs2::UE5::Experience::Model::FEzStatus::FromModel(Item));
             }

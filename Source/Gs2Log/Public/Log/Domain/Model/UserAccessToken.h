@@ -114,6 +114,8 @@ namespace Gs2::Log::Domain::Model
             const FUserAccessTokenDomain& From
         );
 
+
+
         class GS2LOG_API FSendInGameLogTask final :
             public Gs2::Core::Util::TGs2Future<Gs2::Log::Domain::Model::FInGameLogAccessTokenDomain>,
             public TSharedFromThis<FSendInGameLogTask>

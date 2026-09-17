@@ -29,6 +29,8 @@
 #include "Guild/Domain/Iterator/DescribeReceiveRequestsIterator.h"
 
 #include "Core/Domain/Gs2.h"
+#include "Guild/Model/Cache/ReceiveMemberRequest.h"
+#include "Guild/Model/Cache/Guild.h"
 #include "Guild/Domain/Model/ReceiveMemberRequest.h"
 #include "Guild/Domain/Model/Guild.h"
 
@@ -97,11 +99,11 @@ namespace Gs2::Guild::Domain::Iterator
 
         if (!RangeIteratorOpt || (!*RangeIteratorOpt && !bLast))
         {
-            const auto ListParentKey = Gs2::Guild::Domain::Model::FGuildDomain::CreateCacheParentKey(
+            const auto ListParentKey = Gs2::Guild::Model::Cache::FReceiveMemberRequestCache::CreateCacheParentKey(
                 Self->NamespaceName,
                 Self->GuildModelName,
                 Self->GuildName(),
-                "ReceiveMemberRequest"
+                Self->AccessToken.IsValid() ? Self->AccessToken->GetTimeOffset() : TOptional<int32>()
             );
 
             if (!RangeIteratorOpt)
@@ -119,7 +121,7 @@ namespace Gs2::Guild::Domain::Iterator
                 }
             }
 
-            const auto Future = Self->Client->DescribeReceiveRequests(
+            const auto Request =
                 MakeShared<Gs2::Guild::Request::FDescribeReceiveRequestsRequest>()
                     ->WithContextStack(Self->Gs2->DefaultContextStack)
                     ->WithNamespaceName(Self->NamespaceName)
@@ -127,7 +129,8 @@ namespace Gs2::Guild::Domain::Iterator
                     ->WithAccessToken(Self->AccessToken == nullptr ? TOptional<FString>() : Self->AccessToken->GetToken())
                     ->WithPageToken(PageToken)
                     ->WithLimit(FetchSize)
-            );
+            ;
+            const auto Future = Self->Client->DescribeReceiveRequests(Request);
             Future->StartSynchronousTask();
             if (Future->GetTask().IsError())
             {
@@ -141,18 +144,22 @@ namespace Gs2::Guild::Domain::Iterator
             }
             const auto R = Future->GetTask().Result();
             Future->EnsureCompletion();
-            Range = R->GetItems();
-            for (auto Item : *R->GetItems())
+            Range = R->GetItems().IsValid() ? R->GetItems() : MakeShared<TArray<Gs2::Guild::Model::FReceiveMemberRequestPtr>>();
+            const auto CacheOwnerSnapshotTimeOffset = Self->AccessToken.IsValid() ? Self->AccessToken->GetTimeOffset() : TOptional<int32>();
+            const auto ResultModel = R;
+
+
+            if (Range.IsValid())
             {
-                Self->Gs2->Cache->Put(
-                    Gs2::Guild::Model::FReceiveMemberRequest::TypeName,
-                    ListParentKey,
-                    Gs2::Guild::Domain::Model::FReceiveMemberRequestDomain::CreateCacheKey(
-                        Item->GetUserId()
-                    ),
-                    Item,
-                    FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
-                );
+                for (const auto& Item : *Range)
+                {
+                    if (!Item.IsValid()) continue;
+                    Gs2::Guild::Model::Cache::FReceiveMemberRequestCache::Put(
+                        Self->Gs2->Cache,
+                        Request->GetNamespaceName(), Request->GetGuildModelName(), Self->GuildName(), Item->GetUserId(),
+                        CacheOwnerSnapshotTimeOffset, Item
+                    );
+                }
             }
             if (Range)
             {

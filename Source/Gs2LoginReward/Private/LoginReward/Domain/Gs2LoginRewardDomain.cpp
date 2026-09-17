@@ -33,6 +33,15 @@
 #include "LoginReward/Domain/Model/UserAccessToken.h"
 #include "LoginReward/Domain/Model/Bonus.h"
 #include "LoginReward/Domain/Model/ReceiveStatus.h"
+#include "LoginReward/Model/Cache/ReceiveStatus.h"
+#include "LoginReward/Model/Cache/BonusModel.h"
+
+#include "LoginReward/Model/Cache/Namespace.h"
+#include "LoginReward/Model/Cache/BonusModelMaster.h"
+#include "LoginReward/Model/Cache/CurrentBonusMaster.h"
+#include "LoginReward/Model/Cache/ReceiveStatus.h"
+#include "LoginReward/Model/Cache/BonusModel.h"
+
 #include "Core/Domain/Gs2.h"
 
 namespace Gs2::LoginReward::Domain
@@ -86,6 +95,19 @@ namespace Gs2::LoginReward::Domain
         }
         const auto ResultModel = Future->GetTask().Result();
         Future->EnsureCompletion();
+
+            if (ResultModel.IsValid() && ResultModel->GetItem() != nullptr)
+            {
+
+
+        Gs2::LoginReward::Model::Cache::FNamespaceCache::Put(
+            Self->Gs2->Cache,
+
+            ResultModel->GetItem()->GetName(),
+            TOptional<int32>(),
+            ResultModel->GetItem()
+        );
+            }
         auto Domain = MakeShared<Gs2::LoginReward::Domain::Model::FNamespaceDomain>(
             Self->Gs2,
             Self,
@@ -129,6 +151,7 @@ namespace Gs2::LoginReward::Domain
         }
         const auto ResultModel = Future->GetTask().Result();
         Future->EnsureCompletion();
+
         const auto Domain = Self;
         *Result = Domain;
         return nullptr;
@@ -168,6 +191,7 @@ namespace Gs2::LoginReward::Domain
         }
         const auto ResultModel = Future->GetTask().Result();
         Future->EnsureCompletion();
+
         const auto Domain = Self;
         if (ResultModel != nullptr)
         {
@@ -214,6 +238,7 @@ namespace Gs2::LoginReward::Domain
         }
         const auto ResultModel = Future->GetTask().Result();
         Future->EnsureCompletion();
+
         const auto Domain = Self;
         *Result = Domain;
         return nullptr;
@@ -253,6 +278,7 @@ namespace Gs2::LoginReward::Domain
         }
         const auto ResultModel = Future->GetTask().Result();
         Future->EnsureCompletion();
+
         const auto Domain = Self;
         *Result = Domain;
         return nullptr;
@@ -292,6 +318,7 @@ namespace Gs2::LoginReward::Domain
         }
         const auto ResultModel = Future->GetTask().Result();
         Future->EnsureCompletion();
+
         const auto Domain = Self;
         if (ResultModel != nullptr)
         {
@@ -342,6 +369,7 @@ namespace Gs2::LoginReward::Domain
         }
         const auto ResultModel = Future->GetTask().Result();
         Future->EnsureCompletion();
+
         const auto Domain = Self;
         *Result = Domain;
         return nullptr;
@@ -381,6 +409,7 @@ namespace Gs2::LoginReward::Domain
         }
         const auto ResultModel = Future->GetTask().Result();
         Future->EnsureCompletion();
+
         const auto Domain = Self;
         if (ResultModel != nullptr)
         {
@@ -412,24 +441,110 @@ namespace Gs2::LoginReward::Domain
 
     Gs2::Core::Domain::CallbackID FGs2LoginRewardDomain::SubscribeNamespaces(
     TFunction<void()> Callback
+
     )
     {
         return Gs2->Cache->ListSubscribe(
             Gs2::LoginReward::Model::FNamespace::TypeName,
-            "loginReward:Namespace",
+            Gs2::LoginReward::Model::Cache::FNamespaceCache::CreateCacheParentKey(
+                TOptional<int32>()
+            ),
+            Callback,
             Callback
         );
     }
-
     void FGs2LoginRewardDomain::UnsubscribeNamespaces(
         Gs2::Core::Domain::CallbackID CallbackID
     )
     {
         Gs2->Cache->ListUnsubscribe(
             Gs2::LoginReward::Model::FNamespace::TypeName,
-            "loginReward:Namespace",
+            Gs2::LoginReward::Model::Cache::FNamespaceCache::CreateCacheParentKey(
+                TOptional<int32>()
+            ),
             CallbackID
         );
+    }
+    class FGs2LoginRewardDomain::FCollectNamespacesTask : public Gs2::Core::Util::TGs2Future<TArray<Gs2::LoginReward::Model::FNamespacePtr>>, public TSharedFromThis<FCollectNamespacesTask>
+    {
+        const TSharedPtr<FGs2LoginRewardDomain> Self;
+        const TFunction<void(TArray<Gs2::LoginReward::Model::FNamespacePtr>)> OnCollected;
+    const TOptional<FString> QueryNamePrefix;
+    public:
+        explicit FCollectNamespacesTask(const TSharedPtr<FGs2LoginRewardDomain>& Self, TFunction<void(TArray<Gs2::LoginReward::Model::FNamespacePtr>)> OnCollected,const TOptional<FString> NamePrefix) : Self(Self), OnCollected(OnCollected), QueryNamePrefix(NamePrefix) {}
+        FCollectNamespacesTask(const FCollectNamespacesTask& From) : TGs2Future(From), Self(From.Self), OnCollected(From.OnCollected), QueryNamePrefix(From.QueryNamePrefix) {}
+        virtual Gs2::Core::Model::FGs2ErrorPtr Action(TSharedPtr<TSharedPtr<TArray<Gs2::LoginReward::Model::FNamespacePtr>>> Result) override
+        {
+            TArray<Gs2::LoginReward::Model::FNamespacePtr> Items;
+            auto Iterator = Self->Namespaces(QueryNamePrefix)->begin();
+            while (Iterator.HasNext())
+            {
+                if (Iterator.IsError()) return Iterator.Error();
+                if (Iterator.IsCurrentValid()) Items.Add(Iterator.Current());
+                ++Iterator;
+            }
+            if (Iterator.IsError()) return Iterator.Error();
+            *Result = MakeShared<TArray<Gs2::LoginReward::Model::FNamespacePtr>>(Items);
+            if (OnCollected) OnCollected(Items);
+            return nullptr;
+        }
+    };
+
+    Gs2::Core::Domain::CallbackID FGs2LoginRewardDomain::SubscribeNamespaces(
+        TFunction<void(TArray<Gs2::LoginReward::Model::FNamespacePtr>)> Callback,const TOptional<FString> NamePrefix
+    )
+    {
+        const TWeakPtr<Gs2::Core::Domain::FGs2> WeakGs2 = this->Gs2;
+        const auto QueryNamePrefix = NamePrefix;
+        const auto Parent = Gs2::LoginReward::Model::Cache::FNamespaceCache::CreateCacheParentKey(
+        TOptional<int32>()
+    );
+        return Gs2->Cache->ListSubscribeTyped(
+            Gs2::LoginReward::Model::FNamespace::TypeName,
+            Parent,
+            [Callback, WeakGs2](const TArray<FGs2ObjectPtr>& Values)
+            {
+                if (!WeakGs2.Pin().IsValid()) return;
+                TArray<Gs2::LoginReward::Model::FNamespacePtr> TypedValues;
+                for (const auto& Value : Values) if (Value.IsValid()) TypedValues.Add(StaticCastSharedPtr<Gs2::LoginReward::Model::FNamespace>(Value));
+                Callback(TypedValues);
+            },
+            [WeakGs2, Callback, QueryNamePrefix]()
+            {
+                const auto Owner = WeakGs2.Pin();
+                if (!Owner.IsValid()) return;
+                const auto Domain = MakeShared<FGs2LoginRewardDomain>(Owner);
+                const auto Task = Gs2::Core::Util::New<FAsyncTask<FCollectNamespacesTask>>(Domain, Callback, QueryNamePrefix);
+                Task->StartBackgroundTask();
+            }
+        );
+    }
+
+    void FGs2LoginRewardDomain::InvalidateNamespaces(const TOptional<FString> NamePrefix)
+    {
+        Gs2->Cache->ClearListCache(
+            Gs2::LoginReward::Model::FNamespace::TypeName,
+            Gs2::LoginReward::Model::Cache::FNamespaceCache::CreateCacheParentKey(
+        TOptional<int32>()
+    )
+        );
+    }
+
+    FGs2LoginRewardDomain::FSubscribeNamespacesWithInitialCallTask::FSubscribeNamespacesWithInitialCallTask(const TSharedPtr<FGs2LoginRewardDomain>& Self, TFunction<void(TArray<Gs2::LoginReward::Model::FNamespacePtr>)> Callback,const TOptional<FString> NamePrefix) : Self(Self), Callback(Callback), QueryNamePrefix(NamePrefix) {}
+    FGs2LoginRewardDomain::FSubscribeNamespacesWithInitialCallTask::FSubscribeNamespacesWithInitialCallTask(const FSubscribeNamespacesWithInitialCallTask& From) : TGs2Future(From), Self(From.Self), Callback(From.Callback), QueryNamePrefix(From.QueryNamePrefix) {}
+    Gs2::Core::Model::FGs2ErrorPtr FGs2LoginRewardDomain::FSubscribeNamespacesWithInitialCallTask::Action(TSharedPtr<TSharedPtr<Gs2::Core::Domain::CallbackID>> Result)
+    {
+        const auto Task = Gs2::Core::Util::New<FAsyncTask<FCollectNamespacesTask>>(Self, TFunction<void(TArray<Gs2::LoginReward::Model::FNamespacePtr>)>(), QueryNamePrefix);
+        Task->StartSynchronousTask(); Task->EnsureCompletion();
+        if (Task->GetTask().IsError()) return Task->GetTask().Error();
+        const auto Values = Task->GetTask().Result();
+        const auto CallbackId = Self->SubscribeNamespaces(Callback, QueryNamePrefix);
+        Callback(*Values); *Result = MakeShared<Gs2::Core::Domain::CallbackID>(CallbackId);
+        return nullptr;
+    }
+    TSharedPtr<FAsyncTask<FGs2LoginRewardDomain::FSubscribeNamespacesWithInitialCallTask>> FGs2LoginRewardDomain::SubscribeNamespacesWithInitialCall(TFunction<void(TArray<Gs2::LoginReward::Model::FNamespacePtr>)> Callback,const TOptional<FString> NamePrefix)
+    {
+        return Gs2::Core::Util::New<FAsyncTask<FSubscribeNamespacesWithInitialCallTask>>(this->AsShared(), Callback, NamePrefix);
     }
 
     TSharedPtr<Gs2::LoginReward::Domain::Model::FNamespaceDomain> FGs2LoginRewardDomain::Namespace(
@@ -446,7 +561,8 @@ namespace Gs2::LoginReward::Domain
     void FGs2LoginRewardDomain::UpdateCacheFromStampSheet(
         const FString Method,
         const FString Request,
-        const FString Result
+        const FString Result,
+        const TOptional<int32> TimeOffset
     ) {
         if (Method == "DeleteReceiveStatusByUserId") {
             TSharedPtr<FJsonObject> RequestModelJson;
@@ -463,30 +579,35 @@ namespace Gs2::LoginReward::Domain
             }
             const auto RequestModel = Gs2::LoginReward::Request::FDeleteReceiveStatusByUserIdRequest::FromJson(RequestModelJson);
             const auto ResultModel = Gs2::LoginReward::Result::FDeleteReceiveStatusByUserIdResult::FromJson(ResultModelJson);
-            
-            if (ResultModel->GetItem() != nullptr)
-            {
-                const auto ParentKey = Gs2::LoginReward::Domain::Model::FUserDomain::CreateCacheParentKey(
+
+                      if (!ResultModel.IsValid() || !ResultModel->GetItem().IsValid())
+                          {
+                            return;
+                            }if (!ResultModel.IsValid() || !((ResultModel.IsValid() && ResultModel->GetItem().IsValid() ? ResultModel->GetItem()->GetUserId() : TOptional<FString>())).IsSet())
+                          {
+                            return;
+                            }
+                      Gs2::LoginReward::Model::Cache::FReceiveStatusCache::Delete(
+                    Gs2->Cache,
+
                     RequestModel->GetNamespaceName(),
-                    RequestModel->GetUserId(),
-                    "ReceiveStatus"
+                    (ResultModel.IsValid() && ResultModel->GetItem().IsValid() ? ResultModel->GetItem()->GetUserId() : TOptional<FString>()),
+                    ResultModel->GetItem()->GetBonusModelName(),
+                    TimeOffset
                 );
-                const auto Key = Gs2::LoginReward::Domain::Model::FReceiveStatusDomain::CreateCacheKey(
-                    ResultModel->GetItem()->GetBonusModelName()
-                );
-                Gs2->Cache->Delete(Gs2::LoginReward::Model::FReceiveStatus::TypeName, ParentKey, Key);
-            }
-            if (ResultModel->GetBonusModel() != nullptr)
-            {
-                const auto ParentKey = Gs2::LoginReward::Domain::Model::FNamespaceDomain::CreateCacheParentKey(
+                      if (!ResultModel.IsValid() || !ResultModel->GetItem().IsValid())
+                          {
+                            return;
+                            }
+                      Gs2::LoginReward::Model::Cache::FBonusModelCache::Delete(
+                    Gs2->Cache,
+
                     RequestModel->GetNamespaceName(),
-                    "BonusModel"
+                    ResultModel->GetItem()->GetBonusModelName(),
+                    TimeOffset
                 );
-                const auto Key = Gs2::LoginReward::Domain::Model::FBonusModelDomain::CreateCacheKey(
-                    ResultModel->GetBonusModel()->GetName()
-                );
-                Gs2->Cache->Delete(Gs2::LoginReward::Model::FBonusModel::TypeName, ParentKey, Key);
-            }
+
+
         }
         if (Method == "UnmarkReceivedByUserId") {
             TSharedPtr<FJsonObject> RequestModelJson;
@@ -503,49 +624,53 @@ namespace Gs2::LoginReward::Domain
             }
             const auto RequestModel = Gs2::LoginReward::Request::FUnmarkReceivedByUserIdRequest::FromJson(RequestModelJson);
             const auto ResultModel = Gs2::LoginReward::Result::FUnmarkReceivedByUserIdResult::FromJson(ResultModelJson);
-            
-            if (ResultModel->GetItem() != nullptr)
-            {
-                const auto ParentKey = Gs2::LoginReward::Domain::Model::FUserDomain::CreateCacheParentKey(
+
+                    if (ResultModel.IsValid() && ResultModel->GetItem() != nullptr)
+                    {
+
+                if (!ResultModel.IsValid() || !ResultModel->GetItem().IsValid())
+                    {
+                      return;
+                      }if (!ResultModel.IsValid() || !((ResultModel.IsValid() && ResultModel->GetItem().IsValid() ? ResultModel->GetItem()->GetUserId() : TOptional<FString>())).IsSet())
+                    {
+                      return;
+                      }
+                Gs2::LoginReward::Model::Cache::FReceiveStatusCache::Put(
+                    Gs2->Cache,
+
                     RequestModel->GetNamespaceName(),
-                    RequestModel->GetUserId(),
-                    "ReceiveStatus"
+                    (ResultModel.IsValid() && ResultModel->GetItem().IsValid() ? ResultModel->GetItem()->GetUserId() : TOptional<FString>()),
+                    ResultModel->GetItem()->GetBonusModelName(),
+                    TimeOffset,
+                    ResultModel->GetItem()
                 );
-                const auto Key = Gs2::LoginReward::Domain::Model::FReceiveStatusDomain::CreateCacheKey(
-                    ResultModel->GetItem()->GetBonusModelName()
-                );
-                Gs2->Cache->Put(
-                    Gs2::LoginReward::Model::FReceiveStatus::TypeName,
-                    ParentKey,
-                    Key,
-                    ResultModel->GetItem(),
-                    FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
-                );
-            }
-            if (ResultModel->GetBonusModel() != nullptr)
-            {
-                const auto ParentKey = Gs2::LoginReward::Domain::Model::FNamespaceDomain::CreateCacheParentKey(
+                    }
+                    if (ResultModel.IsValid() && ResultModel->GetBonusModel() != nullptr)
+                    {
+
+                if (!ResultModel.IsValid() || !ResultModel->GetItem().IsValid())
+                    {
+                      return;
+                      }
+                Gs2::LoginReward::Model::Cache::FBonusModelCache::Put(
+                    Gs2->Cache,
+
                     RequestModel->GetNamespaceName(),
-                    "BonusModel"
+                    ResultModel->GetItem()->GetBonusModelName(),
+                    TimeOffset,
+                    ResultModel->GetBonusModel()
                 );
-                const auto Key = Gs2::LoginReward::Domain::Model::FBonusModelDomain::CreateCacheKey(
-                    ResultModel->GetBonusModel()->GetName()
-                );
-                Gs2->Cache->Put(
-                    Gs2::LoginReward::Model::FBonusModel::TypeName,
-                    ParentKey,
-                    Key,
-                    ResultModel->GetBonusModel(),
-                    FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
-                );
-            }
+                    }
+
+
         }
     }
 
     void FGs2LoginRewardDomain::UpdateCacheFromStampTask(
         const FString Method,
         const FString Request,
-        const FString Result
+        const FString Result,
+        const TOptional<int32> TimeOffset
     ) {
         if (Method == "MarkReceivedByUserId") {
             TSharedPtr<FJsonObject> RequestModelJson;
@@ -562,49 +687,53 @@ namespace Gs2::LoginReward::Domain
             }
             const auto RequestModel = Gs2::LoginReward::Request::FMarkReceivedByUserIdRequest::FromJson(RequestModelJson);
             const auto ResultModel = Gs2::LoginReward::Result::FMarkReceivedByUserIdResult::FromJson(ResultModelJson);
-            
-            if (ResultModel->GetItem() != nullptr)
-            {
-                const auto ParentKey = Gs2::LoginReward::Domain::Model::FUserDomain::CreateCacheParentKey(
+
+                    if (ResultModel.IsValid() && ResultModel->GetItem() != nullptr)
+                    {
+
+                if (!ResultModel.IsValid() || !ResultModel->GetItem().IsValid())
+                    {
+                      return;
+                      }if (!ResultModel.IsValid() || !((ResultModel.IsValid() && ResultModel->GetItem().IsValid() ? ResultModel->GetItem()->GetUserId() : TOptional<FString>())).IsSet())
+                    {
+                      return;
+                      }
+                Gs2::LoginReward::Model::Cache::FReceiveStatusCache::Put(
+                    Gs2->Cache,
+
                     RequestModel->GetNamespaceName(),
-                    RequestModel->GetUserId(),
-                    "ReceiveStatus"
+                    (ResultModel.IsValid() && ResultModel->GetItem().IsValid() ? ResultModel->GetItem()->GetUserId() : TOptional<FString>()),
+                    ResultModel->GetItem()->GetBonusModelName(),
+                    TimeOffset,
+                    ResultModel->GetItem()
                 );
-                const auto Key = Gs2::LoginReward::Domain::Model::FReceiveStatusDomain::CreateCacheKey(
-                    ResultModel->GetItem()->GetBonusModelName()
-                );
-                Gs2->Cache->Put(
-                    Gs2::LoginReward::Model::FReceiveStatus::TypeName,
-                    ParentKey,
-                    Key,
-                    ResultModel->GetItem(),
-                    FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
-                );
-            }
-            if (ResultModel->GetBonusModel() != nullptr)
-            {
-                const auto ParentKey = Gs2::LoginReward::Domain::Model::FNamespaceDomain::CreateCacheParentKey(
+                    }
+                    if (ResultModel.IsValid() && ResultModel->GetBonusModel() != nullptr)
+                    {
+
+                if (!ResultModel.IsValid() || !ResultModel->GetItem().IsValid())
+                    {
+                      return;
+                      }
+                Gs2::LoginReward::Model::Cache::FBonusModelCache::Put(
+                    Gs2->Cache,
+
                     RequestModel->GetNamespaceName(),
-                    "BonusModel"
+                    ResultModel->GetItem()->GetBonusModelName(),
+                    TimeOffset,
+                    ResultModel->GetBonusModel()
                 );
-                const auto Key = Gs2::LoginReward::Domain::Model::FBonusModelDomain::CreateCacheKey(
-                    ResultModel->GetBonusModel()->GetName()
-                );
-                Gs2->Cache->Put(
-                    Gs2::LoginReward::Model::FBonusModel::TypeName,
-                    ParentKey,
-                    Key,
-                    ResultModel->GetBonusModel(),
-                    FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
-                );
-            }
+                    }
+
+
         }
     }
 
     void FGs2LoginRewardDomain::UpdateCacheFromJobResult(
         const FString Method,
         const Gs2::JobQueue::Model::FJobPtr Job,
-        const Gs2::JobQueue::Model::FJobResultBodyPtr Result
+        const Gs2::JobQueue::Model::FJobResultBodyPtr Result,
+        const TOptional<int32> TimeOffset
     ) {
         if (Method == "delete_receive_status_by_user_id") {
             TSharedPtr<FJsonObject> RequestModelJson;
@@ -629,30 +758,35 @@ namespace Gs2::LoginReward::Domain
             }
             const auto RequestModel = Gs2::LoginReward::Request::FDeleteReceiveStatusByUserIdRequest::FromJson(RequestModelJson);
             const auto ResultModel = Gs2::LoginReward::Result::FDeleteReceiveStatusByUserIdResult::FromJson(ResultModelJson);
-            
-            if (ResultModel->GetItem() != nullptr)
-            {
-                const auto ParentKey = Gs2::LoginReward::Domain::Model::FUserDomain::CreateCacheParentKey(
+
+                      if (!ResultModel.IsValid() || !ResultModel->GetItem().IsValid())
+                          {
+                            return;
+                            }if (!ResultModel.IsValid() || !((ResultModel.IsValid() && ResultModel->GetItem().IsValid() ? ResultModel->GetItem()->GetUserId() : TOptional<FString>())).IsSet())
+                          {
+                            return;
+                            }
+                      Gs2::LoginReward::Model::Cache::FReceiveStatusCache::Delete(
+                    Gs2->Cache,
+
                     RequestModel->GetNamespaceName(),
-                    RequestModel->GetUserId(),
-                    "ReceiveStatus"
+                    (ResultModel.IsValid() && ResultModel->GetItem().IsValid() ? ResultModel->GetItem()->GetUserId() : TOptional<FString>()),
+                    ResultModel->GetItem()->GetBonusModelName(),
+                    TimeOffset
                 );
-                const auto Key = Gs2::LoginReward::Domain::Model::FReceiveStatusDomain::CreateCacheKey(
-                    ResultModel->GetItem()->GetBonusModelName()
-                );
-                Gs2->Cache->Delete(Gs2::LoginReward::Model::FReceiveStatus::TypeName, ParentKey, Key);
-            }
-            if (ResultModel->GetBonusModel() != nullptr)
-            {
-                const auto ParentKey = Gs2::LoginReward::Domain::Model::FNamespaceDomain::CreateCacheParentKey(
+                      if (!ResultModel.IsValid() || !ResultModel->GetItem().IsValid())
+                          {
+                            return;
+                            }
+                      Gs2::LoginReward::Model::Cache::FBonusModelCache::Delete(
+                    Gs2->Cache,
+
                     RequestModel->GetNamespaceName(),
-                    "BonusModel"
+                    ResultModel->GetItem()->GetBonusModelName(),
+                    TimeOffset
                 );
-                const auto Key = Gs2::LoginReward::Domain::Model::FBonusModelDomain::CreateCacheKey(
-                    ResultModel->GetBonusModel()->GetName()
-                );
-                Gs2->Cache->Delete(Gs2::LoginReward::Model::FBonusModel::TypeName, ParentKey, Key);
-            }
+
+
         }
         if (Method == "unmark_received_by_user_id") {
             TSharedPtr<FJsonObject> RequestModelJson;
@@ -677,42 +811,45 @@ namespace Gs2::LoginReward::Domain
             }
             const auto RequestModel = Gs2::LoginReward::Request::FUnmarkReceivedByUserIdRequest::FromJson(RequestModelJson);
             const auto ResultModel = Gs2::LoginReward::Result::FUnmarkReceivedByUserIdResult::FromJson(ResultModelJson);
-            
-            if (ResultModel->GetItem() != nullptr)
-            {
-                const auto ParentKey = Gs2::LoginReward::Domain::Model::FUserDomain::CreateCacheParentKey(
+
+                    if (ResultModel.IsValid() && ResultModel->GetItem() != nullptr)
+                    {
+
+                if (!ResultModel.IsValid() || !ResultModel->GetItem().IsValid())
+                    {
+                      return;
+                      }if (!ResultModel.IsValid() || !((ResultModel.IsValid() && ResultModel->GetItem().IsValid() ? ResultModel->GetItem()->GetUserId() : TOptional<FString>())).IsSet())
+                    {
+                      return;
+                      }
+                Gs2::LoginReward::Model::Cache::FReceiveStatusCache::Put(
+                    Gs2->Cache,
+
                     RequestModel->GetNamespaceName(),
-                    RequestModel->GetUserId(),
-                    "ReceiveStatus"
+                    (ResultModel.IsValid() && ResultModel->GetItem().IsValid() ? ResultModel->GetItem()->GetUserId() : TOptional<FString>()),
+                    ResultModel->GetItem()->GetBonusModelName(),
+                    TimeOffset,
+                    ResultModel->GetItem()
                 );
-                const auto Key = Gs2::LoginReward::Domain::Model::FReceiveStatusDomain::CreateCacheKey(
-                    ResultModel->GetItem()->GetBonusModelName()
-                );
-                Gs2->Cache->Put(
-                    Gs2::LoginReward::Model::FReceiveStatus::TypeName,
-                    ParentKey,
-                    Key,
-                    ResultModel->GetItem(),
-                    FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
-                );
-            }
-            if (ResultModel->GetBonusModel() != nullptr)
-            {
-                const auto ParentKey = Gs2::LoginReward::Domain::Model::FNamespaceDomain::CreateCacheParentKey(
+                    }
+                    if (ResultModel.IsValid() && ResultModel->GetBonusModel() != nullptr)
+                    {
+
+                if (!ResultModel.IsValid() || !ResultModel->GetItem().IsValid())
+                    {
+                      return;
+                      }
+                Gs2::LoginReward::Model::Cache::FBonusModelCache::Put(
+                    Gs2->Cache,
+
                     RequestModel->GetNamespaceName(),
-                    "BonusModel"
+                    ResultModel->GetItem()->GetBonusModelName(),
+                    TimeOffset,
+                    ResultModel->GetBonusModel()
                 );
-                const auto Key = Gs2::LoginReward::Domain::Model::FBonusModelDomain::CreateCacheKey(
-                    ResultModel->GetBonusModel()->GetName()
-                );
-                Gs2->Cache->Put(
-                    Gs2::LoginReward::Model::FBonusModel::TypeName,
-                    ParentKey,
-                    Key,
-                    ResultModel->GetBonusModel(),
-                    FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
-                );
-            }
+                    }
+
+
         }
     }
 
@@ -728,4 +865,3 @@ namespace Gs2::LoginReward::Domain
 #elif defined(__clang__)
 #pragma clang diagnostic pop
 #endif
-

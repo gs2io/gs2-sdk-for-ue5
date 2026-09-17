@@ -28,6 +28,9 @@
 #include "Experience/Domain/Gs2Experience.h"
 
 #include "Core/Domain/Gs2.h"
+#include "Core/Domain/SpeculativeExecutor/PreparedSpeculativeCommit.h"
+#include "Core/Util/ServerRate.h"
+#include "Experience/Domain/SpeculativeExecutor/StatusSpeculativeCommit.h"
 
 namespace Gs2::Experience::Domain::SpeculativeExecutor
 {
@@ -85,80 +88,65 @@ namespace Gs2::Experience::Domain::SpeculativeExecutor
     }
 
     Gs2::Core::Model::FGs2ErrorPtr FAddRankCapByUserIdSpeculativeExecutor::FCommitTask::Action(
-        TSharedPtr<TSharedPtr<TFunction<void()>>> Result
+        TSharedPtr<TSharedPtr<Gs2::Core::Domain::SpeculativeExecutor::FPreparedSpeculativeCommit>> Result
     )
     {
-        const auto Future = Domain->Experience->Namespace(
-                Request->GetNamespaceName().IsSet() ? *Request->GetNamespaceName() : FString("")
-            )->ExperienceModel(
-                Request->GetExperienceName().IsSet() ? *Request->GetExperienceName() : FString("")
-            )->Model();
-        Future->StartSynchronousTask();
-        if (Future->GetTask().IsError())
+        *Result = nullptr;
+        Gs2::Auth::Model::FAccessTokenPtr PreparedToken = nullptr;
+        if (AccessToken.IsValid()) PreparedToken = MakeShared<Gs2::Auth::Model::FAccessToken>(*AccessToken);
+        Gs2::Experience::Request::FAddRankCapByUserIdRequestPtr PreparedRequest = nullptr;
+        if (Request.IsValid()) PreparedRequest = MakeShared<Gs2::Experience::Request::FAddRankCapByUserIdRequest>(*Request);
+        if (!Domain.IsValid() || !Domain->RestSession.IsValid() || !Domain->Cache.IsValid() ||
+            !PreparedToken.IsValid() || !PreparedRequest.IsValid() ||
+            !PreparedToken->GetUserId().IsSet() || PreparedToken->GetUserId().Get(FString()).IsEmpty()) return nullptr;
+        if (PreparedRequest->GetUserId().IsSet() &&
+            PreparedRequest->GetUserId().Get(FString()) == TEXT("#{userId}"))
         {
-            return Future->GetTask().Error();
+            PreparedRequest->WithUserId(PreparedToken->GetUserId());
         }
-        auto Model = Future->GetTask().Result();
+        if (!PreparedRequest->GetUserId().IsSet() ||
+            PreparedRequest->GetUserId().Get(FString()) != PreparedToken->GetUserId().Get(FString()) ||
+            !PreparedRequest->GetPropertyId().IsSet()) return nullptr;
 
-        if (!Model.IsValid())
-        {
-            *Result = MakeShared<TFunction<void()>>([&]()
-            {
-                return nullptr;
-            });
-            return nullptr;
-        }
-        
-        const auto Future2 = Domain->Experience->Namespace(
-                Request->GetNamespaceName().IsSet() ? *Request->GetNamespaceName() : FString("")
-            )->AccessToken(
-                AccessToken
-            )->Status(
-                Request->GetExperienceName().IsSet() ? *Request->GetExperienceName() : FString(""),
-                Request->GetPropertyId().IsSet() ? *Request->GetPropertyId() : FString("")
-            )->Model();
-        Future2->StartSynchronousTask();
-        if (Future2->GetTask().IsError())
-        {
-            return Future2->GetTask().Error();
-        }
-        auto Item = Future2->GetTask().Result();
-
-        if (!Item.IsValid())
-        {
-            *Result = MakeShared<TFunction<void()>>([&]()
-            {
-                return nullptr;
-            });
-            return nullptr;
-        }
-        auto Err = Transform(Domain, AccessToken, Request, Model, Item);
-        if (Err != nullptr)
-        {
-            return Err;
-        }
-
-        const auto ParentKey = Model::FUserDomain::CreateCacheParentKey(
-            Request->GetNamespaceName(),
-            AccessToken->GetUserId(),
-            FString("Status")
+        const auto NamespaceName = PreparedRequest->GetNamespaceName();
+        const auto UserId = PreparedToken->GetUserId();
+        const auto ExperienceName = PreparedRequest->GetExperienceName();
+        const auto TimeOffset = PreparedToken->GetTimeOffset();
+        const FString PropertyId = PreparedRequest->GetPropertyId().Get(FString())
+            .Replace(TEXT("{region}"), *Domain->RestSession->RegionName())
+            .Replace(TEXT("{ownerId}"), *Domain->RestSession->OwnerId())
+            .Replace(TEXT("{userId}"), *UserId.Get(FString()));
+        const FString ExpectedStatusId = FString::Printf(
+            TEXT("grn:gs2:%s:%s:experience:%s:user:%s:experienceModel:%s:property:%s"),
+            *Domain->RestSession->RegionName(), *Domain->RestSession->OwnerId(),
+            *NamespaceName.Get(FString()), *UserId.Get(FString()),
+            *ExperienceName.Get(FString()), *PropertyId
         );
-        const auto Key = Model::FStatusDomain::CreateCacheKey(
-            Request->GetExperienceName(),
-            Request->GetPropertyId()
+        const FString ExpectedModelId = FString::Printf(
+            TEXT("grn:gs2:%s:%s:experience:%s:model:%s"),
+            *Domain->RestSession->RegionName(), *Domain->RestSession->OwnerId(),
+            *NamespaceName.Get(FString()), *ExperienceName.Get(FString())
         );
-
-        *Result = MakeShared<TFunction<void()>>([&]()
-        {
-            Domain->Cache->Put(
-                Experience::Model::FStatus::TypeName,
-                ParentKey,
-                Key,
-                Item,
-                FDateTime::Now() + FTimespan::FromSeconds(10)
-            );
-            return nullptr;
-        });
+        *Result = FStatusSpeculativeCommit::Create(
+            Domain->Cache, NamespaceName, UserId, ExperienceName, PropertyId,
+            TimeOffset, ExpectedStatusId, ExpectedModelId,
+            [PreparedRequest](const Gs2::Experience::Model::FStatusPtr& Source, const Gs2::Experience::Model::FExperienceModelPtr& Model) -> Gs2::Experience::Model::FStatusPtr
+            {
+                if (!Source->GetExperienceValue().IsSet() || !Source->GetRankCapValue().IsSet() ||
+                    !PreparedRequest->GetRankCapValue().IsSet()) return nullptr;
+                const auto Changed = FStatusSpeculativeCommit::AddRankCap(
+                    Source, *PreparedRequest->GetRankCapValue());
+                if (!Changed.IsValid() || !Changed->GetRankCapValue().IsSet()) return nullptr;
+                return FStatusSpeculativeCommit::RecalculateStatus(
+                    Model, Source, *Source->GetExperienceValue(), *Changed->GetRankCapValue());
+            },
+            [PreparedRequest](const Gs2::Experience::Model::FStatusPtr& Source) -> Gs2::Experience::Model::FStatusPtr
+            {
+                if (!PreparedRequest->GetRankCapValue().IsSet()) return nullptr;
+                return FStatusSpeculativeCommit::AddRankCap(
+                    Source, *PreparedRequest->GetRankCapValue());
+            }
+        );
         return nullptr;
     }
 
@@ -177,10 +165,16 @@ namespace Gs2::Experience::Domain::SpeculativeExecutor
         const double Rate
     )
     {
-        if (Request->GetRankCapValue().IsSet())
+        if (!Request.IsValid())
         {
-            Request->WithRankCapValue(*Request->GetRankCapValue() * Rate);
+            return nullptr;
         }
+        int64 Value = 0;
+        if (!Gs2::Core::Util::TryApplyServerRate(Request->GetRankCapValue().Get(1), Rate, Value))
+        {
+            return nullptr;
+        }
+        Request->WithRankCapValue(Value);
         return Request;
     }
 
@@ -189,11 +183,16 @@ namespace Gs2::Experience::Domain::SpeculativeExecutor
         TBigInt<1024, false> Rate
     )
     {
-        if (Request->GetRankCapValue().IsSet())
+        if (!Request.IsValid())
         {
-            Rate.Multiply(*Request->GetRankCapValue());
-            Request->WithRankCapValue(Rate.ToInt());
+            return nullptr;
         }
+        int64 Value = 0;
+        if (!Gs2::Core::Util::TryApplyServerRate(Request->GetRankCapValue().Get(1), Rate, Value))
+        {
+            return nullptr;
+        }
+        Request->WithRankCapValue(Value);
         return Request;
     }
 }

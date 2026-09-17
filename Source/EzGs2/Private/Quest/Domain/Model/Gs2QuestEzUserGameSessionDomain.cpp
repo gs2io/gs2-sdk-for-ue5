@@ -137,7 +137,8 @@ namespace Gs2::UE5::Quest::Domain::Model
         );
     }
 
-    void FEzUserGameSessionDomain::UnsubscribeCompletedQuestLists(Gs2::Core::Domain::CallbackID CallbackId)
+    void FEzUserGameSessionDomain::UnsubscribeCompletedQuestLists(
+            Gs2::Core::Domain::CallbackID CallbackId)
     {
         Domain->UnsubscribeCompletedQuestLists(
             CallbackId

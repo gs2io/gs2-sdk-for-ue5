@@ -95,6 +95,8 @@ namespace Gs2::Enhance::Domain::Model
             const FProgressAccessTokenDomain& From
         );
 
+
+
         class GS2ENHANCE_API FGetTask final :
             public Gs2::Core::Util::TGs2Future<Gs2::Enhance::Model::FProgress>,
             public TSharedFromThis<FGetTask>
@@ -120,6 +122,8 @@ namespace Gs2::Enhance::Domain::Model
         TSharedPtr<FAsyncTask<FGetTask>> Get(
             Request::FGetProgressRequestPtr Request
         );
+
+
 
         class GS2ENHANCE_API FStartTask final :
             public Gs2::Core::Util::TGs2Future<Core::Domain::FTransactionAccessTokenDomain>,
@@ -150,6 +154,8 @@ namespace Gs2::Enhance::Domain::Model
             bool SpeculativeExecute = true
         );
 
+
+
         class GS2ENHANCE_API FEndTask final :
             public Gs2::Core::Util::TGs2Future<Core::Domain::FTransactionAccessTokenDomain>,
             public TSharedFromThis<FEndTask>
@@ -178,6 +184,8 @@ namespace Gs2::Enhance::Domain::Model
             Request::FEndRequestPtr Request,
             bool SpeculativeExecute = true
         );
+
+
 
         class GS2ENHANCE_API FDeleteTask final :
             public Gs2::Core::Util::TGs2Future<Gs2::Enhance::Domain::Model::FProgressAccessTokenDomain>,

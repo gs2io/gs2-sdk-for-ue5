@@ -82,7 +82,7 @@ namespace Gs2::UE5::Formation::Domain::Model
     Gs2::Core::Domain::CallbackID FEzPropertyFormModelDomain::Subscribe(TFunction<void(Gs2::UE5::Formation::Model::FEzPropertyFormModelPtr)> Callback)
     {
         return Domain->Subscribe(
-            [&](Gs2::Formation::Model::FPropertyFormModelPtr Item)
+            [Callback](Gs2::Formation::Model::FPropertyFormModelPtr Item)
             {
                 Callback(Gs2::UE5::Formation::Model::FEzPropertyFormModel::FromModel(Item));
             }

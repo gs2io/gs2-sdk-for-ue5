@@ -35,6 +35,7 @@
 #include "Distributor/Domain/Model/StampSheetResultAccessToken.h"
 #include "Distributor/Domain/Model/TransactionResult.h"
 #include "Distributor/Domain/Model/TransactionResultAccessToken.h"
+#include "Distributor/Model/Cache/DistributorModel.h"
 
 #include "Core/Domain/Gs2.h"
 #include "Core/Domain/Transaction/JobQueueJobDomainFactory.h"
@@ -108,6 +109,20 @@ namespace Gs2::Distributor::Domain::Model
         }
         const auto ResultModel = Future->GetTask().Result();
         Future->EnsureCompletion();
+
+            if (ResultModel.IsValid() && ResultModel->GetItem() != nullptr)
+            {
+
+
+        Gs2::Distributor::Model::Cache::FDistributorModelCache::Put(
+            Self->Gs2->Cache,
+
+            Request->GetNamespaceName(),
+            Request->GetDistributorName(),
+            TOptional<int32>(),
+            ResultModel->GetItem()
+        );
+            }
         *Result = ResultModel->GetItem();
         return nullptr;
     }
@@ -156,71 +171,158 @@ namespace Gs2::Distributor::Domain::Model
         TSharedPtr<TSharedPtr<Gs2::Distributor::Model::FDistributorModel>> Result
     )
     {
-        // ReSharper disable once CppLocalVariableMayBeConst
-        TSharedPtr<Gs2::Distributor::Model::FDistributorModel> Value;
-        auto bCacheHit = Self->Gs2->Cache->TryGet<Gs2::Distributor::Model::FDistributorModel>(
-            Self->ParentKey,
-            Gs2::Distributor::Domain::Model::FDistributorModelDomain::CreateCacheKey(
-                Self->DistributorName
-            ),
-            &Value
+        const auto CacheParentKey = Gs2::Distributor::Model::Cache::FDistributorModelCache::CreateCacheParentKey(
+
+            Self->NamespaceName,
+            TOptional<int32>()
         );
-        if (!bCacheHit) {
-            const auto Future = Self->Get(
-                MakeShared<Gs2::Distributor::Request::FGetDistributorModelRequest>()
-            );
-            Future->StartSynchronousTask();
-            if (Future->GetTask().IsError())
+        const auto CacheKey = Gs2::Distributor::Model::Cache::FDistributorModelCache::CreateCacheKey(
+
+            Self->DistributorName
+        );
+        return Self->Gs2->Cache->ExecuteWithKeyLock(
+            Gs2::Distributor::Model::FDistributorModel::TypeName,
+            CacheParentKey,
+            CacheKey,
+            [Self = Self, Result]() -> Gs2::Core::Model::FGs2ErrorPtr
             {
-                if (Future->GetTask().Error()->Type() != Gs2::Core::Model::FNotFoundError::TypeString)
-                {
-                    return Future->GetTask().Error();
-                }
+                Gs2::Distributor::Model::FDistributorModelPtr Value;
+                const auto CacheHit = Gs2::Distributor::Model::Cache::FDistributorModelCache::TryGet(
+                    Self->Gs2->Cache,
 
-                const auto Key = Gs2::Distributor::Domain::Model::FDistributorModelDomain::CreateCacheKey(
-                    Self->DistributorName
+                    Self->NamespaceName,
+                    Self->DistributorName,
+                    TOptional<int32>(),
+                    &Value
                 );
-                Self->Gs2->Cache->Put(
-                    Gs2::Distributor::Model::FDistributorModel::TypeName,
-                    Self->ParentKey,
-                    Key,
-                    nullptr,
-                    FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
-                );
-
-                if (Future->GetTask().Error()->Detail(0)->GetComponent() != "distributorModel")
+                if (CacheHit)
                 {
-                    return Future->GetTask().Error();
+                    *Result = Value;
+                    return nullptr;
                 }
-            }
-            else
-            {
-                Value = Future->GetTask().Result();
-            }
-            Future->EnsureCompletion();
-        }
-        *Result = Value;
+                const auto Error = Gs2::Distributor::Model::Cache::FDistributorModelCache::Fetch(
+                    Self->Gs2->Cache,
 
-        return nullptr;
+                    Self->NamespaceName,
+                    Self->DistributorName,
+                    TOptional<int32>(),
+                    [Self](Gs2::Distributor::Model::FDistributorModelPtr* OutItem) -> Gs2::Core::Model::FGs2ErrorPtr
+                    {
+                        const auto Future = Self->Get(
+                            MakeShared<Gs2::Distributor::Request::FGetDistributorModelRequest>()
+                        );
+                        Future->StartSynchronousTask();
+                        if (Future->GetTask().IsError()) return Future->GetTask().Error();
+                        *OutItem = Future->GetTask().Result();
+                        Future->EnsureCompletion();
+                        return nullptr;
+                    },
+                    &Value
+                );
+                if (Error.IsValid()) return Error;
+                *Result = Value;
+                return nullptr;
+            }
+        );
     }
 
     TSharedPtr<FAsyncTask<FDistributorModelDomain::FModelTask>> FDistributorModelDomain::Model() {
         return Gs2::Core::Util::New<FAsyncTask<FDistributorModelDomain::FModelTask>>(this->AsShared());
     }
 
+    void FDistributorModelDomain::Invalidate()
+    {
+        Gs2::Distributor::Model::Cache::FDistributorModelCache::Delete(
+            Gs2->Cache,
+
+            NamespaceName,
+            DistributorName,
+            TOptional<int32>()
+        );
+    }
+
+    FDistributorModelDomain::FSubscribeWithInitialCallTask::FSubscribeWithInitialCallTask(
+        const TSharedPtr<FDistributorModelDomain>& Self,
+        TFunction<void(Gs2::Distributor::Model::FDistributorModelPtr)> Callback
+    ):
+        Self(Self),
+        Callback(Callback)
+    {
+    }
+
+    FDistributorModelDomain::FSubscribeWithInitialCallTask::FSubscribeWithInitialCallTask(
+        const FSubscribeWithInitialCallTask& From
+    ):
+        TGs2Future(From),
+        Self(From.Self),
+        Callback(From.Callback)
+    {
+    }
+
+    Gs2::Core::Model::FGs2ErrorPtr FDistributorModelDomain::FSubscribeWithInitialCallTask::Action(
+        TSharedPtr<TSharedPtr<Gs2::Core::Domain::CallbackID>> Result
+    )
+    {
+        const auto Task = Self->Model();
+        Task->StartSynchronousTask();
+        Task->EnsureCompletion();
+        if (Task->GetTask().IsError()) return Task->GetTask().Error();
+        const auto Item = Task->GetTask().Result();
+        const auto CallbackId = Self->Subscribe(Callback);
+        Callback(Item);
+        *Result = MakeShared<Gs2::Core::Domain::CallbackID>(CallbackId);
+        return nullptr;
+    }
+
+    TSharedPtr<FAsyncTask<FDistributorModelDomain::FSubscribeWithInitialCallTask>> FDistributorModelDomain::SubscribeWithInitialCall(
+        TFunction<void(Gs2::Distributor::Model::FDistributorModelPtr)> Callback
+    )
+    {
+        return Gs2::Core::Util::New<FAsyncTask<FSubscribeWithInitialCallTask>>(this->AsShared(), Callback);
+    }
+
     Gs2::Core::Domain::CallbackID FDistributorModelDomain::Subscribe(
         TFunction<void(Gs2::Distributor::Model::FDistributorModelPtr)> Callback
     )
     {
+        const auto SubscriptionParentKey = Gs2::Distributor::Model::Cache::FDistributorModelCache::CreateCacheParentKey(
+
+            NamespaceName,
+            TOptional<int32>()
+        );
+        const auto SubscriptionCacheKey = Gs2::Distributor::Model::Cache::FDistributorModelCache::CreateCacheKey(
+
+            DistributorName
+        );
+        const TWeakPtr<Gs2::Core::Domain::FGs2> WeakGs2 = Gs2;
+        const TWeakPtr<Distributor::Domain::FGs2DistributorDomain> WeakService = Service;
+        const FString RegisteredParentKey = SubscriptionParentKey;
+        const TOptional<FString> QueryNamespaceName = NamespaceName;
+        const TOptional<FString> QueryDistributorName = DistributorName;
         return Gs2->Cache->Subscribe(
             Gs2::Distributor::Model::FDistributorModel::TypeName,
-            ParentKey,
-            Gs2::Distributor::Domain::Model::FDistributorModelDomain::CreateCacheKey(
-                DistributorName
-            ),
+            SubscriptionParentKey,
+            SubscriptionCacheKey,
             [Callback](TSharedPtr<FGs2Object> obj)
             {
                 Callback(StaticCastSharedPtr<Gs2::Distributor::Model::FDistributorModel>(obj));
+            },
+            [WeakGs2, WeakService, RegisteredParentKey, QueryNamespaceName, QueryDistributorName]()
+            {
+                const auto Owner = WeakGs2.Pin();
+                if (!Owner.IsValid())
+                {
+                    return;
+                }
+                const auto Domain = MakeShared<FDistributorModelDomain>(
+                    Owner,
+                    WeakService.Pin(),
+                    QueryNamespaceName,
+                    QueryDistributorName
+                );
+                Domain->ParentKey = RegisteredParentKey;
+                const auto Task = Domain->Model();
+                Task->StartBackgroundTask();
             }
         );
     }
@@ -229,12 +331,19 @@ namespace Gs2::Distributor::Domain::Model
         Gs2::Core::Domain::CallbackID CallbackID
     )
     {
+        const auto SubscriptionParentKey = Gs2::Distributor::Model::Cache::FDistributorModelCache::CreateCacheParentKey(
+
+            NamespaceName,
+            TOptional<int32>()
+        );
+        const auto SubscriptionCacheKey = Gs2::Distributor::Model::Cache::FDistributorModelCache::CreateCacheKey(
+
+            DistributorName
+        );
         Gs2->Cache->Unsubscribe(
             Gs2::Distributor::Model::FDistributorModel::TypeName,
-            ParentKey,
-            Gs2::Distributor::Domain::Model::FDistributorModelDomain::CreateCacheKey(
-                DistributorName
-            ),
+            SubscriptionParentKey,
+            SubscriptionCacheKey,
             CallbackID
         );
     }
@@ -245,4 +354,3 @@ namespace Gs2::Distributor::Domain::Model
 #elif defined(__clang__)
 #pragma clang diagnostic pop
 #endif
-

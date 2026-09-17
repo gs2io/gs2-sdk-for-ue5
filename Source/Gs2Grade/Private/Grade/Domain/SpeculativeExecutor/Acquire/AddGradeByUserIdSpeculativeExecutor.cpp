@@ -24,8 +24,10 @@
 
 #include "Grade/Domain/SpeculativeExecutor/Acquire/AddGradeByUserIdSpeculativeExecutor.h"
 #include "Grade/Domain/Gs2Grade.h"
+#include "Grade/Domain/SpeculativeExecutor/StatusSpeculativeCommit.h"
 
 #include "Core/Domain/Gs2.h"
+#include "Core/Domain/SpeculativeExecutor/PreparedSpeculativeCommit.h"
 
 namespace Gs2::Grade::Domain::SpeculativeExecutor
 {
@@ -73,59 +75,64 @@ namespace Gs2::Grade::Domain::SpeculativeExecutor
     }
 
     Gs2::Core::Model::FGs2ErrorPtr FAddGradeByUserIdSpeculativeExecutor::FCommitTask::Action(
-        TSharedPtr<TSharedPtr<TFunction<void()>>> Result
+        TSharedPtr<TSharedPtr<Gs2::Core::Domain::SpeculativeExecutor::FPreparedSpeculativeCommit>> Result
     )
     {
-        const auto Future = Domain->Grade->Namespace(
-                Request->GetNamespaceName().IsSet() ? *Request->GetNamespaceName() : FString("")
-            )->AccessToken(
-                AccessToken
-            )->Status(
-                Request->GetGradeName().IsSet() ? *Request->GetGradeName() : FString(""),
-                Request->GetPropertyId().IsSet() ? *Request->GetPropertyId() : FString("")
-            )->Model();
-        Future->StartSynchronousTask();
-        if (Future->GetTask().IsError())
+        *Result = nullptr;
+        Gs2::Auth::Model::FAccessTokenPtr PreparedToken = nullptr;
+        if (AccessToken.IsValid()) PreparedToken = MakeShared<Gs2::Auth::Model::FAccessToken>(*AccessToken);
+        Gs2::Grade::Request::FAddGradeByUserIdRequestPtr PreparedRequest = nullptr;
+        if (Request.IsValid()) PreparedRequest = MakeShared<Gs2::Grade::Request::FAddGradeByUserIdRequest>(*Request);
+        if (!Domain.IsValid() || !Domain->RestSession.IsValid() ||
+            !Domain->Cache.IsValid() || !PreparedToken.IsValid() ||
+            !PreparedRequest.IsValid() || !PreparedToken->GetUserId().IsSet() ||
+            PreparedToken->GetUserId().Get(FString()).IsEmpty()) return nullptr;
+        if (PreparedRequest->GetUserId().IsSet() &&
+            PreparedRequest->GetUserId().Get(FString()) == TEXT("#{userId}"))
         {
-            return Future->GetTask().Error();
+            PreparedRequest->WithUserId(PreparedToken->GetUserId());
         }
-        auto Item = Future->GetTask().Result();
+        if (!PreparedRequest->GetUserId().IsSet() ||
+            PreparedRequest->GetUserId().Get(FString()) != PreparedToken->GetUserId().Get(FString()) ||
+            !PreparedRequest->GetNamespaceName().IsSet() ||
+            PreparedRequest->GetNamespaceName().Get(FString()).IsEmpty() ||
+            !PreparedRequest->GetGradeName().IsSet() ||
+            PreparedRequest->GetGradeName().Get(FString()).IsEmpty() ||
+            !PreparedRequest->GetPropertyId().IsSet() ||
+            PreparedRequest->GetPropertyId().Get(FString()).IsEmpty()) return nullptr;
 
-        if (!Item.IsValid())
-        {
-            *Result = MakeShared<TFunction<void()>>([&]()
+        const auto NamespaceName = PreparedRequest->GetNamespaceName();
+        const auto UserId = PreparedToken->GetUserId();
+        const auto GradeName = PreparedRequest->GetGradeName();
+        const auto TimeOffset = PreparedToken->GetTimeOffset();
+        const auto PropertyId = PreparedRequest->GetPropertyId().Get(FString())
+            .Replace(TEXT("{region}"), *Domain->RestSession->RegionName())
+            .Replace(TEXT("{ownerId}"), *Domain->RestSession->OwnerId())
+            .Replace(TEXT("{userId}"), *UserId.Get(FString()));
+        if (PropertyId.IsEmpty()) return nullptr;
+        const FString ExpectedStatusId = FString::Printf(
+            TEXT("grn:gs2:%s:%s:grade:%s:user:%s:gradeModel:%s:property:%s"),
+            *Domain->RestSession->RegionName(), *Domain->RestSession->OwnerId(),
+            *NamespaceName.Get(FString()), *UserId.Get(FString()),
+            *GradeName.Get(FString()), *PropertyId
+        );
+        *Result = FStatusSpeculativeCommit::Create(
+            Domain->Cache, NamespaceName, UserId, GradeName, PropertyId,
+            TimeOffset, ExpectedStatusId,
+            [PreparedRequest](const Gs2::Grade::Model::FStatusPtr& Source) -> Gs2::Grade::Model::FStatusPtr
             {
-                return nullptr;
-            });
-            return nullptr;
-        }
-        auto Err = Transform(Domain, AccessToken, Request, Item);
-        if (Err != nullptr)
-        {
-            return Err;
-        }
-
-        const auto ParentKey = Model::FUserDomain::CreateCacheParentKey(
-            Request->GetNamespaceName(),
-            AccessToken->GetUserId(),
-            FString("Status")
+                if (!Source->GetGradeValue().IsSet() ||
+                    !PreparedRequest->GetGradeValue().IsSet() ||
+                    *PreparedRequest->GetGradeValue() < 0) return nullptr;
+                const int64 Base = *Source->GetGradeValue();
+                const int64 Delta = *PreparedRequest->GetGradeValue();
+                if (Base > TNumericLimits<int64>::Max() - Delta) return nullptr;
+                const int64 ChangedValue = Base + Delta;
+                if (ChangedValue < 1) return nullptr;
+                return MakeShared<Gs2::Grade::Model::FStatus>(*Source)
+                    ->WithGradeValue(ChangedValue)->WithRevision(0);
+            }
         );
-        const auto Key = Model::FStatusDomain::CreateCacheKey(
-            Request->GetGradeName(),
-            Request->GetPropertyId()
-        );
-
-        *Result = MakeShared<TFunction<void()>>([&]()
-        {
-            Domain->Cache->Put(
-                Grade::Model::FStatus::TypeName,
-                ParentKey,
-                Key,
-                Item,
-                FDateTime::Now() + FTimespan::FromSeconds(10)
-            );
-            return nullptr;
-        });
         return nullptr;
     }
 

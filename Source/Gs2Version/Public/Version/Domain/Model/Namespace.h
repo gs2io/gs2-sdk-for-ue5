@@ -102,6 +102,8 @@ namespace Gs2::Version::Domain::Model
             const FNamespaceDomain& From
         );
 
+
+
         class GS2VERSION_API FGetStatusTask final :
             public Gs2::Core::Util::TGs2Future<Gs2::Version::Domain::Model::FNamespaceDomain>,
             public TSharedFromThis<FGetStatusTask>
@@ -127,6 +129,8 @@ namespace Gs2::Version::Domain::Model
         TSharedPtr<FAsyncTask<FGetStatusTask>> GetStatus(
             Request::FGetNamespaceStatusRequestPtr Request
         );
+
+
 
         class GS2VERSION_API FGetTask final :
             public Gs2::Core::Util::TGs2Future<Gs2::Version::Model::FNamespace>,
@@ -154,6 +158,8 @@ namespace Gs2::Version::Domain::Model
             Request::FGetNamespaceRequestPtr Request
         );
 
+
+
         class GS2VERSION_API FUpdateTask final :
             public Gs2::Core::Util::TGs2Future<Gs2::Version::Domain::Model::FNamespaceDomain>,
             public TSharedFromThis<FUpdateTask>
@@ -180,6 +186,8 @@ namespace Gs2::Version::Domain::Model
             Request::FUpdateNamespaceRequestPtr Request
         );
 
+
+
         class GS2VERSION_API FDeleteTask final :
             public Gs2::Core::Util::TGs2Future<Gs2::Version::Domain::Model::FNamespaceDomain>,
             public TSharedFromThis<FDeleteTask>
@@ -205,6 +213,8 @@ namespace Gs2::Version::Domain::Model
         TSharedPtr<FAsyncTask<FDeleteTask>> Delete(
             Request::FDeleteNamespaceRequestPtr Request
         );
+
+
 
         class GS2VERSION_API FCreateVersionModelMasterTask final :
             public Gs2::Core::Util::TGs2Future<Gs2::Version::Domain::Model::FVersionModelMasterDomain>,
@@ -240,8 +250,33 @@ namespace Gs2::Version::Domain::Model
 
         Gs2::Core::Domain::CallbackID SubscribeVersionModels(
             TFunction<void()> Callback
+
         );
 
+        class FCollectVersionModelsTask;
+
+        Gs2::Core::Domain::CallbackID SubscribeVersionModels(
+            TFunction<void(TArray<Gs2::Version::Model::FVersionModelPtr>)> Callback
+        );
+
+        void InvalidateVersionModels();
+
+        class GS2VERSION_API FSubscribeVersionModelsWithInitialCallTask final :
+            public Gs2::Core::Util::TGs2Future<Gs2::Core::Domain::CallbackID>,
+            public TSharedFromThis<FSubscribeVersionModelsWithInitialCallTask>
+        {
+            const TSharedPtr<FNamespaceDomain> Self;
+            const TFunction<void(TArray<Gs2::Version::Model::FVersionModelPtr>)> Callback;
+
+        public:
+            FSubscribeVersionModelsWithInitialCallTask(const TSharedPtr<FNamespaceDomain>& Self, TFunction<void(TArray<Gs2::Version::Model::FVersionModelPtr>)> Callback);
+            FSubscribeVersionModelsWithInitialCallTask(const FSubscribeVersionModelsWithInitialCallTask& From);
+            virtual Gs2::Core::Model::FGs2ErrorPtr Action(TSharedPtr<TSharedPtr<Gs2::Core::Domain::CallbackID>> Result) override;
+        };
+
+        TSharedPtr<FAsyncTask<FSubscribeVersionModelsWithInitialCallTask>> SubscribeVersionModelsWithInitialCall(
+            TFunction<void(TArray<Gs2::Version::Model::FVersionModelPtr>)> Callback
+        );
         void UnsubscribeVersionModels(
             Gs2::Core::Domain::CallbackID CallbackID
         );
@@ -264,8 +299,33 @@ namespace Gs2::Version::Domain::Model
 
         Gs2::Core::Domain::CallbackID SubscribeVersionModelMasters(
             TFunction<void()> Callback
+
         );
 
+        class FCollectVersionModelMastersTask;
+
+        Gs2::Core::Domain::CallbackID SubscribeVersionModelMasters(
+            TFunction<void(TArray<Gs2::Version::Model::FVersionModelMasterPtr>)> Callback,const TOptional<FString> NamePrefix = TOptional<FString>()
+        );
+
+        void InvalidateVersionModelMasters(const TOptional<FString> NamePrefix = TOptional<FString>());
+
+        class GS2VERSION_API FSubscribeVersionModelMastersWithInitialCallTask final :
+            public Gs2::Core::Util::TGs2Future<Gs2::Core::Domain::CallbackID>,
+            public TSharedFromThis<FSubscribeVersionModelMastersWithInitialCallTask>
+        {
+            const TSharedPtr<FNamespaceDomain> Self;
+            const TFunction<void(TArray<Gs2::Version::Model::FVersionModelMasterPtr>)> Callback;
+        const TOptional<FString> QueryNamePrefix;
+        public:
+            FSubscribeVersionModelMastersWithInitialCallTask(const TSharedPtr<FNamespaceDomain>& Self, TFunction<void(TArray<Gs2::Version::Model::FVersionModelMasterPtr>)> Callback,const TOptional<FString> NamePrefix);
+            FSubscribeVersionModelMastersWithInitialCallTask(const FSubscribeVersionModelMastersWithInitialCallTask& From);
+            virtual Gs2::Core::Model::FGs2ErrorPtr Action(TSharedPtr<TSharedPtr<Gs2::Core::Domain::CallbackID>> Result) override;
+        };
+
+        TSharedPtr<FAsyncTask<FSubscribeVersionModelMastersWithInitialCallTask>> SubscribeVersionModelMastersWithInitialCall(
+            TFunction<void(TArray<Gs2::Version::Model::FVersionModelMasterPtr>)> Callback,const TOptional<FString> NamePrefix = TOptional<FString>()
+        );
         void UnsubscribeVersionModelMasters(
             Gs2::Core::Domain::CallbackID CallbackID
         );
@@ -305,7 +365,34 @@ namespace Gs2::Version::Domain::Model
 
         TSharedPtr<FAsyncTask<FModelTask>> Model();
 
+        void Invalidate();
+
         Gs2::Core::Domain::CallbackID Subscribe(
+            TFunction<void(Gs2::Version::Model::FNamespacePtr)> Callback
+        );
+
+        class GS2VERSION_API FSubscribeWithInitialCallTask final :
+            public Gs2::Core::Util::TGs2Future<Gs2::Core::Domain::CallbackID>,
+            public TSharedFromThis<FSubscribeWithInitialCallTask>
+        {
+            const TSharedPtr<FNamespaceDomain> Self;
+            const TFunction<void(Gs2::Version::Model::FNamespacePtr)> Callback;
+        public:
+            FSubscribeWithInitialCallTask(
+                const TSharedPtr<FNamespaceDomain>& Self,
+                TFunction<void(Gs2::Version::Model::FNamespacePtr)> Callback
+            );
+
+            FSubscribeWithInitialCallTask(
+                const FSubscribeWithInitialCallTask& From
+            );
+
+            virtual Gs2::Core::Model::FGs2ErrorPtr Action(
+                TSharedPtr<TSharedPtr<Gs2::Core::Domain::CallbackID>> Result
+            ) override;
+        };
+
+        TSharedPtr<FAsyncTask<FSubscribeWithInitialCallTask>> SubscribeWithInitialCall(
             TFunction<void(Gs2::Version::Model::FNamespacePtr)> Callback
         );
 

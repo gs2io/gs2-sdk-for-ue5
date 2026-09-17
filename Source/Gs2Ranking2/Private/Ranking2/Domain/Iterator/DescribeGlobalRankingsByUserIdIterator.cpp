@@ -1,3 +1,4 @@
+
 /*
  * Copyright 2016 Game Server Services, Inc. or its affiliates. All Rights
  * Reserved.
@@ -31,6 +32,7 @@
 #include "Ranking2/Domain/Model/GlobalRankingSeason.h"
 
 #include "Core/Domain/Gs2.h"
+#include "Ranking2/Model/Cache/GlobalRankingData.h"
 
 namespace Gs2::Ranking2::Domain::Iterator
 {
@@ -103,20 +105,18 @@ namespace Gs2::Ranking2::Domain::Iterator
 
         if (!RangeIteratorOpt || (!*RangeIteratorOpt && !bLast))
         {
-            const auto ListParentKey = Gs2::Ranking2::Domain::Model::FGlobalRankingSeasonDomain::CreateCacheParentKey(
+            const auto ListParentKey = Gs2::Ranking2::Model::Cache::FGlobalRankingDataCache::CreateCacheParentKey(
                 Self->NamespaceName,
                 Self->RankingName,
                 Self->Season,
-                "GlobalRankingData"
+                TOptional<int32>()
             );
-
             if (!RangeIteratorOpt)
             {
                 Range = Self->Gs2->Cache->TryGetList<Gs2::Ranking2::Model::FGlobalRankingData>(ListParentKey);
 
                 if (Range)
                 {
-                    Range->RemoveAll([this](const Gs2::Ranking2::Model::FGlobalRankingDataPtr& Item) { return Self->UserId && Item->GetUserId() != Self->UserId; });
                     bLast = true;
                     RangeIteratorOpt = Range->CreateIterator();
                     PageToken = TOptional<FString>();
@@ -125,7 +125,7 @@ namespace Gs2::Ranking2::Domain::Iterator
                 }
             }
 
-            const auto Future = Self->Client->DescribeGlobalRankingsByUserId(
+            const auto Request =
                 MakeShared<Gs2::Ranking2::Request::FDescribeGlobalRankingsByUserIdRequest>()
                     ->WithContextStack(Self->Gs2->DefaultContextStack)
                     ->WithNamespaceName(Self->NamespaceName)
@@ -134,7 +134,8 @@ namespace Gs2::Ranking2::Domain::Iterator
                     ->WithSeason(Self->Season)
                     ->WithPageToken(PageToken)
                     ->WithLimit(FetchSize)
-            );
+            ;
+            const auto Future = Self->Client->DescribeGlobalRankingsByUserId(Request);
             Future->StartSynchronousTask();
             if (Future->GetTask().IsError())
             {
@@ -148,22 +149,29 @@ namespace Gs2::Ranking2::Domain::Iterator
             }
             const auto R = Future->GetTask().Result();
             Future->EnsureCompletion();
-            Range = R->GetItems();
-            for (auto Item : *R->GetItems())
+            Range = R->GetItems().IsValid() ? R->GetItems() : MakeShared<TArray<Gs2::Ranking2::Model::FGlobalRankingDataPtr>>();
+            const auto ResultModel = R;
+
+
+            if (Range.IsValid())
             {
-                Self->Gs2->Cache->Put(
-                    Gs2::Ranking2::Model::FGlobalRankingData::TypeName,
-                    ListParentKey,
-                    Gs2::Ranking2::Domain::Model::FGlobalRankingDataDomain::CreateCacheKey(
-                        Item->GetUserId()
-                    ),
-                    Item,
-                    FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
-                );
-            }
-            if (Range)
-            {
-                Range->RemoveAll([this](const Gs2::Ranking2::Model::FGlobalRankingDataPtr& Item) { return Self->UserId && Item->GetUserId() != Self->UserId; });
+                for (const auto& Item : *Range)
+                {
+                    if (!Item.IsValid()) continue;
+                    Gs2::Ranking2::Model::Cache::FGlobalRankingDataCache::Put(
+                        Self->Gs2->Cache,
+                        Request->GetNamespaceName(), Request->GetRankingName(), Item->GetSeason(), Item->GetUserId(),
+                        TOptional<int32>(), Item
+                    );
+                    if (!Request->GetSeason().IsSet())
+                    {
+                        Gs2::Ranking2::Model::Cache::FGlobalRankingDataCache::Put(
+                            Self->Gs2->Cache,
+                            Request->GetNamespaceName(), Request->GetRankingName(), TOptional<int64>(), Item->GetUserId(),
+                            TOptional<int32>(), Item
+                        );
+                    }
+                }
             }
             RangeIteratorOpt = Range->CreateIterator();
             PageToken = R->GetNextPageToken();
@@ -201,4 +209,3 @@ namespace Gs2::Ranking2::Domain::Iterator
 #elif defined(__clang__)
 #pragma clang diagnostic pop
 #endif
-

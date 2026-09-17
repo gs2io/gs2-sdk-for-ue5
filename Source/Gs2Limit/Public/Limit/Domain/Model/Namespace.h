@@ -100,6 +100,8 @@ namespace Gs2::Limit::Domain::Model
             const FNamespaceDomain& From
         );
 
+
+
         class GS2LIMIT_API FGetStatusTask final :
             public Gs2::Core::Util::TGs2Future<Gs2::Limit::Domain::Model::FNamespaceDomain>,
             public TSharedFromThis<FGetStatusTask>
@@ -125,6 +127,8 @@ namespace Gs2::Limit::Domain::Model
         TSharedPtr<FAsyncTask<FGetStatusTask>> GetStatus(
             Request::FGetNamespaceStatusRequestPtr Request
         );
+
+
 
         class GS2LIMIT_API FGetTask final :
             public Gs2::Core::Util::TGs2Future<Gs2::Limit::Model::FNamespace>,
@@ -152,6 +156,8 @@ namespace Gs2::Limit::Domain::Model
             Request::FGetNamespaceRequestPtr Request
         );
 
+
+
         class GS2LIMIT_API FUpdateTask final :
             public Gs2::Core::Util::TGs2Future<Gs2::Limit::Domain::Model::FNamespaceDomain>,
             public TSharedFromThis<FUpdateTask>
@@ -178,6 +184,8 @@ namespace Gs2::Limit::Domain::Model
             Request::FUpdateNamespaceRequestPtr Request
         );
 
+
+
         class GS2LIMIT_API FDeleteTask final :
             public Gs2::Core::Util::TGs2Future<Gs2::Limit::Domain::Model::FNamespaceDomain>,
             public TSharedFromThis<FDeleteTask>
@@ -203,6 +211,8 @@ namespace Gs2::Limit::Domain::Model
         TSharedPtr<FAsyncTask<FDeleteTask>> Delete(
             Request::FDeleteNamespaceRequestPtr Request
         );
+
+
 
         class GS2LIMIT_API FCreateLimitModelMasterTask final :
             public Gs2::Core::Util::TGs2Future<Gs2::Limit::Domain::Model::FLimitModelMasterDomain>,
@@ -238,8 +248,33 @@ namespace Gs2::Limit::Domain::Model
 
         Gs2::Core::Domain::CallbackID SubscribeLimitModels(
             TFunction<void()> Callback
+
         );
 
+        class FCollectLimitModelsTask;
+
+        Gs2::Core::Domain::CallbackID SubscribeLimitModels(
+            TFunction<void(TArray<Gs2::Limit::Model::FLimitModelPtr>)> Callback
+        );
+
+        void InvalidateLimitModels();
+
+        class GS2LIMIT_API FSubscribeLimitModelsWithInitialCallTask final :
+            public Gs2::Core::Util::TGs2Future<Gs2::Core::Domain::CallbackID>,
+            public TSharedFromThis<FSubscribeLimitModelsWithInitialCallTask>
+        {
+            const TSharedPtr<FNamespaceDomain> Self;
+            const TFunction<void(TArray<Gs2::Limit::Model::FLimitModelPtr>)> Callback;
+
+        public:
+            FSubscribeLimitModelsWithInitialCallTask(const TSharedPtr<FNamespaceDomain>& Self, TFunction<void(TArray<Gs2::Limit::Model::FLimitModelPtr>)> Callback);
+            FSubscribeLimitModelsWithInitialCallTask(const FSubscribeLimitModelsWithInitialCallTask& From);
+            virtual Gs2::Core::Model::FGs2ErrorPtr Action(TSharedPtr<TSharedPtr<Gs2::Core::Domain::CallbackID>> Result) override;
+        };
+
+        TSharedPtr<FAsyncTask<FSubscribeLimitModelsWithInitialCallTask>> SubscribeLimitModelsWithInitialCall(
+            TFunction<void(TArray<Gs2::Limit::Model::FLimitModelPtr>)> Callback
+        );
         void UnsubscribeLimitModels(
             Gs2::Core::Domain::CallbackID CallbackID
         );
@@ -262,8 +297,33 @@ namespace Gs2::Limit::Domain::Model
 
         Gs2::Core::Domain::CallbackID SubscribeLimitModelMasters(
             TFunction<void()> Callback
+
         );
 
+        class FCollectLimitModelMastersTask;
+
+        Gs2::Core::Domain::CallbackID SubscribeLimitModelMasters(
+            TFunction<void(TArray<Gs2::Limit::Model::FLimitModelMasterPtr>)> Callback,const TOptional<FString> NamePrefix = TOptional<FString>()
+        );
+
+        void InvalidateLimitModelMasters(const TOptional<FString> NamePrefix = TOptional<FString>());
+
+        class GS2LIMIT_API FSubscribeLimitModelMastersWithInitialCallTask final :
+            public Gs2::Core::Util::TGs2Future<Gs2::Core::Domain::CallbackID>,
+            public TSharedFromThis<FSubscribeLimitModelMastersWithInitialCallTask>
+        {
+            const TSharedPtr<FNamespaceDomain> Self;
+            const TFunction<void(TArray<Gs2::Limit::Model::FLimitModelMasterPtr>)> Callback;
+        const TOptional<FString> QueryNamePrefix;
+        public:
+            FSubscribeLimitModelMastersWithInitialCallTask(const TSharedPtr<FNamespaceDomain>& Self, TFunction<void(TArray<Gs2::Limit::Model::FLimitModelMasterPtr>)> Callback,const TOptional<FString> NamePrefix);
+            FSubscribeLimitModelMastersWithInitialCallTask(const FSubscribeLimitModelMastersWithInitialCallTask& From);
+            virtual Gs2::Core::Model::FGs2ErrorPtr Action(TSharedPtr<TSharedPtr<Gs2::Core::Domain::CallbackID>> Result) override;
+        };
+
+        TSharedPtr<FAsyncTask<FSubscribeLimitModelMastersWithInitialCallTask>> SubscribeLimitModelMastersWithInitialCall(
+            TFunction<void(TArray<Gs2::Limit::Model::FLimitModelMasterPtr>)> Callback,const TOptional<FString> NamePrefix = TOptional<FString>()
+        );
         void UnsubscribeLimitModelMasters(
             Gs2::Core::Domain::CallbackID CallbackID
         );
@@ -303,7 +363,34 @@ namespace Gs2::Limit::Domain::Model
 
         TSharedPtr<FAsyncTask<FModelTask>> Model();
 
+        void Invalidate();
+
         Gs2::Core::Domain::CallbackID Subscribe(
+            TFunction<void(Gs2::Limit::Model::FNamespacePtr)> Callback
+        );
+
+        class GS2LIMIT_API FSubscribeWithInitialCallTask final :
+            public Gs2::Core::Util::TGs2Future<Gs2::Core::Domain::CallbackID>,
+            public TSharedFromThis<FSubscribeWithInitialCallTask>
+        {
+            const TSharedPtr<FNamespaceDomain> Self;
+            const TFunction<void(Gs2::Limit::Model::FNamespacePtr)> Callback;
+        public:
+            FSubscribeWithInitialCallTask(
+                const TSharedPtr<FNamespaceDomain>& Self,
+                TFunction<void(Gs2::Limit::Model::FNamespacePtr)> Callback
+            );
+
+            FSubscribeWithInitialCallTask(
+                const FSubscribeWithInitialCallTask& From
+            );
+
+            virtual Gs2::Core::Model::FGs2ErrorPtr Action(
+                TSharedPtr<TSharedPtr<Gs2::Core::Domain::CallbackID>> Result
+            ) override;
+        };
+
+        TSharedPtr<FAsyncTask<FSubscribeWithInitialCallTask>> SubscribeWithInitialCall(
             TFunction<void(Gs2::Limit::Model::FNamespacePtr)> Callback
         );
 

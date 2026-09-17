@@ -84,6 +84,8 @@ namespace Gs2::Identifier::Domain::Model
             const FUserDomain& From
         );
 
+
+
         class GS2IDENTIFIER_API FUpdateTask final :
             public Gs2::Core::Util::TGs2Future<Gs2::Identifier::Domain::Model::FUserDomain>,
             public TSharedFromThis<FUpdateTask>
@@ -109,6 +111,8 @@ namespace Gs2::Identifier::Domain::Model
         TSharedPtr<FAsyncTask<FUpdateTask>> Update(
             Request::FUpdateUserRequestPtr Request
         );
+
+
 
         class GS2IDENTIFIER_API FGetTask final :
             public Gs2::Core::Util::TGs2Future<Gs2::Identifier::Model::FUser>,
@@ -136,6 +140,8 @@ namespace Gs2::Identifier::Domain::Model
             Request::FGetUserRequestPtr Request
         );
 
+
+
         class GS2IDENTIFIER_API FDeleteTask final :
             public Gs2::Core::Util::TGs2Future<Gs2::Identifier::Domain::Model::FUserDomain>,
             public TSharedFromThis<FDeleteTask>
@@ -161,6 +167,8 @@ namespace Gs2::Identifier::Domain::Model
         TSharedPtr<FAsyncTask<FDeleteTask>> Delete(
             Request::FDeleteUserRequestPtr Request
         );
+
+
 
         class GS2IDENTIFIER_API FCreateIdentifierTask final :
             public Gs2::Core::Util::TGs2Future<Gs2::Identifier::Domain::Model::FIdentifierDomain>,
@@ -195,6 +203,30 @@ namespace Gs2::Identifier::Domain::Model
             TFunction<void()> Callback
         );
 
+        class FCollectIdentifiersTask;
+
+        Gs2::Core::Domain::CallbackID SubscribeIdentifiers(
+            TFunction<void(TArray<Gs2::Identifier::Model::FIdentifierPtr>)> Callback
+        );
+
+        void InvalidateIdentifiers();
+
+        class GS2IDENTIFIER_API FSubscribeIdentifiersWithInitialCallTask final :
+            public Gs2::Core::Util::TGs2Future<Gs2::Core::Domain::CallbackID>,
+            public TSharedFromThis<FSubscribeIdentifiersWithInitialCallTask>
+        {
+            const TSharedPtr<FUserDomain> Self;
+            const TFunction<void(TArray<Gs2::Identifier::Model::FIdentifierPtr>)> Callback;
+
+        public:
+            FSubscribeIdentifiersWithInitialCallTask(const TSharedPtr<FUserDomain>& Self, TFunction<void(TArray<Gs2::Identifier::Model::FIdentifierPtr>)> Callback);
+            FSubscribeIdentifiersWithInitialCallTask(const FSubscribeIdentifiersWithInitialCallTask& From);
+            virtual Gs2::Core::Model::FGs2ErrorPtr Action(TSharedPtr<TSharedPtr<Gs2::Core::Domain::CallbackID>> Result) override;
+        };
+
+        TSharedPtr<FAsyncTask<FSubscribeIdentifiersWithInitialCallTask>> SubscribeIdentifiersWithInitialCall(
+            TFunction<void(TArray<Gs2::Identifier::Model::FIdentifierPtr>)> Callback
+        );
         void UnsubscribeIdentifiers(
             Gs2::Core::Domain::CallbackID CallbackID
         );

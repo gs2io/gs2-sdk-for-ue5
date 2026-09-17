@@ -108,6 +108,8 @@ namespace Gs2::Money2::Domain::Model
             const FUserAccessTokenDomain& From
         );
 
+
+
         class GS2MONEY2_API FVerifyReceiptTask final :
             public Gs2::Core::Util::TGs2Future<Gs2::Money2::Domain::Model::FEventAccessTokenDomain>,
             public TSharedFromThis<FVerifyReceiptTask>
@@ -134,6 +136,8 @@ namespace Gs2::Money2::Domain::Model
             Request::FVerifyReceiptRequestPtr Request
         );
 
+
+
         class GS2MONEY2_API FAllocateSubscriptionStatusTask final :
             public Gs2::Core::Util::TGs2Future<Gs2::Money2::Domain::Model::FSubscriptionStatusAccessTokenDomain>,
             public TSharedFromThis<FAllocateSubscriptionStatusTask>
@@ -159,6 +163,8 @@ namespace Gs2::Money2::Domain::Model
         TSharedPtr<FAsyncTask<FAllocateSubscriptionStatusTask>> AllocateSubscriptionStatus(
             Request::FAllocateSubscriptionStatusRequestPtr Request
         );
+
+
 
         class GS2MONEY2_API FTakeoverSubscriptionStatusTask final :
             public Gs2::Core::Util::TGs2Future<Gs2::Money2::Domain::Model::FSubscriptionStatusAccessTokenDomain>,
@@ -191,8 +197,33 @@ namespace Gs2::Money2::Domain::Model
 
         Gs2::Core::Domain::CallbackID SubscribeWallets(
             TFunction<void()> Callback
+
         );
 
+        class FCollectWalletsTask;
+
+        Gs2::Core::Domain::CallbackID SubscribeWallets(
+            TFunction<void(TArray<Gs2::Money2::Model::FWalletPtr>)> Callback
+        );
+
+        void InvalidateWallets();
+
+        class GS2MONEY2_API FSubscribeWalletsWithInitialCallTask final :
+            public Gs2::Core::Util::TGs2Future<Gs2::Core::Domain::CallbackID>,
+            public TSharedFromThis<FSubscribeWalletsWithInitialCallTask>
+        {
+            const TSharedPtr<FUserAccessTokenDomain> Self;
+            const TFunction<void(TArray<Gs2::Money2::Model::FWalletPtr>)> Callback;
+
+        public:
+            FSubscribeWalletsWithInitialCallTask(const TSharedPtr<FUserAccessTokenDomain>& Self, TFunction<void(TArray<Gs2::Money2::Model::FWalletPtr>)> Callback);
+            FSubscribeWalletsWithInitialCallTask(const FSubscribeWalletsWithInitialCallTask& From);
+            virtual Gs2::Core::Model::FGs2ErrorPtr Action(TSharedPtr<TSharedPtr<Gs2::Core::Domain::CallbackID>> Result) override;
+        };
+
+        TSharedPtr<FAsyncTask<FSubscribeWalletsWithInitialCallTask>> SubscribeWalletsWithInitialCall(
+            TFunction<void(TArray<Gs2::Money2::Model::FWalletPtr>)> Callback
+        );
         void UnsubscribeWallets(
             Gs2::Core::Domain::CallbackID CallbackID
         );
@@ -210,8 +241,33 @@ namespace Gs2::Money2::Domain::Model
 
         Gs2::Core::Domain::CallbackID SubscribeSubscriptionStatuses(
             TFunction<void()> Callback
+
         );
 
+        class FCollectSubscriptionStatusesTask;
+
+        Gs2::Core::Domain::CallbackID SubscribeSubscriptionStatuses(
+            TFunction<void(TArray<Gs2::Money2::Model::FSubscriptionStatusPtr>)> Callback
+        );
+
+        void InvalidateSubscriptionStatuses();
+
+        class GS2MONEY2_API FSubscribeSubscriptionStatusesWithInitialCallTask final :
+            public Gs2::Core::Util::TGs2Future<Gs2::Core::Domain::CallbackID>,
+            public TSharedFromThis<FSubscribeSubscriptionStatusesWithInitialCallTask>
+        {
+            const TSharedPtr<FUserAccessTokenDomain> Self;
+            const TFunction<void(TArray<Gs2::Money2::Model::FSubscriptionStatusPtr>)> Callback;
+
+        public:
+            FSubscribeSubscriptionStatusesWithInitialCallTask(const TSharedPtr<FUserAccessTokenDomain>& Self, TFunction<void(TArray<Gs2::Money2::Model::FSubscriptionStatusPtr>)> Callback);
+            FSubscribeSubscriptionStatusesWithInitialCallTask(const FSubscribeSubscriptionStatusesWithInitialCallTask& From);
+            virtual Gs2::Core::Model::FGs2ErrorPtr Action(TSharedPtr<TSharedPtr<Gs2::Core::Domain::CallbackID>> Result) override;
+        };
+
+        TSharedPtr<FAsyncTask<FSubscribeSubscriptionStatusesWithInitialCallTask>> SubscribeSubscriptionStatusesWithInitialCall(
+            TFunction<void(TArray<Gs2::Money2::Model::FSubscriptionStatusPtr>)> Callback
+        );
         void UnsubscribeSubscriptionStatuses(
             Gs2::Core::Domain::CallbackID CallbackID
         );

@@ -12,8 +12,6 @@
  * on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either
  * express or implied. See the License for the specific language governing
  * permissions and limitations under the License.
- *
- * deny overwrite
  */
 
 // ReSharper disable CppUnusedIncludeDirective
@@ -106,6 +104,8 @@ namespace Gs2::Friend::Domain::Model
             const FUserAccessTokenDomain& From
         );
 
+
+
         class GS2FRIEND_API FSendRequestTask final :
             public Gs2::Core::Util::TGs2Future<Gs2::Friend::Domain::Model::FSendFriendRequestAccessTokenDomain>,
             public TSharedFromThis<FSendRequestTask>
@@ -153,13 +153,37 @@ namespace Gs2::Friend::Domain::Model
         ) const;
 
         Gs2::Core::Domain::CallbackID SubscribeFriends(
-            TFunction<void()> Callback,
-            const TOptional<bool> WithProfile
+            TFunction<void()> Callback
+            , const TOptional<bool> WithProfile = TOptional<bool>()
         );
 
+        class FCollectFriendsTask;
+
+        Gs2::Core::Domain::CallbackID SubscribeFriends(
+            TFunction<void(TArray<Gs2::Friend::Model::FFriendUserPtr>)> Callback,const TOptional<bool> WithProfile = TOptional<bool>()
+        );
+
+        void InvalidateFriends(const TOptional<bool> WithProfile = TOptional<bool>());
+
+        class GS2FRIEND_API FSubscribeFriendsWithInitialCallTask final :
+            public Gs2::Core::Util::TGs2Future<Gs2::Core::Domain::CallbackID>,
+            public TSharedFromThis<FSubscribeFriendsWithInitialCallTask>
+        {
+            const TSharedPtr<FUserAccessTokenDomain> Self;
+            const TFunction<void(TArray<Gs2::Friend::Model::FFriendUserPtr>)> Callback;
+        const TOptional<bool> QueryWithProfile;
+        public:
+            FSubscribeFriendsWithInitialCallTask(const TSharedPtr<FUserAccessTokenDomain>& Self, TFunction<void(TArray<Gs2::Friend::Model::FFriendUserPtr>)> Callback,const TOptional<bool> WithProfile);
+            FSubscribeFriendsWithInitialCallTask(const FSubscribeFriendsWithInitialCallTask& From);
+            virtual Gs2::Core::Model::FGs2ErrorPtr Action(TSharedPtr<TSharedPtr<Gs2::Core::Domain::CallbackID>> Result) override;
+        };
+
+        TSharedPtr<FAsyncTask<FSubscribeFriendsWithInitialCallTask>> SubscribeFriendsWithInitialCall(
+            TFunction<void(TArray<Gs2::Friend::Model::FFriendUserPtr>)> Callback,const TOptional<bool> WithProfile = TOptional<bool>()
+        );
         void UnsubscribeFriends(
-            Gs2::Core::Domain::CallbackID CallbackID,
-            const TOptional<bool> WithProfile
+
+            Gs2::Core::Domain::CallbackID CallbackID, const TOptional<bool> WithProfile = TOptional<bool>()
         );
 
         TSharedPtr<Gs2::Friend::Domain::Model::FFriendAccessTokenDomain> Friend(
@@ -167,13 +191,37 @@ namespace Gs2::Friend::Domain::Model
         );
 
         Gs2::Friend::Domain::Iterator::FDescribeSendRequestsIteratorPtr SendRequests(
-            const TOptional<bool> WithProfile = TOptional<bool>()
         ) const;
 
         Gs2::Core::Domain::CallbackID SubscribeSendRequests(
             TFunction<void()> Callback
+
         );
 
+        class FCollectSendRequestsTask;
+
+        Gs2::Core::Domain::CallbackID SubscribeSendRequests(
+            TFunction<void(TArray<Gs2::Friend::Model::FSendFriendRequestPtr>)> Callback
+        );
+
+        void InvalidateSendRequests();
+
+        class GS2FRIEND_API FSubscribeSendRequestsWithInitialCallTask final :
+            public Gs2::Core::Util::TGs2Future<Gs2::Core::Domain::CallbackID>,
+            public TSharedFromThis<FSubscribeSendRequestsWithInitialCallTask>
+        {
+            const TSharedPtr<FUserAccessTokenDomain> Self;
+            const TFunction<void(TArray<Gs2::Friend::Model::FSendFriendRequestPtr>)> Callback;
+
+        public:
+            FSubscribeSendRequestsWithInitialCallTask(const TSharedPtr<FUserAccessTokenDomain>& Self, TFunction<void(TArray<Gs2::Friend::Model::FSendFriendRequestPtr>)> Callback);
+            FSubscribeSendRequestsWithInitialCallTask(const FSubscribeSendRequestsWithInitialCallTask& From);
+            virtual Gs2::Core::Model::FGs2ErrorPtr Action(TSharedPtr<TSharedPtr<Gs2::Core::Domain::CallbackID>> Result) override;
+        };
+
+        TSharedPtr<FAsyncTask<FSubscribeSendRequestsWithInitialCallTask>> SubscribeSendRequestsWithInitialCall(
+            TFunction<void(TArray<Gs2::Friend::Model::FSendFriendRequestPtr>)> Callback
+        );
         void UnsubscribeSendRequests(
             Gs2::Core::Domain::CallbackID CallbackID
         );
@@ -183,13 +231,37 @@ namespace Gs2::Friend::Domain::Model
         );
 
         Gs2::Friend::Domain::Iterator::FDescribeReceiveRequestsIteratorPtr ReceiveRequests(
-            const TOptional<bool> WithProfile = TOptional<bool>()
         ) const;
 
         Gs2::Core::Domain::CallbackID SubscribeReceiveRequests(
             TFunction<void()> Callback
+
         );
 
+        class FCollectReceiveRequestsTask;
+
+        Gs2::Core::Domain::CallbackID SubscribeReceiveRequests(
+            TFunction<void(TArray<Gs2::Friend::Model::FReceiveFriendRequestPtr>)> Callback
+        );
+
+        void InvalidateReceiveRequests();
+
+        class GS2FRIEND_API FSubscribeReceiveRequestsWithInitialCallTask final :
+            public Gs2::Core::Util::TGs2Future<Gs2::Core::Domain::CallbackID>,
+            public TSharedFromThis<FSubscribeReceiveRequestsWithInitialCallTask>
+        {
+            const TSharedPtr<FUserAccessTokenDomain> Self;
+            const TFunction<void(TArray<Gs2::Friend::Model::FReceiveFriendRequestPtr>)> Callback;
+
+        public:
+            FSubscribeReceiveRequestsWithInitialCallTask(const TSharedPtr<FUserAccessTokenDomain>& Self, TFunction<void(TArray<Gs2::Friend::Model::FReceiveFriendRequestPtr>)> Callback);
+            FSubscribeReceiveRequestsWithInitialCallTask(const FSubscribeReceiveRequestsWithInitialCallTask& From);
+            virtual Gs2::Core::Model::FGs2ErrorPtr Action(TSharedPtr<TSharedPtr<Gs2::Core::Domain::CallbackID>> Result) override;
+        };
+
+        TSharedPtr<FAsyncTask<FSubscribeReceiveRequestsWithInitialCallTask>> SubscribeReceiveRequestsWithInitialCall(
+            TFunction<void(TArray<Gs2::Friend::Model::FReceiveFriendRequestPtr>)> Callback
+        );
         void UnsubscribeReceiveRequests(
             Gs2::Core::Domain::CallbackID CallbackID
         );

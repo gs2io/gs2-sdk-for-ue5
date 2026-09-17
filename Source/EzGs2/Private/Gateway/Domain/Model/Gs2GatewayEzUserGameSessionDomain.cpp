@@ -56,22 +56,22 @@ namespace Gs2::UE5::Gateway::Domain::Model
 
     }
 
-    Gs2::UE5::Gateway::Domain::Model::FEzWebSocketSessionGameSessionDomainPtr FEzUserGameSessionDomain::WebSocketSession(
+    Gs2::UE5::Gateway::Domain::Model::FEzFirebaseTokenGameSessionDomainPtr FEzUserGameSessionDomain::FirebaseToken(
     ) const
     {
-        return MakeShared<Gs2::UE5::Gateway::Domain::Model::FEzWebSocketSessionGameSessionDomain>(
-            Domain->WebSocketSession(
+        return MakeShared<Gs2::UE5::Gateway::Domain::Model::FEzFirebaseTokenGameSessionDomain>(
+            Domain->FirebaseToken(
             ),
             GameSession,
             ConnectionValue
         );
     }
 
-    Gs2::UE5::Gateway::Domain::Model::FEzFirebaseTokenGameSessionDomainPtr FEzUserGameSessionDomain::FirebaseToken(
+    Gs2::UE5::Gateway::Domain::Model::FEzWebSocketSessionGameSessionDomainPtr FEzUserGameSessionDomain::WebSocketSession(
     ) const
     {
-        return MakeShared<Gs2::UE5::Gateway::Domain::Model::FEzFirebaseTokenGameSessionDomain>(
-            Domain->FirebaseToken(
+        return MakeShared<Gs2::UE5::Gateway::Domain::Model::FEzWebSocketSessionGameSessionDomain>(
+            Domain->WebSocketSession(
             ),
             GameSession,
             ConnectionValue

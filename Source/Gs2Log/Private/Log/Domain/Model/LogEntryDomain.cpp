@@ -269,17 +269,26 @@ namespace Gs2::Log::Domain::Model
     )
     {
         const auto ParentKey = FString("log:LogEntry");
-        // ReSharper disable once CppLocalVariableMayBeConst
-        TSharedPtr<Gs2::Log::Model::FLogEntry> Value;
-        auto bCacheHit = Self->Gs2->Cache->TryGet<Gs2::Log::Model::FLogEntry>(
-            ParentKey,
-            Gs2::Log::Domain::Model::FLogEntryDomain::CreateCacheKey(
-            ),
-            &Value
+        const FString CacheKey = Gs2::Log::Domain::Model::FLogEntryDomain::CreateCacheKey(
         );
-        *Result = Value;
+        return Self->Gs2->Cache->ExecuteWithKeyLock(
+            Gs2::Log::Model::FLogEntry::TypeName,
+            ParentKey,
+            CacheKey,
+            [this, Result, CacheKey, ParentKey]() -> Gs2::Core::Model::FGs2ErrorPtr
+            {
+                // ReSharper disable once CppLocalVariableMayBeConst
+                TSharedPtr<Gs2::Log::Model::FLogEntry> Value;
+                auto bCacheHit = Self->Gs2->Cache->TryGet<Gs2::Log::Model::FLogEntry>(
+                    ParentKey,
+                    CacheKey,
+                    &Value
+                );
+                *Result = Value;
 
-        return nullptr;
+                return nullptr;
+            }
+        );
     }
 
     TSharedPtr<FAsyncTask<FLogEntryDomain::FModelTask>> FLogEntryDomain::Model() {

@@ -153,7 +153,7 @@ namespace Gs2::UE5::Auth::Domain::Model
     Gs2::Core::Domain::CallbackID FEzAccessTokenDomain::Subscribe(TFunction<void(Gs2::UE5::Auth::Model::FEzAccessTokenPtr)> Callback)
     {
         return Domain->Subscribe(
-            [&](Gs2::Auth::Model::FAccessTokenPtr Item)
+            [Callback](Gs2::Auth::Model::FAccessTokenPtr Item)
             {
                 Callback(Gs2::UE5::Auth::Model::FEzAccessToken::FromModel(Item));
             }

@@ -100,6 +100,8 @@ namespace Gs2::SkillTree::Domain::Model
             const FNamespaceDomain& From
         );
 
+
+
         class GS2SKILLTREE_API FGetStatusTask final :
             public Gs2::Core::Util::TGs2Future<Gs2::SkillTree::Domain::Model::FNamespaceDomain>,
             public TSharedFromThis<FGetStatusTask>
@@ -125,6 +127,8 @@ namespace Gs2::SkillTree::Domain::Model
         TSharedPtr<FAsyncTask<FGetStatusTask>> GetStatus(
             Request::FGetNamespaceStatusRequestPtr Request
         );
+
+
 
         class GS2SKILLTREE_API FGetTask final :
             public Gs2::Core::Util::TGs2Future<Gs2::SkillTree::Model::FNamespace>,
@@ -152,6 +156,8 @@ namespace Gs2::SkillTree::Domain::Model
             Request::FGetNamespaceRequestPtr Request
         );
 
+
+
         class GS2SKILLTREE_API FUpdateTask final :
             public Gs2::Core::Util::TGs2Future<Gs2::SkillTree::Domain::Model::FNamespaceDomain>,
             public TSharedFromThis<FUpdateTask>
@@ -178,6 +184,8 @@ namespace Gs2::SkillTree::Domain::Model
             Request::FUpdateNamespaceRequestPtr Request
         );
 
+
+
         class GS2SKILLTREE_API FDeleteTask final :
             public Gs2::Core::Util::TGs2Future<Gs2::SkillTree::Domain::Model::FNamespaceDomain>,
             public TSharedFromThis<FDeleteTask>
@@ -203,6 +211,8 @@ namespace Gs2::SkillTree::Domain::Model
         TSharedPtr<FAsyncTask<FDeleteTask>> Delete(
             Request::FDeleteNamespaceRequestPtr Request
         );
+
+
 
         class GS2SKILLTREE_API FCreateNodeModelMasterTask final :
             public Gs2::Core::Util::TGs2Future<Gs2::SkillTree::Domain::Model::FNodeModelMasterDomain>,
@@ -238,8 +248,33 @@ namespace Gs2::SkillTree::Domain::Model
 
         Gs2::Core::Domain::CallbackID SubscribeNodeModels(
             TFunction<void()> Callback
+
         );
 
+        class FCollectNodeModelsTask;
+
+        Gs2::Core::Domain::CallbackID SubscribeNodeModels(
+            TFunction<void(TArray<Gs2::SkillTree::Model::FNodeModelPtr>)> Callback
+        );
+
+        void InvalidateNodeModels();
+
+        class GS2SKILLTREE_API FSubscribeNodeModelsWithInitialCallTask final :
+            public Gs2::Core::Util::TGs2Future<Gs2::Core::Domain::CallbackID>,
+            public TSharedFromThis<FSubscribeNodeModelsWithInitialCallTask>
+        {
+            const TSharedPtr<FNamespaceDomain> Self;
+            const TFunction<void(TArray<Gs2::SkillTree::Model::FNodeModelPtr>)> Callback;
+
+        public:
+            FSubscribeNodeModelsWithInitialCallTask(const TSharedPtr<FNamespaceDomain>& Self, TFunction<void(TArray<Gs2::SkillTree::Model::FNodeModelPtr>)> Callback);
+            FSubscribeNodeModelsWithInitialCallTask(const FSubscribeNodeModelsWithInitialCallTask& From);
+            virtual Gs2::Core::Model::FGs2ErrorPtr Action(TSharedPtr<TSharedPtr<Gs2::Core::Domain::CallbackID>> Result) override;
+        };
+
+        TSharedPtr<FAsyncTask<FSubscribeNodeModelsWithInitialCallTask>> SubscribeNodeModelsWithInitialCall(
+            TFunction<void(TArray<Gs2::SkillTree::Model::FNodeModelPtr>)> Callback
+        );
         void UnsubscribeNodeModels(
             Gs2::Core::Domain::CallbackID CallbackID
         );
@@ -254,8 +289,33 @@ namespace Gs2::SkillTree::Domain::Model
 
         Gs2::Core::Domain::CallbackID SubscribeNodeModelMasters(
             TFunction<void()> Callback
+
         );
 
+        class FCollectNodeModelMastersTask;
+
+        Gs2::Core::Domain::CallbackID SubscribeNodeModelMasters(
+            TFunction<void(TArray<Gs2::SkillTree::Model::FNodeModelMasterPtr>)> Callback,const TOptional<FString> NamePrefix = TOptional<FString>()
+        );
+
+        void InvalidateNodeModelMasters(const TOptional<FString> NamePrefix = TOptional<FString>());
+
+        class GS2SKILLTREE_API FSubscribeNodeModelMastersWithInitialCallTask final :
+            public Gs2::Core::Util::TGs2Future<Gs2::Core::Domain::CallbackID>,
+            public TSharedFromThis<FSubscribeNodeModelMastersWithInitialCallTask>
+        {
+            const TSharedPtr<FNamespaceDomain> Self;
+            const TFunction<void(TArray<Gs2::SkillTree::Model::FNodeModelMasterPtr>)> Callback;
+        const TOptional<FString> QueryNamePrefix;
+        public:
+            FSubscribeNodeModelMastersWithInitialCallTask(const TSharedPtr<FNamespaceDomain>& Self, TFunction<void(TArray<Gs2::SkillTree::Model::FNodeModelMasterPtr>)> Callback,const TOptional<FString> NamePrefix);
+            FSubscribeNodeModelMastersWithInitialCallTask(const FSubscribeNodeModelMastersWithInitialCallTask& From);
+            virtual Gs2::Core::Model::FGs2ErrorPtr Action(TSharedPtr<TSharedPtr<Gs2::Core::Domain::CallbackID>> Result) override;
+        };
+
+        TSharedPtr<FAsyncTask<FSubscribeNodeModelMastersWithInitialCallTask>> SubscribeNodeModelMastersWithInitialCall(
+            TFunction<void(TArray<Gs2::SkillTree::Model::FNodeModelMasterPtr>)> Callback,const TOptional<FString> NamePrefix = TOptional<FString>()
+        );
         void UnsubscribeNodeModelMasters(
             Gs2::Core::Domain::CallbackID CallbackID
         );
@@ -303,7 +363,34 @@ namespace Gs2::SkillTree::Domain::Model
 
         TSharedPtr<FAsyncTask<FModelTask>> Model();
 
+        void Invalidate();
+
         Gs2::Core::Domain::CallbackID Subscribe(
+            TFunction<void(Gs2::SkillTree::Model::FNamespacePtr)> Callback
+        );
+
+        class GS2SKILLTREE_API FSubscribeWithInitialCallTask final :
+            public Gs2::Core::Util::TGs2Future<Gs2::Core::Domain::CallbackID>,
+            public TSharedFromThis<FSubscribeWithInitialCallTask>
+        {
+            const TSharedPtr<FNamespaceDomain> Self;
+            const TFunction<void(Gs2::SkillTree::Model::FNamespacePtr)> Callback;
+        public:
+            FSubscribeWithInitialCallTask(
+                const TSharedPtr<FNamespaceDomain>& Self,
+                TFunction<void(Gs2::SkillTree::Model::FNamespacePtr)> Callback
+            );
+
+            FSubscribeWithInitialCallTask(
+                const FSubscribeWithInitialCallTask& From
+            );
+
+            virtual Gs2::Core::Model::FGs2ErrorPtr Action(
+                TSharedPtr<TSharedPtr<Gs2::Core::Domain::CallbackID>> Result
+            ) override;
+        };
+
+        TSharedPtr<FAsyncTask<FSubscribeWithInitialCallTask>> SubscribeWithInitialCall(
             TFunction<void(Gs2::SkillTree::Model::FNamespacePtr)> Callback
         );
 

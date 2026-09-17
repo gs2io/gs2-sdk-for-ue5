@@ -1,3 +1,4 @@
+
 /*
  * Copyright 2016 Game Server Services, Inc. or its affiliates. All Rights
  * Reserved.
@@ -29,6 +30,9 @@
 #include "Guild/Domain/Model/Guild.h"
 
 #include "Core/Domain/Gs2.h"
+
+#include "Guild/Model/Cache/IgnoreUser.h"
+#include "Guild/Model/Cache/Guild.h"
 
 namespace Gs2::Guild::Domain::Iterator
 {
@@ -81,7 +85,7 @@ namespace Gs2::Guild::Domain::Iterator
 
     FDescribeIgnoreUsersByGuildNameIterator::FIterator& FDescribeIgnoreUsersByGuildNameIterator::FIterator::operator++()
     {
-        
+
 
         if (bEnd) return *this;
 
@@ -91,17 +95,18 @@ namespace Gs2::Guild::Domain::Iterator
             return *this;
         }
 
-        if (RangeIteratorOpt) ++*RangeIteratorOpt;
+        if (RangeIteratorOpt && *RangeIteratorOpt) ++*RangeIteratorOpt;
 
+        // Keep the previous page alive until its iterator has been replaced.
+        const auto PreviousRange = Range;
         if (!RangeIteratorOpt || (!*RangeIteratorOpt && !bLast))
         {
-            const auto ListParentKey = Gs2::Guild::Domain::Model::FGuildDomain::CreateCacheParentKey(
+            const auto ListParentKey = Gs2::Guild::Model::Cache::FIgnoreUserCache::CreateCacheParentKey(
                 Self->NamespaceName,
                 Self->GuildModelName,
                 Self->GuildName,
-                "IgnoreUser"
+                TOptional<int32>()
             );
-
             if (!RangeIteratorOpt)
             {
                 Range = Self->Gs2->Cache->TryGetList<Gs2::Guild::Model::FIgnoreUser>(ListParentKey);
@@ -115,8 +120,7 @@ namespace Gs2::Guild::Domain::Iterator
                     return *this;
                 }
             }
-
-            const auto Future = Self->Client->DescribeIgnoreUsersByGuildName(
+            const auto Request =
                 MakeShared<Gs2::Guild::Request::FDescribeIgnoreUsersByGuildNameRequest>()
                     ->WithContextStack(Self->Gs2->DefaultContextStack)
                     ->WithNamespaceName(Self->NamespaceName)
@@ -124,7 +128,8 @@ namespace Gs2::Guild::Domain::Iterator
                     ->WithGuildName(Self->GuildName)
                     ->WithPageToken(PageToken)
                     ->WithLimit(FetchSize)
-            );
+            ;
+            const auto Future = Self->Client->DescribeIgnoreUsersByGuildName(Request);
             Future->StartSynchronousTask();
             if (Future->GetTask().IsError())
             {
@@ -138,17 +143,21 @@ namespace Gs2::Guild::Domain::Iterator
             }
             const auto R = Future->GetTask().Result();
             Future->EnsureCompletion();
-            Range = R->GetItems();
-            for (auto Item : *R->GetItems())
+            Range = R->GetItems().IsValid() ? R->GetItems() : MakeShared<TArray<Gs2::Guild::Model::FIgnoreUserPtr>>();
+            const auto ResultModel = R;
+
+
+            if (Range.IsValid())
             {
-                Self->Gs2->Cache->Put(
-                    Gs2::Guild::Model::FIgnoreUser::TypeName,
-                    ListParentKey,
-                    Gs2::Guild::Domain::Model::FIgnoreUserDomain::CreateCacheKey(
-                    ),
-                    Item,
-                    FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
-                );
+                for (const auto& Item : *Range)
+                {
+                    if (!Item.IsValid()) continue;
+                    Gs2::Guild::Model::Cache::FIgnoreUserCache::Put(
+                        Self->Gs2->Cache,
+                        Request->GetNamespaceName(), Request->GetGuildModelName(), Request->GetGuildName(),
+                        TOptional<int32>(), Item
+                    );
+                }
             }
             if (Range)
             {

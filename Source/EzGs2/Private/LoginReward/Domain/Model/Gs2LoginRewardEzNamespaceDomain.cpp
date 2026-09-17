@@ -75,7 +75,8 @@ namespace Gs2::UE5::LoginReward::Domain::Model
         );
     }
 
-    void FEzNamespaceDomain::UnsubscribeBonusModels(Gs2::Core::Domain::CallbackID CallbackId)
+    void FEzNamespaceDomain::UnsubscribeBonusModels(
+            Gs2::Core::Domain::CallbackID CallbackId)
     {
         Domain->UnsubscribeBonusModels(
             CallbackId

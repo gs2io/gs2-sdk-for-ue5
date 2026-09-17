@@ -39,7 +39,8 @@ namespace Gs2::Core::Domain
 		if (!bSkipCallback) {
 			Gs2->JobQueueDomain->JobQueueExecutedEventHandler(
 				Job,
-				Result
+				Result,
+				AccessToken.IsValid() ? AccessToken->GetTimeOffset() : TOptional<int32>()
 			);
 		}
             
@@ -72,6 +73,7 @@ namespace Gs2::Core::Domain
 				Gs2,
 				NewJobQueueDomain,
 				NewTransactionDomain,
+				Dispatch,
 				AccessToken,
 				NextTransactions
 			);
@@ -93,6 +95,9 @@ namespace Gs2::Core::Domain
 			bool bAtomicCommit,
 			Gs2::Core::Model::FTransactionResultPtr TransactionResult
 		)>& NewTransactionDomain,
+		const TFunction<Gs2::Core::Model::FGs2ErrorPtr(
+			const Gs2::Auth::Model::FAccessTokenPtr& AccessToken
+		)>& Dispatch,
 		const Gs2::Auth::Model::FAccessTokenPtr& AccessToken,
 		const FString NamespaceName,
 		const FString JobName
@@ -101,6 +106,7 @@ namespace Gs2::Core::Domain
 			Gs2,
 			NewJobQueueDomain,
 			NewTransactionDomain,
+			Dispatch,
 			AccessToken,
 			nullptr
 		),
@@ -117,6 +123,7 @@ namespace Gs2::Core::Domain
 			From.Gs2,
 			From.NewJobQueueDomain,
 			From.NewTransactionDomain,
+			From.Dispatch,
 			From.AccessToken,
 			nullptr
 		),
@@ -206,5 +213,10 @@ namespace Gs2::Core::Domain
 		) {
 			return WaitImpl(All, Result);
 		});
+	}
+
+	TOptional<FString> FAutoJobQueueAccessTokenDomain::GetJobName() const
+	{
+		return JobName;
 	}
 }

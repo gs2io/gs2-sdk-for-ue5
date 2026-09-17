@@ -1,3 +1,4 @@
+
 /*
  * Copyright 2016 Game Server Services, Inc. or its affiliates. All Rights
  * Reserved.
@@ -29,6 +30,9 @@
 #include "SeasonRating/Domain/Model/Namespace.h"
 
 #include "Core/Domain/Gs2.h"
+
+#include "SeasonRating/Model/Cache/MatchSession.h"
+#include "SeasonRating/Model/Cache/Namespace.h"
 
 namespace Gs2::SeasonRating::Domain::Iterator
 {
@@ -75,7 +79,7 @@ namespace Gs2::SeasonRating::Domain::Iterator
 
     FDescribeMatchSessionsIterator::FIterator& FDescribeMatchSessionsIterator::FIterator::operator++()
     {
-        
+
 
         if (bEnd) return *this;
 
@@ -85,15 +89,16 @@ namespace Gs2::SeasonRating::Domain::Iterator
             return *this;
         }
 
-        if (RangeIteratorOpt) ++*RangeIteratorOpt;
+        if (RangeIteratorOpt && *RangeIteratorOpt) ++*RangeIteratorOpt;
 
+        // Keep the previous page alive until its iterator has been replaced.
+        const auto PreviousRange = Range;
         if (!RangeIteratorOpt || (!*RangeIteratorOpt && !bLast))
         {
-            const auto ListParentKey = Gs2::SeasonRating::Domain::Model::FNamespaceDomain::CreateCacheParentKey(
+            const auto ListParentKey = Gs2::SeasonRating::Model::Cache::FMatchSessionCache::CreateCacheParentKey(
                 Self->NamespaceName,
-                "MatchSession"
+                TOptional<int32>()
             );
-
             if (!RangeIteratorOpt)
             {
                 Range = Self->Gs2->Cache->TryGetList<Gs2::SeasonRating::Model::FMatchSession>(ListParentKey);
@@ -107,14 +112,14 @@ namespace Gs2::SeasonRating::Domain::Iterator
                     return *this;
                 }
             }
-
-            const auto Future = Self->Client->DescribeMatchSessions(
+            const auto Request =
                 MakeShared<Gs2::SeasonRating::Request::FDescribeMatchSessionsRequest>()
                     ->WithContextStack(Self->Gs2->DefaultContextStack)
                     ->WithNamespaceName(Self->NamespaceName)
                     ->WithPageToken(PageToken)
                     ->WithLimit(FetchSize)
-            );
+            ;
+            const auto Future = Self->Client->DescribeMatchSessions(Request);
             Future->StartSynchronousTask();
             if (Future->GetTask().IsError())
             {
@@ -128,18 +133,21 @@ namespace Gs2::SeasonRating::Domain::Iterator
             }
             const auto R = Future->GetTask().Result();
             Future->EnsureCompletion();
-            Range = R->GetItems();
-            for (auto Item : *R->GetItems())
+            Range = R->GetItems().IsValid() ? R->GetItems() : MakeShared<TArray<Gs2::SeasonRating::Model::FMatchSessionPtr>>();
+            const auto ResultModel = R;
+
+
+            if (Range.IsValid())
             {
-                Self->Gs2->Cache->Put(
-                    Gs2::SeasonRating::Model::FMatchSession::TypeName,
-                    ListParentKey,
-                    Gs2::SeasonRating::Domain::Model::FMatchSessionDomain::CreateCacheKey(
-                        Item->GetName()
-                    ),
-                    Item,
-                    FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
-                );
+                for (const auto& Item : *Range)
+                {
+                    if (!Item.IsValid()) continue;
+                    Gs2::SeasonRating::Model::Cache::FMatchSessionCache::Put(
+                        Self->Gs2->Cache,
+                        Request->GetNamespaceName(), Item->GetName(),
+                        TOptional<int32>(), Item
+                    );
+                }
             }
             if (Range)
             {

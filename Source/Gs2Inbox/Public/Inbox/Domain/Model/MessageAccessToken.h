@@ -83,6 +83,8 @@ namespace Gs2::Inbox::Domain::Model
             const FMessageAccessTokenDomain& From
         );
 
+
+
         class GS2INBOX_API FGetTask final :
             public Gs2::Core::Util::TGs2Future<Gs2::Inbox::Model::FMessage>,
             public TSharedFromThis<FGetTask>
@@ -109,6 +111,8 @@ namespace Gs2::Inbox::Domain::Model
             Request::FGetMessageRequestPtr Request
         );
 
+
+
         class GS2INBOX_API FOpenTask final :
             public Gs2::Core::Util::TGs2Future<Gs2::Inbox::Domain::Model::FMessageAccessTokenDomain>,
             public TSharedFromThis<FOpenTask>
@@ -134,6 +138,8 @@ namespace Gs2::Inbox::Domain::Model
         TSharedPtr<FAsyncTask<FOpenTask>> Open(
             Request::FOpenMessageRequestPtr Request
         );
+
+
 
         class GS2INBOX_API FReadTask final :
             public Gs2::Core::Util::TGs2Future<Gs2::Core::Domain::FTransactionAccessTokenDomain>,
@@ -163,6 +169,8 @@ namespace Gs2::Inbox::Domain::Model
             Request::FReadMessageRequestPtr Request,
             bool SpeculativeExecute = true
         );
+
+
 
         class GS2INBOX_API FDeleteTask final :
             public Gs2::Core::Util::TGs2Future<Gs2::Inbox::Domain::Model::FMessageAccessTokenDomain>,

@@ -89,7 +89,7 @@ namespace Gs2::UE5::Guild::Domain::Model
     Gs2::Core::Domain::CallbackID FEzLastGuildMasterActivityGameSessionDomain::Subscribe(TFunction<void(Gs2::UE5::Guild::Model::FEzLastGuildMasterActivityPtr)> Callback)
     {
         return Domain->Subscribe(
-            [&](Gs2::Guild::Model::FLastGuildMasterActivityPtr Item)
+            [Callback](Gs2::Guild::Model::FLastGuildMasterActivityPtr Item)
             {
                 Callback(Gs2::UE5::Guild::Model::FEzLastGuildMasterActivity::FromModel(Item));
             }

@@ -21,6 +21,7 @@
 #include "GenericPlatform/GenericPlatformHttp.h"
 #include "Core/Gs2Constant.h"
 #include "Core/Net/Rest/Gs2RestSession.h"
+#include "Core/Net/Rest/RestResponseState.h"
 #include "Interfaces/IHttpResponse.h"
 
 namespace Gs2::Gateway::Task::Rest
@@ -49,21 +50,20 @@ namespace Gs2::Gateway::Task::Rest
             return MakeShared<Core::Model::FSessionNotOpenError>(Details);
         }
 
-        auto Processing = true;
-        int32 ResponseCode;
-        FString ResponseBody;
+        const auto Completion = MakeShared<Core::Net::Rest::FRestResponseState, ESPMode::ThreadSafe>();
         {
             const auto request = FHttpModule::Get().CreateRequest();
             request->OnProcessRequestComplete().BindLambda(
-                [&Processing, &ResponseCode, &ResponseBody](FHttpRequestPtr _, FHttpResponsePtr Response, bool Successful)
+                [Completion](FHttpRequestPtr _, FHttpResponsePtr Response, bool Successful)
                 {
-                    if (Successful) {
-                        ResponseCode = Response->GetResponseCode();
-                        ResponseBody = Response->GetContentAsString();
-                    } else {
-                        ResponseCode = 999;
+                    if (Successful && Response.IsValid())
+                    {
+                        Completion->Complete(Response->GetResponseCode(), Response->GetContentAsString());
                     }
-                    Processing = false;
+                    else
+                    {
+                        Completion->Complete(999, FString());
+                    }
                 }
             );
             auto Url = Core::FGs2Constant::EndpointHost
@@ -90,9 +90,17 @@ namespace Gs2::Gateway::Task::Rest
             {
                 JsonRootObject->SetObjectField(TEXT("transactionSetting"), this->Request->GetTransactionSetting()->ToJson());
             }
+            if (this->Request->GetTransactionSettingV2() != nullptr && this->Request->GetTransactionSettingV2().IsValid())
+            {
+                JsonRootObject->SetObjectField(TEXT("transactionSettingV2"), this->Request->GetTransactionSettingV2()->ToJson());
+            }
             if (this->Request->GetFirebaseSecret().IsSet())
             {
                 JsonRootObject->SetStringField(TEXT("firebaseSecret"), this->Request->GetFirebaseSecret().GetValue());
+            }
+            if (this->Request->GetFirebaseProjectId().IsSet())
+            {
+                JsonRootObject->SetStringField(TEXT("firebaseProjectId"), this->Request->GetFirebaseProjectId().GetValue());
             }
             if (this->Request->GetLogSetting() != nullptr && this->Request->GetLogSetting().IsValid())
             {
@@ -119,10 +127,18 @@ namespace Gs2::Gateway::Task::Rest
         }
         else
         {
-            while (Processing)
+            while (!Completion->IsComplete())
             {
                 FPlatformProcess::Sleep(0.01f);
             }
+        }
+
+        int32 ResponseCode = 999;
+        FString ResponseBody;
+        if (!Completion->TryGetResponse(ResponseCode, ResponseBody))
+        {
+            const auto Details = MakeShared<TArray<TSharedPtr<Core::Model::FGs2ErrorDetail>>>();
+            return MakeShared<Core::Model::FUnknownError>(Details);
         }
 
         if (ResponseCode / 100 == 2)

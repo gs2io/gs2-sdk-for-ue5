@@ -72,6 +72,8 @@ namespace Gs2::Deploy::Domain::Model
             const FResourceDomain& From
         );
 
+
+
         class GS2DEPLOY_API FGetTask final :
             public Gs2::Core::Util::TGs2Future<Gs2::Deploy::Model::FResource>,
             public TSharedFromThis<FGetTask>
@@ -130,7 +132,34 @@ namespace Gs2::Deploy::Domain::Model
 
         TSharedPtr<FAsyncTask<FModelTask>> Model();
 
+        void Invalidate();
+
         Gs2::Core::Domain::CallbackID Subscribe(
+            TFunction<void(Gs2::Deploy::Model::FResourcePtr)> Callback
+        );
+
+        class GS2DEPLOY_API FSubscribeWithInitialCallTask final :
+            public Gs2::Core::Util::TGs2Future<Gs2::Core::Domain::CallbackID>,
+            public TSharedFromThis<FSubscribeWithInitialCallTask>
+        {
+            const TSharedPtr<FResourceDomain> Self;
+            const TFunction<void(Gs2::Deploy::Model::FResourcePtr)> Callback;
+        public:
+            FSubscribeWithInitialCallTask(
+                const TSharedPtr<FResourceDomain>& Self,
+                TFunction<void(Gs2::Deploy::Model::FResourcePtr)> Callback
+            );
+
+            FSubscribeWithInitialCallTask(
+                const FSubscribeWithInitialCallTask& From
+            );
+
+            virtual Gs2::Core::Model::FGs2ErrorPtr Action(
+                TSharedPtr<TSharedPtr<Gs2::Core::Domain::CallbackID>> Result
+            ) override;
+        };
+
+        TSharedPtr<FAsyncTask<FSubscribeWithInitialCallTask>> SubscribeWithInitialCall(
             TFunction<void(Gs2::Deploy::Model::FResourcePtr)> Callback
         );
 

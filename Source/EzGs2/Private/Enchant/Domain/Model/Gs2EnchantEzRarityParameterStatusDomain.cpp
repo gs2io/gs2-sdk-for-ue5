@@ -92,7 +92,7 @@ namespace Gs2::UE5::Enchant::Domain::Model
     Gs2::Core::Domain::CallbackID FEzRarityParameterStatusDomain::Subscribe(TFunction<void(Gs2::UE5::Enchant::Model::FEzRarityParameterStatusPtr)> Callback)
     {
         return Domain->Subscribe(
-            [&](Gs2::Enchant::Model::FRarityParameterStatusPtr Item)
+            [Callback](Gs2::Enchant::Model::FRarityParameterStatusPtr Item)
             {
                 Callback(Gs2::UE5::Enchant::Model::FEzRarityParameterStatus::FromModel(Item));
             }

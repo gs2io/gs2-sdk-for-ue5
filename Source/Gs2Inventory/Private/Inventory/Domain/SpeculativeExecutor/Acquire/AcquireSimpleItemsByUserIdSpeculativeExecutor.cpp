@@ -27,154 +27,164 @@
 #include "Inventory/Domain/SpeculativeExecutor/Acquire/AcquireSimpleItemsByUserIdSpeculativeExecutor.h"
 
 #include "Core/Domain/Gs2.h"
-#include "Inventory/Domain/Gs2Inventory.h"
+#include "Core/Domain/SpeculativeExecutor/PreparedSpeculativeCommit.h"
+#include "Inventory/Domain/SpeculativeExecutor/SimpleItemMutationSpeculativeCommit.h"
 
 namespace Gs2::Inventory::Domain::SpeculativeExecutor
 {
+using Private::FSimpleItemBatchSpeculativeCommit;
+using Private::FSimpleItemMutationSpeculativeCommit;
+using Private::FSimpleItemRate;
 
-    FString FAcquireSimpleItemsByUserIdSpeculativeExecutor::Action()
-    {
-        return FString("Gs2Inventory:AcquireSimpleItemsByUserId");
-    }
+FString FAcquireSimpleItemsByUserIdSpeculativeExecutor::Action()
+{
+    return FString("Gs2Inventory:AcquireSimpleItemsByUserId");
+}
 
-    Gs2::Core::Model::FGs2ErrorPtr FAcquireSimpleItemsByUserIdSpeculativeExecutor::Transform(
-        const Gs2::Core::Domain::FGs2Ptr& Domain,
-        const Gs2::Auth::Model::FAccessTokenPtr& AccessToken,
-        const Gs2::Inventory::Request::FAcquireSimpleItemsByUserIdRequestPtr& Request,
-        TSharedPtr<TArray<Gs2::Inventory::Model::FSimpleItemPtr>> Items
-    )
+Gs2::Core::Model::FGs2ErrorPtr FAcquireSimpleItemsByUserIdSpeculativeExecutor::Transform(
+    const Gs2::Core::Domain::FGs2Ptr&, const Gs2::Auth::Model::FAccessTokenPtr&,
+    const Gs2::Inventory::Request::FAcquireSimpleItemsByUserIdRequestPtr&,
+    TSharedPtr<TArray<Gs2::Inventory::Model::FSimpleItemPtr>>
+)
+{
+    return nullptr;
+}
+
+FAcquireSimpleItemsByUserIdSpeculativeExecutor::FCommitTask::FCommitTask(
+    const Gs2::Core::Domain::FGs2Ptr& Domain,
+    const Gs2::Inventory::Domain::FGs2InventoryDomainPtr& Service,
+    const Gs2::Auth::Model::FAccessTokenPtr& AccessToken,
+    const Gs2::Inventory::Request::FAcquireSimpleItemsByUserIdRequestPtr& Request
+): Domain(Domain), Service(Service), AccessToken(AccessToken), Request(Request) {}
+
+FAcquireSimpleItemsByUserIdSpeculativeExecutor::FCommitTask::FCommitTask(const FCommitTask& From):
+    Domain(From.Domain), Service(From.Service), AccessToken(From.AccessToken), Request(From.Request) {}
+
+Gs2::Core::Model::FGs2ErrorPtr FAcquireSimpleItemsByUserIdSpeculativeExecutor::FCommitTask::Action(
+    TSharedPtr<TSharedPtr<Gs2::Core::Domain::SpeculativeExecutor::FPreparedSpeculativeCommit>> Result
+)
+{
+    *Result = nullptr;
+    Gs2::Auth::Model::FAccessTokenPtr Token = nullptr;
+    if (AccessToken.IsValid()) Token = MakeShared<Gs2::Auth::Model::FAccessToken>(*AccessToken);
+    Gs2::Inventory::Request::FAcquireSimpleItemsByUserIdRequestPtr Prepared = nullptr;
+    if (Request.IsValid()) Prepared = MakeShared<Gs2::Inventory::Request::FAcquireSimpleItemsByUserIdRequest>(*Request);
+    if (Prepared.IsValid() && Prepared->GetAcquireCounts().IsValid())
     {
-        for (auto AcquireCount : *Request->GetAcquireCounts())
+        auto Snapshot = MakeShared<TArray<TSharedPtr<Gs2::Inventory::Model::FAcquireCount>>>();
+        for (const auto& Entry : *Prepared->GetAcquireCounts())
         {
-            auto Item = Items->FilterByPredicate([AcquireCount](Inventory::Model::FSimpleItemPtr V)
-            {
-                return V->GetItemName() == AcquireCount->GetItemName();
-            });
-            if (Item.Num() == 0) {
-                Item.Add(
-                    MakeShared<Gs2::Inventory::Model::FSimpleItem>()
-                        ->WithItemName(AcquireCount->GetItemName())
-                        ->WithCount(0)
-                        ->WithRevision(0)
-                );
-            }
-            auto First = Item[0];
-            First->WithCount(*First->GetCount() + *AcquireCount->GetCount());
-            *Items = Items->FilterByPredicate([AcquireCount](Inventory::Model::FSimpleItemPtr V)
-            {
-                return V->GetItemName() != AcquireCount->GetItemName();
-            });
-            Items->Add(First);
+            TSharedPtr<Gs2::Inventory::Model::FAcquireCount> Copy = nullptr;
+            if (Entry.IsValid()) Copy = MakeShared<Gs2::Inventory::Model::FAcquireCount>(*Entry);
+            Snapshot->Add(Copy);
         }
-        Items->Sort([](const Inventory::Model::FSimpleItemPtr& V1, const Inventory::Model::FSimpleItemPtr& V2)
-        {
-            return V1->GetItemName()->Compare(*V2->GetItemName()) < 0;
-        });
+        Prepared->WithAcquireCounts(Snapshot);
+    }
+    if (!Domain.IsValid() || !Domain->RestSession.IsValid() || !Domain->Cache.IsValid() ||
+        !Token.IsValid() || !Prepared.IsValid() || !Token->GetUserId().IsSet() ||
+        Token->GetUserId().Get(FString()).IsEmpty()) return nullptr;
+    if (Prepared->GetUserId().IsSet() && Prepared->GetUserId().Get(FString()) == TEXT("#{userId}"))
+        Prepared->WithUserId(Token->GetUserId());
+    if (!Prepared->GetUserId().IsSet() || Prepared->GetUserId().Get(FString()) != Token->GetUserId().Get(FString()) ||
+        !Prepared->GetNamespaceName().IsSet() || !Prepared->GetInventoryName().IsSet() ||
+        !Prepared->GetAcquireCounts().IsValid()) return nullptr;
+
+    const auto NamespaceName = Prepared->GetNamespaceName();
+    if (Prepared->GetAcquireCounts()->Num() == 0)
+    {
+        *Result = Gs2::Core::Domain::SpeculativeExecutor::FPreparedSpeculativeCommit::WrapLegacy(
+            MakeShared<TFunction<void()>>([]() {})
+        );
         return nullptr;
     }
-
-    FAcquireSimpleItemsByUserIdSpeculativeExecutor::FCommitTask::FCommitTask(
-        const Gs2::Core::Domain::FGs2Ptr& Domain,
-        const Gs2::Inventory::Domain::FGs2InventoryDomainPtr& Service,
-        const Gs2::Auth::Model::FAccessTokenPtr& AccessToken,
-        const Gs2::Inventory::Request::FAcquireSimpleItemsByUserIdRequestPtr& Request
-    ):
-        Domain(Domain),
-        Service(Service),
-        AccessToken(AccessToken),
-        Request(Request)
+    const auto InventoryName = Prepared->GetInventoryName();
+    const auto UserId = Token->GetUserId();
+    const auto TimeOffset = Token->GetTimeOffset();
+    TArray<TSharedPtr<FSimpleItemMutationSpeculativeCommit>> Commits;
+    for (const auto& Entry : *Prepared->GetAcquireCounts())
     {
-
-    }
-
-    FAcquireSimpleItemsByUserIdSpeculativeExecutor::FCommitTask::FCommitTask(
-        const FCommitTask& From
-    ):
-        Domain(From.Domain),
-        Service(From.Service),
-        AccessToken(From.AccessToken),
-        Request(From.Request)
-    {
-
-    }
-
-    Gs2::Core::Model::FGs2ErrorPtr FAcquireSimpleItemsByUserIdSpeculativeExecutor::FCommitTask::Action(
-        TSharedPtr<TSharedPtr<TFunction<void()>>> Result
-    )
-    {
-        const auto It = Domain->Inventory->Namespace(
-                Request->GetNamespaceName().IsSet() ? *Request->GetNamespaceName() : FString("")
-            )->AccessToken(
-                AccessToken
-            )->SimpleInventory(
-                Request->GetInventoryName().IsSet() ? *Request->GetInventoryName() : FString("")
-            )->SimpleItems();
-        auto Items = MakeShared<TArray<Gs2::Inventory::Model::FSimpleItemPtr>>();
-        for (auto Item : *It)
-        {
-            if (Item->IsError())
+        if (!Entry.IsValid() || !Entry->GetItemName().IsSet() || !Entry->GetCount().IsSet()) continue;
+        const FString ItemName = Entry->GetItemName().Get(FString());
+        const FString ExpectedId = Private::SimpleItemExpectedId(
+            Domain->RestSession->RegionName(), Domain->RestSession->OwnerId(), NamespaceName.Get(FString()),
+            UserId.Get(FString()), InventoryName.Get(FString()), ItemName
+        );
+        Gs2::Inventory::Model::FSimpleItemPtr Cached;
+        const bool Found = Gs2::Inventory::Model::Cache::FSimpleItemCache::TryGet(
+            Domain->Cache, NamespaceName, UserId, InventoryName, ItemName, TimeOffset, &Cached
+        );
+        if (!Found) continue;
+        const bool Tombstone = !Cached.IsValid();
+        Gs2::Inventory::Model::FSimpleItemPtr Item = Cached;
+        if (!Item.IsValid()) Item = FSimpleItemMutationSpeculativeCommit::KnownZero(ExpectedId, UserId.Get(FString()), ItemName);
+        if (!Item->GetItemId().IsSet() || Item->GetItemId().Get(FString()) != ExpectedId ||
+            !Item->GetUserId().IsSet() || Item->GetUserId().Get(FString()) != UserId.Get(FString()) ||
+            !Item->GetItemName().IsSet() || Item->GetItemName().Get(FString()) != ItemName ||
+            !Item->GetCount().IsSet()) continue;
+        const int64 Delta = Entry->GetCount().Get(0);
+        Commits.Add(MakeShared<FSimpleItemMutationSpeculativeCommit>(
+            Domain->Cache, NamespaceName, UserId.Get(FString()), InventoryName.Get(FString()), ItemName,
+            TimeOffset, ExpectedId, Item->GetRevision(), Tombstone,
+            [Delta](const Gs2::Inventory::Model::FSimpleItemPtr& Current)
             {
-                return Item->Error();
+                if (!Current.IsValid() || !Current->GetCount().IsSet()) return Gs2::Inventory::Model::FSimpleItemPtr(nullptr);
+                const int64 Base = Current->GetCount().Get(0);
+                if ((Delta > 0 && Base > MAX_int64 - Delta) || (Delta < 0 && Base < MIN_int64 - Delta))
+                    return Gs2::Inventory::Model::FSimpleItemPtr(nullptr);
+                return MakeShared<Gs2::Inventory::Model::FSimpleItem>(*Current)->WithCount(Base + Delta)->WithRevision(0);
             }
-            Items->Add(Item->Current());
-        }
-
-        auto Err = Transform(Domain, AccessToken, Request, Items);
-        if (Err != nullptr)
-        {
-            return Err;
-        }
-
-        *Result = MakeShared<TFunction<void()>>([&]()
-        {
-            for (auto Item : *Items)
-            {
-                const auto ParentKey = Model::FSimpleInventoryDomain::CreateCacheParentKey(
-                    Request->GetNamespaceName(),
-                    AccessToken->GetUserId(),
-                    Request->GetInventoryName(),
-                    FString("SimpleItem")
-                );
-                const auto Key = Model::FSimpleItemDomain::CreateCacheKey(
-                    Item->GetItemName()
-                );
-
-                Domain->Cache->Put(
-                    Inventory::Model::FSimpleItem::TypeName,
-                    ParentKey,
-                    Key,
-                    Item,
-                    FDateTime::Now() + FTimespan::FromSeconds(10)
-                );
-            }
-            return nullptr;
-        });
-        return nullptr;
+        ));
     }
+    if (Prepared->GetAcquireCounts()->Num() > 0 && Commits.Num() == 0) return nullptr;
+    const FString BatchKey = Gs2::Inventory::Model::Cache::FSimpleItemCache::CreateCacheParentKey(
+        NamespaceName, UserId, InventoryName, TimeOffset
+    );
+    const TMap<FString, int64> NoAbsoluteSets;
+    const auto Batch = MakeShared<FSimpleItemBatchSpeculativeCommit>(BatchKey, Commits, NoAbsoluteSets, false, false);
+    *Result = Gs2::Core::Domain::SpeculativeExecutor::FPreparedSpeculativeCommit::CreateComposable(
+        Batch->CompositionKey(),
+        [Batch](const TSharedPtr<void>& Current, const bool HasCurrent, TSharedPtr<void>& Next)
+        { return Batch->TryCompose(Current, HasCurrent, Next); },
+        [Batch](const TSharedPtr<void>& State) { Batch->Commit(State); }
+    );
+    return nullptr;
+}
 
-    TSharedPtr<FAsyncTask<FAcquireSimpleItemsByUserIdSpeculativeExecutor::FCommitTask>> FAcquireSimpleItemsByUserIdSpeculativeExecutor::Execute(
-        const Gs2::Core::Domain::FGs2Ptr& Domain,
-        const Gs2::Inventory::Domain::FGs2InventoryDomainPtr& Service,
-        const Gs2::Auth::Model::FAccessTokenPtr& AccessToken,
-        const Gs2::Inventory::Request::FAcquireSimpleItemsByUserIdRequestPtr& Request
-    )
+TSharedPtr<FAsyncTask<FAcquireSimpleItemsByUserIdSpeculativeExecutor::FCommitTask>> FAcquireSimpleItemsByUserIdSpeculativeExecutor::Execute(
+    const Gs2::Core::Domain::FGs2Ptr& Domain, const Gs2::Inventory::Domain::FGs2InventoryDomainPtr& Service,
+    const Gs2::Auth::Model::FAccessTokenPtr& AccessToken,
+    const Gs2::Inventory::Request::FAcquireSimpleItemsByUserIdRequestPtr& Request)
+{
+    return Gs2::Core::Util::New<FAsyncTask<FCommitTask>>(Domain, Service, AccessToken, Request);
+}
+
+Gs2::Inventory::Request::FAcquireSimpleItemsByUserIdRequestPtr FAcquireSimpleItemsByUserIdSpeculativeExecutor::Rate(
+    const Gs2::Inventory::Request::FAcquireSimpleItemsByUserIdRequestPtr& Request, const double Rate)
+{
+    if (!Request.IsValid() || !Request->GetAcquireCounts().IsValid()) return nullptr;
+    for (const auto& Entry : *Request->GetAcquireCounts())
     {
-        return Gs2::Core::Util::New<FAsyncTask<FCommitTask>>(Domain, Service, AccessToken, Request);
+        if (!Entry.IsValid() || !Entry->GetCount().IsSet()) continue;
+        FSimpleItemRate Count = FSimpleItemRate::FromInt64(Entry->GetCount().Get(0));
+        FSimpleItemRate Value;
+        if (!FSimpleItemRate::TryApplyRate(Count, Rate, Value)) return nullptr;
+        Entry->WithCount(FSimpleItemRate::SaturateToInt64(Value));
     }
+    return Request;
+}
 
-    Gs2::Inventory::Request::FAcquireSimpleItemsByUserIdRequestPtr FAcquireSimpleItemsByUserIdSpeculativeExecutor::Rate(
-        const Gs2::Inventory::Request::FAcquireSimpleItemsByUserIdRequestPtr& Request,
-        const double Rate
-    )
+Gs2::Inventory::Request::FAcquireSimpleItemsByUserIdRequestPtr FAcquireSimpleItemsByUserIdSpeculativeExecutor::Rate(
+    const Gs2::Inventory::Request::FAcquireSimpleItemsByUserIdRequestPtr& Request, TBigInt<1024, false> Rate)
+{
+    if (!Request.IsValid() || !Request->GetAcquireCounts().IsValid()) return nullptr;
+    for (const auto& Entry : *Request->GetAcquireCounts())
     {
-        return Request;
+        if (!Entry.IsValid() || !Entry->GetCount().IsSet()) continue;
+        FSimpleItemRate Count = FSimpleItemRate::FromInt64(Entry->GetCount().Get(0));
+        FSimpleItemRate Value;
+        if (!FSimpleItemRate::TryApplyRate(Count, Rate.ToString(), Value)) return nullptr;
+        Entry->WithCount(FSimpleItemRate::SaturateToInt64(Value));
     }
-
-    Gs2::Inventory::Request::FAcquireSimpleItemsByUserIdRequestPtr FAcquireSimpleItemsByUserIdSpeculativeExecutor::Rate(
-        const Gs2::Inventory::Request::FAcquireSimpleItemsByUserIdRequestPtr& Request,
-        TBigInt<1024, false> Rate
-    )
-    {
-        return Request;
-    }
+    return Request;
+}
 }

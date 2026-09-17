@@ -371,6 +371,30 @@ namespace Gs2::Guild::Domain::Model
             TFunction<void()> Callback
         );
 
+        class FCollectReceiveRequestsTask;
+
+        Gs2::Core::Domain::CallbackID SubscribeReceiveRequests(
+            TFunction<void(TArray<Gs2::Guild::Model::FReceiveMemberRequestPtr>)> Callback
+        );
+
+        void InvalidateReceiveRequests();
+
+        class GS2GUILD_API FSubscribeReceiveRequestsWithInitialCallTask final :
+            public Gs2::Core::Util::TGs2Future<Gs2::Core::Domain::CallbackID>,
+            public TSharedFromThis<FSubscribeReceiveRequestsWithInitialCallTask>
+        {
+            const TSharedPtr<FGuildAccessTokenDomain> Self;
+            const TFunction<void(TArray<Gs2::Guild::Model::FReceiveMemberRequestPtr>)> Callback;
+
+        public:
+            FSubscribeReceiveRequestsWithInitialCallTask(const TSharedPtr<FGuildAccessTokenDomain>& Self, TFunction<void(TArray<Gs2::Guild::Model::FReceiveMemberRequestPtr>)> Callback);
+            FSubscribeReceiveRequestsWithInitialCallTask(const FSubscribeReceiveRequestsWithInitialCallTask& From);
+            virtual Gs2::Core::Model::FGs2ErrorPtr Action(TSharedPtr<TSharedPtr<Gs2::Core::Domain::CallbackID>> Result) override;
+        };
+
+        TSharedPtr<FAsyncTask<FSubscribeReceiveRequestsWithInitialCallTask>> SubscribeReceiveRequestsWithInitialCall(
+            TFunction<void(TArray<Gs2::Guild::Model::FReceiveMemberRequestPtr>)> Callback
+        );
         void UnsubscribeReceiveRequests(
             Gs2::Core::Domain::CallbackID CallbackID
         );
@@ -386,6 +410,30 @@ namespace Gs2::Guild::Domain::Model
             TFunction<void()> Callback
         );
 
+        class FCollectIgnoreUsersTask;
+
+        Gs2::Core::Domain::CallbackID SubscribeIgnoreUsers(
+            TFunction<void(TArray<Gs2::Guild::Model::FIgnoreUserPtr>)> Callback
+        );
+
+        void InvalidateIgnoreUsers();
+
+        class GS2GUILD_API FSubscribeIgnoreUsersWithInitialCallTask final :
+            public Gs2::Core::Util::TGs2Future<Gs2::Core::Domain::CallbackID>,
+            public TSharedFromThis<FSubscribeIgnoreUsersWithInitialCallTask>
+        {
+            const TSharedPtr<FGuildAccessTokenDomain> Self;
+            const TFunction<void(TArray<Gs2::Guild::Model::FIgnoreUserPtr>)> Callback;
+
+        public:
+            FSubscribeIgnoreUsersWithInitialCallTask(const TSharedPtr<FGuildAccessTokenDomain>& Self, TFunction<void(TArray<Gs2::Guild::Model::FIgnoreUserPtr>)> Callback);
+            FSubscribeIgnoreUsersWithInitialCallTask(const FSubscribeIgnoreUsersWithInitialCallTask& From);
+            virtual Gs2::Core::Model::FGs2ErrorPtr Action(TSharedPtr<TSharedPtr<Gs2::Core::Domain::CallbackID>> Result) override;
+        };
+
+        TSharedPtr<FAsyncTask<FSubscribeIgnoreUsersWithInitialCallTask>> SubscribeIgnoreUsersWithInitialCall(
+            TFunction<void(TArray<Gs2::Guild::Model::FIgnoreUserPtr>)> Callback
+        );
         void UnsubscribeIgnoreUsers(
             Gs2::Core::Domain::CallbackID CallbackID
         );

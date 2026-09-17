@@ -31,6 +31,7 @@
 #include "Ranking/Domain/Model/RankingCategory.h"
 
 #include "Core/Domain/Gs2.h"
+#include "Ranking/Model/Cache/Ranking.h"
 
 namespace Gs2::Ranking::Domain::Iterator
 {
@@ -100,12 +101,12 @@ namespace Gs2::Ranking::Domain::Iterator
 
         if (!RangeIteratorOpt || (!*RangeIteratorOpt && !bLast))
         {
-            const auto ListParentKey = Gs2::Ranking::Domain::Model::FRankingCategoryDomain::CreateCacheParentKey(
+            const auto ListParentKey = Gs2::Ranking::Model::Cache::FRankingCache::CreateCacheParentKey(
                 Self->NamespaceName,
                 Self->UserId(),
                 Self->CategoryName,
                 Self->AdditionalScopeName,
-                "Ranking"
+                Self->AccessToken.IsValid() ? Self->AccessToken->GetTimeOffset() : TOptional<int32>()
             );
 
             if (!RangeIteratorOpt)
@@ -146,17 +147,12 @@ namespace Gs2::Ranking::Domain::Iterator
             const auto R = Future->GetTask().Result();
             Future->EnsureCompletion();
             Range = R->GetItems();
-            for (auto Item : *R->GetItems())
+            for (const auto& Item : *R->GetItems())
             {
-                Self->Gs2->Cache->Put(
-                    Gs2::Ranking::Model::FRanking::TypeName,
-                    ListParentKey,
-                    Gs2::Ranking::Domain::Model::FRankingDomain::CreateCacheKey(
-                        Item->GetUserId(),
-                        Item->GetIndex()
-                    ),
-                    Item,
-                    FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
+                Gs2::Ranking::Model::Cache::FRankingCache::Put(
+                    Self->Gs2->Cache, Self->NamespaceName, Self->UserId(), Self->CategoryName,
+                    Self->AdditionalScopeName, Item->GetUserId(), Item->GetIndex(),
+                    Self->AccessToken.IsValid() ? Self->AccessToken->GetTimeOffset() : TOptional<int32>(), Item
                 );
             }
             if (Range)

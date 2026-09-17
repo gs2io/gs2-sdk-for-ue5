@@ -126,6 +126,34 @@ namespace Gs2::Freeze::Domain::Model
 
         TSharedPtr<FAsyncTask<FModelTask>> Model();
 
+        class GS2FREEZE_API FSubscribeWithInitialCallTask final :
+            public Gs2::Core::Util::TGs2Future<Gs2::Core::Domain::CallbackID>,
+            public TSharedFromThis<FSubscribeWithInitialCallTask>
+        {
+            const TSharedPtr<FOutputDomain> Self;
+            const TFunction<void(Gs2::Freeze::Model::FOutputPtr)> Callback;
+        public:
+            explicit FSubscribeWithInitialCallTask(
+                const TSharedPtr<FOutputDomain> Self,
+                const TFunction<void(Gs2::Freeze::Model::FOutputPtr)>& Callback
+            );
+
+            FSubscribeWithInitialCallTask(
+                const FSubscribeWithInitialCallTask& From
+            );
+
+            virtual Gs2::Core::Model::FGs2ErrorPtr Action(
+                TSharedPtr<TSharedPtr<Gs2::Core::Domain::CallbackID>> Result
+            ) override;
+        };
+        friend FSubscribeWithInitialCallTask;
+
+        TSharedPtr<FAsyncTask<FSubscribeWithInitialCallTask>> SubscribeWithInitialCall(
+            TFunction<void(Gs2::Freeze::Model::FOutputPtr)> Callback
+        );
+
+        void Invalidate();
+
         Gs2::Core::Domain::CallbackID Subscribe(
             TFunction<void(Gs2::Freeze::Model::FOutputPtr)> Callback
         );

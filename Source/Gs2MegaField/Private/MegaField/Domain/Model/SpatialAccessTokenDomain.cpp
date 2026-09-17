@@ -452,19 +452,28 @@ namespace Gs2::MegaField::Domain::Model
         TSharedPtr<TSharedPtr<Gs2::MegaField::Model::FSpatial>> Result
     )
     {
-        // ReSharper disable once CppLocalVariableMayBeConst
-        TSharedPtr<Gs2::MegaField::Model::FSpatial> Value;
-        auto bCacheHit = Self->Gs2->Cache->TryGet<Gs2::MegaField::Model::FSpatial>(
-            Self->ParentKey,
-            Gs2::MegaField::Domain::Model::FSpatialDomain::CreateCacheKey(
-                Self->AreaModelName,
-                Self->LayerModelName
-            ),
-            &Value
+        const FString CacheKey = Gs2::MegaField::Domain::Model::FSpatialDomain::CreateCacheKey(
+            Self->AreaModelName,
+            Self->LayerModelName
         );
-        *Result = Value;
+        return Self->Gs2->Cache->ExecuteWithKeyLock(
+            Gs2::MegaField::Model::FSpatial::TypeName,
+            Self->ParentKey,
+            CacheKey,
+            [this, Result, CacheKey]() -> Gs2::Core::Model::FGs2ErrorPtr
+            {
+                // ReSharper disable once CppLocalVariableMayBeConst
+                TSharedPtr<Gs2::MegaField::Model::FSpatial> Value;
+                auto bCacheHit = Self->Gs2->Cache->TryGet<Gs2::MegaField::Model::FSpatial>(
+                    Self->ParentKey,
+                    CacheKey,
+                    &Value
+                );
+                *Result = Value;
 
-        return nullptr;
+                return nullptr;
+            }
+        );
     }
 
     TSharedPtr<FAsyncTask<FSpatialAccessTokenDomain::FModelTask>> FSpatialAccessTokenDomain::Model() {

@@ -36,8 +36,25 @@ namespace Gs2::Core::Net::WebSocket::Task
 
     Model::FGs2ErrorPtr FWebSocketOpenTask::Action(TSharedPtr<TSharedPtr<Result::FOpenTaskResult>> Result)
     {
+        const bool bProjectTokenCredential = Session->Credential()->IsProjectTokenCredential();
         Session->Connect();
-        if (!Session->SocketValue->IsConnected() || !Session->Results.Contains(Session->LoginTaskId))
+        if (!bProjectTokenCredential && Session->Results.Contains(Session->LoginTaskId))
+        {
+            const auto WebSocketResult = *Session->Results.Find(Session->LoginTaskId);
+
+            Session->Mutex->Lock();
+            Session->Results.Remove(Session->LoginTaskId);
+            Session->Mutex->Unlock();
+
+            if (WebSocketResult->IsError())
+            {
+                return WebSocketResult->Error();
+            }
+
+            *Result = MakeShared<Result::FOpenTaskResult>();
+            return nullptr;
+        }
+        if (!Session->SocketValue.IsValid() || !Session->SocketValue->IsConnected())
         {
             auto Detail = MakeShared<TArray<Model::FGs2ErrorDetailPtr>>();
             Detail->Add(MakeShared<Model::FGs2ErrorDetail>(
@@ -47,18 +64,11 @@ namespace Gs2::Core::Net::WebSocket::Task
             ));
             return MakeShared<Model::FSessionNotOpenError>(Detail);
         }
-        
-        const auto WebSocketResult = *Session->Results.Find(Session->LoginTaskId);
-    
-        Session->Mutex->Lock();
-        Session->Results.Remove(Session->LoginTaskId);
-        Session->Mutex->Unlock();
-
-        if (WebSocketResult->IsError())
+        if (bProjectTokenCredential)
         {
-            return WebSocketResult->Error();
+            *Result = MakeShared<Result::FOpenTaskResult>();
+            return nullptr;
         }
-        
         *Result = MakeShared<Result::FOpenTaskResult>();
         return nullptr;
     }

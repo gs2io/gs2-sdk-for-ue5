@@ -70,14 +70,16 @@ namespace Gs2::UE5::Mission::Domain::Model
 
         Gs2::Core::Domain::CallbackID SubscribeCompletes(TFunction<void()> Callback);
 
-        void UnsubscribeCompletes(Gs2::Core::Domain::CallbackID CallbackId);
+        void UnsubscribeCompletes(
+                Gs2::Core::Domain::CallbackID CallbackId);
 
         Gs2::UE5::Mission::Domain::Iterator::FEzDescribeCountersIteratorPtr Counters(
         ) const;
 
         Gs2::Core::Domain::CallbackID SubscribeCounters(TFunction<void()> Callback);
 
-        void UnsubscribeCounters(Gs2::Core::Domain::CallbackID CallbackId);
+        void UnsubscribeCounters(
+                Gs2::Core::Domain::CallbackID CallbackId);
 
         Gs2::UE5::Mission::Domain::Model::FEzCompleteGameSessionDomainPtr Complete(
             const FString MissionGroupName

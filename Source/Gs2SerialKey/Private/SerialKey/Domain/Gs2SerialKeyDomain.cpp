@@ -32,6 +32,7 @@
 #include "SerialKey/Domain/Model/SerialKey.h"
 #include "SerialKey/Domain/Model/User.h"
 #include "SerialKey/Domain/Model/UserAccessToken.h"
+#include "SerialKey/Model/Cache/SerialKey.h"
 #include "SerialKey/Domain/Model/CampaignModel.h"
 #include "SerialKey/Domain/Model/CampaignModelMaster.h"
 #include "SerialKey/Domain/Model/CurrentCampaignMaster.h"
@@ -419,6 +420,7 @@ namespace Gs2::SerialKey::Domain
         return Gs2->Cache->ListSubscribe(
             Gs2::SerialKey::Model::FNamespace::TypeName,
             "serialKey:Namespace",
+            Callback,
             Callback
         );
     }
@@ -448,7 +450,8 @@ namespace Gs2::SerialKey::Domain
     void FGs2SerialKeyDomain::UpdateCacheFromStampSheet(
         const FString Method,
         const FString Request,
-        const FString Result
+        const FString Result,
+        const TOptional<int32> TimeOffset
     ) {
         if (Method == "RevertUseByUserId") {
             TSharedPtr<FJsonObject> RequestModelJson;
@@ -468,20 +471,13 @@ namespace Gs2::SerialKey::Domain
             
             if (ResultModel->GetItem() != nullptr)
             {
-                const auto ParentKey = Gs2::SerialKey::Domain::Model::FUserDomain::CreateCacheParentKey(
+                Gs2::SerialKey::Model::Cache::FSerialKeyCache::Put(
+                    Gs2->Cache,
                     RequestModel->GetNamespaceName(),
                     RequestModel->GetUserId(),
-                    "SerialKey"
-                );
-                const auto Key = Gs2::SerialKey::Domain::Model::FSerialKeyDomain::CreateCacheKey(
-                    ResultModel->GetItem()->GetCode()
-                );
-                Gs2->Cache->Put(
-                    Gs2::SerialKey::Model::FSerialKey::TypeName,
-                    ParentKey,
-                    Key,
-                    ResultModel->GetItem(),
-                    FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
+                    ResultModel->GetItem()->GetCode(),
+                    TimeOffset,
+                    ResultModel->GetItem()
                 );
             }
             if (ResultModel->GetCampaignModel() != nullptr)
@@ -502,47 +498,13 @@ namespace Gs2::SerialKey::Domain
                 );
             }
         }
-        if (Method == "IssueOnce") {
-            TSharedPtr<FJsonObject> RequestModelJson;
-            if (const TSharedRef<TJsonReader<>> JsonReader = TJsonReaderFactory<>::Create(Request);
-                !FJsonSerializer::Deserialize(JsonReader, RequestModelJson))
-            {
-                return;
-            }
-            TSharedPtr<FJsonObject> ResultModelJson;
-            if (const TSharedRef<TJsonReader<>> JsonReader = TJsonReaderFactory<>::Create(Result);
-                !FJsonSerializer::Deserialize(JsonReader, ResultModelJson))
-            {
-                return;
-            }
-            const auto RequestModel = Gs2::SerialKey::Request::FIssueOnceRequest::FromJson(RequestModelJson);
-            const auto ResultModel = Gs2::SerialKey::Result::FIssueOnceResult::FromJson(ResultModelJson);
-            
-            if (ResultModel->GetItem() != nullptr)
-            {
-                const auto ParentKey = Gs2::SerialKey::Domain::Model::FUserDomain::CreateCacheParentKey(
-                    RequestModel->GetNamespaceName(),
-                    TOptional<FString>("Singleton"),
-                    "SerialKey"
-                );
-                const auto Key = Gs2::SerialKey::Domain::Model::FSerialKeyDomain::CreateCacheKey(
-                    ResultModel->GetItem()->GetCode()
-                );
-                Gs2->Cache->Put(
-                    Gs2::SerialKey::Model::FSerialKey::TypeName,
-                    ParentKey,
-                    Key,
-                    ResultModel->GetItem(),
-                    FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
-                );
-            }
-        }
     }
 
     void FGs2SerialKeyDomain::UpdateCacheFromStampTask(
         const FString Method,
         const FString Request,
-        const FString Result
+        const FString Result,
+        const TOptional<int32> TimeOffset
     ) {
         if (Method == "UseByUserId") {
             TSharedPtr<FJsonObject> RequestModelJson;
@@ -562,20 +524,13 @@ namespace Gs2::SerialKey::Domain
             
             if (ResultModel->GetItem() != nullptr)
             {
-                const auto ParentKey = Gs2::SerialKey::Domain::Model::FUserDomain::CreateCacheParentKey(
+                Gs2::SerialKey::Model::Cache::FSerialKeyCache::Put(
+                    Gs2->Cache,
                     RequestModel->GetNamespaceName(),
                     RequestModel->GetUserId(),
-                    "SerialKey"
-                );
-                const auto Key = Gs2::SerialKey::Domain::Model::FSerialKeyDomain::CreateCacheKey(
-                    ResultModel->GetItem()->GetCode()
-                );
-                Gs2->Cache->Put(
-                    Gs2::SerialKey::Model::FSerialKey::TypeName,
-                    ParentKey,
-                    Key,
-                    ResultModel->GetItem(),
-                    FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
+                    ResultModel->GetItem()->GetCode(),
+                    TimeOffset,
+                    ResultModel->GetItem()
                 );
             }
             if (ResultModel->GetCampaignModel() != nullptr)
@@ -601,7 +556,8 @@ namespace Gs2::SerialKey::Domain
     void FGs2SerialKeyDomain::UpdateCacheFromJobResult(
         const FString Method,
         const Gs2::JobQueue::Model::FJobPtr Job,
-        const Gs2::JobQueue::Model::FJobResultBodyPtr Result
+        const Gs2::JobQueue::Model::FJobResultBodyPtr Result,
+        const TOptional<int32> TimeOffset
     ) {
         if (Method == "revert_use_by_user_id") {
             TSharedPtr<FJsonObject> RequestModelJson;
@@ -629,20 +585,13 @@ namespace Gs2::SerialKey::Domain
             
             if (ResultModel->GetItem() != nullptr)
             {
-                const auto ParentKey = Gs2::SerialKey::Domain::Model::FUserDomain::CreateCacheParentKey(
+                Gs2::SerialKey::Model::Cache::FSerialKeyCache::Put(
+                    Gs2->Cache,
                     RequestModel->GetNamespaceName(),
                     RequestModel->GetUserId(),
-                    "SerialKey"
-                );
-                const auto Key = Gs2::SerialKey::Domain::Model::FSerialKeyDomain::CreateCacheKey(
-                    ResultModel->GetItem()->GetCode()
-                );
-                Gs2->Cache->Put(
-                    Gs2::SerialKey::Model::FSerialKey::TypeName,
-                    ParentKey,
-                    Key,
-                    ResultModel->GetItem(),
-                    FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
+                    ResultModel->GetItem()->GetCode(),
+                    TimeOffset,
+                    ResultModel->GetItem()
                 );
             }
             if (ResultModel->GetCampaignModel() != nullptr)
@@ -663,49 +612,6 @@ namespace Gs2::SerialKey::Domain
                 );
             }
         }
-        if (Method == "issue_once") {
-            TSharedPtr<FJsonObject> RequestModelJson;
-            if (!Job->GetArgs().IsSet())
-            {
-                return;
-            }
-            if (const TSharedRef<TJsonReader<>> JsonReader = TJsonReaderFactory<>::Create(*Job->GetArgs());
-                !FJsonSerializer::Deserialize(JsonReader, RequestModelJson))
-            {
-                return;
-            }
-            TSharedPtr<FJsonObject> ResultModelJson;
-            if (!Result->GetResult().IsSet())
-            {
-                return;
-            }
-            if (const TSharedRef<TJsonReader<>> JsonReader = TJsonReaderFactory<>::Create(*Result->GetResult());
-                !FJsonSerializer::Deserialize(JsonReader, ResultModelJson))
-            {
-                return;
-            }
-            const auto RequestModel = Gs2::SerialKey::Request::FIssueOnceRequest::FromJson(RequestModelJson);
-            const auto ResultModel = Gs2::SerialKey::Result::FIssueOnceResult::FromJson(ResultModelJson);
-            
-            if (ResultModel->GetItem() != nullptr)
-            {
-                const auto ParentKey = Gs2::SerialKey::Domain::Model::FUserDomain::CreateCacheParentKey(
-                    RequestModel->GetNamespaceName(),
-                    TOptional<FString>("Singleton"),
-                    "SerialKey"
-                );
-                const auto Key = Gs2::SerialKey::Domain::Model::FSerialKeyDomain::CreateCacheKey(
-                    ResultModel->GetItem()->GetCode()
-                );
-                Gs2->Cache->Put(
-                    Gs2::SerialKey::Model::FSerialKey::TypeName,
-                    ParentKey,
-                    Key,
-                    ResultModel->GetItem(),
-                    FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
-                );
-            }
-        }
     }
 
     void FGs2SerialKeyDomain::HandleNotification(
@@ -720,4 +626,3 @@ namespace Gs2::SerialKey::Domain
 #elif defined(__clang__)
 #pragma clang diagnostic pop
 #endif
-

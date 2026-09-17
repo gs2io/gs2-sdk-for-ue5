@@ -96,27 +96,89 @@ namespace Gs2::Experience::Domain::Model
         TSharedPtr<TSharedPtr<Gs2::Experience::Model::FThreshold>> Result
     )
     {
-        // ReSharper disable once CppLocalVariableMayBeConst
-        TSharedPtr<Gs2::Experience::Model::FThreshold> Value;
-        auto bCacheHit = Self->Gs2->Cache->TryGet<Gs2::Experience::Model::FThreshold>(
-            Self->ParentKey,
-            Gs2::Experience::Domain::Model::FThresholdDomain::CreateCacheKey(
-            ),
-            &Value
+        const FString CacheKey = Gs2::Experience::Domain::Model::FThresholdDomain::CreateCacheKey(
         );
-        *Result = Value;
+        return Self->Gs2->Cache->ExecuteWithKeyLock(
+            Gs2::Experience::Model::FThreshold::TypeName,
+            Self->ParentKey,
+            CacheKey,
+            [this, Result, CacheKey]() -> Gs2::Core::Model::FGs2ErrorPtr
+            {
+                // ReSharper disable once CppLocalVariableMayBeConst
+                TSharedPtr<Gs2::Experience::Model::FThreshold> Value;
+                auto bCacheHit = Self->Gs2->Cache->TryGet<Gs2::Experience::Model::FThreshold>(
+                    Self->ParentKey,
+                    CacheKey,
+                    &Value
+                );
+                *Result = Value;
 
-        return nullptr;
+                return nullptr;
+            }
+        );
     }
 
     TSharedPtr<FAsyncTask<FThresholdDomain::FModelTask>> FThresholdDomain::Model() {
         return Gs2::Core::Util::New<FAsyncTask<FThresholdDomain::FModelTask>>(this->AsShared());
     }
 
+    void FThresholdDomain::Invalidate()
+    {
+        Gs2->Cache->Delete(
+            Gs2::Experience::Model::FThreshold::TypeName,
+            ParentKey,
+            Gs2::Experience::Domain::Model::FThresholdDomain::CreateCacheKey(
+            )
+        );
+    }
+
+    FThresholdDomain::FSubscribeWithInitialCallTask::FSubscribeWithInitialCallTask(
+        const TSharedPtr<FThresholdDomain>& Self,
+        TFunction<void(Gs2::Experience::Model::FThresholdPtr)> Callback
+    ):
+        Self(Self),
+        Callback(Callback)
+    {
+    }
+
+    FThresholdDomain::FSubscribeWithInitialCallTask::FSubscribeWithInitialCallTask(
+        const FSubscribeWithInitialCallTask& From
+    ):
+        TGs2Future(From),
+        Self(From.Self),
+        Callback(From.Callback)
+    {
+    }
+
+    Gs2::Core::Model::FGs2ErrorPtr FThresholdDomain::FSubscribeWithInitialCallTask::Action(
+        TSharedPtr<TSharedPtr<Gs2::Core::Domain::CallbackID>> Result
+    )
+    {
+        const auto Task = Self->Model();
+        Task->StartSynchronousTask();
+        Task->EnsureCompletion();
+        if (Task->GetTask().IsError()) return Task->GetTask().Error();
+        const auto Item = Task->GetTask().Result();
+        const auto CallbackId = Self->Subscribe(Callback);
+        Callback(Item);
+        *Result = MakeShared<Gs2::Core::Domain::CallbackID>(CallbackId);
+        return nullptr;
+    }
+
+    TSharedPtr<FAsyncTask<FThresholdDomain::FSubscribeWithInitialCallTask>> FThresholdDomain::SubscribeWithInitialCall(
+        TFunction<void(Gs2::Experience::Model::FThresholdPtr)> Callback
+    )
+    {
+        return Gs2::Core::Util::New<FAsyncTask<FSubscribeWithInitialCallTask>>(this->AsShared(), Callback);
+    }
+
     Gs2::Core::Domain::CallbackID FThresholdDomain::Subscribe(
         TFunction<void(Gs2::Experience::Model::FThresholdPtr)> Callback
     )
     {
+        const TWeakPtr<Gs2::Core::Domain::FGs2> WeakGs2 = Gs2;
+        const TWeakPtr<Experience::Domain::FGs2ExperienceDomain> WeakService = Service;
+        const FString RegisteredParentKey = ParentKey;
         return Gs2->Cache->Subscribe(
             Gs2::Experience::Model::FThreshold::TypeName,
             ParentKey,
@@ -125,6 +187,21 @@ namespace Gs2::Experience::Domain::Model
             [Callback](TSharedPtr<FGs2Object> obj)
             {
                 Callback(StaticCastSharedPtr<Gs2::Experience::Model::FThreshold>(obj));
+            },
+            [WeakGs2, WeakService, RegisteredParentKey]()
+            {
+                const auto Owner = WeakGs2.Pin();
+                if (!Owner.IsValid())
+                {
+                    return;
+                }
+                const auto Domain = MakeShared<FThresholdDomain>(
+                    Owner,
+                    WeakService.Pin()
+                );
+                Domain->ParentKey = RegisteredParentKey;
+                const auto Task = Domain->Model();
+                Task->StartBackgroundTask();
             }
         );
     }
@@ -148,4 +225,3 @@ namespace Gs2::Experience::Domain::Model
 #elif defined(__clang__)
 #pragma clang diagnostic pop
 #endif
-

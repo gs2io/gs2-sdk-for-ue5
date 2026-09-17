@@ -65,7 +65,8 @@ namespace Gs2::UE5::Exchange::Domain::Model
         );
     }
 
-    void FEzUserGameSessionDomain::UnsubscribeAwaits(Gs2::Core::Domain::CallbackID CallbackId)
+    void FEzUserGameSessionDomain::UnsubscribeAwaits(
+            Gs2::Core::Domain::CallbackID CallbackId)
     {
         Domain->UnsubscribeAwaits(
             CallbackId

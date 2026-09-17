@@ -94,6 +94,8 @@ namespace Gs2::Chat::Domain::Model
             const FUserAccessTokenDomain& From
         );
 
+
+
         class GS2CHAT_API FCreateRoomTask final :
             public Gs2::Core::Util::TGs2Future<Gs2::Chat::Domain::Model::FRoomAccessTokenDomain>,
             public TSharedFromThis<FCreateRoomTask>
@@ -131,8 +133,33 @@ namespace Gs2::Chat::Domain::Model
 
         Gs2::Core::Domain::CallbackID SubscribeSubscribes(
             TFunction<void()> Callback
+
         );
 
+        class FCollectSubscribesTask;
+
+        Gs2::Core::Domain::CallbackID SubscribeSubscribes(
+            TFunction<void(TArray<Gs2::Chat::Model::FSubscribePtr>)> Callback,const TOptional<FString> RoomNamePrefix = TOptional<FString>()
+        );
+
+        void InvalidateSubscribes(const TOptional<FString> RoomNamePrefix = TOptional<FString>());
+
+        class GS2CHAT_API FSubscribeSubscribesWithInitialCallTask final :
+            public Gs2::Core::Util::TGs2Future<Gs2::Core::Domain::CallbackID>,
+            public TSharedFromThis<FSubscribeSubscribesWithInitialCallTask>
+        {
+            const TSharedPtr<FUserAccessTokenDomain> Self;
+            const TFunction<void(TArray<Gs2::Chat::Model::FSubscribePtr>)> Callback;
+        const TOptional<FString> QueryRoomNamePrefix;
+        public:
+            FSubscribeSubscribesWithInitialCallTask(const TSharedPtr<FUserAccessTokenDomain>& Self, TFunction<void(TArray<Gs2::Chat::Model::FSubscribePtr>)> Callback,const TOptional<FString> RoomNamePrefix);
+            FSubscribeSubscribesWithInitialCallTask(const FSubscribeSubscribesWithInitialCallTask& From);
+            virtual Gs2::Core::Model::FGs2ErrorPtr Action(TSharedPtr<TSharedPtr<Gs2::Core::Domain::CallbackID>> Result) override;
+        };
+
+        TSharedPtr<FAsyncTask<FSubscribeSubscribesWithInitialCallTask>> SubscribeSubscribesWithInitialCall(
+            TFunction<void(TArray<Gs2::Chat::Model::FSubscribePtr>)> Callback,const TOptional<FString> RoomNamePrefix = TOptional<FString>()
+        );
         void UnsubscribeSubscribes(
             Gs2::Core::Domain::CallbackID CallbackID
         );

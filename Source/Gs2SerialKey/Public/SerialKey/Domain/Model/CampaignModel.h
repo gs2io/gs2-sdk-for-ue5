@@ -83,6 +83,8 @@ namespace Gs2::SerialKey::Domain::Model
             const FCampaignModelDomain& From
         );
 
+
+
         class GS2SERIALKEY_API FGetTask final :
             public Gs2::Core::Util::TGs2Future<Gs2::SerialKey::Model::FCampaignModel>,
             public TSharedFromThis<FGetTask>
@@ -108,6 +110,8 @@ namespace Gs2::SerialKey::Domain::Model
         TSharedPtr<FAsyncTask<FGetTask>> Get(
             Request::FGetCampaignModelRequestPtr Request
         );
+
+
 
         class GS2SERIALKEY_API FIssueTask final :
             public Gs2::Core::Util::TGs2Future<Gs2::SerialKey::Domain::Model::FIssueJobDomain>,
@@ -140,8 +144,33 @@ namespace Gs2::SerialKey::Domain::Model
 
         Gs2::Core::Domain::CallbackID SubscribeIssueJobs(
             TFunction<void()> Callback
+
         );
 
+        class FCollectIssueJobsTask;
+
+        Gs2::Core::Domain::CallbackID SubscribeIssueJobs(
+            TFunction<void(TArray<Gs2::SerialKey::Model::FIssueJobPtr>)> Callback
+        );
+
+        void InvalidateIssueJobs();
+
+        class GS2SERIALKEY_API FSubscribeIssueJobsWithInitialCallTask final :
+            public Gs2::Core::Util::TGs2Future<Gs2::Core::Domain::CallbackID>,
+            public TSharedFromThis<FSubscribeIssueJobsWithInitialCallTask>
+        {
+            const TSharedPtr<FCampaignModelDomain> Self;
+            const TFunction<void(TArray<Gs2::SerialKey::Model::FIssueJobPtr>)> Callback;
+
+        public:
+            FSubscribeIssueJobsWithInitialCallTask(const TSharedPtr<FCampaignModelDomain>& Self, TFunction<void(TArray<Gs2::SerialKey::Model::FIssueJobPtr>)> Callback);
+            FSubscribeIssueJobsWithInitialCallTask(const FSubscribeIssueJobsWithInitialCallTask& From);
+            virtual Gs2::Core::Model::FGs2ErrorPtr Action(TSharedPtr<TSharedPtr<Gs2::Core::Domain::CallbackID>> Result) override;
+        };
+
+        TSharedPtr<FAsyncTask<FSubscribeIssueJobsWithInitialCallTask>> SubscribeIssueJobsWithInitialCall(
+            TFunction<void(TArray<Gs2::SerialKey::Model::FIssueJobPtr>)> Callback
+        );
         void UnsubscribeIssueJobs(
             Gs2::Core::Domain::CallbackID CallbackID
         );
@@ -182,7 +211,34 @@ namespace Gs2::SerialKey::Domain::Model
 
         TSharedPtr<FAsyncTask<FModelTask>> Model();
 
+        void Invalidate();
+
         Gs2::Core::Domain::CallbackID Subscribe(
+            TFunction<void(Gs2::SerialKey::Model::FCampaignModelPtr)> Callback
+        );
+
+        class GS2SERIALKEY_API FSubscribeWithInitialCallTask final :
+            public Gs2::Core::Util::TGs2Future<Gs2::Core::Domain::CallbackID>,
+            public TSharedFromThis<FSubscribeWithInitialCallTask>
+        {
+            const TSharedPtr<FCampaignModelDomain> Self;
+            const TFunction<void(Gs2::SerialKey::Model::FCampaignModelPtr)> Callback;
+        public:
+            FSubscribeWithInitialCallTask(
+                const TSharedPtr<FCampaignModelDomain>& Self,
+                TFunction<void(Gs2::SerialKey::Model::FCampaignModelPtr)> Callback
+            );
+
+            FSubscribeWithInitialCallTask(
+                const FSubscribeWithInitialCallTask& From
+            );
+
+            virtual Gs2::Core::Model::FGs2ErrorPtr Action(
+                TSharedPtr<TSharedPtr<Gs2::Core::Domain::CallbackID>> Result
+            ) override;
+        };
+
+        TSharedPtr<FAsyncTask<FSubscribeWithInitialCallTask>> SubscribeWithInitialCall(
             TFunction<void(Gs2::SerialKey::Model::FCampaignModelPtr)> Callback
         );
 

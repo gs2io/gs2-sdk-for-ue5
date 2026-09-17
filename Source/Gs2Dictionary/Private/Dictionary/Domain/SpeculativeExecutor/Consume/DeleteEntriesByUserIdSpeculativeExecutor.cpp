@@ -27,10 +27,26 @@
 #include "Dictionary/Domain/SpeculativeExecutor/Consume/DeleteEntriesByUserIdSpeculativeExecutor.h"
 #include "Dictionary/Domain/Gs2Dictionary.h"
 
+#include "Auth/Model/AccessToken.h"
 #include "Core/Domain/Gs2.h"
+#include "Core/Domain/SpeculativeExecutor/PreparedSpeculativeCommit.h"
+#include "Dictionary/Model/Cache/Entry.h"
+#include "Serialization/JsonSerializer.h"
+#include "Serialization/JsonWriter.h"
 
 namespace Gs2::Dictionary::Domain::SpeculativeExecutor
 {
+
+    namespace
+    {
+        FString SerializeDeleteEntrySnapshot(const TSharedPtr<FJsonObject>& Object)
+        {
+            FString Body;
+            const TSharedRef<TJsonWriter<TCHAR>> Writer = TJsonWriterFactory<TCHAR>::Create(&Body);
+            FJsonSerializer::Serialize(Object.ToSharedRef(), Writer);
+            return Body;
+        }
+    }
 
     FString FDeleteEntriesByUserIdSpeculativeExecutor::Action()
     {
@@ -73,35 +89,82 @@ namespace Gs2::Dictionary::Domain::SpeculativeExecutor
     }
 
     Gs2::Core::Model::FGs2ErrorPtr FDeleteEntriesByUserIdSpeculativeExecutor::FCommitTask::Action(
-        TSharedPtr<TSharedPtr<TFunction<void()>>> Result
+        TSharedPtr<TSharedPtr<Gs2::Core::Domain::SpeculativeExecutor::FPreparedSpeculativeCommit>> Result
     )
     {
-        *Result = MakeShared<TFunction<void()>>([&]()
+        if (!Domain.IsValid() || !Domain->RestSession.IsValid() ||
+            !AccessToken.IsValid() || !Request.IsValid())
         {
-            if (!Request->GetEntryModelNames()->IsEmpty())
+            *Result = nullptr;
+            return nullptr;
+        }
+        const auto PreparedRequest = MakeShared<Gs2::Dictionary::Request::FDeleteEntriesByUserIdRequest>(*Request);
+        const auto PreparedAccessToken = MakeShared<Gs2::Auth::Model::FAccessToken>(*AccessToken);
+        if (PreparedRequest->GetUserId().IsSet() && *PreparedRequest->GetUserId() == TEXT("#{userId}"))
+        {
+            PreparedRequest->WithUserId(PreparedAccessToken->GetUserId());
+        }
+        if (!PreparedAccessToken->GetUserId().IsSet() || PreparedAccessToken->GetUserId()->IsEmpty() ||
+            !PreparedRequest->GetUserId().IsSet() || *PreparedRequest->GetUserId() != *PreparedAccessToken->GetUserId() ||
+            !PreparedRequest->GetNamespaceName().IsSet() || PreparedRequest->GetNamespaceName()->IsEmpty() ||
+            !PreparedRequest->GetEntryModelNames().IsValid())
+        {
+            *Result = nullptr;
+            return nullptr;
+        }
+        const auto NamespaceName = PreparedRequest->GetNamespaceName();
+        const auto UserId = PreparedAccessToken->GetUserId();
+        const auto TimeOffset = PreparedAccessToken->GetTimeOffset();
+        TArray<TPair<FString, FString>> Entries;
+        TSet<FString> Seen;
+        for (const auto& EntryModelName : *PreparedRequest->GetEntryModelNames())
+        {
+            if (Seen.Contains(EntryModelName))
             {
-                for (auto EntryModelName : *Request->GetEntryModelNames())
+                continue;
+            }
+            Seen.Add(EntryModelName);
+            Gs2::Dictionary::Model::FEntryPtr Item;
+            const bool Found = Gs2::Dictionary::Model::Cache::FEntryCache::TryGet(
+                Domain->Cache, NamespaceName, UserId, EntryModelName, TimeOffset, &Item);
+            const FString ExpectedId = FString::Printf(
+                TEXT("grn:gs2:%s:%s:dictionary:%s:user:%s:entry:%s"),
+                *Domain->RestSession->RegionName(), *Domain->RestSession->OwnerId(),
+                **NamespaceName, **UserId, *EntryModelName);
+            if (Found && Item.IsValid() && Item->GetEntryId().IsSet() &&
+                *Item->GetEntryId() == ExpectedId && Item->GetUserId().IsSet() &&
+                *Item->GetUserId() == *UserId && Item->GetName().IsSet() &&
+                *Item->GetName() == EntryModelName)
+            {
+                Entries.Add(TPair<FString, FString>(EntryModelName, SerializeDeleteEntrySnapshot(Item->ToJson())));
+            }
+        }
+        if (Entries.IsEmpty())
+        {
+            *Result = nullptr;
+            return nullptr;
+        }
+        *Result = Gs2::Core::Domain::SpeculativeExecutor::FPreparedSpeculativeCommit::WrapLegacy(
+            MakeShared<TFunction<void()>>([DomainCopy = Domain, PreparedRequest,
+                                           PreparedAccessToken, Entries = MoveTemp(Entries)]()
+        {
+            for (const auto& Entry : Entries)
+            {
+                Gs2::Dictionary::Model::FEntryPtr Current;
+                const bool Found = Gs2::Dictionary::Model::Cache::FEntryCache::TryGet(
+                    DomainCopy->Cache, PreparedRequest->GetNamespaceName(),
+                    PreparedAccessToken->GetUserId(), Entry.Key,
+                    PreparedAccessToken->GetTimeOffset(), &Current);
+                if (Found && Current.IsValid() &&
+                    SerializeDeleteEntrySnapshot(Current->ToJson()) == Entry.Value)
                 {
-                    const auto ParentKey = Model::FUserDomain::CreateCacheParentKey(
-                        Request->GetNamespaceName(),
-                        AccessToken->GetUserId(),
-                        FString("Entry")
-                    );
-                    const auto Key = Model::FEntryDomain::CreateCacheKey(
-                        EntryModelName
-                    );
-
-                    Domain->Cache->Put(
-                        Dictionary::Model::FEntry::TypeName,
-                        ParentKey,
-                        Key,
-                        nullptr,
-                        FDateTime::Now() + FTimespan::FromSeconds(10)
-                    );
+                    Gs2::Dictionary::Model::Cache::FEntryCache::Put(
+                        DomainCopy->Cache, PreparedRequest->GetNamespaceName(),
+                        PreparedAccessToken->GetUserId(), Entry.Key,
+                        PreparedAccessToken->GetTimeOffset(), nullptr);
                 }
             }
-            return nullptr;
-        });
+        }));
         return nullptr;
     }
 

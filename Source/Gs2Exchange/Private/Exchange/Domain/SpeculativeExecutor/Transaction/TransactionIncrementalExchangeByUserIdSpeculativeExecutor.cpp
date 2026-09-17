@@ -27,6 +27,7 @@
 #include "Exchange/Domain/SpeculativeExecutor/Transaction/IncrementalExchangeByUserIdSpeculativeExecutor.h"
 
 #include "Core/Domain/Gs2.h"
+#include "Core/Domain/SpeculativeExecutor/PreparedSpeculativeCommit.h"
 
 namespace Gs2::Exchange::Domain::Transaction::SpeculativeExecutor
 {
@@ -58,11 +59,11 @@ namespace Gs2::Exchange::Domain::Transaction::SpeculativeExecutor
     }
 
     Gs2::Core::Model::FGs2ErrorPtr FIncrementalExchangeByUserIdSpeculativeExecutor::FCommitTask::Action(
-        TSharedPtr<TSharedPtr<TFunction<void()>>> Result)
+        TSharedPtr<TSharedPtr<Gs2::Core::Domain::SpeculativeExecutor::FPreparedSpeculativeCommit>> Result)
     {
         UE_LOG(Gs2Log, Warning, TEXT("Speculative execution not supported on this action: %s"), ToCStr(FIncrementalExchangeByUserIdSpeculativeExecutor::Action()))
 
-        *Result = MakeShared<TFunction<void()>>([]{});
+        *Result = Gs2::Core::Domain::SpeculativeExecutor::FPreparedSpeculativeCommit::WrapLegacy(MakeShared<TFunction<void()>>([]{}));
 
         return nullptr;
     }

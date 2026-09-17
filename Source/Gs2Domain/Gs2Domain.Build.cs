@@ -30,6 +30,8 @@ public class Gs2Domain : ModuleRules
 			"Gs2Enhance",
 			"Gs2Exchange",
 			"Gs2Experience",
+			"Gs2Freeze",
+			"Gs2Guard",
 			"Gs2Formation",
 			"Gs2Friend",
 			"Gs2Gateway",

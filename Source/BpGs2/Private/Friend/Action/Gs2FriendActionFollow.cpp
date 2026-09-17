@@ -12,8 +12,6 @@
  * on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either
  * express or implied. See the License for the specific language governing
  * permissions and limitations under the License.
- *
- * deny overwrite
  */
 
 #include "Friend/Action/Gs2FriendActionFollow.h"
@@ -28,17 +26,17 @@ UGs2FriendFollowAsyncFunction::UGs2FriendFollowAsyncFunction(
 
 UGs2FriendFollowAsyncFunction* UGs2FriendFollowAsyncFunction::Follow(
     UObject* WorldContextObject,
-    FGs2FriendOwnFollow Follow,
+    FGs2FriendOwnFollow FollowValue,
     FString TargetUserId
 )
 {
     UGs2FriendFollowAsyncFunction* Action = NewObject<UGs2FriendFollowAsyncFunction>();
     Action->RegisterWithGameInstance(WorldContextObject);
-    if (Follow.Value == nullptr) {
+    if (FollowValue.Value == nullptr) {
         UE_LOG(BpGs2Log, Error, TEXT("[UGs2FriendFollowAsyncFunction::Follow] Follow parameter specification is missing."))
         return Action;
     }
-    Action->FollowValue = Follow;
+    Action->FollowValue = FollowValue;
     Action->TargetUserId = TargetUserId;
     return Action;
 }

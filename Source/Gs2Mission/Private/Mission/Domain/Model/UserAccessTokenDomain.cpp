@@ -38,6 +38,8 @@
 #include "Mission/Domain/Model/MissionTaskModelMaster.h"
 #include "Mission/Domain/Model/User.h"
 #include "Mission/Domain/Model/UserAccessToken.h"
+#include "Mission/Model/Cache/Complete.h"
+#include "Mission/Model/Cache/Counter.h"
 
 #include "Core/Domain/Gs2.h"
 #include "Core/Domain/Transaction/JobQueueJobDomainFactory.h"
@@ -92,32 +94,124 @@ namespace Gs2::Mission::Domain::Model
 
     Gs2::Core::Domain::CallbackID FUserAccessTokenDomain::SubscribeCompletes(
     TFunction<void()> Callback
+
     )
     {
         return Gs2->Cache->ListSubscribe(
             Gs2::Mission::Model::FComplete::TypeName,
-            Gs2::Mission::Domain::Model::FUserDomain::CreateCacheParentKey(
+            Gs2::Mission::Model::Cache::FCompleteCache::CreateCacheParentKey(
                 NamespaceName,
-                UserId(),
-                "Complete"
+                AccessToken.IsValid() ? AccessToken->GetUserId() : TOptional<FString>(),
+                AccessToken.IsValid() ? AccessToken->GetTimeOffset() : TOptional<int32>()
             ),
+            Callback,
             Callback
         );
     }
-
     void FUserAccessTokenDomain::UnsubscribeCompletes(
         Gs2::Core::Domain::CallbackID CallbackID
     )
     {
         Gs2->Cache->ListUnsubscribe(
             Gs2::Mission::Model::FComplete::TypeName,
-            Gs2::Mission::Domain::Model::FUserDomain::CreateCacheParentKey(
+            Gs2::Mission::Model::Cache::FCompleteCache::CreateCacheParentKey(
                 NamespaceName,
-                UserId(),
-                "Complete"
+                AccessToken.IsValid() ? AccessToken->GetUserId() : TOptional<FString>(),
+                AccessToken.IsValid() ? AccessToken->GetTimeOffset() : TOptional<int32>()
             ),
             CallbackID
         );
+    }
+    class FUserAccessTokenDomain::FCollectCompletesTask : public Gs2::Core::Util::TGs2Future<TArray<Gs2::Mission::Model::FCompletePtr>>, public TSharedFromThis<FCollectCompletesTask>
+    {
+        const TSharedPtr<FUserAccessTokenDomain> Self;
+        const TFunction<void(TArray<Gs2::Mission::Model::FCompletePtr>)> OnCollected;
+
+    public:
+        explicit FCollectCompletesTask(const TSharedPtr<FUserAccessTokenDomain>& Self, TFunction<void(TArray<Gs2::Mission::Model::FCompletePtr>)> OnCollected) : Self(Self), OnCollected(OnCollected) {}
+        FCollectCompletesTask(const FCollectCompletesTask& From) : TGs2Future(From), Self(From.Self), OnCollected(From.OnCollected) {}
+        virtual Gs2::Core::Model::FGs2ErrorPtr Action(TSharedPtr<TSharedPtr<TArray<Gs2::Mission::Model::FCompletePtr>>> Result) override
+        {
+            TArray<Gs2::Mission::Model::FCompletePtr> Items;
+            auto Iterator = Self->Completes()->begin();
+            while (Iterator.HasNext())
+            {
+                if (Iterator.IsError()) return Iterator.Error();
+                if (Iterator.IsCurrentValid()) Items.Add(Iterator.Current());
+                ++Iterator;
+            }
+            if (Iterator.IsError()) return Iterator.Error();
+            *Result = MakeShared<TArray<Gs2::Mission::Model::FCompletePtr>>(Items);
+            if (OnCollected) OnCollected(Items);
+            return nullptr;
+        }
+    };
+
+    Gs2::Core::Domain::CallbackID FUserAccessTokenDomain::SubscribeCompletes(
+        TFunction<void(TArray<Gs2::Mission::Model::FCompletePtr>)> Callback
+    )
+    {
+        const TWeakPtr<Gs2::Core::Domain::FGs2> WeakGs2 = this->Gs2;
+        const TWeakPtr<Mission::Domain::FGs2MissionDomain> WeakService = this->Service;
+        const auto SourceToken = this->AccessToken;
+        const TOptional<FString> RegisteredUserId = SourceToken.IsValid() ? TOptional<FString>(SourceToken->GetUserId()) : TOptional<FString>();
+        const int32 RegisteredTimeOffset = SourceToken.IsValid() ? SourceToken->GetTimeOffset().Get(0) : 0;
+        const auto QueryNamespaceName = NamespaceName;
+        const auto Parent = Gs2::Mission::Model::Cache::FCompleteCache::CreateCacheParentKey(
+        NamespaceName,
+        AccessToken.IsValid() ? AccessToken->GetUserId() : TOptional<FString>(),
+        AccessToken.IsValid() ? AccessToken->GetTimeOffset() : TOptional<int32>()
+    );
+        return Gs2->Cache->ListSubscribeTyped(
+            Gs2::Mission::Model::FComplete::TypeName,
+            Parent,
+            [Callback, WeakGs2](const TArray<FGs2ObjectPtr>& Values)
+            {
+                if (!WeakGs2.Pin().IsValid()) return;
+                TArray<Gs2::Mission::Model::FCompletePtr> TypedValues;
+                for (const auto& Value : Values) if (Value.IsValid()) TypedValues.Add(StaticCastSharedPtr<Gs2::Mission::Model::FComplete>(Value));
+                Callback(TypedValues);
+            },
+            [WeakGs2, WeakService, Callback, QueryNamespaceName, SourceToken, RegisteredUserId, RegisteredTimeOffset]()
+            {
+                const auto Owner = WeakGs2.Pin();
+                if (!Owner.IsValid() || !SourceToken.IsValid() || !RegisteredUserId.IsSet()) return;
+                const auto TokenSnapshot = MakeShared<Gs2::Auth::Model::FAccessToken>(*SourceToken);
+                if (TokenSnapshot->GetUserId() != RegisteredUserId || TokenSnapshot->GetTimeOffset().Get(0) != RegisteredTimeOffset) return;
+                const auto Domain = MakeShared<FUserAccessTokenDomain>(Owner, WeakService.Pin(), QueryNamespaceName, TokenSnapshot);
+                const auto Task = Gs2::Core::Util::New<FAsyncTask<FCollectCompletesTask>>(Domain, Callback);
+                Task->StartBackgroundTask();
+            }
+        );
+    }
+
+    void FUserAccessTokenDomain::InvalidateCompletes()
+    {
+        Gs2->Cache->ClearListCache(
+            Gs2::Mission::Model::FComplete::TypeName,
+            Gs2::Mission::Model::Cache::FCompleteCache::CreateCacheParentKey(
+        NamespaceName,
+        AccessToken.IsValid() ? AccessToken->GetUserId() : TOptional<FString>(),
+        AccessToken.IsValid() ? AccessToken->GetTimeOffset() : TOptional<int32>()
+    )
+        );
+    }
+
+    FUserAccessTokenDomain::FSubscribeCompletesWithInitialCallTask::FSubscribeCompletesWithInitialCallTask(const TSharedPtr<FUserAccessTokenDomain>& Self, TFunction<void(TArray<Gs2::Mission::Model::FCompletePtr>)> Callback) : Self(Self), Callback(Callback) {}
+    FUserAccessTokenDomain::FSubscribeCompletesWithInitialCallTask::FSubscribeCompletesWithInitialCallTask(const FSubscribeCompletesWithInitialCallTask& From) : TGs2Future(From), Self(From.Self), Callback(From.Callback) {}
+    Gs2::Core::Model::FGs2ErrorPtr FUserAccessTokenDomain::FSubscribeCompletesWithInitialCallTask::Action(TSharedPtr<TSharedPtr<Gs2::Core::Domain::CallbackID>> Result)
+    {
+        const auto Task = Gs2::Core::Util::New<FAsyncTask<FCollectCompletesTask>>(Self, TFunction<void(TArray<Gs2::Mission::Model::FCompletePtr>)>());
+        Task->StartSynchronousTask(); Task->EnsureCompletion();
+        if (Task->GetTask().IsError()) return Task->GetTask().Error();
+        const auto Values = Task->GetTask().Result();
+        const auto CallbackId = Self->SubscribeCompletes(Callback);
+        Callback(*Values); *Result = MakeShared<Gs2::Core::Domain::CallbackID>(CallbackId);
+        return nullptr;
+    }
+    TSharedPtr<FAsyncTask<FUserAccessTokenDomain::FSubscribeCompletesWithInitialCallTask>> FUserAccessTokenDomain::SubscribeCompletesWithInitialCall(TFunction<void(TArray<Gs2::Mission::Model::FCompletePtr>)> Callback)
+    {
+        return Gs2::Core::Util::New<FAsyncTask<FSubscribeCompletesWithInitialCallTask>>(this->AsShared(), Callback);
     }
 
     TSharedPtr<Gs2::Mission::Domain::Model::FCompleteAccessTokenDomain> FUserAccessTokenDomain::Complete(
@@ -146,32 +240,124 @@ namespace Gs2::Mission::Domain::Model
 
     Gs2::Core::Domain::CallbackID FUserAccessTokenDomain::SubscribeCounters(
     TFunction<void()> Callback
+
     )
     {
         return Gs2->Cache->ListSubscribe(
             Gs2::Mission::Model::FCounter::TypeName,
-            Gs2::Mission::Domain::Model::FUserDomain::CreateCacheParentKey(
+            Gs2::Mission::Model::Cache::FCounterCache::CreateCacheParentKey(
                 NamespaceName,
-                UserId(),
-                "Counter"
+                AccessToken.IsValid() ? AccessToken->GetUserId() : TOptional<FString>(),
+                AccessToken.IsValid() ? AccessToken->GetTimeOffset() : TOptional<int32>()
             ),
+            Callback,
             Callback
         );
     }
-
     void FUserAccessTokenDomain::UnsubscribeCounters(
         Gs2::Core::Domain::CallbackID CallbackID
     )
     {
         Gs2->Cache->ListUnsubscribe(
             Gs2::Mission::Model::FCounter::TypeName,
-            Gs2::Mission::Domain::Model::FUserDomain::CreateCacheParentKey(
+            Gs2::Mission::Model::Cache::FCounterCache::CreateCacheParentKey(
                 NamespaceName,
-                UserId(),
-                "Counter"
+                AccessToken.IsValid() ? AccessToken->GetUserId() : TOptional<FString>(),
+                AccessToken.IsValid() ? AccessToken->GetTimeOffset() : TOptional<int32>()
             ),
             CallbackID
         );
+    }
+    class FUserAccessTokenDomain::FCollectCountersTask : public Gs2::Core::Util::TGs2Future<TArray<Gs2::Mission::Model::FCounterPtr>>, public TSharedFromThis<FCollectCountersTask>
+    {
+        const TSharedPtr<FUserAccessTokenDomain> Self;
+        const TFunction<void(TArray<Gs2::Mission::Model::FCounterPtr>)> OnCollected;
+
+    public:
+        explicit FCollectCountersTask(const TSharedPtr<FUserAccessTokenDomain>& Self, TFunction<void(TArray<Gs2::Mission::Model::FCounterPtr>)> OnCollected) : Self(Self), OnCollected(OnCollected) {}
+        FCollectCountersTask(const FCollectCountersTask& From) : TGs2Future(From), Self(From.Self), OnCollected(From.OnCollected) {}
+        virtual Gs2::Core::Model::FGs2ErrorPtr Action(TSharedPtr<TSharedPtr<TArray<Gs2::Mission::Model::FCounterPtr>>> Result) override
+        {
+            TArray<Gs2::Mission::Model::FCounterPtr> Items;
+            auto Iterator = Self->Counters()->begin();
+            while (Iterator.HasNext())
+            {
+                if (Iterator.IsError()) return Iterator.Error();
+                if (Iterator.IsCurrentValid()) Items.Add(Iterator.Current());
+                ++Iterator;
+            }
+            if (Iterator.IsError()) return Iterator.Error();
+            *Result = MakeShared<TArray<Gs2::Mission::Model::FCounterPtr>>(Items);
+            if (OnCollected) OnCollected(Items);
+            return nullptr;
+        }
+    };
+
+    Gs2::Core::Domain::CallbackID FUserAccessTokenDomain::SubscribeCounters(
+        TFunction<void(TArray<Gs2::Mission::Model::FCounterPtr>)> Callback
+    )
+    {
+        const TWeakPtr<Gs2::Core::Domain::FGs2> WeakGs2 = this->Gs2;
+        const TWeakPtr<Mission::Domain::FGs2MissionDomain> WeakService = this->Service;
+        const auto SourceToken = this->AccessToken;
+        const TOptional<FString> RegisteredUserId = SourceToken.IsValid() ? TOptional<FString>(SourceToken->GetUserId()) : TOptional<FString>();
+        const int32 RegisteredTimeOffset = SourceToken.IsValid() ? SourceToken->GetTimeOffset().Get(0) : 0;
+        const auto QueryNamespaceName = NamespaceName;
+        const auto Parent = Gs2::Mission::Model::Cache::FCounterCache::CreateCacheParentKey(
+        NamespaceName,
+        AccessToken.IsValid() ? AccessToken->GetUserId() : TOptional<FString>(),
+        AccessToken.IsValid() ? AccessToken->GetTimeOffset() : TOptional<int32>()
+    );
+        return Gs2->Cache->ListSubscribeTyped(
+            Gs2::Mission::Model::FCounter::TypeName,
+            Parent,
+            [Callback, WeakGs2](const TArray<FGs2ObjectPtr>& Values)
+            {
+                if (!WeakGs2.Pin().IsValid()) return;
+                TArray<Gs2::Mission::Model::FCounterPtr> TypedValues;
+                for (const auto& Value : Values) if (Value.IsValid()) TypedValues.Add(StaticCastSharedPtr<Gs2::Mission::Model::FCounter>(Value));
+                Callback(TypedValues);
+            },
+            [WeakGs2, WeakService, Callback, QueryNamespaceName, SourceToken, RegisteredUserId, RegisteredTimeOffset]()
+            {
+                const auto Owner = WeakGs2.Pin();
+                if (!Owner.IsValid() || !SourceToken.IsValid() || !RegisteredUserId.IsSet()) return;
+                const auto TokenSnapshot = MakeShared<Gs2::Auth::Model::FAccessToken>(*SourceToken);
+                if (TokenSnapshot->GetUserId() != RegisteredUserId || TokenSnapshot->GetTimeOffset().Get(0) != RegisteredTimeOffset) return;
+                const auto Domain = MakeShared<FUserAccessTokenDomain>(Owner, WeakService.Pin(), QueryNamespaceName, TokenSnapshot);
+                const auto Task = Gs2::Core::Util::New<FAsyncTask<FCollectCountersTask>>(Domain, Callback);
+                Task->StartBackgroundTask();
+            }
+        );
+    }
+
+    void FUserAccessTokenDomain::InvalidateCounters()
+    {
+        Gs2->Cache->ClearListCache(
+            Gs2::Mission::Model::FCounter::TypeName,
+            Gs2::Mission::Model::Cache::FCounterCache::CreateCacheParentKey(
+        NamespaceName,
+        AccessToken.IsValid() ? AccessToken->GetUserId() : TOptional<FString>(),
+        AccessToken.IsValid() ? AccessToken->GetTimeOffset() : TOptional<int32>()
+    )
+        );
+    }
+
+    FUserAccessTokenDomain::FSubscribeCountersWithInitialCallTask::FSubscribeCountersWithInitialCallTask(const TSharedPtr<FUserAccessTokenDomain>& Self, TFunction<void(TArray<Gs2::Mission::Model::FCounterPtr>)> Callback) : Self(Self), Callback(Callback) {}
+    FUserAccessTokenDomain::FSubscribeCountersWithInitialCallTask::FSubscribeCountersWithInitialCallTask(const FSubscribeCountersWithInitialCallTask& From) : TGs2Future(From), Self(From.Self), Callback(From.Callback) {}
+    Gs2::Core::Model::FGs2ErrorPtr FUserAccessTokenDomain::FSubscribeCountersWithInitialCallTask::Action(TSharedPtr<TSharedPtr<Gs2::Core::Domain::CallbackID>> Result)
+    {
+        const auto Task = Gs2::Core::Util::New<FAsyncTask<FCollectCountersTask>>(Self, TFunction<void(TArray<Gs2::Mission::Model::FCounterPtr>)>());
+        Task->StartSynchronousTask(); Task->EnsureCompletion();
+        if (Task->GetTask().IsError()) return Task->GetTask().Error();
+        const auto Values = Task->GetTask().Result();
+        const auto CallbackId = Self->SubscribeCounters(Callback);
+        Callback(*Values); *Result = MakeShared<Gs2::Core::Domain::CallbackID>(CallbackId);
+        return nullptr;
+    }
+    TSharedPtr<FAsyncTask<FUserAccessTokenDomain::FSubscribeCountersWithInitialCallTask>> FUserAccessTokenDomain::SubscribeCountersWithInitialCall(TFunction<void(TArray<Gs2::Mission::Model::FCounterPtr>)> Callback)
+    {
+        return Gs2::Core::Util::New<FAsyncTask<FSubscribeCountersWithInitialCallTask>>(this->AsShared(), Callback);
     }
 
     TSharedPtr<Gs2::Mission::Domain::Model::FCounterAccessTokenDomain> FUserAccessTokenDomain::Counter(
@@ -213,4 +399,3 @@ namespace Gs2::Mission::Domain::Model
 #elif defined(__clang__)
 #pragma clang diagnostic pop
 #endif
-

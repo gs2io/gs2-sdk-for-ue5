@@ -65,7 +65,8 @@ namespace Gs2::UE5::Mission::Domain::Model
 
         Gs2::Core::Domain::CallbackID SubscribeMissionTaskModels(TFunction<void()> Callback);
 
-        void UnsubscribeMissionTaskModels(Gs2::Core::Domain::CallbackID CallbackId);
+        void UnsubscribeMissionTaskModels(
+                Gs2::Core::Domain::CallbackID CallbackId);
 
         Gs2::UE5::Mission::Domain::Model::FEzMissionTaskModelDomainPtr MissionTaskModel(
             const FString MissionTaskName

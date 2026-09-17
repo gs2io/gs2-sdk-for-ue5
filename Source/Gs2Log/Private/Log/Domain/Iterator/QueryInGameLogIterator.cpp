@@ -28,6 +28,7 @@
 
 #include "Log/Domain/Iterator/QueryInGameLogIterator.h"
 #include "Log/Domain/Model/InGameLog.h"
+#include "Log/Model/Cache/InGameLog.h"
 #include "Log/Domain/Model/User.h"
 
 #include "Core/Domain/Gs2.h"
@@ -112,15 +113,15 @@ namespace Gs2::Log::Domain::Iterator
 
         if (!RangeIteratorOpt || (!*RangeIteratorOpt && !bLast))
         {
-            const auto ListParentKey = Gs2::Log::Domain::Model::FUserDomain::CreateCacheParentKey(
+            const auto ListParentKey = Gs2::Log::Model::Cache::FInGameLogCache::CreateCacheParentKey(
                 Self->NamespaceName,
-                Self->UserId,
-                "InGameLog"
+                TOptional<FString>(),
+                TOptional<int32>()
             );
 
             if (!RangeIteratorOpt)
             {
-                Range = Self->UserId.IsSet() ? Self->Gs2->Cache->TryGetList<Gs2::Log::Model::FInGameLog>(ListParentKey) : nullptr;
+                Range = Self->Gs2->Cache->TryGetList<Gs2::Log::Model::FInGameLog>(ListParentKey);
 
                 if (Range)
                 {
@@ -153,19 +154,18 @@ namespace Gs2::Log::Domain::Iterator
                 }
             }
 
-            const auto Future = Self->Client->QueryInGameLog(
+            const auto Request =
                 MakeShared<Gs2::Log::Request::FQueryInGameLogRequest>()
                     ->WithContextStack(Self->Gs2->DefaultContextStack)
                     ->WithNamespaceName(Self->NamespaceName)
                     ->WithUserId(Self->UserId)
-                    ->WithTags(Self->Tags)
                     ->WithBegin(Self->Begin)
                     ->WithEnd(Self->End)
                     ->WithLongTerm(Self->LongTerm)
                     ->WithPageToken(PageToken)
                     ->WithLimit(FetchSize)
-                    ->WithTimeOffsetToken(Self->TimeOffsetToken)
-            );
+            ;
+            const auto Future = Self->Client->QueryInGameLog(Request);
             Future->StartSynchronousTask();
             if (Future->GetTask().IsError())
             {
@@ -183,18 +183,21 @@ namespace Gs2::Log::Domain::Iterator
             {
                 Self->OnTotalCount(R->GetTotalCount());
             }
-            Range = R->GetItems();
-            for (auto Item : *R->GetItems())
+            Range = R->GetItems().IsValid() ? R->GetItems() : MakeShared<TArray<Gs2::Log::Model::FInGameLogPtr>>();
+            const auto ResultModel = R;
+
+
+            if (Range.IsValid())
             {
-                Self->Gs2->Cache->Put(
-                    Gs2::Log::Model::FInGameLog::TypeName,
-                    ListParentKey,
-                    Gs2::Log::Domain::Model::FInGameLogDomain::CreateCacheKey(
-                        Item->GetRequestId()
-                    ),
-                    Item,
-                    FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
-                );
+                for (const auto& Item : *Range)
+                {
+                    if (!Item.IsValid()) continue;
+                    Gs2::Log::Model::Cache::FInGameLogCache::Put(
+                        Self->Gs2->Cache,
+                        Request->GetNamespaceName(), Request->GetUserId(), Item->GetRequestId(),
+                        TOptional<int32>(), Item
+                    );
+                }
             }
             if (Range)
             {
@@ -256,4 +259,3 @@ namespace Gs2::Log::Domain::Iterator
 #elif defined(__clang__)
 #pragma clang diagnostic pop
 #endif
-

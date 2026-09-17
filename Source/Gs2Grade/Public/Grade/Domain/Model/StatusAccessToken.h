@@ -88,6 +88,8 @@ namespace Gs2::Grade::Domain::Model
             const FStatusAccessTokenDomain& From
         );
 
+
+
         class GS2GRADE_API FGetTask final :
             public Gs2::Core::Util::TGs2Future<Gs2::Grade::Model::FStatus>,
             public TSharedFromThis<FGetTask>
@@ -113,6 +115,8 @@ namespace Gs2::Grade::Domain::Model
         TSharedPtr<FAsyncTask<FGetTask>> Get(
             Request::FGetStatusRequestPtr Request
         );
+
+
 
         class GS2GRADE_API FSubGradeTask final :
             public Gs2::Core::Util::TGs2Future<Gs2::Grade::Domain::Model::FStatusAccessTokenDomain>,
@@ -140,6 +144,8 @@ namespace Gs2::Grade::Domain::Model
             Request::FSubGradeRequestPtr Request
         );
 
+
+
         class GS2GRADE_API FApplyRankCapTask final :
             public Gs2::Core::Util::TGs2Future<Gs2::Grade::Domain::Model::FStatusAccessTokenDomain>,
             public TSharedFromThis<FApplyRankCapTask>
@@ -166,6 +172,8 @@ namespace Gs2::Grade::Domain::Model
             Request::FApplyRankCapRequestPtr Request
         );
 
+
+
         class GS2GRADE_API FVerifyGradeTask final :
             public Gs2::Core::Util::TGs2Future<Gs2::Grade::Domain::Model::FStatusAccessTokenDomain>,
             public TSharedFromThis<FVerifyGradeTask>
@@ -191,6 +199,8 @@ namespace Gs2::Grade::Domain::Model
         TSharedPtr<FAsyncTask<FVerifyGradeTask>> VerifyGrade(
             Request::FVerifyGradeRequestPtr Request
         );
+
+
 
         class GS2GRADE_API FVerifyGradeUpMaterialTask final :
             public Gs2::Core::Util::TGs2Future<Gs2::Grade::Domain::Model::FStatusAccessTokenDomain>,

@@ -1,3 +1,4 @@
+
 /*
  * Copyright 2016 Game Server Services, Inc. or its affiliates. All Rights
  * Reserved.
@@ -12,8 +13,6 @@
  * on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either
  * express or implied. See the License for the specific language governing
  * permissions and limitations under the License.
- *
- * deny overwrite
  */
 
 #if defined(_MSC_VER)
@@ -51,6 +50,17 @@ namespace Gs2::Friend::Domain::Iterator
     {
     }
 
+    FDescribeBlackListByUserIdIterator::FDescribeBlackListByUserIdIterator(
+        const FDescribeBlackListByUserIdIterator& From
+    ):
+        Gs2(From.Gs2),
+        Client(From.Client),
+        NamespaceName(From.NamespaceName),
+        UserId(From.UserId),
+        TimeOffsetToken(From.TimeOffsetToken)
+    {
+    }
+
     Gs2::Core::Model::FGs2ErrorPtr FDescribeBlackListByUserIdIterator::FIteratorNextTask::Action(TSharedPtr<TSharedPtr<Friend::Model::FBlackListEntry>> Result)
     {
         ++Iterator;
@@ -72,9 +82,7 @@ namespace Gs2::Friend::Domain::Iterator
 
     FDescribeBlackListByUserIdIterator::FIterator& FDescribeBlackListByUserIdIterator::FIterator::operator++()
     {
-        
-
-        if (bEnd) return *this;
+                if (bEnd) return *this;
 
         if (ErrorValue && bLast)
         {
@@ -86,12 +94,7 @@ namespace Gs2::Friend::Domain::Iterator
 
         if (!RangeIteratorOpt || (!*RangeIteratorOpt && !bLast))
         {
-            const auto ListParentKey = Gs2::Friend::Domain::Model::FBlackListDomain::CreateCacheParentKey(
-                Self->NamespaceName,
-                Self->UserId,
-                "BlackList"
-            );
-
+            const auto ListParentKey = "friend:UserId";
             if (!RangeIteratorOpt)
             {
                 Range = Self->Gs2->Cache->TryGetList<Gs2::Friend::Model::FBlackListEntry>(ListParentKey);
@@ -105,7 +108,6 @@ namespace Gs2::Friend::Domain::Iterator
                     return *this;
                 }
             }
-
             const auto Future = Self->Client->DescribeBlackListByUserId(
                 MakeShared<Gs2::Friend::Request::FDescribeBlackListByUserIdRequest>()
                     ->WithContextStack(Self->Gs2->DefaultContextStack)

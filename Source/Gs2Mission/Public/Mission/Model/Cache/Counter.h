@@ -1,0 +1,74 @@
+#pragma once
+
+#include "Core/Domain/CacheDatabase.h"
+#include "Core/Model/Gs2Error.h"
+#include "Mission/Model/Counter.h"
+
+namespace Gs2::Mission::Model::Cache
+{
+    class GS2MISSION_API FCounterCache final
+    {
+    public:
+        static FString CreateCacheParentKey(
+            TOptional<FString> CacheOwnerArgumentNamespaceName,
+            TOptional<FString> CacheOwnerArgumentUserId,
+            TOptional<int32> CacheOwnerArgumentTimeOffset = TOptional<int32>()
+        );
+
+        static FString CreateCacheKey(
+            TOptional<FString> CacheOwnerArgumentCounterName
+        );
+
+        static bool TryGet(
+            const Gs2::Core::Domain::FCacheDatabasePtr& CacheOwnerArgumentCache,
+            TOptional<FString> CacheOwnerArgumentNamespaceName,
+            TOptional<FString> CacheOwnerArgumentUserId,
+            TOptional<FString> CacheOwnerArgumentCounterName,
+            TOptional<int32> CacheOwnerArgumentTimeOffset,
+            Gs2::Mission::Model::FCounterPtr* CacheOwnerArgumentOutItem
+        );
+
+        static void Put(
+            const Gs2::Core::Domain::FCacheDatabasePtr& CacheOwnerArgumentCache,
+            TOptional<FString> CacheOwnerArgumentNamespaceName,
+            TOptional<FString> CacheOwnerArgumentUserId,
+            TOptional<FString> CacheOwnerArgumentCounterName,
+            TOptional<int32> CacheOwnerArgumentTimeOffset,
+            const Gs2::Mission::Model::FCounterPtr& CacheOwnerArgumentItem
+        );
+
+        static void Delete(
+            const Gs2::Core::Domain::FCacheDatabasePtr& CacheOwnerArgumentCache,
+            TOptional<FString> CacheOwnerArgumentNamespaceName,
+            TOptional<FString> CacheOwnerArgumentUserId,
+            TOptional<FString> CacheOwnerArgumentCounterName,
+            TOptional<int32> CacheOwnerArgumentTimeOffset
+        );
+
+        static Gs2::Core::Model::FGs2ErrorPtr Fetch(
+            const Gs2::Core::Domain::FCacheDatabasePtr& CacheOwnerArgumentCache,
+            TOptional<FString> CacheOwnerArgumentNamespaceName,
+            TOptional<FString> CacheOwnerArgumentUserId,
+            TOptional<FString> CacheOwnerArgumentCounterName,
+            TOptional<int32> CacheOwnerArgumentTimeOffset,
+            const TFunction<Gs2::Core::Model::FGs2ErrorPtr(Gs2::Mission::Model::FCounterPtr*)>& CacheOwnerArgumentFetchImpl,
+            Gs2::Mission::Model::FCounterPtr* CacheOwnerArgumentOutItem
+        );
+
+        static Gs2::Core::Domain::CallbackID ListSubscribe(
+            const Gs2::Core::Domain::FCacheDatabasePtr& CacheOwnerArgumentCache,
+            TOptional<FString> CacheOwnerArgumentNamespaceName,
+            TOptional<FString> CacheOwnerArgumentUserId,
+            TOptional<int32> CacheOwnerArgumentTimeOffset,
+            TFunction<void(TArray<Gs2::Mission::Model::FCounterPtr>)> CacheOwnerArgumentCallback
+        );
+
+        static void ListUnsubscribe(
+            const Gs2::Core::Domain::FCacheDatabasePtr& CacheOwnerArgumentCache,
+            TOptional<FString> CacheOwnerArgumentNamespaceName,
+            TOptional<FString> CacheOwnerArgumentUserId,
+            TOptional<int32> CacheOwnerArgumentTimeOffset,
+            Gs2::Core::Domain::CallbackID CacheOwnerArgumentCallbackID
+        );
+    };
+}

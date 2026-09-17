@@ -79,6 +79,8 @@ namespace Gs2::Experience::Domain::Model
             const FThresholdMasterDomain& From
         );
 
+
+
         class GS2EXPERIENCE_API FGetTask final :
             public Gs2::Core::Util::TGs2Future<Gs2::Experience::Model::FThresholdMaster>,
             public TSharedFromThis<FGetTask>
@@ -105,6 +107,8 @@ namespace Gs2::Experience::Domain::Model
             Request::FGetThresholdMasterRequestPtr Request
         );
 
+
+
         class GS2EXPERIENCE_API FUpdateTask final :
             public Gs2::Core::Util::TGs2Future<Gs2::Experience::Domain::Model::FThresholdMasterDomain>,
             public TSharedFromThis<FUpdateTask>
@@ -130,6 +134,8 @@ namespace Gs2::Experience::Domain::Model
         TSharedPtr<FAsyncTask<FUpdateTask>> Update(
             Request::FUpdateThresholdMasterRequestPtr Request
         );
+
+
 
         class GS2EXPERIENCE_API FDeleteTask final :
             public Gs2::Core::Util::TGs2Future<Gs2::Experience::Domain::Model::FThresholdMasterDomain>,
@@ -189,7 +195,34 @@ namespace Gs2::Experience::Domain::Model
 
         TSharedPtr<FAsyncTask<FModelTask>> Model();
 
+        void Invalidate();
+
         Gs2::Core::Domain::CallbackID Subscribe(
+            TFunction<void(Gs2::Experience::Model::FThresholdMasterPtr)> Callback
+        );
+
+        class GS2EXPERIENCE_API FSubscribeWithInitialCallTask final :
+            public Gs2::Core::Util::TGs2Future<Gs2::Core::Domain::CallbackID>,
+            public TSharedFromThis<FSubscribeWithInitialCallTask>
+        {
+            const TSharedPtr<FThresholdMasterDomain> Self;
+            const TFunction<void(Gs2::Experience::Model::FThresholdMasterPtr)> Callback;
+        public:
+            FSubscribeWithInitialCallTask(
+                const TSharedPtr<FThresholdMasterDomain>& Self,
+                TFunction<void(Gs2::Experience::Model::FThresholdMasterPtr)> Callback
+            );
+
+            FSubscribeWithInitialCallTask(
+                const FSubscribeWithInitialCallTask& From
+            );
+
+            virtual Gs2::Core::Model::FGs2ErrorPtr Action(
+                TSharedPtr<TSharedPtr<Gs2::Core::Domain::CallbackID>> Result
+            ) override;
+        };
+
+        TSharedPtr<FAsyncTask<FSubscribeWithInitialCallTask>> SubscribeWithInitialCall(
             TFunction<void(Gs2::Experience::Model::FThresholdMasterPtr)> Callback
         );
 
