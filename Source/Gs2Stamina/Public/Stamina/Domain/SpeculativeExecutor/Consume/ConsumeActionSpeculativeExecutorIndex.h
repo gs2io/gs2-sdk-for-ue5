@@ -56,7 +56,7 @@ namespace Gs2::Stamina::Domain::SpeculativeExecutor
             TBigInt<1024, false> Rate;
 
         public:
-            explicit FCommitTask(
+            GS2STAMINA_API explicit FCommitTask(
                 const Gs2::Core::Domain::FGs2Ptr& Domain,
                 const Gs2::Stamina::Domain::FGs2StaminaDomainPtr& Service,
                 const Gs2::Auth::Model::FAccessTokenPtr& AccessToken,
@@ -64,11 +64,11 @@ namespace Gs2::Stamina::Domain::SpeculativeExecutor
                 TBigInt<1024, false> Rate
             );
 
-            FCommitTask(
+            GS2STAMINA_API FCommitTask(
                 const FCommitTask& From
             );
 
-            virtual Gs2::Core::Model::FGs2ErrorPtr Action(
+            GS2STAMINA_API virtual Gs2::Core::Model::FGs2ErrorPtr Action(
                 TSharedPtr<TSharedPtr<Gs2::Core::Domain::SpeculativeExecutor::FPreparedSpeculativeCommit>> Result
             ) override;
         };

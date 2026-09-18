@@ -69,18 +69,18 @@ namespace Gs2::Quest::Domain::SpeculativeExecutor
             const Gs2::Quest::Request::FCreateProgressByUserIdRequestPtr Request;
 
         public:
-            explicit FCommitTask(
+            GS2QUEST_API explicit FCommitTask(
                 const Gs2::Core::Domain::FGs2Ptr& Domain,
                 const Gs2::Quest::Domain::FGs2QuestDomainPtr& Service,
                 const Gs2::Auth::Model::FAccessTokenPtr& AccessToken,
                 const Gs2::Quest::Request::FCreateProgressByUserIdRequestPtr& Request
             );
 
-            FCommitTask(
+            GS2QUEST_API FCommitTask(
                 const FCommitTask& From
             );
 
-            virtual Gs2::Core::Model::FGs2ErrorPtr Action(
+            GS2QUEST_API virtual Gs2::Core::Model::FGs2ErrorPtr Action(
                 TSharedPtr<TSharedPtr<Gs2::Core::Domain::SpeculativeExecutor::FPreparedSpeculativeCommit>> Result
             ) override;
         };

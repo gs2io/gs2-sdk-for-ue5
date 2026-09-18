@@ -64,7 +64,7 @@ namespace Gs2::Distributor::Domain::SpeculativeExecutor
             const TBigInt<1024, false> Rate;
 
         public:
-            explicit FCommitTask(
+            GS2DISTRIBUTOR_API explicit FCommitTask(
                 const Gs2::Core::Domain::FGs2Ptr& Domain,
                 const Gs2::Distributor::Domain::FGs2DistributorDomainPtr& Service,
                 const Gs2::Auth::Model::FAccessTokenPtr& AccessToken,
@@ -72,11 +72,11 @@ namespace Gs2::Distributor::Domain::SpeculativeExecutor
                 const TBigInt<1024, false>& Rate = TBigInt<1024, false>(1)
             );
 
-            FCommitTask(
+            GS2DISTRIBUTOR_API FCommitTask(
                 const FCommitTask& From
             );
 
-            virtual Gs2::Core::Model::FGs2ErrorPtr Action(
+            GS2DISTRIBUTOR_API virtual Gs2::Core::Model::FGs2ErrorPtr Action(
                 TSharedPtr<TSharedPtr<Gs2::Core::Domain::SpeculativeExecutor::FPreparedSpeculativeCommit>> Result
             ) override;
         };

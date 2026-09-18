@@ -70,18 +70,18 @@ namespace Gs2::SerialKey::Domain::SpeculativeExecutor
             const Gs2::SerialKey::Request::FVerifyCodeByUserIdRequestPtr Request;
 
         public:
-            explicit FCommitTask(
+            GS2SERIALKEY_API explicit FCommitTask(
                 const Gs2::Core::Domain::FGs2Ptr& Domain,
                 const Gs2::SerialKey::Domain::FGs2SerialKeyDomainPtr& Service,
                 const Gs2::Auth::Model::FAccessTokenPtr& AccessToken,
                 const Gs2::SerialKey::Request::FVerifyCodeByUserIdRequestPtr& Request
             );
 
-            FCommitTask(
+            GS2SERIALKEY_API FCommitTask(
                 const FCommitTask& From
             );
 
-            virtual Gs2::Core::Model::FGs2ErrorPtr Action(
+            GS2SERIALKEY_API virtual Gs2::Core::Model::FGs2ErrorPtr Action(
                 TSharedPtr<TSharedPtr<Gs2::Core::Domain::SpeculativeExecutor::FPreparedSpeculativeCommit>> Result
             ) override;
         };

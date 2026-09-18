@@ -69,18 +69,18 @@ namespace Gs2::Formation::Domain::SpeculativeExecutor
             const Gs2::Formation::Request::FSetFormByUserIdRequestPtr Request;
 
         public:
-            explicit FCommitTask(
+            GS2FORMATION_API explicit FCommitTask(
                 const Gs2::Core::Domain::FGs2Ptr& Domain,
                 const Gs2::Formation::Domain::FGs2FormationDomainPtr& Service,
                 const Gs2::Auth::Model::FAccessTokenPtr& AccessToken,
                 const Gs2::Formation::Request::FSetFormByUserIdRequestPtr& Request
             );
 
-            FCommitTask(
+            GS2FORMATION_API FCommitTask(
                 const FCommitTask& From
             );
 
-            virtual Gs2::Core::Model::FGs2ErrorPtr Action(
+            GS2FORMATION_API virtual Gs2::Core::Model::FGs2ErrorPtr Action(
                 TSharedPtr<TSharedPtr<Gs2::Core::Domain::SpeculativeExecutor::FPreparedSpeculativeCommit>> Result
             ) override;
         };

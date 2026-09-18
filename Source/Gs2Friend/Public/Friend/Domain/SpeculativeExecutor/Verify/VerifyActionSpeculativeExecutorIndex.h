@@ -57,7 +57,7 @@ namespace Gs2::Friend::Domain::SpeculativeExecutor
             TBigInt<1024, false> Rate;
 
         public:
-            explicit FCommitTask(
+            GS2FRIEND_API explicit FCommitTask(
                 const Gs2::Core::Domain::FGs2Ptr& Domain,
                 const Gs2::Friend::Domain::FGs2FriendDomainPtr& Service,
                 const Gs2::Auth::Model::FAccessTokenPtr& AccessToken,
@@ -65,11 +65,11 @@ namespace Gs2::Friend::Domain::SpeculativeExecutor
                 TBigInt<1024, false> Rate
             );
 
-            FCommitTask(
+            GS2FRIEND_API FCommitTask(
                 const FCommitTask& From
             );
 
-            virtual Gs2::Core::Model::FGs2ErrorPtr Action(
+            GS2FRIEND_API virtual Gs2::Core::Model::FGs2ErrorPtr Action(
                 TSharedPtr<TSharedPtr<Gs2::Core::Domain::SpeculativeExecutor::FPreparedSpeculativeCommit>> Result
             ) override;
         };

@@ -62,7 +62,7 @@ namespace Gs2::Stamina::Domain::SpeculativeExecutor
 
         static FString Action();
 
-        class GS2STAMINA_API FCommitTask final :
+        class FCommitTask final :
             public Gs2::Core::Util::TGs2Future<Gs2::Core::Domain::SpeculativeExecutor::FPreparedSpeculativeCommit>,
             public TSharedFromThis<FCommitTask>
         {
@@ -72,18 +72,18 @@ namespace Gs2::Stamina::Domain::SpeculativeExecutor
             const Gs2::Stamina::Request::FRecoverStaminaByUserIdRequestPtr Request;
 
         public:
-            explicit FCommitTask(
+            GS2STAMINA_API explicit FCommitTask(
                 const Gs2::Core::Domain::FGs2Ptr& Domain,
                 const Gs2::Stamina::Domain::FGs2StaminaDomainPtr& Service,
                 const Gs2::Auth::Model::FAccessTokenPtr& AccessToken,
                 const Gs2::Stamina::Request::FRecoverStaminaByUserIdRequestPtr& Request
             );
 
-            FCommitTask(
+            GS2STAMINA_API FCommitTask(
                 const FCommitTask& From
             );
 
-            virtual Gs2::Core::Model::FGs2ErrorPtr Action(
+            GS2STAMINA_API virtual Gs2::Core::Model::FGs2ErrorPtr Action(
                 TSharedPtr<TSharedPtr<Gs2::Core::Domain::SpeculativeExecutor::FPreparedSpeculativeCommit>> Result
             ) override;
         };

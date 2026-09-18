@@ -70,18 +70,18 @@ namespace Gs2::Inventory::Domain::SpeculativeExecutor
             const Gs2::Inventory::Request::FVerifyItemSetByUserIdRequestPtr Request;
 
         public:
-            explicit FCommitTask(
+            GS2INVENTORY_API explicit FCommitTask(
                 const Gs2::Core::Domain::FGs2Ptr& Domain,
                 const Gs2::Inventory::Domain::FGs2InventoryDomainPtr& Service,
                 const Gs2::Auth::Model::FAccessTokenPtr& AccessToken,
                 const Gs2::Inventory::Request::FVerifyItemSetByUserIdRequestPtr& Request
             );
 
-            FCommitTask(
+            GS2INVENTORY_API FCommitTask(
                 const FCommitTask& From
             );
 
-            virtual Gs2::Core::Model::FGs2ErrorPtr Action(
+            GS2INVENTORY_API virtual Gs2::Core::Model::FGs2ErrorPtr Action(
                 TSharedPtr<TSharedPtr<Gs2::Core::Domain::SpeculativeExecutor::FPreparedSpeculativeCommit>> Result
             ) override;
         };

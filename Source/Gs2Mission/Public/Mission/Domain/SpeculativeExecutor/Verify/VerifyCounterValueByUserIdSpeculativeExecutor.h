@@ -70,18 +70,18 @@ namespace Gs2::Mission::Domain::SpeculativeExecutor
             const Gs2::Mission::Request::FVerifyCounterValueByUserIdRequestPtr Request;
 
         public:
-            explicit FCommitTask(
+            GS2MISSION_API explicit FCommitTask(
                 const Gs2::Core::Domain::FGs2Ptr& Domain,
                 const Gs2::Mission::Domain::FGs2MissionDomainPtr& Service,
                 const Gs2::Auth::Model::FAccessTokenPtr& AccessToken,
                 const Gs2::Mission::Request::FVerifyCounterValueByUserIdRequestPtr& Request
             );
 
-            FCommitTask(
+            GS2MISSION_API FCommitTask(
                 const FCommitTask& From
             );
 
-            virtual Gs2::Core::Model::FGs2ErrorPtr Action(
+            GS2MISSION_API virtual Gs2::Core::Model::FGs2ErrorPtr Action(
                 TSharedPtr<TSharedPtr<Gs2::Core::Domain::SpeculativeExecutor::FPreparedSpeculativeCommit>> Result
             ) override;
         };

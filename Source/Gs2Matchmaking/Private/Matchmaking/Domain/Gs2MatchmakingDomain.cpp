@@ -632,12 +632,15 @@ namespace Gs2::Matchmaking::Domain
             {
                 return;
             }
-            const auto ListParentKey = Gs2::Matchmaking::Domain::Model::FUserDomain::CreateCacheParentKey(
+            // Rating は一覧ではなく単一アイテムのキャッシュとして保持されているため、
+            // ListCache ではなく該当アイテムを直接削除して次回取得時に再取得させる
+            Gs2::Matchmaking::Model::Cache::FRatingCache::Delete(
+                Gs2->Cache,
                 PayloadJson->GetStringField(ANSI_TO_TCHAR("namespaceName")),
                 PayloadJson->GetStringField(ANSI_TO_TCHAR("userId")),
-                "Rating"
+                PayloadJson->GetStringField(ANSI_TO_TCHAR("ratingName")),
+                TOptional<int32>()
             );
-            Gs2->Cache->ClearListCache(Gs2::Matchmaking::Model::FRating::TypeName, ListParentKey);
             ChangeRatingNotificationEvent.Broadcast(Gs2::Matchmaking::Model::FChangeRatingNotification::FromJson(PayloadJson));
         }
     }

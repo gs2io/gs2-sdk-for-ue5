@@ -731,10 +731,10 @@ namespace Gs2::Inbox::Domain
             {
                 return;
             }
-            const auto ListParentKey = Gs2::Inbox::Domain::Model::FUserDomain::CreateCacheParentKey(
+            const auto ListParentKey = Gs2::Inbox::Model::Cache::FMessageCache::CreateCacheParentKey(
                 PayloadJson->GetStringField(ANSI_TO_TCHAR("namespaceName")),
                 PayloadJson->GetStringField(ANSI_TO_TCHAR("userId")),
-                "Message"
+                TOptional<int32>()
             );
             Gs2->Cache->ClearListCache(Gs2::Inbox::Model::FMessage::TypeName, ListParentKey);
             ReceiveNotificationEvent.Broadcast(Gs2::Inbox::Model::FReceiveNotification::FromJson(PayloadJson));

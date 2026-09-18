@@ -69,18 +69,18 @@ namespace Gs2::JobQueue::Domain::SpeculativeExecutor
             const Gs2::JobQueue::Request::FDeleteJobByUserIdRequestPtr Request;
 
         public:
-            explicit FCommitTask(
+            GS2JOBQUEUE_API explicit FCommitTask(
                 const Gs2::Core::Domain::FGs2Ptr& Domain,
                 const Gs2::JobQueue::Domain::FGs2JobQueueDomainPtr& Service,
                 const Gs2::Auth::Model::FAccessTokenPtr& AccessToken,
                 const Gs2::JobQueue::Request::FDeleteJobByUserIdRequestPtr& Request
             );
 
-            FCommitTask(
+            GS2JOBQUEUE_API FCommitTask(
                 const FCommitTask& From
             );
 
-            virtual Gs2::Core::Model::FGs2ErrorPtr Action(
+            GS2JOBQUEUE_API virtual Gs2::Core::Model::FGs2ErrorPtr Action(
                 TSharedPtr<TSharedPtr<Gs2::Core::Domain::SpeculativeExecutor::FPreparedSpeculativeCommit>> Result
             ) override;
         };

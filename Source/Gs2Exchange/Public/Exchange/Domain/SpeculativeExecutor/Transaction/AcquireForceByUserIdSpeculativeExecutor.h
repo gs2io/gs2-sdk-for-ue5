@@ -60,18 +60,18 @@ namespace Gs2::Exchange::Domain::Transaction::SpeculativeExecutor
             const Gs2::Exchange::Request::FAcquireForceByUserIdRequestPtr Request;
 
         public:
-            explicit FCommitTask(
+            GS2EXCHANGE_API explicit FCommitTask(
                 const Gs2::Core::Domain::FGs2Ptr& Domain,
                 const Gs2::Exchange::Domain::FGs2ExchangeDomainPtr& Service,
                 const Gs2::Auth::Model::FAccessTokenPtr& AccessToken,
                 const Gs2::Exchange::Request::FAcquireForceByUserIdRequestPtr& Request
             );
 
-            FCommitTask(
+            GS2EXCHANGE_API FCommitTask(
                 const FCommitTask& From
             );
 
-            virtual Gs2::Core::Model::FGs2ErrorPtr Action(
+            GS2EXCHANGE_API virtual Gs2::Core::Model::FGs2ErrorPtr Action(
                 TSharedPtr<TSharedPtr<Gs2::Core::Domain::SpeculativeExecutor::FPreparedSpeculativeCommit>> Result
             ) override;
         };

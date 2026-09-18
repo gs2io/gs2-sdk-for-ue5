@@ -47,6 +47,7 @@
 #include "Friend/Domain/Model/FriendRequest.h"
 #include "Friend/Model/Cache/ReceiveFriendRequest.h"
 #include "Friend/Model/Cache/FriendRequest.h"
+#include "Friend/Model/Cache/SendFriendRequest.h"
 
 #include "Core/Domain/Gs2.h"
 #include "Core/Domain/Transaction/JobQueueJobDomainFactory.h"
@@ -208,6 +209,14 @@ namespace Gs2::Friend::Domain::Model
             Request->GetFromUserId(),
             TOptional<int32>()
         );
+        Gs2::Friend::Model::Cache::FSendFriendRequestCache::Delete(
+            Self->Gs2->Cache,
+
+            Request->GetNamespaceName(),
+            Request->GetFromUserId(),
+            (ResultModel.IsValid() && ResultModel->GetItem().IsValid() ? ResultModel->GetItem()->GetUserId() : TOptional<FString>()),
+            TOptional<int32>()
+        );
         auto Domain = MakeShared<Gs2::Friend::Domain::Model::FReceiveFriendRequestDomain>(
             Self->Gs2,
             Self->Service,
@@ -272,6 +281,14 @@ namespace Gs2::Friend::Domain::Model
             Request->GetNamespaceName(),
             (ResultModel.IsValid() && ResultModel->GetItem().IsValid() ? ResultModel->GetItem()->GetUserId() : TOptional<FString>()),
             Request->GetFromUserId(),
+            TOptional<int32>()
+        );
+        Gs2::Friend::Model::Cache::FSendFriendRequestCache::Delete(
+            Self->Gs2->Cache,
+
+            Request->GetNamespaceName(),
+            Request->GetFromUserId(),
+            (ResultModel.IsValid() && ResultModel->GetItem().IsValid() ? ResultModel->GetItem()->GetUserId() : TOptional<FString>()),
             TOptional<int32>()
         );
         auto Domain = MakeShared<Gs2::Friend::Domain::Model::FReceiveFriendRequestDomain>(

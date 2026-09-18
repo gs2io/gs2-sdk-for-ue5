@@ -60,7 +60,7 @@ namespace Gs2::Dictionary::Domain::SpeculativeExecutor
 
         static FString Action();
 
-        class GS2DICTIONARY_API FCommitTask final :
+        class FCommitTask final :
             public Gs2::Core::Util::TGs2Future<Gs2::Core::Domain::SpeculativeExecutor::FPreparedSpeculativeCommit>,
             public TSharedFromThis<FCommitTask>
         {
@@ -70,18 +70,18 @@ namespace Gs2::Dictionary::Domain::SpeculativeExecutor
             const Gs2::Dictionary::Request::FVerifyEntryByUserIdRequestPtr Request;
 
         public:
-            explicit FCommitTask(
+            GS2DICTIONARY_API explicit FCommitTask(
                 const Gs2::Core::Domain::FGs2Ptr& Domain,
                 const Gs2::Dictionary::Domain::FGs2DictionaryDomainPtr& Service,
                 const Gs2::Auth::Model::FAccessTokenPtr& AccessToken,
                 const Gs2::Dictionary::Request::FVerifyEntryByUserIdRequestPtr& Request
             );
 
-            FCommitTask(
+            GS2DICTIONARY_API FCommitTask(
                 const FCommitTask& From
             );
 
-            virtual Gs2::Core::Model::FGs2ErrorPtr Action(
+            GS2DICTIONARY_API virtual Gs2::Core::Model::FGs2ErrorPtr Action(
                 TSharedPtr<TSharedPtr<Gs2::Core::Domain::SpeculativeExecutor::FPreparedSpeculativeCommit>> Result
             ) override;
         };

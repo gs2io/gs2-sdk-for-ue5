@@ -69,18 +69,18 @@ namespace Gs2::Money::Domain::SpeculativeExecutor
             const Gs2::Money::Request::FRecordReceiptRequestPtr Request;
 
         public:
-            explicit FCommitTask(
+            GS2MONEY_API explicit FCommitTask(
                 const Gs2::Core::Domain::FGs2Ptr& Domain,
                 const Gs2::Money::Domain::FGs2MoneyDomainPtr& Service,
                 const Gs2::Auth::Model::FAccessTokenPtr& AccessToken,
                 const Gs2::Money::Request::FRecordReceiptRequestPtr& Request
             );
 
-            FCommitTask(
+            GS2MONEY_API FCommitTask(
                 const FCommitTask& From
             );
 
-            virtual Gs2::Core::Model::FGs2ErrorPtr Action(
+            GS2MONEY_API virtual Gs2::Core::Model::FGs2ErrorPtr Action(
                 TSharedPtr<TSharedPtr<Gs2::Core::Domain::SpeculativeExecutor::FPreparedSpeculativeCommit>> Result
             ) override;
         };
