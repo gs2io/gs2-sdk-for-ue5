@@ -1,3 +1,5 @@
+// deny overwrite
+
 #pragma once
 
 #include "Core/Domain/CacheDatabase.h"
