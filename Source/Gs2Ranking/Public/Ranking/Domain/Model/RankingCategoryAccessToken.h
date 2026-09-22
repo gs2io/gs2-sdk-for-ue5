@@ -167,7 +167,6 @@ namespace Gs2::Ranking::Domain::Model
 
         Gs2::Core::Domain::CallbackID SubscribeSubscribeUsers(
             TFunction<void()> Callback
-
         );
 
         class FCollectSubscribeUsersTask;
@@ -207,7 +206,6 @@ namespace Gs2::Ranking::Domain::Model
 
         Gs2::Core::Domain::CallbackID SubscribeRankings(
             TFunction<void()> Callback
-
         );
 
         class FCollectRankingsTask;

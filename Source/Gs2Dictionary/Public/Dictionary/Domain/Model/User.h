@@ -260,7 +260,6 @@ namespace Gs2::Dictionary::Domain::Model
 
         Gs2::Core::Domain::CallbackID SubscribeEntries(
             TFunction<void()> Callback
-
         );
 
         class FCollectEntriesTask;
@@ -301,7 +300,6 @@ namespace Gs2::Dictionary::Domain::Model
 
         Gs2::Core::Domain::CallbackID SubscribeLikes(
             TFunction<void()> Callback
-
         );
 
         class FCollectLikesTask;

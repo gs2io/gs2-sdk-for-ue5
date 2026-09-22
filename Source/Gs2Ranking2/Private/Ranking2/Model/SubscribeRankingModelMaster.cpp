@@ -578,6 +578,28 @@ namespace Gs2::Ranking2::Model::Cache
         );
     }
 
+    FString FSubscribeRankingModelMasterCache::PutUserData(
+        const Gs2::Core::Domain::FCacheDatabasePtr& Cache,
+        TOptional<FString> NamespaceName,
+        TOptional<FString> UserId,
+        TOptional<int32> TimeOffset,
+        const Gs2::Ranking2::Model::FSubscribeRankingModelMasterPtr& Item
+    )
+    {
+        if (!Item.IsValid()) return FString();
+        Put(
+            Cache,
+            NamespaceName,
+            Item->GetName(),
+            TimeOffset,
+            Item
+        );
+        return CreateCacheParentKey(
+            NamespaceName,
+            TimeOffset
+        );
+    }
+
     void FSubscribeRankingModelMasterCache::Delete(
         const Gs2::Core::Domain::FCacheDatabasePtr& CacheOwnerArgumentCache,
         TOptional<FString> CacheOwnerArgumentNamespaceName,

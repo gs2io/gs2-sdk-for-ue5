@@ -57,10 +57,10 @@ namespace Gs2::Limit::Domain::Model
         UserId(UserId),
         LimitName(LimitName),
         CounterName(CounterName),
-        ParentKey(Gs2::Limit::Model::Cache::FCounterCache::CreateCacheParentKey(
+        ParentKey(Gs2::Limit::Domain::Model::FUserDomain::CreateCacheParentKey(
             NamespaceName,
             UserId,
-            TOptional<int32>()
+            "Counter"
         ))
     {
     }
@@ -123,7 +123,7 @@ namespace Gs2::Limit::Domain::Model
               const auto Details = MakeShared<TArray<TSharedPtr<Gs2::Core::Model::FGs2ErrorDetail>>>();
                 Details->Add(MakeShared<Gs2::Core::Model::FGs2ErrorDetail>(TEXT("result.item"), TEXT("result.item is invalid."), TEXT("invalid_response")));
                 return MakeShared<Gs2::Core::Model::FUnknownError>(Details);
-              }if (!(Request->GetUserId()).IsSet())
+              }if (!ResultModel.IsValid() || !((ResultModel.IsValid() && ResultModel->GetItem().IsValid() ? ResultModel->GetItem()->GetUserId() : TOptional<FString>())).IsSet())
             {
               const auto Details = MakeShared<TArray<TSharedPtr<Gs2::Core::Model::FGs2ErrorDetail>>>();
                 Details->Add(MakeShared<Gs2::Core::Model::FGs2ErrorDetail>(TEXT("userId"), TEXT("userId is invalid."), TEXT("invalid_response")));
@@ -133,7 +133,7 @@ namespace Gs2::Limit::Domain::Model
             Self->Gs2->Cache,
 
             Request->GetNamespaceName(),
-            Request->GetUserId(),
+            (ResultModel.IsValid() && ResultModel->GetItem().IsValid() ? ResultModel->GetItem()->GetUserId() : TOptional<FString>()),
             ResultModel->GetItem()->GetLimitName(),
             Request->GetCounterName(),
             TOptional<int32>(),
@@ -193,7 +193,7 @@ namespace Gs2::Limit::Domain::Model
               const auto Details = MakeShared<TArray<TSharedPtr<Gs2::Core::Model::FGs2ErrorDetail>>>();
                 Details->Add(MakeShared<Gs2::Core::Model::FGs2ErrorDetail>(TEXT("result.item"), TEXT("result.item is invalid."), TEXT("invalid_response")));
                 return MakeShared<Gs2::Core::Model::FUnknownError>(Details);
-              }if (!(Request->GetUserId()).IsSet())
+              }if (!ResultModel.IsValid() || !((ResultModel.IsValid() && ResultModel->GetItem().IsValid() ? ResultModel->GetItem()->GetUserId() : TOptional<FString>())).IsSet())
             {
               const auto Details = MakeShared<TArray<TSharedPtr<Gs2::Core::Model::FGs2ErrorDetail>>>();
                 Details->Add(MakeShared<Gs2::Core::Model::FGs2ErrorDetail>(TEXT("userId"), TEXT("userId is invalid."), TEXT("invalid_response")));
@@ -203,7 +203,7 @@ namespace Gs2::Limit::Domain::Model
             Self->Gs2->Cache,
 
             Request->GetNamespaceName(),
-            Request->GetUserId(),
+            (ResultModel.IsValid() && ResultModel->GetItem().IsValid() ? ResultModel->GetItem()->GetUserId() : TOptional<FString>()),
             ResultModel->GetItem()->GetLimitName(),
             Request->GetCounterName(),
             TOptional<int32>(),
@@ -265,7 +265,7 @@ namespace Gs2::Limit::Domain::Model
               const auto Details = MakeShared<TArray<TSharedPtr<Gs2::Core::Model::FGs2ErrorDetail>>>();
                 Details->Add(MakeShared<Gs2::Core::Model::FGs2ErrorDetail>(TEXT("result.item"), TEXT("result.item is invalid."), TEXT("invalid_response")));
                 return MakeShared<Gs2::Core::Model::FUnknownError>(Details);
-              }if (!(Request->GetUserId()).IsSet())
+              }if (!ResultModel.IsValid() || !((ResultModel.IsValid() && ResultModel->GetItem().IsValid() ? ResultModel->GetItem()->GetUserId() : TOptional<FString>())).IsSet())
             {
               const auto Details = MakeShared<TArray<TSharedPtr<Gs2::Core::Model::FGs2ErrorDetail>>>();
                 Details->Add(MakeShared<Gs2::Core::Model::FGs2ErrorDetail>(TEXT("userId"), TEXT("userId is invalid."), TEXT("invalid_response")));
@@ -275,7 +275,7 @@ namespace Gs2::Limit::Domain::Model
             Self->Gs2->Cache,
 
             Request->GetNamespaceName(),
-            Request->GetUserId(),
+            (ResultModel.IsValid() && ResultModel->GetItem().IsValid() ? ResultModel->GetItem()->GetUserId() : TOptional<FString>()),
             ResultModel->GetItem()->GetLimitName(),
             Request->GetCounterName(),
             TOptional<int32>(),
@@ -340,7 +340,7 @@ namespace Gs2::Limit::Domain::Model
                     const auto Details = MakeShared<TArray<TSharedPtr<Gs2::Core::Model::FGs2ErrorDetail>>>();
                       Details->Add(MakeShared<Gs2::Core::Model::FGs2ErrorDetail>(TEXT("result.item"), TEXT("result.item is invalid."), TEXT("invalid_response")));
                       return MakeShared<Gs2::Core::Model::FUnknownError>(Details);
-                    }if (!(Request->GetUserId()).IsSet())
+                    }if (!ResultModel.IsValid() || !((ResultModel.IsValid() && ResultModel->GetItem().IsValid() ? ResultModel->GetItem()->GetUserId() : TOptional<FString>())).IsSet())
                   {
                     const auto Details = MakeShared<TArray<TSharedPtr<Gs2::Core::Model::FGs2ErrorDetail>>>();
                       Details->Add(MakeShared<Gs2::Core::Model::FGs2ErrorDetail>(TEXT("userId"), TEXT("userId is invalid."), TEXT("invalid_response")));
@@ -350,7 +350,7 @@ namespace Gs2::Limit::Domain::Model
             Self->Gs2->Cache,
 
             Request->GetNamespaceName(),
-            Request->GetUserId(),
+            (ResultModel.IsValid() && ResultModel->GetItem().IsValid() ? ResultModel->GetItem()->GetUserId() : TOptional<FString>()),
             ResultModel->GetItem()->GetLimitName(),
             Request->GetCounterName(),
             TOptional<int32>()
@@ -410,7 +410,7 @@ namespace Gs2::Limit::Domain::Model
               const auto Details = MakeShared<TArray<TSharedPtr<Gs2::Core::Model::FGs2ErrorDetail>>>();
                 Details->Add(MakeShared<Gs2::Core::Model::FGs2ErrorDetail>(TEXT("result.item"), TEXT("result.item is invalid."), TEXT("invalid_response")));
                 return MakeShared<Gs2::Core::Model::FUnknownError>(Details);
-              }if (!(Request->GetUserId()).IsSet())
+              }if (!ResultModel.IsValid() || !((ResultModel.IsValid() && ResultModel->GetItem().IsValid() ? ResultModel->GetItem()->GetUserId() : TOptional<FString>())).IsSet())
             {
               const auto Details = MakeShared<TArray<TSharedPtr<Gs2::Core::Model::FGs2ErrorDetail>>>();
                 Details->Add(MakeShared<Gs2::Core::Model::FGs2ErrorDetail>(TEXT("userId"), TEXT("userId is invalid."), TEXT("invalid_response")));
@@ -420,7 +420,7 @@ namespace Gs2::Limit::Domain::Model
             Self->Gs2->Cache,
 
             Request->GetNamespaceName(),
-            Request->GetUserId(),
+            (ResultModel.IsValid() && ResultModel->GetItem().IsValid() ? ResultModel->GetItem()->GetUserId() : TOptional<FString>()),
             ResultModel->GetItem()->GetLimitName(),
             Request->GetCounterName(),
             TOptional<int32>(),

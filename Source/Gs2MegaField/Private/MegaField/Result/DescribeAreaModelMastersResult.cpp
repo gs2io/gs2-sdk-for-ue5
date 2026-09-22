@@ -70,16 +70,17 @@ namespace Gs2::MegaField::Result
         return MakeShared<FDescribeAreaModelMastersResult>()
             ->WithItems(Data->HasField(ANSI_TO_TCHAR("items")) ? [Data]() -> TSharedPtr<TArray<Model::FAreaModelMasterPtr>>
                  {
-                    auto v = MakeShared<TArray<Model::FAreaModelMasterPtr>>();
-                    if (!Data->HasTypedField<EJson::Null>(ANSI_TO_TCHAR("items")) && Data->HasTypedField<EJson::Array>(ANSI_TO_TCHAR("items")))
+                    if (!Data->HasTypedField<EJson::Array>(ANSI_TO_TCHAR("items")))
                     {
-                        for (auto JsonObjectValue : Data->GetArrayField(ANSI_TO_TCHAR("items")))
-                        {
-                            v->Add(Model::FAreaModelMaster::FromJson(JsonObjectValue->AsObject()));
-                        }
+                        return nullptr;
+                    }
+                    auto v = MakeShared<TArray<Model::FAreaModelMasterPtr>>();
+                    for (auto JsonObjectValue : Data->GetArrayField(ANSI_TO_TCHAR("items")))
+                    {
+                        v->Add(Model::FAreaModelMaster::FromJson(JsonObjectValue->AsObject()));
                     }
                     return v;
-                 }() : MakeShared<TArray<Model::FAreaModelMasterPtr>>())
+                 }() : nullptr)
             ->WithNextPageToken(Data->HasField(ANSI_TO_TCHAR("nextPageToken")) ? [Data]() -> TOptional<FString>
                 {
                     FString v("");

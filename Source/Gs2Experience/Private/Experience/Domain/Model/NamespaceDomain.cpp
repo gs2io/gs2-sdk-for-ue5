@@ -436,7 +436,6 @@ namespace Gs2::Experience::Domain::Model
 
     Gs2::Core::Domain::CallbackID FNamespaceDomain::SubscribeExperienceModels(
     TFunction<void()> Callback
-
     )
     {
         return Gs2->Cache->ListSubscribe(
@@ -597,7 +596,6 @@ namespace Gs2::Experience::Domain::Model
 
     Gs2::Core::Domain::CallbackID FNamespaceDomain::SubscribeThresholdMasters(
     TFunction<void()> Callback
-
     )
     {
         return Gs2->Cache->ListSubscribe(
@@ -735,7 +733,6 @@ namespace Gs2::Experience::Domain::Model
 
     Gs2::Core::Domain::CallbackID FNamespaceDomain::SubscribeExperienceModelMasters(
     TFunction<void()> Callback
-
     )
     {
         return Gs2->Cache->ListSubscribe(

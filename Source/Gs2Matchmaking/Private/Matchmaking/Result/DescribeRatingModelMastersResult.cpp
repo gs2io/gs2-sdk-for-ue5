@@ -70,16 +70,17 @@ namespace Gs2::Matchmaking::Result
         return MakeShared<FDescribeRatingModelMastersResult>()
             ->WithItems(Data->HasField(ANSI_TO_TCHAR("items")) ? [Data]() -> TSharedPtr<TArray<Model::FRatingModelMasterPtr>>
                  {
-                    auto v = MakeShared<TArray<Model::FRatingModelMasterPtr>>();
-                    if (!Data->HasTypedField<EJson::Null>(ANSI_TO_TCHAR("items")) && Data->HasTypedField<EJson::Array>(ANSI_TO_TCHAR("items")))
+                    if (!Data->HasTypedField<EJson::Array>(ANSI_TO_TCHAR("items")))
                     {
-                        for (auto JsonObjectValue : Data->GetArrayField(ANSI_TO_TCHAR("items")))
-                        {
-                            v->Add(Model::FRatingModelMaster::FromJson(JsonObjectValue->AsObject()));
-                        }
+                        return nullptr;
+                    }
+                    auto v = MakeShared<TArray<Model::FRatingModelMasterPtr>>();
+                    for (auto JsonObjectValue : Data->GetArrayField(ANSI_TO_TCHAR("items")))
+                    {
+                        v->Add(Model::FRatingModelMaster::FromJson(JsonObjectValue->AsObject()));
                     }
                     return v;
-                 }() : MakeShared<TArray<Model::FRatingModelMasterPtr>>())
+                 }() : nullptr)
             ->WithNextPageToken(Data->HasField(ANSI_TO_TCHAR("nextPageToken")) ? [Data]() -> TOptional<FString>
                 {
                     FString v("");

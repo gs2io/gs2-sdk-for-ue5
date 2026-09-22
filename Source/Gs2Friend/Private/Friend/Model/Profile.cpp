@@ -409,10 +409,33 @@ namespace Gs2::Friend::Model::Cache
             const int64 CacheOwnerOldRevision = CacheOwnerExisting.IsValid() ? CacheOwnerExisting->GetRevision().Get(-1) : -1;
             const int64 CacheOwnerNewRevision = CacheOwnerValue.IsValid() ? CacheOwnerValue->GetRevision().Get(-1) : -1;
             if (CacheOwnerOldRevision > CacheOwnerNewRevision && CacheOwnerNewRevision > 1) return;
-            if (CacheOwnerOldRevision == CacheOwnerNewRevision && CacheOwnerNewRevision != 0) return;
+            if (CacheOwnerOldRevision == CacheOwnerNewRevision) return;
         }
         CacheSnapshot->Put(Gs2::Friend::Model::FProfile::TypeName, CacheOwnerParentKey, CacheOwnerKey, CacheOwnerValue,
             FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
+        );
+    }
+
+    FString FProfileCache::PutUserData(
+        const Gs2::Core::Domain::FCacheDatabasePtr& Cache,
+        TOptional<FString> NamespaceName,
+        TOptional<FString> UserId,
+        TOptional<int32> TimeOffset,
+        const Gs2::Friend::Model::FProfilePtr& Item
+    )
+    {
+        if (!Item.IsValid()) return FString();
+        Put(
+            Cache,
+            NamespaceName,
+            UserId,
+            TimeOffset,
+            Item
+        );
+        return CreateCacheParentKey(
+            NamespaceName,
+            UserId,
+            TimeOffset
         );
     }
 

@@ -96,16 +96,17 @@ namespace Gs2::Quest::Model
                 }() : TOptional<FString>())
             ->WithCompleteAcquireActions(Data->HasField(ANSI_TO_TCHAR("completeAcquireActions")) ? [Data]() -> TSharedPtr<TArray<Model::FAcquireActionPtr>>
                 {
-                    auto v = MakeShared<TArray<Model::FAcquireActionPtr>>();
-                    if (!Data->HasTypedField<EJson::Null>(ANSI_TO_TCHAR("completeAcquireActions")) && Data->HasTypedField<EJson::Array>(ANSI_TO_TCHAR("completeAcquireActions")))
+                    if (!Data->HasTypedField<EJson::Array>(ANSI_TO_TCHAR("completeAcquireActions")))
                     {
-                        for (auto JsonObjectValue : Data->GetArrayField(ANSI_TO_TCHAR("completeAcquireActions")))
-                        {
-                            v->Add(Model::FAcquireAction::FromJson(JsonObjectValue->AsObject()));
-                        }
+                        return nullptr;
+                    }
+                    auto v = MakeShared<TArray<Model::FAcquireActionPtr>>();
+                    for (auto JsonObjectValue : Data->GetArrayField(ANSI_TO_TCHAR("completeAcquireActions")))
+                    {
+                        v->Add(Model::FAcquireAction::FromJson(JsonObjectValue->AsObject()));
                     }
                     return v;
-                 }() : MakeShared<TArray<Model::FAcquireActionPtr>>())
+                 }() : nullptr)
             ->WithWeight(Data->HasField(ANSI_TO_TCHAR("weight")) ? [Data]() -> TOptional<int32>
                 {
                     int32 v;

@@ -406,6 +406,30 @@ namespace Gs2::Inventory::Model::Cache
         );
     }
 
+    FString FBigItemModelMasterCache::PutUserData(
+        const Gs2::Core::Domain::FCacheDatabasePtr& Cache,
+        TOptional<FString> NamespaceName,
+        TOptional<FString> UserId,
+        TOptional<int32> TimeOffset,
+        const Gs2::Inventory::Model::FBigItemModelMasterPtr& Item
+    )
+    {
+        if (!Item.IsValid()) return FString();
+        Put(
+            Cache,
+            NamespaceName,
+            (Item->GetItemModelId().IsSet() ? Gs2::Inventory::Model::FBigItemModelMaster::GetInventoryNameFromGrn(*Item->GetItemModelId()) : TOptional<FString>()),
+            Item->GetName(),
+            TimeOffset,
+            Item
+        );
+        return CreateCacheParentKey(
+            NamespaceName,
+            (Item->GetItemModelId().IsSet() ? Gs2::Inventory::Model::FBigItemModelMaster::GetInventoryNameFromGrn(*Item->GetItemModelId()) : TOptional<FString>()),
+            TimeOffset
+        );
+    }
+
     void FBigItemModelMasterCache::Delete(
         const Gs2::Core::Domain::FCacheDatabasePtr& CacheOwnerArgumentCache,
         TOptional<FString> CacheOwnerArgumentNamespaceName,

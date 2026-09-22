@@ -285,16 +285,17 @@ namespace Gs2::Idle::Request
               }() : TOptional<FString>())
           ->WithAcquireActions(Data->HasField(ANSI_TO_TCHAR("acquireActions")) ? [Data]() -> TSharedPtr<TArray<Model::FAcquireActionListPtr>>
               {
-                  auto v = MakeShared<TArray<Model::FAcquireActionListPtr>>();
-                  if (!Data->HasTypedField<EJson::Null>(ANSI_TO_TCHAR("acquireActions")) && Data->HasTypedField<EJson::Array>(ANSI_TO_TCHAR("acquireActions")))
+                  if (!Data->HasTypedField<EJson::Array>(ANSI_TO_TCHAR("acquireActions")))
                   {
-                      for (auto JsonObjectValue : Data->GetArrayField(ANSI_TO_TCHAR("acquireActions")))
-                      {
-                          v->Add(Model::FAcquireActionList::FromJson(JsonObjectValue->AsObject()));
-                      }
+                      return nullptr;
                   }
+                  auto v = MakeShared<TArray<Model::FAcquireActionListPtr>>();
+                  for (auto JsonObjectValue : Data->GetArrayField(ANSI_TO_TCHAR("acquireActions")))
+                      {
+                      v->Add(Model::FAcquireActionList::FromJson(JsonObjectValue->AsObject()));
+                      }
                   return v;
-              }() : MakeShared<TArray<Model::FAcquireActionListPtr>>())
+              }() : nullptr)
             ->WithIdlePeriodScheduleId(Data->HasField(ANSI_TO_TCHAR("idlePeriodScheduleId")) ? [Data]() -> TOptional<FString>
               {
                   FString v("");

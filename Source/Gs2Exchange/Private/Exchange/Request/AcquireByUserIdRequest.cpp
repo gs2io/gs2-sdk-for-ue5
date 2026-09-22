@@ -169,16 +169,17 @@ namespace Gs2::Exchange::Request
               }() : TOptional<FString>())
           ->WithConfig(Data->HasField(ANSI_TO_TCHAR("config")) ? [Data]() -> TSharedPtr<TArray<Model::FConfigPtr>>
               {
-                  auto v = MakeShared<TArray<Model::FConfigPtr>>();
-                  if (!Data->HasTypedField<EJson::Null>(ANSI_TO_TCHAR("config")) && Data->HasTypedField<EJson::Array>(ANSI_TO_TCHAR("config")))
+                  if (!Data->HasTypedField<EJson::Array>(ANSI_TO_TCHAR("config")))
                   {
-                      for (auto JsonObjectValue : Data->GetArrayField(ANSI_TO_TCHAR("config")))
-                      {
-                          v->Add(Model::FConfig::FromJson(JsonObjectValue->AsObject()));
-                      }
+                      return nullptr;
                   }
+                  auto v = MakeShared<TArray<Model::FConfigPtr>>();
+                  for (auto JsonObjectValue : Data->GetArrayField(ANSI_TO_TCHAR("config")))
+                      {
+                      v->Add(Model::FConfig::FromJson(JsonObjectValue->AsObject()));
+                      }
                   return v;
-              }() : MakeShared<TArray<Model::FConfigPtr>>())
+              }() : nullptr)
             ->WithTimeOffsetToken(Data->HasField(ANSI_TO_TCHAR("timeOffsetToken")) ? [Data]() -> TOptional<FString>
               {
                   FString v("");

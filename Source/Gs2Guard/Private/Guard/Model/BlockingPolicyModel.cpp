@@ -232,16 +232,17 @@ namespace Gs2::Guard::Model
         return MakeShared<FBlockingPolicyModel>()
             ->WithPassServices(Data->HasField(ANSI_TO_TCHAR("passServices")) ? [Data]() -> TSharedPtr<TArray<FString>>
                 {
-                    auto v = MakeShared<TArray<FString>>();
-                    if (!Data->HasTypedField<EJson::Null>(ANSI_TO_TCHAR("passServices")) && Data->HasTypedField<EJson::Array>(ANSI_TO_TCHAR("passServices")))
+                    if (!Data->HasTypedField<EJson::Array>(ANSI_TO_TCHAR("passServices")))
                     {
-                        for (auto JsonObjectValue : Data->GetArrayField(ANSI_TO_TCHAR("passServices")))
-                        {
-                            v->Add(JsonObjectValue->AsString());
-                        }
+                        return nullptr;
+                    }
+                    auto v = MakeShared<TArray<FString>>();
+                    for (auto JsonObjectValue : Data->GetArrayField(ANSI_TO_TCHAR("passServices")))
+                    {
+                        v->Add(JsonObjectValue->AsString());
                     }
                     return v;
-                 }() : MakeShared<TArray<FString>>())
+                 }() : nullptr)
             ->WithDefaultRestriction(Data->HasField(ANSI_TO_TCHAR("defaultRestriction")) ? [Data]() -> TOptional<FString>
                 {
                     FString v("");
@@ -262,16 +263,17 @@ namespace Gs2::Guard::Model
                 }() : TOptional<FString>())
             ->WithLocations(Data->HasField(ANSI_TO_TCHAR("locations")) ? [Data]() -> TSharedPtr<TArray<FString>>
                 {
-                    auto v = MakeShared<TArray<FString>>();
-                    if (!Data->HasTypedField<EJson::Null>(ANSI_TO_TCHAR("locations")) && Data->HasTypedField<EJson::Array>(ANSI_TO_TCHAR("locations")))
+                    if (!Data->HasTypedField<EJson::Array>(ANSI_TO_TCHAR("locations")))
                     {
-                        for (auto JsonObjectValue : Data->GetArrayField(ANSI_TO_TCHAR("locations")))
-                        {
-                            v->Add(JsonObjectValue->AsString());
-                        }
+                        return nullptr;
+                    }
+                    auto v = MakeShared<TArray<FString>>();
+                    for (auto JsonObjectValue : Data->GetArrayField(ANSI_TO_TCHAR("locations")))
+                    {
+                        v->Add(JsonObjectValue->AsString());
                     }
                     return v;
-                 }() : MakeShared<TArray<FString>>())
+                 }() : nullptr)
             ->WithLocationRestriction(Data->HasField(ANSI_TO_TCHAR("locationRestriction")) ? [Data]() -> TOptional<FString>
                 {
                     FString v("");
@@ -346,16 +348,17 @@ namespace Gs2::Guard::Model
                 }() : TOptional<FString>())
             ->WithIpAddresses(Data->HasField(ANSI_TO_TCHAR("ipAddresses")) ? [Data]() -> TSharedPtr<TArray<FString>>
                 {
-                    auto v = MakeShared<TArray<FString>>();
-                    if (!Data->HasTypedField<EJson::Null>(ANSI_TO_TCHAR("ipAddresses")) && Data->HasTypedField<EJson::Array>(ANSI_TO_TCHAR("ipAddresses")))
+                    if (!Data->HasTypedField<EJson::Array>(ANSI_TO_TCHAR("ipAddresses")))
                     {
-                        for (auto JsonObjectValue : Data->GetArrayField(ANSI_TO_TCHAR("ipAddresses")))
-                        {
-                            v->Add(JsonObjectValue->AsString());
-                        }
+                        return nullptr;
+                    }
+                    auto v = MakeShared<TArray<FString>>();
+                    for (auto JsonObjectValue : Data->GetArrayField(ANSI_TO_TCHAR("ipAddresses")))
+                    {
+                        v->Add(JsonObjectValue->AsString());
                     }
                     return v;
-                 }() : MakeShared<TArray<FString>>())
+                 }() : nullptr)
             ->WithIpAddressRestriction(Data->HasField(ANSI_TO_TCHAR("ipAddressRestriction")) ? [Data]() -> TOptional<FString>
                 {
                     FString v("");

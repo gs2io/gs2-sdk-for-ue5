@@ -117,8 +117,7 @@ namespace Gs2::Ranking::Domain::Model
     }
 
     Gs2::Core::Domain::CallbackID FUserDomain::SubscribeScores(
-    TFunction<void()> Callback
-        , const FString CategoryName, const FString ScorerUserId
+     const FString CategoryName, const FString ScorerUserId, TFunction<void()> Callback
     )
     {
         return Gs2->Cache->ListSubscribe(

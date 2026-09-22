@@ -416,6 +416,28 @@ namespace Gs2::Money2::Model::Cache
         );
     }
 
+    FString FRefundHistoryCache::PutUserData(
+        const Gs2::Core::Domain::FCacheDatabasePtr& Cache,
+        TOptional<FString> NamespaceName,
+        TOptional<FString> UserId,
+        TOptional<int32> TimeOffset,
+        const Gs2::Money2::Model::FRefundHistoryPtr& Item
+    )
+    {
+        if (!Item.IsValid()) return FString();
+        Put(
+            Cache,
+            NamespaceName,
+            Item->GetTransactionId(),
+            TimeOffset,
+            Item
+        );
+        return CreateCacheParentKey(
+            NamespaceName,
+            TimeOffset
+        );
+    }
+
     void FRefundHistoryCache::Delete(
         const Gs2::Core::Domain::FCacheDatabasePtr& CacheOwnerArgumentCache,
         TOptional<FString> CacheOwnerArgumentNamespaceName,

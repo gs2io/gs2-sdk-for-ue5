@@ -50,6 +50,14 @@ namespace Gs2::UE5::Mission::Model
         this->ValueValue = Value;
         return SharedThis(this);
     }
+
+    TSharedPtr<FEzScopedValue> FEzScopedValue::WithNextResetAt(
+        const TOptional<int64> NextResetAt
+    )
+    {
+        this->NextResetAtValue = NextResetAt;
+        return SharedThis(this);
+    }
     TOptional<FString> FEzScopedValue::GetScopeType() const
     {
         return ScopeTypeValue;
@@ -75,6 +83,19 @@ namespace Gs2::UE5::Mission::Model
         }
         return FString::Printf(TEXT("%lld"), ValueValue.GetValue());
     }
+    TOptional<int64> FEzScopedValue::GetNextResetAt() const
+    {
+        return NextResetAtValue;
+    }
+
+    FString FEzScopedValue::GetNextResetAtString() const
+    {
+        if (!NextResetAtValue.IsSet())
+        {
+            return FString("null");
+        }
+        return FString::Printf(TEXT("%lld"), NextResetAtValue.GetValue());
+    }
 
     Gs2::Mission::Model::FScopedValuePtr FEzScopedValue::ToModel() const
     {
@@ -82,7 +103,8 @@ namespace Gs2::UE5::Mission::Model
             ->WithScopeType(ScopeTypeValue)
             ->WithResetType(ResetTypeValue)
             ->WithConditionName(ConditionNameValue)
-            ->WithValue(ValueValue);
+            ->WithValue(ValueValue)
+            ->WithNextResetAt(NextResetAtValue);
     }
 
     TSharedPtr<FEzScopedValue> FEzScopedValue::FromModel(const Gs2::Mission::Model::FScopedValuePtr Model)
@@ -95,6 +117,7 @@ namespace Gs2::UE5::Mission::Model
             ->WithScopeType(Model->GetScopeType())
             ->WithResetType(Model->GetResetType())
             ->WithConditionName(Model->GetConditionName())
-            ->WithValue(Model->GetValue());
+            ->WithValue(Model->GetValue())
+            ->WithNextResetAt(Model->GetNextResetAt());
     }
 }

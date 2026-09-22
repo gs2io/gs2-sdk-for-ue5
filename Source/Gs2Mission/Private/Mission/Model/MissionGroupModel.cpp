@@ -297,16 +297,17 @@ namespace Gs2::Mission::Model
                 }() : TOptional<FString>())
             ->WithTasks(Data->HasField(ANSI_TO_TCHAR("tasks")) ? [Data]() -> TSharedPtr<TArray<Model::FMissionTaskModelPtr>>
                 {
-                    auto v = MakeShared<TArray<Model::FMissionTaskModelPtr>>();
-                    if (!Data->HasTypedField<EJson::Null>(ANSI_TO_TCHAR("tasks")) && Data->HasTypedField<EJson::Array>(ANSI_TO_TCHAR("tasks")))
+                    if (!Data->HasTypedField<EJson::Array>(ANSI_TO_TCHAR("tasks")))
                     {
-                        for (auto JsonObjectValue : Data->GetArrayField(ANSI_TO_TCHAR("tasks")))
-                        {
-                            v->Add(Model::FMissionTaskModel::FromJson(JsonObjectValue->AsObject()));
-                        }
+                        return nullptr;
+                    }
+                    auto v = MakeShared<TArray<Model::FMissionTaskModelPtr>>();
+                    for (auto JsonObjectValue : Data->GetArrayField(ANSI_TO_TCHAR("tasks")))
+                    {
+                        v->Add(Model::FMissionTaskModel::FromJson(JsonObjectValue->AsObject()));
                     }
                     return v;
-                 }() : MakeShared<TArray<Model::FMissionTaskModelPtr>>())
+                 }() : nullptr)
             ->WithResetType(Data->HasField(ANSI_TO_TCHAR("resetType")) ? [Data]() -> TOptional<FString>
                 {
                     FString v("");
@@ -503,6 +504,28 @@ namespace Gs2::Mission::Model::Cache
         auto CacheOwnerValue = CacheOwnerArgumentItem;
         CacheSnapshot->Put(Gs2::Mission::Model::FMissionGroupModel::TypeName, CacheOwnerParentKey, CacheOwnerKey, CacheOwnerValue,
             FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
+        );
+    }
+
+    FString FMissionGroupModelCache::PutUserData(
+        const Gs2::Core::Domain::FCacheDatabasePtr& Cache,
+        TOptional<FString> NamespaceName,
+        TOptional<FString> UserId,
+        TOptional<int32> TimeOffset,
+        const Gs2::Mission::Model::FMissionGroupModelPtr& Item
+    )
+    {
+        if (!Item.IsValid()) return FString();
+        Put(
+            Cache,
+            NamespaceName,
+            Item->GetName(),
+            TimeOffset,
+            Item
+        );
+        return CreateCacheParentKey(
+            NamespaceName,
+            TimeOffset
         );
     }
 

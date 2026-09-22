@@ -241,16 +241,17 @@ namespace Gs2::Datastore::Request
               }() : TOptional<FString>())
           ->WithAllowUserIds(Data->HasField(ANSI_TO_TCHAR("allowUserIds")) ? [Data]() -> TSharedPtr<TArray<FString>>
               {
-                  auto v = MakeShared<TArray<FString>>();
-                  if (!Data->HasTypedField<EJson::Null>(ANSI_TO_TCHAR("allowUserIds")) && Data->HasTypedField<EJson::Array>(ANSI_TO_TCHAR("allowUserIds")))
+                  if (!Data->HasTypedField<EJson::Array>(ANSI_TO_TCHAR("allowUserIds")))
                   {
-                      for (auto JsonObjectValue : Data->GetArrayField(ANSI_TO_TCHAR("allowUserIds")))
-                      {
-                          v->Add(JsonObjectValue->AsString());
-                      }
+                      return nullptr;
                   }
+                  auto v = MakeShared<TArray<FString>>();
+                  for (auto JsonObjectValue : Data->GetArrayField(ANSI_TO_TCHAR("allowUserIds")))
+                      {
+                      v->Add(JsonObjectValue->AsString());
+                      }
                   return v;
-              }() : MakeShared<TArray<FString>>())
+              }() : nullptr)
             ->WithUpdateIfExists(Data->HasField(ANSI_TO_TCHAR("updateIfExists")) ? [Data]() -> TOptional<bool>
               {
                   bool v;

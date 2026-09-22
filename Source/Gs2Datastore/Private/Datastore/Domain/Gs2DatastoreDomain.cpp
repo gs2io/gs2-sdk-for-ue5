@@ -34,6 +34,8 @@
 #include "Datastore/Model/Cache/Namespace.h"
 #include "Datastore/Model/Cache/DataObject.h"
 #include "Datastore/Model/Cache/DataObjectHistory.h"
+#include "Datastore/Model/Cache/DataObject.h"
+#include "Datastore/Model/Cache/DataObjectHistory.h"
 
 #include "Core/Domain/Gs2.h"
 
@@ -434,7 +436,6 @@ namespace Gs2::Datastore::Domain
 
     Gs2::Core::Domain::CallbackID FGs2DatastoreDomain::SubscribeNamespaces(
     TFunction<void()> Callback
-
     )
     {
         return Gs2->Cache->ListSubscribe(
@@ -557,6 +558,62 @@ namespace Gs2::Datastore::Domain
         const FString Result,
         const TOptional<int32> TimeOffset
     ) {
+    }
+
+    TOptional<FString> FGs2DatastoreDomain::PutUserData(
+        const TOptional<FString> NamespaceName,
+        const TOptional<FString> UserId,
+        const TOptional<int32> TimeOffset,
+        const FString Kind,
+        const FString Payload
+    ) {
+        TSharedPtr<FJsonObject> PayloadJson;
+        if (const TSharedRef<TJsonReader<>> JsonReader = TJsonReaderFactory<>::Create(Payload);
+            !FJsonSerializer::Deserialize(JsonReader, PayloadJson) || !PayloadJson.IsValid())
+        {
+            return TOptional<FString>();
+        }
+        if (Kind == "dataObject") {
+            const auto Item = Gs2::Datastore::Model::FDataObject::FromJson(PayloadJson);
+            if (!Item.IsValid()) return TOptional<FString>();
+            const auto ParentKey = Gs2::Datastore::Model::Cache::FDataObjectCache::PutUserData(
+                Gs2->Cache,
+                NamespaceName,
+                UserId,
+                TimeOffset,
+                Item
+            );
+            return ParentKey.IsEmpty() ? TOptional<FString>() : TOptional<FString>(ParentKey);
+        }
+        if (Kind == "dataObjectHistory") {
+            const auto Item = Gs2::Datastore::Model::FDataObjectHistory::FromJson(PayloadJson);
+            if (!Item.IsValid()) return TOptional<FString>();
+            const auto ParentKey = Gs2::Datastore::Model::Cache::FDataObjectHistoryCache::PutUserData(
+                Gs2->Cache,
+                NamespaceName,
+                UserId,
+                TimeOffset,
+                Item
+            );
+            return ParentKey.IsEmpty() ? TOptional<FString>() : TOptional<FString>(ParentKey);
+        }
+        return TOptional<FString>();
+    }
+
+    bool FGs2DatastoreDomain::SetListCached(
+        const TOptional<int32> TimeOffset,
+        const FString Kind,
+        const FString ParentKey
+    ) {
+        if (Kind == "dataObject") {
+            Gs2->Cache->SetListCached(Gs2::Datastore::Model::FDataObject::TypeName, ParentKey);
+            return true;
+        }
+        if (Kind == "dataObjectHistory") {
+            Gs2->Cache->SetListCached(Gs2::Datastore::Model::FDataObjectHistory::TypeName, ParentKey);
+            return true;
+        }
+        return false;
     }
 
     void FGs2DatastoreDomain::UpdateCacheFromStampTask(

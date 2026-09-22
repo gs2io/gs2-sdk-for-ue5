@@ -159,6 +159,14 @@ namespace Gs2::Money2::Domain::Model
         };
         friend FModelTask;
 
+        TSharedPtr<FAsyncTask<FModelTask>> Model();
+
+        void Invalidate();
+
+        Gs2::Core::Domain::CallbackID Subscribe(
+            TFunction<void(Gs2::Money2::Model::FSubscriptionStatusPtr)> Callback
+        );
+
         class GS2MONEY2_API FSubscribeWithInitialCallTask final :
             public Gs2::Core::Util::TGs2Future<Gs2::Core::Domain::CallbackID>,
             public TSharedFromThis<FSubscribeWithInitialCallTask>
@@ -166,9 +174,9 @@ namespace Gs2::Money2::Domain::Model
             const TSharedPtr<FSubscriptionStatusAccessTokenDomain> Self;
             const TFunction<void(Gs2::Money2::Model::FSubscriptionStatusPtr)> Callback;
         public:
-            explicit FSubscribeWithInitialCallTask(
-                const TSharedPtr<FSubscriptionStatusAccessTokenDomain> Self,
-                const TFunction<void(Gs2::Money2::Model::FSubscriptionStatusPtr)>& Callback
+            FSubscribeWithInitialCallTask(
+                const TSharedPtr<FSubscriptionStatusAccessTokenDomain>& Self,
+                TFunction<void(Gs2::Money2::Model::FSubscriptionStatusPtr)> Callback
             );
 
             FSubscribeWithInitialCallTask(
@@ -179,16 +187,8 @@ namespace Gs2::Money2::Domain::Model
                 TSharedPtr<TSharedPtr<Gs2::Core::Domain::CallbackID>> Result
             ) override;
         };
-        friend FSubscribeWithInitialCallTask;
 
-        TSharedPtr<FAsyncTask<FSubscriptionStatusAccessTokenDomain::FSubscribeWithInitialCallTask>> SubscribeWithInitialCall(
-            TFunction<void(Gs2::Money2::Model::FSubscriptionStatusPtr)> Callback
-        );
-        void Invalidate();
-
-        TSharedPtr<FAsyncTask<FModelTask>> Model();
-
-        Gs2::Core::Domain::CallbackID Subscribe(
+        TSharedPtr<FAsyncTask<FSubscribeWithInitialCallTask>> SubscribeWithInitialCall(
             TFunction<void(Gs2::Money2::Model::FSubscriptionStatusPtr)> Callback
         );
 

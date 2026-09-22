@@ -201,7 +201,6 @@ namespace Gs2::MegaField::Domain::Model
 
         Gs2::Core::Domain::CallbackID SubscribeLayerModelMasters(
             TFunction<void()> Callback
-
         );
 
         class FCollectLayerModelMastersTask;

@@ -255,16 +255,17 @@ namespace Gs2::Formation::Model
                 }() : TOptional<FString>())
             ->WithSlots(Data->HasField(ANSI_TO_TCHAR("slots")) ? [Data]() -> TSharedPtr<TArray<Model::FSlotModelPtr>>
                 {
-                    auto v = MakeShared<TArray<Model::FSlotModelPtr>>();
-                    if (!Data->HasTypedField<EJson::Null>(ANSI_TO_TCHAR("slots")) && Data->HasTypedField<EJson::Array>(ANSI_TO_TCHAR("slots")))
+                    if (!Data->HasTypedField<EJson::Array>(ANSI_TO_TCHAR("slots")))
                     {
-                        for (auto JsonObjectValue : Data->GetArrayField(ANSI_TO_TCHAR("slots")))
-                        {
-                            v->Add(Model::FSlotModel::FromJson(JsonObjectValue->AsObject()));
-                        }
+                        return nullptr;
+                    }
+                    auto v = MakeShared<TArray<Model::FSlotModelPtr>>();
+                    for (auto JsonObjectValue : Data->GetArrayField(ANSI_TO_TCHAR("slots")))
+                    {
+                        v->Add(Model::FSlotModel::FromJson(JsonObjectValue->AsObject()));
                     }
                     return v;
-                 }() : MakeShared<TArray<Model::FSlotModelPtr>>())
+                 }() : nullptr)
             ->WithCreatedAt(Data->HasField(ANSI_TO_TCHAR("createdAt")) ? [Data]() -> TOptional<int64>
                 {
                     int64 v;
@@ -421,6 +422,28 @@ namespace Gs2::Formation::Model::Cache
         }
         CacheSnapshot->Put(Gs2::Formation::Model::FPropertyFormModelMaster::TypeName, CacheOwnerParentKey, CacheOwnerKey, CacheOwnerValue,
             FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
+        );
+    }
+
+    FString FPropertyFormModelMasterCache::PutUserData(
+        const Gs2::Core::Domain::FCacheDatabasePtr& Cache,
+        TOptional<FString> NamespaceName,
+        TOptional<FString> UserId,
+        TOptional<int32> TimeOffset,
+        const Gs2::Formation::Model::FPropertyFormModelMasterPtr& Item
+    )
+    {
+        if (!Item.IsValid()) return FString();
+        Put(
+            Cache,
+            NamespaceName,
+            Item->GetName(),
+            TimeOffset,
+            Item
+        );
+        return CreateCacheParentKey(
+            NamespaceName,
+            TimeOffset
         );
     }
 

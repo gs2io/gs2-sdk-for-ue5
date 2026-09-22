@@ -64,28 +64,30 @@ namespace Gs2::News::Model
         return MakeShared<FView>()
             ->WithContents(Data->HasField(ANSI_TO_TCHAR("contents")) ? [Data]() -> TSharedPtr<TArray<Model::FContentPtr>>
                 {
-                    auto v = MakeShared<TArray<Model::FContentPtr>>();
-                    if (!Data->HasTypedField<EJson::Null>(ANSI_TO_TCHAR("contents")) && Data->HasTypedField<EJson::Array>(ANSI_TO_TCHAR("contents")))
+                    if (!Data->HasTypedField<EJson::Array>(ANSI_TO_TCHAR("contents")))
                     {
-                        for (auto JsonObjectValue : Data->GetArrayField(ANSI_TO_TCHAR("contents")))
-                        {
-                            v->Add(Model::FContent::FromJson(JsonObjectValue->AsObject()));
-                        }
+                        return nullptr;
+                    }
+                    auto v = MakeShared<TArray<Model::FContentPtr>>();
+                    for (auto JsonObjectValue : Data->GetArrayField(ANSI_TO_TCHAR("contents")))
+                    {
+                        v->Add(Model::FContent::FromJson(JsonObjectValue->AsObject()));
                     }
                     return v;
-                 }() : MakeShared<TArray<Model::FContentPtr>>())
+                 }() : nullptr)
             ->WithRemoveContents(Data->HasField(ANSI_TO_TCHAR("removeContents")) ? [Data]() -> TSharedPtr<TArray<Model::FContentPtr>>
                 {
-                    auto v = MakeShared<TArray<Model::FContentPtr>>();
-                    if (!Data->HasTypedField<EJson::Null>(ANSI_TO_TCHAR("removeContents")) && Data->HasTypedField<EJson::Array>(ANSI_TO_TCHAR("removeContents")))
+                    if (!Data->HasTypedField<EJson::Array>(ANSI_TO_TCHAR("removeContents")))
                     {
-                        for (auto JsonObjectValue : Data->GetArrayField(ANSI_TO_TCHAR("removeContents")))
-                        {
-                            v->Add(Model::FContent::FromJson(JsonObjectValue->AsObject()));
-                        }
+                        return nullptr;
+                    }
+                    auto v = MakeShared<TArray<Model::FContentPtr>>();
+                    for (auto JsonObjectValue : Data->GetArrayField(ANSI_TO_TCHAR("removeContents")))
+                    {
+                        v->Add(Model::FContent::FromJson(JsonObjectValue->AsObject()));
                     }
                     return v;
-                 }() : MakeShared<TArray<Model::FContentPtr>>());
+                 }() : nullptr);
     }
 
     TSharedPtr<FJsonObject> FView::ToJson() const

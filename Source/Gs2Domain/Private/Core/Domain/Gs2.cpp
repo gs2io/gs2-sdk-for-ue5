@@ -28,6 +28,10 @@
 #include "Deploy/Domain/Gs2Deploy.h"
 #include "Dictionary/Domain/Gs2Dictionary.h"
 #include "Distributor/Domain/Gs2Distributor.h"
+#include "Distributor/Gs2DistributorRestClient.h"
+#include "Distributor/Model/UserDataEntry.h"
+#include "Distributor/Request/DescribeUserDataRequest.h"
+#include "Distributor/Result/DescribeUserDataResult.h"
 #include "Enchant/Domain/Gs2Enchant.h"
 #include "Enhance/Domain/Gs2Enhance.h"
 #include "Exchange/Domain/Gs2Exchange.h"
@@ -1390,6 +1394,538 @@ namespace Gs2::Core::Domain
     )
     {
         return Gs2::Core::Util::New<FAsyncTask<FDispatchByUserIdTask>>(SharedThis(this), UserId);
+    }
+
+    FGs2::FLoadUserDataTask::FLoadUserDataTask(
+        const TSharedPtr<FGs2> Self,
+        const Gs2::Auth::Model::FAccessTokenPtr AccessToken
+    ): Self(Self), AccessToken(AccessToken)
+    {
+    }
+
+    Gs2::Core::Model::FGs2ErrorPtr FGs2::FLoadUserDataTask::Action(
+        TSharedPtr<TSharedPtr<int32>> Result
+    )
+    {
+        if (!AccessToken.IsValid())
+        {
+            const auto Details = MakeShared<TArray<TSharedPtr<Gs2::Core::Model::FGs2ErrorDetail>>>();
+            Details->Add(MakeShared<Gs2::Core::Model::FGs2ErrorDetail>(TEXT("accessToken"), TEXT("accessToken is required."), TEXT("required")));
+            return MakeShared<Gs2::Core::Model::FBadRequestError>(Details);
+        }
+        if (Self->Account == nullptr)
+        {
+            Self->Initialize();
+        }
+        const auto Client = MakeShared<Gs2::Distributor::FGs2DistributorRestClient>(Self->RestSession);
+        int32 Loaded = 0;
+        // 全ページを読み終えてからまとめて「リストが揃った印」を立てる (Service, Kind, 親キー) の集合（順序は初出順）
+        TSet<FString> ListCachedKeys;
+        TArray<TTuple<FString, FString, FString>> ListCached;
+        TOptional<FString> PageToken;
+        while (true)
+        {
+            const auto Future = Client->DescribeUserData(
+                MakeShared<Gs2::Distributor::Request::FDescribeUserDataRequest>()
+                    ->WithContextStack(Self->DefaultContextStack)
+                    ->WithAccessToken(AccessToken->GetToken())
+                    ->WithPageToken(PageToken)
+                    ->WithLimit(100)
+            );
+            Future->StartSynchronousTask();
+            if (Future->GetTask().IsError())
+            {
+                return Future->GetTask().Error();
+            }
+            const auto ResultModel = Future->GetTask().Result();
+            Future->EnsureCompletion();
+            if (!ResultModel.IsValid())
+            {
+                break;
+            }
+            if (ResultModel->GetItems().IsValid())
+            {
+                for (const auto& Entry : *ResultModel->GetItems())
+                {
+                    if (!Entry.IsValid())
+                    {
+                        continue;
+                    }
+                    const auto Service = Entry->GetService().Get(FString());
+                    const auto Kind = Entry->GetKind().Get(FString());
+                    // 1 件の JSON が読めなくても（未設定が返る）他のエントリは入れる（個別 API で取り直せる）
+                    const auto ParentKey = Self->PutUserData(
+                        Service,
+                        Entry->GetNamespaceName(),
+                        AccessToken->GetUserId(),
+                        AccessToken->GetTimeOffset(),
+                        Kind,
+                        Entry->GetPayload().Get(FString())
+                    );
+                    if (!ParentKey.IsSet())
+                    {
+                        continue;
+                    }
+                    Loaded++;
+                    const auto ListCachedKey = Service + TEXT("\t") + Kind + TEXT("\t") + *ParentKey;
+                    if (!ListCachedKeys.Contains(ListCachedKey))
+                    {
+                        ListCachedKeys.Add(ListCachedKey);
+                        ListCached.Add(MakeTuple(Service, Kind, *ParentKey));
+                    }
+                }
+            }
+            PageToken = ResultModel->GetNextPageToken();
+            if (!PageToken.IsSet() || PageToken->IsEmpty())
+            {
+                break;
+            }
+        }
+        for (const auto& Item : ListCached)
+        {
+            Self->SetListCached(Item.Get<0>(), AccessToken->GetTimeOffset(), Item.Get<1>(), Item.Get<2>());
+        }
+        *Result = MakeShared<int32>(Loaded);
+        return nullptr;
+    }
+
+    TSharedPtr<FAsyncTask<FGs2::FLoadUserDataTask>> FGs2::LoadUserData(
+        Gs2::Auth::Model::FAccessTokenPtr AccessToken
+    )
+    {
+        return Gs2::Core::Util::New<FAsyncTask<FLoadUserDataTask>>(SharedThis(this), AccessToken);
+    }
+
+    TOptional<FString> FGs2::PutUserData(
+        const FString Service,
+        const TOptional<FString> NamespaceName,
+        const TOptional<FString> UserId,
+        const TOptional<int32> TimeOffset,
+        const FString Kind,
+        const FString Payload
+    ) const
+    {
+        if (Disposed)
+        {
+            UE_LOG(Gs2Log, Error, TEXT("[FGs2::PutUserData] FGs2 already disposed"));
+            return TOptional<FString>();
+        }
+        if (Service == "account")
+        {
+            return Account->PutUserData(NamespaceName, UserId, TimeOffset, Kind, Payload);
+        }
+        if (Service == "ad_reward")
+        {
+            return AdReward->PutUserData(NamespaceName, UserId, TimeOffset, Kind, Payload);
+        }
+        if (Service == "auth")
+        {
+            return Auth->PutUserData(NamespaceName, UserId, TimeOffset, Kind, Payload);
+        }
+        if (Service == "buff")
+        {
+            return Buff->PutUserData(NamespaceName, UserId, TimeOffset, Kind, Payload);
+        }
+        if (Service == "chat")
+        {
+            return Chat->PutUserData(NamespaceName, UserId, TimeOffset, Kind, Payload);
+        }
+        if (Service == "datastore")
+        {
+            return Datastore->PutUserData(NamespaceName, UserId, TimeOffset, Kind, Payload);
+        }
+        if (Service == "deploy")
+        {
+            return Deploy->PutUserData(NamespaceName, UserId, TimeOffset, Kind, Payload);
+        }
+        if (Service == "dictionary")
+        {
+            return Dictionary->PutUserData(NamespaceName, UserId, TimeOffset, Kind, Payload);
+        }
+        if (Service == "distributor")
+        {
+            return Distributor->PutUserData(NamespaceName, UserId, TimeOffset, Kind, Payload);
+        }
+        if (Service == "enchant")
+        {
+            return Enchant->PutUserData(NamespaceName, UserId, TimeOffset, Kind, Payload);
+        }
+        if (Service == "enhance")
+        {
+            return Enhance->PutUserData(NamespaceName, UserId, TimeOffset, Kind, Payload);
+        }
+        if (Service == "exchange")
+        {
+            return Exchange->PutUserData(NamespaceName, UserId, TimeOffset, Kind, Payload);
+        }
+        if (Service == "experience")
+        {
+            return Experience->PutUserData(NamespaceName, UserId, TimeOffset, Kind, Payload);
+        }
+        if (Service == "formation")
+        {
+            return Formation->PutUserData(NamespaceName, UserId, TimeOffset, Kind, Payload);
+        }
+        if (Service == "freeze")
+        {
+            return Freeze->PutUserData(NamespaceName, UserId, TimeOffset, Kind, Payload);
+        }
+        if (Service == "friend")
+        {
+            return Friend->PutUserData(NamespaceName, UserId, TimeOffset, Kind, Payload);
+        }
+        if (Service == "gateway")
+        {
+            return Gateway->PutUserData(NamespaceName, UserId, TimeOffset, Kind, Payload);
+        }
+        if (Service == "grade")
+        {
+            return Grade->PutUserData(NamespaceName, UserId, TimeOffset, Kind, Payload);
+        }
+        if (Service == "guard")
+        {
+            return Guard->PutUserData(NamespaceName, UserId, TimeOffset, Kind, Payload);
+        }
+        if (Service == "guild")
+        {
+            return Guild->PutUserData(NamespaceName, UserId, TimeOffset, Kind, Payload);
+        }
+        if (Service == "identifier")
+        {
+            return Identifier->PutUserData(NamespaceName, UserId, TimeOffset, Kind, Payload);
+        }
+        if (Service == "idle")
+        {
+            return Idle->PutUserData(NamespaceName, UserId, TimeOffset, Kind, Payload);
+        }
+        if (Service == "inbox")
+        {
+            return Inbox->PutUserData(NamespaceName, UserId, TimeOffset, Kind, Payload);
+        }
+        if (Service == "inventory")
+        {
+            return Inventory->PutUserData(NamespaceName, UserId, TimeOffset, Kind, Payload);
+        }
+        if (Service == "job_queue")
+        {
+            return JobQueue->PutUserData(NamespaceName, UserId, TimeOffset, Kind, Payload);
+        }
+        if (Service == "key")
+        {
+            return Key->PutUserData(NamespaceName, UserId, TimeOffset, Kind, Payload);
+        }
+        if (Service == "limit")
+        {
+            return Limit->PutUserData(NamespaceName, UserId, TimeOffset, Kind, Payload);
+        }
+        if (Service == "lock")
+        {
+            return Lock->PutUserData(NamespaceName, UserId, TimeOffset, Kind, Payload);
+        }
+        if (Service == "log")
+        {
+            return Log->PutUserData(NamespaceName, UserId, TimeOffset, Kind, Payload);
+        }
+        if (Service == "login_reward")
+        {
+            return LoginReward->PutUserData(NamespaceName, UserId, TimeOffset, Kind, Payload);
+        }
+        if (Service == "lottery")
+        {
+            return Lottery->PutUserData(NamespaceName, UserId, TimeOffset, Kind, Payload);
+        }
+        if (Service == "matchmaking")
+        {
+            return Matchmaking->PutUserData(NamespaceName, UserId, TimeOffset, Kind, Payload);
+        }
+        if (Service == "mega_field")
+        {
+            return MegaField->PutUserData(NamespaceName, UserId, TimeOffset, Kind, Payload);
+        }
+        if (Service == "mission")
+        {
+            return Mission->PutUserData(NamespaceName, UserId, TimeOffset, Kind, Payload);
+        }
+        if (Service == "money")
+        {
+            return Money->PutUserData(NamespaceName, UserId, TimeOffset, Kind, Payload);
+        }
+        if (Service == "money2")
+        {
+            return Money2->PutUserData(NamespaceName, UserId, TimeOffset, Kind, Payload);
+        }
+        if (Service == "news")
+        {
+            return News->PutUserData(NamespaceName, UserId, TimeOffset, Kind, Payload);
+        }
+        if (Service == "quest")
+        {
+            return Quest->PutUserData(NamespaceName, UserId, TimeOffset, Kind, Payload);
+        }
+        if (Service == "ranking")
+        {
+            return Ranking->PutUserData(NamespaceName, UserId, TimeOffset, Kind, Payload);
+        }
+        if (Service == "ranking2")
+        {
+            return Ranking2->PutUserData(NamespaceName, UserId, TimeOffset, Kind, Payload);
+        }
+        if (Service == "realtime")
+        {
+            return Realtime->PutUserData(NamespaceName, UserId, TimeOffset, Kind, Payload);
+        }
+        if (Service == "schedule")
+        {
+            return Schedule->PutUserData(NamespaceName, UserId, TimeOffset, Kind, Payload);
+        }
+        if (Service == "script")
+        {
+            return Script->PutUserData(NamespaceName, UserId, TimeOffset, Kind, Payload);
+        }
+        if (Service == "season_rating")
+        {
+            return SeasonRating->PutUserData(NamespaceName, UserId, TimeOffset, Kind, Payload);
+        }
+        if (Service == "serial_key")
+        {
+            return SerialKey->PutUserData(NamespaceName, UserId, TimeOffset, Kind, Payload);
+        }
+        if (Service == "showcase")
+        {
+            return Showcase->PutUserData(NamespaceName, UserId, TimeOffset, Kind, Payload);
+        }
+        if (Service == "skill_tree")
+        {
+            return SkillTree->PutUserData(NamespaceName, UserId, TimeOffset, Kind, Payload);
+        }
+        if (Service == "stamina")
+        {
+            return Stamina->PutUserData(NamespaceName, UserId, TimeOffset, Kind, Payload);
+        }
+        if (Service == "state_machine")
+        {
+            return StateMachine->PutUserData(NamespaceName, UserId, TimeOffset, Kind, Payload);
+        }
+        if (Service == "version")
+        {
+            return Version->PutUserData(NamespaceName, UserId, TimeOffset, Kind, Payload);
+        }
+        return TOptional<FString>();
+    }
+
+    bool FGs2::SetListCached(
+        const FString Service,
+        const TOptional<int32> TimeOffset,
+        const FString Kind,
+        const FString ParentKey
+    ) const
+    {
+        if (Disposed)
+        {
+            UE_LOG(Gs2Log, Error, TEXT("[FGs2::SetListCached] FGs2 already disposed"));
+            return false;
+        }
+        if (Service == "account")
+        {
+            return Account->SetListCached(TimeOffset, Kind, ParentKey);
+        }
+        if (Service == "ad_reward")
+        {
+            return AdReward->SetListCached(TimeOffset, Kind, ParentKey);
+        }
+        if (Service == "auth")
+        {
+            return Auth->SetListCached(TimeOffset, Kind, ParentKey);
+        }
+        if (Service == "buff")
+        {
+            return Buff->SetListCached(TimeOffset, Kind, ParentKey);
+        }
+        if (Service == "chat")
+        {
+            return Chat->SetListCached(TimeOffset, Kind, ParentKey);
+        }
+        if (Service == "datastore")
+        {
+            return Datastore->SetListCached(TimeOffset, Kind, ParentKey);
+        }
+        if (Service == "deploy")
+        {
+            return Deploy->SetListCached(TimeOffset, Kind, ParentKey);
+        }
+        if (Service == "dictionary")
+        {
+            return Dictionary->SetListCached(TimeOffset, Kind, ParentKey);
+        }
+        if (Service == "distributor")
+        {
+            return Distributor->SetListCached(TimeOffset, Kind, ParentKey);
+        }
+        if (Service == "enchant")
+        {
+            return Enchant->SetListCached(TimeOffset, Kind, ParentKey);
+        }
+        if (Service == "enhance")
+        {
+            return Enhance->SetListCached(TimeOffset, Kind, ParentKey);
+        }
+        if (Service == "exchange")
+        {
+            return Exchange->SetListCached(TimeOffset, Kind, ParentKey);
+        }
+        if (Service == "experience")
+        {
+            return Experience->SetListCached(TimeOffset, Kind, ParentKey);
+        }
+        if (Service == "formation")
+        {
+            return Formation->SetListCached(TimeOffset, Kind, ParentKey);
+        }
+        if (Service == "freeze")
+        {
+            return Freeze->SetListCached(TimeOffset, Kind, ParentKey);
+        }
+        if (Service == "friend")
+        {
+            return Friend->SetListCached(TimeOffset, Kind, ParentKey);
+        }
+        if (Service == "gateway")
+        {
+            return Gateway->SetListCached(TimeOffset, Kind, ParentKey);
+        }
+        if (Service == "grade")
+        {
+            return Grade->SetListCached(TimeOffset, Kind, ParentKey);
+        }
+        if (Service == "guard")
+        {
+            return Guard->SetListCached(TimeOffset, Kind, ParentKey);
+        }
+        if (Service == "guild")
+        {
+            return Guild->SetListCached(TimeOffset, Kind, ParentKey);
+        }
+        if (Service == "identifier")
+        {
+            return Identifier->SetListCached(TimeOffset, Kind, ParentKey);
+        }
+        if (Service == "idle")
+        {
+            return Idle->SetListCached(TimeOffset, Kind, ParentKey);
+        }
+        if (Service == "inbox")
+        {
+            return Inbox->SetListCached(TimeOffset, Kind, ParentKey);
+        }
+        if (Service == "inventory")
+        {
+            return Inventory->SetListCached(TimeOffset, Kind, ParentKey);
+        }
+        if (Service == "job_queue")
+        {
+            return JobQueue->SetListCached(TimeOffset, Kind, ParentKey);
+        }
+        if (Service == "key")
+        {
+            return Key->SetListCached(TimeOffset, Kind, ParentKey);
+        }
+        if (Service == "limit")
+        {
+            return Limit->SetListCached(TimeOffset, Kind, ParentKey);
+        }
+        if (Service == "lock")
+        {
+            return Lock->SetListCached(TimeOffset, Kind, ParentKey);
+        }
+        if (Service == "log")
+        {
+            return Log->SetListCached(TimeOffset, Kind, ParentKey);
+        }
+        if (Service == "login_reward")
+        {
+            return LoginReward->SetListCached(TimeOffset, Kind, ParentKey);
+        }
+        if (Service == "lottery")
+        {
+            return Lottery->SetListCached(TimeOffset, Kind, ParentKey);
+        }
+        if (Service == "matchmaking")
+        {
+            return Matchmaking->SetListCached(TimeOffset, Kind, ParentKey);
+        }
+        if (Service == "mega_field")
+        {
+            return MegaField->SetListCached(TimeOffset, Kind, ParentKey);
+        }
+        if (Service == "mission")
+        {
+            return Mission->SetListCached(TimeOffset, Kind, ParentKey);
+        }
+        if (Service == "money")
+        {
+            return Money->SetListCached(TimeOffset, Kind, ParentKey);
+        }
+        if (Service == "money2")
+        {
+            return Money2->SetListCached(TimeOffset, Kind, ParentKey);
+        }
+        if (Service == "news")
+        {
+            return News->SetListCached(TimeOffset, Kind, ParentKey);
+        }
+        if (Service == "quest")
+        {
+            return Quest->SetListCached(TimeOffset, Kind, ParentKey);
+        }
+        if (Service == "ranking")
+        {
+            return Ranking->SetListCached(TimeOffset, Kind, ParentKey);
+        }
+        if (Service == "ranking2")
+        {
+            return Ranking2->SetListCached(TimeOffset, Kind, ParentKey);
+        }
+        if (Service == "realtime")
+        {
+            return Realtime->SetListCached(TimeOffset, Kind, ParentKey);
+        }
+        if (Service == "schedule")
+        {
+            return Schedule->SetListCached(TimeOffset, Kind, ParentKey);
+        }
+        if (Service == "script")
+        {
+            return Script->SetListCached(TimeOffset, Kind, ParentKey);
+        }
+        if (Service == "season_rating")
+        {
+            return SeasonRating->SetListCached(TimeOffset, Kind, ParentKey);
+        }
+        if (Service == "serial_key")
+        {
+            return SerialKey->SetListCached(TimeOffset, Kind, ParentKey);
+        }
+        if (Service == "showcase")
+        {
+            return Showcase->SetListCached(TimeOffset, Kind, ParentKey);
+        }
+        if (Service == "skill_tree")
+        {
+            return SkillTree->SetListCached(TimeOffset, Kind, ParentKey);
+        }
+        if (Service == "stamina")
+        {
+            return Stamina->SetListCached(TimeOffset, Kind, ParentKey);
+        }
+        if (Service == "state_machine")
+        {
+            return StateMachine->SetListCached(TimeOffset, Kind, ParentKey);
+        }
+        if (Service == "version")
+        {
+            return Version->SetListCached(TimeOffset, Kind, ParentKey);
+        }
+        return false;
     }
 
     FGs2::FDisconnectTask::FDisconnectTask(const TSharedPtr<FGs2> Self): Self(Self)

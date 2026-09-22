@@ -150,7 +150,6 @@ namespace Gs2::Lottery::Domain::Model
 
     Gs2::Core::Domain::CallbackID FPrizeTableDomain::SubscribePrizeLimits(
     TFunction<void()> Callback
-
     )
     {
         return Gs2->Cache->ListSubscribe(

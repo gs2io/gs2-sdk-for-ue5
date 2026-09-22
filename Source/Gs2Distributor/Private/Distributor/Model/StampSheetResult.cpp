@@ -355,28 +355,30 @@ namespace Gs2::Distributor::Model
                 }() : TOptional<FString>())
             ->WithVerifyTaskRequests(Data->HasField(ANSI_TO_TCHAR("verifyTaskRequests")) ? [Data]() -> TSharedPtr<TArray<Model::FVerifyActionPtr>>
                 {
-                    auto v = MakeShared<TArray<Model::FVerifyActionPtr>>();
-                    if (!Data->HasTypedField<EJson::Null>(ANSI_TO_TCHAR("verifyTaskRequests")) && Data->HasTypedField<EJson::Array>(ANSI_TO_TCHAR("verifyTaskRequests")))
+                    if (!Data->HasTypedField<EJson::Array>(ANSI_TO_TCHAR("verifyTaskRequests")))
                     {
-                        for (auto JsonObjectValue : Data->GetArrayField(ANSI_TO_TCHAR("verifyTaskRequests")))
-                        {
-                            v->Add(Model::FVerifyAction::FromJson(JsonObjectValue->AsObject()));
-                        }
+                        return nullptr;
+                    }
+                    auto v = MakeShared<TArray<Model::FVerifyActionPtr>>();
+                    for (auto JsonObjectValue : Data->GetArrayField(ANSI_TO_TCHAR("verifyTaskRequests")))
+                    {
+                        v->Add(Model::FVerifyAction::FromJson(JsonObjectValue->AsObject()));
                     }
                     return v;
-                 }() : MakeShared<TArray<Model::FVerifyActionPtr>>())
+                 }() : nullptr)
             ->WithTaskRequests(Data->HasField(ANSI_TO_TCHAR("taskRequests")) ? [Data]() -> TSharedPtr<TArray<Model::FConsumeActionPtr>>
                 {
-                    auto v = MakeShared<TArray<Model::FConsumeActionPtr>>();
-                    if (!Data->HasTypedField<EJson::Null>(ANSI_TO_TCHAR("taskRequests")) && Data->HasTypedField<EJson::Array>(ANSI_TO_TCHAR("taskRequests")))
+                    if (!Data->HasTypedField<EJson::Array>(ANSI_TO_TCHAR("taskRequests")))
                     {
-                        for (auto JsonObjectValue : Data->GetArrayField(ANSI_TO_TCHAR("taskRequests")))
-                        {
-                            v->Add(Model::FConsumeAction::FromJson(JsonObjectValue->AsObject()));
-                        }
+                        return nullptr;
+                    }
+                    auto v = MakeShared<TArray<Model::FConsumeActionPtr>>();
+                    for (auto JsonObjectValue : Data->GetArrayField(ANSI_TO_TCHAR("taskRequests")))
+                    {
+                        v->Add(Model::FConsumeAction::FromJson(JsonObjectValue->AsObject()));
                     }
                     return v;
-                 }() : MakeShared<TArray<Model::FConsumeActionPtr>>())
+                 }() : nullptr)
             ->WithSheetRequest(Data->HasField(ANSI_TO_TCHAR("sheetRequest")) ? [Data]() -> Model::FAcquireActionPtr
                 {
                     if (Data->HasTypedField<EJson::Null>(ANSI_TO_TCHAR("sheetRequest")))
@@ -387,52 +389,56 @@ namespace Gs2::Distributor::Model
                  }() : nullptr)
             ->WithVerifyTaskResultCodes(Data->HasField(ANSI_TO_TCHAR("verifyTaskResultCodes")) ? [Data]() -> TSharedPtr<TArray<int32>>
                 {
-                    auto v = MakeShared<TArray<int32>>();
-                    if (!Data->HasTypedField<EJson::Null>(ANSI_TO_TCHAR("verifyTaskResultCodes")) && Data->HasTypedField<EJson::Array>(ANSI_TO_TCHAR("verifyTaskResultCodes")))
+                    if (!Data->HasTypedField<EJson::Array>(ANSI_TO_TCHAR("verifyTaskResultCodes")))
                     {
-                        for (auto JsonObjectValue : Data->GetArrayField(ANSI_TO_TCHAR("verifyTaskResultCodes")))
-                        {
-                            v->Add(JsonObjectValue->AsNumber());
-                        }
+                        return nullptr;
+                    }
+                    auto v = MakeShared<TArray<int32>>();
+                    for (auto JsonObjectValue : Data->GetArrayField(ANSI_TO_TCHAR("verifyTaskResultCodes")))
+                    {
+                        v->Add(JsonObjectValue->AsNumber());
                     }
                     return v;
-                 }() : MakeShared<TArray<int32>>())
+                 }() : nullptr)
             ->WithVerifyTaskResults(Data->HasField(ANSI_TO_TCHAR("verifyTaskResults")) ? [Data]() -> TSharedPtr<TArray<FString>>
                 {
-                    auto v = MakeShared<TArray<FString>>();
-                    if (!Data->HasTypedField<EJson::Null>(ANSI_TO_TCHAR("verifyTaskResults")) && Data->HasTypedField<EJson::Array>(ANSI_TO_TCHAR("verifyTaskResults")))
+                    if (!Data->HasTypedField<EJson::Array>(ANSI_TO_TCHAR("verifyTaskResults")))
                     {
-                        for (auto JsonObjectValue : Data->GetArrayField(ANSI_TO_TCHAR("verifyTaskResults")))
-                        {
-                            v->Add(JsonObjectValue->AsString());
-                        }
+                        return nullptr;
+                    }
+                    auto v = MakeShared<TArray<FString>>();
+                    for (auto JsonObjectValue : Data->GetArrayField(ANSI_TO_TCHAR("verifyTaskResults")))
+                    {
+                        v->Add(JsonObjectValue->AsString());
                     }
                     return v;
-                 }() : MakeShared<TArray<FString>>())
+                 }() : nullptr)
             ->WithTaskResultCodes(Data->HasField(ANSI_TO_TCHAR("taskResultCodes")) ? [Data]() -> TSharedPtr<TArray<int32>>
                 {
-                    auto v = MakeShared<TArray<int32>>();
-                    if (!Data->HasTypedField<EJson::Null>(ANSI_TO_TCHAR("taskResultCodes")) && Data->HasTypedField<EJson::Array>(ANSI_TO_TCHAR("taskResultCodes")))
+                    if (!Data->HasTypedField<EJson::Array>(ANSI_TO_TCHAR("taskResultCodes")))
                     {
-                        for (auto JsonObjectValue : Data->GetArrayField(ANSI_TO_TCHAR("taskResultCodes")))
-                        {
-                            v->Add(JsonObjectValue->AsNumber());
-                        }
+                        return nullptr;
+                    }
+                    auto v = MakeShared<TArray<int32>>();
+                    for (auto JsonObjectValue : Data->GetArrayField(ANSI_TO_TCHAR("taskResultCodes")))
+                    {
+                        v->Add(JsonObjectValue->AsNumber());
                     }
                     return v;
-                 }() : MakeShared<TArray<int32>>())
+                 }() : nullptr)
             ->WithTaskResults(Data->HasField(ANSI_TO_TCHAR("taskResults")) ? [Data]() -> TSharedPtr<TArray<FString>>
                 {
-                    auto v = MakeShared<TArray<FString>>();
-                    if (!Data->HasTypedField<EJson::Null>(ANSI_TO_TCHAR("taskResults")) && Data->HasTypedField<EJson::Array>(ANSI_TO_TCHAR("taskResults")))
+                    if (!Data->HasTypedField<EJson::Array>(ANSI_TO_TCHAR("taskResults")))
                     {
-                        for (auto JsonObjectValue : Data->GetArrayField(ANSI_TO_TCHAR("taskResults")))
-                        {
-                            v->Add(JsonObjectValue->AsString());
-                        }
+                        return nullptr;
+                    }
+                    auto v = MakeShared<TArray<FString>>();
+                    for (auto JsonObjectValue : Data->GetArrayField(ANSI_TO_TCHAR("taskResults")))
+                    {
+                        v->Add(JsonObjectValue->AsString());
                     }
                     return v;
-                 }() : MakeShared<TArray<FString>>())
+                 }() : nullptr)
             ->WithSheetResultCode(Data->HasField(ANSI_TO_TCHAR("sheetResultCode")) ? [Data]() -> TOptional<int32>
                 {
                     int32 v;
@@ -668,6 +674,30 @@ namespace Gs2::Distributor::Model::Cache
         }
         CacheSnapshot->Put(Gs2::Distributor::Model::FStampSheetResult::TypeName, CacheOwnerParentKey, CacheOwnerKey, CacheOwnerValue,
             FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
+        );
+    }
+
+    FString FStampSheetResultCache::PutUserData(
+        const Gs2::Core::Domain::FCacheDatabasePtr& Cache,
+        TOptional<FString> NamespaceName,
+        TOptional<FString> UserId,
+        TOptional<int32> TimeOffset,
+        const Gs2::Distributor::Model::FStampSheetResultPtr& Item
+    )
+    {
+        if (!Item.IsValid()) return FString();
+        Put(
+            Cache,
+            NamespaceName,
+            UserId,
+            Item->GetTransactionId(),
+            TimeOffset,
+            Item
+        );
+        return CreateCacheParentKey(
+            NamespaceName,
+            UserId,
+            TimeOffset
         );
     }
 

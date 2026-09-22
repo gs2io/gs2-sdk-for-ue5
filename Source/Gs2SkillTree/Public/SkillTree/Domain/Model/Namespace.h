@@ -248,7 +248,6 @@ namespace Gs2::SkillTree::Domain::Model
 
         Gs2::Core::Domain::CallbackID SubscribeNodeModels(
             TFunction<void()> Callback
-
         );
 
         class FCollectNodeModelsTask;
@@ -289,7 +288,6 @@ namespace Gs2::SkillTree::Domain::Model
 
         Gs2::Core::Domain::CallbackID SubscribeNodeModelMasters(
             TFunction<void()> Callback
-
         );
 
         class FCollectNodeModelMastersTask;

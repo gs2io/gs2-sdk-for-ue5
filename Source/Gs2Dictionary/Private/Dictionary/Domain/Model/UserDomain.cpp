@@ -180,23 +180,6 @@ namespace Gs2::Dictionary::Domain::Model
         const auto ResultModel = Future->GetTask().Result();
         Future->EnsureCompletion();
 
-        const auto Entries = Self->Gs2->Cache->TryGetList<Gs2::Dictionary::Model::FEntry>(
-            Gs2::Dictionary::Model::Cache::FEntryCache::CreateCacheParentKey(
-                Request->GetNamespaceName(), Request->GetUserId(), TOptional<int32>()
-            )
-        );
-        if (Entries.IsValid())
-        {
-            for (const auto& Item : *Entries)
-            {
-                if (!Item.IsValid()) continue;
-                Gs2::Dictionary::Model::Cache::FEntryCache::Delete(
-                    Self->Gs2->Cache,
-                    Request->GetNamespaceName(), Request->GetUserId(), Item->GetName(), TOptional<int32>()
-                );
-            }
-        }
-
         const auto Domain = Self;
         *Result = Domain;
         return nullptr;
@@ -492,7 +475,6 @@ namespace Gs2::Dictionary::Domain::Model
 
     Gs2::Core::Domain::CallbackID FUserDomain::SubscribeEntries(
     TFunction<void()> Callback
-
     )
     {
         return Gs2->Cache->ListSubscribe(
@@ -637,7 +619,6 @@ namespace Gs2::Dictionary::Domain::Model
 
     Gs2::Core::Domain::CallbackID FUserDomain::SubscribeLikes(
     TFunction<void()> Callback
-
     )
     {
         return Gs2->Cache->ListSubscribe(

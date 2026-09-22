@@ -87,7 +87,6 @@ namespace Gs2::Money::Domain::Model
 
     Gs2::Core::Domain::CallbackID FUserAccessTokenDomain::SubscribeWallets(
     TFunction<void()> Callback
-
     )
     {
         return Gs2->Cache->ListSubscribe(

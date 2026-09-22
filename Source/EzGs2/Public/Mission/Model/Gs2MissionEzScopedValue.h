@@ -27,12 +27,14 @@ namespace Gs2::UE5::Mission::Model
         TOptional<FString> ResetTypeValue;
         TOptional<FString> ConditionNameValue;
         TOptional<int64> ValueValue;
+        TOptional<int64> NextResetAtValue;
 
 	public:
         TSharedPtr<FEzScopedValue> WithScopeType(const TOptional<FString> ScopeType);
         TSharedPtr<FEzScopedValue> WithResetType(const TOptional<FString> ResetType);
         TSharedPtr<FEzScopedValue> WithConditionName(const TOptional<FString> ConditionName);
         TSharedPtr<FEzScopedValue> WithValue(const TOptional<int64> Value);
+        TSharedPtr<FEzScopedValue> WithNextResetAt(const TOptional<int64> NextResetAt);
 
         TOptional<FString> GetScopeType() const;
 
@@ -42,6 +44,9 @@ namespace Gs2::UE5::Mission::Model
 
         TOptional<int64> GetValue() const;
         FString GetValueString() const;
+
+        TOptional<int64> GetNextResetAt() const;
+        FString GetNextResetAtString() const;
 
         Gs2::Mission::Model::FScopedValuePtr ToModel() const;
         static TSharedPtr<FEzScopedValue> FromModel(Gs2::Mission::Model::FScopedValuePtr Model);

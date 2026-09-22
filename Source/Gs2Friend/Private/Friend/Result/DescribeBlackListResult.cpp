@@ -70,16 +70,17 @@ namespace Gs2::Friend::Result
         return MakeShared<FDescribeBlackListResult>()
             ->WithItems(Data->HasField(ANSI_TO_TCHAR("items")) ? [Data]() -> TSharedPtr<TArray<FString>>
                  {
-                    auto v = MakeShared<TArray<FString>>();
-                    if (!Data->HasTypedField<EJson::Null>(ANSI_TO_TCHAR("items")) && Data->HasTypedField<EJson::Array>(ANSI_TO_TCHAR("items")))
+                    if (!Data->HasTypedField<EJson::Array>(ANSI_TO_TCHAR("items")))
                     {
-                        for (auto JsonObjectValue : Data->GetArrayField(ANSI_TO_TCHAR("items")))
-                        {
-                            v->Add(JsonObjectValue->AsString());
-                        }
+                        return nullptr;
+                    }
+                    auto v = MakeShared<TArray<FString>>();
+                    for (auto JsonObjectValue : Data->GetArrayField(ANSI_TO_TCHAR("items")))
+                    {
+                        v->Add(JsonObjectValue->AsString());
                     }
                     return v;
-                 }() : MakeShared<TArray<FString>>())
+                 }() : nullptr)
             ->WithNextPageToken(Data->HasField(ANSI_TO_TCHAR("nextPageToken")) ? [Data]() -> TOptional<FString>
                 {
                     FString v("");

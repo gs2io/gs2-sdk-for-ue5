@@ -153,8 +153,7 @@ namespace Gs2::Friend::Domain::Model
         ) const;
 
         Gs2::Core::Domain::CallbackID SubscribeFriends(
-            TFunction<void()> Callback
-            , const TOptional<bool> WithProfile = TOptional<bool>()
+            TFunction<void()> Callback, const TOptional<bool> WithProfile = TOptional<bool>()
         );
 
         class FCollectFriendsTask;
@@ -196,7 +195,6 @@ namespace Gs2::Friend::Domain::Model
 
         Gs2::Core::Domain::CallbackID SubscribeSendRequests(
             TFunction<void()> Callback
-
         );
 
         class FCollectSendRequestsTask;
@@ -237,7 +235,6 @@ namespace Gs2::Friend::Domain::Model
 
         Gs2::Core::Domain::CallbackID SubscribeReceiveRequests(
             TFunction<void()> Callback
-
         );
 
         class FCollectReceiveRequestsTask;

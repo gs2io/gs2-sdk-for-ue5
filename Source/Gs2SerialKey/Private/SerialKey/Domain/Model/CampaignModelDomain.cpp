@@ -209,7 +209,6 @@ namespace Gs2::SerialKey::Domain::Model
 
     Gs2::Core::Domain::CallbackID FCampaignModelDomain::SubscribeIssueJobs(
     TFunction<void()> Callback
-
     )
     {
         return Gs2->Cache->ListSubscribe(

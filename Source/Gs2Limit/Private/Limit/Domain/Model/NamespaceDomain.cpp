@@ -372,7 +372,6 @@ namespace Gs2::Limit::Domain::Model
 
     Gs2::Core::Domain::CallbackID FNamespaceDomain::SubscribeLimitModels(
     TFunction<void()> Callback
-
     )
     {
         return Gs2->Cache->ListSubscribe(
@@ -533,7 +532,6 @@ namespace Gs2::Limit::Domain::Model
 
     Gs2::Core::Domain::CallbackID FNamespaceDomain::SubscribeLimitModelMasters(
     TFunction<void()> Callback
-
     )
     {
         return Gs2->Cache->ListSubscribe(

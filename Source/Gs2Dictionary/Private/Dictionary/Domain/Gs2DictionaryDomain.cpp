@@ -41,6 +41,8 @@
 #include "Dictionary/Model/Cache/EntryModel.h"
 #include "Dictionary/Model/Cache/Entry.h"
 #include "Dictionary/Model/Cache/Like.h"
+#include "Dictionary/Model/Cache/Entry.h"
+#include "Dictionary/Model/Cache/Like.h"
 
 #include "Core/Domain/Gs2.h"
 
@@ -441,7 +443,6 @@ namespace Gs2::Dictionary::Domain
 
     Gs2::Core::Domain::CallbackID FGs2DictionaryDomain::SubscribeNamespaces(
     TFunction<void()> Callback
-
     )
     {
         return Gs2->Cache->ListSubscribe(
@@ -593,6 +594,62 @@ namespace Gs2::Dictionary::Domain
                     }
                 }
         }
+    }
+
+    TOptional<FString> FGs2DictionaryDomain::PutUserData(
+        const TOptional<FString> NamespaceName,
+        const TOptional<FString> UserId,
+        const TOptional<int32> TimeOffset,
+        const FString Kind,
+        const FString Payload
+    ) {
+        TSharedPtr<FJsonObject> PayloadJson;
+        if (const TSharedRef<TJsonReader<>> JsonReader = TJsonReaderFactory<>::Create(Payload);
+            !FJsonSerializer::Deserialize(JsonReader, PayloadJson) || !PayloadJson.IsValid())
+        {
+            return TOptional<FString>();
+        }
+        if (Kind == "entry") {
+            const auto Item = Gs2::Dictionary::Model::FEntry::FromJson(PayloadJson);
+            if (!Item.IsValid()) return TOptional<FString>();
+            const auto ParentKey = Gs2::Dictionary::Model::Cache::FEntryCache::PutUserData(
+                Gs2->Cache,
+                NamespaceName,
+                UserId,
+                TimeOffset,
+                Item
+            );
+            return ParentKey.IsEmpty() ? TOptional<FString>() : TOptional<FString>(ParentKey);
+        }
+        if (Kind == "like") {
+            const auto Item = Gs2::Dictionary::Model::FLike::FromJson(PayloadJson);
+            if (!Item.IsValid()) return TOptional<FString>();
+            const auto ParentKey = Gs2::Dictionary::Model::Cache::FLikeCache::PutUserData(
+                Gs2->Cache,
+                NamespaceName,
+                UserId,
+                TimeOffset,
+                Item
+            );
+            return ParentKey.IsEmpty() ? TOptional<FString>() : TOptional<FString>(ParentKey);
+        }
+        return TOptional<FString>();
+    }
+
+    bool FGs2DictionaryDomain::SetListCached(
+        const TOptional<int32> TimeOffset,
+        const FString Kind,
+        const FString ParentKey
+    ) {
+        if (Kind == "entry") {
+            Gs2->Cache->SetListCached(Gs2::Dictionary::Model::FEntry::TypeName, ParentKey);
+            return true;
+        }
+        if (Kind == "like") {
+            Gs2->Cache->SetListCached(Gs2::Dictionary::Model::FLike::TypeName, ParentKey);
+            return true;
+        }
+        return false;
     }
 
     void FGs2DictionaryDomain::UpdateCacheFromStampTask(

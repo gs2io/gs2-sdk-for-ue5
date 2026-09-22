@@ -95,7 +95,6 @@ namespace Gs2::Mission::Domain::Model
 
     Gs2::Core::Domain::CallbackID FUserDomain::SubscribeCompletes(
     TFunction<void()> Callback
-
     )
     {
         return Gs2->Cache->ListSubscribe(
@@ -240,7 +239,6 @@ namespace Gs2::Mission::Domain::Model
 
     Gs2::Core::Domain::CallbackID FUserDomain::SubscribeCounters(
     TFunction<void()> Callback
-
     )
     {
         return Gs2->Cache->ListSubscribe(

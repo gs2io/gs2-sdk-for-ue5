@@ -26,17 +26,22 @@ namespace Gs2::UE5::Mission::Model
         TOptional<FString> MissionGroupNameValue;
         TSharedPtr<TArray<FString>> CompletedMissionTaskNamesValue;
         TSharedPtr<TArray<FString>> ReceivedMissionTaskNamesValue;
+        TOptional<int64> NextResetAtValue;
 
 	public:
         TSharedPtr<FEzComplete> WithMissionGroupName(const TOptional<FString> MissionGroupName);
         TSharedPtr<FEzComplete> WithCompletedMissionTaskNames(const TSharedPtr<TArray<FString>> CompletedMissionTaskNames);
         TSharedPtr<FEzComplete> WithReceivedMissionTaskNames(const TSharedPtr<TArray<FString>> ReceivedMissionTaskNames);
+        TSharedPtr<FEzComplete> WithNextResetAt(const TOptional<int64> NextResetAt);
 
         TOptional<FString> GetMissionGroupName() const;
 
         TSharedPtr<TArray<FString>> GetCompletedMissionTaskNames() const;
 
         TSharedPtr<TArray<FString>> GetReceivedMissionTaskNames() const;
+
+        TOptional<int64> GetNextResetAt() const;
+        FString GetNextResetAtString() const;
 
         Gs2::Mission::Model::FCompletePtr ToModel() const;
         static TSharedPtr<FEzComplete> FromModel(Gs2::Mission::Model::FCompletePtr Model);

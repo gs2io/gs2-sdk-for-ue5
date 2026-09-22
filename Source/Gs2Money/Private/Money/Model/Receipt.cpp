@@ -606,6 +606,30 @@ namespace Gs2::Money::Model::Cache
         );
     }
 
+    FString FReceiptCache::PutUserData(
+        const Gs2::Core::Domain::FCacheDatabasePtr& Cache,
+        TOptional<FString> NamespaceName,
+        TOptional<FString> UserId,
+        TOptional<int32> TimeOffset,
+        const Gs2::Money::Model::FReceiptPtr& Item
+    )
+    {
+        if (!Item.IsValid()) return FString();
+        Put(
+            Cache,
+            NamespaceName,
+            UserId,
+            Item->GetTransactionId(),
+            TimeOffset,
+            Item
+        );
+        return CreateCacheParentKey(
+            NamespaceName,
+            UserId,
+            TimeOffset
+        );
+    }
+
     void FReceiptCache::Delete(
         const Gs2::Core::Domain::FCacheDatabasePtr& CacheOwnerArgumentCache,
         TOptional<FString> CacheOwnerArgumentNamespaceName,

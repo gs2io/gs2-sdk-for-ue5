@@ -197,7 +197,6 @@ namespace Gs2::Money2::Domain::Model
 
         Gs2::Core::Domain::CallbackID SubscribeWallets(
             TFunction<void()> Callback
-
         );
 
         class FCollectWalletsTask;
@@ -241,7 +240,6 @@ namespace Gs2::Money2::Domain::Model
 
         Gs2::Core::Domain::CallbackID SubscribeSubscriptionStatuses(
             TFunction<void()> Callback
-
         );
 
         class FCollectSubscriptionStatusesTask;

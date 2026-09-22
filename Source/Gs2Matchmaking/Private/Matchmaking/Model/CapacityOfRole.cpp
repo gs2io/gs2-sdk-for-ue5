@@ -110,16 +110,17 @@ namespace Gs2::Matchmaking::Model
                 }() : TOptional<FString>())
             ->WithRoleAliases(Data->HasField(ANSI_TO_TCHAR("roleAliases")) ? [Data]() -> TSharedPtr<TArray<FString>>
                 {
-                    auto v = MakeShared<TArray<FString>>();
-                    if (!Data->HasTypedField<EJson::Null>(ANSI_TO_TCHAR("roleAliases")) && Data->HasTypedField<EJson::Array>(ANSI_TO_TCHAR("roleAliases")))
+                    if (!Data->HasTypedField<EJson::Array>(ANSI_TO_TCHAR("roleAliases")))
                     {
-                        for (auto JsonObjectValue : Data->GetArrayField(ANSI_TO_TCHAR("roleAliases")))
-                        {
-                            v->Add(JsonObjectValue->AsString());
-                        }
+                        return nullptr;
+                    }
+                    auto v = MakeShared<TArray<FString>>();
+                    for (auto JsonObjectValue : Data->GetArrayField(ANSI_TO_TCHAR("roleAliases")))
+                    {
+                        v->Add(JsonObjectValue->AsString());
                     }
                     return v;
-                 }() : MakeShared<TArray<FString>>())
+                 }() : nullptr)
             ->WithCapacity(Data->HasField(ANSI_TO_TCHAR("capacity")) ? [Data]() -> TOptional<int32>
                 {
                     int32 v;
@@ -131,16 +132,17 @@ namespace Gs2::Matchmaking::Model
                 }() : TOptional<int32>())
             ->WithParticipants(Data->HasField(ANSI_TO_TCHAR("participants")) ? [Data]() -> TSharedPtr<TArray<Model::FPlayerPtr>>
                 {
-                    auto v = MakeShared<TArray<Model::FPlayerPtr>>();
-                    if (!Data->HasTypedField<EJson::Null>(ANSI_TO_TCHAR("participants")) && Data->HasTypedField<EJson::Array>(ANSI_TO_TCHAR("participants")))
+                    if (!Data->HasTypedField<EJson::Array>(ANSI_TO_TCHAR("participants")))
                     {
-                        for (auto JsonObjectValue : Data->GetArrayField(ANSI_TO_TCHAR("participants")))
-                        {
-                            v->Add(Model::FPlayer::FromJson(JsonObjectValue->AsObject()));
-                        }
+                        return nullptr;
+                    }
+                    auto v = MakeShared<TArray<Model::FPlayerPtr>>();
+                    for (auto JsonObjectValue : Data->GetArrayField(ANSI_TO_TCHAR("participants")))
+                    {
+                        v->Add(Model::FPlayer::FromJson(JsonObjectValue->AsObject()));
                     }
                     return v;
-                 }() : MakeShared<TArray<Model::FPlayerPtr>>());
+                 }() : nullptr);
     }
 
     TSharedPtr<FJsonObject> FCapacityOfRole::ToJson() const

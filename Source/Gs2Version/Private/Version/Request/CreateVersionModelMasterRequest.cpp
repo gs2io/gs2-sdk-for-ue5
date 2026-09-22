@@ -348,16 +348,17 @@ namespace Gs2::Version::Request
               }() : nullptr)
           ->WithScheduleVersions(Data->HasField(ANSI_TO_TCHAR("scheduleVersions")) ? [Data]() -> TSharedPtr<TArray<Model::FScheduleVersionPtr>>
               {
-                  auto v = MakeShared<TArray<Model::FScheduleVersionPtr>>();
-                  if (!Data->HasTypedField<EJson::Null>(ANSI_TO_TCHAR("scheduleVersions")) && Data->HasTypedField<EJson::Array>(ANSI_TO_TCHAR("scheduleVersions")))
+                  if (!Data->HasTypedField<EJson::Array>(ANSI_TO_TCHAR("scheduleVersions")))
                   {
-                      for (auto JsonObjectValue : Data->GetArrayField(ANSI_TO_TCHAR("scheduleVersions")))
-                      {
-                          v->Add(Model::FScheduleVersion::FromJson(JsonObjectValue->AsObject()));
-                      }
+                      return nullptr;
                   }
+                  auto v = MakeShared<TArray<Model::FScheduleVersionPtr>>();
+                  for (auto JsonObjectValue : Data->GetArrayField(ANSI_TO_TCHAR("scheduleVersions")))
+                      {
+                      v->Add(Model::FScheduleVersion::FromJson(JsonObjectValue->AsObject()));
+                      }
                   return v;
-              }() : MakeShared<TArray<Model::FScheduleVersionPtr>>())
+              }() : nullptr)
             ->WithNeedSignature(Data->HasField(ANSI_TO_TCHAR("needSignature")) ? [Data]() -> TOptional<bool>
               {
                   bool v;

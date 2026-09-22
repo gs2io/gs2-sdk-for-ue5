@@ -55,16 +55,17 @@ namespace Gs2::MegaField::Result
         return MakeShared<FActionResult>()
             ->WithItems(Data->HasField(ANSI_TO_TCHAR("items")) ? [Data]() -> TSharedPtr<TArray<Model::FSpatialPtr>>
                  {
-                    auto v = MakeShared<TArray<Model::FSpatialPtr>>();
-                    if (!Data->HasTypedField<EJson::Null>(ANSI_TO_TCHAR("items")) && Data->HasTypedField<EJson::Array>(ANSI_TO_TCHAR("items")))
+                    if (!Data->HasTypedField<EJson::Array>(ANSI_TO_TCHAR("items")))
                     {
-                        for (auto JsonObjectValue : Data->GetArrayField(ANSI_TO_TCHAR("items")))
-                        {
-                            v->Add(Model::FSpatial::FromJson(JsonObjectValue->AsObject()));
-                        }
+                        return nullptr;
+                    }
+                    auto v = MakeShared<TArray<Model::FSpatialPtr>>();
+                    for (auto JsonObjectValue : Data->GetArrayField(ANSI_TO_TCHAR("items")))
+                    {
+                        v->Add(Model::FSpatial::FromJson(JsonObjectValue->AsObject()));
                     }
                     return v;
-                 }() : MakeShared<TArray<Model::FSpatialPtr>>());
+                 }() : nullptr);
     }
 
     TSharedPtr<FJsonObject> FActionResult::ToJson() const

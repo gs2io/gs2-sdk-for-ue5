@@ -203,32 +203,15 @@ namespace Gs2::Friend::Domain::Model
                       Details->Add(MakeShared<Gs2::Core::Model::FGs2ErrorDetail>(TEXT("userId"), TEXT("userId is invalid."), TEXT("invalid_response")));
                       return MakeShared<Gs2::Core::Model::FUnknownError>(Details);
                     }
-        // フレンド解除は双方向の関係であり、また一覧キャッシュは WithProfile(true/false/未指定) ごとに
-        // 別々に保持されるため、自分側・相手側それぞれ全パターンのキャッシュを削除する
-        {
-            const auto OwnerUserId = ResultModel.IsValid() && ResultModel->GetItem().IsValid() ? ResultModel->GetItem()->GetUserId() : TOptional<FString>();
-            for (const auto& WithProfile : {TOptional<bool>(false), TOptional<bool>(true), TOptional<bool>()})
-            {
-                Gs2::Friend::Model::Cache::FFriendUserCache::Delete(
-                    Self->Gs2->Cache,
+              Gs2::Friend::Model::Cache::FFriendUserCache::Delete(
+            Self->Gs2->Cache,
 
-                    Request->GetNamespaceName(),
-                    OwnerUserId,
-                    WithProfile,
-                    Request->GetTargetUserId(),
-                    TOptional<int32>()
-                );
-                Gs2::Friend::Model::Cache::FFriendUserCache::Delete(
-                    Self->Gs2->Cache,
-
-                    Request->GetNamespaceName(),
-                    Request->GetTargetUserId(),
-                    WithProfile,
-                    OwnerUserId,
-                    TOptional<int32>()
-                );
-            }
-        }
+            Request->GetNamespaceName(),
+            (ResultModel.IsValid() && ResultModel->GetItem().IsValid() ? ResultModel->GetItem()->GetUserId() : TOptional<FString>()),
+            TOptional<bool>(),
+            Request->GetTargetUserId(),
+            TOptional<int32>()
+        );
         auto Domain = MakeShared<Gs2::Friend::Domain::Model::FFriendUserDomain>(
             Self->Gs2,
             Self->Service,

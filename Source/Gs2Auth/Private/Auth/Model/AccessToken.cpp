@@ -260,6 +260,25 @@ namespace Gs2::Auth::Model::Cache
         );
     }
 
+    FString FAccessTokenCache::PutUserData(
+        const Gs2::Core::Domain::FCacheDatabasePtr& Cache,
+        TOptional<FString> NamespaceName,
+        TOptional<FString> UserId,
+        TOptional<int32> TimeOffset,
+        const Gs2::Auth::Model::FAccessTokenPtr& Item
+    )
+    {
+        if (!Item.IsValid()) return FString();
+        Put(
+            Cache,
+            TimeOffset,
+            Item
+        );
+        return CreateCacheParentKey(
+            TimeOffset
+        );
+    }
+
     void FAccessTokenCache::Delete(
         const Gs2::Core::Domain::FCacheDatabasePtr& CacheOwnerArgumentCache,
         TOptional<int32> CacheOwnerArgumentTimeOffset

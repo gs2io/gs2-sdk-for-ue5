@@ -213,16 +213,17 @@ namespace Gs2::Enhance::Request
               }() : TOptional<FString>())
           ->WithGradeEntries(Data->HasField(ANSI_TO_TCHAR("gradeEntries")) ? [Data]() -> TSharedPtr<TArray<Model::FUnleashRateEntryModelPtr>>
               {
-                  auto v = MakeShared<TArray<Model::FUnleashRateEntryModelPtr>>();
-                  if (!Data->HasTypedField<EJson::Null>(ANSI_TO_TCHAR("gradeEntries")) && Data->HasTypedField<EJson::Array>(ANSI_TO_TCHAR("gradeEntries")))
+                  if (!Data->HasTypedField<EJson::Array>(ANSI_TO_TCHAR("gradeEntries")))
                   {
-                      for (auto JsonObjectValue : Data->GetArrayField(ANSI_TO_TCHAR("gradeEntries")))
-                      {
-                          v->Add(Model::FUnleashRateEntryModel::FromJson(JsonObjectValue->AsObject()));
-                      }
+                      return nullptr;
                   }
+                  auto v = MakeShared<TArray<Model::FUnleashRateEntryModelPtr>>();
+                  for (auto JsonObjectValue : Data->GetArrayField(ANSI_TO_TCHAR("gradeEntries")))
+                      {
+                      v->Add(Model::FUnleashRateEntryModel::FromJson(JsonObjectValue->AsObject()));
+                      }
                   return v;
-              }() : MakeShared<TArray<Model::FUnleashRateEntryModelPtr>>());
+              }() : nullptr);
     }
 
     TSharedPtr<FJsonObject> FCreateUnleashRateModelMasterRequest::ToJson() const

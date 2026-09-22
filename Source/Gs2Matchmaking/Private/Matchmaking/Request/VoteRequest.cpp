@@ -156,16 +156,17 @@ namespace Gs2::Matchmaking::Request
               }() : TOptional<FString>())
           ->WithGameResults(Data->HasField(ANSI_TO_TCHAR("gameResults")) ? [Data]() -> TSharedPtr<TArray<Model::FGameResultPtr>>
               {
-                  auto v = MakeShared<TArray<Model::FGameResultPtr>>();
-                  if (!Data->HasTypedField<EJson::Null>(ANSI_TO_TCHAR("gameResults")) && Data->HasTypedField<EJson::Array>(ANSI_TO_TCHAR("gameResults")))
+                  if (!Data->HasTypedField<EJson::Array>(ANSI_TO_TCHAR("gameResults")))
                   {
-                      for (auto JsonObjectValue : Data->GetArrayField(ANSI_TO_TCHAR("gameResults")))
-                      {
-                          v->Add(Model::FGameResult::FromJson(JsonObjectValue->AsObject()));
-                      }
+                      return nullptr;
                   }
+                  auto v = MakeShared<TArray<Model::FGameResultPtr>>();
+                  for (auto JsonObjectValue : Data->GetArrayField(ANSI_TO_TCHAR("gameResults")))
+                      {
+                      v->Add(Model::FGameResult::FromJson(JsonObjectValue->AsObject()));
+                      }
                   return v;
-              }() : MakeShared<TArray<Model::FGameResultPtr>>())
+              }() : nullptr)
             ->WithKeyId(Data->HasField(ANSI_TO_TCHAR("keyId")) ? [Data]() -> TOptional<FString>
               {
                   FString v("");

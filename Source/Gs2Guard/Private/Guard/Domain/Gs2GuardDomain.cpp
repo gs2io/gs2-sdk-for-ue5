@@ -123,7 +123,6 @@ namespace Gs2::Guard::Domain
 
     Gs2::Core::Domain::CallbackID FGs2GuardDomain::SubscribeNamespaces(
     TFunction<void()> Callback
-
     )
     {
         return Gs2->Cache->ListSubscribe(
@@ -136,11 +135,9 @@ namespace Gs2::Guard::Domain
         );
     }
     void FGs2GuardDomain::UnsubscribeNamespaces(
-        Gs2::Core::Domain::CallbackID CallbackID,
-        const TOptional<FString> NamePrefix
+        Gs2::Core::Domain::CallbackID CallbackID
     )
     {
-        (void)NamePrefix;
         Gs2->Cache->ListUnsubscribe(
             Gs2::Guard::Model::FNamespace::TypeName,
             Gs2::Guard::Model::Cache::FNamespaceCache::CreateCacheParentKey(
@@ -248,6 +245,24 @@ namespace Gs2::Guard::Domain
         const FString Result,
         const TOptional<int32> TimeOffset
     ) {
+    }
+
+    TOptional<FString> FGs2GuardDomain::PutUserData(
+        const TOptional<FString> NamespaceName,
+        const TOptional<FString> UserId,
+        const TOptional<int32> TimeOffset,
+        const FString Kind,
+        const FString Payload
+    ) {
+        return TOptional<FString>();
+    }
+
+    bool FGs2GuardDomain::SetListCached(
+        const TOptional<int32> TimeOffset,
+        const FString Kind,
+        const FString ParentKey
+    ) {
+        return false;
     }
 
     void FGs2GuardDomain::UpdateCacheFromStampTask(

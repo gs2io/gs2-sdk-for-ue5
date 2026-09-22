@@ -33,7 +33,6 @@
 
 #include "Friend/Model/Cache/FollowUser.h"
 #include "Friend/Model/Cache/Follow.h"
-#include "Friend/Model/Cache/PublicProfile.h"
 
 namespace Gs2::Friend::Domain::Iterator
 {
@@ -154,31 +153,11 @@ namespace Gs2::Friend::Domain::Iterator
                 for (const auto& Item : *Range)
                 {
                     if (!Item.IsValid()) continue;
-                    if (Request->GetWithProfile().Get(bool{}))
-                    {
-                        Gs2::Friend::Model::Cache::FFollowUserCache::Put(
-                            Self->Gs2->Cache, Request->GetNamespaceName(), Request->GetUserId(), true,
-                            Item->GetUserId(), TOptional<int32>(), Item
-                        );
-                    }
                     Gs2::Friend::Model::Cache::FFollowUserCache::Put(
-                        Self->Gs2->Cache, Request->GetNamespaceName(), Request->GetUserId(), false,
-                        Item->GetUserId(), TOptional<int32>(),
-                        MakeShared<Gs2::Friend::Model::FFollowUser>()->WithUserId(Item->GetUserId())
+                        Self->Gs2->Cache,
+                        Request->GetNamespaceName(), Request->GetUserId(), Request->GetWithProfile().Get(bool{}), Item->GetUserId(),
+                        TOptional<int32>(), Item
                     );
-                    Gs2::Friend::Model::Cache::FFollowUserCache::Put(
-                        Self->Gs2->Cache, Request->GetNamespaceName(), Request->GetUserId(), TOptional<bool>(),
-                        Item->GetUserId(), TOptional<int32>(),
-                        MakeShared<Gs2::Friend::Model::FFollowUser>()->WithUserId(Item->GetUserId())
-                    );
-                    if (Request->GetWithProfile().Get(bool{}))
-                    {
-                        Gs2::Friend::Model::Cache::FPublicProfileCache::Put(
-                            Self->Gs2->Cache, Request->GetNamespaceName(), Item->GetUserId(), TOptional<int32>(),
-                            MakeShared<Gs2::Friend::Model::FPublicProfile>()
-                                ->WithUserId(Item->GetUserId())->WithPublicProfile(Item->GetPublicProfile())
-                        );
-                    }
                 }
             }
             if (Range)

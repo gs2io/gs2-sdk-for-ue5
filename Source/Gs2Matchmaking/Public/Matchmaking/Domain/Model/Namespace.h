@@ -365,7 +365,6 @@ namespace Gs2::Matchmaking::Domain::Model
 
         Gs2::Core::Domain::CallbackID SubscribeRatingModels(
             TFunction<void()> Callback
-
         );
 
         class FCollectRatingModelsTask;
@@ -406,7 +405,6 @@ namespace Gs2::Matchmaking::Domain::Model
 
         Gs2::Core::Domain::CallbackID SubscribeRatingModelMasters(
             TFunction<void()> Callback
-
         );
 
         class FCollectRatingModelMastersTask;
@@ -451,7 +449,6 @@ namespace Gs2::Matchmaking::Domain::Model
 
         Gs2::Core::Domain::CallbackID SubscribeSeasonModels(
             TFunction<void()> Callback
-
         );
 
         class FCollectSeasonModelsTask;
@@ -492,7 +489,6 @@ namespace Gs2::Matchmaking::Domain::Model
 
         Gs2::Core::Domain::CallbackID SubscribeSeasonModelMasters(
             TFunction<void()> Callback
-
         );
 
         class FCollectSeasonModelMastersTask;

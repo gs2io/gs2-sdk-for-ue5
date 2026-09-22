@@ -68,6 +68,8 @@ namespace Gs2::Freeze::Domain::Model
             const FOutputDomain& From
         );
 
+
+
         class GS2FREEZE_API FGetTask final :
             public Gs2::Core::Util::TGs2Future<Gs2::Freeze::Model::FOutput>,
             public TSharedFromThis<FGetTask>
@@ -126,6 +128,12 @@ namespace Gs2::Freeze::Domain::Model
 
         TSharedPtr<FAsyncTask<FModelTask>> Model();
 
+        void Invalidate();
+
+        Gs2::Core::Domain::CallbackID Subscribe(
+            TFunction<void(Gs2::Freeze::Model::FOutputPtr)> Callback
+        );
+
         class GS2FREEZE_API FSubscribeWithInitialCallTask final :
             public Gs2::Core::Util::TGs2Future<Gs2::Core::Domain::CallbackID>,
             public TSharedFromThis<FSubscribeWithInitialCallTask>
@@ -133,9 +141,9 @@ namespace Gs2::Freeze::Domain::Model
             const TSharedPtr<FOutputDomain> Self;
             const TFunction<void(Gs2::Freeze::Model::FOutputPtr)> Callback;
         public:
-            explicit FSubscribeWithInitialCallTask(
-                const TSharedPtr<FOutputDomain> Self,
-                const TFunction<void(Gs2::Freeze::Model::FOutputPtr)>& Callback
+            FSubscribeWithInitialCallTask(
+                const TSharedPtr<FOutputDomain>& Self,
+                TFunction<void(Gs2::Freeze::Model::FOutputPtr)> Callback
             );
 
             FSubscribeWithInitialCallTask(
@@ -146,15 +154,8 @@ namespace Gs2::Freeze::Domain::Model
                 TSharedPtr<TSharedPtr<Gs2::Core::Domain::CallbackID>> Result
             ) override;
         };
-        friend FSubscribeWithInitialCallTask;
 
         TSharedPtr<FAsyncTask<FSubscribeWithInitialCallTask>> SubscribeWithInitialCall(
-            TFunction<void(Gs2::Freeze::Model::FOutputPtr)> Callback
-        );
-
-        void Invalidate();
-
-        Gs2::Core::Domain::CallbackID Subscribe(
             TFunction<void(Gs2::Freeze::Model::FOutputPtr)> Callback
         );
 

@@ -178,7 +178,6 @@ namespace Gs2::Chat::Domain::Model
 
     Gs2::Core::Domain::CallbackID FUserAccessTokenDomain::SubscribeSubscribes(
     TFunction<void()> Callback
-
     )
     {
         return Gs2->Cache->ListSubscribe(

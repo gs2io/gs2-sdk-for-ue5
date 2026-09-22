@@ -34,6 +34,7 @@
 #include "Gateway/Model/Cache/Namespace.h"
 #include "Gateway/Model/Cache/WebSocketSession.h"
 #include "Gateway/Model/Cache/FirebaseToken.h"
+#include "Gateway/Model/Cache/FirebaseToken.h"
 
 #include "Core/Domain/Gs2.h"
 
@@ -436,7 +437,6 @@ namespace Gs2::Gateway::Domain
 
     Gs2::Core::Domain::CallbackID FGs2GatewayDomain::SubscribeNamespaces(
     TFunction<void()> Callback
-
     )
     {
         return Gs2->Cache->ListSubscribe(
@@ -559,6 +559,46 @@ namespace Gs2::Gateway::Domain
         const FString Result,
         const TOptional<int32> TimeOffset
     ) {
+    }
+
+    TOptional<FString> FGs2GatewayDomain::PutUserData(
+        const TOptional<FString> NamespaceName,
+        const TOptional<FString> UserId,
+        const TOptional<int32> TimeOffset,
+        const FString Kind,
+        const FString Payload
+    ) {
+        TSharedPtr<FJsonObject> PayloadJson;
+        if (const TSharedRef<TJsonReader<>> JsonReader = TJsonReaderFactory<>::Create(Payload);
+            !FJsonSerializer::Deserialize(JsonReader, PayloadJson) || !PayloadJson.IsValid())
+        {
+            return TOptional<FString>();
+        }
+        if (Kind == "firebaseToken") {
+            const auto Item = Gs2::Gateway::Model::FFirebaseToken::FromJson(PayloadJson);
+            if (!Item.IsValid()) return TOptional<FString>();
+            const auto ParentKey = Gs2::Gateway::Model::Cache::FFirebaseTokenCache::PutUserData(
+                Gs2->Cache,
+                NamespaceName,
+                UserId,
+                TimeOffset,
+                Item
+            );
+            return ParentKey.IsEmpty() ? TOptional<FString>() : TOptional<FString>(ParentKey);
+        }
+        return TOptional<FString>();
+    }
+
+    bool FGs2GatewayDomain::SetListCached(
+        const TOptional<int32> TimeOffset,
+        const FString Kind,
+        const FString ParentKey
+    ) {
+        if (Kind == "firebaseToken") {
+            Gs2->Cache->SetListCached(Gs2::Gateway::Model::FFirebaseToken::TypeName, ParentKey);
+            return true;
+        }
+        return false;
     }
 
     void FGs2GatewayDomain::UpdateCacheFromStampTask(

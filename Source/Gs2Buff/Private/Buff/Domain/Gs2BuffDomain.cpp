@@ -437,7 +437,6 @@ namespace Gs2::Buff::Domain
 
     Gs2::Core::Domain::CallbackID FGs2BuffDomain::SubscribeNamespaces(
     TFunction<void()> Callback
-
     )
     {
         return Gs2->Cache->ListSubscribe(
@@ -560,6 +559,24 @@ namespace Gs2::Buff::Domain
         const FString Result,
         const TOptional<int32> TimeOffset
     ) {
+    }
+
+    TOptional<FString> FGs2BuffDomain::PutUserData(
+        const TOptional<FString> NamespaceName,
+        const TOptional<FString> UserId,
+        const TOptional<int32> TimeOffset,
+        const FString Kind,
+        const FString Payload
+    ) {
+        return TOptional<FString>();
+    }
+
+    bool FGs2BuffDomain::SetListCached(
+        const TOptional<int32> TimeOffset,
+        const FString Kind,
+        const FString ParentKey
+    ) {
+        return false;
     }
 
     void FGs2BuffDomain::UpdateCacheFromStampTask(

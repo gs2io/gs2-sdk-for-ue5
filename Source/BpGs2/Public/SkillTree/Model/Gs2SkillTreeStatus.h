@@ -39,6 +39,8 @@ struct FGs2SkillTreeStatusValue
     UPROPERTY(Category = Gs2, BlueprintReadOnly)
     FString UserId = "";
     UPROPERTY(Category = Gs2, BlueprintReadOnly)
+    FString PropertyId = "";
+    UPROPERTY(Category = Gs2, BlueprintReadOnly)
     TArray<FString> ReleasedNodeNames = TArray<FString>();
 };
 
@@ -53,6 +55,7 @@ inline FGs2SkillTreeStatusValue EzStatusToFGs2SkillTreeStatusValue(
     }
     Value.StatusId = Model->GetStatusId() ? *Model->GetStatusId() : "";
     Value.UserId = Model->GetUserId() ? *Model->GetUserId() : "";
+    Value.PropertyId = Model->GetPropertyId() ? *Model->GetPropertyId() : "";
     Value.ReleasedNodeNames = Model->GetReleasedNodeNames() ? [&]
     {
         TArray<FString> r;
@@ -72,6 +75,7 @@ inline Gs2::UE5::SkillTree::Model::FEzStatusPtr FGs2SkillTreeStatusValueToEzStat
     return MakeShared<Gs2::UE5::SkillTree::Model::FEzStatus>()
         ->WithStatusId(Model.StatusId)
         ->WithUserId(Model.UserId)
+        ->WithPropertyId(Model.PropertyId)
         ->WithReleasedNodeNames([&]{
             auto r = MakeShared<TArray<FString>>();
             for (auto v : Model.ReleasedNodeNames) {

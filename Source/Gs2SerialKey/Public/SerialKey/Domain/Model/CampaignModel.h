@@ -144,7 +144,6 @@ namespace Gs2::SerialKey::Domain::Model
 
         Gs2::Core::Domain::CallbackID SubscribeIssueJobs(
             TFunction<void()> Callback
-
         );
 
         class FCollectIssueJobsTask;

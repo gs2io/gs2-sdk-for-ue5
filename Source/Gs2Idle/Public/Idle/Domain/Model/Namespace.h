@@ -248,7 +248,6 @@ namespace Gs2::Idle::Domain::Model
 
         Gs2::Core::Domain::CallbackID SubscribeCategoryModels(
             TFunction<void()> Callback
-
         );
 
         class FCollectCategoryModelsTask;
@@ -297,7 +296,6 @@ namespace Gs2::Idle::Domain::Model
 
         Gs2::Core::Domain::CallbackID SubscribeCategoryModelMasters(
             TFunction<void()> Callback
-
         );
 
         class FCollectCategoryModelMastersTask;

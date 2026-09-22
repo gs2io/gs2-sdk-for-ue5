@@ -98,28 +98,30 @@ namespace Gs2::Version::Result
                 }() : TOptional<FString>())
             ->WithWarnings(Data->HasField(ANSI_TO_TCHAR("warnings")) ? [Data]() -> TSharedPtr<TArray<Model::FStatusPtr>>
                  {
-                    auto v = MakeShared<TArray<Model::FStatusPtr>>();
-                    if (!Data->HasTypedField<EJson::Null>(ANSI_TO_TCHAR("warnings")) && Data->HasTypedField<EJson::Array>(ANSI_TO_TCHAR("warnings")))
+                    if (!Data->HasTypedField<EJson::Array>(ANSI_TO_TCHAR("warnings")))
                     {
-                        for (auto JsonObjectValue : Data->GetArrayField(ANSI_TO_TCHAR("warnings")))
-                        {
-                            v->Add(Model::FStatus::FromJson(JsonObjectValue->AsObject()));
-                        }
+                        return nullptr;
+                    }
+                    auto v = MakeShared<TArray<Model::FStatusPtr>>();
+                    for (auto JsonObjectValue : Data->GetArrayField(ANSI_TO_TCHAR("warnings")))
+                    {
+                        v->Add(Model::FStatus::FromJson(JsonObjectValue->AsObject()));
                     }
                     return v;
-                 }() : MakeShared<TArray<Model::FStatusPtr>>())
+                 }() : nullptr)
             ->WithErrors(Data->HasField(ANSI_TO_TCHAR("errors")) ? [Data]() -> TSharedPtr<TArray<Model::FStatusPtr>>
                  {
-                    auto v = MakeShared<TArray<Model::FStatusPtr>>();
-                    if (!Data->HasTypedField<EJson::Null>(ANSI_TO_TCHAR("errors")) && Data->HasTypedField<EJson::Array>(ANSI_TO_TCHAR("errors")))
+                    if (!Data->HasTypedField<EJson::Array>(ANSI_TO_TCHAR("errors")))
                     {
-                        for (auto JsonObjectValue : Data->GetArrayField(ANSI_TO_TCHAR("errors")))
-                        {
-                            v->Add(Model::FStatus::FromJson(JsonObjectValue->AsObject()));
-                        }
+                        return nullptr;
+                    }
+                    auto v = MakeShared<TArray<Model::FStatusPtr>>();
+                    for (auto JsonObjectValue : Data->GetArrayField(ANSI_TO_TCHAR("errors")))
+                    {
+                        v->Add(Model::FStatus::FromJson(JsonObjectValue->AsObject()));
                     }
                     return v;
-                 }() : MakeShared<TArray<Model::FStatusPtr>>());
+                 }() : nullptr);
     }
 
     TSharedPtr<FJsonObject> FCheckVersionResult::ToJson() const

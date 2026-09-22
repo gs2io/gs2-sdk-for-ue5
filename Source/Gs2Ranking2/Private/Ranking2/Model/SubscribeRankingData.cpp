@@ -645,6 +645,32 @@ namespace Gs2::Ranking2::Model::Cache
         );
     }
 
+    FString FSubscribeRankingDataCache::PutUserData(
+        const Gs2::Core::Domain::FCacheDatabasePtr& Cache,
+        TOptional<FString> NamespaceName,
+        TOptional<FString> UserId,
+        TOptional<int32> TimeOffset,
+        const Gs2::Ranking2::Model::FSubscribeRankingDataPtr& Item
+    )
+    {
+        if (!Item.IsValid()) return FString();
+        Put(
+            Cache,
+            NamespaceName,
+            Item->GetRankingName(),
+            Item->GetSeason(),
+            Item->GetScorerUserId(),
+            TimeOffset,
+            Item
+        );
+        return CreateCacheParentKey(
+            NamespaceName,
+            Item->GetRankingName(),
+            Item->GetSeason(),
+            TimeOffset
+        );
+    }
+
     void FSubscribeRankingDataCache::Delete(
         const Gs2::Core::Domain::FCacheDatabasePtr& CacheOwnerArgumentCache,
         TOptional<FString> CacheOwnerArgumentNamespaceName,

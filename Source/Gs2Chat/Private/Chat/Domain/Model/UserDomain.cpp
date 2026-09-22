@@ -93,14 +93,13 @@ namespace Gs2::Chat::Domain::Model
 
     Gs2::Core::Domain::CallbackID FUserDomain::SubscribeRooms(
     TFunction<void()> Callback
-
     )
     {
         return Gs2->Cache->ListSubscribe(
             Gs2::Chat::Model::FRoom::TypeName,
             Gs2::Chat::Model::Cache::FRoomCache::CreateCacheParentKey(
                 NamespaceName,
-                TOptional<FString>(),
+                UserId,
                 TOptional<int32>()
             ),
             Callback,
@@ -115,7 +114,7 @@ namespace Gs2::Chat::Domain::Model
             Gs2::Chat::Model::FRoom::TypeName,
             Gs2::Chat::Model::Cache::FRoomCache::CreateCacheParentKey(
                 NamespaceName,
-                TOptional<FString>(),
+                UserId,
                 TOptional<int32>()
             ),
             CallbackID
@@ -157,7 +156,7 @@ namespace Gs2::Chat::Domain::Model
         const auto QueryNamePrefix = NamePrefix;
         const auto Parent = Gs2::Chat::Model::Cache::FRoomCache::CreateCacheParentKey(
         NamespaceName,
-        TOptional<FString>(),
+        UserId,
         TOptional<int32>()
     );
         return Gs2->Cache->ListSubscribeTyped(
@@ -187,7 +186,7 @@ namespace Gs2::Chat::Domain::Model
             Gs2::Chat::Model::FRoom::TypeName,
             Gs2::Chat::Model::Cache::FRoomCache::CreateCacheParentKey(
         NamespaceName,
-        TOptional<FString>(),
+        UserId,
         TOptional<int32>()
     )
         );
@@ -242,7 +241,6 @@ namespace Gs2::Chat::Domain::Model
 
     Gs2::Core::Domain::CallbackID FUserDomain::SubscribeSubscribes(
     TFunction<void()> Callback
-
     )
     {
         return Gs2->Cache->ListSubscribe(
@@ -374,7 +372,6 @@ namespace Gs2::Chat::Domain::Model
 
     Gs2::Core::Domain::CallbackID FUserDomain::SubscribeSubscribesByRoomName(
     TFunction<void()> Callback
-
     )
     {
         return Gs2->Cache->ListSubscribe(

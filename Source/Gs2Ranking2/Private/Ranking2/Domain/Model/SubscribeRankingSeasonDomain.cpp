@@ -203,7 +203,6 @@ namespace Gs2::Ranking2::Domain::Model
 
     Gs2::Core::Domain::CallbackID FSubscribeRankingSeasonDomain::SubscribeSubscribeRankingScores(
     TFunction<void()> Callback
-
     )
     {
         return Gs2->Cache->ListSubscribe(
@@ -356,7 +355,6 @@ namespace Gs2::Ranking2::Domain::Model
 
     Gs2::Core::Domain::CallbackID FSubscribeRankingSeasonDomain::SubscribeSubscribeRankings(
     TFunction<void()> Callback
-
     )
     {
         return Gs2->Cache->ListSubscribe(

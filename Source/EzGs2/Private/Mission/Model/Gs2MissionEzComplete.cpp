@@ -42,6 +42,14 @@ namespace Gs2::UE5::Mission::Model
         this->ReceivedMissionTaskNamesValue = ReceivedMissionTaskNames;
         return SharedThis(this);
     }
+
+    TSharedPtr<FEzComplete> FEzComplete::WithNextResetAt(
+        const TOptional<int64> NextResetAt
+    )
+    {
+        this->NextResetAtValue = NextResetAt;
+        return SharedThis(this);
+    }
     TOptional<FString> FEzComplete::GetMissionGroupName() const
     {
         return MissionGroupNameValue;
@@ -54,13 +62,27 @@ namespace Gs2::UE5::Mission::Model
     {
         return ReceivedMissionTaskNamesValue;
     }
+    TOptional<int64> FEzComplete::GetNextResetAt() const
+    {
+        return NextResetAtValue;
+    }
+
+    FString FEzComplete::GetNextResetAtString() const
+    {
+        if (!NextResetAtValue.IsSet())
+        {
+            return FString("null");
+        }
+        return FString::Printf(TEXT("%lld"), NextResetAtValue.GetValue());
+    }
 
     Gs2::Mission::Model::FCompletePtr FEzComplete::ToModel() const
     {
         return MakeShared<Gs2::Mission::Model::FComplete>()
             ->WithMissionGroupName(MissionGroupNameValue)
             ->WithCompletedMissionTaskNames(CompletedMissionTaskNamesValue)
-            ->WithReceivedMissionTaskNames(ReceivedMissionTaskNamesValue);
+            ->WithReceivedMissionTaskNames(ReceivedMissionTaskNamesValue)
+            ->WithNextResetAt(NextResetAtValue);
     }
 
     TSharedPtr<FEzComplete> FEzComplete::FromModel(const Gs2::Mission::Model::FCompletePtr Model)
@@ -72,6 +94,7 @@ namespace Gs2::UE5::Mission::Model
         return MakeShared<FEzComplete>()
             ->WithMissionGroupName(Model->GetMissionGroupName())
             ->WithCompletedMissionTaskNames(Model->GetCompletedMissionTaskNames())
-            ->WithReceivedMissionTaskNames(Model->GetReceivedMissionTaskNames());
+            ->WithReceivedMissionTaskNames(Model->GetReceivedMissionTaskNames())
+            ->WithNextResetAt(Model->GetNextResetAt());
     }
 }

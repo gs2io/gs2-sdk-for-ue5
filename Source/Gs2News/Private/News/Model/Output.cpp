@@ -343,6 +343,30 @@ namespace Gs2::News::Model::Cache
         );
     }
 
+    FString FOutputCache::PutUserData(
+        const Gs2::Core::Domain::FCacheDatabasePtr& Cache,
+        TOptional<FString> NamespaceName,
+        TOptional<FString> UserId,
+        TOptional<int32> TimeOffset,
+        const Gs2::News::Model::FOutputPtr& Item
+    )
+    {
+        if (!Item.IsValid()) return FString();
+        Put(
+            Cache,
+            NamespaceName,
+            (Item->GetOutputId().IsSet() ? Gs2::News::Model::FOutput::GetUploadTokenFromGrn(*Item->GetOutputId()) : TOptional<FString>()),
+            Item->GetName(),
+            TimeOffset,
+            Item
+        );
+        return CreateCacheParentKey(
+            NamespaceName,
+            (Item->GetOutputId().IsSet() ? Gs2::News::Model::FOutput::GetUploadTokenFromGrn(*Item->GetOutputId()) : TOptional<FString>()),
+            TimeOffset
+        );
+    }
+
     void FOutputCache::Delete(
         const Gs2::Core::Domain::FCacheDatabasePtr& CacheOwnerArgumentCache,
         TOptional<FString> CacheOwnerArgumentNamespaceName,

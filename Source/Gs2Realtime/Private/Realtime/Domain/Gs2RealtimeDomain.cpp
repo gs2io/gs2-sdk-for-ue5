@@ -125,7 +125,6 @@ namespace Gs2::Realtime::Domain
 
     Gs2::Core::Domain::CallbackID FGs2RealtimeDomain::SubscribeNamespaces(
     TFunction<void()> Callback
-
     )
     {
         return Gs2->Cache->ListSubscribe(
@@ -250,6 +249,24 @@ namespace Gs2::Realtime::Domain
     ) {
     }
 
+    TOptional<FString> FGs2RealtimeDomain::PutUserData(
+        const TOptional<FString> NamespaceName,
+        const TOptional<FString> UserId,
+        const TOptional<int32> TimeOffset,
+        const FString Kind,
+        const FString Payload
+    ) {
+        return TOptional<FString>();
+    }
+
+    bool FGs2RealtimeDomain::SetListCached(
+        const TOptional<int32> TimeOffset,
+        const FString Kind,
+        const FString ParentKey
+    ) {
+        return false;
+    }
+
     void FGs2RealtimeDomain::UpdateCacheFromStampTask(
         const FString Method,
         const FString Request,
@@ -277,14 +294,7 @@ namespace Gs2::Realtime::Domain
             {
                 return;
             }
-            const auto Notification = Gs2::Realtime::Model::FCreateNotification::FromJson(PayloadJson);
-            Gs2::Realtime::Model::Cache::FRoomCache::Delete(
-                Gs2->Cache,
-                Notification->GetNamespaceName(),
-                Notification->GetRoomName(),
-                TOptional<int32>()
-            );
-            CreateNotificationEvent.Broadcast(Notification);
+            CreateNotificationEvent.Broadcast(Gs2::Realtime::Model::FCreateNotification::FromJson(PayloadJson));
         }
     }
 

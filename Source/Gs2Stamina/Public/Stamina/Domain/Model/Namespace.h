@@ -338,7 +338,6 @@ namespace Gs2::Stamina::Domain::Model
 
         Gs2::Core::Domain::CallbackID SubscribeMaxStaminaTableMasters(
             TFunction<void()> Callback
-
         );
 
         class FCollectMaxStaminaTableMastersTask;
@@ -378,7 +377,6 @@ namespace Gs2::Stamina::Domain::Model
 
         Gs2::Core::Domain::CallbackID SubscribeStaminaModels(
             TFunction<void()> Callback
-
         );
 
         class FCollectStaminaModelsTask;
@@ -427,7 +425,6 @@ namespace Gs2::Stamina::Domain::Model
 
         Gs2::Core::Domain::CallbackID SubscribeRecoverIntervalTableMasters(
             TFunction<void()> Callback
-
         );
 
         class FCollectRecoverIntervalTableMastersTask;
@@ -468,7 +465,6 @@ namespace Gs2::Stamina::Domain::Model
 
         Gs2::Core::Domain::CallbackID SubscribeRecoverValueTableMasters(
             TFunction<void()> Callback
-
         );
 
         class FCollectRecoverValueTableMastersTask;
@@ -509,7 +505,6 @@ namespace Gs2::Stamina::Domain::Model
 
         Gs2::Core::Domain::CallbackID SubscribeStaminaModelMasters(
             TFunction<void()> Callback
-
         );
 
         class FCollectStaminaModelMastersTask;

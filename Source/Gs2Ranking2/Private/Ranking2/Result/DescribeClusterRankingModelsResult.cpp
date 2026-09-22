@@ -55,16 +55,17 @@ namespace Gs2::Ranking2::Result
         return MakeShared<FDescribeClusterRankingModelsResult>()
             ->WithItems(Data->HasField(ANSI_TO_TCHAR("items")) ? [Data]() -> TSharedPtr<TArray<Model::FClusterRankingModelPtr>>
                  {
-                    auto v = MakeShared<TArray<Model::FClusterRankingModelPtr>>();
-                    if (!Data->HasTypedField<EJson::Null>(ANSI_TO_TCHAR("items")) && Data->HasTypedField<EJson::Array>(ANSI_TO_TCHAR("items")))
+                    if (!Data->HasTypedField<EJson::Array>(ANSI_TO_TCHAR("items")))
                     {
-                        for (auto JsonObjectValue : Data->GetArrayField(ANSI_TO_TCHAR("items")))
-                        {
-                            v->Add(Model::FClusterRankingModel::FromJson(JsonObjectValue->AsObject()));
-                        }
+                        return nullptr;
+                    }
+                    auto v = MakeShared<TArray<Model::FClusterRankingModelPtr>>();
+                    for (auto JsonObjectValue : Data->GetArrayField(ANSI_TO_TCHAR("items")))
+                    {
+                        v->Add(Model::FClusterRankingModel::FromJson(JsonObjectValue->AsObject()));
                     }
                     return v;
-                 }() : MakeShared<TArray<Model::FClusterRankingModelPtr>>());
+                 }() : nullptr);
     }
 
     TSharedPtr<FJsonObject> FDescribeClusterRankingModelsResult::ToJson() const

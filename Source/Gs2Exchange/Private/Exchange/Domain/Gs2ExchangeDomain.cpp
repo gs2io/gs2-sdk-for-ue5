@@ -46,6 +46,7 @@
 #include "Exchange/Model/Cache/RateModel.h"
 #include "Exchange/Model/Cache/IncrementalRateModel.h"
 #include "Exchange/Model/Cache/Await.h"
+#include "Exchange/Model/Cache/Await.h"
 
 #include "Core/Domain/Gs2.h"
 
@@ -446,7 +447,6 @@ namespace Gs2::Exchange::Domain
 
     Gs2::Core::Domain::CallbackID FGs2ExchangeDomain::SubscribeNamespaces(
     TFunction<void()> Callback
-
     )
     {
         return Gs2->Cache->ListSubscribe(
@@ -736,6 +736,46 @@ namespace Gs2::Exchange::Domain
                     }
 
         }
+    }
+
+    TOptional<FString> FGs2ExchangeDomain::PutUserData(
+        const TOptional<FString> NamespaceName,
+        const TOptional<FString> UserId,
+        const TOptional<int32> TimeOffset,
+        const FString Kind,
+        const FString Payload
+    ) {
+        TSharedPtr<FJsonObject> PayloadJson;
+        if (const TSharedRef<TJsonReader<>> JsonReader = TJsonReaderFactory<>::Create(Payload);
+            !FJsonSerializer::Deserialize(JsonReader, PayloadJson) || !PayloadJson.IsValid())
+        {
+            return TOptional<FString>();
+        }
+        if (Kind == "await") {
+            const auto Item = Gs2::Exchange::Model::FAwait::FromJson(PayloadJson);
+            if (!Item.IsValid()) return TOptional<FString>();
+            const auto ParentKey = Gs2::Exchange::Model::Cache::FAwaitCache::PutUserData(
+                Gs2->Cache,
+                NamespaceName,
+                UserId,
+                TimeOffset,
+                Item
+            );
+            return ParentKey.IsEmpty() ? TOptional<FString>() : TOptional<FString>(ParentKey);
+        }
+        return TOptional<FString>();
+    }
+
+    bool FGs2ExchangeDomain::SetListCached(
+        const TOptional<int32> TimeOffset,
+        const FString Kind,
+        const FString ParentKey
+    ) {
+        if (Kind == "await") {
+            Gs2->Cache->SetListCached(Gs2::Exchange::Model::FAwait::TypeName, ParentKey);
+            return true;
+        }
+        return false;
     }
 
     void FGs2ExchangeDomain::UpdateCacheFromStampTask(

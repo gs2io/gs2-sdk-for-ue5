@@ -165,7 +165,6 @@ namespace Gs2::Inventory::Domain::Model
 
     Gs2::Core::Domain::CallbackID FInventoryModelDomain::SubscribeItemModels(
     TFunction<void()> Callback
-
     )
     {
         return Gs2->Cache->ListSubscribe(

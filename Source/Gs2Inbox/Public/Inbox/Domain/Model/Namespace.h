@@ -258,7 +258,6 @@ namespace Gs2::Inbox::Domain::Model
 
         Gs2::Core::Domain::CallbackID SubscribeGlobalMessages(
             TFunction<void()> Callback
-
         );
 
         class FCollectGlobalMessagesTask;
@@ -299,7 +298,6 @@ namespace Gs2::Inbox::Domain::Model
 
         Gs2::Core::Domain::CallbackID SubscribeGlobalMessageMasters(
             TFunction<void()> Callback
-
         );
 
         class FCollectGlobalMessageMastersTask;

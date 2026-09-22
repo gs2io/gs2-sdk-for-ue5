@@ -104,7 +104,6 @@ namespace Gs2::Showcase::Domain::Model
 
     Gs2::Core::Domain::CallbackID FRandomShowcaseDomain::SubscribeRandomDisplayItems(
     TFunction<void()> Callback
-
     )
     {
         return Gs2->Cache->ListSubscribe(

@@ -207,7 +207,6 @@ namespace Gs2::SerialKey::Domain::Model
 
         Gs2::Core::Domain::CallbackID SubscribeSerialKeys(
             TFunction<void()> Callback
-
         );
 
         class FCollectSerialKeysTask;

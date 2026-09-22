@@ -110,7 +110,6 @@ namespace Gs2::Schedule::Domain::Model
 
         Gs2::Core::Domain::CallbackID SubscribeTriggers(
             TFunction<void()> Callback
-
         );
 
         class FCollectTriggersTask;
@@ -151,7 +150,6 @@ namespace Gs2::Schedule::Domain::Model
 
         Gs2::Core::Domain::CallbackID SubscribeEvents(
             TFunction<void()> Callback
-
         );
 
         class FCollectEventsTask;

@@ -154,16 +154,17 @@ namespace Gs2::MegaField::Request
               }() : TOptional<FString>())
           ->WithUserIds(Data->HasField(ANSI_TO_TCHAR("userIds")) ? [Data]() -> TSharedPtr<TArray<FString>>
               {
-                  auto v = MakeShared<TArray<FString>>();
-                  if (!Data->HasTypedField<EJson::Null>(ANSI_TO_TCHAR("userIds")) && Data->HasTypedField<EJson::Array>(ANSI_TO_TCHAR("userIds")))
+                  if (!Data->HasTypedField<EJson::Array>(ANSI_TO_TCHAR("userIds")))
                   {
-                      for (auto JsonObjectValue : Data->GetArrayField(ANSI_TO_TCHAR("userIds")))
-                      {
-                          v->Add(JsonObjectValue->AsString());
-                      }
+                      return nullptr;
                   }
+                  auto v = MakeShared<TArray<FString>>();
+                  for (auto JsonObjectValue : Data->GetArrayField(ANSI_TO_TCHAR("userIds")))
+                      {
+                      v->Add(JsonObjectValue->AsString());
+                      }
                   return v;
-              }() : MakeShared<TArray<FString>>())
+              }() : nullptr)
           ->WithDuplicationAvoider(Data->HasField(ANSI_TO_TCHAR("duplicationAvoider")) ? TOptional<FString>(Data->GetStringField(ANSI_TO_TCHAR("duplicationAvoider"))) : TOptional<FString>());
     }
 

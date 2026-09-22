@@ -38,7 +38,6 @@
 #include "Quest/Domain/Model/UserAccessToken.h"
 #include "Quest/Domain/SpeculativeExecutor/Transaction/EndByUserIdSpeculativeExecutor.h"
 #include "Quest/Model/Cache/Progress.h"
-#include "Quest/Model/Cache/CompletedQuestList.h"
 #include "Quest/Model/Cache/QuestGroupModel.h"
 #include "Quest/Model/Cache/QuestModel.h"
 
@@ -221,14 +220,6 @@ namespace Gs2::Quest::Domain::Model
             Request->GetNamespaceName(),
             (CacheOwnerSnapshotUserId),
             CacheOwnerSnapshotTimeOffset
-        );
-        Self->Gs2->Cache->ClearListCache(
-            Gs2::Quest::Model::FCompletedQuestList::TypeName,
-            Gs2::Quest::Model::Cache::FCompletedQuestListCache::CreateCacheParentKey(
-                Request->GetNamespaceName(),
-                CacheOwnerSnapshotUserId,
-                CacheOwnerSnapshotTimeOffset
-            )
         );
         const auto Transaction = Gs2::Core::Domain::Internal::FTransactionDomainFactory::ToTransaction(
             Self->Gs2,

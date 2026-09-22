@@ -647,6 +647,34 @@ namespace Gs2::Ranking2::Model::Cache
         );
     }
 
+    FString FClusterRankingDataCache::PutUserData(
+        const Gs2::Core::Domain::FCacheDatabasePtr& Cache,
+        TOptional<FString> NamespaceName,
+        TOptional<FString> UserId,
+        TOptional<int32> TimeOffset,
+        const Gs2::Ranking2::Model::FClusterRankingDataPtr& Item
+    )
+    {
+        if (!Item.IsValid()) return FString();
+        Put(
+            Cache,
+            NamespaceName,
+            Item->GetRankingName(),
+            Item->GetClusterName(),
+            Item->GetSeason(),
+            Item->GetUserId(),
+            TimeOffset,
+            Item
+        );
+        return CreateCacheParentKey(
+            NamespaceName,
+            Item->GetRankingName(),
+            Item->GetClusterName(),
+            Item->GetSeason(),
+            TimeOffset
+        );
+    }
+
     void FClusterRankingDataCache::Delete(
         const Gs2::Core::Domain::FCacheDatabasePtr& CacheOwnerArgumentCache,
         TOptional<FString> CacheOwnerArgumentNamespaceName,

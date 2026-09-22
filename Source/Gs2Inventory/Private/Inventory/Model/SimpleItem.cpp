@@ -355,9 +355,37 @@ namespace Gs2::Inventory::Model::Cache
             const int64 CacheOwnerOldRevision = CacheOwnerExisting.IsValid() ? CacheOwnerExisting->GetRevision().Get(-1) : -1;
             const int64 CacheOwnerNewRevision = CacheOwnerValue.IsValid() ? CacheOwnerValue->GetRevision().Get(-1) : -1;
             if (CacheOwnerOldRevision > CacheOwnerNewRevision && CacheOwnerNewRevision > 1) return;
+            if (CacheOwnerOldRevision == CacheOwnerNewRevision) return;
         }
+        if (CacheOwnerValue.IsValid() && CacheOwnerValue->GetCount().IsSet() && CacheOwnerValue->GetCount().Get(0) == 0) CacheOwnerValue = nullptr;
         CacheSnapshot->Put(Gs2::Inventory::Model::FSimpleItem::TypeName, CacheOwnerParentKey, CacheOwnerKey, CacheOwnerValue,
             FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
+        );
+    }
+
+    FString FSimpleItemCache::PutUserData(
+        const Gs2::Core::Domain::FCacheDatabasePtr& Cache,
+        TOptional<FString> NamespaceName,
+        TOptional<FString> UserId,
+        TOptional<int32> TimeOffset,
+        const Gs2::Inventory::Model::FSimpleItemPtr& Item
+    )
+    {
+        if (!Item.IsValid()) return FString();
+        Put(
+            Cache,
+            NamespaceName,
+            UserId,
+            (Item->GetItemId().IsSet() ? Gs2::Inventory::Model::FSimpleItem::GetInventoryNameFromGrn(*Item->GetItemId()) : TOptional<FString>()),
+            Item->GetItemName(),
+            TimeOffset,
+            Item
+        );
+        return CreateCacheParentKey(
+            NamespaceName,
+            UserId,
+            (Item->GetItemId().IsSet() ? Gs2::Inventory::Model::FSimpleItem::GetInventoryNameFromGrn(*Item->GetItemId()) : TOptional<FString>()),
+            TimeOffset
         );
     }
 

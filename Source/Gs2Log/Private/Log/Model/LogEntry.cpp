@@ -160,16 +160,17 @@ namespace Gs2::Log::Model
                 }() : TOptional<FString>())
             ->WithLabels(Data->HasField(ANSI_TO_TCHAR("labels")) ? [Data]() -> TSharedPtr<TArray<Model::FLabelPtr>>
                 {
-                    auto v = MakeShared<TArray<Model::FLabelPtr>>();
-                    if (!Data->HasTypedField<EJson::Null>(ANSI_TO_TCHAR("labels")) && Data->HasTypedField<EJson::Array>(ANSI_TO_TCHAR("labels")))
+                    if (!Data->HasTypedField<EJson::Array>(ANSI_TO_TCHAR("labels")))
                     {
-                        for (auto JsonObjectValue : Data->GetArrayField(ANSI_TO_TCHAR("labels")))
-                        {
-                            v->Add(Model::FLabel::FromJson(JsonObjectValue->AsObject()));
-                        }
+                        return nullptr;
+                    }
+                    auto v = MakeShared<TArray<Model::FLabelPtr>>();
+                    for (auto JsonObjectValue : Data->GetArrayField(ANSI_TO_TCHAR("labels")))
+                    {
+                        v->Add(Model::FLabel::FromJson(JsonObjectValue->AsObject()));
                     }
                     return v;
-                 }() : MakeShared<TArray<Model::FLabelPtr>>());
+                 }() : nullptr);
     }
 
     TSharedPtr<FJsonObject> FLogEntry::ToJson() const
@@ -265,6 +266,25 @@ namespace Gs2::Log::Model::Cache
         auto CacheOwnerValue = CacheOwnerArgumentItem;
         CacheSnapshot->Put(Gs2::Log::Model::FLogEntry::TypeName, CacheOwnerParentKey, CacheOwnerKey, CacheOwnerValue,
             FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
+        );
+    }
+
+    FString FLogEntryCache::PutUserData(
+        const Gs2::Core::Domain::FCacheDatabasePtr& Cache,
+        TOptional<FString> NamespaceName,
+        TOptional<FString> UserId,
+        TOptional<int32> TimeOffset,
+        const Gs2::Log::Model::FLogEntryPtr& Item
+    )
+    {
+        if (!Item.IsValid()) return FString();
+        Put(
+            Cache,
+            TimeOffset,
+            Item
+        );
+        return CreateCacheParentKey(
+            TimeOffset
         );
     }
 

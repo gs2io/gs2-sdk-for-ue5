@@ -226,7 +226,6 @@ namespace Gs2::Realtime::Domain::Model
 
         Gs2::Core::Domain::CallbackID SubscribeRooms(
             TFunction<void()> Callback
-
         );
 
         class FCollectRoomsTask;

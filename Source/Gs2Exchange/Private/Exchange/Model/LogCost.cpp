@@ -96,28 +96,30 @@ namespace Gs2::Exchange::Model
                 }() : TOptional<double>())
             ->WithAdds(Data->HasField(ANSI_TO_TCHAR("adds")) ? [Data]() -> TSharedPtr<TArray<double>>
                 {
-                    auto v = MakeShared<TArray<double>>();
-                    if (!Data->HasTypedField<EJson::Null>(ANSI_TO_TCHAR("adds")) && Data->HasTypedField<EJson::Array>(ANSI_TO_TCHAR("adds")))
+                    if (!Data->HasTypedField<EJson::Array>(ANSI_TO_TCHAR("adds")))
                     {
-                        for (auto JsonObjectValue : Data->GetArrayField(ANSI_TO_TCHAR("adds")))
-                        {
-                            v->Add(JsonObjectValue->AsNumber());
-                        }
+                        return nullptr;
+                    }
+                    auto v = MakeShared<TArray<double>>();
+                    for (auto JsonObjectValue : Data->GetArrayField(ANSI_TO_TCHAR("adds")))
+                    {
+                        v->Add(JsonObjectValue->AsNumber());
                     }
                     return v;
-                 }() : MakeShared<TArray<double>>())
+                 }() : nullptr)
             ->WithSubs(Data->HasField(ANSI_TO_TCHAR("subs")) ? [Data]() -> TSharedPtr<TArray<double>>
                 {
-                    auto v = MakeShared<TArray<double>>();
-                    if (!Data->HasTypedField<EJson::Null>(ANSI_TO_TCHAR("subs")) && Data->HasTypedField<EJson::Array>(ANSI_TO_TCHAR("subs")))
+                    if (!Data->HasTypedField<EJson::Array>(ANSI_TO_TCHAR("subs")))
                     {
-                        for (auto JsonObjectValue : Data->GetArrayField(ANSI_TO_TCHAR("subs")))
-                        {
-                            v->Add(JsonObjectValue->AsNumber());
-                        }
+                        return nullptr;
+                    }
+                    auto v = MakeShared<TArray<double>>();
+                    for (auto JsonObjectValue : Data->GetArrayField(ANSI_TO_TCHAR("subs")))
+                    {
+                        v->Add(JsonObjectValue->AsNumber());
                     }
                     return v;
-                 }() : MakeShared<TArray<double>>());
+                 }() : nullptr);
     }
 
     TSharedPtr<FJsonObject> FLogCost::ToJson() const

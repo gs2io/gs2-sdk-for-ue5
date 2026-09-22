@@ -150,7 +150,6 @@ namespace Gs2::News::Domain::Model
 
     Gs2::Core::Domain::CallbackID FProgressDomain::SubscribeOutputs(
     TFunction<void()> Callback
-
     )
     {
         return Gs2->Cache->ListSubscribe(

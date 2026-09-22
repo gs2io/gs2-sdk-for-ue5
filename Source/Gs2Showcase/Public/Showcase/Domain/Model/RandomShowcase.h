@@ -99,7 +99,6 @@ namespace Gs2::Showcase::Domain::Model
 
         Gs2::Core::Domain::CallbackID SubscribeRandomDisplayItems(
             TFunction<void()> Callback
-
         );
 
         class FCollectRandomDisplayItemsTask;

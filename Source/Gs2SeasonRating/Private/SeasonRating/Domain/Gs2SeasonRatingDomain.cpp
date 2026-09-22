@@ -442,7 +442,6 @@ namespace Gs2::SeasonRating::Domain
 
     Gs2::Core::Domain::CallbackID FGs2SeasonRatingDomain::SubscribeNamespaces(
     TFunction<void()> Callback
-
     )
     {
         return Gs2->Cache->ListSubscribe(
@@ -565,6 +564,24 @@ namespace Gs2::SeasonRating::Domain
         const FString Result,
         const TOptional<int32> TimeOffset
     ) {
+    }
+
+    TOptional<FString> FGs2SeasonRatingDomain::PutUserData(
+        const TOptional<FString> NamespaceName,
+        const TOptional<FString> UserId,
+        const TOptional<int32> TimeOffset,
+        const FString Kind,
+        const FString Payload
+    ) {
+        return TOptional<FString>();
+    }
+
+    bool FGs2SeasonRatingDomain::SetListCached(
+        const TOptional<int32> TimeOffset,
+        const FString Kind,
+        const FString ParentKey
+    ) {
+        return false;
     }
 
     void FGs2SeasonRatingDomain::UpdateCacheFromStampTask(

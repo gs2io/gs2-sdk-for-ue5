@@ -71,6 +71,24 @@ namespace Gs2::Auth::Domain
     ) {
     }
 
+    TOptional<FString> FGs2AuthDomain::PutUserData(
+        const TOptional<FString> NamespaceName,
+        const TOptional<FString> UserId,
+        const TOptional<int32> TimeOffset,
+        const FString Kind,
+        const FString Payload
+    ) {
+        return TOptional<FString>();
+    }
+
+    bool FGs2AuthDomain::SetListCached(
+        const TOptional<int32> TimeOffset,
+        const FString Kind,
+        const FString ParentKey
+    ) {
+        return false;
+    }
+
     void FGs2AuthDomain::UpdateCacheFromStampTask(
         const FString Method,
         const FString Request,

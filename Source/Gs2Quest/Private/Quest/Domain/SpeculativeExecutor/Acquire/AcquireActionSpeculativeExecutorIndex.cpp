@@ -66,10 +66,6 @@ namespace Gs2::Quest::Domain::SpeculativeExecutor
         NewAcquireAction = AcquireAction->WithAction(NewAcquireAction->GetAction()->Replace(TEXT("{ownerId}"), ToCStr(Domain->RestSession->OwnerId())));
         NewAcquireAction = AcquireAction->WithAction(NewAcquireAction->GetAction()->Replace(TEXT("{userId}"), ToCStr(AccessToken->GetUserId().IsSet() ? *AccessToken->GetUserId() : "")));
         if (FCreateProgressByUserIdSpeculativeExecutor::Action() == NewAcquireAction->GetAction()) {
-            if (Rate != 1)
-            {
-                return nullptr;
-            }
             TSharedPtr<FJsonObject> RequestModelJson;
             if (const TSharedRef<TJsonReader<>> JsonReader = TJsonReaderFactory<>::Create(NewAcquireAction->GetRequest().IsSet() ? *NewAcquireAction->GetRequest() : "{}");
                 !FJsonSerializer::Deserialize(JsonReader, RequestModelJson))
@@ -77,6 +73,7 @@ namespace Gs2::Quest::Domain::SpeculativeExecutor
                 return nullptr;
             }
             auto Request = Request::FCreateProgressByUserIdRequest::FromJson(RequestModelJson);
+            Request = FCreateProgressByUserIdSpeculativeExecutor::Rate(Request, Rate);
             auto Future = FCreateProgressByUserIdSpeculativeExecutor::Execute(
                 Domain,
                 Service,
@@ -89,7 +86,6 @@ namespace Gs2::Quest::Domain::SpeculativeExecutor
                 return Future->GetTask().Error();
             }
             *Result = Future->GetTask().Result();
-            return nullptr;
         }
         return nullptr;
     }

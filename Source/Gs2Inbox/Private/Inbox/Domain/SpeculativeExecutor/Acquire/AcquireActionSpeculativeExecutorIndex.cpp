@@ -66,10 +66,6 @@ namespace Gs2::Inbox::Domain::SpeculativeExecutor
         NewAcquireAction = AcquireAction->WithAction(NewAcquireAction->GetAction()->Replace(TEXT("{ownerId}"), ToCStr(Domain->RestSession->OwnerId())));
         NewAcquireAction = AcquireAction->WithAction(NewAcquireAction->GetAction()->Replace(TEXT("{userId}"), ToCStr(AccessToken->GetUserId().IsSet() ? *AccessToken->GetUserId() : "")));
         if (FSendMessageByUserIdSpeculativeExecutor::Action() == NewAcquireAction->GetAction()) {
-            if (Rate != 1)
-            {
-                return nullptr;
-            }
             TSharedPtr<FJsonObject> RequestModelJson;
             if (const TSharedRef<TJsonReader<>> JsonReader = TJsonReaderFactory<>::Create(NewAcquireAction->GetRequest().IsSet() ? *NewAcquireAction->GetRequest() : "{}");
                 !FJsonSerializer::Deserialize(JsonReader, RequestModelJson))
@@ -90,7 +86,6 @@ namespace Gs2::Inbox::Domain::SpeculativeExecutor
                 return Future->GetTask().Error();
             }
             *Result = Future->GetTask().Result();
-            return nullptr;
         }
         return nullptr;
     }

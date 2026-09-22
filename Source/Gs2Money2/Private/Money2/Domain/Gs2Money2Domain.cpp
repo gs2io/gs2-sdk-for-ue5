@@ -53,7 +53,7 @@
 #include "Money2/Model/Cache/StoreContentModel.h"
 #include "Money2/Model/Cache/UnusedBalance.h"
 #include "Money2/Model/Cache/StoreSubscriptionContentModel.h"
-#include "Money2/Model/Cache/SubscriptionStatus.h"
+#include "Money2/Model/Cache/Wallet.h"
 
 #include "Core/Domain/Gs2.h"
 
@@ -454,7 +454,6 @@ namespace Gs2::Money2::Domain
 
     Gs2::Core::Domain::CallbackID FGs2Money2Domain::SubscribeNamespaces(
     TFunction<void()> Callback
-
     )
     {
         return Gs2->Cache->ListSubscribe(
@@ -617,6 +616,46 @@ namespace Gs2::Money2::Domain
         }
     }
 
+    TOptional<FString> FGs2Money2Domain::PutUserData(
+        const TOptional<FString> NamespaceName,
+        const TOptional<FString> UserId,
+        const TOptional<int32> TimeOffset,
+        const FString Kind,
+        const FString Payload
+    ) {
+        TSharedPtr<FJsonObject> PayloadJson;
+        if (const TSharedRef<TJsonReader<>> JsonReader = TJsonReaderFactory<>::Create(Payload);
+            !FJsonSerializer::Deserialize(JsonReader, PayloadJson) || !PayloadJson.IsValid())
+        {
+            return TOptional<FString>();
+        }
+        if (Kind == "wallet") {
+            const auto Item = Gs2::Money2::Model::FWallet::FromJson(PayloadJson);
+            if (!Item.IsValid()) return TOptional<FString>();
+            const auto ParentKey = Gs2::Money2::Model::Cache::FWalletCache::PutUserData(
+                Gs2->Cache,
+                NamespaceName,
+                UserId,
+                TimeOffset,
+                Item
+            );
+            return ParentKey.IsEmpty() ? TOptional<FString>() : TOptional<FString>(ParentKey);
+        }
+        return TOptional<FString>();
+    }
+
+    bool FGs2Money2Domain::SetListCached(
+        const TOptional<int32> TimeOffset,
+        const FString Kind,
+        const FString ParentKey
+    ) {
+        if (Kind == "wallet") {
+            Gs2->Cache->SetListCached(Gs2::Money2::Model::FWallet::TypeName, ParentKey);
+            return true;
+        }
+        return false;
+    }
+
     void FGs2Money2Domain::UpdateCacheFromStampTask(
         const FString Method,
         const FString Request,
@@ -766,23 +805,7 @@ namespace Gs2::Money2::Domain
             {
                 return;
             }
-            const auto Notification = Gs2::Money2::Model::FChangeSubscriptionStatus::FromJson(PayloadJson);
-            Gs2->Cache->ClearListCache(
-                Gs2::Money2::Model::FSubscriptionStatus::TypeName,
-                Gs2::Money2::Model::Cache::FSubscriptionStatusCache::CreateCacheParentKey(
-                    Notification->GetNamespaceName(),
-                    Notification->GetUserId(),
-                    TOptional<int32>()
-                )
-            );
-            Gs2::Money2::Model::Cache::FSubscriptionStatusCache::Delete(
-                Gs2->Cache,
-                Notification->GetNamespaceName(),
-                Notification->GetUserId(),
-                Notification->GetContentName(),
-                TOptional<int32>()
-            );
-            ChangeSubscriptionStatusEvent.Broadcast(Notification);
+            ChangeSubscriptionStatusEvent.Broadcast(Gs2::Money2::Model::FChangeSubscriptionStatus::FromJson(PayloadJson));
         }
     }
 

@@ -278,7 +278,6 @@ namespace Gs2::Experience::Domain::Model
 
         Gs2::Core::Domain::CallbackID SubscribeExperienceModels(
             TFunction<void()> Callback
-
         );
 
         class FCollectExperienceModelsTask;
@@ -327,7 +326,6 @@ namespace Gs2::Experience::Domain::Model
 
         Gs2::Core::Domain::CallbackID SubscribeThresholdMasters(
             TFunction<void()> Callback
-
         );
 
         class FCollectThresholdMastersTask;
@@ -368,7 +366,6 @@ namespace Gs2::Experience::Domain::Model
 
         Gs2::Core::Domain::CallbackID SubscribeExperienceModelMasters(
             TFunction<void()> Callback
-
         );
 
         class FCollectExperienceModelMastersTask;

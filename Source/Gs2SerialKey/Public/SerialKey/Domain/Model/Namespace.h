@@ -249,7 +249,6 @@ namespace Gs2::SerialKey::Domain::Model
 
         Gs2::Core::Domain::CallbackID SubscribeCampaignModels(
             TFunction<void()> Callback
-
         );
 
         class FCollectCampaignModelsTask;
@@ -298,7 +297,6 @@ namespace Gs2::SerialKey::Domain::Model
 
         Gs2::Core::Domain::CallbackID SubscribeCampaignModelMasters(
             TFunction<void()> Callback
-
         );
 
         class FCollectCampaignModelMastersTask;

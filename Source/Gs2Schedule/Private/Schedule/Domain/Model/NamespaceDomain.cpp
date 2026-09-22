@@ -399,7 +399,6 @@ namespace Gs2::Schedule::Domain::Model
 
     Gs2::Core::Domain::CallbackID FNamespaceDomain::SubscribeEventMasters(
     TFunction<void()> Callback
-
     )
     {
         return Gs2->Cache->ListSubscribe(

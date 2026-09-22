@@ -120,7 +120,6 @@ namespace Gs2::Inventory::Domain::Model
 
     Gs2::Core::Domain::CallbackID FUserDomain::SubscribeInventories(
     TFunction<void()> Callback
-
     )
     {
         return Gs2->Cache->ListSubscribe(

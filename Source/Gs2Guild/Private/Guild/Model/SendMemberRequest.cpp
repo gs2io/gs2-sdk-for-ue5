@@ -22,6 +22,7 @@ namespace Gs2::Guild::Model
 {
     FSendMemberRequest::FSendMemberRequest():
         UserIdValue(TOptional<FString>()),
+        TargetGuildModelNameValue(TOptional<FString>()),
         TargetGuildNameValue(TOptional<FString>()),
         MetadataValue(TOptional<FString>()),
         CreatedAtValue(TOptional<int64>())
@@ -32,6 +33,7 @@ namespace Gs2::Guild::Model
         const FSendMemberRequest& From
     ):
         UserIdValue(From.UserIdValue),
+        TargetGuildModelNameValue(From.TargetGuildModelNameValue),
         TargetGuildNameValue(From.TargetGuildNameValue),
         MetadataValue(From.MetadataValue),
         CreatedAtValue(From.CreatedAtValue)
@@ -43,6 +45,14 @@ namespace Gs2::Guild::Model
     )
     {
         this->UserIdValue = UserId;
+        return SharedThis(this);
+    }
+
+    TSharedPtr<FSendMemberRequest> FSendMemberRequest::WithTargetGuildModelName(
+        const TOptional<FString> TargetGuildModelName
+    )
+    {
+        this->TargetGuildModelNameValue = TargetGuildModelName;
         return SharedThis(this);
     }
 
@@ -72,6 +82,10 @@ namespace Gs2::Guild::Model
     TOptional<FString> FSendMemberRequest::GetUserId() const
     {
         return UserIdValue;
+    }
+    TOptional<FString> FSendMemberRequest::GetTargetGuildModelName() const
+    {
+        return TargetGuildModelNameValue;
     }
     TOptional<FString> FSendMemberRequest::GetTargetGuildName() const
     {
@@ -105,6 +119,15 @@ namespace Gs2::Guild::Model
                 {
                     FString v("");
                     if (Data->TryGetStringField(ANSI_TO_TCHAR("userId"), v))
+                    {
+                        return TOptional(v);
+                    }
+                    return TOptional<FString>();
+                }() : TOptional<FString>())
+            ->WithTargetGuildModelName(Data->HasField(ANSI_TO_TCHAR("targetGuildModelName")) ? [Data]() -> TOptional<FString>
+                {
+                    FString v("");
+                    if (Data->TryGetStringField(ANSI_TO_TCHAR("targetGuildModelName"), v))
                     {
                         return TOptional(v);
                     }
@@ -145,6 +168,10 @@ namespace Gs2::Guild::Model
         if (UserIdValue.IsSet())
         {
             JsonRootObject->SetStringField(TEXT("userId"), UserIdValue.GetValue());
+        }
+        if (TargetGuildModelNameValue.IsSet())
+        {
+            JsonRootObject->SetStringField(TEXT("targetGuildModelName"), TargetGuildModelNameValue.GetValue());
         }
         if (TargetGuildNameValue.IsSet())
         {
@@ -257,6 +284,34 @@ namespace Gs2::Guild::Model::Cache
             FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
         );
     }
+
+    /* diff +++ start */
+    FString FSendMemberRequestCache::PutUserData(
+        const Gs2::Core::Domain::FCacheDatabasePtr& Cache,
+        TOptional<FString> NamespaceName,
+        TOptional<FString> UserId,
+        TOptional<int32> TimeOffset,
+        const Gs2::Guild::Model::FSendMemberRequestPtr& Item
+    )
+    {
+        if (!Item.IsValid()) return FString();
+        Put(
+            Cache,
+            NamespaceName,
+            UserId,
+            Item->GetTargetGuildModelName() /* モデルは送信先の guildModelName を targetGuildModelName として持つ */,
+            Item->GetTargetGuildName() /* モデルは送信先の guildName を targetGuildName として持つ */,
+            TimeOffset,
+            Item
+        );
+        return CreateCacheParentKey(
+            NamespaceName,
+            Item->GetTargetGuildModelName(),
+            UserId,
+            TimeOffset
+        );
+    }
+    /* diff +++ end */
 
     void FSendMemberRequestCache::Delete(
         const Gs2::Core::Domain::FCacheDatabasePtr& CacheOwnerArgumentCache,

@@ -180,16 +180,17 @@ namespace Gs2::Mission::Request
               }() : TOptional<FString>())
           ->WithScopes(Data->HasField(ANSI_TO_TCHAR("scopes")) ? [Data]() -> TSharedPtr<TArray<Model::FCounterScopeModelPtr>>
               {
-                  auto v = MakeShared<TArray<Model::FCounterScopeModelPtr>>();
-                  if (!Data->HasTypedField<EJson::Null>(ANSI_TO_TCHAR("scopes")) && Data->HasTypedField<EJson::Array>(ANSI_TO_TCHAR("scopes")))
+                  if (!Data->HasTypedField<EJson::Array>(ANSI_TO_TCHAR("scopes")))
                   {
-                      for (auto JsonObjectValue : Data->GetArrayField(ANSI_TO_TCHAR("scopes")))
-                      {
-                          v->Add(Model::FCounterScopeModel::FromJson(JsonObjectValue->AsObject()));
-                      }
+                      return nullptr;
                   }
+                  auto v = MakeShared<TArray<Model::FCounterScopeModelPtr>>();
+                  for (auto JsonObjectValue : Data->GetArrayField(ANSI_TO_TCHAR("scopes")))
+                      {
+                      v->Add(Model::FCounterScopeModel::FromJson(JsonObjectValue->AsObject()));
+                      }
                   return v;
-              }() : MakeShared<TArray<Model::FCounterScopeModelPtr>>())
+              }() : nullptr)
             ->WithChallengePeriodEventId(Data->HasField(ANSI_TO_TCHAR("challengePeriodEventId")) ? [Data]() -> TOptional<FString>
               {
                   FString v("");

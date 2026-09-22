@@ -140,11 +140,22 @@ namespace Gs2::Inventory::Domain::Model
             if (ResultModel.IsValid() && ResultModel->GetItem() != nullptr)
             {
 
+        if (!ResultModel.IsValid() || !ResultModel->GetItem().IsValid())
+            {
+              const auto Details = MakeShared<TArray<TSharedPtr<Gs2::Core::Model::FGs2ErrorDetail>>>();
+                Details->Add(MakeShared<Gs2::Core::Model::FGs2ErrorDetail>(TEXT("result.item"), TEXT("result.item is invalid."), TEXT("invalid_response")));
+                return MakeShared<Gs2::Core::Model::FUnknownError>(Details);
+              }if (!ResultModel.IsValid() || !((ResultModel.IsValid() && ResultModel->GetItem().IsValid() ? ResultModel->GetItem()->GetUserId() : TOptional<FString>())).IsSet())
+            {
+              const auto Details = MakeShared<TArray<TSharedPtr<Gs2::Core::Model::FGs2ErrorDetail>>>();
+                Details->Add(MakeShared<Gs2::Core::Model::FGs2ErrorDetail>(TEXT("userId"), TEXT("userId is invalid."), TEXT("invalid_response")));
+                return MakeShared<Gs2::Core::Model::FUnknownError>(Details);
+              }
         Gs2::Inventory::Model::Cache::FInventoryCache::Put(
             Self->Gs2->Cache,
 
             Request->GetNamespaceName(),
-            Request->GetUserId(),
+            (ResultModel.IsValid() && ResultModel->GetItem().IsValid() ? ResultModel->GetItem()->GetUserId() : TOptional<FString>()),
             ResultModel->GetItem()->GetInventoryName(),
             TOptional<int32>(),
             ResultModel->GetItem()
@@ -607,7 +618,6 @@ namespace Gs2::Inventory::Domain::Model
 
     Gs2::Core::Domain::CallbackID FInventoryDomain::SubscribeItemSets(
     TFunction<void()> Callback
-
     )
     {
         return Gs2->Cache->ListSubscribe(

@@ -442,7 +442,6 @@ namespace Gs2::Chat::Domain
 
     Gs2::Core::Domain::CallbackID FGs2ChatDomain::SubscribeNamespaces(
     TFunction<void()> Callback
-
     )
     {
         return Gs2->Cache->ListSubscribe(
@@ -567,6 +566,24 @@ namespace Gs2::Chat::Domain
     ) {
     }
 
+    TOptional<FString> FGs2ChatDomain::PutUserData(
+        const TOptional<FString> NamespaceName,
+        const TOptional<FString> UserId,
+        const TOptional<int32> TimeOffset,
+        const FString Kind,
+        const FString Payload
+    ) {
+        return TOptional<FString>();
+    }
+
+    bool FGs2ChatDomain::SetListCached(
+        const TOptional<int32> TimeOffset,
+        const FString Kind,
+        const FString ParentKey
+    ) {
+        return false;
+    }
+
     void FGs2ChatDomain::UpdateCacheFromStampTask(
         const FString Method,
         const FString Request,
@@ -594,13 +611,13 @@ namespace Gs2::Chat::Domain
             {
                 return;
             }
-            const auto ListParentKey = Gs2::Chat::Model::Cache::FMessageCache::CreateCacheParentKey(
+            const auto ListParentKey = Gs2::Chat::Domain::Model::FRoomDomain::CreateCacheParentKey(
                 PayloadJson->GetStringField(ANSI_TO_TCHAR("namespaceName")),
                 TOptional<FString>("Singleton"),
                 PayloadJson->GetStringField(ANSI_TO_TCHAR("roomName")),
-                TOptional<int32>()
+                "Message"
             );
-            Gs2->Cache->SetListCacheUpdateRequired(Gs2::Chat::Model::FMessage::TypeName, ListParentKey);
+            Gs2->Cache->ClearListCache(Gs2::Chat::Model::FMessage::TypeName, ListParentKey);
             PostNotificationEvent.Broadcast(Gs2::Chat::Model::FPostNotification::FromJson(PayloadJson));
         }
     }

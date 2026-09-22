@@ -207,7 +207,6 @@ namespace Gs2::Quest::Domain::Model
 
         Gs2::Core::Domain::CallbackID SubscribeQuestModelMasters(
             TFunction<void()> Callback
-
         );
 
         class FCollectQuestModelMastersTask;

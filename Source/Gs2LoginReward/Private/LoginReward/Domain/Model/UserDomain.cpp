@@ -102,7 +102,6 @@ namespace Gs2::LoginReward::Domain::Model
 
     Gs2::Core::Domain::CallbackID FUserDomain::SubscribeReceiveStatuses(
     TFunction<void()> Callback
-
     )
     {
         return Gs2->Cache->ListSubscribe(

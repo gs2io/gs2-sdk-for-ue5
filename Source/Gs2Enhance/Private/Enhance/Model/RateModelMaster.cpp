@@ -352,16 +352,17 @@ namespace Gs2::Enhance::Model
                 }() : TOptional<FString>())
             ->WithAcquireExperienceHierarchy(Data->HasField(ANSI_TO_TCHAR("acquireExperienceHierarchy")) ? [Data]() -> TSharedPtr<TArray<FString>>
                 {
-                    auto v = MakeShared<TArray<FString>>();
-                    if (!Data->HasTypedField<EJson::Null>(ANSI_TO_TCHAR("acquireExperienceHierarchy")) && Data->HasTypedField<EJson::Array>(ANSI_TO_TCHAR("acquireExperienceHierarchy")))
+                    if (!Data->HasTypedField<EJson::Array>(ANSI_TO_TCHAR("acquireExperienceHierarchy")))
                     {
-                        for (auto JsonObjectValue : Data->GetArrayField(ANSI_TO_TCHAR("acquireExperienceHierarchy")))
-                        {
-                            v->Add(JsonObjectValue->AsString());
-                        }
+                        return nullptr;
+                    }
+                    auto v = MakeShared<TArray<FString>>();
+                    for (auto JsonObjectValue : Data->GetArrayField(ANSI_TO_TCHAR("acquireExperienceHierarchy")))
+                    {
+                        v->Add(JsonObjectValue->AsString());
                     }
                     return v;
-                 }() : MakeShared<TArray<FString>>())
+                 }() : nullptr)
             ->WithExperienceModelId(Data->HasField(ANSI_TO_TCHAR("experienceModelId")) ? [Data]() -> TOptional<FString>
                 {
                     FString v("");
@@ -373,16 +374,17 @@ namespace Gs2::Enhance::Model
                 }() : TOptional<FString>())
             ->WithBonusRates(Data->HasField(ANSI_TO_TCHAR("bonusRates")) ? [Data]() -> TSharedPtr<TArray<Model::FBonusRatePtr>>
                 {
-                    auto v = MakeShared<TArray<Model::FBonusRatePtr>>();
-                    if (!Data->HasTypedField<EJson::Null>(ANSI_TO_TCHAR("bonusRates")) && Data->HasTypedField<EJson::Array>(ANSI_TO_TCHAR("bonusRates")))
+                    if (!Data->HasTypedField<EJson::Array>(ANSI_TO_TCHAR("bonusRates")))
                     {
-                        for (auto JsonObjectValue : Data->GetArrayField(ANSI_TO_TCHAR("bonusRates")))
-                        {
-                            v->Add(Model::FBonusRate::FromJson(JsonObjectValue->AsObject()));
-                        }
+                        return nullptr;
+                    }
+                    auto v = MakeShared<TArray<Model::FBonusRatePtr>>();
+                    for (auto JsonObjectValue : Data->GetArrayField(ANSI_TO_TCHAR("bonusRates")))
+                    {
+                        v->Add(Model::FBonusRate::FromJson(JsonObjectValue->AsObject()));
                     }
                     return v;
-                 }() : MakeShared<TArray<Model::FBonusRatePtr>>())
+                 }() : nullptr)
             ->WithCreatedAt(Data->HasField(ANSI_TO_TCHAR("createdAt")) ? [Data]() -> TOptional<int64>
                 {
                     int64 v;
@@ -564,6 +566,28 @@ namespace Gs2::Enhance::Model::Cache
         }
         CacheSnapshot->Put(Gs2::Enhance::Model::FRateModelMaster::TypeName, CacheOwnerParentKey, CacheOwnerKey, CacheOwnerValue,
             FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
+        );
+    }
+
+    FString FRateModelMasterCache::PutUserData(
+        const Gs2::Core::Domain::FCacheDatabasePtr& Cache,
+        TOptional<FString> NamespaceName,
+        TOptional<FString> UserId,
+        TOptional<int32> TimeOffset,
+        const Gs2::Enhance::Model::FRateModelMasterPtr& Item
+    )
+    {
+        if (!Item.IsValid()) return FString();
+        Put(
+            Cache,
+            NamespaceName,
+            Item->GetName(),
+            TimeOffset,
+            Item
+        );
+        return CreateCacheParentKey(
+            NamespaceName,
+            TimeOffset
         );
     }
 

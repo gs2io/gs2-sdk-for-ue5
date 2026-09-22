@@ -169,16 +169,17 @@ namespace Gs2::Inventory::Request
               }() : TOptional<FString>())
           ->WithAcquireCounts(Data->HasField(ANSI_TO_TCHAR("acquireCounts")) ? [Data]() -> TSharedPtr<TArray<Model::FAcquireCountPtr>>
               {
-                  auto v = MakeShared<TArray<Model::FAcquireCountPtr>>();
-                  if (!Data->HasTypedField<EJson::Null>(ANSI_TO_TCHAR("acquireCounts")) && Data->HasTypedField<EJson::Array>(ANSI_TO_TCHAR("acquireCounts")))
+                  if (!Data->HasTypedField<EJson::Array>(ANSI_TO_TCHAR("acquireCounts")))
                   {
-                      for (auto JsonObjectValue : Data->GetArrayField(ANSI_TO_TCHAR("acquireCounts")))
-                      {
-                          v->Add(Model::FAcquireCount::FromJson(JsonObjectValue->AsObject()));
-                      }
+                      return nullptr;
                   }
+                  auto v = MakeShared<TArray<Model::FAcquireCountPtr>>();
+                  for (auto JsonObjectValue : Data->GetArrayField(ANSI_TO_TCHAR("acquireCounts")))
+                      {
+                      v->Add(Model::FAcquireCount::FromJson(JsonObjectValue->AsObject()));
+                      }
                   return v;
-              }() : MakeShared<TArray<Model::FAcquireCountPtr>>())
+              }() : nullptr)
             ->WithTimeOffsetToken(Data->HasField(ANSI_TO_TCHAR("timeOffsetToken")) ? [Data]() -> TOptional<FString>
               {
                   FString v("");

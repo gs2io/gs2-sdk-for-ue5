@@ -154,16 +154,17 @@ namespace Gs2::Matchmaking::Request
               }() : TOptional<FString>())
           ->WithAttributeRanges(Data->HasField(ANSI_TO_TCHAR("attributeRanges")) ? [Data]() -> TSharedPtr<TArray<Model::FAttributeRangePtr>>
               {
-                  auto v = MakeShared<TArray<Model::FAttributeRangePtr>>();
-                  if (!Data->HasTypedField<EJson::Null>(ANSI_TO_TCHAR("attributeRanges")) && Data->HasTypedField<EJson::Array>(ANSI_TO_TCHAR("attributeRanges")))
+                  if (!Data->HasTypedField<EJson::Array>(ANSI_TO_TCHAR("attributeRanges")))
                   {
-                      for (auto JsonObjectValue : Data->GetArrayField(ANSI_TO_TCHAR("attributeRanges")))
-                      {
-                          v->Add(Model::FAttributeRange::FromJson(JsonObjectValue->AsObject()));
-                      }
+                      return nullptr;
                   }
+                  auto v = MakeShared<TArray<Model::FAttributeRangePtr>>();
+                  for (auto JsonObjectValue : Data->GetArrayField(ANSI_TO_TCHAR("attributeRanges")))
+                      {
+                      v->Add(Model::FAttributeRange::FromJson(JsonObjectValue->AsObject()));
+                      }
                   return v;
-              }() : MakeShared<TArray<Model::FAttributeRangePtr>>())
+              }() : nullptr)
           ->WithDuplicationAvoider(Data->HasField(ANSI_TO_TCHAR("duplicationAvoider")) ? TOptional<FString>(Data->GetStringField(ANSI_TO_TCHAR("duplicationAvoider"))) : TOptional<FString>());
     }
 

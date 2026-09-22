@@ -130,16 +130,17 @@ namespace Gs2::Version::Request
               }() : TOptional<FString>())
           ->WithTargetVersions(Data->HasField(ANSI_TO_TCHAR("targetVersions")) ? [Data]() -> TSharedPtr<TArray<Model::FTargetVersionPtr>>
               {
-                  auto v = MakeShared<TArray<Model::FTargetVersionPtr>>();
-                  if (!Data->HasTypedField<EJson::Null>(ANSI_TO_TCHAR("targetVersions")) && Data->HasTypedField<EJson::Array>(ANSI_TO_TCHAR("targetVersions")))
+                  if (!Data->HasTypedField<EJson::Array>(ANSI_TO_TCHAR("targetVersions")))
                   {
-                      for (auto JsonObjectValue : Data->GetArrayField(ANSI_TO_TCHAR("targetVersions")))
-                      {
-                          v->Add(Model::FTargetVersion::FromJson(JsonObjectValue->AsObject()));
-                      }
+                      return nullptr;
                   }
+                  auto v = MakeShared<TArray<Model::FTargetVersionPtr>>();
+                  for (auto JsonObjectValue : Data->GetArrayField(ANSI_TO_TCHAR("targetVersions")))
+                      {
+                      v->Add(Model::FTargetVersion::FromJson(JsonObjectValue->AsObject()));
+                      }
                   return v;
-              }() : MakeShared<TArray<Model::FTargetVersionPtr>>())
+              }() : nullptr)
           ->WithDuplicationAvoider(Data->HasField(ANSI_TO_TCHAR("duplicationAvoider")) ? TOptional<FString>(Data->GetStringField(ANSI_TO_TCHAR("duplicationAvoider"))) : TOptional<FString>());
     }
 

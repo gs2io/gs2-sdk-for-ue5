@@ -53,6 +53,8 @@
 #include "Matchmaking/Model/Cache/JoinedSeasonGathering.h"
 #include "Matchmaking/Model/Cache/RatingModel.h"
 #include "Matchmaking/Model/Cache/SeasonModel.h"
+#include "Matchmaking/Model/Cache/JoinedSeasonGathering.h"
+#include "Matchmaking/Model/Cache/Rating.h"
 
 #include "Core/Domain/Gs2.h"
 
@@ -453,7 +455,6 @@ namespace Gs2::Matchmaking::Domain
 
     Gs2::Core::Domain::CallbackID FGs2MatchmakingDomain::SubscribeNamespaces(
     TFunction<void()> Callback
-
     )
     {
         return Gs2->Cache->ListSubscribe(
@@ -578,6 +579,62 @@ namespace Gs2::Matchmaking::Domain
     ) {
     }
 
+    TOptional<FString> FGs2MatchmakingDomain::PutUserData(
+        const TOptional<FString> NamespaceName,
+        const TOptional<FString> UserId,
+        const TOptional<int32> TimeOffset,
+        const FString Kind,
+        const FString Payload
+    ) {
+        TSharedPtr<FJsonObject> PayloadJson;
+        if (const TSharedRef<TJsonReader<>> JsonReader = TJsonReaderFactory<>::Create(Payload);
+            !FJsonSerializer::Deserialize(JsonReader, PayloadJson) || !PayloadJson.IsValid())
+        {
+            return TOptional<FString>();
+        }
+        if (Kind == "joinedSeasonGathering") {
+            const auto Item = Gs2::Matchmaking::Model::FJoinedSeasonGathering::FromJson(PayloadJson);
+            if (!Item.IsValid()) return TOptional<FString>();
+            const auto ParentKey = Gs2::Matchmaking::Model::Cache::FJoinedSeasonGatheringCache::PutUserData(
+                Gs2->Cache,
+                NamespaceName,
+                UserId,
+                TimeOffset,
+                Item
+            );
+            return ParentKey.IsEmpty() ? TOptional<FString>() : TOptional<FString>(ParentKey);
+        }
+        if (Kind == "rating") {
+            const auto Item = Gs2::Matchmaking::Model::FRating::FromJson(PayloadJson);
+            if (!Item.IsValid()) return TOptional<FString>();
+            const auto ParentKey = Gs2::Matchmaking::Model::Cache::FRatingCache::PutUserData(
+                Gs2->Cache,
+                NamespaceName,
+                UserId,
+                TimeOffset,
+                Item
+            );
+            return ParentKey.IsEmpty() ? TOptional<FString>() : TOptional<FString>(ParentKey);
+        }
+        return TOptional<FString>();
+    }
+
+    bool FGs2MatchmakingDomain::SetListCached(
+        const TOptional<int32> TimeOffset,
+        const FString Kind,
+        const FString ParentKey
+    ) {
+        if (Kind == "joinedSeasonGathering") {
+            Gs2->Cache->SetListCached(Gs2::Matchmaking::Model::FJoinedSeasonGathering::TypeName, ParentKey);
+            return true;
+        }
+        if (Kind == "rating") {
+            Gs2->Cache->SetListCached(Gs2::Matchmaking::Model::FRating::TypeName, ParentKey);
+            return true;
+        }
+        return false;
+    }
+
     void FGs2MatchmakingDomain::UpdateCacheFromStampTask(
         const FString Method,
         const FString Request,
@@ -632,15 +689,12 @@ namespace Gs2::Matchmaking::Domain
             {
                 return;
             }
-            // Rating は一覧ではなく単一アイテムのキャッシュとして保持されているため、
-            // ListCache ではなく該当アイテムを直接削除して次回取得時に再取得させる
-            Gs2::Matchmaking::Model::Cache::FRatingCache::Delete(
-                Gs2->Cache,
+            const auto ListParentKey = Gs2::Matchmaking::Domain::Model::FUserDomain::CreateCacheParentKey(
                 PayloadJson->GetStringField(ANSI_TO_TCHAR("namespaceName")),
                 PayloadJson->GetStringField(ANSI_TO_TCHAR("userId")),
-                PayloadJson->GetStringField(ANSI_TO_TCHAR("ratingName")),
-                TOptional<int32>()
+                "Rating"
             );
+            Gs2->Cache->ClearListCache(Gs2::Matchmaking::Model::FRating::TypeName, ListParentKey);
             ChangeRatingNotificationEvent.Broadcast(Gs2::Matchmaking::Model::FChangeRatingNotification::FromJson(PayloadJson));
         }
     }

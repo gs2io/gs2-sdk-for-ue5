@@ -82,16 +82,17 @@ namespace Gs2::Exchange::Model
                 }() : TOptional<double>())
             ->WithLogs(Data->HasField(ANSI_TO_TCHAR("logs")) ? [Data]() -> TSharedPtr<TArray<double>>
                 {
-                    auto v = MakeShared<TArray<double>>();
-                    if (!Data->HasTypedField<EJson::Null>(ANSI_TO_TCHAR("logs")) && Data->HasTypedField<EJson::Array>(ANSI_TO_TCHAR("logs")))
+                    if (!Data->HasTypedField<EJson::Array>(ANSI_TO_TCHAR("logs")))
                     {
-                        for (auto JsonObjectValue : Data->GetArrayField(ANSI_TO_TCHAR("logs")))
-                        {
-                            v->Add(JsonObjectValue->AsNumber());
-                        }
+                        return nullptr;
+                    }
+                    auto v = MakeShared<TArray<double>>();
+                    for (auto JsonObjectValue : Data->GetArrayField(ANSI_TO_TCHAR("logs")))
+                    {
+                        v->Add(JsonObjectValue->AsNumber());
                     }
                     return v;
-                 }() : MakeShared<TArray<double>>());
+                 }() : nullptr);
     }
 
     TSharedPtr<FJsonObject> FLogRate::ToJson() const

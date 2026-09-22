@@ -203,8 +203,9 @@ namespace Gs2::Ranking::Domain::Model
                 Gs2::Ranking::Model::Cache::FScoreCache::Put(
                     Self->Gs2->Cache,
                     Request->GetNamespaceName(),
-                    ResultModel->GetItem()->GetScorerUserId(),
+                    Self->AccessToken.IsValid() ? Self->AccessToken->GetUserId() : TOptional<FString>(),
                     Request->GetCategoryName(),
+                    ResultModel->GetItem()->GetScorerUserId(),
                     ResultModel->GetItem()->GetUniqueId(),
                     Self->AccessToken.IsValid() ? Self->AccessToken->GetTimeOffset() : TOptional<int32>(),
                     ResultModel->GetItem()

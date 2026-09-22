@@ -74,6 +74,7 @@ namespace Gs2::Ranking2::Domain::SpeculativeExecutor
                 return nullptr;
             }
             auto Request = Request::FCreateGlobalRankingReceivedRewardByUserIdRequest::FromJson(RequestModelJson);
+            Request = FCreateGlobalRankingReceivedRewardByUserIdSpeculativeExecutor::Rate(Request, Rate);
             auto Future = FCreateGlobalRankingReceivedRewardByUserIdSpeculativeExecutor::Execute(
                 Domain,
                 Service,
@@ -86,7 +87,6 @@ namespace Gs2::Ranking2::Domain::SpeculativeExecutor
                 return Future->GetTask().Error();
             }
             *Result = Future->GetTask().Result();
-            return nullptr;
         }
         if (FCreateClusterRankingReceivedRewardByUserIdSpeculativeExecutor::Action() == NewConsumeAction->GetAction()) {
             TSharedPtr<FJsonObject> RequestModelJson;
@@ -96,6 +96,7 @@ namespace Gs2::Ranking2::Domain::SpeculativeExecutor
                 return nullptr;
             }
             auto Request = Request::FCreateClusterRankingReceivedRewardByUserIdRequest::FromJson(RequestModelJson);
+            Request = FCreateClusterRankingReceivedRewardByUserIdSpeculativeExecutor::Rate(Request, Rate);
             auto Future = FCreateClusterRankingReceivedRewardByUserIdSpeculativeExecutor::Execute(
                 Domain,
                 Service,
@@ -108,7 +109,6 @@ namespace Gs2::Ranking2::Domain::SpeculativeExecutor
                 return Future->GetTask().Error();
             }
             *Result = Future->GetTask().Result();
-            return nullptr;
         }
         return nullptr;
     }

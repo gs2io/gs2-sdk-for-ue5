@@ -51,6 +51,14 @@ namespace Gs2::UE5::Limit::Model
         return SharedThis(this);
     }
 
+    TSharedPtr<FEzCounter> FEzCounter::WithNextResetAt(
+        const TOptional<int64> NextResetAt
+    )
+    {
+        this->NextResetAtValue = NextResetAt;
+        return SharedThis(this);
+    }
+
     TSharedPtr<FEzCounter> FEzCounter::WithCreatedAt(
         const TOptional<int64> CreatedAt
     )
@@ -91,6 +99,19 @@ namespace Gs2::UE5::Limit::Model
         }
         return FString::Printf(TEXT("%d"), CountValue.GetValue());
     }
+    TOptional<int64> FEzCounter::GetNextResetAt() const
+    {
+        return NextResetAtValue;
+    }
+
+    FString FEzCounter::GetNextResetAtString() const
+    {
+        if (!NextResetAtValue.IsSet())
+        {
+            return FString("null");
+        }
+        return FString::Printf(TEXT("%lld"), NextResetAtValue.GetValue());
+    }
     TOptional<int64> FEzCounter::GetCreatedAt() const
     {
         return CreatedAtValue;
@@ -125,6 +146,7 @@ namespace Gs2::UE5::Limit::Model
             ->WithLimitName(LimitNameValue)
             ->WithName(NameValue)
             ->WithCount(CountValue)
+            ->WithNextResetAt(NextResetAtValue)
             ->WithCreatedAt(CreatedAtValue)
             ->WithUpdatedAt(UpdatedAtValue);
     }
@@ -140,6 +162,7 @@ namespace Gs2::UE5::Limit::Model
             ->WithLimitName(Model->GetLimitName())
             ->WithName(Model->GetName())
             ->WithCount(Model->GetCount())
+            ->WithNextResetAt(Model->GetNextResetAt())
             ->WithCreatedAt(Model->GetCreatedAt())
             ->WithUpdatedAt(Model->GetUpdatedAt());
     }

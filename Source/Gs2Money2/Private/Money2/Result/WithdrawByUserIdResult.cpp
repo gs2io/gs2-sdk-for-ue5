@@ -82,16 +82,17 @@ namespace Gs2::Money2::Result
                  }() : nullptr)
             ->WithWithdrawTransactions(Data->HasField(ANSI_TO_TCHAR("withdrawTransactions")) ? [Data]() -> TSharedPtr<TArray<Model::FDepositTransactionPtr>>
                  {
-                    auto v = MakeShared<TArray<Model::FDepositTransactionPtr>>();
-                    if (!Data->HasTypedField<EJson::Null>(ANSI_TO_TCHAR("withdrawTransactions")) && Data->HasTypedField<EJson::Array>(ANSI_TO_TCHAR("withdrawTransactions")))
+                    if (!Data->HasTypedField<EJson::Array>(ANSI_TO_TCHAR("withdrawTransactions")))
                     {
-                        for (auto JsonObjectValue : Data->GetArrayField(ANSI_TO_TCHAR("withdrawTransactions")))
-                        {
-                            v->Add(Model::FDepositTransaction::FromJson(JsonObjectValue->AsObject()));
-                        }
+                        return nullptr;
+                    }
+                    auto v = MakeShared<TArray<Model::FDepositTransactionPtr>>();
+                    for (auto JsonObjectValue : Data->GetArrayField(ANSI_TO_TCHAR("withdrawTransactions")))
+                    {
+                        v->Add(Model::FDepositTransaction::FromJson(JsonObjectValue->AsObject()));
                     }
                     return v;
-                 }() : MakeShared<TArray<Model::FDepositTransactionPtr>>());
+                 }() : nullptr);
     }
 
     TSharedPtr<FJsonObject> FWithdrawByUserIdResult::ToJson() const

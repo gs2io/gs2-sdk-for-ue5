@@ -383,7 +383,6 @@ namespace Gs2::Ranking::Domain::Model
 
     Gs2::Core::Domain::CallbackID FNamespaceDomain::SubscribeCategoryModels(
     TFunction<void()> Callback
-
     )
     {
         return Gs2->Cache->ListSubscribe(
@@ -544,7 +543,6 @@ namespace Gs2::Ranking::Domain::Model
 
     Gs2::Core::Domain::CallbackID FNamespaceDomain::SubscribeCategoryModelMasters(
     TFunction<void()> Callback
-
     )
     {
         return Gs2->Cache->ListSubscribe(

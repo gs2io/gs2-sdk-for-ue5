@@ -193,16 +193,17 @@ namespace Gs2::Enchant::Request
               }() : TOptional<FString>())
           ->WithFixedParameterNames(Data->HasField(ANSI_TO_TCHAR("fixedParameterNames")) ? [Data]() -> TSharedPtr<TArray<FString>>
               {
-                  auto v = MakeShared<TArray<FString>>();
-                  if (!Data->HasTypedField<EJson::Null>(ANSI_TO_TCHAR("fixedParameterNames")) && Data->HasTypedField<EJson::Array>(ANSI_TO_TCHAR("fixedParameterNames")))
+                  if (!Data->HasTypedField<EJson::Array>(ANSI_TO_TCHAR("fixedParameterNames")))
                   {
-                      for (auto JsonObjectValue : Data->GetArrayField(ANSI_TO_TCHAR("fixedParameterNames")))
-                      {
-                          v->Add(JsonObjectValue->AsString());
-                      }
+                      return nullptr;
                   }
+                  auto v = MakeShared<TArray<FString>>();
+                  for (auto JsonObjectValue : Data->GetArrayField(ANSI_TO_TCHAR("fixedParameterNames")))
+                      {
+                      v->Add(JsonObjectValue->AsString());
+                      }
                   return v;
-              }() : MakeShared<TArray<FString>>())
+              }() : nullptr)
             ->WithTimeOffsetToken(Data->HasField(ANSI_TO_TCHAR("timeOffsetToken")) ? [Data]() -> TOptional<FString>
               {
                   FString v("");

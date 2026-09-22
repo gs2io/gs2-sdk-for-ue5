@@ -39,6 +39,7 @@
 #include "Limit/Model/Cache/CurrentLimitMaster.h"
 #include "Limit/Model/Cache/LimitModel.h"
 #include "Limit/Model/Cache/Counter.h"
+#include "Limit/Model/Cache/Counter.h"
 
 #include "Core/Domain/Gs2.h"
 
@@ -439,7 +440,6 @@ namespace Gs2::Limit::Domain
 
     Gs2::Core::Domain::CallbackID FGs2LimitDomain::SubscribeNamespaces(
     TFunction<void()> Callback
-
     )
     {
         return Gs2->Cache->ListSubscribe(
@@ -578,18 +578,28 @@ namespace Gs2::Limit::Domain
             const auto RequestModel = Gs2::Limit::Request::FCountDownByUserIdRequest::FromJson(RequestModelJson);
             const auto ResultModel = Gs2::Limit::Result::FCountDownByUserIdResult::FromJson(ResultModelJson);
 
-            if (ResultModel->GetItem() != nullptr)
-            {
+                    if (ResultModel.IsValid() && ResultModel->GetItem() != nullptr)
+                    {
+
+                if (!ResultModel.IsValid() || !ResultModel->GetItem().IsValid())
+                    {
+                      return;
+                      }if (!ResultModel.IsValid() || !((ResultModel.IsValid() && ResultModel->GetItem().IsValid() ? ResultModel->GetItem()->GetUserId() : TOptional<FString>())).IsSet())
+                    {
+                      return;
+                      }
                 Gs2::Limit::Model::Cache::FCounterCache::Put(
                     Gs2->Cache,
+
                     RequestModel->GetNamespaceName(),
-                    RequestModel->GetUserId(),
+                    (ResultModel.IsValid() && ResultModel->GetItem().IsValid() ? ResultModel->GetItem()->GetUserId() : TOptional<FString>()),
                     ResultModel->GetItem()->GetLimitName(),
                     RequestModel->GetCounterName(),
                     TimeOffset,
                     ResultModel->GetItem()
                 );
-            }
+                    }
+
         }
         if (Method == "DeleteCounterByUserId") {
             TSharedPtr<FJsonObject> RequestModelJson;
@@ -607,18 +617,64 @@ namespace Gs2::Limit::Domain
             const auto RequestModel = Gs2::Limit::Request::FDeleteCounterByUserIdRequest::FromJson(RequestModelJson);
             const auto ResultModel = Gs2::Limit::Result::FDeleteCounterByUserIdResult::FromJson(ResultModelJson);
 
-            if (ResultModel->GetItem() != nullptr)
-            {
-                Gs2::Limit::Model::Cache::FCounterCache::Delete(
+                      if (!ResultModel.IsValid() || !ResultModel->GetItem().IsValid())
+                          {
+                            return;
+                            }if (!ResultModel.IsValid() || !((ResultModel.IsValid() && ResultModel->GetItem().IsValid() ? ResultModel->GetItem()->GetUserId() : TOptional<FString>())).IsSet())
+                          {
+                            return;
+                            }
+                      Gs2::Limit::Model::Cache::FCounterCache::Delete(
                     Gs2->Cache,
+
                     RequestModel->GetNamespaceName(),
-                    RequestModel->GetUserId(),
+                    (ResultModel.IsValid() && ResultModel->GetItem().IsValid() ? ResultModel->GetItem()->GetUserId() : TOptional<FString>()),
                     ResultModel->GetItem()->GetLimitName(),
                     RequestModel->GetCounterName(),
                     TimeOffset
                 );
-            }
+
         }
+    }
+
+    TOptional<FString> FGs2LimitDomain::PutUserData(
+        const TOptional<FString> NamespaceName,
+        const TOptional<FString> UserId,
+        const TOptional<int32> TimeOffset,
+        const FString Kind,
+        const FString Payload
+    ) {
+        TSharedPtr<FJsonObject> PayloadJson;
+        if (const TSharedRef<TJsonReader<>> JsonReader = TJsonReaderFactory<>::Create(Payload);
+            !FJsonSerializer::Deserialize(JsonReader, PayloadJson) || !PayloadJson.IsValid())
+        {
+            return TOptional<FString>();
+        }
+        if (Kind == "counter") {
+            const auto Item = Gs2::Limit::Model::FCounter::FromJson(PayloadJson);
+            if (!Item.IsValid()) return TOptional<FString>();
+            const auto ParentKey = Gs2::Limit::Model::Cache::FCounterCache::PutUserData(
+                Gs2->Cache,
+                NamespaceName,
+                UserId,
+                TimeOffset,
+                Item
+            );
+            return ParentKey.IsEmpty() ? TOptional<FString>() : TOptional<FString>(ParentKey);
+        }
+        return TOptional<FString>();
+    }
+
+    bool FGs2LimitDomain::SetListCached(
+        const TOptional<int32> TimeOffset,
+        const FString Kind,
+        const FString ParentKey
+    ) {
+        if (Kind == "counter") {
+            Gs2->Cache->SetListCached(Gs2::Limit::Model::FCounter::TypeName, ParentKey);
+            return true;
+        }
+        return false;
     }
 
     void FGs2LimitDomain::UpdateCacheFromStampTask(
@@ -643,18 +699,28 @@ namespace Gs2::Limit::Domain
             const auto RequestModel = Gs2::Limit::Request::FCountUpByUserIdRequest::FromJson(RequestModelJson);
             const auto ResultModel = Gs2::Limit::Result::FCountUpByUserIdResult::FromJson(ResultModelJson);
 
-            if (ResultModel->GetItem() != nullptr)
-            {
+                    if (ResultModel.IsValid() && ResultModel->GetItem() != nullptr)
+                    {
+
+                if (!ResultModel.IsValid() || !ResultModel->GetItem().IsValid())
+                    {
+                      return;
+                      }if (!ResultModel.IsValid() || !((ResultModel.IsValid() && ResultModel->GetItem().IsValid() ? ResultModel->GetItem()->GetUserId() : TOptional<FString>())).IsSet())
+                    {
+                      return;
+                      }
                 Gs2::Limit::Model::Cache::FCounterCache::Put(
                     Gs2->Cache,
+
                     RequestModel->GetNamespaceName(),
-                    RequestModel->GetUserId(),
+                    (ResultModel.IsValid() && ResultModel->GetItem().IsValid() ? ResultModel->GetItem()->GetUserId() : TOptional<FString>()),
                     ResultModel->GetItem()->GetLimitName(),
                     RequestModel->GetCounterName(),
                     TimeOffset,
                     ResultModel->GetItem()
                 );
-            }
+                    }
+
         }
     }
 
@@ -688,18 +754,28 @@ namespace Gs2::Limit::Domain
             const auto RequestModel = Gs2::Limit::Request::FCountDownByUserIdRequest::FromJson(RequestModelJson);
             const auto ResultModel = Gs2::Limit::Result::FCountDownByUserIdResult::FromJson(ResultModelJson);
 
-            if (ResultModel->GetItem() != nullptr)
-            {
+                    if (ResultModel.IsValid() && ResultModel->GetItem() != nullptr)
+                    {
+
+                if (!ResultModel.IsValid() || !ResultModel->GetItem().IsValid())
+                    {
+                      return;
+                      }if (!ResultModel.IsValid() || !((ResultModel.IsValid() && ResultModel->GetItem().IsValid() ? ResultModel->GetItem()->GetUserId() : TOptional<FString>())).IsSet())
+                    {
+                      return;
+                      }
                 Gs2::Limit::Model::Cache::FCounterCache::Put(
                     Gs2->Cache,
+
                     RequestModel->GetNamespaceName(),
-                    RequestModel->GetUserId(),
+                    (ResultModel.IsValid() && ResultModel->GetItem().IsValid() ? ResultModel->GetItem()->GetUserId() : TOptional<FString>()),
                     ResultModel->GetItem()->GetLimitName(),
                     RequestModel->GetCounterName(),
                     TimeOffset,
                     ResultModel->GetItem()
                 );
-            }
+                    }
+
         }
         if (Method == "delete_counter_by_user_id") {
             TSharedPtr<FJsonObject> RequestModelJson;
@@ -725,17 +801,23 @@ namespace Gs2::Limit::Domain
             const auto RequestModel = Gs2::Limit::Request::FDeleteCounterByUserIdRequest::FromJson(RequestModelJson);
             const auto ResultModel = Gs2::Limit::Result::FDeleteCounterByUserIdResult::FromJson(ResultModelJson);
 
-            if (ResultModel->GetItem() != nullptr)
-            {
-                Gs2::Limit::Model::Cache::FCounterCache::Delete(
+                      if (!ResultModel.IsValid() || !ResultModel->GetItem().IsValid())
+                          {
+                            return;
+                            }if (!ResultModel.IsValid() || !((ResultModel.IsValid() && ResultModel->GetItem().IsValid() ? ResultModel->GetItem()->GetUserId() : TOptional<FString>())).IsSet())
+                          {
+                            return;
+                            }
+                      Gs2::Limit::Model::Cache::FCounterCache::Delete(
                     Gs2->Cache,
+
                     RequestModel->GetNamespaceName(),
-                    RequestModel->GetUserId(),
+                    (ResultModel.IsValid() && ResultModel->GetItem().IsValid() ? ResultModel->GetItem()->GetUserId() : TOptional<FString>()),
                     ResultModel->GetItem()->GetLimitName(),
                     RequestModel->GetCounterName(),
                     TimeOffset
                 );
-            }
+
         }
     }
 

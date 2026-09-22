@@ -259,16 +259,17 @@ namespace Gs2::Inventory::Model
                 }() : TOptional<bool>())
             ->WithItemModels(Data->HasField(ANSI_TO_TCHAR("itemModels")) ? [Data]() -> TSharedPtr<TArray<Model::FItemModelPtr>>
                 {
-                    auto v = MakeShared<TArray<Model::FItemModelPtr>>();
-                    if (!Data->HasTypedField<EJson::Null>(ANSI_TO_TCHAR("itemModels")) && Data->HasTypedField<EJson::Array>(ANSI_TO_TCHAR("itemModels")))
+                    if (!Data->HasTypedField<EJson::Array>(ANSI_TO_TCHAR("itemModels")))
                     {
-                        for (auto JsonObjectValue : Data->GetArrayField(ANSI_TO_TCHAR("itemModels")))
-                        {
-                            v->Add(Model::FItemModel::FromJson(JsonObjectValue->AsObject()));
-                        }
+                        return nullptr;
+                    }
+                    auto v = MakeShared<TArray<Model::FItemModelPtr>>();
+                    for (auto JsonObjectValue : Data->GetArrayField(ANSI_TO_TCHAR("itemModels")))
+                    {
+                        v->Add(Model::FItemModel::FromJson(JsonObjectValue->AsObject()));
                     }
                     return v;
-                 }() : MakeShared<TArray<Model::FItemModelPtr>>());
+                 }() : nullptr);
     }
 
     TSharedPtr<FJsonObject> FInventoryModel::ToJson() const
@@ -386,6 +387,28 @@ namespace Gs2::Inventory::Model::Cache
         auto CacheOwnerValue = CacheOwnerArgumentItem;
         CacheSnapshot->Put(Gs2::Inventory::Model::FInventoryModel::TypeName, CacheOwnerParentKey, CacheOwnerKey, CacheOwnerValue,
             FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
+        );
+    }
+
+    FString FInventoryModelCache::PutUserData(
+        const Gs2::Core::Domain::FCacheDatabasePtr& Cache,
+        TOptional<FString> NamespaceName,
+        TOptional<FString> UserId,
+        TOptional<int32> TimeOffset,
+        const Gs2::Inventory::Model::FInventoryModelPtr& Item
+    )
+    {
+        if (!Item.IsValid()) return FString();
+        Put(
+            Cache,
+            NamespaceName,
+            Item->GetName(),
+            TimeOffset,
+            Item
+        );
+        return CreateCacheParentKey(
+            NamespaceName,
+            TimeOffset
         );
     }
 

@@ -23,6 +23,8 @@
 #endif
 
 #include "Lottery/Domain/SpeculativeExecutor/Acquire/DrawByUserIdSpeculativeExecutor.h"
+#include "Lottery/Domain/Gs2Lottery.h"
+#include "Lottery/Domain/SpeculativeExecutor/Transaction/DrawByUserIdSpeculativeExecutor.h"
 
 #include "Core/Domain/Gs2.h"
 #include "Core/Domain/SpeculativeExecutor/PreparedSpeculativeCommit.h"
@@ -64,8 +66,18 @@ namespace Gs2::Lottery::Domain::SpeculativeExecutor
         TSharedPtr<TSharedPtr<Gs2::Core::Domain::SpeculativeExecutor::FPreparedSpeculativeCommit>> Result
     )
     {
-        UE_LOG(Gs2Log, Warning, TEXT("Speculative execution not supported on this action: %s"), ToCStr(FDrawByUserIdSpeculativeExecutor::Action()))
-        *Result = Gs2::Core::Domain::SpeculativeExecutor::FPreparedSpeculativeCommit::WrapLegacy(MakeShared<TFunction<void()>>([](){}));
+        const auto Future = Transaction::SpeculativeExecutor::FDrawByUserIdSpeculativeExecutor::Execute(
+            Domain,
+            Service,
+            AccessToken,
+            Request
+        );
+        Future->StartSynchronousTask();
+        if (Future->GetTask().IsError())
+        {
+            return Future->GetTask().Error();
+        }
+        *Result = Future->GetTask().Result();
         return nullptr;
     }
 

@@ -140,7 +140,6 @@ namespace Gs2::Log::Domain
 
     Gs2::Core::Domain::CallbackID FGs2LogDomain::SubscribeNamespaces(
     TFunction<void()> Callback
-
     )
     {
         return Gs2->Cache->ListSubscribe(
@@ -275,7 +274,6 @@ namespace Gs2::Log::Domain
 
     Gs2::Core::Domain::CallbackID FGs2LogDomain::SubscribeLog(
     TFunction<void()> Callback
-
     )
     {
         return Gs2->Cache->ListSubscribe(
@@ -411,7 +409,6 @@ namespace Gs2::Log::Domain
 
     Gs2::Core::Domain::CallbackID FGs2LogDomain::SubscribeTimeseries(
     TFunction<void()> Callback
-
     )
     {
         return Gs2->Cache->ListSubscribe(
@@ -531,6 +528,24 @@ namespace Gs2::Log::Domain
         const FString Result,
         const TOptional<int32> TimeOffset
     ) {
+    }
+
+    TOptional<FString> FGs2LogDomain::PutUserData(
+        const TOptional<FString> NamespaceName,
+        const TOptional<FString> UserId,
+        const TOptional<int32> TimeOffset,
+        const FString Kind,
+        const FString Payload
+    ) {
+        return TOptional<FString>();
+    }
+
+    bool FGs2LogDomain::SetListCached(
+        const TOptional<int32> TimeOffset,
+        const FString Kind,
+        const FString ParentKey
+    ) {
+        return false;
     }
 
     void FGs2LogDomain::UpdateCacheFromStampTask(

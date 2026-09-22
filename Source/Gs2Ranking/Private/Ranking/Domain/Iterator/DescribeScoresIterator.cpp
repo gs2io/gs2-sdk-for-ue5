@@ -135,6 +135,7 @@ namespace Gs2::Ranking::Domain::Iterator
             const auto R = Future->GetTask().Result();
             Future->EnsureCompletion();
             Range = R->GetItems().IsValid() ? R->GetItems() : MakeShared<TArray<Gs2::Ranking::Model::FScorePtr>>();
+            const auto CacheOwnerSnapshotUserId = Self->AccessToken.IsValid() ? Self->AccessToken->GetUserId() : TOptional<FString>();
             const auto CacheOwnerSnapshotTimeOffset = Self->AccessToken.IsValid() ? Self->AccessToken->GetTimeOffset() : TOptional<int32>();
             const auto ResultModel = R;
 
@@ -146,7 +147,7 @@ namespace Gs2::Ranking::Domain::Iterator
                     if (!Item.IsValid()) continue;
                     Gs2::Ranking::Model::Cache::FScoreCache::Put(
                         Self->Gs2->Cache,
-                        Request->GetNamespaceName(), Item->GetScorerUserId(), Item->GetCategoryName(), Item->GetUniqueId(),
+                        Request->GetNamespaceName(), CacheOwnerSnapshotUserId, Item->GetCategoryName(), Item->GetScorerUserId(), Item->GetUniqueId(),
                         CacheOwnerSnapshotTimeOffset, Item
                     );
                 }

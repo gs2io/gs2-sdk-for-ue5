@@ -93,12 +93,14 @@ namespace Gs2::Gateway::Domain::Model
             const FUserAccessTokenDomain& From
         );
 
+        TSharedPtr<Gs2::Gateway::Domain::Model::FFirebaseTokenAccessTokenDomain> FirebaseToken(
+        );
+
         Gs2::Gateway::Domain::Iterator::FDescribeWebSocketSessionsIteratorPtr WebSocketSessions(
         ) const;
 
         Gs2::Core::Domain::CallbackID SubscribeWebSocketSessions(
             TFunction<void()> Callback
-
         );
 
         class FCollectWebSocketSessionsTask;
@@ -130,9 +132,6 @@ namespace Gs2::Gateway::Domain::Model
         );
 
         TSharedPtr<Gs2::Gateway::Domain::Model::FWebSocketSessionAccessTokenDomain> WebSocketSession(
-        );
-
-        TSharedPtr<Gs2::Gateway::Domain::Model::FFirebaseTokenAccessTokenDomain> FirebaseToken(
         );
 
         static FString CreateCacheParentKey(

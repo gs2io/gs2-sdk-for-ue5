@@ -366,16 +366,17 @@ namespace Gs2::Guild::Request
               }() : TOptional<int32>())
           ->WithRoles(Data->HasField(ANSI_TO_TCHAR("roles")) ? [Data]() -> TSharedPtr<TArray<Model::FRoleModelPtr>>
               {
-                  auto v = MakeShared<TArray<Model::FRoleModelPtr>>();
-                  if (!Data->HasTypedField<EJson::Null>(ANSI_TO_TCHAR("roles")) && Data->HasTypedField<EJson::Array>(ANSI_TO_TCHAR("roles")))
+                  if (!Data->HasTypedField<EJson::Array>(ANSI_TO_TCHAR("roles")))
                   {
-                      for (auto JsonObjectValue : Data->GetArrayField(ANSI_TO_TCHAR("roles")))
-                      {
-                          v->Add(Model::FRoleModel::FromJson(JsonObjectValue->AsObject()));
-                      }
+                      return nullptr;
                   }
+                  auto v = MakeShared<TArray<Model::FRoleModelPtr>>();
+                  for (auto JsonObjectValue : Data->GetArrayField(ANSI_TO_TCHAR("roles")))
+                      {
+                      v->Add(Model::FRoleModel::FromJson(JsonObjectValue->AsObject()));
+                      }
                   return v;
-              }() : MakeShared<TArray<Model::FRoleModelPtr>>())
+              }() : nullptr)
             ->WithGuildMasterRole(Data->HasField(ANSI_TO_TCHAR("guildMasterRole")) ? [Data]() -> TOptional<FString>
               {
                   FString v("");

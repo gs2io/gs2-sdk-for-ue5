@@ -283,16 +283,17 @@ namespace Gs2::SeasonRating::Model
                 }() : TOptional<FString>())
             ->WithTiers(Data->HasField(ANSI_TO_TCHAR("tiers")) ? [Data]() -> TSharedPtr<TArray<Model::FTierModelPtr>>
                 {
-                    auto v = MakeShared<TArray<Model::FTierModelPtr>>();
-                    if (!Data->HasTypedField<EJson::Null>(ANSI_TO_TCHAR("tiers")) && Data->HasTypedField<EJson::Array>(ANSI_TO_TCHAR("tiers")))
+                    if (!Data->HasTypedField<EJson::Array>(ANSI_TO_TCHAR("tiers")))
                     {
-                        for (auto JsonObjectValue : Data->GetArrayField(ANSI_TO_TCHAR("tiers")))
-                        {
-                            v->Add(Model::FTierModel::FromJson(JsonObjectValue->AsObject()));
-                        }
+                        return nullptr;
+                    }
+                    auto v = MakeShared<TArray<Model::FTierModelPtr>>();
+                    for (auto JsonObjectValue : Data->GetArrayField(ANSI_TO_TCHAR("tiers")))
+                    {
+                        v->Add(Model::FTierModel::FromJson(JsonObjectValue->AsObject()));
                     }
                     return v;
-                 }() : MakeShared<TArray<Model::FTierModelPtr>>())
+                 }() : nullptr)
             ->WithExperienceModelId(Data->HasField(ANSI_TO_TCHAR("experienceModelId")) ? [Data]() -> TOptional<FString>
                 {
                     FString v("");
@@ -475,6 +476,28 @@ namespace Gs2::SeasonRating::Model::Cache
         }
         CacheSnapshot->Put(Gs2::SeasonRating::Model::FSeasonModelMaster::TypeName, CacheOwnerParentKey, CacheOwnerKey, CacheOwnerValue,
             FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
+        );
+    }
+
+    FString FSeasonModelMasterCache::PutUserData(
+        const Gs2::Core::Domain::FCacheDatabasePtr& Cache,
+        TOptional<FString> NamespaceName,
+        TOptional<FString> UserId,
+        TOptional<int32> TimeOffset,
+        const Gs2::SeasonRating::Model::FSeasonModelMasterPtr& Item
+    )
+    {
+        if (!Item.IsValid()) return FString();
+        Put(
+            Cache,
+            NamespaceName,
+            Item->GetName(),
+            TimeOffset,
+            Item
+        );
+        return CreateCacheParentKey(
+            NamespaceName,
+            TimeOffset
         );
     }
 

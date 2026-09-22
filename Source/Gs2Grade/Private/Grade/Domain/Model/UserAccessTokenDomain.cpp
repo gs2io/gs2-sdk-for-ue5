@@ -89,8 +89,7 @@ namespace Gs2::Grade::Domain::Model
     }
 
     Gs2::Core::Domain::CallbackID FUserAccessTokenDomain::SubscribeStatuses(
-    TFunction<void()> Callback
-        , const TOptional<FString> GradeName
+    TFunction<void()> Callback, const TOptional<FString> GradeName
     )
     {
         return Gs2->Cache->ListSubscribe(

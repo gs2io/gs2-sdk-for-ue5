@@ -372,7 +372,6 @@ namespace Gs2::SkillTree::Domain::Model
 
     Gs2::Core::Domain::CallbackID FNamespaceDomain::SubscribeNodeModels(
     TFunction<void()> Callback
-
     )
     {
         return Gs2->Cache->ListSubscribe(
@@ -509,7 +508,6 @@ namespace Gs2::SkillTree::Domain::Model
 
     Gs2::Core::Domain::CallbackID FNamespaceDomain::SubscribeNodeModelMasters(
     TFunction<void()> Callback
-
     )
     {
         return Gs2->Cache->ListSubscribe(

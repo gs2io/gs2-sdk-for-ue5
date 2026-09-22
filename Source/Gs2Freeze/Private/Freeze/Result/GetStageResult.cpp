@@ -101,28 +101,30 @@ namespace Gs2::Freeze::Result
                  }() : nullptr)
             ->WithSource(Data->HasField(ANSI_TO_TCHAR("source")) ? [Data]() -> TSharedPtr<TArray<Model::FMicroservicePtr>>
                  {
-                    auto v = MakeShared<TArray<Model::FMicroservicePtr>>();
-                    if (!Data->HasTypedField<EJson::Null>(ANSI_TO_TCHAR("source")) && Data->HasTypedField<EJson::Array>(ANSI_TO_TCHAR("source")))
+                    if (!Data->HasTypedField<EJson::Array>(ANSI_TO_TCHAR("source")))
                     {
-                        for (auto JsonObjectValue : Data->GetArrayField(ANSI_TO_TCHAR("source")))
-                        {
-                            v->Add(Model::FMicroservice::FromJson(JsonObjectValue->AsObject()));
-                        }
+                        return nullptr;
+                    }
+                    auto v = MakeShared<TArray<Model::FMicroservicePtr>>();
+                    for (auto JsonObjectValue : Data->GetArrayField(ANSI_TO_TCHAR("source")))
+                    {
+                        v->Add(Model::FMicroservice::FromJson(JsonObjectValue->AsObject()));
                     }
                     return v;
-                 }() : MakeShared<TArray<Model::FMicroservicePtr>>())
+                 }() : nullptr)
             ->WithCurrent(Data->HasField(ANSI_TO_TCHAR("current")) ? [Data]() -> TSharedPtr<TArray<Model::FMicroservicePtr>>
                  {
-                    auto v = MakeShared<TArray<Model::FMicroservicePtr>>();
-                    if (!Data->HasTypedField<EJson::Null>(ANSI_TO_TCHAR("current")) && Data->HasTypedField<EJson::Array>(ANSI_TO_TCHAR("current")))
+                    if (!Data->HasTypedField<EJson::Array>(ANSI_TO_TCHAR("current")))
                     {
-                        for (auto JsonObjectValue : Data->GetArrayField(ANSI_TO_TCHAR("current")))
-                        {
-                            v->Add(Model::FMicroservice::FromJson(JsonObjectValue->AsObject()));
-                        }
+                        return nullptr;
+                    }
+                    auto v = MakeShared<TArray<Model::FMicroservicePtr>>();
+                    for (auto JsonObjectValue : Data->GetArrayField(ANSI_TO_TCHAR("current")))
+                    {
+                        v->Add(Model::FMicroservice::FromJson(JsonObjectValue->AsObject()));
                     }
                     return v;
-                 }() : MakeShared<TArray<Model::FMicroservicePtr>>());
+                 }() : nullptr);
     }
 
     TSharedPtr<FJsonObject> FGetStageResult::ToJson() const

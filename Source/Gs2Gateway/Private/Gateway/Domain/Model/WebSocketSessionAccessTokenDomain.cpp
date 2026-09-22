@@ -205,8 +205,8 @@ namespace Gs2::Gateway::Domain::Model
     }
 
     FWebSocketSessionAccessTokenDomain::FSubscribeWithInitialCallTask::FSubscribeWithInitialCallTask(
-        const TSharedPtr<FWebSocketSessionAccessTokenDomain> Self,
-        const TFunction<void(Gs2::Gateway::Model::FWebSocketSessionPtr)>& Callback
+        const TSharedPtr<FWebSocketSessionAccessTokenDomain>& Self,
+        TFunction<void(Gs2::Gateway::Model::FWebSocketSessionPtr)> Callback
     ): Self(Self), Callback(Callback)
     {
     }

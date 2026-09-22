@@ -43,6 +43,8 @@ struct FGs2LimitCounterValue
     UPROPERTY(Category = Gs2, BlueprintReadOnly)
     int32 Count = 0;
     UPROPERTY(Category = Gs2, BlueprintReadOnly)
+    int64 NextResetAt = 0;
+    UPROPERTY(Category = Gs2, BlueprintReadOnly)
     int64 CreatedAt = 0;
     UPROPERTY(Category = Gs2, BlueprintReadOnly)
     int64 UpdatedAt = 0;
@@ -61,6 +63,7 @@ inline FGs2LimitCounterValue EzCounterToFGs2LimitCounterValue(
     Value.LimitName = Model->GetLimitName() ? *Model->GetLimitName() : "";
     Value.Name = Model->GetName() ? *Model->GetName() : "";
     Value.Count = Model->GetCount() ? *Model->GetCount() : 0;
+    Value.NextResetAt = Model->GetNextResetAt() ? *Model->GetNextResetAt() : 0;
     Value.CreatedAt = Model->GetCreatedAt() ? *Model->GetCreatedAt() : 0;
     Value.UpdatedAt = Model->GetUpdatedAt() ? *Model->GetUpdatedAt() : 0;
     return Value;
@@ -75,6 +78,7 @@ inline Gs2::UE5::Limit::Model::FEzCounterPtr FGs2LimitCounterValueToEzCounter(
         ->WithLimitName(Model.LimitName)
         ->WithName(Model.Name)
         ->WithCount(Model.Count)
+        ->WithNextResetAt(Model.NextResetAt)
         ->WithCreatedAt(Model.CreatedAt)
         ->WithUpdatedAt(Model.UpdatedAt);
 }

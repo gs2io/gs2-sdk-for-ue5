@@ -324,7 +324,6 @@ namespace Gs2::Money2::Domain::Model
 
     Gs2::Core::Domain::CallbackID FUserDomain::SubscribeWallets(
     TFunction<void()> Callback
-
     )
     {
         return Gs2->Cache->ListSubscribe(
@@ -473,7 +472,6 @@ namespace Gs2::Money2::Domain::Model
 
     Gs2::Core::Domain::CallbackID FUserDomain::SubscribeEvents(
     TFunction<void()> Callback
-
     )
     {
         return Gs2->Cache->ListSubscribe(
@@ -620,7 +618,6 @@ namespace Gs2::Money2::Domain::Model
 
     Gs2::Core::Domain::CallbackID FUserDomain::SubscribeSubscriptionStatuses(
     TFunction<void()> Callback
-
     )
     {
         return Gs2->Cache->ListSubscribe(

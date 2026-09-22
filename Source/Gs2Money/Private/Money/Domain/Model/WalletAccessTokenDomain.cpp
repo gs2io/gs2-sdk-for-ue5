@@ -55,10 +55,10 @@ namespace Gs2::Money::Domain::Model
         NamespaceName(NamespaceName),
         AccessToken(AccessToken),
         Slot(Slot),
-        ParentKey(Gs2::Money::Model::Cache::FWalletCache::CreateCacheParentKey(
+        ParentKey(Gs2::Money::Domain::Model::FUserDomain::CreateCacheParentKey(
             NamespaceName,
             UserId(),
-            AccessToken.IsValid() ? AccessToken->GetTimeOffset() : TOptional<int32>()
+            "Wallet"
         ))
     {
     }
@@ -100,6 +100,8 @@ namespace Gs2::Money::Domain::Model
             ->WithNamespaceName(Self->NamespaceName)
             ->WithAccessToken(Self->AccessToken->GetToken())
             ->WithSlot(Self->Slot);
+        const auto CacheOwnerSnapshotUserId = Self->AccessToken.IsValid() ? Self->UserId() : TOptional<FString>();
+        const auto CacheOwnerSnapshotTimeOffset = Self->AccessToken.IsValid() ? Self->AccessToken->GetTimeOffset() : TOptional<int32>();
         const auto Future = Self->Client->GetWallet(
             Request
         );
@@ -111,14 +113,30 @@ namespace Gs2::Money::Domain::Model
         const auto ResultModel = Future->GetTask().Result();
         Future->EnsureCompletion();
 
-        if (ResultModel.IsValid() && ResultModel->GetItem().IsValid())
-        {
-            Gs2::Money::Model::Cache::FWalletCache::Put(
-                Self->Gs2->Cache,
-                Request->GetNamespaceName(), Self->UserId(), Request->GetSlot(),
-                Self->AccessToken->GetTimeOffset(), ResultModel->GetItem()
-            );
-        }
+            if (ResultModel.IsValid() && ResultModel->GetItem() != nullptr)
+            {
+
+        if (!ResultModel.IsValid() || !ResultModel->GetItem().IsValid())
+            {
+              const auto Details = MakeShared<TArray<TSharedPtr<Gs2::Core::Model::FGs2ErrorDetail>>>();
+                Details->Add(MakeShared<Gs2::Core::Model::FGs2ErrorDetail>(TEXT("result.item"), TEXT("result.item is invalid."), TEXT("invalid_response")));
+                return MakeShared<Gs2::Core::Model::FUnknownError>(Details);
+              }if (!((CacheOwnerSnapshotUserId)).IsSet())
+            {
+              const auto Details = MakeShared<TArray<TSharedPtr<Gs2::Core::Model::FGs2ErrorDetail>>>();
+                Details->Add(MakeShared<Gs2::Core::Model::FGs2ErrorDetail>(TEXT("userId"), TEXT("userId is invalid."), TEXT("invalid_response")));
+                return MakeShared<Gs2::Core::Model::FUnknownError>(Details);
+              }
+        Gs2::Money::Model::Cache::FWalletCache::Put(
+            Self->Gs2->Cache,
+
+            Request->GetNamespaceName(),
+            (CacheOwnerSnapshotUserId),
+            ResultModel->GetItem()->GetSlot().Get(int32{}),
+            CacheOwnerSnapshotTimeOffset,
+            ResultModel->GetItem()
+        );
+            }
         *Result = ResultModel->GetItem();
         return nullptr;
     }
@@ -152,6 +170,8 @@ namespace Gs2::Money::Domain::Model
             ->WithNamespaceName(Self->NamespaceName)
             ->WithAccessToken(Self->AccessToken->GetToken())
             ->WithSlot(Self->Slot);
+        const auto CacheOwnerSnapshotUserId = Self->AccessToken.IsValid() ? Self->UserId() : TOptional<FString>();
+        const auto CacheOwnerSnapshotTimeOffset = Self->AccessToken.IsValid() ? Self->AccessToken->GetTimeOffset() : TOptional<int32>();
         const auto Future = Self->Client->Withdraw(
             Request
         );
@@ -163,14 +183,30 @@ namespace Gs2::Money::Domain::Model
         const auto ResultModel = Future->GetTask().Result();
         Future->EnsureCompletion();
 
-        if (ResultModel.IsValid() && ResultModel->GetItem().IsValid())
-        {
-            Gs2::Money::Model::Cache::FWalletCache::Put(
-                Self->Gs2->Cache,
-                Request->GetNamespaceName(), Self->UserId(), Request->GetSlot(),
-                Self->AccessToken->GetTimeOffset(), ResultModel->GetItem()
-            );
-        }
+            if (ResultModel.IsValid() && ResultModel->GetItem() != nullptr)
+            {
+
+        if (!ResultModel.IsValid() || !ResultModel->GetItem().IsValid())
+            {
+              const auto Details = MakeShared<TArray<TSharedPtr<Gs2::Core::Model::FGs2ErrorDetail>>>();
+                Details->Add(MakeShared<Gs2::Core::Model::FGs2ErrorDetail>(TEXT("result.item"), TEXT("result.item is invalid."), TEXT("invalid_response")));
+                return MakeShared<Gs2::Core::Model::FUnknownError>(Details);
+              }if (!((CacheOwnerSnapshotUserId)).IsSet())
+            {
+              const auto Details = MakeShared<TArray<TSharedPtr<Gs2::Core::Model::FGs2ErrorDetail>>>();
+                Details->Add(MakeShared<Gs2::Core::Model::FGs2ErrorDetail>(TEXT("userId"), TEXT("userId is invalid."), TEXT("invalid_response")));
+                return MakeShared<Gs2::Core::Model::FUnknownError>(Details);
+              }
+        Gs2::Money::Model::Cache::FWalletCache::Put(
+            Self->Gs2->Cache,
+
+            Request->GetNamespaceName(),
+            (CacheOwnerSnapshotUserId),
+            ResultModel->GetItem()->GetSlot().Get(int32{}),
+            CacheOwnerSnapshotTimeOffset,
+            ResultModel->GetItem()
+        );
+            }
         auto Domain = Self;
         if (ResultModel != nullptr)
         {

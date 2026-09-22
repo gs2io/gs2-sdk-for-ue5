@@ -271,40 +271,43 @@ namespace Gs2::Distributor::Model
                 }() : TOptional<FString>())
             ->WithVerifyResults(Data->HasField(ANSI_TO_TCHAR("verifyResults")) ? [Data]() -> TSharedPtr<TArray<Model::FVerifyActionResultPtr>>
                 {
-                    auto v = MakeShared<TArray<Model::FVerifyActionResultPtr>>();
-                    if (!Data->HasTypedField<EJson::Null>(ANSI_TO_TCHAR("verifyResults")) && Data->HasTypedField<EJson::Array>(ANSI_TO_TCHAR("verifyResults")))
+                    if (!Data->HasTypedField<EJson::Array>(ANSI_TO_TCHAR("verifyResults")))
                     {
-                        for (auto JsonObjectValue : Data->GetArrayField(ANSI_TO_TCHAR("verifyResults")))
-                        {
-                            v->Add(Model::FVerifyActionResult::FromJson(JsonObjectValue->AsObject()));
-                        }
+                        return nullptr;
+                    }
+                    auto v = MakeShared<TArray<Model::FVerifyActionResultPtr>>();
+                    for (auto JsonObjectValue : Data->GetArrayField(ANSI_TO_TCHAR("verifyResults")))
+                    {
+                        v->Add(Model::FVerifyActionResult::FromJson(JsonObjectValue->AsObject()));
                     }
                     return v;
-                 }() : MakeShared<TArray<Model::FVerifyActionResultPtr>>())
+                 }() : nullptr)
             ->WithConsumeResults(Data->HasField(ANSI_TO_TCHAR("consumeResults")) ? [Data]() -> TSharedPtr<TArray<Model::FConsumeActionResultPtr>>
                 {
-                    auto v = MakeShared<TArray<Model::FConsumeActionResultPtr>>();
-                    if (!Data->HasTypedField<EJson::Null>(ANSI_TO_TCHAR("consumeResults")) && Data->HasTypedField<EJson::Array>(ANSI_TO_TCHAR("consumeResults")))
+                    if (!Data->HasTypedField<EJson::Array>(ANSI_TO_TCHAR("consumeResults")))
                     {
-                        for (auto JsonObjectValue : Data->GetArrayField(ANSI_TO_TCHAR("consumeResults")))
-                        {
-                            v->Add(Model::FConsumeActionResult::FromJson(JsonObjectValue->AsObject()));
-                        }
+                        return nullptr;
+                    }
+                    auto v = MakeShared<TArray<Model::FConsumeActionResultPtr>>();
+                    for (auto JsonObjectValue : Data->GetArrayField(ANSI_TO_TCHAR("consumeResults")))
+                    {
+                        v->Add(Model::FConsumeActionResult::FromJson(JsonObjectValue->AsObject()));
                     }
                     return v;
-                 }() : MakeShared<TArray<Model::FConsumeActionResultPtr>>())
+                 }() : nullptr)
             ->WithAcquireResults(Data->HasField(ANSI_TO_TCHAR("acquireResults")) ? [Data]() -> TSharedPtr<TArray<Model::FAcquireActionResultPtr>>
                 {
-                    auto v = MakeShared<TArray<Model::FAcquireActionResultPtr>>();
-                    if (!Data->HasTypedField<EJson::Null>(ANSI_TO_TCHAR("acquireResults")) && Data->HasTypedField<EJson::Array>(ANSI_TO_TCHAR("acquireResults")))
+                    if (!Data->HasTypedField<EJson::Array>(ANSI_TO_TCHAR("acquireResults")))
                     {
-                        for (auto JsonObjectValue : Data->GetArrayField(ANSI_TO_TCHAR("acquireResults")))
-                        {
-                            v->Add(Model::FAcquireActionResult::FromJson(JsonObjectValue->AsObject()));
-                        }
+                        return nullptr;
+                    }
+                    auto v = MakeShared<TArray<Model::FAcquireActionResultPtr>>();
+                    for (auto JsonObjectValue : Data->GetArrayField(ANSI_TO_TCHAR("acquireResults")))
+                    {
+                        v->Add(Model::FAcquireActionResult::FromJson(JsonObjectValue->AsObject()));
                     }
                     return v;
-                 }() : MakeShared<TArray<Model::FAcquireActionResultPtr>>())
+                 }() : nullptr)
             ->WithHasError(Data->HasField(ANSI_TO_TCHAR("hasError")) ? [Data]() -> TOptional<bool>
                 {
                     bool v;
@@ -479,9 +482,34 @@ namespace Gs2::Distributor::Model::Cache
             const int64 CacheOwnerOldRevision = CacheOwnerExisting.IsValid() ? CacheOwnerExisting->GetRevision().Get(-1) : -1;
             const int64 CacheOwnerNewRevision = CacheOwnerValue.IsValid() ? CacheOwnerValue->GetRevision().Get(-1) : -1;
             if (CacheOwnerOldRevision > CacheOwnerNewRevision && CacheOwnerNewRevision > 1) return;
+            if (CacheOwnerOldRevision == CacheOwnerNewRevision) return;
         }
         CacheSnapshot->Put(Gs2::Distributor::Model::FTransactionResult::TypeName, CacheOwnerParentKey, CacheOwnerKey, CacheOwnerValue,
             FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
+        );
+    }
+
+    FString FTransactionResultCache::PutUserData(
+        const Gs2::Core::Domain::FCacheDatabasePtr& Cache,
+        TOptional<FString> NamespaceName,
+        TOptional<FString> UserId,
+        TOptional<int32> TimeOffset,
+        const Gs2::Distributor::Model::FTransactionResultPtr& Item
+    )
+    {
+        if (!Item.IsValid()) return FString();
+        Put(
+            Cache,
+            NamespaceName,
+            UserId,
+            Item->GetTransactionId(),
+            TimeOffset,
+            Item
+        );
+        return CreateCacheParentKey(
+            NamespaceName,
+            UserId,
+            TimeOffset
         );
     }
 

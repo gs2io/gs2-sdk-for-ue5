@@ -141,16 +141,17 @@ namespace Gs2::Identifier::Model
                 }() : TOptional<FString>())
             ->WithSecurityPolicyIds(Data->HasField(ANSI_TO_TCHAR("securityPolicyIds")) ? [Data]() -> TSharedPtr<TArray<FString>>
                 {
-                    auto v = MakeShared<TArray<FString>>();
-                    if (!Data->HasTypedField<EJson::Null>(ANSI_TO_TCHAR("securityPolicyIds")) && Data->HasTypedField<EJson::Array>(ANSI_TO_TCHAR("securityPolicyIds")))
+                    if (!Data->HasTypedField<EJson::Array>(ANSI_TO_TCHAR("securityPolicyIds")))
                     {
-                        for (auto JsonObjectValue : Data->GetArrayField(ANSI_TO_TCHAR("securityPolicyIds")))
-                        {
-                            v->Add(JsonObjectValue->AsString());
-                        }
+                        return nullptr;
+                    }
+                    auto v = MakeShared<TArray<FString>>();
+                    for (auto JsonObjectValue : Data->GetArrayField(ANSI_TO_TCHAR("securityPolicyIds")))
+                    {
+                        v->Add(JsonObjectValue->AsString());
                     }
                     return v;
-                 }() : MakeShared<TArray<FString>>())
+                 }() : nullptr)
             ->WithAttachedAt(Data->HasField(ANSI_TO_TCHAR("attachedAt")) ? [Data]() -> TOptional<int64>
                 {
                     int64 v;
@@ -274,6 +275,27 @@ namespace Gs2::Identifier::Model::Cache
         }
         CacheSnapshot->Put(Gs2::Identifier::Model::FAttachSecurityPolicy::TypeName, CacheOwnerParentKey, CacheOwnerKey, CacheOwnerValue,
             FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
+        );
+    }
+
+    FString FAttachSecurityPolicyCache::PutUserData(
+        const Gs2::Core::Domain::FCacheDatabasePtr& Cache,
+        TOptional<FString> NamespaceName,
+        TOptional<FString> UserId,
+        TOptional<int32> TimeOffset,
+        const Gs2::Identifier::Model::FAttachSecurityPolicyPtr& Item
+    )
+    {
+        if (!Item.IsValid()) return FString();
+        Put(
+            Cache,
+            (Item->GetUserId().IsSet() ? Gs2::Identifier::Model::FAttachSecurityPolicy::GetUserNameFromGrn(*Item->GetUserId()) : TOptional<FString>()),
+            TimeOffset,
+            Item
+        );
+        return CreateCacheParentKey(
+            (Item->GetUserId().IsSet() ? Gs2::Identifier::Model::FAttachSecurityPolicy::GetUserNameFromGrn(*Item->GetUserId()) : TOptional<FString>()),
+            TimeOffset
         );
     }
 

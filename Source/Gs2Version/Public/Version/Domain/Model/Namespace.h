@@ -250,7 +250,6 @@ namespace Gs2::Version::Domain::Model
 
         Gs2::Core::Domain::CallbackID SubscribeVersionModels(
             TFunction<void()> Callback
-
         );
 
         class FCollectVersionModelsTask;
@@ -299,7 +298,6 @@ namespace Gs2::Version::Domain::Model
 
         Gs2::Core::Domain::CallbackID SubscribeVersionModelMasters(
             TFunction<void()> Callback
-
         );
 
         class FCollectVersionModelMastersTask;

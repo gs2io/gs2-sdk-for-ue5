@@ -55,16 +55,17 @@ namespace Gs2::Identifier::Result
         return MakeShared<FGetHasSecurityPolicyResult>()
             ->WithItems(Data->HasField(ANSI_TO_TCHAR("items")) ? [Data]() -> TSharedPtr<TArray<Model::FSecurityPolicyPtr>>
                  {
-                    auto v = MakeShared<TArray<Model::FSecurityPolicyPtr>>();
-                    if (!Data->HasTypedField<EJson::Null>(ANSI_TO_TCHAR("items")) && Data->HasTypedField<EJson::Array>(ANSI_TO_TCHAR("items")))
+                    if (!Data->HasTypedField<EJson::Array>(ANSI_TO_TCHAR("items")))
                     {
-                        for (auto JsonObjectValue : Data->GetArrayField(ANSI_TO_TCHAR("items")))
-                        {
-                            v->Add(Model::FSecurityPolicy::FromJson(JsonObjectValue->AsObject()));
-                        }
+                        return nullptr;
+                    }
+                    auto v = MakeShared<TArray<Model::FSecurityPolicyPtr>>();
+                    for (auto JsonObjectValue : Data->GetArrayField(ANSI_TO_TCHAR("items")))
+                    {
+                        v->Add(Model::FSecurityPolicy::FromJson(JsonObjectValue->AsObject()));
                     }
                     return v;
-                 }() : MakeShared<TArray<Model::FSecurityPolicyPtr>>());
+                 }() : nullptr);
     }
 
     TSharedPtr<FJsonObject> FGetHasSecurityPolicyResult::ToJson() const

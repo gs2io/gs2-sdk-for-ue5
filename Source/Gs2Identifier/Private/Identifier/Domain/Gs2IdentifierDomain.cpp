@@ -32,6 +32,14 @@
 #include "Identifier/Domain/Model/Identifier.h"
 #include "Identifier/Domain/Model/Password.h"
 #include "Identifier/Domain/Model/AttachSecurityPolicy.h"
+/* diff +++ start */
+#include "Identifier/Model/Cache/User.h"
+#include "Identifier/Model/Cache/Identifier.h"
+#include "Identifier/Model/Cache/Password.h"
+#include "Identifier/Model/Cache/AttachSecurityPolicy.h"
+#include "Identifier/Model/Cache/SecurityPolicy.h"
+#include "Identifier/Model/Cache/ProjectToken.h"
+/* diff +++ end */
 #include "Core/Domain/Gs2.h"
 
 namespace Gs2::Identifier::Domain
@@ -293,6 +301,26 @@ namespace Gs2::Identifier::Domain
         const TOptional<int32> TimeOffset
     ) {
     }
+
+    /* diff +++ start */
+    TOptional<FString> FGs2IdentifierDomain::PutUserData(
+        const TOptional<FString> NamespaceName,
+        const TOptional<FString> UserId,
+        const TOptional<int32> TimeOffset,
+        const FString Kind,
+        const FString Payload
+    ) {
+        return TOptional<FString>();
+    }
+
+    bool FGs2IdentifierDomain::SetListCached(
+        const TOptional<int32> TimeOffset,
+        const FString Kind,
+        const FString ParentKey
+    ) {
+        return false;
+    }
+    /* diff +++ end */
 
     void FGs2IdentifierDomain::UpdateCacheFromStampTask(
         const FString Method,

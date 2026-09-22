@@ -367,14 +367,13 @@ namespace Gs2::SerialKey::Domain::Model
 
     Gs2::Core::Domain::CallbackID FUserDomain::SubscribeSerialKeys(
     TFunction<void()> Callback
-
     )
     {
         return Gs2->Cache->ListSubscribe(
             Gs2::SerialKey::Model::FSerialKey::TypeName,
             Gs2::SerialKey::Model::Cache::FSerialKeyCache::CreateCacheParentKey(
                 NamespaceName,
-                TOptional<FString>(),
+                UserId,
                 TOptional<int32>()
             ),
             Callback,
@@ -389,7 +388,7 @@ namespace Gs2::SerialKey::Domain::Model
             Gs2::SerialKey::Model::FSerialKey::TypeName,
             Gs2::SerialKey::Model::Cache::FSerialKeyCache::CreateCacheParentKey(
                 NamespaceName,
-                TOptional<FString>(),
+                UserId,
                 TOptional<int32>()
             ),
             CallbackID
@@ -432,7 +431,7 @@ namespace Gs2::SerialKey::Domain::Model
         const auto QueryIssueJobName = IssueJobName;
         const auto Parent = Gs2::SerialKey::Model::Cache::FSerialKeyCache::CreateCacheParentKey(
         NamespaceName,
-        TOptional<FString>(),
+        UserId,
         TOptional<int32>()
     );
         return Gs2->Cache->ListSubscribeTyped(
@@ -462,7 +461,7 @@ namespace Gs2::SerialKey::Domain::Model
             Gs2::SerialKey::Model::FSerialKey::TypeName,
             Gs2::SerialKey::Model::Cache::FSerialKeyCache::CreateCacheParentKey(
         NamespaceName,
-        TOptional<FString>(),
+        UserId,
         TOptional<int32>()
     )
         );

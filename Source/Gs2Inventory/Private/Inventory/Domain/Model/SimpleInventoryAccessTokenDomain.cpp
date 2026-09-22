@@ -191,7 +191,6 @@ namespace Gs2::Inventory::Domain::Model
 
     Gs2::Core::Domain::CallbackID FSimpleInventoryAccessTokenDomain::SubscribeSimpleItems(
     TFunction<void()> Callback
-
     )
     {
         return Gs2->Cache->ListSubscribe(

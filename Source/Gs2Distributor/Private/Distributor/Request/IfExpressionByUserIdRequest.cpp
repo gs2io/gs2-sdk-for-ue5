@@ -215,28 +215,30 @@ namespace Gs2::Distributor::Request
               }() : nullptr)
           ->WithTrueActions(Data->HasField(ANSI_TO_TCHAR("trueActions")) ? [Data]() -> TSharedPtr<TArray<Model::FConsumeActionPtr>>
               {
-                  auto v = MakeShared<TArray<Model::FConsumeActionPtr>>();
-                  if (!Data->HasTypedField<EJson::Null>(ANSI_TO_TCHAR("trueActions")) && Data->HasTypedField<EJson::Array>(ANSI_TO_TCHAR("trueActions")))
+                  if (!Data->HasTypedField<EJson::Array>(ANSI_TO_TCHAR("trueActions")))
                   {
-                      for (auto JsonObjectValue : Data->GetArrayField(ANSI_TO_TCHAR("trueActions")))
-                      {
-                          v->Add(Model::FConsumeAction::FromJson(JsonObjectValue->AsObject()));
-                      }
+                      return nullptr;
                   }
+                  auto v = MakeShared<TArray<Model::FConsumeActionPtr>>();
+                  for (auto JsonObjectValue : Data->GetArrayField(ANSI_TO_TCHAR("trueActions")))
+                      {
+                      v->Add(Model::FConsumeAction::FromJson(JsonObjectValue->AsObject()));
+                      }
                   return v;
-              }() : MakeShared<TArray<Model::FConsumeActionPtr>>())
+              }() : nullptr)
           ->WithFalseActions(Data->HasField(ANSI_TO_TCHAR("falseActions")) ? [Data]() -> TSharedPtr<TArray<Model::FConsumeActionPtr>>
               {
-                  auto v = MakeShared<TArray<Model::FConsumeActionPtr>>();
-                  if (!Data->HasTypedField<EJson::Null>(ANSI_TO_TCHAR("falseActions")) && Data->HasTypedField<EJson::Array>(ANSI_TO_TCHAR("falseActions")))
+                  if (!Data->HasTypedField<EJson::Array>(ANSI_TO_TCHAR("falseActions")))
                   {
-                      for (auto JsonObjectValue : Data->GetArrayField(ANSI_TO_TCHAR("falseActions")))
-                      {
-                          v->Add(Model::FConsumeAction::FromJson(JsonObjectValue->AsObject()));
-                      }
+                      return nullptr;
                   }
+                  auto v = MakeShared<TArray<Model::FConsumeActionPtr>>();
+                  for (auto JsonObjectValue : Data->GetArrayField(ANSI_TO_TCHAR("falseActions")))
+                      {
+                      v->Add(Model::FConsumeAction::FromJson(JsonObjectValue->AsObject()));
+                      }
                   return v;
-              }() : MakeShared<TArray<Model::FConsumeActionPtr>>())
+              }() : nullptr)
             ->WithMultiplyValueSpecifyingQuantity(Data->HasField(ANSI_TO_TCHAR("multiplyValueSpecifyingQuantity")) ? [Data]() -> TOptional<bool>
               {
                   bool v;

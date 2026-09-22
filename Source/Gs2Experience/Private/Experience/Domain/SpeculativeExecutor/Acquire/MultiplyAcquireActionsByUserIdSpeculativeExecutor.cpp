@@ -100,10 +100,6 @@ namespace Gs2::Experience::Domain::SpeculativeExecutor
         {
             Request->WithBaseRate(*Request->GetBaseRate() * Rate);
         }
-        else
-        {
-            Request->WithBaseRate(static_cast<float>(Rate));
-        }
         return Request;
     }
 
@@ -115,8 +111,8 @@ namespace Gs2::Experience::Domain::SpeculativeExecutor
         if (Request->GetBaseRate().IsSet())
         {
             Rate.Multiply(*Request->GetBaseRate());
+            Request->WithBaseRate(Rate.ToInt());
         }
-        Request->WithBaseRate(Rate.ToInt());
         return Request;
     }
 }

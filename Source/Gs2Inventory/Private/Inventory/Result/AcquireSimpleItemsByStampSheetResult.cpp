@@ -55,16 +55,17 @@ namespace Gs2::Inventory::Result
         return MakeShared<FAcquireSimpleItemsByStampSheetResult>()
             ->WithItems(Data->HasField(ANSI_TO_TCHAR("items")) ? [Data]() -> TSharedPtr<TArray<Model::FSimpleItemPtr>>
                  {
-                    auto v = MakeShared<TArray<Model::FSimpleItemPtr>>();
-                    if (!Data->HasTypedField<EJson::Null>(ANSI_TO_TCHAR("items")) && Data->HasTypedField<EJson::Array>(ANSI_TO_TCHAR("items")))
+                    if (!Data->HasTypedField<EJson::Array>(ANSI_TO_TCHAR("items")))
                     {
-                        for (auto JsonObjectValue : Data->GetArrayField(ANSI_TO_TCHAR("items")))
-                        {
-                            v->Add(Model::FSimpleItem::FromJson(JsonObjectValue->AsObject()));
-                        }
+                        return nullptr;
+                    }
+                    auto v = MakeShared<TArray<Model::FSimpleItemPtr>>();
+                    for (auto JsonObjectValue : Data->GetArrayField(ANSI_TO_TCHAR("items")))
+                    {
+                        v->Add(Model::FSimpleItem::FromJson(JsonObjectValue->AsObject()));
                     }
                     return v;
-                 }() : MakeShared<TArray<Model::FSimpleItemPtr>>());
+                 }() : nullptr);
     }
 
     TSharedPtr<FJsonObject> FAcquireSimpleItemsByStampSheetResult::ToJson() const

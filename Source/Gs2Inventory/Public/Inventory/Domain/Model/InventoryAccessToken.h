@@ -192,7 +192,6 @@ namespace Gs2::Inventory::Domain::Model
 
         Gs2::Core::Domain::CallbackID SubscribeItemSets(
             TFunction<void()> Callback
-
         );
 
         class FCollectItemSetsTask;

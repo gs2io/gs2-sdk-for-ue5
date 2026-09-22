@@ -92,7 +92,6 @@ namespace Gs2::Stamina::Domain::Model
 
     Gs2::Core::Domain::CallbackID FUserDomain::SubscribeStaminas(
     TFunction<void()> Callback
-
     )
     {
         return Gs2->Cache->ListSubscribe(

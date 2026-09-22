@@ -92,6 +92,10 @@
 #include "Task/Rest/FreezeMasterDataByTimestampTask.h"
 #include "Request/BatchExecuteApiRequest.h"
 #include "Task/Rest/BatchExecuteApiTask.h"
+#include "Request/DescribeUserDataRequest.h"
+#include "Task/Rest/DescribeUserDataTask.h"
+#include "Request/DescribeUserDataByUserIdRequest.h"
+#include "Task/Rest/DescribeUserDataByUserIdTask.h"
 #include "Request/IfExpressionByUserIdRequest.h"
 #include "Task/Rest/IfExpressionByUserIdTask.h"
 #include "Request/AndExpressionByUserIdRequest.h"
@@ -272,6 +276,14 @@ namespace Gs2::Distributor
 
         TSharedPtr<FAsyncTask<Task::Rest::FBatchExecuteApiTask>> BatchExecuteApi(
             const Request::FBatchExecuteApiRequestPtr Request
+        ) const;
+
+        TSharedPtr<FAsyncTask<Task::Rest::FDescribeUserDataTask>> DescribeUserData(
+            const Request::FDescribeUserDataRequestPtr Request
+        ) const;
+
+        TSharedPtr<FAsyncTask<Task::Rest::FDescribeUserDataByUserIdTask>> DescribeUserDataByUserId(
+            const Request::FDescribeUserDataByUserIdRequestPtr Request
         ) const;
 
         TSharedPtr<FAsyncTask<Task::Rest::FIfExpressionByUserIdTask>> IfExpressionByUserId(

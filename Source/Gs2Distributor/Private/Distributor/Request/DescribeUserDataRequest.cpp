@@ -1,0 +1,155 @@
+/*
+ * Copyright 2016 Game Server Services, Inc. or its affiliates. All Rights
+ * Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License").
+ * You may not use this file except in compliance with the License.
+ * A copy of the License is located at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * or in the "license" file accompanying this file. This file is distributed
+ * on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either
+ * express or implied. See the License for the specific language governing
+ * permissions and limitations under the License.
+ */
+
+#include "Distributor/Request/DescribeUserDataRequest.h"
+
+namespace Gs2::Distributor::Request
+{
+    FDescribeUserDataRequest::FDescribeUserDataRequest():
+        AccessTokenValue(TOptional<FString>()),
+        PageTokenValue(TOptional<FString>()),
+        LimitValue(TOptional<int32>())
+    {
+    }
+
+    FDescribeUserDataRequest::FDescribeUserDataRequest(
+        const FDescribeUserDataRequest& From
+    ):
+        AccessTokenValue(From.AccessTokenValue),
+        PageTokenValue(From.PageTokenValue),
+        LimitValue(From.LimitValue)
+    {
+    }
+
+    TSharedPtr<FDescribeUserDataRequest> FDescribeUserDataRequest::WithContextStack(
+        const TOptional<FString> ContextStack
+    )
+    {
+        this->ContextStackValue = ContextStack;
+        return SharedThis(this);
+    }
+
+    TSharedPtr<FDescribeUserDataRequest> FDescribeUserDataRequest::WithAccessToken(
+        const TOptional<FString> AccessToken
+    )
+    {
+        this->AccessTokenValue = AccessToken;
+        return SharedThis(this);
+    }
+
+    TSharedPtr<FDescribeUserDataRequest> FDescribeUserDataRequest::WithPageToken(
+        const TOptional<FString> PageToken
+    )
+    {
+        this->PageTokenValue = PageToken;
+        return SharedThis(this);
+    }
+
+    TSharedPtr<FDescribeUserDataRequest> FDescribeUserDataRequest::WithLimit(
+        const TOptional<int32> Limit
+    )
+    {
+        this->LimitValue = Limit;
+        return SharedThis(this);
+    }
+
+    TOptional<FString> FDescribeUserDataRequest::GetContextStack() const
+    {
+        return ContextStackValue;
+    }
+
+    TOptional<FString> FDescribeUserDataRequest::GetAccessToken() const
+    {
+        return AccessTokenValue;
+    }
+
+    TOptional<FString> FDescribeUserDataRequest::GetPageToken() const
+    {
+        return PageTokenValue;
+    }
+
+    TOptional<int32> FDescribeUserDataRequest::GetLimit() const
+    {
+        return LimitValue;
+    }
+
+    FString FDescribeUserDataRequest::GetLimitString() const
+    {
+        if (!LimitValue.IsSet())
+        {
+            return FString("null");
+        }
+        return FString::Printf(TEXT("%d"), LimitValue.GetValue());
+    }
+
+    TSharedPtr<FDescribeUserDataRequest> FDescribeUserDataRequest::FromJson(const TSharedPtr<FJsonObject> Data)
+    {
+        if (Data == nullptr) {
+            return nullptr;
+        }
+        return MakeShared<FDescribeUserDataRequest>()
+            ->WithContextStack(Data->HasField(ANSI_TO_TCHAR("contextStack")) ? TOptional<FString>(Data->GetStringField(ANSI_TO_TCHAR("contextStack"))) : TOptional<FString>())
+            ->WithAccessToken(Data->HasField(ANSI_TO_TCHAR("xGs2AccessToken")) ? [Data]() -> TOptional<FString>
+              {
+                  FString v("");
+                    if (Data->TryGetStringField(ANSI_TO_TCHAR("xGs2AccessToken"), v))
+                  {
+                        return TOptional(v);
+                  }
+                  return TOptional<FString>();
+              }() : TOptional<FString>())
+            ->WithPageToken(Data->HasField(ANSI_TO_TCHAR("pageToken")) ? [Data]() -> TOptional<FString>
+              {
+                  FString v("");
+                    if (Data->TryGetStringField(ANSI_TO_TCHAR("pageToken"), v))
+                  {
+                        return TOptional(v);
+                  }
+                  return TOptional<FString>();
+              }() : TOptional<FString>())
+            ->WithLimit(Data->HasField(ANSI_TO_TCHAR("limit")) ? [Data]() -> TOptional<int32>
+              {
+                  int32 v;
+                    if (Data->TryGetNumberField(ANSI_TO_TCHAR("limit"), v))
+                  {
+                        return TOptional(v);
+                  }
+                  return TOptional<int32>();
+              }() : TOptional<int32>());
+    }
+
+    TSharedPtr<FJsonObject> FDescribeUserDataRequest::ToJson() const
+    {
+        const TSharedPtr<FJsonObject> JsonRootObject = MakeShared<FJsonObject>();
+        if (ContextStackValue.IsSet())
+        {
+            JsonRootObject->SetStringField(TEXT("contextStack"), ContextStackValue.GetValue());
+        }
+        if (AccessTokenValue.IsSet())
+        {
+            JsonRootObject->SetStringField(TEXT("xGs2AccessToken"), AccessTokenValue.GetValue());
+        }
+        if (PageTokenValue.IsSet())
+        {
+            JsonRootObject->SetStringField(TEXT("pageToken"), PageTokenValue.GetValue());
+        }
+        if (LimitValue.IsSet())
+        {
+            JsonRootObject->SetNumberField(TEXT("limit"), LimitValue.GetValue());
+        }
+        return JsonRootObject;
+    }
+}

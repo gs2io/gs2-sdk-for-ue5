@@ -165,16 +165,17 @@ namespace Gs2::Experience::Request
               }() : TOptional<FString>())
           ->WithValues(Data->HasField(ANSI_TO_TCHAR("values")) ? [Data]() -> TSharedPtr<TArray<int64>>
               {
-                  auto v = MakeShared<TArray<int64>>();
-                  if (!Data->HasTypedField<EJson::Null>(ANSI_TO_TCHAR("values")) && Data->HasTypedField<EJson::Array>(ANSI_TO_TCHAR("values")))
+                  if (!Data->HasTypedField<EJson::Array>(ANSI_TO_TCHAR("values")))
                   {
-                      for (auto JsonObjectValue : Data->GetArrayField(ANSI_TO_TCHAR("values")))
-                      {
-                          v->Add(JsonObjectValue->AsNumber());
-                      }
+                      return nullptr;
                   }
+                  auto v = MakeShared<TArray<int64>>();
+                  for (auto JsonObjectValue : Data->GetArrayField(ANSI_TO_TCHAR("values")))
+                      {
+                      v->Add(JsonObjectValue->AsNumber());
+                      }
                   return v;
-              }() : MakeShared<TArray<int64>>());
+              }() : nullptr);
     }
 
     TSharedPtr<FJsonObject> FUpdateThresholdMasterRequest::ToJson() const

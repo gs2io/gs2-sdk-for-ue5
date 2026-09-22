@@ -76,6 +76,17 @@ namespace Gs2::Gateway::Domain::Model
 
     }
 
+    TSharedPtr<Gs2::Gateway::Domain::Model::FFirebaseTokenAccessTokenDomain> FUserAccessTokenDomain::FirebaseToken(
+    )
+    {
+        return MakeShared<Gs2::Gateway::Domain::Model::FFirebaseTokenAccessTokenDomain>(
+            Gs2,
+            Service,
+            NamespaceName,
+            AccessToken
+        );
+    }
+
     Gs2::Gateway::Domain::Iterator::FDescribeWebSocketSessionsIteratorPtr FUserAccessTokenDomain::WebSocketSessions(
     ) const
     {
@@ -89,7 +100,6 @@ namespace Gs2::Gateway::Domain::Model
 
     Gs2::Core::Domain::CallbackID FUserAccessTokenDomain::SubscribeWebSocketSessions(
     TFunction<void()> Callback
-
     )
     {
         return Gs2->Cache->ListSubscribe(
@@ -213,17 +223,6 @@ namespace Gs2::Gateway::Domain::Model
     )
     {
         return MakeShared<Gs2::Gateway::Domain::Model::FWebSocketSessionAccessTokenDomain>(
-            Gs2,
-            Service,
-            NamespaceName,
-            AccessToken
-        );
-    }
-
-    TSharedPtr<Gs2::Gateway::Domain::Model::FFirebaseTokenAccessTokenDomain> FUserAccessTokenDomain::FirebaseToken(
-    )
-    {
-        return MakeShared<Gs2::Gateway::Domain::Model::FFirebaseTokenAccessTokenDomain>(
             Gs2,
             Service,
             NamespaceName,

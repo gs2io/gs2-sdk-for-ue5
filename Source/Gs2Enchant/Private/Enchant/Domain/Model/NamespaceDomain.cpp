@@ -441,7 +441,6 @@ namespace Gs2::Enchant::Domain::Model
 
     Gs2::Core::Domain::CallbackID FNamespaceDomain::SubscribeBalanceParameterModels(
     TFunction<void()> Callback
-
     )
     {
         return Gs2->Cache->ListSubscribe(
@@ -578,7 +577,6 @@ namespace Gs2::Enchant::Domain::Model
 
     Gs2::Core::Domain::CallbackID FNamespaceDomain::SubscribeBalanceParameterModelMasters(
     TFunction<void()> Callback
-
     )
     {
         return Gs2->Cache->ListSubscribe(
@@ -714,7 +712,6 @@ namespace Gs2::Enchant::Domain::Model
 
     Gs2::Core::Domain::CallbackID FNamespaceDomain::SubscribeRarityParameterModels(
     TFunction<void()> Callback
-
     )
     {
         return Gs2->Cache->ListSubscribe(
@@ -849,7 +846,6 @@ namespace Gs2::Enchant::Domain::Model
 
     Gs2::Core::Domain::CallbackID FNamespaceDomain::SubscribeRarityParameterModelMasters(
     TFunction<void()> Callback
-
     )
     {
         return Gs2->Cache->ListSubscribe(

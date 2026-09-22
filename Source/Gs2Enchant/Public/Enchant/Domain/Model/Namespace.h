@@ -284,7 +284,6 @@ namespace Gs2::Enchant::Domain::Model
 
         Gs2::Core::Domain::CallbackID SubscribeBalanceParameterModels(
             TFunction<void()> Callback
-
         );
 
         class FCollectBalanceParameterModelsTask;
@@ -325,7 +324,6 @@ namespace Gs2::Enchant::Domain::Model
 
         Gs2::Core::Domain::CallbackID SubscribeBalanceParameterModelMasters(
             TFunction<void()> Callback
-
         );
 
         class FCollectBalanceParameterModelMastersTask;
@@ -365,7 +363,6 @@ namespace Gs2::Enchant::Domain::Model
 
         Gs2::Core::Domain::CallbackID SubscribeRarityParameterModels(
             TFunction<void()> Callback
-
         );
 
         class FCollectRarityParameterModelsTask;
@@ -405,7 +402,6 @@ namespace Gs2::Enchant::Domain::Model
 
         Gs2::Core::Domain::CallbackID SubscribeRarityParameterModelMasters(
             TFunction<void()> Callback
-
         );
 
         class FCollectRarityParameterModelMastersTask;

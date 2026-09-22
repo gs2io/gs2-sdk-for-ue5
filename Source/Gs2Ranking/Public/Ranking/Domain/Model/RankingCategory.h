@@ -166,7 +166,6 @@ namespace Gs2::Ranking::Domain::Model
 
         Gs2::Core::Domain::CallbackID SubscribeSubscribesByCategoryName(
             TFunction<void()> Callback
-
         );
 
         class FCollectSubscribesByCategoryNameTask;
@@ -207,7 +206,6 @@ namespace Gs2::Ranking::Domain::Model
 
         Gs2::Core::Domain::CallbackID SubscribeRankings(
             TFunction<void()> Callback
-
         );
 
         class FCollectRankingsTask;
@@ -244,7 +242,6 @@ namespace Gs2::Ranking::Domain::Model
 
         Gs2::Core::Domain::CallbackID SubscribeNearRankings(
             TFunction<void()> Callback
-
         );
 
         class FCollectNearRankingsTask;

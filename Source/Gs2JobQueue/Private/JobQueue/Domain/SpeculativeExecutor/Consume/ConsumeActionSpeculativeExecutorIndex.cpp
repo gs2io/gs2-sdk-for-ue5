@@ -73,6 +73,7 @@ namespace Gs2::JobQueue::Domain::SpeculativeExecutor
                 return nullptr;
             }
             auto Request = Request::FDeleteJobByUserIdRequest::FromJson(RequestModelJson);
+            Request = FDeleteJobByUserIdSpeculativeExecutor::Rate(Request, Rate);
             auto Future = FDeleteJobByUserIdSpeculativeExecutor::Execute(
                 Domain,
                 Service,
@@ -85,7 +86,6 @@ namespace Gs2::JobQueue::Domain::SpeculativeExecutor
                 return Future->GetTask().Error();
             }
             *Result = Future->GetTask().Result();
-            return nullptr;
         }
         return nullptr;
     }

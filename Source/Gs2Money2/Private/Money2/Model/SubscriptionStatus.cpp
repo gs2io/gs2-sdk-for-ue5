@@ -151,16 +151,17 @@ namespace Gs2::Money2::Model
                 }() : TOptional<int64>())
             ->WithDetail(Data->HasField(ANSI_TO_TCHAR("detail")) ? [Data]() -> TSharedPtr<TArray<Model::FSubscribeTransactionPtr>>
                 {
-                    auto v = MakeShared<TArray<Model::FSubscribeTransactionPtr>>();
-                    if (!Data->HasTypedField<EJson::Null>(ANSI_TO_TCHAR("detail")) && Data->HasTypedField<EJson::Array>(ANSI_TO_TCHAR("detail")))
+                    if (!Data->HasTypedField<EJson::Array>(ANSI_TO_TCHAR("detail")))
                     {
-                        for (auto JsonObjectValue : Data->GetArrayField(ANSI_TO_TCHAR("detail")))
-                        {
-                            v->Add(Model::FSubscribeTransaction::FromJson(JsonObjectValue->AsObject()));
-                        }
+                        return nullptr;
+                    }
+                    auto v = MakeShared<TArray<Model::FSubscribeTransactionPtr>>();
+                    for (auto JsonObjectValue : Data->GetArrayField(ANSI_TO_TCHAR("detail")))
+                    {
+                        v->Add(Model::FSubscribeTransaction::FromJson(JsonObjectValue->AsObject()));
                     }
                     return v;
-                 }() : MakeShared<TArray<Model::FSubscribeTransactionPtr>>());
+                 }() : nullptr);
     }
 
     TSharedPtr<FJsonObject> FSubscriptionStatus::ToJson() const
@@ -280,6 +281,30 @@ namespace Gs2::Money2::Model::Cache
             CacheOwnerValue.IsValid() && CacheOwnerValue->GetExpiresAt().IsSet() && CacheOwnerValue->GetExpiresAt().Get(0) != 0
                 ? FDateTime::FromUnixTimestamp(0) + FTimespan::FromMilliseconds(CacheOwnerValue->GetExpiresAt().Get(0))
                 : FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
+        );
+    }
+
+    FString FSubscriptionStatusCache::PutUserData(
+        const Gs2::Core::Domain::FCacheDatabasePtr& Cache,
+        TOptional<FString> NamespaceName,
+        TOptional<FString> UserId,
+        TOptional<int32> TimeOffset,
+        const Gs2::Money2::Model::FSubscriptionStatusPtr& Item
+    )
+    {
+        if (!Item.IsValid()) return FString();
+        Put(
+            Cache,
+            NamespaceName,
+            UserId,
+            Item->GetContentName(),
+            TimeOffset,
+            Item
+        );
+        return CreateCacheParentKey(
+            NamespaceName,
+            UserId,
+            TimeOffset
         );
     }
 

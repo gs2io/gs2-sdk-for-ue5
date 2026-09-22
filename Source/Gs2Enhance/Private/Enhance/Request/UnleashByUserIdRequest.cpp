@@ -212,28 +212,30 @@ namespace Gs2::Enhance::Request
               }() : TOptional<FString>())
           ->WithMaterials(Data->HasField(ANSI_TO_TCHAR("materials")) ? [Data]() -> TSharedPtr<TArray<FString>>
               {
-                  auto v = MakeShared<TArray<FString>>();
-                  if (!Data->HasTypedField<EJson::Null>(ANSI_TO_TCHAR("materials")) && Data->HasTypedField<EJson::Array>(ANSI_TO_TCHAR("materials")))
+                  if (!Data->HasTypedField<EJson::Array>(ANSI_TO_TCHAR("materials")))
                   {
-                      for (auto JsonObjectValue : Data->GetArrayField(ANSI_TO_TCHAR("materials")))
-                      {
-                          v->Add(JsonObjectValue->AsString());
-                      }
+                      return nullptr;
                   }
+                  auto v = MakeShared<TArray<FString>>();
+                  for (auto JsonObjectValue : Data->GetArrayField(ANSI_TO_TCHAR("materials")))
+                      {
+                      v->Add(JsonObjectValue->AsString());
+                      }
                   return v;
-              }() : MakeShared<TArray<FString>>())
+              }() : nullptr)
           ->WithConfig(Data->HasField(ANSI_TO_TCHAR("config")) ? [Data]() -> TSharedPtr<TArray<Model::FConfigPtr>>
               {
-                  auto v = MakeShared<TArray<Model::FConfigPtr>>();
-                  if (!Data->HasTypedField<EJson::Null>(ANSI_TO_TCHAR("config")) && Data->HasTypedField<EJson::Array>(ANSI_TO_TCHAR("config")))
+                  if (!Data->HasTypedField<EJson::Array>(ANSI_TO_TCHAR("config")))
                   {
-                      for (auto JsonObjectValue : Data->GetArrayField(ANSI_TO_TCHAR("config")))
-                      {
-                          v->Add(Model::FConfig::FromJson(JsonObjectValue->AsObject()));
-                      }
+                      return nullptr;
                   }
+                  auto v = MakeShared<TArray<Model::FConfigPtr>>();
+                  for (auto JsonObjectValue : Data->GetArrayField(ANSI_TO_TCHAR("config")))
+                      {
+                      v->Add(Model::FConfig::FromJson(JsonObjectValue->AsObject()));
+                      }
                   return v;
-              }() : MakeShared<TArray<Model::FConfigPtr>>())
+              }() : nullptr)
             ->WithTimeOffsetToken(Data->HasField(ANSI_TO_TCHAR("timeOffsetToken")) ? [Data]() -> TOptional<FString>
               {
                   FString v("");

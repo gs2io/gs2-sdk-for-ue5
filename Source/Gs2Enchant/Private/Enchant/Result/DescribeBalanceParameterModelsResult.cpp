@@ -55,16 +55,17 @@ namespace Gs2::Enchant::Result
         return MakeShared<FDescribeBalanceParameterModelsResult>()
             ->WithItems(Data->HasField(ANSI_TO_TCHAR("items")) ? [Data]() -> TSharedPtr<TArray<Model::FBalanceParameterModelPtr>>
                  {
-                    auto v = MakeShared<TArray<Model::FBalanceParameterModelPtr>>();
-                    if (!Data->HasTypedField<EJson::Null>(ANSI_TO_TCHAR("items")) && Data->HasTypedField<EJson::Array>(ANSI_TO_TCHAR("items")))
+                    if (!Data->HasTypedField<EJson::Array>(ANSI_TO_TCHAR("items")))
                     {
-                        for (auto JsonObjectValue : Data->GetArrayField(ANSI_TO_TCHAR("items")))
-                        {
-                            v->Add(Model::FBalanceParameterModel::FromJson(JsonObjectValue->AsObject()));
-                        }
+                        return nullptr;
+                    }
+                    auto v = MakeShared<TArray<Model::FBalanceParameterModelPtr>>();
+                    for (auto JsonObjectValue : Data->GetArrayField(ANSI_TO_TCHAR("items")))
+                    {
+                        v->Add(Model::FBalanceParameterModel::FromJson(JsonObjectValue->AsObject()));
                     }
                     return v;
-                 }() : MakeShared<TArray<Model::FBalanceParameterModelPtr>>());
+                 }() : nullptr);
     }
 
     TSharedPtr<FJsonObject> FDescribeBalanceParameterModelsResult::ToJson() const

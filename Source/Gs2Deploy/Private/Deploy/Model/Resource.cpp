@@ -306,28 +306,30 @@ namespace Gs2::Deploy::Model
                 }() : TOptional<FString>())
             ->WithRollbackAfter(Data->HasField(ANSI_TO_TCHAR("rollbackAfter")) ? [Data]() -> TSharedPtr<TArray<FString>>
                 {
-                    auto v = MakeShared<TArray<FString>>();
-                    if (!Data->HasTypedField<EJson::Null>(ANSI_TO_TCHAR("rollbackAfter")) && Data->HasTypedField<EJson::Array>(ANSI_TO_TCHAR("rollbackAfter")))
+                    if (!Data->HasTypedField<EJson::Array>(ANSI_TO_TCHAR("rollbackAfter")))
                     {
-                        for (auto JsonObjectValue : Data->GetArrayField(ANSI_TO_TCHAR("rollbackAfter")))
-                        {
-                            v->Add(JsonObjectValue->AsString());
-                        }
+                        return nullptr;
+                    }
+                    auto v = MakeShared<TArray<FString>>();
+                    for (auto JsonObjectValue : Data->GetArrayField(ANSI_TO_TCHAR("rollbackAfter")))
+                    {
+                        v->Add(JsonObjectValue->AsString());
                     }
                     return v;
-                 }() : MakeShared<TArray<FString>>())
+                 }() : nullptr)
             ->WithOutputFields(Data->HasField(ANSI_TO_TCHAR("outputFields")) ? [Data]() -> TSharedPtr<TArray<Model::FOutputFieldPtr>>
                 {
-                    auto v = MakeShared<TArray<Model::FOutputFieldPtr>>();
-                    if (!Data->HasTypedField<EJson::Null>(ANSI_TO_TCHAR("outputFields")) && Data->HasTypedField<EJson::Array>(ANSI_TO_TCHAR("outputFields")))
+                    if (!Data->HasTypedField<EJson::Array>(ANSI_TO_TCHAR("outputFields")))
                     {
-                        for (auto JsonObjectValue : Data->GetArrayField(ANSI_TO_TCHAR("outputFields")))
-                        {
-                            v->Add(Model::FOutputField::FromJson(JsonObjectValue->AsObject()));
-                        }
+                        return nullptr;
+                    }
+                    auto v = MakeShared<TArray<Model::FOutputFieldPtr>>();
+                    for (auto JsonObjectValue : Data->GetArrayField(ANSI_TO_TCHAR("outputFields")))
+                    {
+                        v->Add(Model::FOutputField::FromJson(JsonObjectValue->AsObject()));
                     }
                     return v;
-                 }() : MakeShared<TArray<Model::FOutputFieldPtr>>())
+                 }() : nullptr)
             ->WithWorkId(Data->HasField(ANSI_TO_TCHAR("workId")) ? [Data]() -> TOptional<FString>
                 {
                     FString v("");
@@ -484,6 +486,28 @@ namespace Gs2::Deploy::Model::Cache
         auto CacheOwnerValue = CacheOwnerArgumentItem;
         CacheSnapshot->Put(Gs2::Deploy::Model::FResource::TypeName, CacheOwnerParentKey, CacheOwnerKey, CacheOwnerValue,
             FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
+        );
+    }
+
+    FString FResourceCache::PutUserData(
+        const Gs2::Core::Domain::FCacheDatabasePtr& Cache,
+        TOptional<FString> NamespaceName,
+        TOptional<FString> UserId,
+        TOptional<int32> TimeOffset,
+        const Gs2::Deploy::Model::FResourcePtr& Item
+    )
+    {
+        if (!Item.IsValid()) return FString();
+        Put(
+            Cache,
+            (Item->GetResourceId().IsSet() ? Gs2::Deploy::Model::FResource::GetStackNameFromGrn(*Item->GetResourceId()) : TOptional<FString>()),
+            Item->GetName(),
+            TimeOffset,
+            Item
+        );
+        return CreateCacheParentKey(
+            (Item->GetResourceId().IsSet() ? Gs2::Deploy::Model::FResource::GetStackNameFromGrn(*Item->GetResourceId()) : TOptional<FString>()),
+            TimeOffset
         );
     }
 

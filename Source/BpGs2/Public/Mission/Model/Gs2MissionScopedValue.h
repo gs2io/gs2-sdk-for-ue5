@@ -34,6 +34,8 @@ struct FGs2MissionScopedValue
     FString ConditionName = "";
     UPROPERTY(Category = Gs2, BlueprintReadWrite)
     int64 Value = 0;
+    UPROPERTY(Category = Gs2, BlueprintReadWrite)
+    int64 NextResetAt = 0;
 };
 
 inline FGs2MissionScopedValue EzScopedValueToFGs2MissionScopedValue(
@@ -45,6 +47,7 @@ inline FGs2MissionScopedValue EzScopedValueToFGs2MissionScopedValue(
     Value.ResetType = Model->GetResetType() ? *Model->GetResetType() : "";
     Value.ConditionName = Model->GetConditionName() ? *Model->GetConditionName() : "";
     Value.Value = Model->GetValue() ? *Model->GetValue() : 0;
+    Value.NextResetAt = Model->GetNextResetAt() ? *Model->GetNextResetAt() : 0;
     return Value;
 }
 
@@ -56,5 +59,6 @@ inline Gs2::UE5::Mission::Model::FEzScopedValuePtr FGs2MissionScopedValueToEzSco
         ->WithScopeType(Model.ScopeType)
         ->WithResetType(Model.ResetType)
         ->WithConditionName(Model.ConditionName)
-        ->WithValue(Model.Value);
+        ->WithValue(Model.Value)
+        ->WithNextResetAt(Model.NextResetAt);
 }

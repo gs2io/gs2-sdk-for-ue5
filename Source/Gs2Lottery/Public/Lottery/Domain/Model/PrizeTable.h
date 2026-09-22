@@ -127,7 +127,6 @@ namespace Gs2::Lottery::Domain::Model
 
         Gs2::Core::Domain::CallbackID SubscribePrizeLimits(
             TFunction<void()> Callback
-
         );
 
         class FCollectPrizeLimitsTask;

@@ -69,6 +69,13 @@
 #include "Ranking2/Model/Cache/ClusterRankingData.h"
 #include "Ranking2/Model/Cache/ClusterRankingReceivedReward.h"
 #include "Ranking2/Model/Cache/ClusterRankingScore.h"
+#include "Ranking2/Model/Cache/ClusterRankingReceivedReward.h"
+#include "Ranking2/Model/Cache/ClusterRankingScore.h"
+#include "Ranking2/Model/Cache/GlobalRankingReceivedReward.h"
+#include "Ranking2/Model/Cache/GlobalRankingScore.h"
+#include "Ranking2/Model/Cache/SubscribeRankingData.h"
+#include "Ranking2/Model/Cache/SubscribeRankingScore.h"
+#include "Ranking2/Model/Cache/SubscribeUser.h"
 
 #include "Core/Domain/Gs2.h"
 
@@ -469,7 +476,6 @@ namespace Gs2::Ranking2::Domain
 
     Gs2::Core::Domain::CallbackID FGs2Ranking2Domain::SubscribeNamespaces(
     TFunction<void()> Callback
-
     )
     {
         return Gs2->Cache->ListSubscribe(
@@ -592,6 +598,142 @@ namespace Gs2::Ranking2::Domain
         const FString Result,
         const TOptional<int32> TimeOffset
     ) {
+    }
+
+    TOptional<FString> FGs2Ranking2Domain::PutUserData(
+        const TOptional<FString> NamespaceName,
+        const TOptional<FString> UserId,
+        const TOptional<int32> TimeOffset,
+        const FString Kind,
+        const FString Payload
+    ) {
+        TSharedPtr<FJsonObject> PayloadJson;
+        if (const TSharedRef<TJsonReader<>> JsonReader = TJsonReaderFactory<>::Create(Payload);
+            !FJsonSerializer::Deserialize(JsonReader, PayloadJson) || !PayloadJson.IsValid())
+        {
+            return TOptional<FString>();
+        }
+        if (Kind == "clusterRankingReceivedReward") {
+            const auto Item = Gs2::Ranking2::Model::FClusterRankingReceivedReward::FromJson(PayloadJson);
+            if (!Item.IsValid()) return TOptional<FString>();
+            const auto ParentKey = Gs2::Ranking2::Model::Cache::FClusterRankingReceivedRewardCache::PutUserData(
+                Gs2->Cache,
+                NamespaceName,
+                UserId,
+                TimeOffset,
+                Item
+            );
+            return ParentKey.IsEmpty() ? TOptional<FString>() : TOptional<FString>(ParentKey);
+        }
+        if (Kind == "clusterRankingScore") {
+            const auto Item = Gs2::Ranking2::Model::FClusterRankingScore::FromJson(PayloadJson);
+            if (!Item.IsValid()) return TOptional<FString>();
+            const auto ParentKey = Gs2::Ranking2::Model::Cache::FClusterRankingScoreCache::PutUserData(
+                Gs2->Cache,
+                NamespaceName,
+                UserId,
+                TimeOffset,
+                Item
+            );
+            return ParentKey.IsEmpty() ? TOptional<FString>() : TOptional<FString>(ParentKey);
+        }
+        if (Kind == "globalRankingReceivedReward") {
+            const auto Item = Gs2::Ranking2::Model::FGlobalRankingReceivedReward::FromJson(PayloadJson);
+            if (!Item.IsValid()) return TOptional<FString>();
+            const auto ParentKey = Gs2::Ranking2::Model::Cache::FGlobalRankingReceivedRewardCache::PutUserData(
+                Gs2->Cache,
+                NamespaceName,
+                UserId,
+                TimeOffset,
+                Item
+            );
+            return ParentKey.IsEmpty() ? TOptional<FString>() : TOptional<FString>(ParentKey);
+        }
+        if (Kind == "globalRankingScore") {
+            const auto Item = Gs2::Ranking2::Model::FGlobalRankingScore::FromJson(PayloadJson);
+            if (!Item.IsValid()) return TOptional<FString>();
+            const auto ParentKey = Gs2::Ranking2::Model::Cache::FGlobalRankingScoreCache::PutUserData(
+                Gs2->Cache,
+                NamespaceName,
+                UserId,
+                TimeOffset,
+                Item
+            );
+            return ParentKey.IsEmpty() ? TOptional<FString>() : TOptional<FString>(ParentKey);
+        }
+        if (Kind == "subscribeRankingData") {
+            const auto Item = Gs2::Ranking2::Model::FSubscribeRankingData::FromJson(PayloadJson);
+            if (!Item.IsValid()) return TOptional<FString>();
+            const auto ParentKey = Gs2::Ranking2::Model::Cache::FSubscribeRankingDataCache::PutUserData(
+                Gs2->Cache,
+                NamespaceName,
+                UserId,
+                TimeOffset,
+                Item
+            );
+            return ParentKey.IsEmpty() ? TOptional<FString>() : TOptional<FString>(ParentKey);
+        }
+        if (Kind == "subscribeRankingScore") {
+            const auto Item = Gs2::Ranking2::Model::FSubscribeRankingScore::FromJson(PayloadJson);
+            if (!Item.IsValid()) return TOptional<FString>();
+            const auto ParentKey = Gs2::Ranking2::Model::Cache::FSubscribeRankingScoreCache::PutUserData(
+                Gs2->Cache,
+                NamespaceName,
+                UserId,
+                TimeOffset,
+                Item
+            );
+            return ParentKey.IsEmpty() ? TOptional<FString>() : TOptional<FString>(ParentKey);
+        }
+        if (Kind == "subscribeUser") {
+            const auto Item = Gs2::Ranking2::Model::FSubscribeUser::FromJson(PayloadJson);
+            if (!Item.IsValid()) return TOptional<FString>();
+            const auto ParentKey = Gs2::Ranking2::Model::Cache::FSubscribeUserCache::PutUserData(
+                Gs2->Cache,
+                NamespaceName,
+                UserId,
+                TimeOffset,
+                Item
+            );
+            return ParentKey.IsEmpty() ? TOptional<FString>() : TOptional<FString>(ParentKey);
+        }
+        return TOptional<FString>();
+    }
+
+    bool FGs2Ranking2Domain::SetListCached(
+        const TOptional<int32> TimeOffset,
+        const FString Kind,
+        const FString ParentKey
+    ) {
+        if (Kind == "clusterRankingReceivedReward") {
+            Gs2->Cache->SetListCached(Gs2::Ranking2::Model::FClusterRankingReceivedReward::TypeName, ParentKey);
+            return true;
+        }
+        if (Kind == "clusterRankingScore") {
+            Gs2->Cache->SetListCached(Gs2::Ranking2::Model::FClusterRankingScore::TypeName, ParentKey);
+            return true;
+        }
+        if (Kind == "globalRankingReceivedReward") {
+            Gs2->Cache->SetListCached(Gs2::Ranking2::Model::FGlobalRankingReceivedReward::TypeName, ParentKey);
+            return true;
+        }
+        if (Kind == "globalRankingScore") {
+            Gs2->Cache->SetListCached(Gs2::Ranking2::Model::FGlobalRankingScore::TypeName, ParentKey);
+            return true;
+        }
+        if (Kind == "subscribeRankingData") {
+            Gs2->Cache->SetListCached(Gs2::Ranking2::Model::FSubscribeRankingData::TypeName, ParentKey);
+            return true;
+        }
+        if (Kind == "subscribeRankingScore") {
+            Gs2->Cache->SetListCached(Gs2::Ranking2::Model::FSubscribeRankingScore::TypeName, ParentKey);
+            return true;
+        }
+        if (Kind == "subscribeUser") {
+            Gs2->Cache->SetListCached(Gs2::Ranking2::Model::FSubscribeUser::TypeName, ParentKey);
+            return true;
+        }
+        return false;
     }
 
     void FGs2Ranking2Domain::UpdateCacheFromStampTask(

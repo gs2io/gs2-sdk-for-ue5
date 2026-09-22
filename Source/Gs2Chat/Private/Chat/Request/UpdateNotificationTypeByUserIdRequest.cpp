@@ -169,16 +169,17 @@ namespace Gs2::Chat::Request
               }() : TOptional<FString>())
           ->WithNotificationTypes(Data->HasField(ANSI_TO_TCHAR("notificationTypes")) ? [Data]() -> TSharedPtr<TArray<Model::FNotificationTypePtr>>
               {
-                  auto v = MakeShared<TArray<Model::FNotificationTypePtr>>();
-                  if (!Data->HasTypedField<EJson::Null>(ANSI_TO_TCHAR("notificationTypes")) && Data->HasTypedField<EJson::Array>(ANSI_TO_TCHAR("notificationTypes")))
+                  if (!Data->HasTypedField<EJson::Array>(ANSI_TO_TCHAR("notificationTypes")))
                   {
-                      for (auto JsonObjectValue : Data->GetArrayField(ANSI_TO_TCHAR("notificationTypes")))
-                      {
-                          v->Add(Model::FNotificationType::FromJson(JsonObjectValue->AsObject()));
-                      }
+                      return nullptr;
                   }
+                  auto v = MakeShared<TArray<Model::FNotificationTypePtr>>();
+                  for (auto JsonObjectValue : Data->GetArrayField(ANSI_TO_TCHAR("notificationTypes")))
+                      {
+                      v->Add(Model::FNotificationType::FromJson(JsonObjectValue->AsObject()));
+                      }
                   return v;
-              }() : MakeShared<TArray<Model::FNotificationTypePtr>>())
+              }() : nullptr)
             ->WithTimeOffsetToken(Data->HasField(ANSI_TO_TCHAR("timeOffsetToken")) ? [Data]() -> TOptional<FString>
               {
                   FString v("");

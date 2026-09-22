@@ -93,8 +93,7 @@ namespace Gs2::Grade::Domain::Model
         ) const;
 
         Gs2::Core::Domain::CallbackID SubscribeStatuses(
-            TFunction<void()> Callback
-            , const TOptional<FString> GradeName = TOptional<FString>()
+            TFunction<void()> Callback, const TOptional<FString> GradeName = TOptional<FString>()
         );
 
         class FCollectStatusesTask;

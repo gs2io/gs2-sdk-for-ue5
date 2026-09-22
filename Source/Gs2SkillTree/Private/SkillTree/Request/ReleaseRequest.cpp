@@ -173,28 +173,30 @@ namespace Gs2::SkillTree::Request
               }() : TOptional<FString>())
           ->WithNodeModelNames(Data->HasField(ANSI_TO_TCHAR("nodeModelNames")) ? [Data]() -> TSharedPtr<TArray<FString>>
               {
-                  auto v = MakeShared<TArray<FString>>();
-                  if (!Data->HasTypedField<EJson::Null>(ANSI_TO_TCHAR("nodeModelNames")) && Data->HasTypedField<EJson::Array>(ANSI_TO_TCHAR("nodeModelNames")))
+                  if (!Data->HasTypedField<EJson::Array>(ANSI_TO_TCHAR("nodeModelNames")))
                   {
-                      for (auto JsonObjectValue : Data->GetArrayField(ANSI_TO_TCHAR("nodeModelNames")))
-                      {
-                          v->Add(JsonObjectValue->AsString());
-                      }
+                      return nullptr;
                   }
+                  auto v = MakeShared<TArray<FString>>();
+                  for (auto JsonObjectValue : Data->GetArrayField(ANSI_TO_TCHAR("nodeModelNames")))
+                      {
+                      v->Add(JsonObjectValue->AsString());
+                      }
                   return v;
-              }() : MakeShared<TArray<FString>>())
+              }() : nullptr)
           ->WithConfig(Data->HasField(ANSI_TO_TCHAR("config")) ? [Data]() -> TSharedPtr<TArray<Model::FConfigPtr>>
               {
-                  auto v = MakeShared<TArray<Model::FConfigPtr>>();
-                  if (!Data->HasTypedField<EJson::Null>(ANSI_TO_TCHAR("config")) && Data->HasTypedField<EJson::Array>(ANSI_TO_TCHAR("config")))
+                  if (!Data->HasTypedField<EJson::Array>(ANSI_TO_TCHAR("config")))
                   {
-                      for (auto JsonObjectValue : Data->GetArrayField(ANSI_TO_TCHAR("config")))
-                      {
-                          v->Add(Model::FConfig::FromJson(JsonObjectValue->AsObject()));
-                      }
+                      return nullptr;
                   }
+                  auto v = MakeShared<TArray<Model::FConfigPtr>>();
+                  for (auto JsonObjectValue : Data->GetArrayField(ANSI_TO_TCHAR("config")))
+                      {
+                      v->Add(Model::FConfig::FromJson(JsonObjectValue->AsObject()));
+                      }
                   return v;
-              }() : MakeShared<TArray<Model::FConfigPtr>>())
+              }() : nullptr)
           ->WithDuplicationAvoider(Data->HasField(ANSI_TO_TCHAR("duplicationAvoider")) ? TOptional<FString>(Data->GetStringField(ANSI_TO_TCHAR("duplicationAvoider"))) : TOptional<FString>());
     }
 

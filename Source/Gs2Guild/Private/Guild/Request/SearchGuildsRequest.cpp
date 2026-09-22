@@ -351,76 +351,82 @@ namespace Gs2::Guild::Request
               }() : TOptional<FString>())
           ->WithAttributes1(Data->HasField(ANSI_TO_TCHAR("attributes1")) ? [Data]() -> TSharedPtr<TArray<int32>>
               {
-                  auto v = MakeShared<TArray<int32>>();
-                  if (!Data->HasTypedField<EJson::Null>(ANSI_TO_TCHAR("attributes1")) && Data->HasTypedField<EJson::Array>(ANSI_TO_TCHAR("attributes1")))
+                  if (!Data->HasTypedField<EJson::Array>(ANSI_TO_TCHAR("attributes1")))
                   {
-                      for (auto JsonObjectValue : Data->GetArrayField(ANSI_TO_TCHAR("attributes1")))
-                      {
-                          v->Add(JsonObjectValue->AsNumber());
-                      }
+                      return nullptr;
                   }
+                  auto v = MakeShared<TArray<int32>>();
+                  for (auto JsonObjectValue : Data->GetArrayField(ANSI_TO_TCHAR("attributes1")))
+                      {
+                      v->Add(JsonObjectValue->AsNumber());
+                      }
                   return v;
-              }() : MakeShared<TArray<int32>>())
+              }() : nullptr)
           ->WithAttributes2(Data->HasField(ANSI_TO_TCHAR("attributes2")) ? [Data]() -> TSharedPtr<TArray<int32>>
               {
-                  auto v = MakeShared<TArray<int32>>();
-                  if (!Data->HasTypedField<EJson::Null>(ANSI_TO_TCHAR("attributes2")) && Data->HasTypedField<EJson::Array>(ANSI_TO_TCHAR("attributes2")))
+                  if (!Data->HasTypedField<EJson::Array>(ANSI_TO_TCHAR("attributes2")))
                   {
-                      for (auto JsonObjectValue : Data->GetArrayField(ANSI_TO_TCHAR("attributes2")))
-                      {
-                          v->Add(JsonObjectValue->AsNumber());
-                      }
+                      return nullptr;
                   }
+                  auto v = MakeShared<TArray<int32>>();
+                  for (auto JsonObjectValue : Data->GetArrayField(ANSI_TO_TCHAR("attributes2")))
+                      {
+                      v->Add(JsonObjectValue->AsNumber());
+                      }
                   return v;
-              }() : MakeShared<TArray<int32>>())
+              }() : nullptr)
           ->WithAttributes3(Data->HasField(ANSI_TO_TCHAR("attributes3")) ? [Data]() -> TSharedPtr<TArray<int32>>
               {
-                  auto v = MakeShared<TArray<int32>>();
-                  if (!Data->HasTypedField<EJson::Null>(ANSI_TO_TCHAR("attributes3")) && Data->HasTypedField<EJson::Array>(ANSI_TO_TCHAR("attributes3")))
+                  if (!Data->HasTypedField<EJson::Array>(ANSI_TO_TCHAR("attributes3")))
                   {
-                      for (auto JsonObjectValue : Data->GetArrayField(ANSI_TO_TCHAR("attributes3")))
-                      {
-                          v->Add(JsonObjectValue->AsNumber());
-                      }
+                      return nullptr;
                   }
+                  auto v = MakeShared<TArray<int32>>();
+                  for (auto JsonObjectValue : Data->GetArrayField(ANSI_TO_TCHAR("attributes3")))
+                      {
+                      v->Add(JsonObjectValue->AsNumber());
+                      }
                   return v;
-              }() : MakeShared<TArray<int32>>())
+              }() : nullptr)
           ->WithAttributes4(Data->HasField(ANSI_TO_TCHAR("attributes4")) ? [Data]() -> TSharedPtr<TArray<int32>>
               {
-                  auto v = MakeShared<TArray<int32>>();
-                  if (!Data->HasTypedField<EJson::Null>(ANSI_TO_TCHAR("attributes4")) && Data->HasTypedField<EJson::Array>(ANSI_TO_TCHAR("attributes4")))
+                  if (!Data->HasTypedField<EJson::Array>(ANSI_TO_TCHAR("attributes4")))
                   {
-                      for (auto JsonObjectValue : Data->GetArrayField(ANSI_TO_TCHAR("attributes4")))
-                      {
-                          v->Add(JsonObjectValue->AsNumber());
-                      }
+                      return nullptr;
                   }
+                  auto v = MakeShared<TArray<int32>>();
+                  for (auto JsonObjectValue : Data->GetArrayField(ANSI_TO_TCHAR("attributes4")))
+                      {
+                      v->Add(JsonObjectValue->AsNumber());
+                      }
                   return v;
-              }() : MakeShared<TArray<int32>>())
+              }() : nullptr)
           ->WithAttributes5(Data->HasField(ANSI_TO_TCHAR("attributes5")) ? [Data]() -> TSharedPtr<TArray<int32>>
               {
-                  auto v = MakeShared<TArray<int32>>();
-                  if (!Data->HasTypedField<EJson::Null>(ANSI_TO_TCHAR("attributes5")) && Data->HasTypedField<EJson::Array>(ANSI_TO_TCHAR("attributes5")))
+                  if (!Data->HasTypedField<EJson::Array>(ANSI_TO_TCHAR("attributes5")))
                   {
-                      for (auto JsonObjectValue : Data->GetArrayField(ANSI_TO_TCHAR("attributes5")))
-                      {
-                          v->Add(JsonObjectValue->AsNumber());
-                      }
+                      return nullptr;
                   }
+                  auto v = MakeShared<TArray<int32>>();
+                  for (auto JsonObjectValue : Data->GetArrayField(ANSI_TO_TCHAR("attributes5")))
+                      {
+                      v->Add(JsonObjectValue->AsNumber());
+                      }
                   return v;
-              }() : MakeShared<TArray<int32>>())
+              }() : nullptr)
           ->WithJoinPolicies(Data->HasField(ANSI_TO_TCHAR("joinPolicies")) ? [Data]() -> TSharedPtr<TArray<FString>>
               {
-                  auto v = MakeShared<TArray<FString>>();
-                  if (!Data->HasTypedField<EJson::Null>(ANSI_TO_TCHAR("joinPolicies")) && Data->HasTypedField<EJson::Array>(ANSI_TO_TCHAR("joinPolicies")))
+                  if (!Data->HasTypedField<EJson::Array>(ANSI_TO_TCHAR("joinPolicies")))
                   {
-                      for (auto JsonObjectValue : Data->GetArrayField(ANSI_TO_TCHAR("joinPolicies")))
-                      {
-                          v->Add(JsonObjectValue->AsString());
-                      }
+                      return nullptr;
                   }
+                  auto v = MakeShared<TArray<FString>>();
+                  for (auto JsonObjectValue : Data->GetArrayField(ANSI_TO_TCHAR("joinPolicies")))
+                      {
+                      v->Add(JsonObjectValue->AsString());
+                      }
                   return v;
-              }() : MakeShared<TArray<FString>>())
+              }() : nullptr)
             ->WithIncludeFullMembersGuild(Data->HasField(ANSI_TO_TCHAR("includeFullMembersGuild")) ? [Data]() -> TOptional<bool>
               {
                   bool v;

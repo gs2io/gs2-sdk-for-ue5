@@ -108,7 +108,6 @@ namespace Gs2::Lottery::Domain::Model
 
     Gs2::Core::Domain::CallbackID FUserAccessTokenDomain::SubscribeBoxes(
     TFunction<void()> Callback
-
     )
     {
         return Gs2->Cache->ListSubscribe(

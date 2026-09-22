@@ -315,8 +315,8 @@ namespace Gs2::Dictionary::Domain::Model
     }
 
     FEntryAccessTokenDomain::FSubscribeWithInitialCallTask::FSubscribeWithInitialCallTask(
-        const TSharedPtr<FEntryAccessTokenDomain> Self,
-        const TFunction<void(Gs2::Dictionary::Model::FEntryPtr)>& Callback
+        const TSharedPtr<FEntryAccessTokenDomain>& Self,
+        TFunction<void(Gs2::Dictionary::Model::FEntryPtr)> Callback
     ): Self(Self), Callback(Callback)
     {
     }

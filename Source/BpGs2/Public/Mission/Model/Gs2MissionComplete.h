@@ -40,6 +40,8 @@ struct FGs2MissionCompleteValue
     TArray<FString> CompletedMissionTaskNames = TArray<FString>();
     UPROPERTY(Category = Gs2, BlueprintReadOnly)
     TArray<FString> ReceivedMissionTaskNames = TArray<FString>();
+    UPROPERTY(Category = Gs2, BlueprintReadOnly)
+    int64 NextResetAt = 0;
 };
 
 inline FGs2MissionCompleteValue EzCompleteToFGs2MissionCompleteValue(
@@ -70,6 +72,7 @@ inline FGs2MissionCompleteValue EzCompleteToFGs2MissionCompleteValue(
         }
         return r;
     }() : TArray<FString>();
+    Value.NextResetAt = Model->GetNextResetAt() ? *Model->GetNextResetAt() : 0;
     return Value;
 }
 
@@ -92,7 +95,8 @@ inline Gs2::UE5::Mission::Model::FEzCompletePtr FGs2MissionCompleteValueToEzComp
                 r->Add(v);
             }
             return r;
-        }());
+        }())
+        ->WithNextResetAt(Model.NextResetAt);
 }
 
 UCLASS()

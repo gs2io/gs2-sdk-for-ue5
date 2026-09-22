@@ -48,7 +48,6 @@
 #include "Friend/Domain/Model/FriendRequestAccessToken.h"
 #include "Friend/Model/Cache/Follow.h"
 #include "Friend/Model/Cache/FollowUser.h"
-#include "Friend/Model/Cache/PublicProfile.h"
 
 #include "Core/Domain/Gs2.h"
 #include "Core/Domain/Transaction/JobQueueJobDomainFactory.h"
@@ -143,37 +142,10 @@ namespace Gs2::Friend::Domain::Model
 
             Request->GetNamespaceName(),
             (CacheOwnerSnapshotUserId),
-            true,
-            Request->GetTargetUserId(),
-            CacheOwnerSnapshotTimeOffset,
-            ResultModel->GetItem()
-        );
-        Gs2::Friend::Model::Cache::FFollowUserCache::Put(
-            Self->Gs2->Cache,
-            Request->GetNamespaceName(),
-            CacheOwnerSnapshotUserId,
-            false,
-            Request->GetTargetUserId(),
-            CacheOwnerSnapshotTimeOffset,
-            MakeShared<Gs2::Friend::Model::FFollowUser>()->WithUserId(Request->GetTargetUserId())
-        );
-        Gs2::Friend::Model::Cache::FFollowUserCache::Put(
-            Self->Gs2->Cache,
-            Request->GetNamespaceName(),
-            CacheOwnerSnapshotUserId,
             TOptional<bool>(),
             Request->GetTargetUserId(),
             CacheOwnerSnapshotTimeOffset,
-            MakeShared<Gs2::Friend::Model::FFollowUser>()->WithUserId(Request->GetTargetUserId())
-        );
-        Gs2::Friend::Model::Cache::FPublicProfileCache::Put(
-            Self->Gs2->Cache,
-            Request->GetNamespaceName(),
-            ResultModel->GetItem()->GetUserId(),
-            CacheOwnerSnapshotTimeOffset,
-            MakeShared<Gs2::Friend::Model::FPublicProfile>()
-                ->WithUserId(ResultModel->GetItem()->GetUserId())
-                ->WithPublicProfile(ResultModel->GetItem()->GetPublicProfile())
+            ResultModel->GetItem()
         );
             }
         auto Domain = MakeShared<Gs2::Friend::Domain::Model::FFollowUserAccessTokenDomain>(
@@ -209,7 +181,6 @@ namespace Gs2::Friend::Domain::Model
 
     Gs2::Core::Domain::CallbackID FFollowAccessTokenDomain::SubscribeFollows(
     TFunction<void()> Callback
-
     )
     {
         return Gs2->Cache->ListSubscribe(

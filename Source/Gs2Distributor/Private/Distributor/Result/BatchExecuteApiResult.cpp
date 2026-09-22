@@ -55,16 +55,17 @@ namespace Gs2::Distributor::Result
         return MakeShared<FBatchExecuteApiResult>()
             ->WithResults(Data->HasField(ANSI_TO_TCHAR("results")) ? [Data]() -> TSharedPtr<TArray<Model::FBatchResultPayloadPtr>>
                  {
-                    auto v = MakeShared<TArray<Model::FBatchResultPayloadPtr>>();
-                    if (!Data->HasTypedField<EJson::Null>(ANSI_TO_TCHAR("results")) && Data->HasTypedField<EJson::Array>(ANSI_TO_TCHAR("results")))
+                    if (!Data->HasTypedField<EJson::Array>(ANSI_TO_TCHAR("results")))
                     {
-                        for (auto JsonObjectValue : Data->GetArrayField(ANSI_TO_TCHAR("results")))
-                        {
-                            v->Add(Model::FBatchResultPayload::FromJson(JsonObjectValue->AsObject()));
-                        }
+                        return nullptr;
+                    }
+                    auto v = MakeShared<TArray<Model::FBatchResultPayloadPtr>>();
+                    for (auto JsonObjectValue : Data->GetArrayField(ANSI_TO_TCHAR("results")))
+                    {
+                        v->Add(Model::FBatchResultPayload::FromJson(JsonObjectValue->AsObject()));
                     }
                     return v;
-                 }() : MakeShared<TArray<Model::FBatchResultPayloadPtr>>());
+                 }() : nullptr);
     }
 
     TSharedPtr<FJsonObject> FBatchExecuteApiResult::ToJson() const

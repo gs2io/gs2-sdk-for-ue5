@@ -315,28 +315,30 @@ namespace Gs2::Quest::Model
                 }() : TOptional<int64>())
             ->WithRewards(Data->HasField(ANSI_TO_TCHAR("rewards")) ? [Data]() -> TSharedPtr<TArray<Model::FRewardPtr>>
                 {
-                    auto v = MakeShared<TArray<Model::FRewardPtr>>();
-                    if (!Data->HasTypedField<EJson::Null>(ANSI_TO_TCHAR("rewards")) && Data->HasTypedField<EJson::Array>(ANSI_TO_TCHAR("rewards")))
+                    if (!Data->HasTypedField<EJson::Array>(ANSI_TO_TCHAR("rewards")))
                     {
-                        for (auto JsonObjectValue : Data->GetArrayField(ANSI_TO_TCHAR("rewards")))
-                        {
-                            v->Add(Model::FReward::FromJson(JsonObjectValue->AsObject()));
-                        }
+                        return nullptr;
+                    }
+                    auto v = MakeShared<TArray<Model::FRewardPtr>>();
+                    for (auto JsonObjectValue : Data->GetArrayField(ANSI_TO_TCHAR("rewards")))
+                    {
+                        v->Add(Model::FReward::FromJson(JsonObjectValue->AsObject()));
                     }
                     return v;
-                 }() : MakeShared<TArray<Model::FRewardPtr>>())
+                 }() : nullptr)
             ->WithFailedRewards(Data->HasField(ANSI_TO_TCHAR("failedRewards")) ? [Data]() -> TSharedPtr<TArray<Model::FRewardPtr>>
                 {
-                    auto v = MakeShared<TArray<Model::FRewardPtr>>();
-                    if (!Data->HasTypedField<EJson::Null>(ANSI_TO_TCHAR("failedRewards")) && Data->HasTypedField<EJson::Array>(ANSI_TO_TCHAR("failedRewards")))
+                    if (!Data->HasTypedField<EJson::Array>(ANSI_TO_TCHAR("failedRewards")))
                     {
-                        for (auto JsonObjectValue : Data->GetArrayField(ANSI_TO_TCHAR("failedRewards")))
-                        {
-                            v->Add(Model::FReward::FromJson(JsonObjectValue->AsObject()));
-                        }
+                        return nullptr;
+                    }
+                    auto v = MakeShared<TArray<Model::FRewardPtr>>();
+                    for (auto JsonObjectValue : Data->GetArrayField(ANSI_TO_TCHAR("failedRewards")))
+                    {
+                        v->Add(Model::FReward::FromJson(JsonObjectValue->AsObject()));
                     }
                     return v;
-                 }() : MakeShared<TArray<Model::FRewardPtr>>())
+                 }() : nullptr)
             ->WithMetadata(Data->HasField(ANSI_TO_TCHAR("metadata")) ? [Data]() -> TOptional<FString>
                 {
                     FString v("");
@@ -519,6 +521,29 @@ namespace Gs2::Quest::Model::Cache
         }
         CacheSnapshot->Put(Gs2::Quest::Model::FProgress::TypeName, CacheOwnerParentKey, CacheOwnerKey, CacheOwnerValue,
             FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
+        );
+    }
+
+    FString FProgressCache::PutUserData(
+        const Gs2::Core::Domain::FCacheDatabasePtr& Cache,
+        TOptional<FString> NamespaceName,
+        TOptional<FString> UserId,
+        TOptional<int32> TimeOffset,
+        const Gs2::Quest::Model::FProgressPtr& Item
+    )
+    {
+        if (!Item.IsValid()) return FString();
+        Put(
+            Cache,
+            NamespaceName,
+            UserId,
+            TimeOffset,
+            Item
+        );
+        return CreateCacheParentKey(
+            NamespaceName,
+            UserId,
+            TimeOffset
         );
     }
 

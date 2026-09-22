@@ -443,78 +443,63 @@ namespace Gs2::Ranking2::Domain::Model
         TSharedPtr<TSharedPtr<Gs2::Ranking2::Model::FGlobalRankingReceivedReward>> Result
     )
     {
-        const FString CacheKey = Gs2::Ranking2::Domain::Model::FGlobalRankingReceivedRewardDomain::CreateCacheKey(
+        const auto CacheParentKey = Gs2::Ranking2::Model::Cache::FGlobalRankingReceivedRewardCache::CreateCacheParentKey(
+
+            Self->NamespaceName,
+            Self->UserId,
+            Self->RankingName,
+            TOptional<int32>()
+        );
+        const auto CacheKey = Gs2::Ranking2::Model::Cache::FGlobalRankingReceivedRewardCache::CreateCacheKey(
+
             Self->Season,
             Self->UserId
         );
         return Self->Gs2->Cache->ExecuteWithKeyLock(
             Gs2::Ranking2::Model::FGlobalRankingReceivedReward::TypeName,
-            Self->ParentKey,
+            CacheParentKey,
             CacheKey,
-            [this, Result, CacheKey]() -> Gs2::Core::Model::FGs2ErrorPtr
+            [Self = Self, Result]() -> Gs2::Core::Model::FGs2ErrorPtr
             {
-                // ReSharper disable once CppLocalVariableMayBeConst
-                TSharedPtr<Gs2::Ranking2::Model::FGlobalRankingReceivedReward> Value;
-                auto bCacheHit = Self->Gs2->Cache->TryGet<Gs2::Ranking2::Model::FGlobalRankingReceivedReward>(
-                    Self->ParentKey,
-                    CacheKey,
+                Gs2::Ranking2::Model::FGlobalRankingReceivedRewardPtr Value;
+                const auto CacheHit = Gs2::Ranking2::Model::Cache::FGlobalRankingReceivedRewardCache::TryGet(
+                    Self->Gs2->Cache,
+
+                    Self->NamespaceName,
+                    Self->RankingName,
+                    Self->Season,
+                    Self->UserId,
+                    TOptional<int32>(),
                     &Value
                 );
-                if (!bCacheHit) {
-                    const auto Future = Self->Get(
-                        MakeShared<Gs2::Ranking2::Request::FGetGlobalRankingReceivedRewardByUserIdRequest>()
-                    );
-                    Future->StartSynchronousTask();
-                    if (Future->GetTask().IsError())
-                    {
-                        const auto Error = Future->GetTask().Error();
-                        if (!Error.IsValid() || Error->Type() != Gs2::Core::Model::FNotFoundError::TypeString)
-                        {
-                            return Error;
-                        }
-
-                        Self->Gs2->Cache->Put(
-                            Gs2::Ranking2::Model::FGlobalRankingReceivedReward::TypeName,
-                            Self->ParentKey,
-                            CacheKey,
-                            nullptr,
-                            FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
-                        );
-
-                        if (!Error->GetErrors().IsValid() || Error->Count() == 0 || !Error->Detail(0).IsValid() || Error->Detail(0)->GetComponent() != "globalRankingReceivedReward")
-                        {
-                            return Error;
-                        }
-                    }
-                    else
-                    {
-                        Value = Future->GetTask().Result();
-                    }
-                    Future->EnsureCompletion();
-                }
-
-                if (!bCacheHit)
+                if (CacheHit)
                 {
-                    FGs2ObjectPtr ExistingObject;
-                    const bool Existing = Self->Gs2->Cache->TryGet(
-                        Gs2::Ranking2::Model::FGlobalRankingReceivedReward::TypeName,
-                        Self->ParentKey,
-                        CacheKey,
-                        &ExistingObject
-                    );
-                    if (!Existing || ExistingObject != Value)
-                    {
-                        Self->Gs2->Cache->Put(
-                            Gs2::Ranking2::Model::FGlobalRankingReceivedReward::TypeName,
-                            Self->ParentKey,
-                            CacheKey,
-                            Value,
-                            FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
-                        );
-                    }
+                    *Result = Value;
+                    return nullptr;
                 }
-                *Result = Value;
+                const auto Error = Gs2::Ranking2::Model::Cache::FGlobalRankingReceivedRewardCache::Fetch(
+                    Self->Gs2->Cache,
 
+                    Self->NamespaceName,
+                    Self->RankingName,
+                    Self->Season,
+                    Self->UserId,
+                    TOptional<int32>(),
+                    [Self](Gs2::Ranking2::Model::FGlobalRankingReceivedRewardPtr* OutItem) -> Gs2::Core::Model::FGs2ErrorPtr
+                    {
+                        const auto Future = Self->Get(
+                            MakeShared<Gs2::Ranking2::Request::FGetGlobalRankingReceivedRewardByUserIdRequest>()
+                        );
+                        Future->StartSynchronousTask();
+                        if (Future->GetTask().IsError()) return Future->GetTask().Error();
+                        *OutItem = Future->GetTask().Result();
+                        Future->EnsureCompletion();
+                        return nullptr;
+                    },
+                    &Value
+                );
+                if (Error.IsValid()) return Error;
+                *Result = Value;
                 return nullptr;
             }
         );
@@ -522,6 +507,59 @@ namespace Gs2::Ranking2::Domain::Model
 
     TSharedPtr<FAsyncTask<FGlobalRankingReceivedRewardDomain::FModelTask>> FGlobalRankingReceivedRewardDomain::Model() {
         return Gs2::Core::Util::New<FAsyncTask<FGlobalRankingReceivedRewardDomain::FModelTask>>(this->AsShared());
+    }
+
+    void FGlobalRankingReceivedRewardDomain::Invalidate()
+    {
+        Gs2::Ranking2::Model::Cache::FGlobalRankingReceivedRewardCache::Delete(
+            Gs2->Cache,
+
+            NamespaceName,
+            RankingName,
+            Season,
+            UserId,
+            TOptional<int32>()
+        );
+    }
+
+    FGlobalRankingReceivedRewardDomain::FSubscribeWithInitialCallTask::FSubscribeWithInitialCallTask(
+        const TSharedPtr<FGlobalRankingReceivedRewardDomain>& Self,
+        TFunction<void(Gs2::Ranking2::Model::FGlobalRankingReceivedRewardPtr)> Callback
+    ):
+        Self(Self),
+        Callback(Callback)
+    {
+    }
+
+    FGlobalRankingReceivedRewardDomain::FSubscribeWithInitialCallTask::FSubscribeWithInitialCallTask(
+        const FSubscribeWithInitialCallTask& From
+    ):
+        TGs2Future(From),
+        Self(From.Self),
+        Callback(From.Callback)
+    {
+    }
+
+    Gs2::Core::Model::FGs2ErrorPtr FGlobalRankingReceivedRewardDomain::FSubscribeWithInitialCallTask::Action(
+        TSharedPtr<TSharedPtr<Gs2::Core::Domain::CallbackID>> Result
+    )
+    {
+        const auto Task = Self->Model();
+        Task->StartSynchronousTask();
+        Task->EnsureCompletion();
+        if (Task->GetTask().IsError()) return Task->GetTask().Error();
+        const auto Item = Task->GetTask().Result();
+        const auto CallbackId = Self->Subscribe(Callback);
+        Callback(Item);
+        *Result = MakeShared<Gs2::Core::Domain::CallbackID>(CallbackId);
+        return nullptr;
+    }
+
+    TSharedPtr<FAsyncTask<FGlobalRankingReceivedRewardDomain::FSubscribeWithInitialCallTask>> FGlobalRankingReceivedRewardDomain::SubscribeWithInitialCall(
+        TFunction<void(Gs2::Ranking2::Model::FGlobalRankingReceivedRewardPtr)> Callback
+    )
+    {
+        return Gs2::Core::Util::New<FAsyncTask<FSubscribeWithInitialCallTask>>(this->AsShared(), Callback);
     }
 
     Gs2::Core::Domain::CallbackID FGlobalRankingReceivedRewardDomain::Subscribe(

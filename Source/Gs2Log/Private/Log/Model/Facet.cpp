@@ -101,16 +101,17 @@ namespace Gs2::Log::Model
                 }() : TOptional<FString>())
             ->WithValues(Data->HasField(ANSI_TO_TCHAR("values")) ? [Data]() -> TSharedPtr<TArray<Model::FFacetValueCountPtr>>
                 {
-                    auto v = MakeShared<TArray<Model::FFacetValueCountPtr>>();
-                    if (!Data->HasTypedField<EJson::Null>(ANSI_TO_TCHAR("values")) && Data->HasTypedField<EJson::Array>(ANSI_TO_TCHAR("values")))
+                    if (!Data->HasTypedField<EJson::Array>(ANSI_TO_TCHAR("values")))
                     {
-                        for (auto JsonObjectValue : Data->GetArrayField(ANSI_TO_TCHAR("values")))
-                        {
-                            v->Add(Model::FFacetValueCount::FromJson(JsonObjectValue->AsObject()));
-                        }
+                        return nullptr;
+                    }
+                    auto v = MakeShared<TArray<Model::FFacetValueCountPtr>>();
+                    for (auto JsonObjectValue : Data->GetArrayField(ANSI_TO_TCHAR("values")))
+                    {
+                        v->Add(Model::FFacetValueCount::FromJson(JsonObjectValue->AsObject()));
                     }
                     return v;
-                 }() : MakeShared<TArray<Model::FFacetValueCountPtr>>())
+                 }() : nullptr)
             ->WithRange(Data->HasField(ANSI_TO_TCHAR("range")) ? [Data]() -> Model::FNumericRangePtr
                 {
                     if (Data->HasTypedField<EJson::Null>(ANSI_TO_TCHAR("range")))

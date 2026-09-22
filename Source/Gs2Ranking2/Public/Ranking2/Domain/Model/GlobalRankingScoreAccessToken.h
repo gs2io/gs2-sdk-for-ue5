@@ -228,6 +228,31 @@ namespace Gs2::Ranking2::Domain::Model
             TFunction<void(Gs2::Ranking2::Model::FGlobalRankingScorePtr)> Callback
         );
 
+        class GS2RANKING2_API FSubscribeWithInitialCallTask final :
+            public Gs2::Core::Util::TGs2Future<Gs2::Core::Domain::CallbackID>,
+            public TSharedFromThis<FSubscribeWithInitialCallTask>
+        {
+            const TSharedPtr<FGlobalRankingScoreAccessTokenDomain> Self;
+            const TFunction<void(Gs2::Ranking2::Model::FGlobalRankingScorePtr)> Callback;
+        public:
+            FSubscribeWithInitialCallTask(
+                const TSharedPtr<FGlobalRankingScoreAccessTokenDomain>& Self,
+                TFunction<void(Gs2::Ranking2::Model::FGlobalRankingScorePtr)> Callback
+            );
+
+            FSubscribeWithInitialCallTask(
+                const FSubscribeWithInitialCallTask& From
+            );
+
+            virtual Gs2::Core::Model::FGs2ErrorPtr Action(
+                TSharedPtr<TSharedPtr<Gs2::Core::Domain::CallbackID>> Result
+            ) override;
+        };
+
+        TSharedPtr<FAsyncTask<FSubscribeWithInitialCallTask>> SubscribeWithInitialCall(
+            TFunction<void(Gs2::Ranking2::Model::FGlobalRankingScorePtr)> Callback
+        );
+
         void Unsubscribe(
             Gs2::Core::Domain::CallbackID CallbackID
         );

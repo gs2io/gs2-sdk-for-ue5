@@ -189,16 +189,17 @@ namespace Gs2::Distributor::Request
               }() : TOptional<FString>())
           ->WithWhiteListTargetIds(Data->HasField(ANSI_TO_TCHAR("whiteListTargetIds")) ? [Data]() -> TSharedPtr<TArray<FString>>
               {
-                  auto v = MakeShared<TArray<FString>>();
-                  if (!Data->HasTypedField<EJson::Null>(ANSI_TO_TCHAR("whiteListTargetIds")) && Data->HasTypedField<EJson::Array>(ANSI_TO_TCHAR("whiteListTargetIds")))
+                  if (!Data->HasTypedField<EJson::Array>(ANSI_TO_TCHAR("whiteListTargetIds")))
                   {
-                      for (auto JsonObjectValue : Data->GetArrayField(ANSI_TO_TCHAR("whiteListTargetIds")))
-                      {
-                          v->Add(JsonObjectValue->AsString());
-                      }
+                      return nullptr;
                   }
+                  auto v = MakeShared<TArray<FString>>();
+                  for (auto JsonObjectValue : Data->GetArrayField(ANSI_TO_TCHAR("whiteListTargetIds")))
+                      {
+                      v->Add(JsonObjectValue->AsString());
+                      }
                   return v;
-              }() : MakeShared<TArray<FString>>());
+              }() : nullptr);
     }
 
     TSharedPtr<FJsonObject> FCreateDistributorModelMasterRequest::ToJson() const

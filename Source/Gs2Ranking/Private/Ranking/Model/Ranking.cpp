@@ -372,6 +372,35 @@ namespace Gs2::Ranking::Model::Cache
         );
     }
 
+    FString FRankingCache::PutUserData(
+        const Gs2::Core::Domain::FCacheDatabasePtr& Cache,
+        TOptional<FString> NamespaceName,
+        TOptional<FString> UserId,
+        TOptional<int32> TimeOffset,
+        const Gs2::Ranking::Model::FRankingPtr& Item
+    )
+    {
+        if (!Item.IsValid()) return FString();
+        Put(
+            Cache,
+            NamespaceName,
+            UserId,
+            Item->GetCategoryName(),
+            TOptional<FString>() /* TODO: 一括取得のエントリから additionalScopeName を決められない。手書きで値を入れる */,
+            TOptional<FString>() /* TODO: 一括取得のエントリから scorerUserId を決められない。手書きで値を入れる */,
+            Item->GetIndex(),
+            TimeOffset,
+            Item
+        );
+        return CreateCacheParentKey(
+            NamespaceName,
+            UserId,
+            Item->GetCategoryName(),
+            TOptional<FString>() /* TODO: 一括取得のエントリから additionalScopeName を決められない。手書きで値を入れる */,
+            TimeOffset
+        );
+    }
+
     void FRankingCache::Delete(
         const Gs2::Core::Domain::FCacheDatabasePtr& CacheOwnerArgumentCache,
         TOptional<FString> CacheOwnerArgumentNamespaceName,

@@ -282,6 +282,28 @@ namespace Gs2::Deploy::Model::Cache
         );
     }
 
+    FString FOutputCache::PutUserData(
+        const Gs2::Core::Domain::FCacheDatabasePtr& Cache,
+        TOptional<FString> NamespaceName,
+        TOptional<FString> UserId,
+        TOptional<int32> TimeOffset,
+        const Gs2::Deploy::Model::FOutputPtr& Item
+    )
+    {
+        if (!Item.IsValid()) return FString();
+        Put(
+            Cache,
+            (Item->GetOutputId().IsSet() ? Gs2::Deploy::Model::FOutput::GetStackNameFromGrn(*Item->GetOutputId()) : TOptional<FString>()),
+            Item->GetName(),
+            TimeOffset,
+            Item
+        );
+        return CreateCacheParentKey(
+            (Item->GetOutputId().IsSet() ? Gs2::Deploy::Model::FOutput::GetStackNameFromGrn(*Item->GetOutputId()) : TOptional<FString>()),
+            TimeOffset
+        );
+    }
+
     void FOutputCache::Delete(
         const Gs2::Core::Domain::FCacheDatabasePtr& CacheOwnerArgumentCache,
         TOptional<FString> CacheOwnerArgumentStackName,

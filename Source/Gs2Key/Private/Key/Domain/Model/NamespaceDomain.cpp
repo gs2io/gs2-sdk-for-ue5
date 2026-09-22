@@ -419,7 +419,6 @@ namespace Gs2::Key::Domain::Model
 
     Gs2::Core::Domain::CallbackID FNamespaceDomain::SubscribeKeys(
     TFunction<void()> Callback
-
     )
     {
         return Gs2->Cache->ListSubscribe(
@@ -555,7 +554,6 @@ namespace Gs2::Key::Domain::Model
 
     Gs2::Core::Domain::CallbackID FNamespaceDomain::SubscribeGitHubApiKeys(
     TFunction<void()> Callback
-
     )
     {
         return Gs2->Cache->ListSubscribe(

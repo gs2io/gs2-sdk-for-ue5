@@ -100,7 +100,6 @@ namespace Gs2::Stamina::Domain::Model
 
         Gs2::Core::Domain::CallbackID SubscribeStaminas(
             TFunction<void()> Callback
-
         );
 
         class FCollectStaminasTask;

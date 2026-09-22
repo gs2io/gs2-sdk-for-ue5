@@ -101,7 +101,6 @@ namespace Gs2::Version::Domain::Model
 
         Gs2::Core::Domain::CallbackID SubscribeAcceptVersions(
             TFunction<void()> Callback
-
         );
 
         class FCollectAcceptVersionsTask;

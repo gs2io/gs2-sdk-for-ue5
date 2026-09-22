@@ -301,16 +301,17 @@ namespace Gs2::AdReward::Request
               }() : nullptr)
           ->WithAppLovinMaxes(Data->HasField(ANSI_TO_TCHAR("appLovinMaxes")) ? [Data]() -> TSharedPtr<TArray<Model::FAppLovinMaxPtr>>
               {
-                  auto v = MakeShared<TArray<Model::FAppLovinMaxPtr>>();
-                  if (!Data->HasTypedField<EJson::Null>(ANSI_TO_TCHAR("appLovinMaxes")) && Data->HasTypedField<EJson::Array>(ANSI_TO_TCHAR("appLovinMaxes")))
+                  if (!Data->HasTypedField<EJson::Array>(ANSI_TO_TCHAR("appLovinMaxes")))
                   {
-                      for (auto JsonObjectValue : Data->GetArrayField(ANSI_TO_TCHAR("appLovinMaxes")))
-                      {
-                          v->Add(Model::FAppLovinMax::FromJson(JsonObjectValue->AsObject()));
-                      }
+                      return nullptr;
                   }
+                  auto v = MakeShared<TArray<Model::FAppLovinMaxPtr>>();
+                  for (auto JsonObjectValue : Data->GetArrayField(ANSI_TO_TCHAR("appLovinMaxes")))
+                      {
+                      v->Add(Model::FAppLovinMax::FromJson(JsonObjectValue->AsObject()));
+                      }
                   return v;
-              }() : MakeShared<TArray<Model::FAppLovinMaxPtr>>())
+              }() : nullptr)
           ->WithAcquirePointScript(Data->HasField(ANSI_TO_TCHAR("acquirePointScript")) ? [Data]() -> Model::FScriptSettingPtr
               {
                   if (Data->HasTypedField<EJson::Null>(ANSI_TO_TCHAR("acquirePointScript")))

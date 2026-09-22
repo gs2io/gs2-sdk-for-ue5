@@ -94,7 +94,6 @@ namespace Gs2::News::Domain::Model
 
         Gs2::Core::Domain::CallbackID SubscribeNewses(
             TFunction<void()> Callback
-
         );
 
         class FCollectNewsesTask;

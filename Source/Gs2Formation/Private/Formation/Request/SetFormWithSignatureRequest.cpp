@@ -202,16 +202,17 @@ namespace Gs2::Formation::Request
               }() : TOptional<int32>())
           ->WithSlots(Data->HasField(ANSI_TO_TCHAR("slots")) ? [Data]() -> TSharedPtr<TArray<Model::FSlotWithSignaturePtr>>
               {
-                  auto v = MakeShared<TArray<Model::FSlotWithSignaturePtr>>();
-                  if (!Data->HasTypedField<EJson::Null>(ANSI_TO_TCHAR("slots")) && Data->HasTypedField<EJson::Array>(ANSI_TO_TCHAR("slots")))
+                  if (!Data->HasTypedField<EJson::Array>(ANSI_TO_TCHAR("slots")))
                   {
-                      for (auto JsonObjectValue : Data->GetArrayField(ANSI_TO_TCHAR("slots")))
-                      {
-                          v->Add(Model::FSlotWithSignature::FromJson(JsonObjectValue->AsObject()));
-                      }
+                      return nullptr;
                   }
+                  auto v = MakeShared<TArray<Model::FSlotWithSignaturePtr>>();
+                  for (auto JsonObjectValue : Data->GetArrayField(ANSI_TO_TCHAR("slots")))
+                      {
+                      v->Add(Model::FSlotWithSignature::FromJson(JsonObjectValue->AsObject()));
+                      }
                   return v;
-              }() : MakeShared<TArray<Model::FSlotWithSignaturePtr>>())
+              }() : nullptr)
             ->WithKeyId(Data->HasField(ANSI_TO_TCHAR("keyId")) ? [Data]() -> TOptional<FString>
               {
                   FString v("");

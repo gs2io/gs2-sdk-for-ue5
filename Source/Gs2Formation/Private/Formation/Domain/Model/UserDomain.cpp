@@ -101,7 +101,6 @@ namespace Gs2::Formation::Domain::Model
 
     Gs2::Core::Domain::CallbackID FUserDomain::SubscribeMolds(
     TFunction<void()> Callback
-
     )
     {
         return Gs2->Cache->ListSubscribe(
@@ -247,8 +246,7 @@ namespace Gs2::Formation::Domain::Model
     }
 
     Gs2::Core::Domain::CallbackID FUserDomain::SubscribePropertyForms(
-    TFunction<void()> Callback
-        , const FString PropertyFormModelName
+     const FString PropertyFormModelName, TFunction<void()> Callback
     )
     {
         return Gs2->Cache->ListSubscribe(

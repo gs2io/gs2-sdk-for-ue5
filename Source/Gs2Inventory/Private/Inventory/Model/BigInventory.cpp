@@ -220,16 +220,17 @@ namespace Gs2::Inventory::Model
                 }() : TOptional<FString>())
             ->WithBigItems(Data->HasField(ANSI_TO_TCHAR("bigItems")) ? [Data]() -> TSharedPtr<TArray<Model::FBigItemPtr>>
                 {
-                    auto v = MakeShared<TArray<Model::FBigItemPtr>>();
-                    if (!Data->HasTypedField<EJson::Null>(ANSI_TO_TCHAR("bigItems")) && Data->HasTypedField<EJson::Array>(ANSI_TO_TCHAR("bigItems")))
+                    if (!Data->HasTypedField<EJson::Array>(ANSI_TO_TCHAR("bigItems")))
                     {
-                        for (auto JsonObjectValue : Data->GetArrayField(ANSI_TO_TCHAR("bigItems")))
-                        {
-                            v->Add(Model::FBigItem::FromJson(JsonObjectValue->AsObject()));
-                        }
+                        return nullptr;
+                    }
+                    auto v = MakeShared<TArray<Model::FBigItemPtr>>();
+                    for (auto JsonObjectValue : Data->GetArrayField(ANSI_TO_TCHAR("bigItems")))
+                    {
+                        v->Add(Model::FBigItem::FromJson(JsonObjectValue->AsObject()));
                     }
                     return v;
-                 }() : MakeShared<TArray<Model::FBigItemPtr>>())
+                 }() : nullptr)
             ->WithCreatedAt(Data->HasField(ANSI_TO_TCHAR("createdAt")) ? [Data]() -> TOptional<int64>
                 {
                     int64 v;
@@ -369,6 +370,30 @@ namespace Gs2::Inventory::Model::Cache
         auto CacheOwnerValue = CacheOwnerArgumentItem;
         CacheSnapshot->Put(Gs2::Inventory::Model::FBigInventory::TypeName, CacheOwnerParentKey, CacheOwnerKey, CacheOwnerValue,
             FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
+        );
+    }
+
+    FString FBigInventoryCache::PutUserData(
+        const Gs2::Core::Domain::FCacheDatabasePtr& Cache,
+        TOptional<FString> NamespaceName,
+        TOptional<FString> UserId,
+        TOptional<int32> TimeOffset,
+        const Gs2::Inventory::Model::FBigInventoryPtr& Item
+    )
+    {
+        if (!Item.IsValid()) return FString();
+        Put(
+            Cache,
+            NamespaceName,
+            UserId,
+            Item->GetInventoryName(),
+            TimeOffset,
+            Item
+        );
+        return CreateCacheParentKey(
+            NamespaceName,
+            UserId,
+            TimeOffset
         );
     }
 

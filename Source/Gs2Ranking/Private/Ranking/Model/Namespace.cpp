@@ -279,16 +279,17 @@ namespace Gs2::Ranking::Model
                  }() : nullptr)
             ->WithLastCalculatedAts(Data->HasField(ANSI_TO_TCHAR("lastCalculatedAts")) ? [Data]() -> TSharedPtr<TArray<Model::FCalculatedAtPtr>>
                 {
-                    auto v = MakeShared<TArray<Model::FCalculatedAtPtr>>();
-                    if (!Data->HasTypedField<EJson::Null>(ANSI_TO_TCHAR("lastCalculatedAts")) && Data->HasTypedField<EJson::Array>(ANSI_TO_TCHAR("lastCalculatedAts")))
+                    if (!Data->HasTypedField<EJson::Array>(ANSI_TO_TCHAR("lastCalculatedAts")))
                     {
-                        for (auto JsonObjectValue : Data->GetArrayField(ANSI_TO_TCHAR("lastCalculatedAts")))
-                        {
-                            v->Add(Model::FCalculatedAt::FromJson(JsonObjectValue->AsObject()));
-                        }
+                        return nullptr;
+                    }
+                    auto v = MakeShared<TArray<Model::FCalculatedAtPtr>>();
+                    for (auto JsonObjectValue : Data->GetArrayField(ANSI_TO_TCHAR("lastCalculatedAts")))
+                    {
+                        v->Add(Model::FCalculatedAt::FromJson(JsonObjectValue->AsObject()));
                     }
                     return v;
-                 }() : MakeShared<TArray<Model::FCalculatedAtPtr>>())
+                 }() : nullptr)
             ->WithLogSetting(Data->HasField(ANSI_TO_TCHAR("logSetting")) ? [Data]() -> Model::FLogSettingPtr
                 {
                     if (Data->HasTypedField<EJson::Null>(ANSI_TO_TCHAR("logSetting")))
@@ -455,6 +456,26 @@ namespace Gs2::Ranking::Model::Cache
         }
         CacheSnapshot->Put(Gs2::Ranking::Model::FNamespace::TypeName, CacheOwnerParentKey, CacheOwnerKey, CacheOwnerValue,
             FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
+        );
+    }
+
+    FString FNamespaceCache::PutUserData(
+        const Gs2::Core::Domain::FCacheDatabasePtr& Cache,
+        TOptional<FString> NamespaceName,
+        TOptional<FString> UserId,
+        TOptional<int32> TimeOffset,
+        const Gs2::Ranking::Model::FNamespacePtr& Item
+    )
+    {
+        if (!Item.IsValid()) return FString();
+        Put(
+            Cache,
+            NamespaceName,
+            TimeOffset,
+            Item
+        );
+        return CreateCacheParentKey(
+            TimeOffset
         );
     }
 

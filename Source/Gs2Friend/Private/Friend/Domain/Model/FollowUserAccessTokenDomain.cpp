@@ -47,7 +47,6 @@
 #include "Friend/Domain/Model/PublicProfileAccessToken.h"
 #include "Friend/Domain/Model/FriendRequestAccessToken.h"
 #include "Friend/Model/Cache/FollowUser.h"
-#include "Friend/Model/Cache/PublicProfile.h"
 
 #include "Core/Domain/Gs2.h"
 #include "Core/Domain/Transaction/JobQueueJobDomainFactory.h"
@@ -143,48 +142,16 @@ namespace Gs2::Friend::Domain::Model
                 Details->Add(MakeShared<Gs2::Core::Model::FGs2ErrorDetail>(TEXT("userId"), TEXT("userId is invalid."), TEXT("invalid_response")));
                 return MakeShared<Gs2::Core::Model::FUnknownError>(Details);
               }
-        if (Request->GetWithProfile().Get(bool{}))
-        {
-            Gs2::Friend::Model::Cache::FFollowUserCache::Put(
-                Self->Gs2->Cache,
-                Request->GetNamespaceName(),
-                CacheOwnerSnapshotUserId,
-                true,
-                Request->GetTargetUserId(),
-                CacheOwnerSnapshotTimeOffset,
-                ResultModel->GetItem()
-            );
-        }
         Gs2::Friend::Model::Cache::FFollowUserCache::Put(
             Self->Gs2->Cache,
+
             Request->GetNamespaceName(),
-            CacheOwnerSnapshotUserId,
-            false,
+            (CacheOwnerSnapshotUserId),
+            Request->GetWithProfile().Get(bool{}),
             Request->GetTargetUserId(),
             CacheOwnerSnapshotTimeOffset,
-            MakeShared<Gs2::Friend::Model::FFollowUser>()->WithUserId(Request->GetTargetUserId())
+            ResultModel->GetItem()
         );
-        Gs2::Friend::Model::Cache::FFollowUserCache::Put(
-            Self->Gs2->Cache,
-            Request->GetNamespaceName(),
-            CacheOwnerSnapshotUserId,
-            TOptional<bool>(),
-            Request->GetTargetUserId(),
-            CacheOwnerSnapshotTimeOffset,
-            MakeShared<Gs2::Friend::Model::FFollowUser>()->WithUserId(Request->GetTargetUserId())
-        );
-        if (Request->GetWithProfile().Get(bool{}))
-        {
-            Gs2::Friend::Model::Cache::FPublicProfileCache::Put(
-                Self->Gs2->Cache,
-                Request->GetNamespaceName(),
-                ResultModel->GetItem()->GetUserId(),
-                CacheOwnerSnapshotTimeOffset,
-                MakeShared<Gs2::Friend::Model::FPublicProfile>()
-                    ->WithUserId(ResultModel->GetItem()->GetUserId())
-                    ->WithPublicProfile(ResultModel->GetItem()->GetPublicProfile())
-            );
-        }
             }
         *Result = ResultModel->GetItem();
         return nullptr;
@@ -238,25 +205,15 @@ namespace Gs2::Friend::Domain::Model
                       Details->Add(MakeShared<Gs2::Core::Model::FGs2ErrorDetail>(TEXT("userId"), TEXT("userId is invalid."), TEXT("invalid_response")));
                       return MakeShared<Gs2::Core::Model::FUnknownError>(Details);
                     }
-              for (const auto& WithProfile : {TOptional<bool>(false), TOptional<bool>(true), TOptional<bool>()})
-              {
-                  Gs2::Friend::Model::Cache::FFollowUserCache::Delete(
-                      Self->Gs2->Cache,
-                      Request->GetNamespaceName(),
-                      CacheOwnerSnapshotUserId,
-                      WithProfile,
-                      Request->GetTargetUserId(),
-                      CacheOwnerSnapshotTimeOffset
-                  );
-                  Gs2::Friend::Model::Cache::FFollowUserCache::Delete(
-                      Self->Gs2->Cache,
-                      Request->GetNamespaceName(),
-                      Request->GetTargetUserId(),
-                      WithProfile,
-                      CacheOwnerSnapshotUserId,
-                      CacheOwnerSnapshotTimeOffset
-                  );
-              }
+              Gs2::Friend::Model::Cache::FFollowUserCache::Delete(
+            Self->Gs2->Cache,
+
+            Request->GetNamespaceName(),
+            (CacheOwnerSnapshotUserId),
+            TOptional<bool>(),
+            Request->GetTargetUserId(),
+            CacheOwnerSnapshotTimeOffset
+        );
         auto Domain = Self;
 
         *Result = Domain;

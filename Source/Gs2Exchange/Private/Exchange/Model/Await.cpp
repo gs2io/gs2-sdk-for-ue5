@@ -353,16 +353,17 @@ namespace Gs2::Exchange::Model
                 }() : TOptional<int32>())
             ->WithConfig(Data->HasField(ANSI_TO_TCHAR("config")) ? [Data]() -> TSharedPtr<TArray<Model::FConfigPtr>>
                 {
-                    auto v = MakeShared<TArray<Model::FConfigPtr>>();
-                    if (!Data->HasTypedField<EJson::Null>(ANSI_TO_TCHAR("config")) && Data->HasTypedField<EJson::Array>(ANSI_TO_TCHAR("config")))
+                    if (!Data->HasTypedField<EJson::Array>(ANSI_TO_TCHAR("config")))
                     {
-                        for (auto JsonObjectValue : Data->GetArrayField(ANSI_TO_TCHAR("config")))
-                        {
-                            v->Add(Model::FConfig::FromJson(JsonObjectValue->AsObject()));
-                        }
+                        return nullptr;
+                    }
+                    auto v = MakeShared<TArray<Model::FConfigPtr>>();
+                    for (auto JsonObjectValue : Data->GetArrayField(ANSI_TO_TCHAR("config")))
+                    {
+                        v->Add(Model::FConfig::FromJson(JsonObjectValue->AsObject()));
                     }
                     return v;
-                 }() : MakeShared<TArray<Model::FConfigPtr>>())
+                 }() : nullptr)
             ->WithAcquirableAt(Data->HasField(ANSI_TO_TCHAR("acquirableAt")) ? [Data]() -> TOptional<int64>
                 {
                     int64 v;
@@ -549,6 +550,30 @@ namespace Gs2::Exchange::Model::Cache
         if (CacheOwnerValue.IsValid() && CacheOwnerValue->GetCount().IsSet() && CacheOwnerValue->GetCount().Get(0) == 0) CacheOwnerValue = nullptr;
         CacheSnapshot->Put(Gs2::Exchange::Model::FAwait::TypeName, CacheOwnerParentKey, CacheOwnerKey, CacheOwnerValue,
             FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
+        );
+    }
+
+    FString FAwaitCache::PutUserData(
+        const Gs2::Core::Domain::FCacheDatabasePtr& Cache,
+        TOptional<FString> NamespaceName,
+        TOptional<FString> UserId,
+        TOptional<int32> TimeOffset,
+        const Gs2::Exchange::Model::FAwaitPtr& Item
+    )
+    {
+        if (!Item.IsValid()) return FString();
+        Put(
+            Cache,
+            NamespaceName,
+            UserId,
+            Item->GetName(),
+            TimeOffset,
+            Item
+        );
+        return CreateCacheParentKey(
+            NamespaceName,
+            UserId,
+            TimeOffset
         );
     }
 

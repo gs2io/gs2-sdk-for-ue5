@@ -95,6 +95,8 @@ namespace Gs2::Dictionary::Domain::Model
             const FEntryAccessTokenDomain& From
         );
 
+
+
         class GS2DICTIONARY_API FGetTask final :
             public Gs2::Core::Util::TGs2Future<Gs2::Dictionary::Model::FEntry>,
             public TSharedFromThis<FGetTask>
@@ -121,6 +123,8 @@ namespace Gs2::Dictionary::Domain::Model
             Request::FGetEntryRequestPtr Request
         );
 
+
+
         class GS2DICTIONARY_API FGetWithSignatureTask final :
             public Gs2::Core::Util::TGs2Future<Gs2::Dictionary::Domain::Model::FEntryAccessTokenDomain>,
             public TSharedFromThis<FGetWithSignatureTask>
@@ -146,6 +150,8 @@ namespace Gs2::Dictionary::Domain::Model
         TSharedPtr<FAsyncTask<FGetWithSignatureTask>> GetWithSignature(
             Request::FGetEntryWithSignatureRequestPtr Request
         );
+
+
 
         class GS2DICTIONARY_API FVerifyTask final :
             public Gs2::Core::Util::TGs2Future<Gs2::Dictionary::Domain::Model::FEntryAccessTokenDomain>,
@@ -206,6 +212,12 @@ namespace Gs2::Dictionary::Domain::Model
 
         TSharedPtr<FAsyncTask<FModelTask>> Model();
 
+        void Invalidate();
+
+        Gs2::Core::Domain::CallbackID Subscribe(
+            TFunction<void(Gs2::Dictionary::Model::FEntryPtr)> Callback
+        );
+
         class GS2DICTIONARY_API FSubscribeWithInitialCallTask final :
             public Gs2::Core::Util::TGs2Future<Gs2::Core::Domain::CallbackID>,
             public TSharedFromThis<FSubscribeWithInitialCallTask>
@@ -213,9 +225,9 @@ namespace Gs2::Dictionary::Domain::Model
             const TSharedPtr<FEntryAccessTokenDomain> Self;
             const TFunction<void(Gs2::Dictionary::Model::FEntryPtr)> Callback;
         public:
-            explicit FSubscribeWithInitialCallTask(
-                const TSharedPtr<FEntryAccessTokenDomain> Self,
-                const TFunction<void(Gs2::Dictionary::Model::FEntryPtr)>& Callback
+            FSubscribeWithInitialCallTask(
+                const TSharedPtr<FEntryAccessTokenDomain>& Self,
+                TFunction<void(Gs2::Dictionary::Model::FEntryPtr)> Callback
             );
 
             FSubscribeWithInitialCallTask(
@@ -226,15 +238,8 @@ namespace Gs2::Dictionary::Domain::Model
                 TSharedPtr<TSharedPtr<Gs2::Core::Domain::CallbackID>> Result
             ) override;
         };
-        friend FSubscribeWithInitialCallTask;
 
         TSharedPtr<FAsyncTask<FSubscribeWithInitialCallTask>> SubscribeWithInitialCall(
-            TFunction<void(Gs2::Dictionary::Model::FEntryPtr)> Callback
-        );
-
-        void Invalidate();
-
-        Gs2::Core::Domain::CallbackID Subscribe(
             TFunction<void(Gs2::Dictionary::Model::FEntryPtr)> Callback
         );
 

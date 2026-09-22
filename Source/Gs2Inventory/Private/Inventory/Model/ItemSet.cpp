@@ -706,6 +706,35 @@ namespace Gs2::Inventory::Model::Cache
         );
     }
 
+    /* diff +++ start */
+    FString FItemSetCache::PutUserData(
+        const Gs2::Core::Domain::FCacheDatabasePtr& Cache,
+        TOptional<FString> NamespaceName,
+        TOptional<FString> UserId,
+        TOptional<int32> TimeOffset,
+        const Gs2::Inventory::Model::FItemSetPtr& Item
+    )
+    {
+        if (!Item.IsValid()) return FString();
+        Put(
+            Cache,
+            NamespaceName,
+            UserId,
+            Item->GetInventoryName(),
+            Item->GetItemName(),
+            Item->GetName(),
+            TimeOffset,
+            Item
+        );
+        return CreateCacheParentKey(
+            NamespaceName,
+            UserId,
+            Item->GetInventoryName(),
+            TimeOffset
+        );
+    }
+    /* diff +++ end */
+
     void FItemSetCache::Delete(
         const Gs2::Core::Domain::FCacheDatabasePtr& CacheOwnerArgumentCache,
         TOptional<FString> CacheOwnerArgumentNamespaceName,

@@ -89,7 +89,6 @@ namespace Gs2::News::Domain::Model
 
     Gs2::Core::Domain::CallbackID FUserAccessTokenDomain::SubscribeNewses(
     TFunction<void()> Callback
-
     )
     {
         return Gs2->Cache->ListSubscribe(

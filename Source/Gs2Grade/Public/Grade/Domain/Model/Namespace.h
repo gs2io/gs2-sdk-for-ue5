@@ -248,7 +248,6 @@ namespace Gs2::Grade::Domain::Model
 
         Gs2::Core::Domain::CallbackID SubscribeGradeModels(
             TFunction<void()> Callback
-
         );
 
         class FCollectGradeModelsTask;
@@ -289,7 +288,6 @@ namespace Gs2::Grade::Domain::Model
 
         Gs2::Core::Domain::CallbackID SubscribeGradeModelMasters(
             TFunction<void()> Callback
-
         );
 
         class FCollectGradeModelMastersTask;

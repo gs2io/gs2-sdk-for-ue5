@@ -339,16 +339,17 @@ namespace Gs2::Money::Model
                 }() : TOptional<int32>())
             ->WithDetail(Data->HasField(ANSI_TO_TCHAR("detail")) ? [Data]() -> TSharedPtr<TArray<Model::FWalletDetailPtr>>
                 {
-                    auto v = MakeShared<TArray<Model::FWalletDetailPtr>>();
-                    if (!Data->HasTypedField<EJson::Null>(ANSI_TO_TCHAR("detail")) && Data->HasTypedField<EJson::Array>(ANSI_TO_TCHAR("detail")))
+                    if (!Data->HasTypedField<EJson::Array>(ANSI_TO_TCHAR("detail")))
                     {
-                        for (auto JsonObjectValue : Data->GetArrayField(ANSI_TO_TCHAR("detail")))
-                        {
-                            v->Add(Model::FWalletDetail::FromJson(JsonObjectValue->AsObject()));
-                        }
+                        return nullptr;
+                    }
+                    auto v = MakeShared<TArray<Model::FWalletDetailPtr>>();
+                    for (auto JsonObjectValue : Data->GetArrayField(ANSI_TO_TCHAR("detail")))
+                    {
+                        v->Add(Model::FWalletDetail::FromJson(JsonObjectValue->AsObject()));
                     }
                     return v;
-                 }() : MakeShared<TArray<Model::FWalletDetailPtr>>())
+                 }() : nullptr)
             ->WithShareFree(Data->HasField(ANSI_TO_TCHAR("shareFree")) ? [Data]() -> TOptional<bool>
                 {
                     bool v;
@@ -523,16 +524,37 @@ namespace Gs2::Money::Model::Cache
         Gs2::Money::Model::FWalletPtr CacheOwnerExisting;
         if (CacheSnapshot->TryGet<Gs2::Money::Model::FWallet>(CacheOwnerParentKey, CacheOwnerKey, &CacheOwnerExisting))
         {
-            const int64 CacheOwnerOldRevision = CacheOwnerExisting.IsValid() ? CacheOwnerExisting->GetRevision().Get(0) : 0;
-            const int64 CacheOwnerNewRevision = CacheOwnerValue.IsValid() ? CacheOwnerValue->GetRevision().Get(0) : 0;
+            const int64 CacheOwnerOldRevision = CacheOwnerExisting.IsValid() ? CacheOwnerExisting->GetRevision().Get(-1) : -1;
+            const int64 CacheOwnerNewRevision = CacheOwnerValue.IsValid() ? CacheOwnerValue->GetRevision().Get(-1) : -1;
             if (CacheOwnerOldRevision > CacheOwnerNewRevision && CacheOwnerNewRevision > 1) return;
-        }
-        if (CacheOwnerValue.IsValid() && CacheOwnerValue->GetShareFree().Get(false) && CacheOwnerArgumentSlot.Get(0) == 0 && CacheOwnerValue->GetRevision().Get(0) != 0)
-        {
-            CacheSnapshot->ClearListCache(Gs2::Money::Model::FWallet::TypeName, CacheOwnerParentKey);
+            if (CacheOwnerOldRevision == CacheOwnerNewRevision) return;
         }
         CacheSnapshot->Put(Gs2::Money::Model::FWallet::TypeName, CacheOwnerParentKey, CacheOwnerKey, CacheOwnerValue,
             FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
+        );
+    }
+
+    FString FWalletCache::PutUserData(
+        const Gs2::Core::Domain::FCacheDatabasePtr& Cache,
+        TOptional<FString> NamespaceName,
+        TOptional<FString> UserId,
+        TOptional<int32> TimeOffset,
+        const Gs2::Money::Model::FWalletPtr& Item
+    )
+    {
+        if (!Item.IsValid()) return FString();
+        Put(
+            Cache,
+            NamespaceName,
+            UserId,
+            Item->GetSlot(),
+            TimeOffset,
+            Item
+        );
+        return CreateCacheParentKey(
+            NamespaceName,
+            UserId,
+            TimeOffset
         );
     }
 

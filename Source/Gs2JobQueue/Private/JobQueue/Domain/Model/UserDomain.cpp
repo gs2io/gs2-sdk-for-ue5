@@ -192,48 +192,33 @@ namespace Gs2::JobQueue::Domain::Model
         const auto ResultModel = Future->GetTask().Result();
         Future->EnsureCompletion();
 
-        if (!ResultModel.IsValid())
-        {
-            const auto Details = MakeShared<TArray<TSharedPtr<Gs2::Core::Model::FGs2ErrorDetail>>>();
-            return MakeShared<Gs2::Core::Model::FUnknownError>(Details);
-        }
-        const auto Item = ResultModel->GetItem();
-        if (Item.IsValid())
-        {
-            if (!Item->GetUserId().IsSet())
-            {
-                const auto Details = MakeShared<TArray<TSharedPtr<Gs2::Core::Model::FGs2ErrorDetail>>>();
-                Details->Add(MakeShared<Gs2::Core::Model::FGs2ErrorDetail>(TEXT("userId"), TEXT("userId is invalid."), TEXT("invalid_response")));
-                return MakeShared<Gs2::Core::Model::FUnknownError>(Details);
-            }
-            Self->Gs2->JobQueueDomain->JobQueueExecutedEventHandler(
-                Item,
-                ResultModel->GetResult(),
-                TOptional<int32>()
-            );
-            Gs2::JobQueue::Model::Cache::FJobCache::Delete(
-                Self->Gs2->Cache,
-                Request->GetNamespaceName(),
-                Item->GetUserId(),
-                TOptional<FString>(),
-                TOptional<int32>()
-            );
-        }
+              if (!ResultModel.IsValid() || !((ResultModel.IsValid() && ResultModel->GetItem().IsValid() ? ResultModel->GetItem()->GetUserId() : TOptional<FString>())).IsSet())
+                  {
+                    const auto Details = MakeShared<TArray<TSharedPtr<Gs2::Core::Model::FGs2ErrorDetail>>>();
+                      Details->Add(MakeShared<Gs2::Core::Model::FGs2ErrorDetail>(TEXT("userId"), TEXT("userId is invalid."), TEXT("invalid_response")));
+                      return MakeShared<Gs2::Core::Model::FUnknownError>(Details);
+                    }
+              Gs2::JobQueue::Model::Cache::FJobCache::Delete(
+            Self->Gs2->Cache,
+
+            Request->GetNamespaceName(),
+            (ResultModel.IsValid() && ResultModel->GetItem().IsValid() ? ResultModel->GetItem()->GetUserId() : TOptional<FString>()),
+            TOptional<FString>(),
+            TOptional<int32>()
+        );
         auto Domain = MakeShared<Gs2::JobQueue::Domain::Model::FJobDomain>(
             Self->Gs2,
             Self->Service,
             Request->GetNamespaceName(),
-            Item.IsValid() ? Item->GetUserId() : Self->UserId,
-            Item.IsValid() ? Item->GetName() : TOptional<FString>()
+            ResultModel->GetItem()->GetUserId(),
+            ResultModel->GetItem()->GetName()
         );
-        if (ResultModel.IsValid())
+        if (ResultModel != nullptr)
         {
             if (ResultModel->GetIsLastJob().IsSet())
             {
                 Domain->IsLastJob = *ResultModel->GetIsLastJob();
             }
-            Domain->Item = Item;
-            Domain->Result = ResultModel->GetResult();
         }
 
         *Result = Domain;
@@ -261,7 +246,6 @@ namespace Gs2::JobQueue::Domain::Model
 
     Gs2::Core::Domain::CallbackID FUserDomain::SubscribeJobs(
     TFunction<void()> Callback
-
     )
     {
         return Gs2->Cache->ListSubscribe(

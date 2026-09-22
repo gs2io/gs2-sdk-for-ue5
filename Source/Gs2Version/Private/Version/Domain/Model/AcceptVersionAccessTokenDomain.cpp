@@ -23,7 +23,6 @@
 #endif
 
 #include "Version/Domain/Model/AcceptVersionAccessToken.h"
-#include "Version/Model/Cache/AcceptVersion.h"
 #include "Version/Domain/Model/AcceptVersion.h"
 #include "Version/Domain/Model/Namespace.h"
 #include "Version/Domain/Model/VersionModelMaster.h"
@@ -35,6 +34,7 @@
 #include "Version/Domain/Model/User.h"
 #include "Version/Domain/Model/UserAccessToken.h"
 #include "Version/Domain/Model/CurrentVersionMaster.h"
+#include "Version/Model/Cache/AcceptVersion.h"
 
 #include "Core/Domain/Gs2.h"
 #include "Core/Domain/Transaction/JobQueueJobDomainFactory.h"
@@ -57,7 +57,12 @@ namespace Gs2::Version::Domain::Model
         Client(MakeShared<Gs2::Version::FGs2VersionRestClient>(Gs2->RestSession)),
         NamespaceName(NamespaceName),
         AccessToken(AccessToken),
-        VersionName(VersionName)
+        VersionName(VersionName),
+        ParentKey(Gs2::Version::Domain::Model::FUserDomain::CreateCacheParentKey(
+            NamespaceName,
+            UserId(),
+            "AcceptVersion"
+        ))
     {
     }
 
@@ -69,7 +74,8 @@ namespace Gs2::Version::Domain::Model
         Client(From.Client),
         NamespaceName(From.NamespaceName),
         AccessToken(From.AccessToken),
-        VersionName(From.VersionName)
+        VersionName(From.VersionName),
+        ParentKey(From.ParentKey)
     {
 
     }
@@ -92,23 +98,13 @@ namespace Gs2::Version::Domain::Model
         TSharedPtr<TSharedPtr<Gs2::Version::Domain::Model::FAcceptVersionAccessTokenDomain>> Result
     )
     {
-        const auto SourceToken = Self->AccessToken;
-        Gs2::Auth::Model::FAccessTokenPtr TokenSnapshot;
-        if (SourceToken.IsValid())
-        {
-            TokenSnapshot = MakeShared<Gs2::Auth::Model::FAccessToken>(*SourceToken);
-        }
-        const auto SnapshotUserId = TokenSnapshot.IsValid()
-            ? TokenSnapshot->GetUserId()
-            : TOptional<FString>();
-        const auto SnapshotTimeOffset = TokenSnapshot.IsValid()
-            ? TokenSnapshot->GetTimeOffset()
-            : TOptional<int32>();
         Request
             ->WithContextStack((!Request->GetContextStack().IsSet() || Request->GetContextStack()->IsEmpty()) ? Self->Gs2->DefaultContextStack : Request->GetContextStack())
             ->WithNamespaceName(Self->NamespaceName)
             ->WithVersionName(Self->VersionName)
-            ->WithAccessToken(TokenSnapshot.IsValid() ? TokenSnapshot->GetToken() : TOptional<FString>());
+            ->WithAccessToken(Self->AccessToken->GetToken());
+        const auto CacheOwnerSnapshotUserId = Self->AccessToken.IsValid() ? Self->UserId() : TOptional<FString>();
+        const auto CacheOwnerSnapshotTimeOffset = Self->AccessToken.IsValid() ? Self->AccessToken->GetTimeOffset() : TOptional<int32>();
         const auto Future = Self->Client->Accept(
             Request
         );
@@ -119,18 +115,31 @@ namespace Gs2::Version::Domain::Model
         }
         const auto ResultModel = Future->GetTask().Result();
         Future->EnsureCompletion();
-        if (ResultModel.IsValid() && ResultModel->GetItem() != nullptr)
-        {
-            const auto Item = ResultModel->GetItem();
-            Gs2::Version::Model::Cache::FAcceptVersionCache::Put(
-                Self->Gs2->Cache,
-                Request->GetNamespaceName(),
-                SnapshotUserId,
-                Item->GetVersionName(),
-                SnapshotTimeOffset,
-                Item
-            );
-        }
+
+            if (ResultModel.IsValid() && ResultModel->GetItem() != nullptr)
+            {
+
+        if (!ResultModel.IsValid() || !ResultModel->GetItem().IsValid())
+            {
+              const auto Details = MakeShared<TArray<TSharedPtr<Gs2::Core::Model::FGs2ErrorDetail>>>();
+                Details->Add(MakeShared<Gs2::Core::Model::FGs2ErrorDetail>(TEXT("result.item"), TEXT("result.item is invalid."), TEXT("invalid_response")));
+                return MakeShared<Gs2::Core::Model::FUnknownError>(Details);
+              }if (!((CacheOwnerSnapshotUserId)).IsSet())
+            {
+              const auto Details = MakeShared<TArray<TSharedPtr<Gs2::Core::Model::FGs2ErrorDetail>>>();
+                Details->Add(MakeShared<Gs2::Core::Model::FGs2ErrorDetail>(TEXT("userId"), TEXT("userId is invalid."), TEXT("invalid_response")));
+                return MakeShared<Gs2::Core::Model::FUnknownError>(Details);
+              }
+        Gs2::Version::Model::Cache::FAcceptVersionCache::Put(
+            Self->Gs2->Cache,
+
+            Request->GetNamespaceName(),
+            (CacheOwnerSnapshotUserId),
+            ResultModel->GetItem()->GetVersionName(),
+            CacheOwnerSnapshotTimeOffset,
+            ResultModel->GetItem()
+        );
+            }
         auto Domain = Self;
 
         *Result = Domain;
@@ -161,23 +170,13 @@ namespace Gs2::Version::Domain::Model
         TSharedPtr<TSharedPtr<Gs2::Version::Domain::Model::FAcceptVersionAccessTokenDomain>> Result
     )
     {
-        const auto SourceToken = Self->AccessToken;
-        Gs2::Auth::Model::FAccessTokenPtr TokenSnapshot;
-        if (SourceToken.IsValid())
-        {
-            TokenSnapshot = MakeShared<Gs2::Auth::Model::FAccessToken>(*SourceToken);
-        }
-        const auto SnapshotUserId = TokenSnapshot.IsValid()
-            ? TokenSnapshot->GetUserId()
-            : TOptional<FString>();
-        const auto SnapshotTimeOffset = TokenSnapshot.IsValid()
-            ? TokenSnapshot->GetTimeOffset()
-            : TOptional<int32>();
         Request
             ->WithContextStack((!Request->GetContextStack().IsSet() || Request->GetContextStack()->IsEmpty()) ? Self->Gs2->DefaultContextStack : Request->GetContextStack())
             ->WithNamespaceName(Self->NamespaceName)
             ->WithVersionName(Self->VersionName)
-            ->WithAccessToken(TokenSnapshot.IsValid() ? TokenSnapshot->GetToken() : TOptional<FString>());
+            ->WithAccessToken(Self->AccessToken->GetToken());
+        const auto CacheOwnerSnapshotUserId = Self->AccessToken.IsValid() ? Self->UserId() : TOptional<FString>();
+        const auto CacheOwnerSnapshotTimeOffset = Self->AccessToken.IsValid() ? Self->AccessToken->GetTimeOffset() : TOptional<int32>();
         const auto Future = Self->Client->Reject(
             Request
         );
@@ -188,18 +187,31 @@ namespace Gs2::Version::Domain::Model
         }
         const auto ResultModel = Future->GetTask().Result();
         Future->EnsureCompletion();
-        if (ResultModel.IsValid() && ResultModel->GetItem() != nullptr)
-        {
-            const auto Item = ResultModel->GetItem();
-            Gs2::Version::Model::Cache::FAcceptVersionCache::Put(
-                Self->Gs2->Cache,
-                Request->GetNamespaceName(),
-                SnapshotUserId,
-                Item->GetVersionName(),
-                SnapshotTimeOffset,
-                Item
-            );
-        }
+
+            if (ResultModel.IsValid() && ResultModel->GetItem() != nullptr)
+            {
+
+        if (!ResultModel.IsValid() || !ResultModel->GetItem().IsValid())
+            {
+              const auto Details = MakeShared<TArray<TSharedPtr<Gs2::Core::Model::FGs2ErrorDetail>>>();
+                Details->Add(MakeShared<Gs2::Core::Model::FGs2ErrorDetail>(TEXT("result.item"), TEXT("result.item is invalid."), TEXT("invalid_response")));
+                return MakeShared<Gs2::Core::Model::FUnknownError>(Details);
+              }if (!((CacheOwnerSnapshotUserId)).IsSet())
+            {
+              const auto Details = MakeShared<TArray<TSharedPtr<Gs2::Core::Model::FGs2ErrorDetail>>>();
+                Details->Add(MakeShared<Gs2::Core::Model::FGs2ErrorDetail>(TEXT("userId"), TEXT("userId is invalid."), TEXT("invalid_response")));
+                return MakeShared<Gs2::Core::Model::FUnknownError>(Details);
+              }
+        Gs2::Version::Model::Cache::FAcceptVersionCache::Put(
+            Self->Gs2->Cache,
+
+            Request->GetNamespaceName(),
+            (CacheOwnerSnapshotUserId),
+            ResultModel->GetItem()->GetVersionName(),
+            CacheOwnerSnapshotTimeOffset,
+            ResultModel->GetItem()
+        );
+            }
         auto Domain = Self;
 
         *Result = Domain;
@@ -230,23 +242,13 @@ namespace Gs2::Version::Domain::Model
         TSharedPtr<TSharedPtr<Gs2::Version::Model::FAcceptVersion>> Result
     )
     {
-        const auto SourceToken = Self->AccessToken;
-        Gs2::Auth::Model::FAccessTokenPtr TokenSnapshot;
-        if (SourceToken.IsValid())
-        {
-            TokenSnapshot = MakeShared<Gs2::Auth::Model::FAccessToken>(*SourceToken);
-        }
-        const auto SnapshotUserId = TokenSnapshot.IsValid()
-            ? TokenSnapshot->GetUserId()
-            : TOptional<FString>();
-        const auto SnapshotTimeOffset = TokenSnapshot.IsValid()
-            ? TokenSnapshot->GetTimeOffset()
-            : TOptional<int32>();
         Request
             ->WithContextStack((!Request->GetContextStack().IsSet() || Request->GetContextStack()->IsEmpty()) ? Self->Gs2->DefaultContextStack : Request->GetContextStack())
             ->WithNamespaceName(Self->NamespaceName)
-            ->WithAccessToken(TokenSnapshot.IsValid() ? TokenSnapshot->GetToken() : TOptional<FString>())
+            ->WithAccessToken(Self->AccessToken->GetToken())
             ->WithVersionName(Self->VersionName);
+        const auto CacheOwnerSnapshotUserId = Self->AccessToken.IsValid() ? Self->UserId() : TOptional<FString>();
+        const auto CacheOwnerSnapshotTimeOffset = Self->AccessToken.IsValid() ? Self->AccessToken->GetTimeOffset() : TOptional<int32>();
         const auto Future = Self->Client->GetAcceptVersion(
             Request
         );
@@ -257,19 +259,32 @@ namespace Gs2::Version::Domain::Model
         }
         const auto ResultModel = Future->GetTask().Result();
         Future->EnsureCompletion();
-        if (ResultModel.IsValid() && ResultModel->GetItem() != nullptr)
-        {
-            const auto Item = ResultModel->GetItem();
-            Gs2::Version::Model::Cache::FAcceptVersionCache::Put(
-                Self->Gs2->Cache,
-                Request->GetNamespaceName(),
-                SnapshotUserId,
-                Item->GetVersionName(),
-                SnapshotTimeOffset,
-                Item
-            );
-        }
-        *Result = ResultModel.IsValid() ? ResultModel->GetItem() : nullptr;
+
+            if (ResultModel.IsValid() && ResultModel->GetItem() != nullptr)
+            {
+
+        if (!ResultModel.IsValid() || !ResultModel->GetItem().IsValid())
+            {
+              const auto Details = MakeShared<TArray<TSharedPtr<Gs2::Core::Model::FGs2ErrorDetail>>>();
+                Details->Add(MakeShared<Gs2::Core::Model::FGs2ErrorDetail>(TEXT("result.item"), TEXT("result.item is invalid."), TEXT("invalid_response")));
+                return MakeShared<Gs2::Core::Model::FUnknownError>(Details);
+              }if (!((CacheOwnerSnapshotUserId)).IsSet())
+            {
+              const auto Details = MakeShared<TArray<TSharedPtr<Gs2::Core::Model::FGs2ErrorDetail>>>();
+                Details->Add(MakeShared<Gs2::Core::Model::FGs2ErrorDetail>(TEXT("userId"), TEXT("userId is invalid."), TEXT("invalid_response")));
+                return MakeShared<Gs2::Core::Model::FUnknownError>(Details);
+              }
+        Gs2::Version::Model::Cache::FAcceptVersionCache::Put(
+            Self->Gs2->Cache,
+
+            Request->GetNamespaceName(),
+            (CacheOwnerSnapshotUserId),
+            ResultModel->GetItem()->GetVersionName(),
+            CacheOwnerSnapshotTimeOffset,
+            ResultModel->GetItem()
+        );
+            }
+        *Result = ResultModel->GetItem();
         return nullptr;
     }
 
@@ -297,23 +312,13 @@ namespace Gs2::Version::Domain::Model
         TSharedPtr<TSharedPtr<Gs2::Version::Domain::Model::FAcceptVersionAccessTokenDomain>> Result
     )
     {
-        const auto SourceToken = Self->AccessToken;
-        Gs2::Auth::Model::FAccessTokenPtr TokenSnapshot;
-        if (SourceToken.IsValid())
-        {
-            TokenSnapshot = MakeShared<Gs2::Auth::Model::FAccessToken>(*SourceToken);
-        }
-        const auto SnapshotUserId = TokenSnapshot.IsValid()
-            ? TokenSnapshot->GetUserId()
-            : TOptional<FString>();
-        const auto SnapshotTimeOffset = TokenSnapshot.IsValid()
-            ? TokenSnapshot->GetTimeOffset()
-            : TOptional<int32>();
         Request
             ->WithContextStack((!Request->GetContextStack().IsSet() || Request->GetContextStack()->IsEmpty()) ? Self->Gs2->DefaultContextStack : Request->GetContextStack())
             ->WithNamespaceName(Self->NamespaceName)
-            ->WithAccessToken(TokenSnapshot.IsValid() ? TokenSnapshot->GetToken() : TOptional<FString>())
+            ->WithAccessToken(Self->AccessToken->GetToken())
             ->WithVersionName(Self->VersionName);
+        const auto CacheOwnerSnapshotUserId = Self->AccessToken.IsValid() ? Self->UserId() : TOptional<FString>();
+        const auto CacheOwnerSnapshotTimeOffset = Self->AccessToken.IsValid() ? Self->AccessToken->GetTimeOffset() : TOptional<int32>();
         const auto Future = Self->Client->DeleteAcceptVersion(
             Request
         );
@@ -321,25 +326,35 @@ namespace Gs2::Version::Domain::Model
         if (Future->GetTask().IsError())
         {
             const auto Error = Future->GetTask().Error();
-            if (!Error.IsValid() || !Error->IsChildOf(Gs2::Core::Model::FNotFoundError::Class))
+            if (Error.IsValid() && Error->IsChildOf(Gs2::Core::Model::FNotFoundError::Class))
             {
-                return Error;
+                *Result = Self;
+                return nullptr;
             }
-            *Result = Self;
-            return nullptr;
+            return Error;
         }
         const auto ResultModel = Future->GetTask().Result();
         Future->EnsureCompletion();
-        if (ResultModel.IsValid() && ResultModel->GetItem() != nullptr)
-        {
-            Gs2::Version::Model::Cache::FAcceptVersionCache::Delete(
-                Self->Gs2->Cache,
-                Request->GetNamespaceName(),
-                SnapshotUserId,
-                ResultModel->GetItem()->GetVersionName(),
-                SnapshotTimeOffset
-            );
-        }
+
+              if (!ResultModel.IsValid() || !ResultModel->GetItem().IsValid())
+                  {
+                    const auto Details = MakeShared<TArray<TSharedPtr<Gs2::Core::Model::FGs2ErrorDetail>>>();
+                      Details->Add(MakeShared<Gs2::Core::Model::FGs2ErrorDetail>(TEXT("result.item"), TEXT("result.item is invalid."), TEXT("invalid_response")));
+                      return MakeShared<Gs2::Core::Model::FUnknownError>(Details);
+                    }if (!((CacheOwnerSnapshotUserId)).IsSet())
+                  {
+                    const auto Details = MakeShared<TArray<TSharedPtr<Gs2::Core::Model::FGs2ErrorDetail>>>();
+                      Details->Add(MakeShared<Gs2::Core::Model::FGs2ErrorDetail>(TEXT("userId"), TEXT("userId is invalid."), TEXT("invalid_response")));
+                      return MakeShared<Gs2::Core::Model::FUnknownError>(Details);
+                    }
+              Gs2::Version::Model::Cache::FAcceptVersionCache::Delete(
+            Self->Gs2->Cache,
+
+            Request->GetNamespaceName(),
+            (CacheOwnerSnapshotUserId),
+            ResultModel->GetItem()->GetVersionName(),
+            CacheOwnerSnapshotTimeOffset
+        );
         auto Domain = Self;
 
         *Result = Domain;
@@ -392,74 +407,58 @@ namespace Gs2::Version::Domain::Model
         TSharedPtr<TSharedPtr<Gs2::Version::Model::FAcceptVersion>> Result
     )
     {
-        const auto SourceToken = Self->AccessToken;
-        Gs2::Auth::Model::FAccessTokenPtr TokenSnapshot;
-        if (SourceToken.IsValid())
-        {
-            TokenSnapshot = MakeShared<Gs2::Auth::Model::FAccessToken>(*SourceToken);
-        }
-        const auto OwnerUserId = TokenSnapshot.IsValid()
-            ? TokenSnapshot->GetUserId()
-            : TOptional<FString>();
-        const auto OwnerTimeOffset = TokenSnapshot.IsValid()
-            ? TokenSnapshot->GetTimeOffset()
-            : TOptional<int32>();
-        const auto ParentKey = Gs2::Version::Model::Cache::FAcceptVersionCache::CreateCacheParentKey(
+        const auto CacheParentKey = Gs2::Version::Model::Cache::FAcceptVersionCache::CreateCacheParentKey(
+
             Self->NamespaceName,
-            OwnerUserId,
-            OwnerTimeOffset
+            Self->AccessToken.IsValid() ? Self->UserId() : TOptional<FString>(),
+            Self->AccessToken.IsValid() ? Self->AccessToken->GetTimeOffset() : TOptional<int32>()
         );
-        const auto CacheKey = Gs2::Version::Model::Cache::FAcceptVersionCache::CreateCacheKey(Self->VersionName);
+        const auto CacheKey = Gs2::Version::Model::Cache::FAcceptVersionCache::CreateCacheKey(
+
+            Self->VersionName
+        );
         return Self->Gs2->Cache->ExecuteWithKeyLock(
             Gs2::Version::Model::FAcceptVersion::TypeName,
-            ParentKey,
+            CacheParentKey,
             CacheKey,
-            [this, Result, OwnerUserId, OwnerTimeOffset, TokenSnapshot]() -> Gs2::Core::Model::FGs2ErrorPtr
+            [Self = Self, Result]() -> Gs2::Core::Model::FGs2ErrorPtr
             {
                 Gs2::Version::Model::FAcceptVersionPtr Value;
-                if (Gs2::Version::Model::Cache::FAcceptVersionCache::TryGet(
+                const auto CacheHit = Gs2::Version::Model::Cache::FAcceptVersionCache::TryGet(
                     Self->Gs2->Cache,
+
                     Self->NamespaceName,
-                    OwnerUserId,
+                    Self->AccessToken.IsValid() ? Self->UserId() : TOptional<FString>(),
                     Self->VersionName,
-                    OwnerTimeOffset,
+                    Self->AccessToken.IsValid() ? Self->AccessToken->GetTimeOffset() : TOptional<int32>(),
                     &Value
-                ))
+                );
+                if (CacheHit)
                 {
                     *Result = Value;
                     return nullptr;
                 }
-                const auto FetchDomain = MakeShared<FAcceptVersionAccessTokenDomain>(
-                    Self->Gs2,
-                    Self->Service,
-                    Self->NamespaceName,
-                    TokenSnapshot,
-                    Self->VersionName
-                );
                 const auto Error = Gs2::Version::Model::Cache::FAcceptVersionCache::Fetch(
                     Self->Gs2->Cache,
+
                     Self->NamespaceName,
-                    OwnerUserId,
+                    Self->AccessToken.IsValid() ? Self->UserId() : TOptional<FString>(),
                     Self->VersionName,
-                    OwnerTimeOffset,
-                    [TaskSelf = FetchDomain](Gs2::Version::Model::FAcceptVersionPtr* OutValue) -> Gs2::Core::Model::FGs2ErrorPtr
+                    Self->AccessToken.IsValid() ? Self->AccessToken->GetTimeOffset() : TOptional<int32>(),
+                    [Self](Gs2::Version::Model::FAcceptVersionPtr* OutItem) -> Gs2::Core::Model::FGs2ErrorPtr
                     {
-                        const auto Future = TaskSelf->Get(MakeShared<Gs2::Version::Request::FGetAcceptVersionRequest>());
+                        const auto Future = Self->Get(
+                            MakeShared<Gs2::Version::Request::FGetAcceptVersionRequest>()
+                        );
                         Future->StartSynchronousTask();
-                        if (Future->GetTask().IsError())
-                        {
-                            return Future->GetTask().Error();
-                        }
-                        *OutValue = Future->GetTask().Result();
+                        if (Future->GetTask().IsError()) return Future->GetTask().Error();
+                        *OutItem = Future->GetTask().Result();
                         Future->EnsureCompletion();
                         return nullptr;
                     },
                     &Value
                 );
-                if (Error.IsValid())
-                {
-                    return Error;
-                }
+                if (Error.IsValid()) return Error;
                 *Result = Value;
                 return nullptr;
             }
@@ -470,16 +469,33 @@ namespace Gs2::Version::Domain::Model
         return Gs2::Core::Util::New<FAsyncTask<FAcceptVersionAccessTokenDomain::FModelTask>>(this->AsShared());
     }
 
+    void FAcceptVersionAccessTokenDomain::Invalidate()
+    {
+        Gs2::Version::Model::Cache::FAcceptVersionCache::Delete(
+            Gs2->Cache,
+
+            NamespaceName,
+            AccessToken.IsValid() ? UserId() : TOptional<FString>(),
+            VersionName,
+            AccessToken.IsValid() ? AccessToken->GetTimeOffset() : TOptional<int32>()
+        );
+    }
+
     FAcceptVersionAccessTokenDomain::FSubscribeWithInitialCallTask::FSubscribeWithInitialCallTask(
-        const TSharedPtr<FAcceptVersionAccessTokenDomain> Self,
-        const TFunction<void(Gs2::Version::Model::FAcceptVersionPtr)>& Callback
-    ): Self(Self), Callback(Callback)
+        const TSharedPtr<FAcceptVersionAccessTokenDomain>& Self,
+        TFunction<void(Gs2::Version::Model::FAcceptVersionPtr)> Callback
+    ):
+        Self(Self),
+        Callback(Callback)
     {
     }
 
     FAcceptVersionAccessTokenDomain::FSubscribeWithInitialCallTask::FSubscribeWithInitialCallTask(
         const FSubscribeWithInitialCallTask& From
-    ): TGs2Future(From), Self(From.Self), Callback(From.Callback)
+    ):
+        TGs2Future(From),
+        Self(From.Self),
+        Callback(From.Callback)
     {
     }
 
@@ -487,14 +503,14 @@ namespace Gs2::Version::Domain::Model
         TSharedPtr<TSharedPtr<Gs2::Core::Domain::CallbackID>> Result
     )
     {
-        const auto Future = Self->Model();
-        Future->StartSynchronousTask();
-        Future->EnsureCompletion();
-        if (Future->GetTask().IsError()) return Future->GetTask().Error();
-        const auto Item = Future->GetTask().Result();
-        const auto ID = Self->Subscribe(Callback);
+        const auto Task = Self->Model();
+        Task->StartSynchronousTask();
+        Task->EnsureCompletion();
+        if (Task->GetTask().IsError()) return Task->GetTask().Error();
+        const auto Item = Task->GetTask().Result();
+        const auto CallbackId = Self->Subscribe(Callback);
         Callback(Item);
-        *Result = MakeShared<Gs2::Core::Domain::CallbackID>(ID);
+        *Result = MakeShared<Gs2::Core::Domain::CallbackID>(CallbackId);
         return nullptr;
     }
 
@@ -505,24 +521,23 @@ namespace Gs2::Version::Domain::Model
         return Gs2::Core::Util::New<FAsyncTask<FSubscribeWithInitialCallTask>>(this->AsShared(), Callback);
     }
 
-    void FAcceptVersionAccessTokenDomain::Invalidate()
-    {
-        const auto SourceToken = AccessToken;
-        Gs2::Version::Model::Cache::FAcceptVersionCache::Delete(
-            Gs2->Cache,
-            NamespaceName,
-            SourceToken.IsValid() ? SourceToken->GetUserId() : TOptional<FString>(),
-            VersionName,
-            SourceToken.IsValid() ? SourceToken->GetTimeOffset() : TOptional<int32>()
-        );
-    }
-
     Gs2::Core::Domain::CallbackID FAcceptVersionAccessTokenDomain::Subscribe(
         TFunction<void(Gs2::Version::Model::FAcceptVersionPtr)> Callback
     )
     {
+        const auto SubscriptionParentKey = Gs2::Version::Model::Cache::FAcceptVersionCache::CreateCacheParentKey(
+
+            NamespaceName,
+            AccessToken.IsValid() ? UserId() : TOptional<FString>(),
+            AccessToken.IsValid() ? AccessToken->GetTimeOffset() : TOptional<int32>()
+        );
+        const auto SubscriptionCacheKey = Gs2::Version::Model::Cache::FAcceptVersionCache::CreateCacheKey(
+
+            VersionName
+        );
         const TWeakPtr<Gs2::Core::Domain::FGs2> WeakGs2 = Gs2;
         const TWeakPtr<Version::Domain::FGs2VersionDomain> WeakService = Service;
+        const FString RegisteredParentKey = SubscriptionParentKey;
         const TOptional<FString> QueryNamespaceName = NamespaceName;
         const TOptional<FString> QueryVersionName = VersionName;
         const auto SourceToken = AccessToken;
@@ -530,25 +545,17 @@ namespace Gs2::Version::Domain::Model
             ? TOptional<FString>(SourceToken->GetUserId())
             : TOptional<FString>();
         const int32 RegisteredTimeOffset = SourceToken.IsValid() ? SourceToken->GetTimeOffset().Get(0) : 0;
-
-        const auto OwnerSubscriptionParentKey = Gs2::Version::Model::Cache::FAcceptVersionCache::CreateCacheParentKey(
-            NamespaceName,
-            RegisteredUserId,
-            SourceToken.IsValid() ? SourceToken->GetTimeOffset() : TOptional<int32>()
-        );
-        const auto OwnerSubscriptionKey = Gs2::Version::Model::Cache::FAcceptVersionCache::CreateCacheKey(VersionName);
         return Gs2->Cache->Subscribe(
             Gs2::Version::Model::FAcceptVersion::TypeName,
-            OwnerSubscriptionParentKey,
-            OwnerSubscriptionKey,
+            SubscriptionParentKey,
+            SubscriptionCacheKey,
             [Callback](TSharedPtr<FGs2Object> obj)
             {
                 Callback(StaticCastSharedPtr<Gs2::Version::Model::FAcceptVersion>(obj));
             },
-            [WeakGs2, WeakService, QueryNamespaceName, QueryVersionName, SourceToken, RegisteredUserId, RegisteredTimeOffset]()
+            [WeakGs2, WeakService, RegisteredParentKey, QueryNamespaceName, QueryVersionName, SourceToken, RegisteredUserId, RegisteredTimeOffset]()
             {
                 const auto Owner = WeakGs2.Pin();
-                const auto ServiceOwner = WeakService.Pin();
                 if (!Owner.IsValid() || !SourceToken.IsValid() || !RegisteredUserId.IsSet())
                 {
                     return;
@@ -560,11 +567,12 @@ namespace Gs2::Version::Domain::Model
                 }
                 const auto Domain = MakeShared<FAcceptVersionAccessTokenDomain>(
                     Owner,
-                    ServiceOwner,
+                    WeakService.Pin(),
                     QueryNamespaceName,
                     TokenSnapshot,
                     QueryVersionName
                 );
+                Domain->ParentKey = RegisteredParentKey;
                 const auto Task = Domain->Model();
                 Task->StartBackgroundTask();
             }
@@ -575,17 +583,20 @@ namespace Gs2::Version::Domain::Model
         Gs2::Core::Domain::CallbackID CallbackID
     )
     {
-        const auto SourceToken = AccessToken;
-        const auto OwnerSubscriptionParentKey = Gs2::Version::Model::Cache::FAcceptVersionCache::CreateCacheParentKey(
+        const auto SubscriptionParentKey = Gs2::Version::Model::Cache::FAcceptVersionCache::CreateCacheParentKey(
+
             NamespaceName,
-            SourceToken.IsValid() ? SourceToken->GetUserId() : TOptional<FString>(),
-            SourceToken.IsValid() ? SourceToken->GetTimeOffset() : TOptional<int32>()
+            AccessToken.IsValid() ? UserId() : TOptional<FString>(),
+            AccessToken.IsValid() ? AccessToken->GetTimeOffset() : TOptional<int32>()
         );
-        const auto OwnerSubscriptionKey = Gs2::Version::Model::Cache::FAcceptVersionCache::CreateCacheKey(VersionName);
+        const auto SubscriptionCacheKey = Gs2::Version::Model::Cache::FAcceptVersionCache::CreateCacheKey(
+
+            VersionName
+        );
         Gs2->Cache->Unsubscribe(
             Gs2::Version::Model::FAcceptVersion::TypeName,
-            OwnerSubscriptionParentKey,
-            OwnerSubscriptionKey,
+            SubscriptionParentKey,
+            SubscriptionCacheKey,
             CallbackID
         );
     }

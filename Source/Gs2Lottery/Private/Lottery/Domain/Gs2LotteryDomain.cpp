@@ -569,6 +569,48 @@ namespace Gs2::Lottery::Domain
         }
     }
 
+    /* diff +++ start */
+    TOptional<FString> FGs2LotteryDomain::PutUserData(
+        const TOptional<FString> NamespaceName,
+        const TOptional<FString> UserId,
+        const TOptional<int32> TimeOffset,
+        const FString Kind,
+        const FString Payload
+    ) {
+        TSharedPtr<FJsonObject> PayloadJson;
+        if (const TSharedRef<TJsonReader<>> JsonReader = TJsonReaderFactory<>::Create(Payload);
+            !FJsonSerializer::Deserialize(JsonReader, PayloadJson) || !PayloadJson.IsValid())
+        {
+            return TOptional<FString>();
+        }
+        if (Kind == "boxItems") {
+            const auto Item = Gs2::Lottery::Model::FBoxItems::FromJson(PayloadJson);
+            if (!Item.IsValid()) return TOptional<FString>();
+            const auto ParentKey = Gs2::Lottery::Model::Cache::FBoxItemsCache::PutUserData(
+                Gs2->Cache,
+                NamespaceName,
+                UserId,
+                TimeOffset,
+                Item
+            );
+            return ParentKey.IsEmpty() ? TOptional<FString>() : TOptional<FString>(ParentKey);
+        }
+        return TOptional<FString>();
+    }
+
+    bool FGs2LotteryDomain::SetListCached(
+        const TOptional<int32> TimeOffset,
+        const FString Kind,
+        const FString ParentKey
+    ) {
+        if (Kind == "boxItems") {
+            Gs2->Cache->SetListCached(Gs2::Lottery::Model::FBoxItems::TypeName, ParentKey);
+            return true;
+        }
+        return false;
+    }
+    /* diff +++ end */
+
     void FGs2LotteryDomain::UpdateCacheFromStampTask(
         const FString Method,
         const FString Request,

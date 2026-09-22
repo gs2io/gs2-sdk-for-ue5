@@ -114,7 +114,6 @@ namespace Gs2::StateMachine::Domain::Model
 
         Gs2::Core::Domain::CallbackID SubscribeStatuses(
             TFunction<void()> Callback
-
         );
 
         class FCollectStatusesTask;

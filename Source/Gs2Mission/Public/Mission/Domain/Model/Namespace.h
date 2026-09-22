@@ -288,7 +288,6 @@ namespace Gs2::Mission::Domain::Model
 
         Gs2::Core::Domain::CallbackID SubscribeMissionGroupModels(
             TFunction<void()> Callback
-
         );
 
         class FCollectMissionGroupModelsTask;
@@ -328,7 +327,6 @@ namespace Gs2::Mission::Domain::Model
 
         Gs2::Core::Domain::CallbackID SubscribeCounterModels(
             TFunction<void()> Callback
-
         );
 
         class FCollectCounterModelsTask;
@@ -377,7 +375,6 @@ namespace Gs2::Mission::Domain::Model
 
         Gs2::Core::Domain::CallbackID SubscribeCounterModelMasters(
             TFunction<void()> Callback
-
         );
 
         class FCollectCounterModelMastersTask;
@@ -418,7 +415,6 @@ namespace Gs2::Mission::Domain::Model
 
         Gs2::Core::Domain::CallbackID SubscribeMissionGroupModelMasters(
             TFunction<void()> Callback
-
         );
 
         class FCollectMissionGroupModelMastersTask;

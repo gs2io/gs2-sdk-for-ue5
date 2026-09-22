@@ -27,6 +27,7 @@ namespace Gs2::UE5::Limit::Model
         TOptional<FString> LimitNameValue;
         TOptional<FString> NameValue;
         TOptional<int32> CountValue;
+        TOptional<int64> NextResetAtValue;
         TOptional<int64> CreatedAtValue;
         TOptional<int64> UpdatedAtValue;
 
@@ -35,6 +36,7 @@ namespace Gs2::UE5::Limit::Model
         TSharedPtr<FEzCounter> WithLimitName(const TOptional<FString> LimitName);
         TSharedPtr<FEzCounter> WithName(const TOptional<FString> Name);
         TSharedPtr<FEzCounter> WithCount(const TOptional<int32> Count);
+        TSharedPtr<FEzCounter> WithNextResetAt(const TOptional<int64> NextResetAt);
         TSharedPtr<FEzCounter> WithCreatedAt(const TOptional<int64> CreatedAt);
         TSharedPtr<FEzCounter> WithUpdatedAt(const TOptional<int64> UpdatedAt);
 
@@ -46,6 +48,9 @@ namespace Gs2::UE5::Limit::Model
 
         TOptional<int32> GetCount() const;
         FString GetCountString() const;
+
+        TOptional<int64> GetNextResetAt() const;
+        FString GetNextResetAtString() const;
 
         TOptional<int64> GetCreatedAt() const;
         FString GetCreatedAtString() const;

@@ -150,7 +150,6 @@ namespace Gs2::Inventory::Domain::Model
 
         Gs2::Core::Domain::CallbackID SubscribeItemModels(
             TFunction<void()> Callback
-
         );
 
         class FCollectItemModelsTask;

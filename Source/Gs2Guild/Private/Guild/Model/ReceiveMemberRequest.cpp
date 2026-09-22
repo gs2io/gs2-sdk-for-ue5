@@ -250,6 +250,32 @@ namespace Gs2::Guild::Model::Cache
         );
     }
 
+    FString FReceiveMemberRequestCache::PutUserData(
+        const Gs2::Core::Domain::FCacheDatabasePtr& Cache,
+        TOptional<FString> NamespaceName,
+        TOptional<FString> UserId,
+        TOptional<int32> TimeOffset,
+        const Gs2::Guild::Model::FReceiveMemberRequestPtr& Item
+    )
+    {
+        if (!Item.IsValid()) return FString();
+        Put(
+            Cache,
+            NamespaceName,
+            TOptional<FString>() /* TODO: 一括取得のエントリから guildModelName を決められない。手書きで値を入れる */,
+            TOptional<FString>() /* TODO: 一括取得のエントリから guildName を決められない。手書きで値を入れる */,
+            Item->GetUserId(),
+            TimeOffset,
+            Item
+        );
+        return CreateCacheParentKey(
+            NamespaceName,
+            TOptional<FString>() /* TODO: 一括取得のエントリから guildModelName を決められない。手書きで値を入れる */,
+            TOptional<FString>() /* TODO: 一括取得のエントリから guildName を決められない。手書きで値を入れる */,
+            TimeOffset
+        );
+    }
+
     void FReceiveMemberRequestCache::Delete(
         const Gs2::Core::Domain::FCacheDatabasePtr& CacheOwnerArgumentCache,
         TOptional<FString> CacheOwnerArgumentNamespaceName,

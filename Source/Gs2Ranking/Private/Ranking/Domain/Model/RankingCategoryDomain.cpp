@@ -223,8 +223,9 @@ namespace Gs2::Ranking::Domain::Model
             Self->Gs2->Cache,
 
             Request->GetNamespaceName(),
+            (ResultModel.IsValid() && ResultModel->GetItem().IsValid() ? ResultModel->GetItem()->GetUserId() : TOptional<FString>()),
+            ResultModel->GetItem()->GetCategoryName(),
             ResultModel->GetItem()->GetScorerUserId(),
-            Request->GetCategoryName(),
             ResultModel->GetItem()->GetUniqueId(),
             TOptional<int32>(),
             ResultModel->GetItem()
@@ -266,7 +267,6 @@ namespace Gs2::Ranking::Domain::Model
 
     Gs2::Core::Domain::CallbackID FRankingCategoryDomain::SubscribeSubscribesByCategoryName(
     TFunction<void()> Callback
-
     )
     {
         return Gs2->Cache->ListSubscribe(
@@ -275,7 +275,7 @@ namespace Gs2::Ranking::Domain::Model
                 NamespaceName,
                 UserId,
                 CategoryName,
-                TOptional<FString>(),
+                AdditionalScopeName,
                 TOptional<int32>()
             ),
             Callback,
@@ -292,7 +292,7 @@ namespace Gs2::Ranking::Domain::Model
                 NamespaceName,
                 UserId,
                 CategoryName,
-                TOptional<FString>(),
+                AdditionalScopeName,
                 TOptional<int32>()
             ),
             CallbackID
@@ -338,7 +338,7 @@ namespace Gs2::Ranking::Domain::Model
         NamespaceName,
         UserId,
         CategoryName,
-        TOptional<FString>(),
+        AdditionalScopeName,
         TOptional<int32>()
     );
         return Gs2->Cache->ListSubscribeTyped(
@@ -370,7 +370,7 @@ namespace Gs2::Ranking::Domain::Model
         NamespaceName,
         UserId,
         CategoryName,
-        TOptional<FString>(),
+        AdditionalScopeName,
         TOptional<int32>()
     )
         );
@@ -425,7 +425,6 @@ namespace Gs2::Ranking::Domain::Model
 
     Gs2::Core::Domain::CallbackID FRankingCategoryDomain::SubscribeRankings(
     TFunction<void()> Callback
-
     )
     {
         return Gs2->Cache->ListSubscribe(
@@ -568,14 +567,13 @@ namespace Gs2::Ranking::Domain::Model
 
     Gs2::Core::Domain::CallbackID FRankingCategoryDomain::SubscribeNearRankings(
     TFunction<void()> Callback
-
     )
     {
         return Gs2->Cache->ListSubscribe(
             Gs2::Ranking::Model::FRanking::TypeName,
             Gs2::Ranking::Model::Cache::FRankingCache::CreateCacheParentKey(
                 NamespaceName,
-                TOptional<FString>(),
+                UserId,
                 CategoryName,
                 AdditionalScopeName,
                 TOptional<int32>()
@@ -592,7 +590,7 @@ namespace Gs2::Ranking::Domain::Model
             Gs2::Ranking::Model::FRanking::TypeName,
             Gs2::Ranking::Model::Cache::FRankingCache::CreateCacheParentKey(
                 NamespaceName,
-                TOptional<FString>(),
+                UserId,
                 CategoryName,
                 AdditionalScopeName,
                 TOptional<int32>()
@@ -638,7 +636,7 @@ namespace Gs2::Ranking::Domain::Model
         const auto QueryScore = Score;
         const auto Parent = Gs2::Ranking::Model::Cache::FRankingCache::CreateCacheParentKey(
         NamespaceName,
-        TOptional<FString>(),
+        UserId,
         CategoryName,
         AdditionalScopeName,
         TOptional<int32>()
@@ -670,7 +668,7 @@ namespace Gs2::Ranking::Domain::Model
             Gs2::Ranking::Model::FRanking::TypeName,
             Gs2::Ranking::Model::Cache::FRankingCache::CreateCacheParentKey(
         NamespaceName,
-        TOptional<FString>(),
+        UserId,
         CategoryName,
         AdditionalScopeName,
         TOptional<int32>()

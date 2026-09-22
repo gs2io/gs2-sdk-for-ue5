@@ -58,10 +58,10 @@ namespace Gs2::Limit::Domain::Model
         AccessToken(AccessToken),
         LimitName(LimitName),
         CounterName(CounterName),
-        ParentKey(Gs2::Limit::Model::Cache::FCounterCache::CreateCacheParentKey(
+        ParentKey(Gs2::Limit::Domain::Model::FUserDomain::CreateCacheParentKey(
             NamespaceName,
-            AccessToken.IsValid() ? UserId() : TOptional<FString>(),
-            AccessToken.IsValid() ? AccessToken->GetTimeOffset() : TOptional<int32>()
+            UserId(),
+            "Counter"
         ))
     {
     }
@@ -105,6 +105,8 @@ namespace Gs2::Limit::Domain::Model
             ->WithLimitName(Self->LimitName)
             ->WithAccessToken(Self->AccessToken->GetToken())
             ->WithCounterName(Self->CounterName);
+        const auto CacheOwnerSnapshotUserId = Self->AccessToken.IsValid() ? Self->UserId() : TOptional<FString>();
+        const auto CacheOwnerSnapshotTimeOffset = Self->AccessToken.IsValid() ? Self->AccessToken->GetTimeOffset() : TOptional<int32>();
         const auto Future = Self->Client->GetCounter(
             Request
         );
@@ -115,15 +117,33 @@ namespace Gs2::Limit::Domain::Model
         }
         const auto ResultModel = Future->GetTask().Result();
         Future->EnsureCompletion();
-        if (ResultModel.IsValid() && ResultModel->GetItem().IsValid())
-        {
-            Gs2::Limit::Model::Cache::FCounterCache::Put(
-                Self->Gs2->Cache,
-                Request->GetNamespaceName(), Self->UserId(), Request->GetLimitName(),
-                Request->GetCounterName(), Self->AccessToken->GetTimeOffset(), ResultModel->GetItem()
-            );
-        }
-        *Result = ResultModel.IsValid() ? ResultModel->GetItem() : nullptr;
+
+            if (ResultModel.IsValid() && ResultModel->GetItem() != nullptr)
+            {
+
+        if (!ResultModel.IsValid() || !ResultModel->GetItem().IsValid())
+            {
+              const auto Details = MakeShared<TArray<TSharedPtr<Gs2::Core::Model::FGs2ErrorDetail>>>();
+                Details->Add(MakeShared<Gs2::Core::Model::FGs2ErrorDetail>(TEXT("result.item"), TEXT("result.item is invalid."), TEXT("invalid_response")));
+                return MakeShared<Gs2::Core::Model::FUnknownError>(Details);
+              }if (!((CacheOwnerSnapshotUserId)).IsSet())
+            {
+              const auto Details = MakeShared<TArray<TSharedPtr<Gs2::Core::Model::FGs2ErrorDetail>>>();
+                Details->Add(MakeShared<Gs2::Core::Model::FGs2ErrorDetail>(TEXT("userId"), TEXT("userId is invalid."), TEXT("invalid_response")));
+                return MakeShared<Gs2::Core::Model::FUnknownError>(Details);
+              }
+        Gs2::Limit::Model::Cache::FCounterCache::Put(
+            Self->Gs2->Cache,
+
+            Request->GetNamespaceName(),
+            (CacheOwnerSnapshotUserId),
+            ResultModel->GetItem()->GetLimitName(),
+            Request->GetCounterName(),
+            CacheOwnerSnapshotTimeOffset,
+            ResultModel->GetItem()
+        );
+            }
+        *Result = ResultModel->GetItem();
         return nullptr;
     }
 
@@ -157,6 +177,8 @@ namespace Gs2::Limit::Domain::Model
             ->WithLimitName(Self->LimitName)
             ->WithCounterName(Self->CounterName)
             ->WithAccessToken(Self->AccessToken->GetToken());
+        const auto CacheOwnerSnapshotUserId = Self->AccessToken.IsValid() ? Self->UserId() : TOptional<FString>();
+        const auto CacheOwnerSnapshotTimeOffset = Self->AccessToken.IsValid() ? Self->AccessToken->GetTimeOffset() : TOptional<int32>();
         const auto Future = Self->Client->CountUp(
             Request
         );
@@ -167,18 +189,32 @@ namespace Gs2::Limit::Domain::Model
         }
         const auto ResultModel = Future->GetTask().Result();
         Future->EnsureCompletion();
-        if (ResultModel.IsValid() && ResultModel->GetItem() != nullptr)
-        {
-            Gs2::Limit::Model::Cache::FCounterCache::Put(
-                Self->Gs2->Cache,
-                Request->GetNamespaceName(),
-                Self->AccessToken.IsValid() ? Self->UserId() : TOptional<FString>(),
-                ResultModel->GetItem()->GetLimitName(),
-                Request->GetCounterName(),
-                Self->AccessToken.IsValid() ? Self->AccessToken->GetTimeOffset() : TOptional<int32>(),
-                ResultModel->GetItem()
-            );
-        }
+
+            if (ResultModel.IsValid() && ResultModel->GetItem() != nullptr)
+            {
+
+        if (!ResultModel.IsValid() || !ResultModel->GetItem().IsValid())
+            {
+              const auto Details = MakeShared<TArray<TSharedPtr<Gs2::Core::Model::FGs2ErrorDetail>>>();
+                Details->Add(MakeShared<Gs2::Core::Model::FGs2ErrorDetail>(TEXT("result.item"), TEXT("result.item is invalid."), TEXT("invalid_response")));
+                return MakeShared<Gs2::Core::Model::FUnknownError>(Details);
+              }if (!((CacheOwnerSnapshotUserId)).IsSet())
+            {
+              const auto Details = MakeShared<TArray<TSharedPtr<Gs2::Core::Model::FGs2ErrorDetail>>>();
+                Details->Add(MakeShared<Gs2::Core::Model::FGs2ErrorDetail>(TEXT("userId"), TEXT("userId is invalid."), TEXT("invalid_response")));
+                return MakeShared<Gs2::Core::Model::FUnknownError>(Details);
+              }
+        Gs2::Limit::Model::Cache::FCounterCache::Put(
+            Self->Gs2->Cache,
+
+            Request->GetNamespaceName(),
+            (CacheOwnerSnapshotUserId),
+            ResultModel->GetItem()->GetLimitName(),
+            Request->GetCounterName(),
+            CacheOwnerSnapshotTimeOffset,
+            ResultModel->GetItem()
+        );
+            }
         auto Domain = Self;
 
         *Result = Domain;
@@ -215,6 +251,8 @@ namespace Gs2::Limit::Domain::Model
             ->WithAccessToken(Self->AccessToken->GetToken())
             ->WithLimitName(Self->LimitName)
             ->WithCounterName(Self->CounterName);
+        const auto CacheOwnerSnapshotUserId = Self->AccessToken.IsValid() ? Self->UserId() : TOptional<FString>();
+        const auto CacheOwnerSnapshotTimeOffset = Self->AccessToken.IsValid() ? Self->AccessToken->GetTimeOffset() : TOptional<int32>();
         const auto Future = Self->Client->VerifyCounter(
             Request
         );
@@ -225,18 +263,32 @@ namespace Gs2::Limit::Domain::Model
         }
         const auto ResultModel = Future->GetTask().Result();
         Future->EnsureCompletion();
-        if (ResultModel.IsValid() && ResultModel->GetItem() != nullptr)
-        {
-            Gs2::Limit::Model::Cache::FCounterCache::Put(
-                Self->Gs2->Cache,
-                Request->GetNamespaceName(),
-                Self->AccessToken.IsValid() ? Self->UserId() : TOptional<FString>(),
-                ResultModel->GetItem()->GetLimitName(),
-                Request->GetCounterName(),
-                Self->AccessToken.IsValid() ? Self->AccessToken->GetTimeOffset() : TOptional<int32>(),
-                ResultModel->GetItem()
-            );
-        }
+
+            if (ResultModel.IsValid() && ResultModel->GetItem() != nullptr)
+            {
+
+        if (!ResultModel.IsValid() || !ResultModel->GetItem().IsValid())
+            {
+              const auto Details = MakeShared<TArray<TSharedPtr<Gs2::Core::Model::FGs2ErrorDetail>>>();
+                Details->Add(MakeShared<Gs2::Core::Model::FGs2ErrorDetail>(TEXT("result.item"), TEXT("result.item is invalid."), TEXT("invalid_response")));
+                return MakeShared<Gs2::Core::Model::FUnknownError>(Details);
+              }if (!((CacheOwnerSnapshotUserId)).IsSet())
+            {
+              const auto Details = MakeShared<TArray<TSharedPtr<Gs2::Core::Model::FGs2ErrorDetail>>>();
+                Details->Add(MakeShared<Gs2::Core::Model::FGs2ErrorDetail>(TEXT("userId"), TEXT("userId is invalid."), TEXT("invalid_response")));
+                return MakeShared<Gs2::Core::Model::FUnknownError>(Details);
+              }
+        Gs2::Limit::Model::Cache::FCounterCache::Put(
+            Self->Gs2->Cache,
+
+            Request->GetNamespaceName(),
+            (CacheOwnerSnapshotUserId),
+            ResultModel->GetItem()->GetLimitName(),
+            Request->GetCounterName(),
+            CacheOwnerSnapshotTimeOffset,
+            ResultModel->GetItem()
+        );
+            }
         auto Domain = Self;
 
         *Result = Domain;
@@ -271,7 +323,7 @@ namespace Gs2::Limit::Domain::Model
     )
     {
         return FString("") +
-            (LimitName.IsSet() ? *LimitName : "null") + ":" + 
+            (LimitName.IsSet() ? *LimitName : "null") + ":" +
             (CounterName.IsSet() ? *CounterName : "null");
     }
 
@@ -308,49 +360,46 @@ namespace Gs2::Limit::Domain::Model
             Gs2::Limit::Model::FCounter::TypeName,
             CacheParentKey,
             CacheKey,
-            [this, Result, CacheKey]() -> Gs2::Core::Model::FGs2ErrorPtr
+            [Self = Self, Result]() -> Gs2::Core::Model::FGs2ErrorPtr
             {
                 Gs2::Limit::Model::FCounterPtr Value;
-                if (Gs2::Limit::Model::Cache::FCounterCache::TryGet(
+                const auto CacheHit = Gs2::Limit::Model::Cache::FCounterCache::TryGet(
                     Self->Gs2->Cache,
+
                     Self->NamespaceName,
                     Self->AccessToken.IsValid() ? Self->UserId() : TOptional<FString>(),
                     Self->LimitName,
                     Self->CounterName,
                     Self->AccessToken.IsValid() ? Self->AccessToken->GetTimeOffset() : TOptional<int32>(),
                     &Value
-                ))
+                );
+                if (CacheHit)
                 {
                     *Result = Value;
                     return nullptr;
                 }
                 const auto Error = Gs2::Limit::Model::Cache::FCounterCache::Fetch(
                     Self->Gs2->Cache,
+
                     Self->NamespaceName,
                     Self->AccessToken.IsValid() ? Self->UserId() : TOptional<FString>(),
                     Self->LimitName,
                     Self->CounterName,
                     Self->AccessToken.IsValid() ? Self->AccessToken->GetTimeOffset() : TOptional<int32>(),
-                    [Self = Self](Gs2::Limit::Model::FCounterPtr* OutItem) -> Gs2::Core::Model::FGs2ErrorPtr
+                    [Self](Gs2::Limit::Model::FCounterPtr* OutItem) -> Gs2::Core::Model::FGs2ErrorPtr
                     {
                         const auto Future = Self->Get(
                             MakeShared<Gs2::Limit::Request::FGetCounterRequest>()
                         );
                         Future->StartSynchronousTask();
-                        if (Future->GetTask().IsError())
-                        {
-                            return Future->GetTask().Error();
-                        }
+                        if (Future->GetTask().IsError()) return Future->GetTask().Error();
                         *OutItem = Future->GetTask().Result();
                         Future->EnsureCompletion();
                         return nullptr;
                     },
                     &Value
                 );
-                if (Error.IsValid())
-                {
-                    return Error;
-                }
+                if (Error.IsValid()) return Error;
                 *Result = Value;
                 return nullptr;
             }
@@ -361,16 +410,34 @@ namespace Gs2::Limit::Domain::Model
         return Gs2::Core::Util::New<FAsyncTask<FCounterAccessTokenDomain::FModelTask>>(this->AsShared());
     }
 
+    void FCounterAccessTokenDomain::Invalidate()
+    {
+        Gs2::Limit::Model::Cache::FCounterCache::Delete(
+            Gs2->Cache,
+
+            NamespaceName,
+            AccessToken.IsValid() ? UserId() : TOptional<FString>(),
+            LimitName,
+            CounterName,
+            AccessToken.IsValid() ? AccessToken->GetTimeOffset() : TOptional<int32>()
+        );
+    }
+
     FCounterAccessTokenDomain::FSubscribeWithInitialCallTask::FSubscribeWithInitialCallTask(
-        const TSharedPtr<FCounterAccessTokenDomain> Self,
-        const TFunction<void(Gs2::Limit::Model::FCounterPtr)>& Callback
-    ): Self(Self), Callback(Callback)
+        const TSharedPtr<FCounterAccessTokenDomain>& Self,
+        TFunction<void(Gs2::Limit::Model::FCounterPtr)> Callback
+    ):
+        Self(Self),
+        Callback(Callback)
     {
     }
 
     FCounterAccessTokenDomain::FSubscribeWithInitialCallTask::FSubscribeWithInitialCallTask(
         const FSubscribeWithInitialCallTask& From
-    ): TGs2Future(From), Self(From.Self), Callback(From.Callback)
+    ):
+        TGs2Future(From),
+        Self(From.Self),
+        Callback(From.Callback)
     {
     }
 
@@ -378,17 +445,14 @@ namespace Gs2::Limit::Domain::Model
         TSharedPtr<TSharedPtr<Gs2::Core::Domain::CallbackID>> Result
     )
     {
-        const auto Future = Self->Model();
-        Future->StartSynchronousTask();
-        Future->EnsureCompletion();
-        if (Future->GetTask().IsError())
-        {
-            return Future->GetTask().Error();
-        }
-        const auto Item = Future->GetTask().Result();
-        const auto ID = Self->Subscribe(Callback);
+        const auto Task = Self->Model();
+        Task->StartSynchronousTask();
+        Task->EnsureCompletion();
+        if (Task->GetTask().IsError()) return Task->GetTask().Error();
+        const auto Item = Task->GetTask().Result();
+        const auto CallbackId = Self->Subscribe(Callback);
         Callback(Item);
-        *Result = MakeShared<Gs2::Core::Domain::CallbackID>(ID);
+        *Result = MakeShared<Gs2::Core::Domain::CallbackID>(CallbackId);
         return nullptr;
     }
 
@@ -399,53 +463,41 @@ namespace Gs2::Limit::Domain::Model
         return Gs2::Core::Util::New<FAsyncTask<FSubscribeWithInitialCallTask>>(this->AsShared(), Callback);
     }
 
-    void FCounterAccessTokenDomain::Invalidate()
-    {
-        Gs2::Limit::Model::Cache::FCounterCache::Delete(
-            Gs2->Cache,
-            NamespaceName,
-            AccessToken.IsValid() ? UserId() : TOptional<FString>(),
-            LimitName,
-            CounterName,
-            AccessToken.IsValid() ? AccessToken->GetTimeOffset() : TOptional<int32>()
-        );
-    }
-
     Gs2::Core::Domain::CallbackID FCounterAccessTokenDomain::Subscribe(
         TFunction<void(Gs2::Limit::Model::FCounterPtr)> Callback
     )
     {
-        const TWeakPtr<Gs2::Core::Domain::FGs2> WeakGs2 = Gs2;
-        const TWeakPtr<Gs2::Limit::Domain::FGs2LimitDomain> WeakService = Service;
-        const FString RegisteredParentKey = ParentKey;
-        const TOptional<FString> QueryNamespace = NamespaceName;
-        const TOptional<FString> QueryLimit = LimitName;
-        const TOptional<FString> QueryCounter = CounterName;
-        const auto SourceToken = AccessToken;
-        const TOptional<FString> RegisteredUserId = SourceToken.IsValid()
-            ? TOptional<FString>(SourceToken->GetUserId())
-            : TOptional<FString>();
-        const auto RegisteredTimeOffset = SourceToken.IsValid() ? SourceToken->GetTimeOffset() : TOptional<int32>();
-        const auto OwnerSubscriptionParentKey = Gs2::Limit::Model::Cache::FCounterCache::CreateCacheParentKey(
+        const auto SubscriptionParentKey = Gs2::Limit::Model::Cache::FCounterCache::CreateCacheParentKey(
 
             NamespaceName,
             AccessToken.IsValid() ? UserId() : TOptional<FString>(),
             AccessToken.IsValid() ? AccessToken->GetTimeOffset() : TOptional<int32>()
         );
-        const auto OwnerSubscriptionKey = Gs2::Limit::Model::Cache::FCounterCache::CreateCacheKey(
+        const auto SubscriptionCacheKey = Gs2::Limit::Model::Cache::FCounterCache::CreateCacheKey(
 
             LimitName,
             CounterName
         );
+        const TWeakPtr<Gs2::Core::Domain::FGs2> WeakGs2 = Gs2;
+        const TWeakPtr<Limit::Domain::FGs2LimitDomain> WeakService = Service;
+        const FString RegisteredParentKey = SubscriptionParentKey;
+        const TOptional<FString> QueryNamespaceName = NamespaceName;
+        const TOptional<FString> QueryLimitName = LimitName;
+        const TOptional<FString> QueryCounterName = CounterName;
+        const auto SourceToken = AccessToken;
+        const TOptional<FString> RegisteredUserId = SourceToken.IsValid()
+            ? TOptional<FString>(SourceToken->GetUserId())
+            : TOptional<FString>();
+        const int32 RegisteredTimeOffset = SourceToken.IsValid() ? SourceToken->GetTimeOffset().Get(0) : 0;
         return Gs2->Cache->Subscribe(
             Gs2::Limit::Model::FCounter::TypeName,
-            OwnerSubscriptionParentKey,
-            OwnerSubscriptionKey,
+            SubscriptionParentKey,
+            SubscriptionCacheKey,
             [Callback](TSharedPtr<FGs2Object> obj)
             {
                 Callback(StaticCastSharedPtr<Gs2::Limit::Model::FCounter>(obj));
             },
-            [WeakGs2, WeakService, RegisteredParentKey, QueryNamespace, QueryLimit, QueryCounter, SourceToken, RegisteredUserId, RegisteredTimeOffset]()
+            [WeakGs2, WeakService, RegisteredParentKey, QueryNamespaceName, QueryLimitName, QueryCounterName, SourceToken, RegisteredUserId, RegisteredTimeOffset]()
             {
                 const auto Owner = WeakGs2.Pin();
                 if (!Owner.IsValid() || !SourceToken.IsValid() || !RegisteredUserId.IsSet())
@@ -453,17 +505,17 @@ namespace Gs2::Limit::Domain::Model
                     return;
                 }
                 const auto TokenSnapshot = MakeShared<Gs2::Auth::Model::FAccessToken>(*SourceToken);
-                if (TokenSnapshot->GetUserId() != RegisteredUserId || TokenSnapshot->GetTimeOffset() != RegisteredTimeOffset)
+                if (TokenSnapshot->GetUserId() != RegisteredUserId || TokenSnapshot->GetTimeOffset().Get(0) != RegisteredTimeOffset)
                 {
                     return;
                 }
                 const auto Domain = MakeShared<FCounterAccessTokenDomain>(
                     Owner,
                     WeakService.Pin(),
-                    QueryNamespace,
+                    QueryNamespaceName,
                     TokenSnapshot,
-                    QueryLimit,
-                    QueryCounter
+                    QueryLimitName,
+                    QueryCounterName
                 );
                 Domain->ParentKey = RegisteredParentKey;
                 const auto Task = Domain->Model();
@@ -476,17 +528,21 @@ namespace Gs2::Limit::Domain::Model
         Gs2::Core::Domain::CallbackID CallbackID
     )
     {
+        const auto SubscriptionParentKey = Gs2::Limit::Model::Cache::FCounterCache::CreateCacheParentKey(
+
+            NamespaceName,
+            AccessToken.IsValid() ? UserId() : TOptional<FString>(),
+            AccessToken.IsValid() ? AccessToken->GetTimeOffset() : TOptional<int32>()
+        );
+        const auto SubscriptionCacheKey = Gs2::Limit::Model::Cache::FCounterCache::CreateCacheKey(
+
+            LimitName,
+            CounterName
+        );
         Gs2->Cache->Unsubscribe(
             Gs2::Limit::Model::FCounter::TypeName,
-            Gs2::Limit::Model::Cache::FCounterCache::CreateCacheParentKey(
-                NamespaceName,
-                AccessToken.IsValid() ? UserId() : TOptional<FString>(),
-                AccessToken.IsValid() ? AccessToken->GetTimeOffset() : TOptional<int32>()
-            ),
-            Gs2::Limit::Model::Cache::FCounterCache::CreateCacheKey(
-                LimitName,
-                CounterName
-            ),
+            SubscriptionParentKey,
+            SubscriptionCacheKey,
             CallbackID
         );
     }

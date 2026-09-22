@@ -96,16 +96,17 @@ namespace Gs2::Money2::Model
                 }() : TOptional<int32>())
             ->WithDepositTransactions(Data->HasField(ANSI_TO_TCHAR("depositTransactions")) ? [Data]() -> TSharedPtr<TArray<Model::FDepositTransactionPtr>>
                 {
-                    auto v = MakeShared<TArray<Model::FDepositTransactionPtr>>();
-                    if (!Data->HasTypedField<EJson::Null>(ANSI_TO_TCHAR("depositTransactions")) && Data->HasTypedField<EJson::Array>(ANSI_TO_TCHAR("depositTransactions")))
+                    if (!Data->HasTypedField<EJson::Array>(ANSI_TO_TCHAR("depositTransactions")))
                     {
-                        for (auto JsonObjectValue : Data->GetArrayField(ANSI_TO_TCHAR("depositTransactions")))
-                        {
-                            v->Add(Model::FDepositTransaction::FromJson(JsonObjectValue->AsObject()));
-                        }
+                        return nullptr;
+                    }
+                    auto v = MakeShared<TArray<Model::FDepositTransactionPtr>>();
+                    for (auto JsonObjectValue : Data->GetArrayField(ANSI_TO_TCHAR("depositTransactions")))
+                    {
+                        v->Add(Model::FDepositTransaction::FromJson(JsonObjectValue->AsObject()));
                     }
                     return v;
-                 }() : MakeShared<TArray<Model::FDepositTransactionPtr>>())
+                 }() : nullptr)
             ->WithStatus(Data->HasField(ANSI_TO_TCHAR("status")) ? [Data]() -> Model::FWalletSummaryPtr
                 {
                     if (Data->HasTypedField<EJson::Null>(ANSI_TO_TCHAR("status")))

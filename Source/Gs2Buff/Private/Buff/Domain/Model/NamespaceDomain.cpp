@@ -373,7 +373,6 @@ namespace Gs2::Buff::Domain::Model
 
     Gs2::Core::Domain::CallbackID FNamespaceDomain::SubscribeBuffEntryModelMasters(
     TFunction<void()> Callback
-
     )
     {
         return Gs2->Cache->ListSubscribe(
@@ -509,7 +508,6 @@ namespace Gs2::Buff::Domain::Model
 
     Gs2::Core::Domain::CallbackID FNamespaceDomain::SubscribeBuffEntryModels(
     TFunction<void()> Callback
-
     )
     {
         return Gs2->Cache->ListSubscribe(

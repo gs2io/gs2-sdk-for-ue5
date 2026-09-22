@@ -93,8 +93,7 @@ namespace Gs2::Enchant::Domain::Model
     }
 
     Gs2::Core::Domain::CallbackID FUserAccessTokenDomain::SubscribeBalanceParameterStatuses(
-    TFunction<void()> Callback
-        , const TOptional<FString> ParameterName
+    TFunction<void()> Callback, const TOptional<FString> ParameterName
     )
     {
         return Gs2->Cache->ListSubscribe(
@@ -245,8 +244,7 @@ namespace Gs2::Enchant::Domain::Model
     }
 
     Gs2::Core::Domain::CallbackID FUserAccessTokenDomain::SubscribeRarityParameterStatuses(
-    TFunction<void()> Callback
-        , const TOptional<FString> ParameterName
+    TFunction<void()> Callback, const TOptional<FString> ParameterName
     )
     {
         return Gs2->Cache->ListSubscribe(

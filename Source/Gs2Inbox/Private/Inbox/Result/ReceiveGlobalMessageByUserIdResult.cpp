@@ -55,16 +55,17 @@ namespace Gs2::Inbox::Result
         return MakeShared<FReceiveGlobalMessageByUserIdResult>()
             ->WithItem(Data->HasField(ANSI_TO_TCHAR("item")) ? [Data]() -> TSharedPtr<TArray<Model::FMessagePtr>>
                  {
-                    auto v = MakeShared<TArray<Model::FMessagePtr>>();
-                    if (!Data->HasTypedField<EJson::Null>(ANSI_TO_TCHAR("item")) && Data->HasTypedField<EJson::Array>(ANSI_TO_TCHAR("item")))
+                    if (!Data->HasTypedField<EJson::Array>(ANSI_TO_TCHAR("item")))
                     {
-                        for (auto JsonObjectValue : Data->GetArrayField(ANSI_TO_TCHAR("item")))
-                        {
-                            v->Add(Model::FMessage::FromJson(JsonObjectValue->AsObject()));
-                        }
+                        return nullptr;
+                    }
+                    auto v = MakeShared<TArray<Model::FMessagePtr>>();
+                    for (auto JsonObjectValue : Data->GetArrayField(ANSI_TO_TCHAR("item")))
+                    {
+                        v->Add(Model::FMessage::FromJson(JsonObjectValue->AsObject()));
                     }
                     return v;
-                 }() : MakeShared<TArray<Model::FMessagePtr>>());
+                 }() : nullptr);
     }
 
     TSharedPtr<FJsonObject> FReceiveGlobalMessageByUserIdResult::ToJson() const

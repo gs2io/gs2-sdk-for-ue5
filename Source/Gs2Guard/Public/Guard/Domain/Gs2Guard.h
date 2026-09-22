@@ -96,7 +96,6 @@ namespace Gs2::Guard::Domain
 
         Gs2::Core::Domain::CallbackID SubscribeNamespaces(
             TFunction<void()> Callback
-
         );
 
         class FCollectNamespacesTask;
@@ -124,8 +123,7 @@ namespace Gs2::Guard::Domain
             TFunction<void(TArray<Gs2::Guard::Model::FNamespacePtr>)> Callback,const TOptional<FString> NamePrefix = TOptional<FString>()
         );
         void UnsubscribeNamespaces(
-            Gs2::Core::Domain::CallbackID CallbackID,
-            const TOptional<FString> NamePrefix
+            Gs2::Core::Domain::CallbackID CallbackID
         );
 
         TSharedPtr<Gs2::Guard::Domain::Model::FNamespaceDomain> Namespace(
@@ -144,6 +142,24 @@ namespace Gs2::Guard::Domain
             const FString Request,
             const FString Result,
             const TOptional<int32> TimeOffset = TOptional<int32>()
+        );
+
+        // Gs2Distributor:DescribeUserData（ユーザーの全データの一括取得）の 1 エントリを、Kind に対応するモデルのキャッシュへ入れる。
+        // 戻り値は親キー（未設定は知らない Kind ＝ SDK が古い / 対応表に無い / Payload が読めない）。呼び手は全ページを読み終えてから
+        // SetListCached(TimeOffset, Kind, ParentKey) を呼ぶ。対応表は sdk-gen の type/user_data_cache.py（kind → モデル）。
+        TOptional<FString> PutUserData(
+            const TOptional<FString> NamespaceName,
+            const TOptional<FString> UserId,
+            const TOptional<int32> TimeOffset,
+            const FString Kind,
+            const FString Payload
+        );
+
+        // 一括取得で入れた Kind の親キーに「リストが揃った印」を立てる（Describe のイテレータがサーバーへ出なくなる）。
+        bool SetListCached(
+            const TOptional<int32> TimeOffset,
+            const FString Kind,
+            const FString ParentKey
         );
 
         void UpdateCacheFromJobResult(

@@ -249,8 +249,7 @@ namespace Gs2::Friend::Domain::Model
     }
 
     Gs2::Core::Domain::CallbackID FUserDomain::SubscribeFriends(
-    TFunction<void()> Callback
-        , const TOptional<bool> WithProfile
+    TFunction<void()> Callback, const TOptional<bool> WithProfile
     )
     {
         return Gs2->Cache->ListSubscribe(
@@ -401,7 +400,6 @@ namespace Gs2::Friend::Domain::Model
 
     Gs2::Core::Domain::CallbackID FUserDomain::SubscribeSendRequests(
     TFunction<void()> Callback
-
     )
     {
         return Gs2->Cache->ListSubscribe(
@@ -546,7 +544,6 @@ namespace Gs2::Friend::Domain::Model
 
     Gs2::Core::Domain::CallbackID FUserDomain::SubscribeReceiveRequests(
     TFunction<void()> Callback
-
     )
     {
         return Gs2->Cache->ListSubscribe(

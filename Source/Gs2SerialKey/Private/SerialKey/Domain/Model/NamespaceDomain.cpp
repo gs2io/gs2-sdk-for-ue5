@@ -374,7 +374,6 @@ namespace Gs2::SerialKey::Domain::Model
 
     Gs2::Core::Domain::CallbackID FNamespaceDomain::SubscribeCampaignModels(
     TFunction<void()> Callback
-
     )
     {
         return Gs2->Cache->ListSubscribe(
@@ -535,7 +534,6 @@ namespace Gs2::SerialKey::Domain::Model
 
     Gs2::Core::Domain::CallbackID FNamespaceDomain::SubscribeCampaignModelMasters(
     TFunction<void()> Callback
-
     )
     {
         return Gs2->Cache->ListSubscribe(

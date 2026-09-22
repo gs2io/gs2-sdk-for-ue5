@@ -240,6 +240,17 @@ namespace Gs2::Gateway::Domain::Model
         return Gs2::Core::Util::New<FAsyncTask<FDisconnectAllTask>>(this->AsShared(), Request);
     }
 
+    TSharedPtr<Gs2::Gateway::Domain::Model::FFirebaseTokenDomain> FUserDomain::FirebaseToken(
+    )
+    {
+        return MakeShared<Gs2::Gateway::Domain::Model::FFirebaseTokenDomain>(
+            Gs2,
+            Service,
+            NamespaceName,
+            UserId
+        );
+    }
+
     Gs2::Gateway::Domain::Iterator::FDescribeWebSocketSessionsByUserIdIteratorPtr FUserDomain::WebSocketSessions(
         const TOptional<FString> TimeOffsetToken
     ) const
@@ -255,7 +266,6 @@ namespace Gs2::Gateway::Domain::Model
 
     Gs2::Core::Domain::CallbackID FUserDomain::SubscribeWebSocketSessions(
     TFunction<void()> Callback
-
     )
     {
         return Gs2->Cache->ListSubscribe(
@@ -376,17 +386,6 @@ namespace Gs2::Gateway::Domain::Model
     )
     {
         return MakeShared<Gs2::Gateway::Domain::Model::FWebSocketSessionDomain>(
-            Gs2,
-            Service,
-            NamespaceName,
-            UserId
-        );
-    }
-
-    TSharedPtr<Gs2::Gateway::Domain::Model::FFirebaseTokenDomain> FUserDomain::FirebaseToken(
-    )
-    {
-        return MakeShared<Gs2::Gateway::Domain::Model::FFirebaseTokenDomain>(
             Gs2,
             Service,
             NamespaceName,

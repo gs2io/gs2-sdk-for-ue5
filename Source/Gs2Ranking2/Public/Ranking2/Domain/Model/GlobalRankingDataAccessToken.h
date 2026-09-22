@@ -165,6 +165,14 @@ namespace Gs2::Ranking2::Domain::Model
         };
         friend FModelTask;
 
+        TSharedPtr<FAsyncTask<FModelTask>> Model();
+
+        void Invalidate();
+
+        Gs2::Core::Domain::CallbackID Subscribe(
+            TFunction<void(Gs2::Ranking2::Model::FGlobalRankingDataPtr)> Callback
+        );
+
         class GS2RANKING2_API FSubscribeWithInitialCallTask final :
             public Gs2::Core::Util::TGs2Future<Gs2::Core::Domain::CallbackID>,
             public TSharedFromThis<FSubscribeWithInitialCallTask>
@@ -172,9 +180,9 @@ namespace Gs2::Ranking2::Domain::Model
             const TSharedPtr<FGlobalRankingDataAccessTokenDomain> Self;
             const TFunction<void(Gs2::Ranking2::Model::FGlobalRankingDataPtr)> Callback;
         public:
-            explicit FSubscribeWithInitialCallTask(
-                const TSharedPtr<FGlobalRankingDataAccessTokenDomain> Self,
-                const TFunction<void(Gs2::Ranking2::Model::FGlobalRankingDataPtr)>& Callback
+            FSubscribeWithInitialCallTask(
+                const TSharedPtr<FGlobalRankingDataAccessTokenDomain>& Self,
+                TFunction<void(Gs2::Ranking2::Model::FGlobalRankingDataPtr)> Callback
             );
 
             FSubscribeWithInitialCallTask(
@@ -185,16 +193,8 @@ namespace Gs2::Ranking2::Domain::Model
                 TSharedPtr<TSharedPtr<Gs2::Core::Domain::CallbackID>> Result
             ) override;
         };
-        friend FSubscribeWithInitialCallTask;
 
-        TSharedPtr<FAsyncTask<FGlobalRankingDataAccessTokenDomain::FSubscribeWithInitialCallTask>> SubscribeWithInitialCall(
-            TFunction<void(Gs2::Ranking2::Model::FGlobalRankingDataPtr)> Callback
-        );
-        void Invalidate();
-
-        TSharedPtr<FAsyncTask<FModelTask>> Model();
-
-        Gs2::Core::Domain::CallbackID Subscribe(
+        TSharedPtr<FAsyncTask<FSubscribeWithInitialCallTask>> SubscribeWithInitialCall(
             TFunction<void(Gs2::Ranking2::Model::FGlobalRankingDataPtr)> Callback
         );
 

@@ -74,23 +74,7 @@ namespace Gs2::Limit::Domain::SpeculativeExecutor
                 return nullptr;
             }
             auto Request = Request::FCountDownByUserIdRequest::FromJson(RequestModelJson);
-            const int64 Count = Request->GetCountDownValue().IsSet() ? static_cast<int64>(*Request->GetCountDownValue()) : 1;
-            if (Count == 0)
-            {
-                Request->WithCountDownValue(0);
-            }
-            else
-            {
-                const uint64 Magnitude = Count < 0 ? static_cast<uint64>(-Count) : static_cast<uint64>(Count);
-                const uint64 MaxMagnitude = 2147483647ULL;
-                const uint64 MaxRate = MaxMagnitude / Magnitude;
-                if (Rate > TBigInt<1024, false>(static_cast<int64>(MaxRate)))
-                {
-                    return nullptr;
-                }
-                const int64 Scaled = Count * Rate.ToInt();
-                Request->WithCountDownValue(static_cast<int32>(Scaled));
-            }
+            Request = FCountDownByUserIdSpeculativeExecutor::Rate(Request, Rate);
             auto Future = FCountDownByUserIdSpeculativeExecutor::Execute(
                 Domain,
                 Service,
@@ -103,7 +87,6 @@ namespace Gs2::Limit::Domain::SpeculativeExecutor
                 return Future->GetTask().Error();
             }
             *Result = Future->GetTask().Result();
-            return nullptr;
         }
         if (FDeleteCounterByUserIdSpeculativeExecutor::Action() == NewAcquireAction->GetAction()) {
             TSharedPtr<FJsonObject> RequestModelJson;
@@ -126,7 +109,6 @@ namespace Gs2::Limit::Domain::SpeculativeExecutor
                 return Future->GetTask().Error();
             }
             *Result = Future->GetTask().Result();
-            return nullptr;
         }
         return nullptr;
     }

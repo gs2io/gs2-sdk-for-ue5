@@ -46,6 +46,7 @@
 #include "Enhance/Model/Cache/UnleashRateModel.h"
 #include "Enhance/Model/Cache/RateModel.h"
 #include "Enhance/Model/Cache/Progress.h"
+#include "Enhance/Model/Cache/Progress.h"
 
 #include "Core/Domain/Gs2.h"
 
@@ -446,7 +447,6 @@ namespace Gs2::Enhance::Domain
 
     Gs2::Core::Domain::CallbackID FGs2EnhanceDomain::SubscribeNamespaces(
     TFunction<void()> Callback
-
     )
     {
         return Gs2->Cache->ListSubscribe(
@@ -665,6 +665,46 @@ namespace Gs2::Enhance::Domain
                     }
 
         }
+    }
+
+    TOptional<FString> FGs2EnhanceDomain::PutUserData(
+        const TOptional<FString> NamespaceName,
+        const TOptional<FString> UserId,
+        const TOptional<int32> TimeOffset,
+        const FString Kind,
+        const FString Payload
+    ) {
+        TSharedPtr<FJsonObject> PayloadJson;
+        if (const TSharedRef<TJsonReader<>> JsonReader = TJsonReaderFactory<>::Create(Payload);
+            !FJsonSerializer::Deserialize(JsonReader, PayloadJson) || !PayloadJson.IsValid())
+        {
+            return TOptional<FString>();
+        }
+        if (Kind == "progress") {
+            const auto Item = Gs2::Enhance::Model::FProgress::FromJson(PayloadJson);
+            if (!Item.IsValid()) return TOptional<FString>();
+            const auto ParentKey = Gs2::Enhance::Model::Cache::FProgressCache::PutUserData(
+                Gs2->Cache,
+                NamespaceName,
+                UserId,
+                TimeOffset,
+                Item
+            );
+            return ParentKey.IsEmpty() ? TOptional<FString>() : TOptional<FString>(ParentKey);
+        }
+        return TOptional<FString>();
+    }
+
+    bool FGs2EnhanceDomain::SetListCached(
+        const TOptional<int32> TimeOffset,
+        const FString Kind,
+        const FString ParentKey
+    ) {
+        if (Kind == "progress") {
+            Gs2->Cache->SetListCached(Gs2::Enhance::Model::FProgress::TypeName, ParentKey);
+            return true;
+        }
+        return false;
     }
 
     void FGs2EnhanceDomain::UpdateCacheFromStampTask(

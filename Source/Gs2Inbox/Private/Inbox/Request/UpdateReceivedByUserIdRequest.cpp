@@ -145,16 +145,17 @@ namespace Gs2::Inbox::Request
               }() : TOptional<FString>())
           ->WithReceivedGlobalMessageNames(Data->HasField(ANSI_TO_TCHAR("receivedGlobalMessageNames")) ? [Data]() -> TSharedPtr<TArray<FString>>
               {
-                  auto v = MakeShared<TArray<FString>>();
-                  if (!Data->HasTypedField<EJson::Null>(ANSI_TO_TCHAR("receivedGlobalMessageNames")) && Data->HasTypedField<EJson::Array>(ANSI_TO_TCHAR("receivedGlobalMessageNames")))
+                  if (!Data->HasTypedField<EJson::Array>(ANSI_TO_TCHAR("receivedGlobalMessageNames")))
                   {
-                      for (auto JsonObjectValue : Data->GetArrayField(ANSI_TO_TCHAR("receivedGlobalMessageNames")))
-                      {
-                          v->Add(JsonObjectValue->AsString());
-                      }
+                      return nullptr;
                   }
+                  auto v = MakeShared<TArray<FString>>();
+                  for (auto JsonObjectValue : Data->GetArrayField(ANSI_TO_TCHAR("receivedGlobalMessageNames")))
+                      {
+                      v->Add(JsonObjectValue->AsString());
+                      }
                   return v;
-              }() : MakeShared<TArray<FString>>())
+              }() : nullptr)
             ->WithTimeOffsetToken(Data->HasField(ANSI_TO_TCHAR("timeOffsetToken")) ? [Data]() -> TOptional<FString>
               {
                   FString v("");

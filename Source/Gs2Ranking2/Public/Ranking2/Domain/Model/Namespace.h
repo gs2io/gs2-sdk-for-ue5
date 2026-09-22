@@ -352,7 +352,6 @@ namespace Gs2::Ranking2::Domain::Model
 
         Gs2::Core::Domain::CallbackID SubscribeGlobalRankingModels(
             TFunction<void()> Callback
-
         );
 
         class FCollectGlobalRankingModelsTask;
@@ -393,7 +392,6 @@ namespace Gs2::Ranking2::Domain::Model
 
         Gs2::Core::Domain::CallbackID SubscribeGlobalRankingModelMasters(
             TFunction<void()> Callback
-
         );
 
         class FCollectGlobalRankingModelMastersTask;
@@ -441,7 +439,6 @@ namespace Gs2::Ranking2::Domain::Model
 
         Gs2::Core::Domain::CallbackID SubscribeSubscribeRankingModels(
             TFunction<void()> Callback
-
         );
 
         class FCollectSubscribeRankingModelsTask;
@@ -482,7 +479,6 @@ namespace Gs2::Ranking2::Domain::Model
 
         Gs2::Core::Domain::CallbackID SubscribeSubscribeRankingModelMasters(
             TFunction<void()> Callback
-
         );
 
         class FCollectSubscribeRankingModelMastersTask;
@@ -522,7 +518,6 @@ namespace Gs2::Ranking2::Domain::Model
 
         Gs2::Core::Domain::CallbackID SubscribeClusterRankingModels(
             TFunction<void()> Callback
-
         );
 
         class FCollectClusterRankingModelsTask;
@@ -563,7 +558,6 @@ namespace Gs2::Ranking2::Domain::Model
 
         Gs2::Core::Domain::CallbackID SubscribeClusterRankingModelMasters(
             TFunction<void()> Callback
-
         );
 
         class FCollectClusterRankingModelMastersTask;

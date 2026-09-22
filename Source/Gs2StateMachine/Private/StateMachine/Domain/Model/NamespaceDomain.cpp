@@ -363,7 +363,6 @@ namespace Gs2::StateMachine::Domain::Model
 
     Gs2::Core::Domain::CallbackID FNamespaceDomain::SubscribeStateMachineMasters(
     TFunction<void()> Callback
-
     )
     {
         return Gs2->Cache->ListSubscribe(

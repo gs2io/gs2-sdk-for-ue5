@@ -145,16 +145,17 @@ namespace Gs2::JobQueue::Request
               }() : TOptional<FString>())
           ->WithJobs(Data->HasField(ANSI_TO_TCHAR("jobs")) ? [Data]() -> TSharedPtr<TArray<Model::FJobEntryPtr>>
               {
-                  auto v = MakeShared<TArray<Model::FJobEntryPtr>>();
-                  if (!Data->HasTypedField<EJson::Null>(ANSI_TO_TCHAR("jobs")) && Data->HasTypedField<EJson::Array>(ANSI_TO_TCHAR("jobs")))
+                  if (!Data->HasTypedField<EJson::Array>(ANSI_TO_TCHAR("jobs")))
                   {
-                      for (auto JsonObjectValue : Data->GetArrayField(ANSI_TO_TCHAR("jobs")))
-                      {
-                          v->Add(Model::FJobEntry::FromJson(JsonObjectValue->AsObject()));
-                      }
+                      return nullptr;
                   }
+                  auto v = MakeShared<TArray<Model::FJobEntryPtr>>();
+                  for (auto JsonObjectValue : Data->GetArrayField(ANSI_TO_TCHAR("jobs")))
+                      {
+                      v->Add(Model::FJobEntry::FromJson(JsonObjectValue->AsObject()));
+                      }
                   return v;
-              }() : MakeShared<TArray<Model::FJobEntryPtr>>())
+              }() : nullptr)
             ->WithTimeOffsetToken(Data->HasField(ANSI_TO_TCHAR("timeOffsetToken")) ? [Data]() -> TOptional<FString>
               {
                   FString v("");

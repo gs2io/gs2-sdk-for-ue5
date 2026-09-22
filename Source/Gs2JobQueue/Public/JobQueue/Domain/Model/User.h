@@ -150,7 +150,6 @@ namespace Gs2::JobQueue::Domain::Model
 
         Gs2::Core::Domain::CallbackID SubscribeJobs(
             TFunction<void()> Callback
-
         );
 
         class FCollectJobsTask;

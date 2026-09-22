@@ -247,7 +247,6 @@ namespace Gs2::Buff::Domain::Model
 
         Gs2::Core::Domain::CallbackID SubscribeBuffEntryModelMasters(
             TFunction<void()> Callback
-
         );
 
         class FCollectBuffEntryModelMastersTask;
@@ -287,7 +286,6 @@ namespace Gs2::Buff::Domain::Model
 
         Gs2::Core::Domain::CallbackID SubscribeBuffEntryModels(
             TFunction<void()> Callback
-
         );
 
         class FCollectBuffEntryModelsTask;

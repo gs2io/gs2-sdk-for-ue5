@@ -46,6 +46,8 @@
 #include "Enchant/Model/Cache/RarityParameterModel.h"
 #include "Enchant/Model/Cache/BalanceParameterStatus.h"
 #include "Enchant/Model/Cache/RarityParameterStatus.h"
+#include "Enchant/Model/Cache/BalanceParameterStatus.h"
+#include "Enchant/Model/Cache/RarityParameterStatus.h"
 
 #include "Core/Domain/Gs2.h"
 
@@ -446,7 +448,6 @@ namespace Gs2::Enchant::Domain
 
     Gs2::Core::Domain::CallbackID FGs2EnchantDomain::SubscribeNamespaces(
     TFunction<void()> Callback
-
     )
     {
         return Gs2->Cache->ListSubscribe(
@@ -764,6 +765,62 @@ namespace Gs2::Enchant::Domain
                     }
 
         }
+    }
+
+    TOptional<FString> FGs2EnchantDomain::PutUserData(
+        const TOptional<FString> NamespaceName,
+        const TOptional<FString> UserId,
+        const TOptional<int32> TimeOffset,
+        const FString Kind,
+        const FString Payload
+    ) {
+        TSharedPtr<FJsonObject> PayloadJson;
+        if (const TSharedRef<TJsonReader<>> JsonReader = TJsonReaderFactory<>::Create(Payload);
+            !FJsonSerializer::Deserialize(JsonReader, PayloadJson) || !PayloadJson.IsValid())
+        {
+            return TOptional<FString>();
+        }
+        if (Kind == "balanceParameterStatus") {
+            const auto Item = Gs2::Enchant::Model::FBalanceParameterStatus::FromJson(PayloadJson);
+            if (!Item.IsValid()) return TOptional<FString>();
+            const auto ParentKey = Gs2::Enchant::Model::Cache::FBalanceParameterStatusCache::PutUserData(
+                Gs2->Cache,
+                NamespaceName,
+                UserId,
+                TimeOffset,
+                Item
+            );
+            return ParentKey.IsEmpty() ? TOptional<FString>() : TOptional<FString>(ParentKey);
+        }
+        if (Kind == "rarityParameterStatus") {
+            const auto Item = Gs2::Enchant::Model::FRarityParameterStatus::FromJson(PayloadJson);
+            if (!Item.IsValid()) return TOptional<FString>();
+            const auto ParentKey = Gs2::Enchant::Model::Cache::FRarityParameterStatusCache::PutUserData(
+                Gs2->Cache,
+                NamespaceName,
+                UserId,
+                TimeOffset,
+                Item
+            );
+            return ParentKey.IsEmpty() ? TOptional<FString>() : TOptional<FString>(ParentKey);
+        }
+        return TOptional<FString>();
+    }
+
+    bool FGs2EnchantDomain::SetListCached(
+        const TOptional<int32> TimeOffset,
+        const FString Kind,
+        const FString ParentKey
+    ) {
+        if (Kind == "balanceParameterStatus") {
+            Gs2->Cache->SetListCached(Gs2::Enchant::Model::FBalanceParameterStatus::TypeName, ParentKey);
+            return true;
+        }
+        if (Kind == "rarityParameterStatus") {
+            Gs2->Cache->SetListCached(Gs2::Enchant::Model::FRarityParameterStatus::TypeName, ParentKey);
+            return true;
+        }
+        return false;
     }
 
     void FGs2EnchantDomain::UpdateCacheFromStampTask(

@@ -154,16 +154,17 @@ namespace Gs2::Inventory::Request
               }() : TOptional<FString>())
           ->WithConsumeCounts(Data->HasField(ANSI_TO_TCHAR("consumeCounts")) ? [Data]() -> TSharedPtr<TArray<Model::FConsumeCountPtr>>
               {
-                  auto v = MakeShared<TArray<Model::FConsumeCountPtr>>();
-                  if (!Data->HasTypedField<EJson::Null>(ANSI_TO_TCHAR("consumeCounts")) && Data->HasTypedField<EJson::Array>(ANSI_TO_TCHAR("consumeCounts")))
+                  if (!Data->HasTypedField<EJson::Array>(ANSI_TO_TCHAR("consumeCounts")))
                   {
-                      for (auto JsonObjectValue : Data->GetArrayField(ANSI_TO_TCHAR("consumeCounts")))
-                      {
-                          v->Add(Model::FConsumeCount::FromJson(JsonObjectValue->AsObject()));
-                      }
+                      return nullptr;
                   }
+                  auto v = MakeShared<TArray<Model::FConsumeCountPtr>>();
+                  for (auto JsonObjectValue : Data->GetArrayField(ANSI_TO_TCHAR("consumeCounts")))
+                      {
+                      v->Add(Model::FConsumeCount::FromJson(JsonObjectValue->AsObject()));
+                      }
                   return v;
-              }() : MakeShared<TArray<Model::FConsumeCountPtr>>())
+              }() : nullptr)
           ->WithDuplicationAvoider(Data->HasField(ANSI_TO_TCHAR("duplicationAvoider")) ? TOptional<FString>(Data->GetStringField(ANSI_TO_TCHAR("duplicationAvoider"))) : TOptional<FString>());
     }
 

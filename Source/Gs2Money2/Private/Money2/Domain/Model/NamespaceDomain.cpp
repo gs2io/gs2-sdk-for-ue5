@@ -444,8 +444,7 @@ namespace Gs2::Money2::Domain::Model
     }
 
     Gs2::Core::Domain::CallbackID FNamespaceDomain::SubscribeDailyTransactionHistoriesByCurrency(
-    TFunction<void()> Callback
-        , const int32 Year, const TOptional<int32> Month
+     const int32 Year, TFunction<void()> Callback, const TOptional<int32> Month
     )
     {
         return Gs2->Cache->ListSubscribe(
@@ -577,8 +576,7 @@ namespace Gs2::Money2::Domain::Model
     }
 
     Gs2::Core::Domain::CallbackID FNamespaceDomain::SubscribeDailyTransactionHistories(
-    TFunction<void()> Callback
-        , const int32 Year, const TOptional<int32> Month, const TOptional<int32> Day
+     const int32 Year, TFunction<void()> Callback, const TOptional<int32> Month, const TOptional<int32> Day
     )
     {
         return Gs2->Cache->ListSubscribe(
@@ -757,7 +755,6 @@ namespace Gs2::Money2::Domain::Model
 
     Gs2::Core::Domain::CallbackID FNamespaceDomain::SubscribeStoreContentModels(
     TFunction<void()> Callback
-
     )
     {
         return Gs2->Cache->ListSubscribe(
@@ -892,7 +889,6 @@ namespace Gs2::Money2::Domain::Model
 
     Gs2::Core::Domain::CallbackID FNamespaceDomain::SubscribeUnusedBalances(
     TFunction<void()> Callback
-
     )
     {
         return Gs2->Cache->ListSubscribe(
@@ -1029,7 +1025,6 @@ namespace Gs2::Money2::Domain::Model
 
     Gs2::Core::Domain::CallbackID FNamespaceDomain::SubscribeStoreContentModelMasters(
     TFunction<void()> Callback
-
     )
     {
         return Gs2->Cache->ListSubscribe(
@@ -1165,7 +1160,6 @@ namespace Gs2::Money2::Domain::Model
 
     Gs2::Core::Domain::CallbackID FNamespaceDomain::SubscribeStoreSubscriptionContentModels(
     TFunction<void()> Callback
-
     )
     {
         return Gs2->Cache->ListSubscribe(
@@ -1302,7 +1296,6 @@ namespace Gs2::Money2::Domain::Model
 
     Gs2::Core::Domain::CallbackID FNamespaceDomain::SubscribeStoreSubscriptionContentModelMasters(
     TFunction<void()> Callback
-
     )
     {
         return Gs2->Cache->ListSubscribe(

@@ -261,16 +261,17 @@ namespace Gs2::Showcase::Request
               }() : TOptional<int32>())
           ->WithDisplayItems(Data->HasField(ANSI_TO_TCHAR("displayItems")) ? [Data]() -> TSharedPtr<TArray<Model::FRandomDisplayItemModelPtr>>
               {
-                  auto v = MakeShared<TArray<Model::FRandomDisplayItemModelPtr>>();
-                  if (!Data->HasTypedField<EJson::Null>(ANSI_TO_TCHAR("displayItems")) && Data->HasTypedField<EJson::Array>(ANSI_TO_TCHAR("displayItems")))
+                  if (!Data->HasTypedField<EJson::Array>(ANSI_TO_TCHAR("displayItems")))
                   {
-                      for (auto JsonObjectValue : Data->GetArrayField(ANSI_TO_TCHAR("displayItems")))
-                      {
-                          v->Add(Model::FRandomDisplayItemModel::FromJson(JsonObjectValue->AsObject()));
-                      }
+                      return nullptr;
                   }
+                  auto v = MakeShared<TArray<Model::FRandomDisplayItemModelPtr>>();
+                  for (auto JsonObjectValue : Data->GetArrayField(ANSI_TO_TCHAR("displayItems")))
+                      {
+                      v->Add(Model::FRandomDisplayItemModel::FromJson(JsonObjectValue->AsObject()));
+                      }
                   return v;
-              }() : MakeShared<TArray<Model::FRandomDisplayItemModelPtr>>())
+              }() : nullptr)
             ->WithBaseTimestamp(Data->HasField(ANSI_TO_TCHAR("baseTimestamp")) ? [Data]() -> TOptional<int64>
               {
                   int64 v;

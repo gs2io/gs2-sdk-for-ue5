@@ -282,6 +282,28 @@ namespace Gs2::Identifier::Model::Cache
         );
     }
 
+    FString FIdentifierCache::PutUserData(
+        const Gs2::Core::Domain::FCacheDatabasePtr& Cache,
+        TOptional<FString> NamespaceName,
+        TOptional<FString> UserId,
+        TOptional<int32> TimeOffset,
+        const Gs2::Identifier::Model::FIdentifierPtr& Item
+    )
+    {
+        if (!Item.IsValid()) return FString();
+        Put(
+            Cache,
+            Item->GetUserName(),
+            Item->GetClientId(),
+            TimeOffset,
+            Item
+        );
+        return CreateCacheParentKey(
+            Item->GetUserName(),
+            TimeOffset
+        );
+    }
+
     void FIdentifierCache::Delete(
         const Gs2::Core::Domain::FCacheDatabasePtr& CacheOwnerArgumentCache,
         TOptional<FString> CacheOwnerArgumentUserName,

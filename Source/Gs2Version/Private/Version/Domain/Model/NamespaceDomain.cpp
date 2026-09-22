@@ -374,7 +374,6 @@ namespace Gs2::Version::Domain::Model
 
     Gs2::Core::Domain::CallbackID FNamespaceDomain::SubscribeVersionModels(
     TFunction<void()> Callback
-
     )
     {
         return Gs2->Cache->ListSubscribe(
@@ -535,7 +534,6 @@ namespace Gs2::Version::Domain::Model
 
     Gs2::Core::Domain::CallbackID FNamespaceDomain::SubscribeVersionModelMasters(
     TFunction<void()> Callback
-
     )
     {
         return Gs2->Cache->ListSubscribe(

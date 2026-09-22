@@ -145,16 +145,17 @@ namespace Gs2::Distributor::Request
               }() : TOptional<FString>())
           ->WithActions(Data->HasField(ANSI_TO_TCHAR("actions")) ? [Data]() -> TSharedPtr<TArray<Model::FVerifyActionPtr>>
               {
-                  auto v = MakeShared<TArray<Model::FVerifyActionPtr>>();
-                  if (!Data->HasTypedField<EJson::Null>(ANSI_TO_TCHAR("actions")) && Data->HasTypedField<EJson::Array>(ANSI_TO_TCHAR("actions")))
+                  if (!Data->HasTypedField<EJson::Array>(ANSI_TO_TCHAR("actions")))
                   {
-                      for (auto JsonObjectValue : Data->GetArrayField(ANSI_TO_TCHAR("actions")))
-                      {
-                          v->Add(Model::FVerifyAction::FromJson(JsonObjectValue->AsObject()));
-                      }
+                      return nullptr;
                   }
+                  auto v = MakeShared<TArray<Model::FVerifyActionPtr>>();
+                  for (auto JsonObjectValue : Data->GetArrayField(ANSI_TO_TCHAR("actions")))
+                      {
+                      v->Add(Model::FVerifyAction::FromJson(JsonObjectValue->AsObject()));
+                      }
                   return v;
-              }() : MakeShared<TArray<Model::FVerifyActionPtr>>())
+              }() : nullptr)
             ->WithTimeOffsetToken(Data->HasField(ANSI_TO_TCHAR("timeOffsetToken")) ? [Data]() -> TOptional<FString>
               {
                   FString v("");

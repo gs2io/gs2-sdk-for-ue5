@@ -41,6 +41,7 @@
 #include "Experience/Model/Cache/CurrentExperienceMaster.h"
 #include "Experience/Model/Cache/ExperienceModel.h"
 #include "Experience/Model/Cache/Status.h"
+#include "Experience/Model/Cache/Status.h"
 
 #include "Core/Domain/Gs2.h"
 
@@ -441,7 +442,6 @@ namespace Gs2::Experience::Domain
 
     Gs2::Core::Domain::CallbackID FGs2ExperienceDomain::SubscribeNamespaces(
     TFunction<void()> Callback
-
     )
     {
         return Gs2->Cache->ListSubscribe(
@@ -737,6 +737,46 @@ namespace Gs2::Experience::Domain
             const auto ResultModel = Gs2::Experience::Result::FMultiplyAcquireActionsByUserIdResult::FromJson(ResultModelJson);
 
         }
+    }
+
+    TOptional<FString> FGs2ExperienceDomain::PutUserData(
+        const TOptional<FString> NamespaceName,
+        const TOptional<FString> UserId,
+        const TOptional<int32> TimeOffset,
+        const FString Kind,
+        const FString Payload
+    ) {
+        TSharedPtr<FJsonObject> PayloadJson;
+        if (const TSharedRef<TJsonReader<>> JsonReader = TJsonReaderFactory<>::Create(Payload);
+            !FJsonSerializer::Deserialize(JsonReader, PayloadJson) || !PayloadJson.IsValid())
+        {
+            return TOptional<FString>();
+        }
+        if (Kind == "status") {
+            const auto Item = Gs2::Experience::Model::FStatus::FromJson(PayloadJson);
+            if (!Item.IsValid()) return TOptional<FString>();
+            const auto ParentKey = Gs2::Experience::Model::Cache::FStatusCache::PutUserData(
+                Gs2->Cache,
+                NamespaceName,
+                UserId,
+                TimeOffset,
+                Item
+            );
+            return ParentKey.IsEmpty() ? TOptional<FString>() : TOptional<FString>(ParentKey);
+        }
+        return TOptional<FString>();
+    }
+
+    bool FGs2ExperienceDomain::SetListCached(
+        const TOptional<int32> TimeOffset,
+        const FString Kind,
+        const FString ParentKey
+    ) {
+        if (Kind == "status") {
+            Gs2->Cache->SetListCached(Gs2::Experience::Model::FStatus::TypeName, ParentKey);
+            return true;
+        }
+        return false;
     }
 
     void FGs2ExperienceDomain::UpdateCacheFromStampTask(

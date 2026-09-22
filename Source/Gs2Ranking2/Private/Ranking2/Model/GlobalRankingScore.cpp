@@ -501,6 +501,32 @@ namespace Gs2::Ranking2::Model::Cache
         );
     }
 
+    FString FGlobalRankingScoreCache::PutUserData(
+        const Gs2::Core::Domain::FCacheDatabasePtr& Cache,
+        TOptional<FString> NamespaceName,
+        TOptional<FString> UserId,
+        TOptional<int32> TimeOffset,
+        const Gs2::Ranking2::Model::FGlobalRankingScorePtr& Item
+    )
+    {
+        if (!Item.IsValid()) return FString();
+        Put(
+            Cache,
+            NamespaceName,
+            Item->GetRankingName(),
+            Item->GetSeason(),
+            UserId,
+            TimeOffset,
+            Item
+        );
+        return CreateCacheParentKey(
+            NamespaceName,
+            UserId,
+            Item->GetRankingName(),
+            TimeOffset
+        );
+    }
+
     void FGlobalRankingScoreCache::Delete(
         const Gs2::Core::Domain::FCacheDatabasePtr& CacheOwnerArgumentCache,
         TOptional<FString> CacheOwnerArgumentNamespaceName,

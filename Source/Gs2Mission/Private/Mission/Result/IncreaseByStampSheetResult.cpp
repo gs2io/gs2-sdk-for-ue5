@@ -82,16 +82,17 @@ namespace Gs2::Mission::Result
                  }() : nullptr)
             ->WithChangedCompletes(Data->HasField(ANSI_TO_TCHAR("changedCompletes")) ? [Data]() -> TSharedPtr<TArray<Model::FCompletePtr>>
                  {
-                    auto v = MakeShared<TArray<Model::FCompletePtr>>();
-                    if (!Data->HasTypedField<EJson::Null>(ANSI_TO_TCHAR("changedCompletes")) && Data->HasTypedField<EJson::Array>(ANSI_TO_TCHAR("changedCompletes")))
+                    if (!Data->HasTypedField<EJson::Array>(ANSI_TO_TCHAR("changedCompletes")))
                     {
-                        for (auto JsonObjectValue : Data->GetArrayField(ANSI_TO_TCHAR("changedCompletes")))
-                        {
-                            v->Add(Model::FComplete::FromJson(JsonObjectValue->AsObject()));
-                        }
+                        return nullptr;
+                    }
+                    auto v = MakeShared<TArray<Model::FCompletePtr>>();
+                    for (auto JsonObjectValue : Data->GetArrayField(ANSI_TO_TCHAR("changedCompletes")))
+                    {
+                        v->Add(Model::FComplete::FromJson(JsonObjectValue->AsObject()));
                     }
                     return v;
-                 }() : MakeShared<TArray<Model::FCompletePtr>>());
+                 }() : nullptr);
     }
 
     TSharedPtr<FJsonObject> FIncreaseByStampSheetResult::ToJson() const

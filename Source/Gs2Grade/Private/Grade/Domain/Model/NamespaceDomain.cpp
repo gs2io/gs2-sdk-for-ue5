@@ -373,7 +373,6 @@ namespace Gs2::Grade::Domain::Model
 
     Gs2::Core::Domain::CallbackID FNamespaceDomain::SubscribeGradeModels(
     TFunction<void()> Callback
-
     )
     {
         return Gs2->Cache->ListSubscribe(
@@ -510,7 +509,6 @@ namespace Gs2::Grade::Domain::Model
 
     Gs2::Core::Domain::CallbackID FNamespaceDomain::SubscribeGradeModelMasters(
     TFunction<void()> Callback
-
     )
     {
         return Gs2->Cache->ListSubscribe(

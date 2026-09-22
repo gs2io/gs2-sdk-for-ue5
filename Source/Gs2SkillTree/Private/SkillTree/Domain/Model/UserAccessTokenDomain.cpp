@@ -87,7 +87,6 @@ namespace Gs2::SkillTree::Domain::Model
 
     Gs2::Core::Domain::CallbackID FUserAccessTokenDomain::SubscribeStatuses(
     TFunction<void()> Callback
-
     )
     {
         return Gs2->Cache->ListSubscribe(

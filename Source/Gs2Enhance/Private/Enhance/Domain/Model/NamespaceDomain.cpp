@@ -440,7 +440,6 @@ namespace Gs2::Enhance::Domain::Model
 
     Gs2::Core::Domain::CallbackID FNamespaceDomain::SubscribeUnleashRateModels(
     TFunction<void()> Callback
-
     )
     {
         return Gs2->Cache->ListSubscribe(
@@ -577,7 +576,6 @@ namespace Gs2::Enhance::Domain::Model
 
     Gs2::Core::Domain::CallbackID FNamespaceDomain::SubscribeUnleashRateModelMasters(
     TFunction<void()> Callback
-
     )
     {
         return Gs2->Cache->ListSubscribe(
@@ -713,7 +711,6 @@ namespace Gs2::Enhance::Domain::Model
 
     Gs2::Core::Domain::CallbackID FNamespaceDomain::SubscribeRateModels(
     TFunction<void()> Callback
-
     )
     {
         return Gs2->Cache->ListSubscribe(
@@ -874,7 +871,6 @@ namespace Gs2::Enhance::Domain::Model
 
     Gs2::Core::Domain::CallbackID FNamespaceDomain::SubscribeRateModelMasters(
     TFunction<void()> Callback
-
     )
     {
         return Gs2->Cache->ListSubscribe(

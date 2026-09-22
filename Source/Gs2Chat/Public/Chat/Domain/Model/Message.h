@@ -93,6 +93,8 @@ namespace Gs2::Chat::Domain::Model
             const FMessageDomain& From
         );
 
+
+
         class GS2CHAT_API FGetTask final :
             public Gs2::Core::Util::TGs2Future<Gs2::Chat::Model::FMessage>,
             public TSharedFromThis<FGetTask>
@@ -118,6 +120,8 @@ namespace Gs2::Chat::Domain::Model
         TSharedPtr<FAsyncTask<FGetTask>> Get(
             Request::FGetMessageByUserIdRequestPtr Request
         );
+
+
 
         class GS2CHAT_API FDeleteTask final :
             public Gs2::Core::Util::TGs2Future<Gs2::Chat::Domain::Model::FMessageDomain>,
@@ -177,6 +181,14 @@ namespace Gs2::Chat::Domain::Model
         };
         friend FModelTask;
 
+        TSharedPtr<FAsyncTask<FModelTask>> Model();
+
+        void Invalidate();
+
+        Gs2::Core::Domain::CallbackID Subscribe(
+            TFunction<void(Gs2::Chat::Model::FMessagePtr)> Callback
+        );
+
         class GS2CHAT_API FSubscribeWithInitialCallTask final :
             public Gs2::Core::Util::TGs2Future<Gs2::Core::Domain::CallbackID>,
             public TSharedFromThis<FSubscribeWithInitialCallTask>
@@ -184,9 +196,9 @@ namespace Gs2::Chat::Domain::Model
             const TSharedPtr<FMessageDomain> Self;
             const TFunction<void(Gs2::Chat::Model::FMessagePtr)> Callback;
         public:
-            explicit FSubscribeWithInitialCallTask(
-                const TSharedPtr<FMessageDomain> Self,
-                const TFunction<void(Gs2::Chat::Model::FMessagePtr)>& Callback
+            FSubscribeWithInitialCallTask(
+                const TSharedPtr<FMessageDomain>& Self,
+                TFunction<void(Gs2::Chat::Model::FMessagePtr)> Callback
             );
 
             FSubscribeWithInitialCallTask(
@@ -197,16 +209,8 @@ namespace Gs2::Chat::Domain::Model
                 TSharedPtr<TSharedPtr<Gs2::Core::Domain::CallbackID>> Result
             ) override;
         };
-        friend FSubscribeWithInitialCallTask;
 
-        TSharedPtr<FAsyncTask<FModelTask>> Model();
-
-        TSharedPtr<FAsyncTask<FMessageDomain::FSubscribeWithInitialCallTask>> SubscribeWithInitialCall(
-            TFunction<void(Gs2::Chat::Model::FMessagePtr)> Callback
-        );
-        void Invalidate();
-
-        Gs2::Core::Domain::CallbackID Subscribe(
+        TSharedPtr<FAsyncTask<FSubscribeWithInitialCallTask>> SubscribeWithInitialCall(
             TFunction<void(Gs2::Chat::Model::FMessagePtr)> Callback
         );
 

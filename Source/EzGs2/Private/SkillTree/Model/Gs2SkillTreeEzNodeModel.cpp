@@ -66,6 +66,14 @@ namespace Gs2::UE5::SkillTree::Model
         this->RestrainReturnRateValue = RestrainReturnRate;
         return SharedThis(this);
     }
+
+    TSharedPtr<FEzNodeModel> FEzNodeModel::WithPremiseNodeNames(
+        const TSharedPtr<TArray<FString>> PremiseNodeNames
+    )
+    {
+        this->PremiseNodeNamesValue = PremiseNodeNames;
+        return SharedThis(this);
+    }
     TOptional<FString> FEzNodeModel::GetName() const
     {
         return NameValue;
@@ -98,6 +106,10 @@ namespace Gs2::UE5::SkillTree::Model
             return FString("null");
         }
         return FString::Printf(TEXT("%f"), RestrainReturnRateValue.GetValue());
+    }
+    TSharedPtr<TArray<FString>> FEzNodeModel::GetPremiseNodeNames() const
+    {
+        return PremiseNodeNamesValue;
     }
 
     Gs2::SkillTree::Model::FNodeModelPtr FEzNodeModel::ToModel() const
@@ -147,7 +159,8 @@ namespace Gs2::UE5::SkillTree::Model
                     return v;
                 }()
             )
-            ->WithRestrainReturnRate(RestrainReturnRateValue);
+            ->WithRestrainReturnRate(RestrainReturnRateValue)
+            ->WithPremiseNodeNames(PremiseNodeNamesValue);
     }
 
     TSharedPtr<FEzNodeModel> FEzNodeModel::FromModel(const Gs2::SkillTree::Model::FNodeModelPtr Model)
@@ -201,6 +214,7 @@ namespace Gs2::UE5::SkillTree::Model
                     return v;
                 }()
             )
-            ->WithRestrainReturnRate(Model->GetRestrainReturnRate());
+            ->WithRestrainReturnRate(Model->GetRestrainReturnRate())
+            ->WithPremiseNodeNames(Model->GetPremiseNodeNames());
     }
 }

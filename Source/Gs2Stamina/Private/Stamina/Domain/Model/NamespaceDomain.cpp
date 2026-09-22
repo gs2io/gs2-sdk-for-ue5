@@ -564,7 +564,6 @@ namespace Gs2::Stamina::Domain::Model
 
     Gs2::Core::Domain::CallbackID FNamespaceDomain::SubscribeMaxStaminaTableMasters(
     TFunction<void()> Callback
-
     )
     {
         return Gs2->Cache->ListSubscribe(
@@ -699,7 +698,6 @@ namespace Gs2::Stamina::Domain::Model
 
     Gs2::Core::Domain::CallbackID FNamespaceDomain::SubscribeStaminaModels(
     TFunction<void()> Callback
-
     )
     {
         return Gs2->Cache->ListSubscribe(
@@ -860,7 +858,6 @@ namespace Gs2::Stamina::Domain::Model
 
     Gs2::Core::Domain::CallbackID FNamespaceDomain::SubscribeRecoverIntervalTableMasters(
     TFunction<void()> Callback
-
     )
     {
         return Gs2->Cache->ListSubscribe(
@@ -998,7 +995,6 @@ namespace Gs2::Stamina::Domain::Model
 
     Gs2::Core::Domain::CallbackID FNamespaceDomain::SubscribeRecoverValueTableMasters(
     TFunction<void()> Callback
-
     )
     {
         return Gs2->Cache->ListSubscribe(
@@ -1136,7 +1132,6 @@ namespace Gs2::Stamina::Domain::Model
 
     Gs2::Core::Domain::CallbackID FNamespaceDomain::SubscribeStaminaModelMasters(
     TFunction<void()> Callback
-
     )
     {
         return Gs2->Cache->ListSubscribe(

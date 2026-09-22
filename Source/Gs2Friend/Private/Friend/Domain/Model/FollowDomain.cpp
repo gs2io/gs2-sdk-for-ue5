@@ -47,7 +47,6 @@
 #include "Friend/Domain/Model/FriendRequest.h"
 #include "Friend/Model/Cache/Follow.h"
 #include "Friend/Model/Cache/FollowUser.h"
-#include "Friend/Model/Cache/PublicProfile.h"
 
 #include "Core/Domain/Gs2.h"
 #include "Core/Domain/Transaction/JobQueueJobDomainFactory.h"
@@ -139,45 +138,18 @@ namespace Gs2::Friend::Domain::Model
             Self->Gs2->Cache,
 
             Request->GetNamespaceName(),
-            Self->UserId,
-            true,
-            Request->GetTargetUserId(),
-            TOptional<int32>(),
-            ResultModel->GetItem()
-        );
-        Gs2::Friend::Model::Cache::FFollowUserCache::Put(
-            Self->Gs2->Cache,
-            Request->GetNamespaceName(),
-            Self->UserId,
-            false,
-            Request->GetTargetUserId(),
-            TOptional<int32>(),
-            MakeShared<Gs2::Friend::Model::FFollowUser>()->WithUserId(Request->GetTargetUserId())
-        );
-        Gs2::Friend::Model::Cache::FFollowUserCache::Put(
-            Self->Gs2->Cache,
-            Request->GetNamespaceName(),
-            Self->UserId,
+            (ResultModel.IsValid() && ResultModel->GetItem().IsValid() ? ResultModel->GetItem()->GetUserId() : TOptional<FString>()),
             TOptional<bool>(),
             Request->GetTargetUserId(),
             TOptional<int32>(),
-            MakeShared<Gs2::Friend::Model::FFollowUser>()->WithUserId(Request->GetTargetUserId())
-        );
-        Gs2::Friend::Model::Cache::FPublicProfileCache::Put(
-            Self->Gs2->Cache,
-            Request->GetNamespaceName(),
-            ResultModel->GetItem()->GetUserId(),
-            TOptional<int32>(),
-            MakeShared<Gs2::Friend::Model::FPublicProfile>()
-                ->WithUserId(ResultModel->GetItem()->GetUserId())
-                ->WithPublicProfile(ResultModel->GetItem()->GetPublicProfile())
+            ResultModel->GetItem()
         );
             }
         auto Domain = MakeShared<Gs2::Friend::Domain::Model::FFollowUserDomain>(
             Self->Gs2,
             Self->Service,
             Request->GetNamespaceName(),
-            Self->UserId,
+            ResultModel->GetItem()->GetUserId(),
             Self->WithProfile,
             Request->GetTargetUserId()
         );
@@ -208,7 +180,6 @@ namespace Gs2::Friend::Domain::Model
 
     Gs2::Core::Domain::CallbackID FFollowDomain::SubscribeFollows(
     TFunction<void()> Callback
-
     )
     {
         return Gs2->Cache->ListSubscribe(

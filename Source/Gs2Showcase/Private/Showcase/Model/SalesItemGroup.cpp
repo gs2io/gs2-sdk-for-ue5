@@ -96,16 +96,17 @@ namespace Gs2::Showcase::Model
                 }() : TOptional<FString>())
             ->WithSalesItems(Data->HasField(ANSI_TO_TCHAR("salesItems")) ? [Data]() -> TSharedPtr<TArray<Model::FSalesItemPtr>>
                 {
-                    auto v = MakeShared<TArray<Model::FSalesItemPtr>>();
-                    if (!Data->HasTypedField<EJson::Null>(ANSI_TO_TCHAR("salesItems")) && Data->HasTypedField<EJson::Array>(ANSI_TO_TCHAR("salesItems")))
+                    if (!Data->HasTypedField<EJson::Array>(ANSI_TO_TCHAR("salesItems")))
                     {
-                        for (auto JsonObjectValue : Data->GetArrayField(ANSI_TO_TCHAR("salesItems")))
-                        {
-                            v->Add(Model::FSalesItem::FromJson(JsonObjectValue->AsObject()));
-                        }
+                        return nullptr;
+                    }
+                    auto v = MakeShared<TArray<Model::FSalesItemPtr>>();
+                    for (auto JsonObjectValue : Data->GetArrayField(ANSI_TO_TCHAR("salesItems")))
+                    {
+                        v->Add(Model::FSalesItem::FromJson(JsonObjectValue->AsObject()));
                     }
                     return v;
-                 }() : MakeShared<TArray<Model::FSalesItemPtr>>());
+                 }() : nullptr);
     }
 
     TSharedPtr<FJsonObject> FSalesItemGroup::ToJson() const

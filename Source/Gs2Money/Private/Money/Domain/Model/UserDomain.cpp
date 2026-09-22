@@ -238,7 +238,6 @@ namespace Gs2::Money::Domain::Model
 
     Gs2::Core::Domain::CallbackID FUserDomain::SubscribeWallets(
     TFunction<void()> Callback
-
     )
     {
         return Gs2->Cache->ListSubscribe(
@@ -389,7 +388,6 @@ namespace Gs2::Money::Domain::Model
 
     Gs2::Core::Domain::CallbackID FUserDomain::SubscribeReceipts(
     TFunction<void()> Callback
-
     )
     {
         return Gs2->Cache->ListSubscribe(

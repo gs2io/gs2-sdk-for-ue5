@@ -248,7 +248,6 @@ namespace Gs2::Limit::Domain::Model
 
         Gs2::Core::Domain::CallbackID SubscribeLimitModels(
             TFunction<void()> Callback
-
         );
 
         class FCollectLimitModelsTask;
@@ -297,7 +296,6 @@ namespace Gs2::Limit::Domain::Model
 
         Gs2::Core::Domain::CallbackID SubscribeLimitModelMasters(
             TFunction<void()> Callback
-
         );
 
         class FCollectLimitModelMastersTask;

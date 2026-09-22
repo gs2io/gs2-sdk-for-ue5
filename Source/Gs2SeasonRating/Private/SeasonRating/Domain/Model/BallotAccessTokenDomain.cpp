@@ -110,22 +110,6 @@ namespace Gs2::SeasonRating::Domain::Model
             Value = MakeShared<Gs2::SeasonRating::Model::FSignedBallot>()
                 ->WithBody(Response->GetBody())
                 ->WithSignature(Response->GetSignature());
-            Self->Gs2->Cache->Put(
-                Gs2::SeasonRating::Model::FSignedBallot::TypeName,
-                Gs2::SeasonRating::Domain::Model::FBallotDomain::CreateSignedCacheParentKey(
-                    Request->GetNamespaceName(),
-                    Self->UserId(),
-                    Self->AccessToken.IsValid() ? Self->AccessToken->GetTimeOffset() : TOptional<int32>()
-                ),
-                Gs2::SeasonRating::Domain::Model::FBallotDomain::CreateCacheKey(
-                    Request->GetSeasonName(),
-                    Request->GetSessionName(),
-                    TOptional<int32>(),
-                    TOptional<FString>()
-                ),
-                Value,
-                FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
-            );
         }
         Self->Body = Value.IsValid() ? Value->GetBody() : TOptional<FString>();
         Self->Signature = Value.IsValid() ? Value->GetSignature() : TOptional<FString>();

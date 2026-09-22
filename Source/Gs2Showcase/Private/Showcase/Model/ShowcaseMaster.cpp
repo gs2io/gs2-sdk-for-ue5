@@ -278,16 +278,17 @@ namespace Gs2::Showcase::Model
                 }() : TOptional<FString>())
             ->WithDisplayItems(Data->HasField(ANSI_TO_TCHAR("displayItems")) ? [Data]() -> TSharedPtr<TArray<Model::FDisplayItemMasterPtr>>
                 {
-                    auto v = MakeShared<TArray<Model::FDisplayItemMasterPtr>>();
-                    if (!Data->HasTypedField<EJson::Null>(ANSI_TO_TCHAR("displayItems")) && Data->HasTypedField<EJson::Array>(ANSI_TO_TCHAR("displayItems")))
+                    if (!Data->HasTypedField<EJson::Array>(ANSI_TO_TCHAR("displayItems")))
                     {
-                        for (auto JsonObjectValue : Data->GetArrayField(ANSI_TO_TCHAR("displayItems")))
-                        {
-                            v->Add(Model::FDisplayItemMaster::FromJson(JsonObjectValue->AsObject()));
-                        }
+                        return nullptr;
+                    }
+                    auto v = MakeShared<TArray<Model::FDisplayItemMasterPtr>>();
+                    for (auto JsonObjectValue : Data->GetArrayField(ANSI_TO_TCHAR("displayItems")))
+                    {
+                        v->Add(Model::FDisplayItemMaster::FromJson(JsonObjectValue->AsObject()));
                     }
                     return v;
-                 }() : MakeShared<TArray<Model::FDisplayItemMasterPtr>>())
+                 }() : nullptr)
             ->WithCreatedAt(Data->HasField(ANSI_TO_TCHAR("createdAt")) ? [Data]() -> TOptional<int64>
                 {
                     int64 v;
@@ -448,6 +449,28 @@ namespace Gs2::Showcase::Model::Cache
         }
         CacheSnapshot->Put(Gs2::Showcase::Model::FShowcaseMaster::TypeName, CacheOwnerParentKey, CacheOwnerKey, CacheOwnerValue,
             FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
+        );
+    }
+
+    FString FShowcaseMasterCache::PutUserData(
+        const Gs2::Core::Domain::FCacheDatabasePtr& Cache,
+        TOptional<FString> NamespaceName,
+        TOptional<FString> UserId,
+        TOptional<int32> TimeOffset,
+        const Gs2::Showcase::Model::FShowcaseMasterPtr& Item
+    )
+    {
+        if (!Item.IsValid()) return FString();
+        Put(
+            Cache,
+            NamespaceName,
+            Item->GetName(),
+            TimeOffset,
+            Item
+        );
+        return CreateCacheParentKey(
+            NamespaceName,
+            TimeOffset
         );
     }
 

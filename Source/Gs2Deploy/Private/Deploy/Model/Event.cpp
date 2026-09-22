@@ -380,6 +380,28 @@ namespace Gs2::Deploy::Model::Cache
         );
     }
 
+    FString FEventCache::PutUserData(
+        const Gs2::Core::Domain::FCacheDatabasePtr& Cache,
+        TOptional<FString> NamespaceName,
+        TOptional<FString> UserId,
+        TOptional<int32> TimeOffset,
+        const Gs2::Deploy::Model::FEventPtr& Item
+    )
+    {
+        if (!Item.IsValid()) return FString();
+        Put(
+            Cache,
+            (Item->GetEventId().IsSet() ? Gs2::Deploy::Model::FEvent::GetStackNameFromGrn(*Item->GetEventId()) : TOptional<FString>()),
+            Item->GetName(),
+            TimeOffset,
+            Item
+        );
+        return CreateCacheParentKey(
+            (Item->GetEventId().IsSet() ? Gs2::Deploy::Model::FEvent::GetStackNameFromGrn(*Item->GetEventId()) : TOptional<FString>()),
+            TimeOffset
+        );
+    }
+
     void FEventCache::Delete(
         const Gs2::Core::Domain::FCacheDatabasePtr& CacheOwnerArgumentCache,
         TOptional<FString> CacheOwnerArgumentStackName,

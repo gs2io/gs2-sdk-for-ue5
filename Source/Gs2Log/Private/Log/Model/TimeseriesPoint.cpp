@@ -82,16 +82,17 @@ namespace Gs2::Log::Model
                 }() : TOptional<int64>())
             ->WithValues(Data->HasField(ANSI_TO_TCHAR("values")) ? [Data]() -> TSharedPtr<TArray<Model::FTimeseriesValuePtr>>
                 {
-                    auto v = MakeShared<TArray<Model::FTimeseriesValuePtr>>();
-                    if (!Data->HasTypedField<EJson::Null>(ANSI_TO_TCHAR("values")) && Data->HasTypedField<EJson::Array>(ANSI_TO_TCHAR("values")))
+                    if (!Data->HasTypedField<EJson::Array>(ANSI_TO_TCHAR("values")))
                     {
-                        for (auto JsonObjectValue : Data->GetArrayField(ANSI_TO_TCHAR("values")))
-                        {
-                            v->Add(Model::FTimeseriesValue::FromJson(JsonObjectValue->AsObject()));
-                        }
+                        return nullptr;
+                    }
+                    auto v = MakeShared<TArray<Model::FTimeseriesValuePtr>>();
+                    for (auto JsonObjectValue : Data->GetArrayField(ANSI_TO_TCHAR("values")))
+                    {
+                        v->Add(Model::FTimeseriesValue::FromJson(JsonObjectValue->AsObject()));
                     }
                     return v;
-                 }() : MakeShared<TArray<Model::FTimeseriesValuePtr>>());
+                 }() : nullptr);
     }
 
     TSharedPtr<FJsonObject> FTimeseriesPoint::ToJson() const

@@ -243,16 +243,17 @@ namespace Gs2::SeasonRating::Model
                 }() : TOptional<FString>())
             ->WithWrittenBallots(Data->HasField(ANSI_TO_TCHAR("writtenBallots")) ? [Data]() -> TSharedPtr<TArray<Model::FWrittenBallotPtr>>
                 {
-                    auto v = MakeShared<TArray<Model::FWrittenBallotPtr>>();
-                    if (!Data->HasTypedField<EJson::Null>(ANSI_TO_TCHAR("writtenBallots")) && Data->HasTypedField<EJson::Array>(ANSI_TO_TCHAR("writtenBallots")))
+                    if (!Data->HasTypedField<EJson::Array>(ANSI_TO_TCHAR("writtenBallots")))
                     {
-                        for (auto JsonObjectValue : Data->GetArrayField(ANSI_TO_TCHAR("writtenBallots")))
-                        {
-                            v->Add(Model::FWrittenBallot::FromJson(JsonObjectValue->AsObject()));
-                        }
+                        return nullptr;
+                    }
+                    auto v = MakeShared<TArray<Model::FWrittenBallotPtr>>();
+                    for (auto JsonObjectValue : Data->GetArrayField(ANSI_TO_TCHAR("writtenBallots")))
+                    {
+                        v->Add(Model::FWrittenBallot::FromJson(JsonObjectValue->AsObject()));
                     }
                     return v;
-                 }() : MakeShared<TArray<Model::FWrittenBallotPtr>>())
+                 }() : nullptr)
             ->WithCreatedAt(Data->HasField(ANSI_TO_TCHAR("createdAt")) ? [Data]() -> TOptional<int64>
                 {
                     int64 v;
@@ -411,6 +412,29 @@ namespace Gs2::SeasonRating::Model::Cache
         }
         CacheSnapshot->Put(Gs2::SeasonRating::Model::FVote::TypeName, CacheOwnerParentKey, CacheOwnerKey, CacheOwnerValue,
             FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
+        );
+    }
+
+    FString FVoteCache::PutUserData(
+        const Gs2::Core::Domain::FCacheDatabasePtr& Cache,
+        TOptional<FString> NamespaceName,
+        TOptional<FString> UserId,
+        TOptional<int32> TimeOffset,
+        const Gs2::SeasonRating::Model::FVotePtr& Item
+    )
+    {
+        if (!Item.IsValid()) return FString();
+        Put(
+            Cache,
+            NamespaceName,
+            Item->GetSeasonName(),
+            Item->GetSessionName(),
+            TimeOffset,
+            Item
+        );
+        return CreateCacheParentKey(
+            NamespaceName,
+            TimeOffset
         );
     }
 

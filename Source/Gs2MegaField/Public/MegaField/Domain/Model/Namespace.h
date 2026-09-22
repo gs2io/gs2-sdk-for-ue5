@@ -235,7 +235,6 @@ namespace Gs2::MegaField::Domain::Model
 
         Gs2::Core::Domain::CallbackID SubscribeAreaModels(
             TFunction<void()> Callback
-
         );
 
         class FCollectAreaModelsTask;
@@ -283,7 +282,6 @@ namespace Gs2::MegaField::Domain::Model
 
         Gs2::Core::Domain::CallbackID SubscribeAreaModelMasters(
             TFunction<void()> Callback
-
         );
 
         class FCollectAreaModelMastersTask;

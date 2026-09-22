@@ -23,6 +23,8 @@
 #endif
 
 #include "Exchange/Domain/SpeculativeExecutor/Acquire/IncrementalExchangeByUserIdSpeculativeExecutor.h"
+#include "Exchange/Domain/Gs2Exchange.h"
+#include "Exchange/Domain/SpeculativeExecutor/Transaction/IncrementalExchangeByUserIdSpeculativeExecutor.h"
 
 #include "Core/Domain/Gs2.h"
 #include "Core/Domain/SpeculativeExecutor/PreparedSpeculativeCommit.h"
@@ -64,8 +66,18 @@ namespace Gs2::Exchange::Domain::SpeculativeExecutor
         TSharedPtr<TSharedPtr<Gs2::Core::Domain::SpeculativeExecutor::FPreparedSpeculativeCommit>> Result
     )
     {
-        UE_LOG(Gs2Log, Warning, TEXT("Speculative execution not supported on this action: %s"), ToCStr(FIncrementalExchangeByUserIdSpeculativeExecutor::Action()))
-        *Result = Gs2::Core::Domain::SpeculativeExecutor::FPreparedSpeculativeCommit::WrapLegacy(MakeShared<TFunction<void()>>([](){}));
+        const auto Future = Transaction::SpeculativeExecutor::FIncrementalExchangeByUserIdSpeculativeExecutor::Execute(
+            Domain,
+            Service,
+            AccessToken,
+            Request
+        );
+        Future->StartSynchronousTask();
+        if (Future->GetTask().IsError())
+        {
+            return Future->GetTask().Error();
+        }
+        *Result = Future->GetTask().Result();
         return nullptr;
     }
 

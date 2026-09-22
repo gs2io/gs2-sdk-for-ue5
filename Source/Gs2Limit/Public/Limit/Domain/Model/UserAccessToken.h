@@ -89,8 +89,7 @@ namespace Gs2::Limit::Domain::Model
         ) const;
 
         Gs2::Core::Domain::CallbackID SubscribeCounters(
-            TFunction<void()> Callback
-            , const TOptional<FString> LimitName = TOptional<FString>()
+            TFunction<void()> Callback, const TOptional<FString> LimitName = TOptional<FString>()
         );
 
         class FCollectCountersTask;

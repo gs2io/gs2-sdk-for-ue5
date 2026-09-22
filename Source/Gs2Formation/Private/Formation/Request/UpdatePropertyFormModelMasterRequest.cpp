@@ -165,16 +165,17 @@ namespace Gs2::Formation::Request
               }() : TOptional<FString>())
           ->WithSlots(Data->HasField(ANSI_TO_TCHAR("slots")) ? [Data]() -> TSharedPtr<TArray<Model::FSlotModelPtr>>
               {
-                  auto v = MakeShared<TArray<Model::FSlotModelPtr>>();
-                  if (!Data->HasTypedField<EJson::Null>(ANSI_TO_TCHAR("slots")) && Data->HasTypedField<EJson::Array>(ANSI_TO_TCHAR("slots")))
+                  if (!Data->HasTypedField<EJson::Array>(ANSI_TO_TCHAR("slots")))
                   {
-                      for (auto JsonObjectValue : Data->GetArrayField(ANSI_TO_TCHAR("slots")))
-                      {
-                          v->Add(Model::FSlotModel::FromJson(JsonObjectValue->AsObject()));
-                      }
+                      return nullptr;
                   }
+                  auto v = MakeShared<TArray<Model::FSlotModelPtr>>();
+                  for (auto JsonObjectValue : Data->GetArrayField(ANSI_TO_TCHAR("slots")))
+                      {
+                      v->Add(Model::FSlotModel::FromJson(JsonObjectValue->AsObject()));
+                      }
                   return v;
-              }() : MakeShared<TArray<Model::FSlotModelPtr>>());
+              }() : nullptr);
     }
 
     TSharedPtr<FJsonObject> FUpdatePropertyFormModelMasterRequest::ToJson() const

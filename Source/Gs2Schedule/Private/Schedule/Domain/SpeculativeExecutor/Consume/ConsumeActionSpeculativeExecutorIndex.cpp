@@ -73,6 +73,7 @@ namespace Gs2::Schedule::Domain::SpeculativeExecutor
                 return nullptr;
             }
             auto Request = Request::FDeleteTriggerByUserIdRequest::FromJson(RequestModelJson);
+            Request = FDeleteTriggerByUserIdSpeculativeExecutor::Rate(Request, Rate);
             auto Future = FDeleteTriggerByUserIdSpeculativeExecutor::Execute(
                 Domain,
                 Service,
@@ -85,7 +86,6 @@ namespace Gs2::Schedule::Domain::SpeculativeExecutor
                 return Future->GetTask().Error();
             }
             *Result = Future->GetTask().Result();
-            return nullptr;
         }
         return nullptr;
     }

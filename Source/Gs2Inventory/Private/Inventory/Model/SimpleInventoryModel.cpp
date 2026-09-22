@@ -163,16 +163,17 @@ namespace Gs2::Inventory::Model
                 }() : TOptional<FString>())
             ->WithSimpleItemModels(Data->HasField(ANSI_TO_TCHAR("simpleItemModels")) ? [Data]() -> TSharedPtr<TArray<Model::FSimpleItemModelPtr>>
                 {
-                    auto v = MakeShared<TArray<Model::FSimpleItemModelPtr>>();
-                    if (!Data->HasTypedField<EJson::Null>(ANSI_TO_TCHAR("simpleItemModels")) && Data->HasTypedField<EJson::Array>(ANSI_TO_TCHAR("simpleItemModels")))
+                    if (!Data->HasTypedField<EJson::Array>(ANSI_TO_TCHAR("simpleItemModels")))
                     {
-                        for (auto JsonObjectValue : Data->GetArrayField(ANSI_TO_TCHAR("simpleItemModels")))
-                        {
-                            v->Add(Model::FSimpleItemModel::FromJson(JsonObjectValue->AsObject()));
-                        }
+                        return nullptr;
+                    }
+                    auto v = MakeShared<TArray<Model::FSimpleItemModelPtr>>();
+                    for (auto JsonObjectValue : Data->GetArrayField(ANSI_TO_TCHAR("simpleItemModels")))
+                    {
+                        v->Add(Model::FSimpleItemModel::FromJson(JsonObjectValue->AsObject()));
                     }
                     return v;
-                 }() : MakeShared<TArray<Model::FSimpleItemModelPtr>>());
+                 }() : nullptr);
     }
 
     TSharedPtr<FJsonObject> FSimpleInventoryModel::ToJson() const
@@ -278,6 +279,28 @@ namespace Gs2::Inventory::Model::Cache
         auto CacheOwnerValue = CacheOwnerArgumentItem;
         CacheSnapshot->Put(Gs2::Inventory::Model::FSimpleInventoryModel::TypeName, CacheOwnerParentKey, CacheOwnerKey, CacheOwnerValue,
             FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
+        );
+    }
+
+    FString FSimpleInventoryModelCache::PutUserData(
+        const Gs2::Core::Domain::FCacheDatabasePtr& Cache,
+        TOptional<FString> NamespaceName,
+        TOptional<FString> UserId,
+        TOptional<int32> TimeOffset,
+        const Gs2::Inventory::Model::FSimpleInventoryModelPtr& Item
+    )
+    {
+        if (!Item.IsValid()) return FString();
+        Put(
+            Cache,
+            NamespaceName,
+            Item->GetName(),
+            TimeOffset,
+            Item
+        );
+        return CreateCacheParentKey(
+            NamespaceName,
+            TimeOffset
         );
     }
 

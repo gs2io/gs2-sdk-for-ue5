@@ -25,16 +25,20 @@ namespace Gs2::UE5::SkillTree::Model
 	{
         TOptional<FString> StatusIdValue;
         TOptional<FString> UserIdValue;
+        TOptional<FString> PropertyIdValue;
         TSharedPtr<TArray<FString>> ReleasedNodeNamesValue;
 
 	public:
         TSharedPtr<FEzStatus> WithStatusId(const TOptional<FString> StatusId);
         TSharedPtr<FEzStatus> WithUserId(const TOptional<FString> UserId);
+        TSharedPtr<FEzStatus> WithPropertyId(const TOptional<FString> PropertyId);
         TSharedPtr<FEzStatus> WithReleasedNodeNames(const TSharedPtr<TArray<FString>> ReleasedNodeNames);
 
         TOptional<FString> GetStatusId() const;
 
         TOptional<FString> GetUserId() const;
+
+        TOptional<FString> GetPropertyId() const;
 
         TSharedPtr<TArray<FString>> GetReleasedNodeNames() const;
 

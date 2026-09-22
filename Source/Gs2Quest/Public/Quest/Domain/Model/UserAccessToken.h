@@ -127,7 +127,6 @@ namespace Gs2::Quest::Domain::Model
 
         Gs2::Core::Domain::CallbackID SubscribeCompletedQuestLists(
             TFunction<void()> Callback
-
         );
 
         class FCollectCompletedQuestListsTask;

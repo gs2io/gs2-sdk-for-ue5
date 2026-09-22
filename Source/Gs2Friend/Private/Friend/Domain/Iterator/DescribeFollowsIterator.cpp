@@ -33,7 +33,6 @@
 
 #include "Friend/Model/Cache/FollowUser.h"
 #include "Friend/Model/Cache/Follow.h"
-#include "Friend/Model/Cache/PublicProfile.h"
 
 namespace Gs2::Friend::Domain::Iterator
 {
@@ -153,31 +152,11 @@ namespace Gs2::Friend::Domain::Iterator
                 for (const auto& Item : *Range)
                 {
                     if (!Item.IsValid()) continue;
-                    if (Request->GetWithProfile().Get(bool{}))
-                    {
-                        Gs2::Friend::Model::Cache::FFollowUserCache::Put(
-                            Self->Gs2->Cache, Request->GetNamespaceName(), CacheOwnerSnapshotUserId, true,
-                            Item->GetUserId(), CacheOwnerSnapshotTimeOffset, Item
-                        );
-                    }
                     Gs2::Friend::Model::Cache::FFollowUserCache::Put(
-                        Self->Gs2->Cache, Request->GetNamespaceName(), CacheOwnerSnapshotUserId, false,
-                        Item->GetUserId(), CacheOwnerSnapshotTimeOffset,
-                        MakeShared<Gs2::Friend::Model::FFollowUser>()->WithUserId(Item->GetUserId())
+                        Self->Gs2->Cache,
+                        Request->GetNamespaceName(), CacheOwnerSnapshotUserId, Request->GetWithProfile().Get(bool{}), Item->GetUserId(),
+                        CacheOwnerSnapshotTimeOffset, Item
                     );
-                    Gs2::Friend::Model::Cache::FFollowUserCache::Put(
-                        Self->Gs2->Cache, Request->GetNamespaceName(), CacheOwnerSnapshotUserId, TOptional<bool>(),
-                        Item->GetUserId(), CacheOwnerSnapshotTimeOffset,
-                        MakeShared<Gs2::Friend::Model::FFollowUser>()->WithUserId(Item->GetUserId())
-                    );
-                    if (Request->GetWithProfile().Get(bool{}))
-                    {
-                        Gs2::Friend::Model::Cache::FPublicProfileCache::Put(
-                            Self->Gs2->Cache, Request->GetNamespaceName(), Item->GetUserId(), CacheOwnerSnapshotTimeOffset,
-                            MakeShared<Gs2::Friend::Model::FPublicProfile>()
-                                ->WithUserId(Item->GetUserId())->WithPublicProfile(Item->GetPublicProfile())
-                        );
-                    }
                 }
             }
             if (Range)

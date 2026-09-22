@@ -87,13 +87,8 @@ namespace Gs2::Money::Domain::SpeculativeExecutor
                 return Future->GetTask().Error();
             }
             *Result = Future->GetTask().Result();
-            return nullptr;
         }
         if (FRevertRecordReceiptSpeculativeExecutor::Action() == NewAcquireAction->GetAction()) {
-            if (Rate != 1)
-            {
-                return nullptr;
-            }
             TSharedPtr<FJsonObject> RequestModelJson;
             if (const TSharedRef<TJsonReader<>> JsonReader = TJsonReaderFactory<>::Create(NewAcquireAction->GetRequest().IsSet() ? *NewAcquireAction->GetRequest() : "{}");
                 !FJsonSerializer::Deserialize(JsonReader, RequestModelJson))
@@ -101,6 +96,7 @@ namespace Gs2::Money::Domain::SpeculativeExecutor
                 return nullptr;
             }
             auto Request = Request::FRevertRecordReceiptRequest::FromJson(RequestModelJson);
+            Request = FRevertRecordReceiptSpeculativeExecutor::Rate(Request, Rate);
             auto Future = FRevertRecordReceiptSpeculativeExecutor::Execute(
                 Domain,
                 Service,
@@ -113,7 +109,6 @@ namespace Gs2::Money::Domain::SpeculativeExecutor
                 return Future->GetTask().Error();
             }
             *Result = Future->GetTask().Result();
-            return nullptr;
         }
         return nullptr;
     }

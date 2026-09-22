@@ -57,10 +57,10 @@ namespace Gs2::Inbox::Domain::Model
         NamespaceName(NamespaceName),
         UserId(UserId),
         MessageName(MessageName),
-        ParentKey(Gs2::Inbox::Model::Cache::FMessageCache::CreateCacheParentKey(
+        ParentKey(Gs2::Inbox::Domain::Model::FUserDomain::CreateCacheParentKey(
             NamespaceName,
             UserId,
-            TOptional<int32>()
+            "Message"
         ))
     {
     }

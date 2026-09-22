@@ -165,16 +165,17 @@ namespace Gs2::Lottery::Request
               }() : TOptional<FString>())
           ->WithPrizes(Data->HasField(ANSI_TO_TCHAR("prizes")) ? [Data]() -> TSharedPtr<TArray<Model::FPrizePtr>>
               {
-                  auto v = MakeShared<TArray<Model::FPrizePtr>>();
-                  if (!Data->HasTypedField<EJson::Null>(ANSI_TO_TCHAR("prizes")) && Data->HasTypedField<EJson::Array>(ANSI_TO_TCHAR("prizes")))
+                  if (!Data->HasTypedField<EJson::Array>(ANSI_TO_TCHAR("prizes")))
                   {
-                      for (auto JsonObjectValue : Data->GetArrayField(ANSI_TO_TCHAR("prizes")))
-                      {
-                          v->Add(Model::FPrize::FromJson(JsonObjectValue->AsObject()));
-                      }
+                      return nullptr;
                   }
+                  auto v = MakeShared<TArray<Model::FPrizePtr>>();
+                  for (auto JsonObjectValue : Data->GetArrayField(ANSI_TO_TCHAR("prizes")))
+                      {
+                      v->Add(Model::FPrize::FromJson(JsonObjectValue->AsObject()));
+                      }
                   return v;
-              }() : MakeShared<TArray<Model::FPrizePtr>>());
+              }() : nullptr);
     }
 
     TSharedPtr<FJsonObject> FUpdatePrizeTableMasterRequest::ToJson() const

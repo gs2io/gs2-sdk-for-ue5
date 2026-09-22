@@ -258,16 +258,17 @@ namespace Gs2::Quest::Model
                 }() : TOptional<FString>())
             ->WithContents(Data->HasField(ANSI_TO_TCHAR("contents")) ? [Data]() -> TSharedPtr<TArray<Model::FContentsPtr>>
                 {
-                    auto v = MakeShared<TArray<Model::FContentsPtr>>();
-                    if (!Data->HasTypedField<EJson::Null>(ANSI_TO_TCHAR("contents")) && Data->HasTypedField<EJson::Array>(ANSI_TO_TCHAR("contents")))
+                    if (!Data->HasTypedField<EJson::Array>(ANSI_TO_TCHAR("contents")))
                     {
-                        for (auto JsonObjectValue : Data->GetArrayField(ANSI_TO_TCHAR("contents")))
-                        {
-                            v->Add(Model::FContents::FromJson(JsonObjectValue->AsObject()));
-                        }
+                        return nullptr;
+                    }
+                    auto v = MakeShared<TArray<Model::FContentsPtr>>();
+                    for (auto JsonObjectValue : Data->GetArrayField(ANSI_TO_TCHAR("contents")))
+                    {
+                        v->Add(Model::FContents::FromJson(JsonObjectValue->AsObject()));
                     }
                     return v;
-                 }() : MakeShared<TArray<Model::FContentsPtr>>())
+                 }() : nullptr)
             ->WithChallengePeriodEventId(Data->HasField(ANSI_TO_TCHAR("challengePeriodEventId")) ? [Data]() -> TOptional<FString>
                 {
                     FString v("");
@@ -279,64 +280,69 @@ namespace Gs2::Quest::Model
                 }() : TOptional<FString>())
             ->WithFirstCompleteAcquireActions(Data->HasField(ANSI_TO_TCHAR("firstCompleteAcquireActions")) ? [Data]() -> TSharedPtr<TArray<Model::FAcquireActionPtr>>
                 {
-                    auto v = MakeShared<TArray<Model::FAcquireActionPtr>>();
-                    if (!Data->HasTypedField<EJson::Null>(ANSI_TO_TCHAR("firstCompleteAcquireActions")) && Data->HasTypedField<EJson::Array>(ANSI_TO_TCHAR("firstCompleteAcquireActions")))
+                    if (!Data->HasTypedField<EJson::Array>(ANSI_TO_TCHAR("firstCompleteAcquireActions")))
                     {
-                        for (auto JsonObjectValue : Data->GetArrayField(ANSI_TO_TCHAR("firstCompleteAcquireActions")))
-                        {
-                            v->Add(Model::FAcquireAction::FromJson(JsonObjectValue->AsObject()));
-                        }
+                        return nullptr;
+                    }
+                    auto v = MakeShared<TArray<Model::FAcquireActionPtr>>();
+                    for (auto JsonObjectValue : Data->GetArrayField(ANSI_TO_TCHAR("firstCompleteAcquireActions")))
+                    {
+                        v->Add(Model::FAcquireAction::FromJson(JsonObjectValue->AsObject()));
                     }
                     return v;
-                 }() : MakeShared<TArray<Model::FAcquireActionPtr>>())
+                 }() : nullptr)
             ->WithVerifyActions(Data->HasField(ANSI_TO_TCHAR("verifyActions")) ? [Data]() -> TSharedPtr<TArray<Model::FVerifyActionPtr>>
                 {
-                    auto v = MakeShared<TArray<Model::FVerifyActionPtr>>();
-                    if (!Data->HasTypedField<EJson::Null>(ANSI_TO_TCHAR("verifyActions")) && Data->HasTypedField<EJson::Array>(ANSI_TO_TCHAR("verifyActions")))
+                    if (!Data->HasTypedField<EJson::Array>(ANSI_TO_TCHAR("verifyActions")))
                     {
-                        for (auto JsonObjectValue : Data->GetArrayField(ANSI_TO_TCHAR("verifyActions")))
-                        {
-                            v->Add(Model::FVerifyAction::FromJson(JsonObjectValue->AsObject()));
-                        }
+                        return nullptr;
+                    }
+                    auto v = MakeShared<TArray<Model::FVerifyActionPtr>>();
+                    for (auto JsonObjectValue : Data->GetArrayField(ANSI_TO_TCHAR("verifyActions")))
+                    {
+                        v->Add(Model::FVerifyAction::FromJson(JsonObjectValue->AsObject()));
                     }
                     return v;
-                 }() : MakeShared<TArray<Model::FVerifyActionPtr>>())
+                 }() : nullptr)
             ->WithConsumeActions(Data->HasField(ANSI_TO_TCHAR("consumeActions")) ? [Data]() -> TSharedPtr<TArray<Model::FConsumeActionPtr>>
                 {
-                    auto v = MakeShared<TArray<Model::FConsumeActionPtr>>();
-                    if (!Data->HasTypedField<EJson::Null>(ANSI_TO_TCHAR("consumeActions")) && Data->HasTypedField<EJson::Array>(ANSI_TO_TCHAR("consumeActions")))
+                    if (!Data->HasTypedField<EJson::Array>(ANSI_TO_TCHAR("consumeActions")))
                     {
-                        for (auto JsonObjectValue : Data->GetArrayField(ANSI_TO_TCHAR("consumeActions")))
-                        {
-                            v->Add(Model::FConsumeAction::FromJson(JsonObjectValue->AsObject()));
-                        }
+                        return nullptr;
+                    }
+                    auto v = MakeShared<TArray<Model::FConsumeActionPtr>>();
+                    for (auto JsonObjectValue : Data->GetArrayField(ANSI_TO_TCHAR("consumeActions")))
+                    {
+                        v->Add(Model::FConsumeAction::FromJson(JsonObjectValue->AsObject()));
                     }
                     return v;
-                 }() : MakeShared<TArray<Model::FConsumeActionPtr>>())
+                 }() : nullptr)
             ->WithFailedAcquireActions(Data->HasField(ANSI_TO_TCHAR("failedAcquireActions")) ? [Data]() -> TSharedPtr<TArray<Model::FAcquireActionPtr>>
                 {
-                    auto v = MakeShared<TArray<Model::FAcquireActionPtr>>();
-                    if (!Data->HasTypedField<EJson::Null>(ANSI_TO_TCHAR("failedAcquireActions")) && Data->HasTypedField<EJson::Array>(ANSI_TO_TCHAR("failedAcquireActions")))
+                    if (!Data->HasTypedField<EJson::Array>(ANSI_TO_TCHAR("failedAcquireActions")))
                     {
-                        for (auto JsonObjectValue : Data->GetArrayField(ANSI_TO_TCHAR("failedAcquireActions")))
-                        {
-                            v->Add(Model::FAcquireAction::FromJson(JsonObjectValue->AsObject()));
-                        }
+                        return nullptr;
+                    }
+                    auto v = MakeShared<TArray<Model::FAcquireActionPtr>>();
+                    for (auto JsonObjectValue : Data->GetArrayField(ANSI_TO_TCHAR("failedAcquireActions")))
+                    {
+                        v->Add(Model::FAcquireAction::FromJson(JsonObjectValue->AsObject()));
                     }
                     return v;
-                 }() : MakeShared<TArray<Model::FAcquireActionPtr>>())
+                 }() : nullptr)
             ->WithPremiseQuestNames(Data->HasField(ANSI_TO_TCHAR("premiseQuestNames")) ? [Data]() -> TSharedPtr<TArray<FString>>
                 {
-                    auto v = MakeShared<TArray<FString>>();
-                    if (!Data->HasTypedField<EJson::Null>(ANSI_TO_TCHAR("premiseQuestNames")) && Data->HasTypedField<EJson::Array>(ANSI_TO_TCHAR("premiseQuestNames")))
+                    if (!Data->HasTypedField<EJson::Array>(ANSI_TO_TCHAR("premiseQuestNames")))
                     {
-                        for (auto JsonObjectValue : Data->GetArrayField(ANSI_TO_TCHAR("premiseQuestNames")))
-                        {
-                            v->Add(JsonObjectValue->AsString());
-                        }
+                        return nullptr;
+                    }
+                    auto v = MakeShared<TArray<FString>>();
+                    for (auto JsonObjectValue : Data->GetArrayField(ANSI_TO_TCHAR("premiseQuestNames")))
+                    {
+                        v->Add(JsonObjectValue->AsString());
                     }
                     return v;
-                 }() : MakeShared<TArray<FString>>());
+                 }() : nullptr);
     }
 
     TSharedPtr<FJsonObject> FQuestModel::ToJson() const
@@ -497,6 +503,30 @@ namespace Gs2::Quest::Model::Cache
         auto CacheOwnerValue = CacheOwnerArgumentItem;
         CacheSnapshot->Put(Gs2::Quest::Model::FQuestModel::TypeName, CacheOwnerParentKey, CacheOwnerKey, CacheOwnerValue,
             FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
+        );
+    }
+
+    FString FQuestModelCache::PutUserData(
+        const Gs2::Core::Domain::FCacheDatabasePtr& Cache,
+        TOptional<FString> NamespaceName,
+        TOptional<FString> UserId,
+        TOptional<int32> TimeOffset,
+        const Gs2::Quest::Model::FQuestModelPtr& Item
+    )
+    {
+        if (!Item.IsValid()) return FString();
+        Put(
+            Cache,
+            NamespaceName,
+            (Item->GetQuestModelId().IsSet() ? Gs2::Quest::Model::FQuestModel::GetQuestGroupNameFromGrn(*Item->GetQuestModelId()) : TOptional<FString>()),
+            Item->GetName(),
+            TimeOffset,
+            Item
+        );
+        return CreateCacheParentKey(
+            NamespaceName,
+            (Item->GetQuestModelId().IsSet() ? Gs2::Quest::Model::FQuestModel::GetQuestGroupNameFromGrn(*Item->GetQuestModelId()) : TOptional<FString>()),
+            TimeOffset
         );
     }
 

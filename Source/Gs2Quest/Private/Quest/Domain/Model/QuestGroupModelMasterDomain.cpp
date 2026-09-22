@@ -336,7 +336,6 @@ namespace Gs2::Quest::Domain::Model
 
     Gs2::Core::Domain::CallbackID FQuestGroupModelMasterDomain::SubscribeQuestModelMasters(
     TFunction<void()> Callback
-
     )
     {
         return Gs2->Cache->ListSubscribe(

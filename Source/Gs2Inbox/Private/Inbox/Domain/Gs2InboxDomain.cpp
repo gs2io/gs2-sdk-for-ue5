@@ -41,6 +41,7 @@
 #include "Inbox/Model/Cache/Received.h"
 #include "Inbox/Model/Cache/CurrentMessageMaster.h"
 #include "Inbox/Model/Cache/GlobalMessage.h"
+#include "Inbox/Model/Cache/Message.h"
 
 #include "Core/Domain/Gs2.h"
 
@@ -441,7 +442,6 @@ namespace Gs2::Inbox::Domain
 
     Gs2::Core::Domain::CallbackID FGs2InboxDomain::SubscribeNamespaces(
     TFunction<void()> Callback
-
     )
     {
         return Gs2->Cache->ListSubscribe(
@@ -601,6 +601,46 @@ namespace Gs2::Inbox::Domain
         }
     }
 
+    TOptional<FString> FGs2InboxDomain::PutUserData(
+        const TOptional<FString> NamespaceName,
+        const TOptional<FString> UserId,
+        const TOptional<int32> TimeOffset,
+        const FString Kind,
+        const FString Payload
+    ) {
+        TSharedPtr<FJsonObject> PayloadJson;
+        if (const TSharedRef<TJsonReader<>> JsonReader = TJsonReaderFactory<>::Create(Payload);
+            !FJsonSerializer::Deserialize(JsonReader, PayloadJson) || !PayloadJson.IsValid())
+        {
+            return TOptional<FString>();
+        }
+        if (Kind == "message") {
+            const auto Item = Gs2::Inbox::Model::FMessage::FromJson(PayloadJson);
+            if (!Item.IsValid()) return TOptional<FString>();
+            const auto ParentKey = Gs2::Inbox::Model::Cache::FMessageCache::PutUserData(
+                Gs2->Cache,
+                NamespaceName,
+                UserId,
+                TimeOffset,
+                Item
+            );
+            return ParentKey.IsEmpty() ? TOptional<FString>() : TOptional<FString>(ParentKey);
+        }
+        return TOptional<FString>();
+    }
+
+    bool FGs2InboxDomain::SetListCached(
+        const TOptional<int32> TimeOffset,
+        const FString Kind,
+        const FString ParentKey
+    ) {
+        if (Kind == "message") {
+            Gs2->Cache->SetListCached(Gs2::Inbox::Model::FMessage::TypeName, ParentKey);
+            return true;
+        }
+        return false;
+    }
+
     void FGs2InboxDomain::UpdateCacheFromStampTask(
         const FString Method,
         const FString Request,
@@ -731,10 +771,10 @@ namespace Gs2::Inbox::Domain
             {
                 return;
             }
-            const auto ListParentKey = Gs2::Inbox::Model::Cache::FMessageCache::CreateCacheParentKey(
+            const auto ListParentKey = Gs2::Inbox::Domain::Model::FUserDomain::CreateCacheParentKey(
                 PayloadJson->GetStringField(ANSI_TO_TCHAR("namespaceName")),
                 PayloadJson->GetStringField(ANSI_TO_TCHAR("userId")),
-                TOptional<int32>()
+                "Message"
             );
             Gs2->Cache->ClearListCache(Gs2::Inbox::Model::FMessage::TypeName, ListParentKey);
             ReceiveNotificationEvent.Broadcast(Gs2::Inbox::Model::FReceiveNotification::FromJson(PayloadJson));

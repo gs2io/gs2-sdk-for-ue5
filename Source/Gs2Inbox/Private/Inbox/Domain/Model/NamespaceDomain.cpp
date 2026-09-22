@@ -399,7 +399,6 @@ namespace Gs2::Inbox::Domain::Model
 
     Gs2::Core::Domain::CallbackID FNamespaceDomain::SubscribeGlobalMessages(
     TFunction<void()> Callback
-
     )
     {
         return Gs2->Cache->ListSubscribe(
@@ -536,7 +535,6 @@ namespace Gs2::Inbox::Domain::Model
 
     Gs2::Core::Domain::CallbackID FNamespaceDomain::SubscribeGlobalMessageMasters(
     TFunction<void()> Callback
-
     )
     {
         return Gs2->Cache->ListSubscribe(

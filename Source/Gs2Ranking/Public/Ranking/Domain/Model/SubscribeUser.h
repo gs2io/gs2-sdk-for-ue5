@@ -185,6 +185,14 @@ namespace Gs2::Ranking::Domain::Model
         };
         friend FModelTask;
 
+        TSharedPtr<FAsyncTask<FModelTask>> Model();
+
+        void Invalidate();
+
+        Gs2::Core::Domain::CallbackID Subscribe(
+            TFunction<void(Gs2::Ranking::Model::FSubscribeUserPtr)> Callback
+        );
+
         class GS2RANKING_API FSubscribeWithInitialCallTask final :
             public Gs2::Core::Util::TGs2Future<Gs2::Core::Domain::CallbackID>,
             public TSharedFromThis<FSubscribeWithInitialCallTask>
@@ -192,9 +200,9 @@ namespace Gs2::Ranking::Domain::Model
             const TSharedPtr<FSubscribeUserDomain> Self;
             const TFunction<void(Gs2::Ranking::Model::FSubscribeUserPtr)> Callback;
         public:
-            explicit FSubscribeWithInitialCallTask(
-                const TSharedPtr<FSubscribeUserDomain> Self,
-                const TFunction<void(Gs2::Ranking::Model::FSubscribeUserPtr)>& Callback
+            FSubscribeWithInitialCallTask(
+                const TSharedPtr<FSubscribeUserDomain>& Self,
+                TFunction<void(Gs2::Ranking::Model::FSubscribeUserPtr)> Callback
             );
 
             FSubscribeWithInitialCallTask(
@@ -205,16 +213,8 @@ namespace Gs2::Ranking::Domain::Model
                 TSharedPtr<TSharedPtr<Gs2::Core::Domain::CallbackID>> Result
             ) override;
         };
-        friend FSubscribeWithInitialCallTask;
 
-        TSharedPtr<FAsyncTask<FSubscribeUserDomain::FSubscribeWithInitialCallTask>> SubscribeWithInitialCall(
-            TFunction<void(Gs2::Ranking::Model::FSubscribeUserPtr)> Callback
-        );
-        void Invalidate();
-
-        TSharedPtr<FAsyncTask<FModelTask>> Model();
-
-        Gs2::Core::Domain::CallbackID Subscribe(
+        TSharedPtr<FAsyncTask<FSubscribeWithInitialCallTask>> SubscribeWithInitialCall(
             TFunction<void(Gs2::Ranking::Model::FSubscribeUserPtr)> Callback
         );
 

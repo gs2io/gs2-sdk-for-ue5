@@ -259,7 +259,6 @@ namespace Gs2::Schedule::Domain::Model
 
         Gs2::Core::Domain::CallbackID SubscribeEventMasters(
             TFunction<void()> Callback
-
         );
 
         class FCollectEventMastersTask;

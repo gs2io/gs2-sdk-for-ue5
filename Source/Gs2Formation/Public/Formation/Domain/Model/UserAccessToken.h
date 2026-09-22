@@ -104,7 +104,6 @@ namespace Gs2::Formation::Domain::Model
 
         Gs2::Core::Domain::CallbackID SubscribeMolds(
             TFunction<void()> Callback
-
         );
 
         class FCollectMoldsTask;
@@ -144,8 +143,7 @@ namespace Gs2::Formation::Domain::Model
         ) const;
 
         Gs2::Core::Domain::CallbackID SubscribePropertyForms(
-            TFunction<void()> Callback
-            , const FString PropertyFormModelName
+             const FString PropertyFormModelName, TFunction<void()> Callback
         );
 
         class FCollectPropertyFormsTask;

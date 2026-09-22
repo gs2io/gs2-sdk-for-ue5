@@ -52,7 +52,6 @@ namespace Gs2::JobQueue::Domain::Model
         Gs2(Gs2),
         Service(Service),
         Client(MakeShared<Gs2::JobQueue::FGs2JobQueueRestClient>(Gs2->RestSession)),
-        Item(nullptr),
         NamespaceName(NamespaceName),
         UserId(UserId),
         JobName(JobName),
@@ -70,7 +69,6 @@ namespace Gs2::JobQueue::Domain::Model
         Gs2(From.Gs2),
         Service(From.Service),
         Client(From.Client),
-        Item(From.Item),
         NamespaceName(From.NamespaceName),
         UserId(From.UserId),
         JobName(From.JobName),
@@ -322,6 +320,58 @@ namespace Gs2::JobQueue::Domain::Model
 
     TSharedPtr<FAsyncTask<FJobDomain::FModelTask>> FJobDomain::Model() {
         return Gs2::Core::Util::New<FAsyncTask<FJobDomain::FModelTask>>(this->AsShared());
+    }
+
+    void FJobDomain::Invalidate()
+    {
+        Gs2::JobQueue::Model::Cache::FJobCache::Delete(
+            Gs2->Cache,
+
+            NamespaceName,
+            UserId,
+            JobName,
+            TOptional<int32>()
+        );
+    }
+
+    FJobDomain::FSubscribeWithInitialCallTask::FSubscribeWithInitialCallTask(
+        const TSharedPtr<FJobDomain>& Self,
+        TFunction<void(Gs2::JobQueue::Model::FJobPtr)> Callback
+    ):
+        Self(Self),
+        Callback(Callback)
+    {
+    }
+
+    FJobDomain::FSubscribeWithInitialCallTask::FSubscribeWithInitialCallTask(
+        const FSubscribeWithInitialCallTask& From
+    ):
+        TGs2Future(From),
+        Self(From.Self),
+        Callback(From.Callback)
+    {
+    }
+
+    Gs2::Core::Model::FGs2ErrorPtr FJobDomain::FSubscribeWithInitialCallTask::Action(
+        TSharedPtr<TSharedPtr<Gs2::Core::Domain::CallbackID>> Result
+    )
+    {
+        const auto Task = Self->Model();
+        Task->StartSynchronousTask();
+        Task->EnsureCompletion();
+        if (Task->GetTask().IsError()) return Task->GetTask().Error();
+        const auto Item = Task->GetTask().Result();
+        const auto CallbackId = Self->Subscribe(Callback);
+        Callback(Item);
+        *Result = MakeShared<Gs2::Core::Domain::CallbackID>(CallbackId);
+        return nullptr;
+    }
+
+    TSharedPtr<FAsyncTask<FJobDomain::FSubscribeWithInitialCallTask>> FJobDomain::SubscribeWithInitialCall(
+        TFunction<void(Gs2::JobQueue::Model::FJobPtr)> Callback
+    )
+    {
+        return Gs2::Core::Util::New<FAsyncTask<FSubscribeWithInitialCallTask>>(this->AsShared(), Callback);
     }
 
     Gs2::Core::Domain::CallbackID FJobDomain::Subscribe(

@@ -48,7 +48,6 @@
 #include "Friend/Domain/Model/FriendRequestAccessToken.h"
 #include "Friend/Model/Cache/ReceiveFriendRequest.h"
 #include "Friend/Model/Cache/FriendRequest.h"
-#include "Friend/Model/Cache/SendFriendRequest.h"
 
 #include "Core/Domain/Gs2.h"
 #include "Core/Domain/Transaction/JobQueueJobDomainFactory.h"
@@ -214,14 +213,6 @@ namespace Gs2::Friend::Domain::Model
             Request->GetFromUserId(),
             CacheOwnerSnapshotTimeOffset
         );
-        Gs2::Friend::Model::Cache::FSendFriendRequestCache::Delete(
-            Self->Gs2->Cache,
-
-            Request->GetNamespaceName(),
-            Request->GetFromUserId(),
-            (CacheOwnerSnapshotUserId),
-            CacheOwnerSnapshotTimeOffset
-        );
         auto Domain = MakeShared<Gs2::Friend::Domain::Model::FReceiveFriendRequestAccessTokenDomain>(
             Self->Gs2,
             Self->Service,
@@ -288,14 +279,6 @@ namespace Gs2::Friend::Domain::Model
             Request->GetNamespaceName(),
             (CacheOwnerSnapshotUserId),
             Request->GetFromUserId(),
-            CacheOwnerSnapshotTimeOffset
-        );
-        Gs2::Friend::Model::Cache::FSendFriendRequestCache::Delete(
-            Self->Gs2->Cache,
-
-            Request->GetNamespaceName(),
-            Request->GetFromUserId(),
-            (CacheOwnerSnapshotUserId),
             CacheOwnerSnapshotTimeOffset
         );
         auto Domain = MakeShared<Gs2::Friend::Domain::Model::FReceiveFriendRequestAccessTokenDomain>(

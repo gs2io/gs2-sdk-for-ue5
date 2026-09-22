@@ -89,8 +89,7 @@ namespace Gs2::Limit::Domain::Model
     }
 
     Gs2::Core::Domain::CallbackID FUserDomain::SubscribeCounters(
-    TFunction<void()> Callback
-        , const TOptional<FString> LimitName
+    TFunction<void()> Callback, const TOptional<FString> LimitName
     )
     {
         return Gs2->Cache->ListSubscribe(

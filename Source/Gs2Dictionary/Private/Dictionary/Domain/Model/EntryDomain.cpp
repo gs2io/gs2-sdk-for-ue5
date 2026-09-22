@@ -405,8 +405,8 @@ namespace Gs2::Dictionary::Domain::Model
     }
 
     FEntryDomain::FSubscribeWithInitialCallTask::FSubscribeWithInitialCallTask(
-        const TSharedPtr<FEntryDomain> Self,
-        const TFunction<void(Gs2::Dictionary::Model::FEntryPtr)>& Callback
+        const TSharedPtr<FEntryDomain>& Self,
+        TFunction<void(Gs2::Dictionary::Model::FEntryPtr)> Callback
     ): Self(Self), Callback(Callback)
     {
     }

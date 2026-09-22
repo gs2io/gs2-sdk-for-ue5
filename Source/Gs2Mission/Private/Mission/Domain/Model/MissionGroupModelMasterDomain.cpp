@@ -333,7 +333,6 @@ namespace Gs2::Mission::Domain::Model
 
     Gs2::Core::Domain::CallbackID FMissionGroupModelMasterDomain::SubscribeMissionTaskModelMasters(
     TFunction<void()> Callback
-
     )
     {
         return Gs2->Cache->ListSubscribe(

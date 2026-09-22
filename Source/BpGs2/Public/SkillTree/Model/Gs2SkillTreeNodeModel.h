@@ -49,6 +49,8 @@ struct FGs2SkillTreeNodeModelValue
     TArray<FGs2SkillTreeAcquireAction> ReturnAcquireActions = TArray<FGs2SkillTreeAcquireAction>();
     UPROPERTY(Category = Gs2, BlueprintReadOnly)
     float RestrainReturnRate = 0;
+    UPROPERTY(Category = Gs2, BlueprintReadOnly)
+    TArray<FString> PremiseNodeNames = TArray<FString>();
 };
 
 inline FGs2SkillTreeNodeModelValue EzNodeModelToFGs2SkillTreeNodeModelValue(
@@ -90,6 +92,15 @@ inline FGs2SkillTreeNodeModelValue EzNodeModelToFGs2SkillTreeNodeModelValue(
         return r;
     }() : TArray<FGs2SkillTreeAcquireAction>();
     Value.RestrainReturnRate = Model->GetRestrainReturnRate() ? *Model->GetRestrainReturnRate() : 0;
+    Value.PremiseNodeNames = Model->GetPremiseNodeNames() ? [&]
+    {
+        TArray<FString> r;
+        for (auto v : *Model->GetPremiseNodeNames())
+        {
+            r.Add(v);
+        }
+        return r;
+    }() : TArray<FString>();
     return Value;
 }
 
@@ -121,7 +132,14 @@ inline Gs2::UE5::SkillTree::Model::FEzNodeModelPtr FGs2SkillTreeNodeModelValueTo
             }
             return r;
         }())
-        ->WithRestrainReturnRate(Model.RestrainReturnRate);
+        ->WithRestrainReturnRate(Model.RestrainReturnRate)
+        ->WithPremiseNodeNames([&]{
+            auto r = MakeShared<TArray<FString>>();
+            for (auto v : Model.PremiseNodeNames) {
+                r->Add(v);
+            }
+            return r;
+        }());
 }
 
 UCLASS()

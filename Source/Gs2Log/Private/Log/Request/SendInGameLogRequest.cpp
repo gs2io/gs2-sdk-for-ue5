@@ -145,16 +145,17 @@ namespace Gs2::Log::Request
               }() : TOptional<FString>())
           ->WithTags(Data->HasField(ANSI_TO_TCHAR("tags")) ? [Data]() -> TSharedPtr<TArray<Model::FInGameLogTagPtr>>
               {
-                  auto v = MakeShared<TArray<Model::FInGameLogTagPtr>>();
-                  if (!Data->HasTypedField<EJson::Null>(ANSI_TO_TCHAR("tags")) && Data->HasTypedField<EJson::Array>(ANSI_TO_TCHAR("tags")))
+                  if (!Data->HasTypedField<EJson::Array>(ANSI_TO_TCHAR("tags")))
                   {
-                      for (auto JsonObjectValue : Data->GetArrayField(ANSI_TO_TCHAR("tags")))
-                      {
-                          v->Add(Model::FInGameLogTag::FromJson(JsonObjectValue->AsObject()));
-                      }
+                      return nullptr;
                   }
+                  auto v = MakeShared<TArray<Model::FInGameLogTagPtr>>();
+                  for (auto JsonObjectValue : Data->GetArrayField(ANSI_TO_TCHAR("tags")))
+                      {
+                      v->Add(Model::FInGameLogTag::FromJson(JsonObjectValue->AsObject()));
+                      }
                   return v;
-              }() : MakeShared<TArray<Model::FInGameLogTagPtr>>())
+              }() : nullptr)
             ->WithPayload(Data->HasField(ANSI_TO_TCHAR("payload")) ? [Data]() -> TOptional<FString>
               {
                   FString v("");

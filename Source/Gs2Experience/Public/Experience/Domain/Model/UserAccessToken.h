@@ -91,8 +91,7 @@ namespace Gs2::Experience::Domain::Model
         ) const;
 
         Gs2::Core::Domain::CallbackID SubscribeStatuses(
-            TFunction<void()> Callback
-            , const TOptional<FString> ExperienceName = TOptional<FString>()
+            TFunction<void()> Callback, const TOptional<FString> ExperienceName = TOptional<FString>()
         );
 
         class FCollectStatusesTask;

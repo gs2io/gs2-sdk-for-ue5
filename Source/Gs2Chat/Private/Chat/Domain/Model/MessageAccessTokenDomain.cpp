@@ -64,11 +64,11 @@ namespace Gs2::Chat::Domain::Model
         RoomName(RoomName),
         Password(Password),
         MessageName(MessageName),
-        ParentKey(Gs2::Chat::Model::Cache::FMessageCache::CreateCacheParentKey(
+        ParentKey(Gs2::Chat::Domain::Model::FRoomDomain::CreateCacheParentKey(
             NamespaceName,
-            AccessToken.IsValid() ? AccessToken->GetUserId() : TOptional<FString>(),
+            TOptional<FString>("Singleton"),
             RoomName,
-            AccessToken.IsValid() ? AccessToken->GetTimeOffset() : TOptional<int32>()
+            "Message"
         ))
     {
     }
@@ -127,25 +127,27 @@ namespace Gs2::Chat::Domain::Model
         const auto ResultModel = Future->GetTask().Result();
         Future->EnsureCompletion();
 
-        if (ResultModel.IsValid() && ResultModel->GetItem() != nullptr)
-        {
-            if (!ResultModel.IsValid() || !ResultModel->GetItem().IsValid())
+            if (ResultModel.IsValid() && ResultModel->GetItem() != nullptr)
             {
-                const auto Details = MakeShared<TArray<TSharedPtr<Gs2::Core::Model::FGs2ErrorDetail>>>();
+
+        if (!ResultModel.IsValid() || !ResultModel->GetItem().IsValid())
+            {
+              const auto Details = MakeShared<TArray<TSharedPtr<Gs2::Core::Model::FGs2ErrorDetail>>>();
                 Details->Add(MakeShared<Gs2::Core::Model::FGs2ErrorDetail>(TEXT("result.item"), TEXT("result.item is invalid."), TEXT("invalid_response")));
                 return MakeShared<Gs2::Core::Model::FUnknownError>(Details);
+              }
+        Gs2::Chat::Model::Cache::FMessageCache::Put(
+            Self->Gs2->Cache,
+
+            Request->GetNamespaceName(),
+            (CacheOwnerSnapshotUserId),
+            ResultModel->GetItem()->GetRoomName(),
+            Request->GetMessageName(),
+            CacheOwnerSnapshotTimeOffset,
+            ResultModel->GetItem()
+        );
             }
-            Gs2::Chat::Model::Cache::FMessageCache::Put(
-                Self->Gs2->Cache,
-                Request->GetNamespaceName(),
-                CacheOwnerSnapshotUserId,
-                ResultModel->GetItem()->GetRoomName(),
-                Request->GetMessageName(),
-                CacheOwnerSnapshotTimeOffset,
-                ResultModel->GetItem()
-            );
-        }
-        *Result = ResultModel.IsValid() ? ResultModel->GetItem() : nullptr;
+        *Result = ResultModel->GetItem();
         return nullptr;
     }
 
@@ -198,53 +200,62 @@ namespace Gs2::Chat::Domain::Model
     )
     {
         const auto CacheParentKey = Gs2::Chat::Model::Cache::FMessageCache::CreateCacheParentKey(
+
             Self->NamespaceName,
-            Self->AccessToken.IsValid() ? Self->AccessToken->GetUserId() : TOptional<FString>(),
+            Self->AccessToken.IsValid() ? Self->UserId() : TOptional<FString>(),
             Self->RoomName,
             Self->AccessToken.IsValid() ? Self->AccessToken->GetTimeOffset() : TOptional<int32>()
         );
-        const auto CacheKey = Gs2::Chat::Model::Cache::FMessageCache::CreateCacheKey(Self->MessageName);
+        const auto CacheKey = Gs2::Chat::Model::Cache::FMessageCache::CreateCacheKey(
+
+            Self->MessageName
+        );
         return Self->Gs2->Cache->ExecuteWithKeyLock(
             Gs2::Chat::Model::FMessage::TypeName,
             CacheParentKey,
             CacheKey,
-            [this, Result]() -> Gs2::Core::Model::FGs2ErrorPtr
+            [Self = Self, Result]() -> Gs2::Core::Model::FGs2ErrorPtr
             {
                 Gs2::Chat::Model::FMessagePtr Value;
-                if (Gs2::Chat::Model::Cache::FMessageCache::TryGet(
+                const auto CacheHit = Gs2::Chat::Model::Cache::FMessageCache::TryGet(
                     Self->Gs2->Cache,
+
                     Self->NamespaceName,
-                    Self->AccessToken.IsValid() ? Self->AccessToken->GetUserId() : TOptional<FString>(),
+                    Self->AccessToken.IsValid() ? Self->UserId() : TOptional<FString>(),
                     Self->RoomName,
                     Self->MessageName,
                     Self->AccessToken.IsValid() ? Self->AccessToken->GetTimeOffset() : TOptional<int32>(),
                     &Value
-                ))
+                );
+                if (CacheHit)
                 {
                     *Result = Value;
                     return nullptr;
                 }
-                return Gs2::Chat::Model::Cache::FMessageCache::Fetch(
+                const auto Error = Gs2::Chat::Model::Cache::FMessageCache::Fetch(
                     Self->Gs2->Cache,
+
                     Self->NamespaceName,
-                    Self->AccessToken.IsValid() ? Self->AccessToken->GetUserId() : TOptional<FString>(),
+                    Self->AccessToken.IsValid() ? Self->UserId() : TOptional<FString>(),
                     Self->RoomName,
                     Self->MessageName,
                     Self->AccessToken.IsValid() ? Self->AccessToken->GetTimeOffset() : TOptional<int32>(),
-                    [this](Gs2::Chat::Model::FMessagePtr* OutItem) -> Gs2::Core::Model::FGs2ErrorPtr
+                    [Self](Gs2::Chat::Model::FMessagePtr* OutItem) -> Gs2::Core::Model::FGs2ErrorPtr
                     {
-                        const auto Future = Self->Get(MakeShared<Gs2::Chat::Request::FGetMessageRequest>());
+                        const auto Future = Self->Get(
+                            MakeShared<Gs2::Chat::Request::FGetMessageRequest>()
+                        );
                         Future->StartSynchronousTask();
-                        if (Future->GetTask().IsError())
-                        {
-                            return Future->GetTask().Error();
-                        }
+                        if (Future->GetTask().IsError()) return Future->GetTask().Error();
                         *OutItem = Future->GetTask().Result();
                         Future->EnsureCompletion();
                         return nullptr;
                     },
-                    Result.Get()
+                    &Value
                 );
+                if (Error.IsValid()) return Error;
+                *Result = Value;
+                return nullptr;
             }
         );
     }
@@ -253,16 +264,34 @@ namespace Gs2::Chat::Domain::Model
         return Gs2::Core::Util::New<FAsyncTask<FMessageAccessTokenDomain::FModelTask>>(this->AsShared());
     }
 
+    void FMessageAccessTokenDomain::Invalidate()
+    {
+        Gs2::Chat::Model::Cache::FMessageCache::Delete(
+            Gs2->Cache,
+
+            NamespaceName,
+            AccessToken.IsValid() ? UserId() : TOptional<FString>(),
+            RoomName,
+            MessageName,
+            AccessToken.IsValid() ? AccessToken->GetTimeOffset() : TOptional<int32>()
+        );
+    }
+
     FMessageAccessTokenDomain::FSubscribeWithInitialCallTask::FSubscribeWithInitialCallTask(
-        const TSharedPtr<FMessageAccessTokenDomain> Self,
-        const TFunction<void(Gs2::Chat::Model::FMessagePtr)>& Callback
-    ): Self(Self), Callback(Callback)
+        const TSharedPtr<FMessageAccessTokenDomain>& Self,
+        TFunction<void(Gs2::Chat::Model::FMessagePtr)> Callback
+    ):
+        Self(Self),
+        Callback(Callback)
     {
     }
 
     FMessageAccessTokenDomain::FSubscribeWithInitialCallTask::FSubscribeWithInitialCallTask(
         const FSubscribeWithInitialCallTask& From
-    ): TGs2Future(From), Self(From.Self), Callback(From.Callback)
+    ):
+        TGs2Future(From),
+        Self(From.Self),
+        Callback(From.Callback)
     {
     }
 
@@ -270,17 +299,14 @@ namespace Gs2::Chat::Domain::Model
         TSharedPtr<TSharedPtr<Gs2::Core::Domain::CallbackID>> Result
     )
     {
-        const auto Future = Self->Model();
-        Future->StartSynchronousTask();
-        Future->EnsureCompletion();
-        if (Future->GetTask().IsError())
-        {
-            return Future->GetTask().Error();
-        }
-        const auto Item = Future->GetTask().Result();
-        const auto ID = Self->Subscribe(Callback);
+        const auto Task = Self->Model();
+        Task->StartSynchronousTask();
+        Task->EnsureCompletion();
+        if (Task->GetTask().IsError()) return Task->GetTask().Error();
+        const auto Item = Task->GetTask().Result();
+        const auto CallbackId = Self->Subscribe(Callback);
         Callback(Item);
-        *Result = MakeShared<Gs2::Core::Domain::CallbackID>(ID);
+        *Result = MakeShared<Gs2::Core::Domain::CallbackID>(CallbackId);
         return nullptr;
     }
 
@@ -291,24 +317,24 @@ namespace Gs2::Chat::Domain::Model
         return Gs2::Core::Util::New<FAsyncTask<FSubscribeWithInitialCallTask>>(this->AsShared(), Callback);
     }
 
-    void FMessageAccessTokenDomain::Invalidate()
-    {
-        Gs2::Chat::Model::Cache::FMessageCache::Delete(
-            Gs2->Cache,
-            NamespaceName,
-            AccessToken.IsValid() ? AccessToken->GetUserId() : TOptional<FString>(),
-            RoomName,
-            MessageName,
-            AccessToken.IsValid() ? AccessToken->GetTimeOffset() : TOptional<int32>()
-        );
-    }
-
     Gs2::Core::Domain::CallbackID FMessageAccessTokenDomain::Subscribe(
         TFunction<void(Gs2::Chat::Model::FMessagePtr)> Callback
     )
     {
+        const auto SubscriptionParentKey = Gs2::Chat::Model::Cache::FMessageCache::CreateCacheParentKey(
+
+            NamespaceName,
+            AccessToken.IsValid() ? UserId() : TOptional<FString>(),
+            RoomName,
+            AccessToken.IsValid() ? AccessToken->GetTimeOffset() : TOptional<int32>()
+        );
+        const auto SubscriptionCacheKey = Gs2::Chat::Model::Cache::FMessageCache::CreateCacheKey(
+
+            MessageName
+        );
         const TWeakPtr<Gs2::Core::Domain::FGs2> WeakGs2 = Gs2;
         const TWeakPtr<Chat::Domain::FGs2ChatDomain> WeakService = Service;
+        const FString RegisteredParentKey = SubscriptionParentKey;
         const TOptional<FString> QueryNamespaceName = NamespaceName;
         const TOptional<FString> QueryRoomName = RoomName;
         const TOptional<FString> QueryPassword = Password;
@@ -317,23 +343,16 @@ namespace Gs2::Chat::Domain::Model
         const TOptional<FString> RegisteredUserId = SourceToken.IsValid()
             ? TOptional<FString>(SourceToken->GetUserId())
             : TOptional<FString>();
-        const auto OwnerSubscriptionParentKey = Gs2::Chat::Model::Cache::FMessageCache::CreateCacheParentKey(
-            NamespaceName,
-            RegisteredUserId,
-            RoomName,
-            SourceToken.IsValid() ? SourceToken->GetTimeOffset() : TOptional<int32>()
-        );
-        const auto OwnerSubscriptionKey = Gs2::Chat::Model::Cache::FMessageCache::CreateCacheKey(MessageName);
-
+        const int32 RegisteredTimeOffset = SourceToken.IsValid() ? SourceToken->GetTimeOffset().Get(0) : 0;
         return Gs2->Cache->Subscribe(
             Gs2::Chat::Model::FMessage::TypeName,
-            OwnerSubscriptionParentKey,
-            OwnerSubscriptionKey,
+            SubscriptionParentKey,
+            SubscriptionCacheKey,
             [Callback](TSharedPtr<FGs2Object> obj)
             {
                 Callback(StaticCastSharedPtr<Gs2::Chat::Model::FMessage>(obj));
             },
-            [WeakGs2, WeakService, QueryNamespaceName, QueryRoomName, QueryPassword, QueryMessageName, SourceToken, RegisteredUserId]()
+            [WeakGs2, WeakService, RegisteredParentKey, QueryNamespaceName, QueryRoomName, QueryPassword, QueryMessageName, SourceToken, RegisteredUserId, RegisteredTimeOffset]()
             {
                 const auto Owner = WeakGs2.Pin();
                 if (!Owner.IsValid() || !SourceToken.IsValid() || !RegisteredUserId.IsSet())
@@ -341,6 +360,10 @@ namespace Gs2::Chat::Domain::Model
                     return;
                 }
                 const auto TokenSnapshot = MakeShared<Gs2::Auth::Model::FAccessToken>(*SourceToken);
+                if (TokenSnapshot->GetUserId() != RegisteredUserId || TokenSnapshot->GetTimeOffset().Get(0) != RegisteredTimeOffset)
+                {
+                    return;
+                }
                 const auto Domain = MakeShared<FMessageAccessTokenDomain>(
                     Owner,
                     WeakService.Pin(),
@@ -350,6 +373,7 @@ namespace Gs2::Chat::Domain::Model
                     QueryPassword,
                     QueryMessageName
                 );
+                Domain->ParentKey = RegisteredParentKey;
                 const auto Task = Domain->Model();
                 Task->StartBackgroundTask();
             }
@@ -360,17 +384,21 @@ namespace Gs2::Chat::Domain::Model
         Gs2::Core::Domain::CallbackID CallbackID
     )
     {
-        const auto OwnerSubscriptionParentKey = Gs2::Chat::Model::Cache::FMessageCache::CreateCacheParentKey(
+        const auto SubscriptionParentKey = Gs2::Chat::Model::Cache::FMessageCache::CreateCacheParentKey(
+
             NamespaceName,
-            AccessToken.IsValid() ? AccessToken->GetUserId() : TOptional<FString>(),
+            AccessToken.IsValid() ? UserId() : TOptional<FString>(),
             RoomName,
             AccessToken.IsValid() ? AccessToken->GetTimeOffset() : TOptional<int32>()
         );
-        const auto OwnerSubscriptionKey = Gs2::Chat::Model::Cache::FMessageCache::CreateCacheKey(MessageName);
+        const auto SubscriptionCacheKey = Gs2::Chat::Model::Cache::FMessageCache::CreateCacheKey(
+
+            MessageName
+        );
         Gs2->Cache->Unsubscribe(
             Gs2::Chat::Model::FMessage::TypeName,
-            OwnerSubscriptionParentKey,
-            OwnerSubscriptionKey,
+            SubscriptionParentKey,
+            SubscriptionCacheKey,
             CallbackID
         );
     }

@@ -39,6 +39,7 @@
 #include "Version/Model/Cache/CurrentVersionMaster.h"
 #include "Version/Model/Cache/VersionModel.h"
 #include "Version/Model/Cache/AcceptVersion.h"
+#include "Version/Model/Cache/AcceptVersion.h"
 
 #include "Core/Domain/Gs2.h"
 
@@ -439,7 +440,6 @@ namespace Gs2::Version::Domain
 
     Gs2::Core::Domain::CallbackID FGs2VersionDomain::SubscribeNamespaces(
     TFunction<void()> Callback
-
     )
     {
         return Gs2->Cache->ListSubscribe(
@@ -562,6 +562,46 @@ namespace Gs2::Version::Domain
         const FString Result,
         const TOptional<int32> TimeOffset
     ) {
+    }
+
+    TOptional<FString> FGs2VersionDomain::PutUserData(
+        const TOptional<FString> NamespaceName,
+        const TOptional<FString> UserId,
+        const TOptional<int32> TimeOffset,
+        const FString Kind,
+        const FString Payload
+    ) {
+        TSharedPtr<FJsonObject> PayloadJson;
+        if (const TSharedRef<TJsonReader<>> JsonReader = TJsonReaderFactory<>::Create(Payload);
+            !FJsonSerializer::Deserialize(JsonReader, PayloadJson) || !PayloadJson.IsValid())
+        {
+            return TOptional<FString>();
+        }
+        if (Kind == "acceptVersion") {
+            const auto Item = Gs2::Version::Model::FAcceptVersion::FromJson(PayloadJson);
+            if (!Item.IsValid()) return TOptional<FString>();
+            const auto ParentKey = Gs2::Version::Model::Cache::FAcceptVersionCache::PutUserData(
+                Gs2->Cache,
+                NamespaceName,
+                UserId,
+                TimeOffset,
+                Item
+            );
+            return ParentKey.IsEmpty() ? TOptional<FString>() : TOptional<FString>(ParentKey);
+        }
+        return TOptional<FString>();
+    }
+
+    bool FGs2VersionDomain::SetListCached(
+        const TOptional<int32> TimeOffset,
+        const FString Kind,
+        const FString ParentKey
+    ) {
+        if (Kind == "acceptVersion") {
+            Gs2->Cache->SetListCached(Gs2::Version::Model::FAcceptVersion::TypeName, ParentKey);
+            return true;
+        }
+        return false;
     }
 
     void FGs2VersionDomain::UpdateCacheFromStampTask(

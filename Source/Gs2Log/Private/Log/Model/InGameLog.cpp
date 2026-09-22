@@ -142,16 +142,17 @@ namespace Gs2::Log::Model
                 }() : TOptional<FString>())
             ->WithTags(Data->HasField(ANSI_TO_TCHAR("tags")) ? [Data]() -> TSharedPtr<TArray<Model::FInGameLogTagPtr>>
                 {
-                    auto v = MakeShared<TArray<Model::FInGameLogTagPtr>>();
-                    if (!Data->HasTypedField<EJson::Null>(ANSI_TO_TCHAR("tags")) && Data->HasTypedField<EJson::Array>(ANSI_TO_TCHAR("tags")))
+                    if (!Data->HasTypedField<EJson::Array>(ANSI_TO_TCHAR("tags")))
                     {
-                        for (auto JsonObjectValue : Data->GetArrayField(ANSI_TO_TCHAR("tags")))
-                        {
-                            v->Add(Model::FInGameLogTag::FromJson(JsonObjectValue->AsObject()));
-                        }
+                        return nullptr;
+                    }
+                    auto v = MakeShared<TArray<Model::FInGameLogTagPtr>>();
+                    for (auto JsonObjectValue : Data->GetArrayField(ANSI_TO_TCHAR("tags")))
+                    {
+                        v->Add(Model::FInGameLogTag::FromJson(JsonObjectValue->AsObject()));
                     }
                     return v;
-                 }() : MakeShared<TArray<Model::FInGameLogTagPtr>>())
+                 }() : nullptr)
             ->WithPayload(Data->HasField(ANSI_TO_TCHAR("payload")) ? [Data]() -> TOptional<FString>
                 {
                     FString v("");
@@ -208,6 +209,7 @@ namespace Gs2::Log::Model::Cache
     {
         return FString("log:")
             + CacheOwnerArgumentNamespaceName.Get(FString()) + FString(":")
+            + CacheOwnerArgumentUserId.Get(FString()) + FString(":")
             + FString::FromInt(CacheOwnerArgumentTimeOffset.Get(0)) + FString(":InGameLog");
     }
 
@@ -277,6 +279,30 @@ namespace Gs2::Log::Model::Cache
         auto CacheOwnerValue = CacheOwnerArgumentItem;
         CacheSnapshot->Put(Gs2::Log::Model::FInGameLog::TypeName, CacheOwnerParentKey, CacheOwnerKey, CacheOwnerValue,
             FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
+        );
+    }
+
+    FString FInGameLogCache::PutUserData(
+        const Gs2::Core::Domain::FCacheDatabasePtr& Cache,
+        TOptional<FString> NamespaceName,
+        TOptional<FString> UserId,
+        TOptional<int32> TimeOffset,
+        const Gs2::Log::Model::FInGameLogPtr& Item
+    )
+    {
+        if (!Item.IsValid()) return FString();
+        Put(
+            Cache,
+            NamespaceName,
+            UserId,
+            Item->GetRequestId(),
+            TimeOffset,
+            Item
+        );
+        return CreateCacheParentKey(
+            NamespaceName,
+            UserId,
+            TimeOffset
         );
     }
 

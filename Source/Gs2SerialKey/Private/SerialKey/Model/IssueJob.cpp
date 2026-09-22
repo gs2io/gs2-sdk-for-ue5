@@ -442,6 +442,30 @@ namespace Gs2::SerialKey::Model::Cache
         );
     }
 
+    FString FIssueJobCache::PutUserData(
+        const Gs2::Core::Domain::FCacheDatabasePtr& Cache,
+        TOptional<FString> NamespaceName,
+        TOptional<FString> UserId,
+        TOptional<int32> TimeOffset,
+        const Gs2::SerialKey::Model::FIssueJobPtr& Item
+    )
+    {
+        if (!Item.IsValid()) return FString();
+        Put(
+            Cache,
+            NamespaceName,
+            (Item->GetIssueJobId().IsSet() ? Gs2::SerialKey::Model::FIssueJob::GetCampaignModelNameFromGrn(*Item->GetIssueJobId()) : TOptional<FString>()),
+            Item->GetName(),
+            TimeOffset,
+            Item
+        );
+        return CreateCacheParentKey(
+            NamespaceName,
+            (Item->GetIssueJobId().IsSet() ? Gs2::SerialKey::Model::FIssueJob::GetCampaignModelNameFromGrn(*Item->GetIssueJobId()) : TOptional<FString>()),
+            TimeOffset
+        );
+    }
+
     void FIssueJobCache::Delete(
         const Gs2::Core::Domain::FCacheDatabasePtr& CacheOwnerArgumentCache,
         TOptional<FString> CacheOwnerArgumentNamespaceName,

@@ -319,7 +319,6 @@ namespace Gs2::Formation::Domain::Model
 
         Gs2::Core::Domain::CallbackID SubscribeMoldModels(
             TFunction<void()> Callback
-
         );
 
         class FCollectMoldModelsTask;
@@ -359,7 +358,6 @@ namespace Gs2::Formation::Domain::Model
 
         Gs2::Core::Domain::CallbackID SubscribePropertyFormModels(
             TFunction<void()> Callback
-
         );
 
         class FCollectPropertyFormModelsTask;
@@ -408,7 +406,6 @@ namespace Gs2::Formation::Domain::Model
 
         Gs2::Core::Domain::CallbackID SubscribePropertyFormModelMasters(
             TFunction<void()> Callback
-
         );
 
         class FCollectPropertyFormModelMastersTask;
@@ -449,7 +446,6 @@ namespace Gs2::Formation::Domain::Model
 
         Gs2::Core::Domain::CallbackID SubscribeFormModelMasters(
             TFunction<void()> Callback
-
         );
 
         class FCollectFormModelMastersTask;
@@ -490,7 +486,6 @@ namespace Gs2::Formation::Domain::Model
 
         Gs2::Core::Domain::CallbackID SubscribeMoldModelMasters(
             TFunction<void()> Callback
-
         );
 
         class FCollectMoldModelMastersTask;

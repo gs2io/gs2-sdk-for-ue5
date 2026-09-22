@@ -163,16 +163,17 @@ namespace Gs2::MegaField::Model
                 }() : TOptional<FString>())
             ->WithLayerModels(Data->HasField(ANSI_TO_TCHAR("layerModels")) ? [Data]() -> TSharedPtr<TArray<Model::FLayerModelPtr>>
                 {
-                    auto v = MakeShared<TArray<Model::FLayerModelPtr>>();
-                    if (!Data->HasTypedField<EJson::Null>(ANSI_TO_TCHAR("layerModels")) && Data->HasTypedField<EJson::Array>(ANSI_TO_TCHAR("layerModels")))
+                    if (!Data->HasTypedField<EJson::Array>(ANSI_TO_TCHAR("layerModels")))
                     {
-                        for (auto JsonObjectValue : Data->GetArrayField(ANSI_TO_TCHAR("layerModels")))
-                        {
-                            v->Add(Model::FLayerModel::FromJson(JsonObjectValue->AsObject()));
-                        }
+                        return nullptr;
+                    }
+                    auto v = MakeShared<TArray<Model::FLayerModelPtr>>();
+                    for (auto JsonObjectValue : Data->GetArrayField(ANSI_TO_TCHAR("layerModels")))
+                    {
+                        v->Add(Model::FLayerModel::FromJson(JsonObjectValue->AsObject()));
                     }
                     return v;
-                 }() : MakeShared<TArray<Model::FLayerModelPtr>>());
+                 }() : nullptr);
     }
 
     TSharedPtr<FJsonObject> FAreaModel::ToJson() const
@@ -278,6 +279,28 @@ namespace Gs2::MegaField::Model::Cache
         auto CacheOwnerValue = CacheOwnerArgumentItem;
         CacheSnapshot->Put(Gs2::MegaField::Model::FAreaModel::TypeName, CacheOwnerParentKey, CacheOwnerKey, CacheOwnerValue,
             FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
+        );
+    }
+
+    FString FAreaModelCache::PutUserData(
+        const Gs2::Core::Domain::FCacheDatabasePtr& Cache,
+        TOptional<FString> NamespaceName,
+        TOptional<FString> UserId,
+        TOptional<int32> TimeOffset,
+        const Gs2::MegaField::Model::FAreaModelPtr& Item
+    )
+    {
+        if (!Item.IsValid()) return FString();
+        Put(
+            Cache,
+            NamespaceName,
+            Item->GetName(),
+            TimeOffset,
+            Item
+        );
+        return CreateCacheParentKey(
+            NamespaceName,
+            TimeOffset
         );
     }
 

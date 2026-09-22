@@ -47,7 +47,6 @@
 #include "Friend/Domain/Model/PublicProfileAccessToken.h"
 #include "Friend/Domain/Model/FriendRequestAccessToken.h"
 #include "Friend/Model/Cache/BlackList.h"
-#include "Friend/Domain/Model/BlackListEntry.h"
 
 #include "Core/Domain/Gs2.h"
 #include "Core/Domain/Transaction/JobQueueJobDomainFactory.h"
@@ -142,15 +141,6 @@ namespace Gs2::Friend::Domain::Model
             CacheOwnerSnapshotTimeOffset,
             ResultModel->GetItem()
         );
-        // ブラックリスト登録/解除で一覧の内容が変わるため、BlackListUsers() の一覧キャッシュを無効化する
-        Self->Gs2->Cache->ClearListCache(
-            Gs2::Friend::Model::FBlackListEntry::TypeName,
-            Gs2::Friend::Domain::Model::FUserDomain::CreateCacheParentKey(
-                Request->GetNamespaceName(),
-                (CacheOwnerSnapshotUserId),
-                Gs2::Friend::Model::FBlackListEntry::TypeName
-            )
-        );
             }
         auto Domain = Self;
 
@@ -215,15 +205,6 @@ namespace Gs2::Friend::Domain::Model
             (CacheOwnerSnapshotUserId),
             CacheOwnerSnapshotTimeOffset,
             ResultModel->GetItem()
-        );
-        // ブラックリスト登録/解除で一覧の内容が変わるため、BlackListUsers() の一覧キャッシュを無効化する
-        Self->Gs2->Cache->ClearListCache(
-            Gs2::Friend::Model::FBlackListEntry::TypeName,
-            Gs2::Friend::Domain::Model::FUserDomain::CreateCacheParentKey(
-                Request->GetNamespaceName(),
-                (CacheOwnerSnapshotUserId),
-                Gs2::Friend::Model::FBlackListEntry::TypeName
-            )
         );
             }
         auto Domain = Self;

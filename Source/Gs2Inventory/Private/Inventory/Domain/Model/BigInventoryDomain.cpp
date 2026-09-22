@@ -117,7 +117,6 @@ namespace Gs2::Inventory::Domain::Model
 
     Gs2::Core::Domain::CallbackID FBigInventoryDomain::SubscribeBigItems(
     TFunction<void()> Callback
-
     )
     {
         return Gs2->Cache->ListSubscribe(

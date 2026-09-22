@@ -87,13 +87,8 @@ namespace Gs2::SerialKey::Domain::SpeculativeExecutor
                 return Future->GetTask().Error();
             }
             *Result = Future->GetTask().Result();
-            return nullptr;
         }
         if (FIssueOnceSpeculativeExecutor::Action() == NewAcquireAction->GetAction()) {
-            if (Rate != 1)
-            {
-                return nullptr;
-            }
             TSharedPtr<FJsonObject> RequestModelJson;
             if (const TSharedRef<TJsonReader<>> JsonReader = TJsonReaderFactory<>::Create(NewAcquireAction->GetRequest().IsSet() ? *NewAcquireAction->GetRequest() : "{}");
                 !FJsonSerializer::Deserialize(JsonReader, RequestModelJson))
@@ -101,6 +96,7 @@ namespace Gs2::SerialKey::Domain::SpeculativeExecutor
                 return nullptr;
             }
             auto Request = Request::FIssueOnceRequest::FromJson(RequestModelJson);
+            Request = FIssueOnceSpeculativeExecutor::Rate(Request, Rate);
             auto Future = FIssueOnceSpeculativeExecutor::Execute(
                 Domain,
                 Service,
@@ -113,7 +109,6 @@ namespace Gs2::SerialKey::Domain::SpeculativeExecutor
                 return Future->GetTask().Error();
             }
             *Result = Future->GetTask().Result();
-            return nullptr;
         }
         return nullptr;
     }

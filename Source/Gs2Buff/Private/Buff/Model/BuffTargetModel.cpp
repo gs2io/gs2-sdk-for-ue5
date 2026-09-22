@@ -119,16 +119,17 @@ namespace Gs2::Buff::Model
                 }() : TOptional<FString>())
             ->WithConditionGrns(Data->HasField(ANSI_TO_TCHAR("conditionGrns")) ? [Data]() -> TSharedPtr<TArray<Model::FBuffTargetGrnPtr>>
                 {
-                    auto v = MakeShared<TArray<Model::FBuffTargetGrnPtr>>();
-                    if (!Data->HasTypedField<EJson::Null>(ANSI_TO_TCHAR("conditionGrns")) && Data->HasTypedField<EJson::Array>(ANSI_TO_TCHAR("conditionGrns")))
+                    if (!Data->HasTypedField<EJson::Array>(ANSI_TO_TCHAR("conditionGrns")))
                     {
-                        for (auto JsonObjectValue : Data->GetArrayField(ANSI_TO_TCHAR("conditionGrns")))
-                        {
-                            v->Add(Model::FBuffTargetGrn::FromJson(JsonObjectValue->AsObject()));
-                        }
+                        return nullptr;
+                    }
+                    auto v = MakeShared<TArray<Model::FBuffTargetGrnPtr>>();
+                    for (auto JsonObjectValue : Data->GetArrayField(ANSI_TO_TCHAR("conditionGrns")))
+                    {
+                        v->Add(Model::FBuffTargetGrn::FromJson(JsonObjectValue->AsObject()));
                     }
                     return v;
-                 }() : MakeShared<TArray<Model::FBuffTargetGrnPtr>>())
+                 }() : nullptr)
             ->WithRate(Data->HasField(ANSI_TO_TCHAR("rate")) ? [Data]() -> TOptional<float>
                 {
                     float v;

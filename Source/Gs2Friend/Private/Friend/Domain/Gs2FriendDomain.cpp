@@ -611,6 +611,112 @@ namespace Gs2::Friend::Domain
         }
     }
 
+    /* diff +++ start */
+    TOptional<FString> FGs2FriendDomain::PutUserData(
+        const TOptional<FString> NamespaceName,
+        const TOptional<FString> UserId,
+        const TOptional<int32> TimeOffset,
+        const FString Kind,
+        const FString Payload
+    ) {
+        TSharedPtr<FJsonObject> PayloadJson;
+        if (const TSharedRef<TJsonReader<>> JsonReader = TJsonReaderFactory<>::Create(Payload);
+            !FJsonSerializer::Deserialize(JsonReader, PayloadJson) || !PayloadJson.IsValid())
+        {
+            return TOptional<FString>();
+        }
+        if (Kind == "followUser") {
+            const auto Item = Gs2::Friend::Model::FFollowUser::FromJson(PayloadJson);
+            if (!Item.IsValid()) return TOptional<FString>();
+            const auto ParentKey = Gs2::Friend::Model::Cache::FFollowUserCache::PutUserData(
+                Gs2->Cache,
+                NamespaceName,
+                UserId,
+                TimeOffset,
+                Item
+            );
+            return ParentKey.IsEmpty() ? TOptional<FString>() : TOptional<FString>(ParentKey);
+        }
+        if (Kind == "friendUser") {
+            const auto Item = Gs2::Friend::Model::FFriendUser::FromJson(PayloadJson);
+            if (!Item.IsValid()) return TOptional<FString>();
+            const auto ParentKey = Gs2::Friend::Model::Cache::FFriendUserCache::PutUserData(
+                Gs2->Cache,
+                NamespaceName,
+                UserId,
+                TimeOffset,
+                Item
+            );
+            return ParentKey.IsEmpty() ? TOptional<FString>() : TOptional<FString>(ParentKey);
+        }
+        if (Kind == "profile") {
+            const auto Item = Gs2::Friend::Model::FProfile::FromJson(PayloadJson);
+            if (!Item.IsValid()) return TOptional<FString>();
+            const auto ParentKey = Gs2::Friend::Model::Cache::FProfileCache::PutUserData(
+                Gs2->Cache,
+                NamespaceName,
+                UserId,
+                TimeOffset,
+                Item
+            );
+            return ParentKey.IsEmpty() ? TOptional<FString>() : TOptional<FString>(ParentKey);
+        }
+        if (Kind == "receiveFriendRequest") {
+            const auto Item = Gs2::Friend::Model::FReceiveFriendRequest::FromJson(PayloadJson);
+            if (!Item.IsValid()) return TOptional<FString>();
+            const auto ParentKey = Gs2::Friend::Model::Cache::FReceiveFriendRequestCache::PutUserData(
+                Gs2->Cache,
+                NamespaceName,
+                UserId,
+                TimeOffset,
+                Item
+            );
+            return ParentKey.IsEmpty() ? TOptional<FString>() : TOptional<FString>(ParentKey);
+        }
+        if (Kind == "sendFriendRequest") {
+            const auto Item = Gs2::Friend::Model::FSendFriendRequest::FromJson(PayloadJson);
+            if (!Item.IsValid()) return TOptional<FString>();
+            const auto ParentKey = Gs2::Friend::Model::Cache::FSendFriendRequestCache::PutUserData(
+                Gs2->Cache,
+                NamespaceName,
+                UserId,
+                TimeOffset,
+                Item
+            );
+            return ParentKey.IsEmpty() ? TOptional<FString>() : TOptional<FString>(ParentKey);
+        }
+        return TOptional<FString>();
+    }
+
+    bool FGs2FriendDomain::SetListCached(
+        const TOptional<int32> TimeOffset,
+        const FString Kind,
+        const FString ParentKey
+    ) {
+        if (Kind == "followUser") {
+            Gs2->Cache->SetListCached(Gs2::Friend::Model::FFollowUser::TypeName, ParentKey);
+            return true;
+        }
+        if (Kind == "friendUser") {
+            Gs2->Cache->SetListCached(Gs2::Friend::Model::FFriendUser::TypeName, ParentKey);
+            return true;
+        }
+        if (Kind == "profile") {
+            Gs2->Cache->SetListCached(Gs2::Friend::Model::FProfile::TypeName, ParentKey);
+            return true;
+        }
+        if (Kind == "receiveFriendRequest") {
+            Gs2->Cache->SetListCached(Gs2::Friend::Model::FReceiveFriendRequest::TypeName, ParentKey);
+            return true;
+        }
+        if (Kind == "sendFriendRequest") {
+            Gs2->Cache->SetListCached(Gs2::Friend::Model::FSendFriendRequest::TypeName, ParentKey);
+            return true;
+        }
+        return false;
+    }
+    /* diff +++ end */
+
     void FGs2FriendDomain::UpdateCacheFromStampTask(
         const FString Method,
         const FString Request,

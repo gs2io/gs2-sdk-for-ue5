@@ -67,7 +67,6 @@ namespace Gs2::Freeze::Domain
 
     Gs2::Core::Domain::CallbackID FGs2FreezeDomain::SubscribeStages(
     TFunction<void()> Callback
-
     )
     {
         return Gs2->Cache->ListSubscribe(
@@ -189,6 +188,24 @@ namespace Gs2::Freeze::Domain
         const FString Result,
         const TOptional<int32> TimeOffset
     ) {
+    }
+
+    TOptional<FString> FGs2FreezeDomain::PutUserData(
+        const TOptional<FString> NamespaceName,
+        const TOptional<FString> UserId,
+        const TOptional<int32> TimeOffset,
+        const FString Kind,
+        const FString Payload
+    ) {
+        return TOptional<FString>();
+    }
+
+    bool FGs2FreezeDomain::SetListCached(
+        const TOptional<int32> TimeOffset,
+        const FString Kind,
+        const FString ParentKey
+    ) {
+        return false;
     }
 
     void FGs2FreezeDomain::UpdateCacheFromStampTask(

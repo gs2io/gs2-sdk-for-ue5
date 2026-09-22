@@ -68,12 +68,12 @@ namespace Gs2::Ranking::Domain::Model
         CategoryName(CategoryName),
         AdditionalScopeName(AdditionalScopeName),
         TargetUserId(TargetUserId),
-        ParentKey(Gs2::Ranking::Model::Cache::FSubscribeUserCache::CreateCacheParentKey(
+        ParentKey(Gs2::Ranking::Domain::Model::FRankingCategoryDomain::CreateCacheParentKey(
             NamespaceName,
             UserId(),
             CategoryName,
-            AdditionalScopeName,
-            AccessToken.IsValid() ? AccessToken->GetTimeOffset() : TOptional<int32>()
+            TOptional<FString>("Singleton"),
+            "SubscribeUser"
         ))
     {
     }
@@ -281,77 +281,65 @@ namespace Gs2::Ranking::Domain::Model
         TSharedPtr<TSharedPtr<Gs2::Ranking::Model::FSubscribeUser>> Result
     )
     {
-        const FString CacheKey = Gs2::Ranking::Model::Cache::FSubscribeUserCache::CreateCacheKey(
+        const auto CacheParentKey = Gs2::Ranking::Model::Cache::FSubscribeUserCache::CreateCacheParentKey(
+
+            Self->NamespaceName,
+            Self->AccessToken.IsValid() ? Self->UserId() : TOptional<FString>(),
+            Self->CategoryName,
+            Self->AdditionalScopeName,
+            Self->AccessToken.IsValid() ? Self->AccessToken->GetTimeOffset() : TOptional<int32>()
+        );
+        const auto CacheKey = Gs2::Ranking::Model::Cache::FSubscribeUserCache::CreateCacheKey(
+
             Self->TargetUserId
         );
         return Self->Gs2->Cache->ExecuteWithKeyLock(
             Gs2::Ranking::Model::FSubscribeUser::TypeName,
-            Self->ParentKey,
+            CacheParentKey,
             CacheKey,
-            [this, Result, CacheKey]() -> Gs2::Core::Model::FGs2ErrorPtr
+            [Self = Self, Result]() -> Gs2::Core::Model::FGs2ErrorPtr
             {
-                // ReSharper disable once CppLocalVariableMayBeConst
-                TSharedPtr<Gs2::Ranking::Model::FSubscribeUser> Value;
-                auto bCacheHit = Self->Gs2->Cache->TryGet<Gs2::Ranking::Model::FSubscribeUser>(
-                    Self->ParentKey,
-                    CacheKey,
+                Gs2::Ranking::Model::FSubscribeUserPtr Value;
+                const auto CacheHit = Gs2::Ranking::Model::Cache::FSubscribeUserCache::TryGet(
+                    Self->Gs2->Cache,
+
+                    Self->NamespaceName,
+                    Self->AccessToken.IsValid() ? Self->UserId() : TOptional<FString>(),
+                    Self->CategoryName,
+                    Self->AdditionalScopeName,
+                    Self->TargetUserId,
+                    Self->AccessToken.IsValid() ? Self->AccessToken->GetTimeOffset() : TOptional<int32>(),
                     &Value
                 );
-                if (!bCacheHit) {
-                    const auto Future = Self->Get(
-                        MakeShared<Gs2::Ranking::Request::FGetSubscribeRequest>()
-                    );
-                    Future->StartSynchronousTask();
-                    if (Future->GetTask().IsError())
-                    {
-                        const auto Error = Future->GetTask().Error();
-                        if (!Error.IsValid() || Error->Type() != Gs2::Core::Model::FNotFoundError::TypeString)
-                        {
-                            return Error;
-                        }
-
-                        Self->Gs2->Cache->Put(
-                            Gs2::Ranking::Model::FSubscribeUser::TypeName,
-                            Self->ParentKey,
-                            CacheKey,
-                            nullptr,
-                            FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
-                        );
-
-                        if (!Error->GetErrors().IsValid() || Error->Count() == 0 || !Error->Detail(0).IsValid() || Error->Detail(0)->GetComponent() != "subscribeUser")
-                        {
-                            return Error;
-                        }
-                    }
-                    else
-                    {
-                        Value = Future->GetTask().Result();
-                    }
-                    Future->EnsureCompletion();
-                }
-
-                if (!bCacheHit)
+                if (CacheHit)
                 {
-                    FGs2ObjectPtr ExistingObject;
-                    const bool Existing = Self->Gs2->Cache->TryGet(
-                        Gs2::Ranking::Model::FSubscribeUser::TypeName,
-                        Self->ParentKey,
-                        CacheKey,
-                        &ExistingObject
-                    );
-                    if (!Existing || ExistingObject != Value)
-                    {
-                        Self->Gs2->Cache->Put(
-                            Gs2::Ranking::Model::FSubscribeUser::TypeName,
-                            Self->ParentKey,
-                            CacheKey,
-                            Value,
-                            FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
-                        );
-                    }
+                    *Result = Value;
+                    return nullptr;
                 }
-                *Result = Value;
+                const auto Error = Gs2::Ranking::Model::Cache::FSubscribeUserCache::Fetch(
+                    Self->Gs2->Cache,
 
+                    Self->NamespaceName,
+                    Self->AccessToken.IsValid() ? Self->UserId() : TOptional<FString>(),
+                    Self->CategoryName,
+                    Self->AdditionalScopeName,
+                    Self->TargetUserId,
+                    Self->AccessToken.IsValid() ? Self->AccessToken->GetTimeOffset() : TOptional<int32>(),
+                    [Self](Gs2::Ranking::Model::FSubscribeUserPtr* OutItem) -> Gs2::Core::Model::FGs2ErrorPtr
+                    {
+                        const auto Future = Self->Get(
+                            MakeShared<Gs2::Ranking::Request::FGetSubscribeRequest>()
+                        );
+                        Future->StartSynchronousTask();
+                        if (Future->GetTask().IsError()) return Future->GetTask().Error();
+                        *OutItem = Future->GetTask().Result();
+                        Future->EnsureCompletion();
+                        return nullptr;
+                    },
+                    &Value
+                );
+                if (Error.IsValid()) return Error;
+                *Result = Value;
                 return nullptr;
             }
         );
@@ -361,49 +349,11 @@ namespace Gs2::Ranking::Domain::Model
         return Gs2::Core::Util::New<FAsyncTask<FSubscribeUserAccessTokenDomain::FModelTask>>(this->AsShared());
     }
 
-
-    FSubscribeUserAccessTokenDomain::FSubscribeWithInitialCallTask::FSubscribeWithInitialCallTask(
-        const TSharedPtr<FSubscribeUserAccessTokenDomain> Self,
-        const TFunction<void(Gs2::Ranking::Model::FSubscribeUserPtr)>& Callback
-    ): Self(Self), Callback(Callback)
-    {
-    }
-
-    FSubscribeUserAccessTokenDomain::FSubscribeWithInitialCallTask::FSubscribeWithInitialCallTask(
-        const FSubscribeWithInitialCallTask& From
-    ): TGs2Future(From), Self(From.Self), Callback(From.Callback)
-    {
-    }
-
-    Gs2::Core::Model::FGs2ErrorPtr FSubscribeUserAccessTokenDomain::FSubscribeWithInitialCallTask::Action(
-        TSharedPtr<TSharedPtr<Gs2::Core::Domain::CallbackID>> Result
-    )
-    {
-        const auto Future = Self->Model();
-        Future->StartSynchronousTask();
-        Future->EnsureCompletion();
-        if (Future->GetTask().IsError())
-        {
-            return Future->GetTask().Error();
-        }
-        const auto Item = Future->GetTask().Result();
-        const auto ID = Self->Subscribe(Callback);
-        Callback(Item);
-        *Result = MakeShared<Gs2::Core::Domain::CallbackID>(ID);
-        return nullptr;
-    }
-
-    TSharedPtr<FAsyncTask<FSubscribeUserAccessTokenDomain::FSubscribeWithInitialCallTask>> FSubscribeUserAccessTokenDomain::SubscribeWithInitialCall(
-        TFunction<void(Gs2::Ranking::Model::FSubscribeUserPtr)> Callback
-    )
-    {
-        return Gs2::Core::Util::New<FAsyncTask<FSubscribeUserAccessTokenDomain::FSubscribeWithInitialCallTask>>(this->AsShared(), Callback);
-    }
-
     void FSubscribeUserAccessTokenDomain::Invalidate()
     {
         Gs2::Ranking::Model::Cache::FSubscribeUserCache::Delete(
             Gs2->Cache,
+
             NamespaceName,
             AccessToken.IsValid() ? UserId() : TOptional<FString>(),
             CategoryName,
@@ -413,13 +363,65 @@ namespace Gs2::Ranking::Domain::Model
         );
     }
 
+    FSubscribeUserAccessTokenDomain::FSubscribeWithInitialCallTask::FSubscribeWithInitialCallTask(
+        const TSharedPtr<FSubscribeUserAccessTokenDomain>& Self,
+        TFunction<void(Gs2::Ranking::Model::FSubscribeUserPtr)> Callback
+    ):
+        Self(Self),
+        Callback(Callback)
+    {
+    }
+
+    FSubscribeUserAccessTokenDomain::FSubscribeWithInitialCallTask::FSubscribeWithInitialCallTask(
+        const FSubscribeWithInitialCallTask& From
+    ):
+        TGs2Future(From),
+        Self(From.Self),
+        Callback(From.Callback)
+    {
+    }
+
+    Gs2::Core::Model::FGs2ErrorPtr FSubscribeUserAccessTokenDomain::FSubscribeWithInitialCallTask::Action(
+        TSharedPtr<TSharedPtr<Gs2::Core::Domain::CallbackID>> Result
+    )
+    {
+        const auto Task = Self->Model();
+        Task->StartSynchronousTask();
+        Task->EnsureCompletion();
+        if (Task->GetTask().IsError()) return Task->GetTask().Error();
+        const auto Item = Task->GetTask().Result();
+        const auto CallbackId = Self->Subscribe(Callback);
+        Callback(Item);
+        *Result = MakeShared<Gs2::Core::Domain::CallbackID>(CallbackId);
+        return nullptr;
+    }
+
+    TSharedPtr<FAsyncTask<FSubscribeUserAccessTokenDomain::FSubscribeWithInitialCallTask>> FSubscribeUserAccessTokenDomain::SubscribeWithInitialCall(
+        TFunction<void(Gs2::Ranking::Model::FSubscribeUserPtr)> Callback
+    )
+    {
+        return Gs2::Core::Util::New<FAsyncTask<FSubscribeWithInitialCallTask>>(this->AsShared(), Callback);
+    }
+
     Gs2::Core::Domain::CallbackID FSubscribeUserAccessTokenDomain::Subscribe(
         TFunction<void(Gs2::Ranking::Model::FSubscribeUserPtr)> Callback
     )
     {
+        const auto SubscriptionParentKey = Gs2::Ranking::Model::Cache::FSubscribeUserCache::CreateCacheParentKey(
+
+            NamespaceName,
+            AccessToken.IsValid() ? UserId() : TOptional<FString>(),
+            CategoryName,
+            AdditionalScopeName,
+            AccessToken.IsValid() ? AccessToken->GetTimeOffset() : TOptional<int32>()
+        );
+        const auto SubscriptionCacheKey = Gs2::Ranking::Model::Cache::FSubscribeUserCache::CreateCacheKey(
+
+            TargetUserId
+        );
         const TWeakPtr<Gs2::Core::Domain::FGs2> WeakGs2 = Gs2;
         const TWeakPtr<Ranking::Domain::FGs2RankingDomain> WeakService = Service;
-        const FString RegisteredParentKey = ParentKey;
+        const FString RegisteredParentKey = SubscriptionParentKey;
         const TOptional<FString> QueryNamespaceName = NamespaceName;
         const TOptional<FString> QueryCategoryName = CategoryName;
         const TOptional<FString> QueryAdditionalScopeName = AdditionalScopeName;
@@ -431,10 +433,8 @@ namespace Gs2::Ranking::Domain::Model
         const int32 RegisteredTimeOffset = SourceToken.IsValid() ? SourceToken->GetTimeOffset().Get(0) : 0;
         return Gs2->Cache->Subscribe(
             Gs2::Ranking::Model::FSubscribeUser::TypeName,
-            ParentKey,
-            Gs2::Ranking::Model::Cache::FSubscribeUserCache::CreateCacheKey(
-                TargetUserId
-            ),
+            SubscriptionParentKey,
+            SubscriptionCacheKey,
             [Callback](TSharedPtr<FGs2Object> obj)
             {
                 Callback(StaticCastSharedPtr<Gs2::Ranking::Model::FSubscribeUser>(obj));
@@ -471,12 +471,22 @@ namespace Gs2::Ranking::Domain::Model
         Gs2::Core::Domain::CallbackID CallbackID
     )
     {
+        const auto SubscriptionParentKey = Gs2::Ranking::Model::Cache::FSubscribeUserCache::CreateCacheParentKey(
+
+            NamespaceName,
+            AccessToken.IsValid() ? UserId() : TOptional<FString>(),
+            CategoryName,
+            AdditionalScopeName,
+            AccessToken.IsValid() ? AccessToken->GetTimeOffset() : TOptional<int32>()
+        );
+        const auto SubscriptionCacheKey = Gs2::Ranking::Model::Cache::FSubscribeUserCache::CreateCacheKey(
+
+            TargetUserId
+        );
         Gs2->Cache->Unsubscribe(
             Gs2::Ranking::Model::FSubscribeUser::TypeName,
-            ParentKey,
-            Gs2::Ranking::Model::Cache::FSubscribeUserCache::CreateCacheKey(
-                TargetUserId
-            ),
+            SubscriptionParentKey,
+            SubscriptionCacheKey,
             CallbackID
         );
     }

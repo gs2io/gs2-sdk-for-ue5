@@ -105,7 +105,6 @@ namespace Gs2::Mission::Domain::Model
 
         Gs2::Core::Domain::CallbackID SubscribeCompletes(
             TFunction<void()> Callback
-
         );
 
         class FCollectCompletesTask;
@@ -146,7 +145,6 @@ namespace Gs2::Mission::Domain::Model
 
         Gs2::Core::Domain::CallbackID SubscribeCounters(
             TFunction<void()> Callback
-
         );
 
         class FCollectCountersTask;

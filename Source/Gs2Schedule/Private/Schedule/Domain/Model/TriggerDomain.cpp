@@ -33,7 +33,6 @@
 #include "Schedule/Domain/Model/UserAccessToken.h"
 #include "Schedule/Domain/Model/CurrentEventMaster.h"
 #include "Schedule/Model/Cache/Trigger.h"
-#include "Schedule/Model/Cache/Event.h"
 
 #include "Core/Domain/Gs2.h"
 #include "Core/Domain/Transaction/JobQueueJobDomainFactory.h"
@@ -195,15 +194,6 @@ namespace Gs2::Schedule::Domain::Model
             ResultModel->GetItem()
         );
             }
-        Self->Gs2->Cache->ClearListCache(
-            Gs2::Schedule::Model::FEvent::TypeName,
-            Gs2::Schedule::Model::Cache::FEventCache::CreateCacheParentKey(
-                Request->GetNamespaceName(),
-                Request->GetUserId(),
-                TOptional<bool>(true),
-                TOptional<int32>()
-            )
-        );
         auto Domain = Self;
 
         *Result = Domain;

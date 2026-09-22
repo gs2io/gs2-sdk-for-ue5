@@ -357,16 +357,17 @@ namespace Gs2::Ranking2::Request
               }() : TOptional<FString>())
           ->WithRankingRewards(Data->HasField(ANSI_TO_TCHAR("rankingRewards")) ? [Data]() -> TSharedPtr<TArray<Model::FRankingRewardPtr>>
               {
-                  auto v = MakeShared<TArray<Model::FRankingRewardPtr>>();
-                  if (!Data->HasTypedField<EJson::Null>(ANSI_TO_TCHAR("rankingRewards")) && Data->HasTypedField<EJson::Array>(ANSI_TO_TCHAR("rankingRewards")))
+                  if (!Data->HasTypedField<EJson::Array>(ANSI_TO_TCHAR("rankingRewards")))
                   {
-                      for (auto JsonObjectValue : Data->GetArrayField(ANSI_TO_TCHAR("rankingRewards")))
-                      {
-                          v->Add(Model::FRankingReward::FromJson(JsonObjectValue->AsObject()));
-                      }
+                      return nullptr;
                   }
+                  auto v = MakeShared<TArray<Model::FRankingRewardPtr>>();
+                  for (auto JsonObjectValue : Data->GetArrayField(ANSI_TO_TCHAR("rankingRewards")))
+                      {
+                      v->Add(Model::FRankingReward::FromJson(JsonObjectValue->AsObject()));
+                      }
                   return v;
-              }() : MakeShared<TArray<Model::FRankingRewardPtr>>())
+              }() : nullptr)
             ->WithRewardCalculationIndex(Data->HasField(ANSI_TO_TCHAR("rewardCalculationIndex")) ? [Data]() -> TOptional<FString>
               {
                   FString v("");

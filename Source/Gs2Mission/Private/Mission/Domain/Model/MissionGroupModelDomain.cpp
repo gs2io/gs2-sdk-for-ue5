@@ -149,7 +149,6 @@ namespace Gs2::Mission::Domain::Model
 
     Gs2::Core::Domain::CallbackID FMissionGroupModelDomain::SubscribeMissionTaskModels(
     TFunction<void()> Callback
-
     )
     {
         return Gs2->Cache->ListSubscribe(

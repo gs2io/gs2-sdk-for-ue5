@@ -234,7 +234,7 @@ namespace Gs2::Ranking::Model::Cache
             + CacheOwnerArgumentNamespaceName.Get(FString()) + FString(":")
             + CacheOwnerArgumentUserId.Get(FString()) + FString(":")
             + CacheOwnerArgumentCategoryName.Get(FString()) + FString(":")
-            + CacheOwnerArgumentAdditionalScopeName.Get(FString()) + FString(":")
+            + FString("Singleton") + FString(":")
             + FString::FromInt(CacheOwnerArgumentTimeOffset.Get(0)) + FString(":SubscribeUser");
     }
 
@@ -312,6 +312,34 @@ namespace Gs2::Ranking::Model::Cache
         auto CacheOwnerValue = CacheOwnerArgumentItem;
         CacheSnapshot->Put(Gs2::Ranking::Model::FSubscribeUser::TypeName, CacheOwnerParentKey, CacheOwnerKey, CacheOwnerValue,
             FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
+        );
+    }
+
+    FString FSubscribeUserCache::PutUserData(
+        const Gs2::Core::Domain::FCacheDatabasePtr& Cache,
+        TOptional<FString> NamespaceName,
+        TOptional<FString> UserId,
+        TOptional<int32> TimeOffset,
+        const Gs2::Ranking::Model::FSubscribeUserPtr& Item
+    )
+    {
+        if (!Item.IsValid()) return FString();
+        Put(
+            Cache,
+            NamespaceName,
+            UserId,
+            Item->GetCategoryName(),
+            TOptional<FString>(),
+            Item->GetTargetUserId(),
+            TimeOffset,
+            Item
+        );
+        return CreateCacheParentKey(
+            NamespaceName,
+            UserId,
+            Item->GetCategoryName(),
+            TOptional<FString>(),
+            TimeOffset
         );
     }
 

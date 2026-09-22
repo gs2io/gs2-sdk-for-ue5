@@ -388,6 +388,30 @@ namespace Gs2::Lottery::Model::Cache
         );
     }
 
+    FString FPrizeLimitCache::PutUserData(
+        const Gs2::Core::Domain::FCacheDatabasePtr& Cache,
+        TOptional<FString> NamespaceName,
+        TOptional<FString> UserId,
+        TOptional<int32> TimeOffset,
+        const Gs2::Lottery::Model::FPrizeLimitPtr& Item
+    )
+    {
+        if (!Item.IsValid()) return FString();
+        Put(
+            Cache,
+            NamespaceName,
+            (Item->GetPrizeLimitId().IsSet() ? Gs2::Lottery::Model::FPrizeLimit::GetPrizeTableNameFromGrn(*Item->GetPrizeLimitId()) : TOptional<FString>()),
+            Item->GetPrizeId(),
+            TimeOffset,
+            Item
+        );
+        return CreateCacheParentKey(
+            NamespaceName,
+            (Item->GetPrizeLimitId().IsSet() ? Gs2::Lottery::Model::FPrizeLimit::GetPrizeTableNameFromGrn(*Item->GetPrizeLimitId()) : TOptional<FString>()),
+            TimeOffset
+        );
+    }
+
     void FPrizeLimitCache::Delete(
         const Gs2::Core::Domain::FCacheDatabasePtr& CacheOwnerArgumentCache,
         TOptional<FString> CacheOwnerArgumentNamespaceName,

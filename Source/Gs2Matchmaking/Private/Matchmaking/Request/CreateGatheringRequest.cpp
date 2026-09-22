@@ -238,40 +238,43 @@ namespace Gs2::Matchmaking::Request
               }() : nullptr)
           ->WithAttributeRanges(Data->HasField(ANSI_TO_TCHAR("attributeRanges")) ? [Data]() -> TSharedPtr<TArray<Model::FAttributeRangePtr>>
               {
-                  auto v = MakeShared<TArray<Model::FAttributeRangePtr>>();
-                  if (!Data->HasTypedField<EJson::Null>(ANSI_TO_TCHAR("attributeRanges")) && Data->HasTypedField<EJson::Array>(ANSI_TO_TCHAR("attributeRanges")))
+                  if (!Data->HasTypedField<EJson::Array>(ANSI_TO_TCHAR("attributeRanges")))
                   {
-                      for (auto JsonObjectValue : Data->GetArrayField(ANSI_TO_TCHAR("attributeRanges")))
-                      {
-                          v->Add(Model::FAttributeRange::FromJson(JsonObjectValue->AsObject()));
-                      }
+                      return nullptr;
                   }
+                  auto v = MakeShared<TArray<Model::FAttributeRangePtr>>();
+                  for (auto JsonObjectValue : Data->GetArrayField(ANSI_TO_TCHAR("attributeRanges")))
+                      {
+                      v->Add(Model::FAttributeRange::FromJson(JsonObjectValue->AsObject()));
+                      }
                   return v;
-              }() : MakeShared<TArray<Model::FAttributeRangePtr>>())
+              }() : nullptr)
           ->WithCapacityOfRoles(Data->HasField(ANSI_TO_TCHAR("capacityOfRoles")) ? [Data]() -> TSharedPtr<TArray<Model::FCapacityOfRolePtr>>
               {
-                  auto v = MakeShared<TArray<Model::FCapacityOfRolePtr>>();
-                  if (!Data->HasTypedField<EJson::Null>(ANSI_TO_TCHAR("capacityOfRoles")) && Data->HasTypedField<EJson::Array>(ANSI_TO_TCHAR("capacityOfRoles")))
+                  if (!Data->HasTypedField<EJson::Array>(ANSI_TO_TCHAR("capacityOfRoles")))
                   {
-                      for (auto JsonObjectValue : Data->GetArrayField(ANSI_TO_TCHAR("capacityOfRoles")))
-                      {
-                          v->Add(Model::FCapacityOfRole::FromJson(JsonObjectValue->AsObject()));
-                      }
+                      return nullptr;
                   }
+                  auto v = MakeShared<TArray<Model::FCapacityOfRolePtr>>();
+                  for (auto JsonObjectValue : Data->GetArrayField(ANSI_TO_TCHAR("capacityOfRoles")))
+                      {
+                      v->Add(Model::FCapacityOfRole::FromJson(JsonObjectValue->AsObject()));
+                      }
                   return v;
-              }() : MakeShared<TArray<Model::FCapacityOfRolePtr>>())
+              }() : nullptr)
           ->WithAllowUserIds(Data->HasField(ANSI_TO_TCHAR("allowUserIds")) ? [Data]() -> TSharedPtr<TArray<FString>>
               {
-                  auto v = MakeShared<TArray<FString>>();
-                  if (!Data->HasTypedField<EJson::Null>(ANSI_TO_TCHAR("allowUserIds")) && Data->HasTypedField<EJson::Array>(ANSI_TO_TCHAR("allowUserIds")))
+                  if (!Data->HasTypedField<EJson::Array>(ANSI_TO_TCHAR("allowUserIds")))
                   {
-                      for (auto JsonObjectValue : Data->GetArrayField(ANSI_TO_TCHAR("allowUserIds")))
-                      {
-                          v->Add(JsonObjectValue->AsString());
-                      }
+                      return nullptr;
                   }
+                  auto v = MakeShared<TArray<FString>>();
+                  for (auto JsonObjectValue : Data->GetArrayField(ANSI_TO_TCHAR("allowUserIds")))
+                      {
+                      v->Add(JsonObjectValue->AsString());
+                      }
                   return v;
-              }() : MakeShared<TArray<FString>>())
+              }() : nullptr)
             ->WithExpiresAt(Data->HasField(ANSI_TO_TCHAR("expiresAt")) ? [Data]() -> TOptional<int64>
               {
                   int64 v;

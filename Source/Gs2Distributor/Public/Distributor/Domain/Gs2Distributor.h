@@ -170,6 +170,26 @@ namespace Gs2::Distributor::Domain
             const TOptional<int32> TimeOffset = TOptional<int32>()
         );
 
+        /* diff +++ start */
+        // Gs2Distributor:DescribeUserData（ユーザーの全データの一括取得）の 1 エントリを、Kind に対応するモデルのキャッシュへ入れる。
+        // 戻り値は親キー（未設定は知らない Kind ＝ SDK が古い / 対応表に無い / Payload が読めない）。呼び手は全ページを読み終えてから
+        // SetListCached(TimeOffset, Kind, ParentKey) を呼ぶ。対応表は sdk-gen の type/user_data_cache.py（kind → モデル）。
+        TOptional<FString> PutUserData(
+            const TOptional<FString> NamespaceName,
+            const TOptional<FString> UserId,
+            const TOptional<int32> TimeOffset,
+            const FString Kind,
+            const FString Payload
+        );
+
+        // 一括取得で入れた Kind の親キーに「リストが揃った印」を立てる（Describe のイテレータがサーバーへ出なくなる）。
+        bool SetListCached(
+            const TOptional<int32> TimeOffset,
+            const FString Kind,
+            const FString ParentKey
+        );
+        /* diff +++ end */
+
         void UpdateCacheFromJobResult(
             const FString Method,
             const Gs2::JobQueue::Model::FJobPtr Job,

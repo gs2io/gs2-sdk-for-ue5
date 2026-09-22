@@ -169,16 +169,17 @@ namespace Gs2::Mission::Request
               }() : TOptional<FString>())
           ->WithMissionTaskNames(Data->HasField(ANSI_TO_TCHAR("missionTaskNames")) ? [Data]() -> TSharedPtr<TArray<FString>>
               {
-                  auto v = MakeShared<TArray<FString>>();
-                  if (!Data->HasTypedField<EJson::Null>(ANSI_TO_TCHAR("missionTaskNames")) && Data->HasTypedField<EJson::Array>(ANSI_TO_TCHAR("missionTaskNames")))
+                  if (!Data->HasTypedField<EJson::Array>(ANSI_TO_TCHAR("missionTaskNames")))
                   {
-                      for (auto JsonObjectValue : Data->GetArrayField(ANSI_TO_TCHAR("missionTaskNames")))
-                      {
-                          v->Add(JsonObjectValue->AsString());
-                      }
+                      return nullptr;
                   }
+                  auto v = MakeShared<TArray<FString>>();
+                  for (auto JsonObjectValue : Data->GetArrayField(ANSI_TO_TCHAR("missionTaskNames")))
+                      {
+                      v->Add(JsonObjectValue->AsString());
+                      }
                   return v;
-              }() : MakeShared<TArray<FString>>())
+              }() : nullptr)
             ->WithTimeOffsetToken(Data->HasField(ANSI_TO_TCHAR("timeOffsetToken")) ? [Data]() -> TOptional<FString>
               {
                   FString v("");

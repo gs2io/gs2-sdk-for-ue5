@@ -43,6 +43,11 @@
 #include "Distributor/Model/Cache/Namespace.h"
 #include "Distributor/Model/Cache/StampSheetResult.h"
 #include "Distributor/Model/Cache/TransactionResult.h"
+/* diff +++ start */
+#include "Distributor/Model/Cache/DistributorModelMaster.h"
+#include "Distributor/Model/Cache/CurrentDistributorMaster.h"
+#include "Distributor/Model/Cache/DistributorModel.h"
+/* diff +++ end */
 #include "Core/Domain/Gs2.h"
 
 namespace Gs2::Distributor::Domain
@@ -256,6 +261,26 @@ namespace Gs2::Distributor::Domain
         const TOptional<int32> TimeOffset
     ) {
     }
+
+    /* diff +++ start */
+    TOptional<FString> FGs2DistributorDomain::PutUserData(
+        const TOptional<FString> NamespaceName,
+        const TOptional<FString> UserId,
+        const TOptional<int32> TimeOffset,
+        const FString Kind,
+        const FString Payload
+    ) {
+        return TOptional<FString>();
+    }
+
+    bool FGs2DistributorDomain::SetListCached(
+        const TOptional<int32> TimeOffset,
+        const FString Kind,
+        const FString ParentKey
+    ) {
+        return false;
+    }
+    /* diff +++ end */
 
     void FGs2DistributorDomain::UpdateCacheFromStampTask(
         const FString Method,

@@ -169,16 +169,17 @@ namespace Gs2::Mission::Request
               }() : TOptional<FString>())
           ->WithValues(Data->HasField(ANSI_TO_TCHAR("values")) ? [Data]() -> TSharedPtr<TArray<Model::FScopedValuePtr>>
               {
-                  auto v = MakeShared<TArray<Model::FScopedValuePtr>>();
-                  if (!Data->HasTypedField<EJson::Null>(ANSI_TO_TCHAR("values")) && Data->HasTypedField<EJson::Array>(ANSI_TO_TCHAR("values")))
+                  if (!Data->HasTypedField<EJson::Array>(ANSI_TO_TCHAR("values")))
                   {
-                      for (auto JsonObjectValue : Data->GetArrayField(ANSI_TO_TCHAR("values")))
-                      {
-                          v->Add(Model::FScopedValue::FromJson(JsonObjectValue->AsObject()));
-                      }
+                      return nullptr;
                   }
+                  auto v = MakeShared<TArray<Model::FScopedValuePtr>>();
+                  for (auto JsonObjectValue : Data->GetArrayField(ANSI_TO_TCHAR("values")))
+                      {
+                      v->Add(Model::FScopedValue::FromJson(JsonObjectValue->AsObject()));
+                      }
                   return v;
-              }() : MakeShared<TArray<Model::FScopedValuePtr>>())
+              }() : nullptr)
             ->WithTimeOffsetToken(Data->HasField(ANSI_TO_TCHAR("timeOffsetToken")) ? [Data]() -> TOptional<FString>
               {
                   FString v("");

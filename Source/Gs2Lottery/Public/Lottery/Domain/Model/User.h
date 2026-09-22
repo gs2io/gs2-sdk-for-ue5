@@ -104,7 +104,6 @@ namespace Gs2::Lottery::Domain::Model
 
         Gs2::Core::Domain::CallbackID SubscribeBoxes(
             TFunction<void()> Callback
-
         );
 
         class FCollectBoxesTask;

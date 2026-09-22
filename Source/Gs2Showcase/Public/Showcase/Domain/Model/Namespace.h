@@ -347,7 +347,6 @@ namespace Gs2::Showcase::Domain::Model
 
         Gs2::Core::Domain::CallbackID SubscribeSalesItemMasters(
             TFunction<void()> Callback
-
         );
 
         class FCollectSalesItemMastersTask;
@@ -388,7 +387,6 @@ namespace Gs2::Showcase::Domain::Model
 
         Gs2::Core::Domain::CallbackID SubscribeSalesItemGroupMasters(
             TFunction<void()> Callback
-
         );
 
         class FCollectSalesItemGroupMastersTask;
@@ -437,7 +435,6 @@ namespace Gs2::Showcase::Domain::Model
 
         Gs2::Core::Domain::CallbackID SubscribeShowcaseMasters(
             TFunction<void()> Callback
-
         );
 
         class FCollectShowcaseMastersTask;
@@ -478,7 +475,6 @@ namespace Gs2::Showcase::Domain::Model
 
         Gs2::Core::Domain::CallbackID SubscribeRandomShowcaseMasters(
             TFunction<void()> Callback
-
         );
 
         class FCollectRandomShowcaseMastersTask;

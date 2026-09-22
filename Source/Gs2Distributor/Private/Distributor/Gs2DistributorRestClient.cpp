@@ -352,6 +352,24 @@ namespace Gs2::Distributor
         );
     }
 
+    TSharedPtr<FAsyncTask<Task::Rest::FDescribeUserDataTask>> FGs2DistributorRestClient::DescribeUserData(
+        const Request::FDescribeUserDataRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::Rest::FDescribeUserDataTask>>(
+            Session,
+            Request
+        );
+    }
+
+    TSharedPtr<FAsyncTask<Task::Rest::FDescribeUserDataByUserIdTask>> FGs2DistributorRestClient::DescribeUserDataByUserId(
+        const Request::FDescribeUserDataByUserIdRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::Rest::FDescribeUserDataByUserIdTask>>(
+            Session,
+            Request
+        );
+    }
+
     TSharedPtr<FAsyncTask<Task::Rest::FIfExpressionByUserIdTask>> FGs2DistributorRestClient::IfExpressionByUserId(
         const Request::FIfExpressionByUserIdRequestPtr Request) const
     {

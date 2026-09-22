@@ -36,6 +36,7 @@
 #include "Money/Model/Cache/Namespace.h"
 #include "Money/Model/Cache/Wallet.h"
 #include "Money/Model/Cache/Receipt.h"
+#include "Money/Model/Cache/Wallet.h"
 
 #include "Core/Domain/Gs2.h"
 
@@ -436,7 +437,6 @@ namespace Gs2::Money::Domain
 
     Gs2::Core::Domain::CallbackID FGs2MoneyDomain::SubscribeNamespaces(
     TFunction<void()> Callback
-
     )
     {
         return Gs2->Cache->ListSubscribe(
@@ -575,17 +575,27 @@ namespace Gs2::Money::Domain
             const auto RequestModel = Gs2::Money::Request::FDepositByUserIdRequest::FromJson(RequestModelJson);
             const auto ResultModel = Gs2::Money::Result::FDepositByUserIdResult::FromJson(ResultModelJson);
 
-            if (ResultModel->GetItem() != nullptr)
-            {
+                    if (ResultModel.IsValid() && ResultModel->GetItem() != nullptr)
+                    {
+
+                if (!ResultModel.IsValid() || !ResultModel->GetItem().IsValid())
+                    {
+                      return;
+                      }if (!ResultModel.IsValid() || !((ResultModel.IsValid() && ResultModel->GetItem().IsValid() ? ResultModel->GetItem()->GetUserId() : TOptional<FString>())).IsSet())
+                    {
+                      return;
+                      }
                 Gs2::Money::Model::Cache::FWalletCache::Put(
                     Gs2->Cache,
+
                     RequestModel->GetNamespaceName(),
-                    RequestModel->GetUserId(),
+                    (ResultModel.IsValid() && ResultModel->GetItem().IsValid() ? ResultModel->GetItem()->GetUserId() : TOptional<FString>()),
                     ResultModel->GetItem()->GetSlot().Get(int32{}),
                     TimeOffset,
                     ResultModel->GetItem()
                 );
-            }
+                    }
+
         }
         if (Method == "RevertRecordReceipt") {
             TSharedPtr<FJsonObject> RequestModelJson;
@@ -603,25 +613,68 @@ namespace Gs2::Money::Domain
             const auto RequestModel = Gs2::Money::Request::FRevertRecordReceiptRequest::FromJson(RequestModelJson);
             const auto ResultModel = Gs2::Money::Result::FRevertRecordReceiptResult::FromJson(ResultModelJson);
 
-            if (ResultModel->GetItem() != nullptr)
-            {
-                const auto ParentKey = Gs2::Money::Domain::Model::FUserDomain::CreateCacheParentKey(
+                    if (ResultModel.IsValid() && ResultModel->GetItem() != nullptr)
+                    {
+
+                if (!ResultModel.IsValid() || !ResultModel->GetItem().IsValid())
+                    {
+                      return;
+                      }if (!ResultModel.IsValid() || !((ResultModel.IsValid() && ResultModel->GetItem().IsValid() ? ResultModel->GetItem()->GetUserId() : TOptional<FString>())).IsSet())
+                    {
+                      return;
+                      }
+                Gs2::Money::Model::Cache::FReceiptCache::Put(
+                    Gs2->Cache,
+
                     RequestModel->GetNamespaceName(),
-                    RequestModel->GetUserId(),
-                    "Receipt"
+                    (ResultModel.IsValid() && ResultModel->GetItem().IsValid() ? ResultModel->GetItem()->GetUserId() : TOptional<FString>()),
+                    ResultModel->GetItem()->GetTransactionId(),
+                    TimeOffset,
+                    ResultModel->GetItem()
                 );
-                const auto Key = Gs2::Money::Domain::Model::FReceiptDomain::CreateCacheKey(
-                    ResultModel->GetItem()->GetTransactionId()
-                );
-                Gs2->Cache->Put(
-                    Gs2::Money::Model::FReceipt::TypeName,
-                    ParentKey,
-                    Key,
-                    ResultModel->GetItem(),
-                    FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
-                );
-            }
+                    }
+
         }
+    }
+
+    TOptional<FString> FGs2MoneyDomain::PutUserData(
+        const TOptional<FString> NamespaceName,
+        const TOptional<FString> UserId,
+        const TOptional<int32> TimeOffset,
+        const FString Kind,
+        const FString Payload
+    ) {
+        TSharedPtr<FJsonObject> PayloadJson;
+        if (const TSharedRef<TJsonReader<>> JsonReader = TJsonReaderFactory<>::Create(Payload);
+            !FJsonSerializer::Deserialize(JsonReader, PayloadJson) || !PayloadJson.IsValid())
+        {
+            return TOptional<FString>();
+        }
+        if (Kind == "wallet") {
+            const auto Item = Gs2::Money::Model::FWallet::FromJson(PayloadJson);
+            if (!Item.IsValid()) return TOptional<FString>();
+            const auto ParentKey = Gs2::Money::Model::Cache::FWalletCache::PutUserData(
+                Gs2->Cache,
+                NamespaceName,
+                UserId,
+                TimeOffset,
+                Item
+            );
+            return ParentKey.IsEmpty() ? TOptional<FString>() : TOptional<FString>(ParentKey);
+        }
+        return TOptional<FString>();
+    }
+
+    bool FGs2MoneyDomain::SetListCached(
+        const TOptional<int32> TimeOffset,
+        const FString Kind,
+        const FString ParentKey
+    ) {
+        if (Kind == "wallet") {
+            Gs2->Cache->SetListCached(Gs2::Money::Model::FWallet::TypeName, ParentKey);
+            return true;
+        }
+        return false;
     }
 
     void FGs2MoneyDomain::UpdateCacheFromStampTask(
@@ -646,17 +699,27 @@ namespace Gs2::Money::Domain
             const auto RequestModel = Gs2::Money::Request::FWithdrawByUserIdRequest::FromJson(RequestModelJson);
             const auto ResultModel = Gs2::Money::Result::FWithdrawByUserIdResult::FromJson(ResultModelJson);
 
-            if (ResultModel->GetItem() != nullptr)
-            {
+                    if (ResultModel.IsValid() && ResultModel->GetItem() != nullptr)
+                    {
+
+                if (!ResultModel.IsValid() || !ResultModel->GetItem().IsValid())
+                    {
+                      return;
+                      }if (!ResultModel.IsValid() || !((ResultModel.IsValid() && ResultModel->GetItem().IsValid() ? ResultModel->GetItem()->GetUserId() : TOptional<FString>())).IsSet())
+                    {
+                      return;
+                      }
                 Gs2::Money::Model::Cache::FWalletCache::Put(
                     Gs2->Cache,
+
                     RequestModel->GetNamespaceName(),
-                    RequestModel->GetUserId(),
+                    (ResultModel.IsValid() && ResultModel->GetItem().IsValid() ? ResultModel->GetItem()->GetUserId() : TOptional<FString>()),
                     ResultModel->GetItem()->GetSlot().Get(int32{}),
                     TimeOffset,
                     ResultModel->GetItem()
                 );
-            }
+                    }
+
         }
         if (Method == "RecordReceipt") {
             TSharedPtr<FJsonObject> RequestModelJson;
@@ -674,24 +737,27 @@ namespace Gs2::Money::Domain
             const auto RequestModel = Gs2::Money::Request::FRecordReceiptRequest::FromJson(RequestModelJson);
             const auto ResultModel = Gs2::Money::Result::FRecordReceiptResult::FromJson(ResultModelJson);
 
-            if (ResultModel->GetItem() != nullptr)
-            {
-                const auto ParentKey = Gs2::Money::Domain::Model::FUserDomain::CreateCacheParentKey(
+                    if (ResultModel.IsValid() && ResultModel->GetItem() != nullptr)
+                    {
+
+                if (!ResultModel.IsValid() || !ResultModel->GetItem().IsValid())
+                    {
+                      return;
+                      }if (!ResultModel.IsValid() || !((ResultModel.IsValid() && ResultModel->GetItem().IsValid() ? ResultModel->GetItem()->GetUserId() : TOptional<FString>())).IsSet())
+                    {
+                      return;
+                      }
+                Gs2::Money::Model::Cache::FReceiptCache::Put(
+                    Gs2->Cache,
+
                     RequestModel->GetNamespaceName(),
-                    RequestModel->GetUserId(),
-                    "Receipt"
+                    (ResultModel.IsValid() && ResultModel->GetItem().IsValid() ? ResultModel->GetItem()->GetUserId() : TOptional<FString>()),
+                    ResultModel->GetItem()->GetTransactionId(),
+                    TimeOffset,
+                    ResultModel->GetItem()
                 );
-                const auto Key = Gs2::Money::Domain::Model::FReceiptDomain::CreateCacheKey(
-                    ResultModel->GetItem()->GetTransactionId()
-                );
-                Gs2->Cache->Put(
-                    Gs2::Money::Model::FReceipt::TypeName,
-                    ParentKey,
-                    Key,
-                    ResultModel->GetItem(),
-                    FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
-                );
-            }
+                    }
+
         }
     }
 
@@ -725,17 +791,27 @@ namespace Gs2::Money::Domain
             const auto RequestModel = Gs2::Money::Request::FDepositByUserIdRequest::FromJson(RequestModelJson);
             const auto ResultModel = Gs2::Money::Result::FDepositByUserIdResult::FromJson(ResultModelJson);
 
-            if (ResultModel->GetItem() != nullptr)
-            {
+                    if (ResultModel.IsValid() && ResultModel->GetItem() != nullptr)
+                    {
+
+                if (!ResultModel.IsValid() || !ResultModel->GetItem().IsValid())
+                    {
+                      return;
+                      }if (!ResultModel.IsValid() || !((ResultModel.IsValid() && ResultModel->GetItem().IsValid() ? ResultModel->GetItem()->GetUserId() : TOptional<FString>())).IsSet())
+                    {
+                      return;
+                      }
                 Gs2::Money::Model::Cache::FWalletCache::Put(
                     Gs2->Cache,
+
                     RequestModel->GetNamespaceName(),
-                    RequestModel->GetUserId(),
+                    (ResultModel.IsValid() && ResultModel->GetItem().IsValid() ? ResultModel->GetItem()->GetUserId() : TOptional<FString>()),
                     ResultModel->GetItem()->GetSlot().Get(int32{}),
                     TimeOffset,
                     ResultModel->GetItem()
                 );
-            }
+                    }
+
         }
         if (Method == "revert_record_receipt") {
             TSharedPtr<FJsonObject> RequestModelJson;
@@ -761,24 +837,27 @@ namespace Gs2::Money::Domain
             const auto RequestModel = Gs2::Money::Request::FRevertRecordReceiptRequest::FromJson(RequestModelJson);
             const auto ResultModel = Gs2::Money::Result::FRevertRecordReceiptResult::FromJson(ResultModelJson);
 
-            if (ResultModel->GetItem() != nullptr)
-            {
-                const auto ParentKey = Gs2::Money::Domain::Model::FUserDomain::CreateCacheParentKey(
+                    if (ResultModel.IsValid() && ResultModel->GetItem() != nullptr)
+                    {
+
+                if (!ResultModel.IsValid() || !ResultModel->GetItem().IsValid())
+                    {
+                      return;
+                      }if (!ResultModel.IsValid() || !((ResultModel.IsValid() && ResultModel->GetItem().IsValid() ? ResultModel->GetItem()->GetUserId() : TOptional<FString>())).IsSet())
+                    {
+                      return;
+                      }
+                Gs2::Money::Model::Cache::FReceiptCache::Put(
+                    Gs2->Cache,
+
                     RequestModel->GetNamespaceName(),
-                    RequestModel->GetUserId(),
-                    "Receipt"
+                    (ResultModel.IsValid() && ResultModel->GetItem().IsValid() ? ResultModel->GetItem()->GetUserId() : TOptional<FString>()),
+                    ResultModel->GetItem()->GetTransactionId(),
+                    TimeOffset,
+                    ResultModel->GetItem()
                 );
-                const auto Key = Gs2::Money::Domain::Model::FReceiptDomain::CreateCacheKey(
-                    ResultModel->GetItem()->GetTransactionId()
-                );
-                Gs2->Cache->Put(
-                    Gs2::Money::Model::FReceipt::TypeName,
-                    ParentKey,
-                    Key,
-                    ResultModel->GetItem(),
-                    FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
-                );
-            }
+                    }
+
         }
     }
 

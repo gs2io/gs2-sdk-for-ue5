@@ -330,7 +330,6 @@ namespace Gs2::Datastore::Domain::Model
 
     Gs2::Core::Domain::CallbackID FUserDomain::SubscribeDataObjects(
     TFunction<void()> Callback
-
     )
     {
         return Gs2->Cache->ListSubscribe(

@@ -104,7 +104,7 @@ namespace Gs2::Guild::Domain::Iterator
             const auto ListParentKey = Gs2::Guild::Model::Cache::FIgnoreUserCache::CreateCacheParentKey(
                 Self->NamespaceName,
                 Self->GuildModelName,
-                Self->UserId(),
+                Self->AccessToken.IsValid() ? Self->AccessToken->GetUserId() : TOptional<FString>(),
                 Self->AccessToken.IsValid() ? Self->AccessToken->GetTimeOffset() : TOptional<int32>()
             );
             if (!RangeIteratorOpt)
@@ -155,7 +155,7 @@ namespace Gs2::Guild::Domain::Iterator
                     if (!Item.IsValid()) continue;
                     Gs2::Guild::Model::Cache::FIgnoreUserCache::Put(
                         Self->Gs2->Cache,
-                        Request->GetNamespaceName(), Request->GetGuildModelName(), Self->UserId(),
+                        Request->GetNamespaceName(), Request->GetGuildModelName(), TOptional<FString>(),
                         CacheOwnerSnapshotTimeOffset, Item
                     );
                 }
@@ -172,7 +172,7 @@ namespace Gs2::Guild::Domain::Iterator
                     Gs2::Guild::Model::Cache::FIgnoreUserCache::CreateCacheParentKey(
                         Self->NamespaceName,
                         Self->GuildModelName,
-                        Self->UserId(),
+                        Self->AccessToken.IsValid() ? Self->AccessToken->GetUserId() : TOptional<FString>(),
                         Self->AccessToken.IsValid() ? Self->AccessToken->GetTimeOffset() : TOptional<int32>()
                     )
                 );

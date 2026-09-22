@@ -197,6 +197,32 @@ namespace Gs2::Lottery::Model::Cache
         );
     }
 
+    FString FProbabilityCache::PutUserData(
+        const Gs2::Core::Domain::FCacheDatabasePtr& Cache,
+        TOptional<FString> NamespaceName,
+        TOptional<FString> UserId,
+        TOptional<int32> TimeOffset,
+        const Gs2::Lottery::Model::FProbabilityPtr& Item
+    )
+    {
+        if (!Item.IsValid()) return FString();
+        Put(
+            Cache,
+            NamespaceName,
+            UserId,
+            TOptional<FString>() /* TODO: 一括取得のエントリから lotteryName を決められない。手書きで値を入れる */,
+            TOptional<FString>() /* TODO: 一括取得のエントリから prizeId を決められない。手書きで値を入れる */,
+            TimeOffset,
+            Item
+        );
+        return CreateCacheParentKey(
+            NamespaceName,
+            UserId,
+            TOptional<FString>() /* TODO: 一括取得のエントリから lotteryName を決められない。手書きで値を入れる */,
+            TimeOffset
+        );
+    }
+
     void FProbabilityCache::Delete(
         const Gs2::Core::Domain::FCacheDatabasePtr& CacheOwnerArgumentCache,
         TOptional<FString> CacheOwnerArgumentNamespaceName,

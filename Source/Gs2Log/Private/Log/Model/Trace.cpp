@@ -96,16 +96,17 @@ namespace Gs2::Log::Model
                 }() : TOptional<FString>())
             ->WithSpans(Data->HasField(ANSI_TO_TCHAR("spans")) ? [Data]() -> TSharedPtr<TArray<Model::FLogEntryPtr>>
                 {
-                    auto v = MakeShared<TArray<Model::FLogEntryPtr>>();
-                    if (!Data->HasTypedField<EJson::Null>(ANSI_TO_TCHAR("spans")) && Data->HasTypedField<EJson::Array>(ANSI_TO_TCHAR("spans")))
+                    if (!Data->HasTypedField<EJson::Array>(ANSI_TO_TCHAR("spans")))
                     {
-                        for (auto JsonObjectValue : Data->GetArrayField(ANSI_TO_TCHAR("spans")))
-                        {
-                            v->Add(Model::FLogEntry::FromJson(JsonObjectValue->AsObject()));
-                        }
+                        return nullptr;
+                    }
+                    auto v = MakeShared<TArray<Model::FLogEntryPtr>>();
+                    for (auto JsonObjectValue : Data->GetArrayField(ANSI_TO_TCHAR("spans")))
+                    {
+                        v->Add(Model::FLogEntry::FromJson(JsonObjectValue->AsObject()));
                     }
                     return v;
-                 }() : MakeShared<TArray<Model::FLogEntryPtr>>())
+                 }() : nullptr)
             ->WithTruncated(Data->HasField(ANSI_TO_TCHAR("truncated")) ? [Data]() -> TOptional<bool>
                 {
                     bool v;

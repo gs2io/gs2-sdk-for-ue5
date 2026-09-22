@@ -55,6 +55,9 @@
 #include "Formation/Model/Cache/Mold.h"
 #include "Formation/Model/Cache/PropertyForm.h"
 #include "Formation/Model/Cache/Form.h"
+#include "Formation/Model/Cache/Form.h"
+#include "Formation/Model/Cache/Mold.h"
+#include "Formation/Model/Cache/PropertyForm.h"
 
 #include "Core/Domain/Gs2.h"
 
@@ -455,7 +458,6 @@ namespace Gs2::Formation::Domain
 
     Gs2::Core::Domain::CallbackID FGs2FormationDomain::SubscribeNamespaces(
     TFunction<void()> Callback
-
     )
     {
         return Gs2->Cache->ListSubscribe(
@@ -857,6 +859,78 @@ namespace Gs2::Formation::Domain
                     }
 
         }
+    }
+
+    TOptional<FString> FGs2FormationDomain::PutUserData(
+        const TOptional<FString> NamespaceName,
+        const TOptional<FString> UserId,
+        const TOptional<int32> TimeOffset,
+        const FString Kind,
+        const FString Payload
+    ) {
+        TSharedPtr<FJsonObject> PayloadJson;
+        if (const TSharedRef<TJsonReader<>> JsonReader = TJsonReaderFactory<>::Create(Payload);
+            !FJsonSerializer::Deserialize(JsonReader, PayloadJson) || !PayloadJson.IsValid())
+        {
+            return TOptional<FString>();
+        }
+        if (Kind == "form") {
+            const auto Item = Gs2::Formation::Model::FForm::FromJson(PayloadJson);
+            if (!Item.IsValid()) return TOptional<FString>();
+            const auto ParentKey = Gs2::Formation::Model::Cache::FFormCache::PutUserData(
+                Gs2->Cache,
+                NamespaceName,
+                UserId,
+                TimeOffset,
+                Item
+            );
+            return ParentKey.IsEmpty() ? TOptional<FString>() : TOptional<FString>(ParentKey);
+        }
+        if (Kind == "mold") {
+            const auto Item = Gs2::Formation::Model::FMold::FromJson(PayloadJson);
+            if (!Item.IsValid()) return TOptional<FString>();
+            const auto ParentKey = Gs2::Formation::Model::Cache::FMoldCache::PutUserData(
+                Gs2->Cache,
+                NamespaceName,
+                UserId,
+                TimeOffset,
+                Item
+            );
+            return ParentKey.IsEmpty() ? TOptional<FString>() : TOptional<FString>(ParentKey);
+        }
+        if (Kind == "propertyForm") {
+            const auto Item = Gs2::Formation::Model::FPropertyForm::FromJson(PayloadJson);
+            if (!Item.IsValid()) return TOptional<FString>();
+            const auto ParentKey = Gs2::Formation::Model::Cache::FPropertyFormCache::PutUserData(
+                Gs2->Cache,
+                NamespaceName,
+                UserId,
+                TimeOffset,
+                Item
+            );
+            return ParentKey.IsEmpty() ? TOptional<FString>() : TOptional<FString>(ParentKey);
+        }
+        return TOptional<FString>();
+    }
+
+    bool FGs2FormationDomain::SetListCached(
+        const TOptional<int32> TimeOffset,
+        const FString Kind,
+        const FString ParentKey
+    ) {
+        if (Kind == "form") {
+            Gs2->Cache->SetListCached(Gs2::Formation::Model::FForm::TypeName, ParentKey);
+            return true;
+        }
+        if (Kind == "mold") {
+            Gs2->Cache->SetListCached(Gs2::Formation::Model::FMold::TypeName, ParentKey);
+            return true;
+        }
+        if (Kind == "propertyForm") {
+            Gs2->Cache->SetListCached(Gs2::Formation::Model::FPropertyForm::TypeName, ParentKey);
+            return true;
+        }
+        return false;
     }
 
     void FGs2FormationDomain::UpdateCacheFromStampTask(

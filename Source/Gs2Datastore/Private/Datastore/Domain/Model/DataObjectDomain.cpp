@@ -266,15 +266,6 @@ namespace Gs2::Datastore::Domain::Model
             TOptional<int32>(),
             ResultModel->GetItem()
         );
-        Self->Gs2->Cache->ClearListCache(
-            Gs2::Datastore::Model::FDataObjectHistory::TypeName,
-            Gs2::Datastore::Model::Cache::FDataObjectHistoryCache::CreateCacheParentKey(
-                Request->GetNamespaceName(),
-                Request->GetUserId(),
-                Request->GetDataObjectName(),
-                TOptional<int32>()
-            )
-        );
             }
         auto Domain = Self;
 
@@ -527,7 +518,6 @@ namespace Gs2::Datastore::Domain::Model
 
     Gs2::Core::Domain::CallbackID FDataObjectDomain::SubscribeDataObjectHistories(
     TFunction<void()> Callback
-
     )
     {
         return Gs2->Cache->ListSubscribe(

@@ -574,7 +574,6 @@ namespace Gs2::Showcase::Domain::Model
 
     Gs2::Core::Domain::CallbackID FNamespaceDomain::SubscribeSalesItemMasters(
     TFunction<void()> Callback
-
     )
     {
         return Gs2->Cache->ListSubscribe(
@@ -712,7 +711,6 @@ namespace Gs2::Showcase::Domain::Model
 
     Gs2::Core::Domain::CallbackID FNamespaceDomain::SubscribeSalesItemGroupMasters(
     TFunction<void()> Callback
-
     )
     {
         return Gs2->Cache->ListSubscribe(
@@ -874,7 +872,6 @@ namespace Gs2::Showcase::Domain::Model
 
     Gs2::Core::Domain::CallbackID FNamespaceDomain::SubscribeShowcaseMasters(
     TFunction<void()> Callback
-
     )
     {
         return Gs2->Cache->ListSubscribe(
@@ -1012,7 +1009,6 @@ namespace Gs2::Showcase::Domain::Model
 
     Gs2::Core::Domain::CallbackID FNamespaceDomain::SubscribeRandomShowcaseMasters(
     TFunction<void()> Callback
-
     )
     {
         return Gs2->Cache->ListSubscribe(

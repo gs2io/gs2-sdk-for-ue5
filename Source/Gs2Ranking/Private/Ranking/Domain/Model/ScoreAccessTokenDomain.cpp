@@ -148,9 +148,10 @@ namespace Gs2::Ranking::Domain::Model
             Self->Gs2->Cache,
 
             Request->GetNamespaceName(),
-            Request->GetScorerUserId(),
-            Request->GetCategoryName(),
-            Request->GetUniqueId(),
+            (CacheOwnerSnapshotUserId),
+            ResultModel->GetItem()->GetCategoryName(),
+            ResultModel->GetItem()->GetScorerUserId(),
+            ResultModel->GetItem()->GetUniqueId(),
             CacheOwnerSnapshotTimeOffset,
             ResultModel->GetItem()
         );
@@ -216,12 +217,13 @@ namespace Gs2::Ranking::Domain::Model
         const auto CacheParentKey = Gs2::Ranking::Model::Cache::FScoreCache::CreateCacheParentKey(
 
             Self->NamespaceName,
-            Self->ScorerUserId,
+            Self->AccessToken.IsValid() ? Self->UserId() : TOptional<FString>(),
             Self->AccessToken.IsValid() ? Self->AccessToken->GetTimeOffset() : TOptional<int32>()
         );
         const auto CacheKey = Gs2::Ranking::Model::Cache::FScoreCache::CreateCacheKey(
 
             Self->CategoryName,
+            Self->ScorerUserId,
             Self->UniqueId
         );
         return Self->Gs2->Cache->ExecuteWithKeyLock(
@@ -235,8 +237,9 @@ namespace Gs2::Ranking::Domain::Model
                     Self->Gs2->Cache,
 
                     Self->NamespaceName,
-                    Self->ScorerUserId,
+                    Self->AccessToken.IsValid() ? Self->UserId() : TOptional<FString>(),
                     Self->CategoryName,
+                    Self->ScorerUserId,
                     Self->UniqueId,
                     Self->AccessToken.IsValid() ? Self->AccessToken->GetTimeOffset() : TOptional<int32>(),
                     &Value
@@ -250,8 +253,9 @@ namespace Gs2::Ranking::Domain::Model
                     Self->Gs2->Cache,
 
                     Self->NamespaceName,
-                    Self->ScorerUserId,
+                    Self->AccessToken.IsValid() ? Self->UserId() : TOptional<FString>(),
                     Self->CategoryName,
+                    Self->ScorerUserId,
                     Self->UniqueId,
                     Self->AccessToken.IsValid() ? Self->AccessToken->GetTimeOffset() : TOptional<int32>(),
                     [Self](Gs2::Ranking::Model::FScorePtr* OutItem) -> Gs2::Core::Model::FGs2ErrorPtr
@@ -284,8 +288,9 @@ namespace Gs2::Ranking::Domain::Model
             Gs2->Cache,
 
             NamespaceName,
-            ScorerUserId,
+            AccessToken.IsValid() ? UserId() : TOptional<FString>(),
             CategoryName,
+            ScorerUserId,
             UniqueId,
             AccessToken.IsValid() ? AccessToken->GetTimeOffset() : TOptional<int32>()
         );
@@ -338,12 +343,13 @@ namespace Gs2::Ranking::Domain::Model
         const auto SubscriptionParentKey = Gs2::Ranking::Model::Cache::FScoreCache::CreateCacheParentKey(
 
             NamespaceName,
-            ScorerUserId,
+            AccessToken.IsValid() ? UserId() : TOptional<FString>(),
             AccessToken.IsValid() ? AccessToken->GetTimeOffset() : TOptional<int32>()
         );
         const auto SubscriptionCacheKey = Gs2::Ranking::Model::Cache::FScoreCache::CreateCacheKey(
 
             CategoryName,
+            ScorerUserId,
             UniqueId
         );
         const TWeakPtr<Gs2::Core::Domain::FGs2> WeakGs2 = Gs2;
@@ -401,12 +407,13 @@ namespace Gs2::Ranking::Domain::Model
         const auto SubscriptionParentKey = Gs2::Ranking::Model::Cache::FScoreCache::CreateCacheParentKey(
 
             NamespaceName,
-            ScorerUserId,
+            AccessToken.IsValid() ? UserId() : TOptional<FString>(),
             AccessToken.IsValid() ? AccessToken->GetTimeOffset() : TOptional<int32>()
         );
         const auto SubscriptionCacheKey = Gs2::Ranking::Model::Cache::FScoreCache::CreateCacheKey(
 
             CategoryName,
+            ScorerUserId,
             UniqueId
         );
         Gs2->Cache->Unsubscribe(

@@ -163,16 +163,17 @@ namespace Gs2::Lottery::Model
                 }() : TOptional<FString>())
             ->WithPrizes(Data->HasField(ANSI_TO_TCHAR("prizes")) ? [Data]() -> TSharedPtr<TArray<Model::FPrizePtr>>
                 {
-                    auto v = MakeShared<TArray<Model::FPrizePtr>>();
-                    if (!Data->HasTypedField<EJson::Null>(ANSI_TO_TCHAR("prizes")) && Data->HasTypedField<EJson::Array>(ANSI_TO_TCHAR("prizes")))
+                    if (!Data->HasTypedField<EJson::Array>(ANSI_TO_TCHAR("prizes")))
                     {
-                        for (auto JsonObjectValue : Data->GetArrayField(ANSI_TO_TCHAR("prizes")))
-                        {
-                            v->Add(Model::FPrize::FromJson(JsonObjectValue->AsObject()));
-                        }
+                        return nullptr;
+                    }
+                    auto v = MakeShared<TArray<Model::FPrizePtr>>();
+                    for (auto JsonObjectValue : Data->GetArrayField(ANSI_TO_TCHAR("prizes")))
+                    {
+                        v->Add(Model::FPrize::FromJson(JsonObjectValue->AsObject()));
                     }
                     return v;
-                 }() : MakeShared<TArray<Model::FPrizePtr>>());
+                 }() : nullptr);
     }
 
     TSharedPtr<FJsonObject> FPrizeTable::ToJson() const
@@ -278,6 +279,28 @@ namespace Gs2::Lottery::Model::Cache
         auto CacheOwnerValue = CacheOwnerArgumentItem;
         CacheSnapshot->Put(Gs2::Lottery::Model::FPrizeTable::TypeName, CacheOwnerParentKey, CacheOwnerKey, CacheOwnerValue,
             FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
+        );
+    }
+
+    FString FPrizeTableCache::PutUserData(
+        const Gs2::Core::Domain::FCacheDatabasePtr& Cache,
+        TOptional<FString> NamespaceName,
+        TOptional<FString> UserId,
+        TOptional<int32> TimeOffset,
+        const Gs2::Lottery::Model::FPrizeTablePtr& Item
+    )
+    {
+        if (!Item.IsValid()) return FString();
+        Put(
+            Cache,
+            NamespaceName,
+            Item->GetName(),
+            TimeOffset,
+            Item
+        );
+        return CreateCacheParentKey(
+            NamespaceName,
+            TimeOffset
         );
     }
 

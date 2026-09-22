@@ -151,7 +151,6 @@ namespace Gs2::Inbox::Domain::Model
 
         Gs2::Core::Domain::CallbackID SubscribeMessages(
             TFunction<void()> Callback
-
         );
 
         class FCollectMessagesTask;

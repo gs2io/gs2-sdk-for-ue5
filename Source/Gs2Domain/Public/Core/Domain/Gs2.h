@@ -505,6 +505,64 @@ namespace Gs2::Core::Domain
         TSharedPtr<FAsyncTask<FDispatchByUserIdTask>> DispatchByUserId(
             const FString UserId
         );
+
+        // ---------------------------------------------------------------------------------------------
+        // ユーザーの全データの一括取得（Gs2Distributor:DescribeUserData）でキャッシュを作る
+        //
+        // ★ログイン直後に 1 回待つと、そのユーザーの全 GS2 サービスのデータ（スタミナ・インベントリ・ミッション進捗 …）が
+        //   各モデルのキャッシュに載り、以後の Get / Describe はサーバーへ出ない。各エントリは kind でモデルを示し、
+        //   サービスごとの生成物 `FGs2<Service>Domain::PutUserData`（kind → モデルの振り分け。鍵の取り出しは各モデルの
+        //   `F<Model>Cache::PutUserData`、sdk-gen の BaseModel.user_data_cache_keys）へ渡す。
+        //   キー方式 v2 のプロジェクトでだけ使える（v1 は BadRequest）。
+        //
+        // ★「リストが揃った印」（Describe のイテレータがサーバーへ出ない条件）は、全ページを読み終えてから
+        //   (service, kind, 親キー) の集合にまとめて立てる。途中で失敗したら印は立てない（入れた item は個別 Get の
+        //   キャッシュとして残る）。エントリ単位で読めない JSON は数えず続行する。
+        //   ロード中に作ったイテレータは部分的なリストを返しうるので、他の呼び出しの前に完了を待つこと。
+        //
+        // 結果: キャッシュに入れたエントリ数。知らない service / kind（SDK が古い、または対応表に無い）は数えず捨てる。
+        // ---------------------------------------------------------------------------------------------
+
+        class GS2DOMAIN_API FLoadUserDataTask final :
+            public Gs2::Core::Util::TGs2Future<int32>,
+            public TSharedFromThis<FLoadUserDataTask>
+        {
+            const TSharedPtr<FGs2> Self;
+            const Gs2::Auth::Model::FAccessTokenPtr AccessToken;
+        public:
+            explicit FLoadUserDataTask(
+                const TSharedPtr<FGs2> Self,
+                const Gs2::Auth::Model::FAccessTokenPtr AccessToken
+            );
+
+            virtual Gs2::Core::Model::FGs2ErrorPtr Action(
+                TSharedPtr<TSharedPtr<int32>> Result
+            ) override;
+        };
+        friend FLoadUserDataTask;
+
+        TSharedPtr<FAsyncTask<FLoadUserDataTask>> LoadUserData(
+            Gs2::Auth::Model::FAccessTokenPtr AccessToken
+        );
+
+        // 一括取得の 1 エントリを、Service の生成物へ振り分けてキャッシュへ入れる。戻り値は親キー（知らない Service / Kind は未設定）。
+        // Service は seed のディレクトリ名の綴り（"stamina" / "skill_tree"）。
+        TOptional<FString> PutUserData(
+            const FString Service,
+            const TOptional<FString> NamespaceName,
+            const TOptional<FString> UserId,
+            const TOptional<int32> TimeOffset,
+            const FString Kind,
+            const FString Payload
+        ) const;
+
+        // 一括取得で入れた (Service, Kind, 親キー) に「リストが揃った印」を立てる。
+        bool SetListCached(
+            const FString Service,
+            const TOptional<int32> TimeOffset,
+            const FString Kind,
+            const FString ParentKey
+        ) const;
         
         class GS2DOMAIN_API FDisconnectTask final :
             public Gs2::Core::Util::TGs2Future<void*>,

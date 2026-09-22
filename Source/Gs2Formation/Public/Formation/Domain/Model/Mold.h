@@ -245,7 +245,6 @@ namespace Gs2::Formation::Domain::Model
 
         Gs2::Core::Domain::CallbackID SubscribeForms(
             TFunction<void()> Callback
-
         );
 
         class FCollectFormsTask;

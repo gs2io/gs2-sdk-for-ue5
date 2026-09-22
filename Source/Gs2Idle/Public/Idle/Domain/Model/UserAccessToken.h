@@ -89,7 +89,6 @@ namespace Gs2::Idle::Domain::Model
 
         Gs2::Core::Domain::CallbackID SubscribeStatuses(
             TFunction<void()> Callback
-
         );
 
         class FCollectStatusesTask;

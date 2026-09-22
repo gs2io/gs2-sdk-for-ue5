@@ -154,16 +154,17 @@ namespace Gs2::Guild::Request
               }() : TOptional<FString>())
           ->WithMembers(Data->HasField(ANSI_TO_TCHAR("members")) ? [Data]() -> TSharedPtr<TArray<Model::FMemberPtr>>
               {
-                  auto v = MakeShared<TArray<Model::FMemberPtr>>();
-                  if (!Data->HasTypedField<EJson::Null>(ANSI_TO_TCHAR("members")) && Data->HasTypedField<EJson::Array>(ANSI_TO_TCHAR("members")))
+                  if (!Data->HasTypedField<EJson::Array>(ANSI_TO_TCHAR("members")))
                   {
-                      for (auto JsonObjectValue : Data->GetArrayField(ANSI_TO_TCHAR("members")))
-                      {
-                          v->Add(Model::FMember::FromJson(JsonObjectValue->AsObject()));
-                      }
+                      return nullptr;
                   }
+                  auto v = MakeShared<TArray<Model::FMemberPtr>>();
+                  for (auto JsonObjectValue : Data->GetArrayField(ANSI_TO_TCHAR("members")))
+                      {
+                      v->Add(Model::FMember::FromJson(JsonObjectValue->AsObject()));
+                      }
                   return v;
-              }() : MakeShared<TArray<Model::FMemberPtr>>())
+              }() : nullptr)
           ->WithDuplicationAvoider(Data->HasField(ANSI_TO_TCHAR("duplicationAvoider")) ? TOptional<FString>(Data->GetStringField(ANSI_TO_TCHAR("duplicationAvoider"))) : TOptional<FString>());
     }
 

@@ -94,7 +94,6 @@ namespace Gs2::LoginReward::Domain::Model
 
         Gs2::Core::Domain::CallbackID SubscribeReceiveStatuses(
             TFunction<void()> Callback
-
         );
 
         class FCollectReceiveStatusesTask;

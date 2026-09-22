@@ -97,8 +97,7 @@ namespace Gs2::Enchant::Domain::Model
         ) const;
 
         Gs2::Core::Domain::CallbackID SubscribeBalanceParameterStatuses(
-            TFunction<void()> Callback
-            , const TOptional<FString> ParameterName = TOptional<FString>()
+            TFunction<void()> Callback, const TOptional<FString> ParameterName = TOptional<FString>()
         );
 
         class FCollectBalanceParameterStatusesTask;
@@ -140,8 +139,7 @@ namespace Gs2::Enchant::Domain::Model
         ) const;
 
         Gs2::Core::Domain::CallbackID SubscribeRarityParameterStatuses(
-            TFunction<void()> Callback
-            , const TOptional<FString> ParameterName = TOptional<FString>()
+            TFunction<void()> Callback, const TOptional<FString> ParameterName = TOptional<FString>()
         );
 
         class FCollectRarityParameterStatusesTask;

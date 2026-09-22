@@ -329,7 +329,6 @@ namespace Gs2::Formation::Domain::Model
 
     Gs2::Core::Domain::CallbackID FMoldAccessTokenDomain::SubscribeForms(
     TFunction<void()> Callback
-
     )
     {
         return Gs2->Cache->ListSubscribe(

@@ -169,16 +169,17 @@ namespace Gs2::SkillTree::Request
               }() : TOptional<FString>())
           ->WithNodeModelNames(Data->HasField(ANSI_TO_TCHAR("nodeModelNames")) ? [Data]() -> TSharedPtr<TArray<FString>>
               {
-                  auto v = MakeShared<TArray<FString>>();
-                  if (!Data->HasTypedField<EJson::Null>(ANSI_TO_TCHAR("nodeModelNames")) && Data->HasTypedField<EJson::Array>(ANSI_TO_TCHAR("nodeModelNames")))
+                  if (!Data->HasTypedField<EJson::Array>(ANSI_TO_TCHAR("nodeModelNames")))
                   {
-                      for (auto JsonObjectValue : Data->GetArrayField(ANSI_TO_TCHAR("nodeModelNames")))
-                      {
-                          v->Add(JsonObjectValue->AsString());
-                      }
+                      return nullptr;
                   }
+                  auto v = MakeShared<TArray<FString>>();
+                  for (auto JsonObjectValue : Data->GetArrayField(ANSI_TO_TCHAR("nodeModelNames")))
+                      {
+                      v->Add(JsonObjectValue->AsString());
+                      }
                   return v;
-              }() : MakeShared<TArray<FString>>())
+              }() : nullptr)
             ->WithTimeOffsetToken(Data->HasField(ANSI_TO_TCHAR("timeOffsetToken")) ? [Data]() -> TOptional<FString>
               {
                   FString v("");

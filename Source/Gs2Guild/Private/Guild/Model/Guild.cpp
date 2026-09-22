@@ -523,16 +523,17 @@ namespace Gs2::Guild::Model
                 }() : TOptional<FString>())
             ->WithCustomRoles(Data->HasField(ANSI_TO_TCHAR("customRoles")) ? [Data]() -> TSharedPtr<TArray<Model::FRoleModelPtr>>
                 {
-                    auto v = MakeShared<TArray<Model::FRoleModelPtr>>();
-                    if (!Data->HasTypedField<EJson::Null>(ANSI_TO_TCHAR("customRoles")) && Data->HasTypedField<EJson::Array>(ANSI_TO_TCHAR("customRoles")))
+                    if (!Data->HasTypedField<EJson::Array>(ANSI_TO_TCHAR("customRoles")))
                     {
-                        for (auto JsonObjectValue : Data->GetArrayField(ANSI_TO_TCHAR("customRoles")))
-                        {
-                            v->Add(Model::FRoleModel::FromJson(JsonObjectValue->AsObject()));
-                        }
+                        return nullptr;
+                    }
+                    auto v = MakeShared<TArray<Model::FRoleModelPtr>>();
+                    for (auto JsonObjectValue : Data->GetArrayField(ANSI_TO_TCHAR("customRoles")))
+                    {
+                        v->Add(Model::FRoleModel::FromJson(JsonObjectValue->AsObject()));
                     }
                     return v;
-                 }() : MakeShared<TArray<Model::FRoleModelPtr>>())
+                 }() : nullptr)
             ->WithGuildMemberDefaultRole(Data->HasField(ANSI_TO_TCHAR("guildMemberDefaultRole")) ? [Data]() -> TOptional<FString>
                 {
                     FString v("");
@@ -553,16 +554,17 @@ namespace Gs2::Guild::Model
                 }() : TOptional<int32>())
             ->WithMembers(Data->HasField(ANSI_TO_TCHAR("members")) ? [Data]() -> TSharedPtr<TArray<Model::FMemberPtr>>
                 {
-                    auto v = MakeShared<TArray<Model::FMemberPtr>>();
-                    if (!Data->HasTypedField<EJson::Null>(ANSI_TO_TCHAR("members")) && Data->HasTypedField<EJson::Array>(ANSI_TO_TCHAR("members")))
+                    if (!Data->HasTypedField<EJson::Array>(ANSI_TO_TCHAR("members")))
                     {
-                        for (auto JsonObjectValue : Data->GetArrayField(ANSI_TO_TCHAR("members")))
-                        {
-                            v->Add(Model::FMember::FromJson(JsonObjectValue->AsObject()));
-                        }
+                        return nullptr;
+                    }
+                    auto v = MakeShared<TArray<Model::FMemberPtr>>();
+                    for (auto JsonObjectValue : Data->GetArrayField(ANSI_TO_TCHAR("members")))
+                    {
+                        v->Add(Model::FMember::FromJson(JsonObjectValue->AsObject()));
                     }
                     return v;
-                 }() : MakeShared<TArray<Model::FMemberPtr>>())
+                 }() : nullptr)
             ->WithCreatedAt(Data->HasField(ANSI_TO_TCHAR("createdAt")) ? [Data]() -> TOptional<int64>
                 {
                     int64 v;
@@ -770,6 +772,29 @@ namespace Gs2::Guild::Model::Cache
         }
         CacheSnapshot->Put(Gs2::Guild::Model::FGuild::TypeName, CacheOwnerParentKey, CacheOwnerKey, CacheOwnerValue,
             FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
+        );
+    }
+
+    FString FGuildCache::PutUserData(
+        const Gs2::Core::Domain::FCacheDatabasePtr& Cache,
+        TOptional<FString> NamespaceName,
+        TOptional<FString> UserId,
+        TOptional<int32> TimeOffset,
+        const Gs2::Guild::Model::FGuildPtr& Item
+    )
+    {
+        if (!Item.IsValid()) return FString();
+        Put(
+            Cache,
+            NamespaceName,
+            Item->GetGuildModelName(),
+            Item->GetName(),
+            TimeOffset,
+            Item
+        );
+        return CreateCacheParentKey(
+            NamespaceName,
+            TimeOffset
         );
     }
 

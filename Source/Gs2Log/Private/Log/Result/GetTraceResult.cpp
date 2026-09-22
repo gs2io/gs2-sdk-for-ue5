@@ -106,16 +106,17 @@ namespace Gs2::Log::Result
                  }() : nullptr)
             ->WithParallels(Data->HasField(ANSI_TO_TCHAR("parallels")) ? [Data]() -> TSharedPtr<TArray<Model::FTracePtr>>
                  {
-                    auto v = MakeShared<TArray<Model::FTracePtr>>();
-                    if (!Data->HasTypedField<EJson::Null>(ANSI_TO_TCHAR("parallels")) && Data->HasTypedField<EJson::Array>(ANSI_TO_TCHAR("parallels")))
+                    if (!Data->HasTypedField<EJson::Array>(ANSI_TO_TCHAR("parallels")))
                     {
-                        for (auto JsonObjectValue : Data->GetArrayField(ANSI_TO_TCHAR("parallels")))
-                        {
-                            v->Add(Model::FTrace::FromJson(JsonObjectValue->AsObject()));
-                        }
+                        return nullptr;
+                    }
+                    auto v = MakeShared<TArray<Model::FTracePtr>>();
+                    for (auto JsonObjectValue : Data->GetArrayField(ANSI_TO_TCHAR("parallels")))
+                    {
+                        v->Add(Model::FTrace::FromJson(JsonObjectValue->AsObject()));
                     }
                     return v;
-                 }() : MakeShared<TArray<Model::FTracePtr>>())
+                 }() : nullptr)
             ->WithParallelTruncated(Data->HasField(ANSI_TO_TCHAR("parallelTruncated")) ? [Data]() -> TOptional<bool>
                 {
                     bool v;

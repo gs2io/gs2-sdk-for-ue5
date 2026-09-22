@@ -69,16 +69,17 @@ namespace Gs2::Distributor::Request
             ->WithContextStack(Data->HasField(ANSI_TO_TCHAR("contextStack")) ? TOptional<FString>(Data->GetStringField(ANSI_TO_TCHAR("contextStack"))) : TOptional<FString>())
           ->WithRequestPayloads(Data->HasField(ANSI_TO_TCHAR("requestPayloads")) ? [Data]() -> TSharedPtr<TArray<Model::FBatchRequestPayloadPtr>>
               {
-                  auto v = MakeShared<TArray<Model::FBatchRequestPayloadPtr>>();
-                  if (!Data->HasTypedField<EJson::Null>(ANSI_TO_TCHAR("requestPayloads")) && Data->HasTypedField<EJson::Array>(ANSI_TO_TCHAR("requestPayloads")))
+                  if (!Data->HasTypedField<EJson::Array>(ANSI_TO_TCHAR("requestPayloads")))
                   {
-                      for (auto JsonObjectValue : Data->GetArrayField(ANSI_TO_TCHAR("requestPayloads")))
-                      {
-                          v->Add(Model::FBatchRequestPayload::FromJson(JsonObjectValue->AsObject()));
-                      }
+                      return nullptr;
                   }
+                  auto v = MakeShared<TArray<Model::FBatchRequestPayloadPtr>>();
+                  for (auto JsonObjectValue : Data->GetArrayField(ANSI_TO_TCHAR("requestPayloads")))
+                      {
+                      v->Add(Model::FBatchRequestPayload::FromJson(JsonObjectValue->AsObject()));
+                      }
                   return v;
-              }() : MakeShared<TArray<Model::FBatchRequestPayloadPtr>>());
+              }() : nullptr);
     }
 
     TSharedPtr<FJsonObject> FBatchExecuteApiRequest::ToJson() const

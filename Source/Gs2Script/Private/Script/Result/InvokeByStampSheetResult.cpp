@@ -292,16 +292,17 @@ namespace Gs2::Script::Result
                 }() : TOptional<int32>())
             ->WithOutput(Data->HasField(ANSI_TO_TCHAR("output")) ? [Data]() -> TSharedPtr<TArray<FString>>
                  {
-                    auto v = MakeShared<TArray<FString>>();
-                    if (!Data->HasTypedField<EJson::Null>(ANSI_TO_TCHAR("output")) && Data->HasTypedField<EJson::Array>(ANSI_TO_TCHAR("output")))
+                    if (!Data->HasTypedField<EJson::Array>(ANSI_TO_TCHAR("output")))
                     {
-                        for (auto JsonObjectValue : Data->GetArrayField(ANSI_TO_TCHAR("output")))
-                        {
-                            v->Add(JsonObjectValue->AsString());
-                        }
+                        return nullptr;
+                    }
+                    auto v = MakeShared<TArray<FString>>();
+                    for (auto JsonObjectValue : Data->GetArrayField(ANSI_TO_TCHAR("output")))
+                    {
+                        v->Add(JsonObjectValue->AsString());
                     }
                     return v;
-                 }() : MakeShared<TArray<FString>>());
+                 }() : nullptr);
     }
 
     TSharedPtr<FJsonObject> FInvokeByStampSheetResult::ToJson() const

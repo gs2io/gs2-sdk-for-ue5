@@ -239,7 +239,6 @@ namespace Gs2::Inventory::Domain::Model
 
         Gs2::Core::Domain::CallbackID SubscribeItemModelMasters(
             TFunction<void()> Callback
-
         );
 
         class FCollectItemModelMastersTask;

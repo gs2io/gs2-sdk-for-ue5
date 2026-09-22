@@ -36,6 +36,14 @@
 #include "SerialKey/Domain/Model/CampaignModel.h"
 #include "SerialKey/Domain/Model/CampaignModelMaster.h"
 #include "SerialKey/Domain/Model/CurrentCampaignMaster.h"
+/* diff +++ start */
+#include "SerialKey/Model/Cache/CampaignModel.h"
+#include "SerialKey/Model/Cache/Namespace.h"
+#include "SerialKey/Model/Cache/CampaignModelMaster.h"
+#include "SerialKey/Model/Cache/CurrentCampaignMaster.h"
+#include "SerialKey/Model/Cache/CampaignModel.h"
+#include "SerialKey/Model/Cache/IssueJob.h"
+/* diff +++ end */
 #include "Core/Domain/Gs2.h"
 
 namespace Gs2::SerialKey::Domain
@@ -499,6 +507,26 @@ namespace Gs2::SerialKey::Domain
             }
         }
     }
+
+    /* diff +++ start */
+    TOptional<FString> FGs2SerialKeyDomain::PutUserData(
+        const TOptional<FString> NamespaceName,
+        const TOptional<FString> UserId,
+        const TOptional<int32> TimeOffset,
+        const FString Kind,
+        const FString Payload
+    ) {
+        return TOptional<FString>();
+    }
+
+    bool FGs2SerialKeyDomain::SetListCached(
+        const TOptional<int32> TimeOffset,
+        const FString Kind,
+        const FString ParentKey
+    ) {
+        return false;
+    }
+    /* diff +++ end */
 
     void FGs2SerialKeyDomain::UpdateCacheFromStampTask(
         const FString Method,

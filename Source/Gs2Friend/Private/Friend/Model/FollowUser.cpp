@@ -12,6 +12,8 @@
  * on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either
  * express or implied. See the License for the specific language governing
  * permissions and limitations under the License.
+ *
+ * deny overwrite
  */
 
 #include "Friend/Model/FollowUser.h"
@@ -215,6 +217,34 @@ namespace Gs2::Friend::Model::Cache
             FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
         );
     }
+
+    /* diff +++ start */
+    FString FFollowUserCache::PutUserData(
+        const Gs2::Core::Domain::FCacheDatabasePtr& Cache,
+        TOptional<FString> NamespaceName,
+        TOptional<FString> UserId,
+        TOptional<int32> TimeOffset,
+        const Gs2::Friend::Model::FFollowUserPtr& Item
+    )
+    {
+        if (!Item.IsValid()) return FString();
+        Put(
+            Cache,
+            NamespaceName,
+            UserId,
+            TOptional<bool>(false) /* サーバーの一括取得は withProfile 無しで展開する */,
+            Item->GetUserId(),
+            TimeOffset,
+            Item
+        );
+        return CreateCacheParentKey(
+            NamespaceName,
+            UserId,
+            TOptional<bool>(false) /* サーバーの一括取得は withProfile 無しで展開する */,
+            TimeOffset
+        );
+    }
+    /* diff +++ end */
 
     void FFollowUserCache::Delete(
         const Gs2::Core::Domain::FCacheDatabasePtr& CacheOwnerArgumentCache,

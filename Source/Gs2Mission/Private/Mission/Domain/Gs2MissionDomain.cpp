@@ -709,6 +709,64 @@ namespace Gs2::Mission::Domain
         }
     }
 
+    /* diff +++ start */
+    TOptional<FString> FGs2MissionDomain::PutUserData(
+        const TOptional<FString> NamespaceName,
+        const TOptional<FString> UserId,
+        const TOptional<int32> TimeOffset,
+        const FString Kind,
+        const FString Payload
+    ) {
+        TSharedPtr<FJsonObject> PayloadJson;
+        if (const TSharedRef<TJsonReader<>> JsonReader = TJsonReaderFactory<>::Create(Payload);
+            !FJsonSerializer::Deserialize(JsonReader, PayloadJson) || !PayloadJson.IsValid())
+        {
+            return TOptional<FString>();
+        }
+        if (Kind == "complete") {
+            const auto Item = Gs2::Mission::Model::FComplete::FromJson(PayloadJson);
+            if (!Item.IsValid()) return TOptional<FString>();
+            const auto ParentKey = Gs2::Mission::Model::Cache::FCompleteCache::PutUserData(
+                Gs2->Cache,
+                NamespaceName,
+                UserId,
+                TimeOffset,
+                Item
+            );
+            return ParentKey.IsEmpty() ? TOptional<FString>() : TOptional<FString>(ParentKey);
+        }
+        if (Kind == "counter") {
+            const auto Item = Gs2::Mission::Model::FCounter::FromJson(PayloadJson);
+            if (!Item.IsValid()) return TOptional<FString>();
+            const auto ParentKey = Gs2::Mission::Model::Cache::FCounterCache::PutUserData(
+                Gs2->Cache,
+                NamespaceName,
+                UserId,
+                TimeOffset,
+                Item
+            );
+            return ParentKey.IsEmpty() ? TOptional<FString>() : TOptional<FString>(ParentKey);
+        }
+        return TOptional<FString>();
+    }
+
+    bool FGs2MissionDomain::SetListCached(
+        const TOptional<int32> TimeOffset,
+        const FString Kind,
+        const FString ParentKey
+    ) {
+        if (Kind == "complete") {
+            Gs2->Cache->SetListCached(Gs2::Mission::Model::FComplete::TypeName, ParentKey);
+            return true;
+        }
+        if (Kind == "counter") {
+            Gs2->Cache->SetListCached(Gs2::Mission::Model::FCounter::TypeName, ParentKey);
+            return true;
+        }
+        return false;
+    }
+    /* diff +++ end */
+
     void FGs2MissionDomain::UpdateCacheFromStampTask(
         const FString Method,
         const FString Request,

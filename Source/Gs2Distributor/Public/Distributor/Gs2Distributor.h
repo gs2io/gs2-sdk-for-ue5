@@ -24,6 +24,7 @@
 #include "Model/StampSheetResult.h"
 #include "Model/BatchRequestPayload.h"
 #include "Model/BatchResultPayload.h"
+#include "Model/UserDataEntry.h"
 #include "Model/AcquireAction.h"
 #include "Model/ConsumeAction.h"
 #include "Model/VerifyAction.h"
@@ -261,6 +262,18 @@
 #include "Result/BatchExecuteApiResult.h"
 #include "Task/Rest/BatchExecuteApiTask.h"
 #include "Task/WebSocket/BatchExecuteApiTask.h"
+
+// DescribeUserData
+#include "Request/DescribeUserDataRequest.h"
+#include "Result/DescribeUserDataResult.h"
+#include "Task/Rest/DescribeUserDataTask.h"
+#include "Task/WebSocket/DescribeUserDataTask.h"
+
+// DescribeUserDataByUserId
+#include "Request/DescribeUserDataByUserIdRequest.h"
+#include "Result/DescribeUserDataByUserIdResult.h"
+#include "Task/Rest/DescribeUserDataByUserIdTask.h"
+#include "Task/WebSocket/DescribeUserDataByUserIdTask.h"
 
 // IfExpressionByUserId
 #include "Request/IfExpressionByUserIdRequest.h"

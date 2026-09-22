@@ -164,28 +164,30 @@ namespace Gs2::Ranking::Model
                  }() : nullptr)
             ->WithAdditionalScopes(Data->HasField(ANSI_TO_TCHAR("additionalScopes")) ? [Data]() -> TSharedPtr<TArray<Model::FScopePtr>>
                 {
-                    auto v = MakeShared<TArray<Model::FScopePtr>>();
-                    if (!Data->HasTypedField<EJson::Null>(ANSI_TO_TCHAR("additionalScopes")) && Data->HasTypedField<EJson::Array>(ANSI_TO_TCHAR("additionalScopes")))
+                    if (!Data->HasTypedField<EJson::Array>(ANSI_TO_TCHAR("additionalScopes")))
                     {
-                        for (auto JsonObjectValue : Data->GetArrayField(ANSI_TO_TCHAR("additionalScopes")))
-                        {
-                            v->Add(Model::FScope::FromJson(JsonObjectValue->AsObject()));
-                        }
+                        return nullptr;
+                    }
+                    auto v = MakeShared<TArray<Model::FScopePtr>>();
+                    for (auto JsonObjectValue : Data->GetArrayField(ANSI_TO_TCHAR("additionalScopes")))
+                    {
+                        v->Add(Model::FScope::FromJson(JsonObjectValue->AsObject()));
                     }
                     return v;
-                 }() : MakeShared<TArray<Model::FScopePtr>>())
+                 }() : nullptr)
             ->WithIgnoreUserIds(Data->HasField(ANSI_TO_TCHAR("ignoreUserIds")) ? [Data]() -> TSharedPtr<TArray<FString>>
                 {
-                    auto v = MakeShared<TArray<FString>>();
-                    if (!Data->HasTypedField<EJson::Null>(ANSI_TO_TCHAR("ignoreUserIds")) && Data->HasTypedField<EJson::Array>(ANSI_TO_TCHAR("ignoreUserIds")))
+                    if (!Data->HasTypedField<EJson::Array>(ANSI_TO_TCHAR("ignoreUserIds")))
                     {
-                        for (auto JsonObjectValue : Data->GetArrayField(ANSI_TO_TCHAR("ignoreUserIds")))
-                        {
-                            v->Add(JsonObjectValue->AsString());
-                        }
+                        return nullptr;
+                    }
+                    auto v = MakeShared<TArray<FString>>();
+                    for (auto JsonObjectValue : Data->GetArrayField(ANSI_TO_TCHAR("ignoreUserIds")))
+                    {
+                        v->Add(JsonObjectValue->AsString());
                     }
                     return v;
-                 }() : MakeShared<TArray<FString>>())
+                 }() : nullptr)
             ->WithGeneration(Data->HasField(ANSI_TO_TCHAR("generation")) ? [Data]() -> TOptional<FString>
                 {
                     FString v("");

@@ -193,16 +193,17 @@ namespace Gs2::Enchant::Request
               }() : TOptional<FString>())
           ->WithParameterValues(Data->HasField(ANSI_TO_TCHAR("parameterValues")) ? [Data]() -> TSharedPtr<TArray<Model::FRarityParameterValuePtr>>
               {
-                  auto v = MakeShared<TArray<Model::FRarityParameterValuePtr>>();
-                  if (!Data->HasTypedField<EJson::Null>(ANSI_TO_TCHAR("parameterValues")) && Data->HasTypedField<EJson::Array>(ANSI_TO_TCHAR("parameterValues")))
+                  if (!Data->HasTypedField<EJson::Array>(ANSI_TO_TCHAR("parameterValues")))
                   {
-                      for (auto JsonObjectValue : Data->GetArrayField(ANSI_TO_TCHAR("parameterValues")))
-                      {
-                          v->Add(Model::FRarityParameterValue::FromJson(JsonObjectValue->AsObject()));
-                      }
+                      return nullptr;
                   }
+                  auto v = MakeShared<TArray<Model::FRarityParameterValuePtr>>();
+                  for (auto JsonObjectValue : Data->GetArrayField(ANSI_TO_TCHAR("parameterValues")))
+                      {
+                      v->Add(Model::FRarityParameterValue::FromJson(JsonObjectValue->AsObject()));
+                      }
                   return v;
-              }() : MakeShared<TArray<Model::FRarityParameterValuePtr>>())
+              }() : nullptr)
             ->WithTimeOffsetToken(Data->HasField(ANSI_TO_TCHAR("timeOffsetToken")) ? [Data]() -> TOptional<FString>
               {
                   FString v("");

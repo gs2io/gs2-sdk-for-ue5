@@ -294,8 +294,7 @@ namespace Gs2::Money2::Domain::Model
         ) const;
 
         Gs2::Core::Domain::CallbackID SubscribeDailyTransactionHistoriesByCurrency(
-            TFunction<void()> Callback
-            , const int32 Year, const TOptional<int32> Month = TOptional<int32>()
+             const int32 Year, TFunction<void()> Callback, const TOptional<int32> Month = TOptional<int32>()
         );
 
         class FCollectDailyTransactionHistoriesByCurrencyTask;
@@ -334,8 +333,7 @@ namespace Gs2::Money2::Domain::Model
         ) const;
 
         Gs2::Core::Domain::CallbackID SubscribeDailyTransactionHistories(
-            TFunction<void()> Callback
-            , const int32 Year, const TOptional<int32> Month = TOptional<int32>(), const TOptional<int32> Day = TOptional<int32>()
+             const int32 Year, TFunction<void()> Callback, const TOptional<int32> Month = TOptional<int32>(), const TOptional<int32> Day = TOptional<int32>()
         );
 
         class FCollectDailyTransactionHistoriesTask;
@@ -390,7 +388,6 @@ namespace Gs2::Money2::Domain::Model
 
         Gs2::Core::Domain::CallbackID SubscribeStoreContentModels(
             TFunction<void()> Callback
-
         );
 
         class FCollectStoreContentModelsTask;
@@ -430,7 +427,6 @@ namespace Gs2::Money2::Domain::Model
 
         Gs2::Core::Domain::CallbackID SubscribeUnusedBalances(
             TFunction<void()> Callback
-
         );
 
         class FCollectUnusedBalancesTask;
@@ -471,7 +467,6 @@ namespace Gs2::Money2::Domain::Model
 
         Gs2::Core::Domain::CallbackID SubscribeStoreContentModelMasters(
             TFunction<void()> Callback
-
         );
 
         class FCollectStoreContentModelMastersTask;
@@ -511,7 +506,6 @@ namespace Gs2::Money2::Domain::Model
 
         Gs2::Core::Domain::CallbackID SubscribeStoreSubscriptionContentModels(
             TFunction<void()> Callback
-
         );
 
         class FCollectStoreSubscriptionContentModelsTask;
@@ -552,7 +546,6 @@ namespace Gs2::Money2::Domain::Model
 
         Gs2::Core::Domain::CallbackID SubscribeStoreSubscriptionContentModelMasters(
             TFunction<void()> Callback
-
         );
 
         class FCollectStoreSubscriptionContentModelMastersTask;

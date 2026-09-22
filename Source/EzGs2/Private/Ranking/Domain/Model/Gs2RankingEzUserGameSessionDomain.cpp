@@ -63,7 +63,7 @@ namespace Gs2::UE5::Ranking::Domain::Model
     Gs2::Core::Domain::CallbackID FEzUserGameSessionDomain::SubscribeScores(TFunction<void()> Callback, const FString CategoryName, const FString ScorerUserId)
     {
         return Domain->SubscribeScores(
-            Callback, CategoryName, ScorerUserId
+            CategoryName, ScorerUserId, Callback
         );
     }
 

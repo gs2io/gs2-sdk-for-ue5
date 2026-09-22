@@ -1,3 +1,4 @@
+// deny overwrite: BigItem の数量は文字列（BigInt）なので、生成器の数値前提の Rate() は使えない。FBigInteger（BigItemMutationSpeculativeCommit.h）で手書き
 /*
  * Copyright 2016 Game Server Services, Inc. or its affiliates. All Rights
  * Reserved.

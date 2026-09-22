@@ -46,7 +46,6 @@
 #include "Friend/Domain/Model/PublicProfileAccessToken.h"
 #include "Friend/Domain/Model/FriendRequest.h"
 #include "Friend/Model/Cache/FollowUser.h"
-#include "Friend/Model/Cache/PublicProfile.h"
 
 #include "Core/Domain/Gs2.h"
 #include "Core/Domain/Transaction/JobQueueJobDomainFactory.h"
@@ -140,48 +139,16 @@ namespace Gs2::Friend::Domain::Model
                 Details->Add(MakeShared<Gs2::Core::Model::FGs2ErrorDetail>(TEXT("userId"), TEXT("userId is invalid."), TEXT("invalid_response")));
                 return MakeShared<Gs2::Core::Model::FUnknownError>(Details);
               }
-        if (Request->GetWithProfile().Get(bool{}))
-        {
-            Gs2::Friend::Model::Cache::FFollowUserCache::Put(
-                Self->Gs2->Cache,
-                Request->GetNamespaceName(),
-                Self->UserId,
-                true,
-                Request->GetTargetUserId(),
-                TOptional<int32>(),
-                ResultModel->GetItem()
-            );
-        }
         Gs2::Friend::Model::Cache::FFollowUserCache::Put(
             Self->Gs2->Cache,
+
             Request->GetNamespaceName(),
-            Self->UserId,
-            false,
+            (ResultModel.IsValid() && ResultModel->GetItem().IsValid() ? ResultModel->GetItem()->GetUserId() : TOptional<FString>()),
+            Request->GetWithProfile().Get(bool{}),
             Request->GetTargetUserId(),
             TOptional<int32>(),
-            MakeShared<Gs2::Friend::Model::FFollowUser>()->WithUserId(Request->GetTargetUserId())
+            ResultModel->GetItem()
         );
-        Gs2::Friend::Model::Cache::FFollowUserCache::Put(
-            Self->Gs2->Cache,
-            Request->GetNamespaceName(),
-            Self->UserId,
-            TOptional<bool>(),
-            Request->GetTargetUserId(),
-            TOptional<int32>(),
-            MakeShared<Gs2::Friend::Model::FFollowUser>()->WithUserId(Request->GetTargetUserId())
-        );
-        if (Request->GetWithProfile().Get(bool{}))
-        {
-            Gs2::Friend::Model::Cache::FPublicProfileCache::Put(
-                Self->Gs2->Cache,
-                Request->GetNamespaceName(),
-                ResultModel->GetItem()->GetUserId(),
-                TOptional<int32>(),
-                MakeShared<Gs2::Friend::Model::FPublicProfile>()
-                    ->WithUserId(ResultModel->GetItem()->GetUserId())
-                    ->WithPublicProfile(ResultModel->GetItem()->GetPublicProfile())
-            );
-        }
             }
         *Result = ResultModel->GetItem();
         return nullptr;
@@ -233,25 +200,15 @@ namespace Gs2::Friend::Domain::Model
                       Details->Add(MakeShared<Gs2::Core::Model::FGs2ErrorDetail>(TEXT("userId"), TEXT("userId is invalid."), TEXT("invalid_response")));
                       return MakeShared<Gs2::Core::Model::FUnknownError>(Details);
                     }
-              for (const auto& WithProfile : {TOptional<bool>(false), TOptional<bool>(true), TOptional<bool>()})
-              {
-                  Gs2::Friend::Model::Cache::FFollowUserCache::Delete(
-                      Self->Gs2->Cache,
-                      Request->GetNamespaceName(),
-                      Self->UserId,
-                      WithProfile,
-                      Request->GetTargetUserId(),
-                      TOptional<int32>()
-                  );
-                  Gs2::Friend::Model::Cache::FFollowUserCache::Delete(
-                      Self->Gs2->Cache,
-                      Request->GetNamespaceName(),
-                      Request->GetTargetUserId(),
-                      WithProfile,
-                      Self->UserId,
-                      TOptional<int32>()
-                  );
-              }
+              Gs2::Friend::Model::Cache::FFollowUserCache::Delete(
+            Self->Gs2->Cache,
+
+            Request->GetNamespaceName(),
+            (ResultModel.IsValid() && ResultModel->GetItem().IsValid() ? ResultModel->GetItem()->GetUserId() : TOptional<FString>()),
+            TOptional<bool>(),
+            Request->GetTargetUserId(),
+            TOptional<int32>()
+        );
         auto Domain = Self;
 
         *Result = Domain;

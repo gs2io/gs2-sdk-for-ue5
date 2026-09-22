@@ -201,16 +201,17 @@ namespace Gs2::Lottery::Result
         return MakeShared<FDrawByUserIdResult>()
             ->WithItems(Data->HasField(ANSI_TO_TCHAR("items")) ? [Data]() -> TSharedPtr<TArray<Model::FDrawnPrizePtr>>
                  {
-                    auto v = MakeShared<TArray<Model::FDrawnPrizePtr>>();
-                    if (!Data->HasTypedField<EJson::Null>(ANSI_TO_TCHAR("items")) && Data->HasTypedField<EJson::Array>(ANSI_TO_TCHAR("items")))
+                    if (!Data->HasTypedField<EJson::Array>(ANSI_TO_TCHAR("items")))
                     {
-                        for (auto JsonObjectValue : Data->GetArrayField(ANSI_TO_TCHAR("items")))
-                        {
-                            v->Add(Model::FDrawnPrize::FromJson(JsonObjectValue->AsObject()));
-                        }
+                        return nullptr;
+                    }
+                    auto v = MakeShared<TArray<Model::FDrawnPrizePtr>>();
+                    for (auto JsonObjectValue : Data->GetArrayField(ANSI_TO_TCHAR("items")))
+                    {
+                        v->Add(Model::FDrawnPrize::FromJson(JsonObjectValue->AsObject()));
                     }
                     return v;
-                 }() : MakeShared<TArray<Model::FDrawnPrizePtr>>())
+                 }() : nullptr)
             ->WithBoxItems(Data->HasField(ANSI_TO_TCHAR("boxItems")) ? [Data]() -> Model::FBoxItemsPtr
                  {
                     if (Data->HasTypedField<EJson::Null>(ANSI_TO_TCHAR("boxItems")))

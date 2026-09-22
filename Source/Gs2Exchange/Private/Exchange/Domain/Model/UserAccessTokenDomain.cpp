@@ -106,7 +106,6 @@ namespace Gs2::Exchange::Domain::Model
 
     Gs2::Core::Domain::CallbackID FUserAccessTokenDomain::SubscribeAwaits(
     TFunction<void()> Callback
-
     )
     {
         return Gs2->Cache->ListSubscribe(

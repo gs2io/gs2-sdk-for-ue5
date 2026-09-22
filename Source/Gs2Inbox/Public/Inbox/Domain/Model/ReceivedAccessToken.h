@@ -110,6 +110,14 @@ namespace Gs2::Inbox::Domain::Model
         };
         friend FModelTask;
 
+        TSharedPtr<FAsyncTask<FModelTask>> Model();
+
+        void Invalidate();
+
+        Gs2::Core::Domain::CallbackID Subscribe(
+            TFunction<void(Gs2::Inbox::Model::FReceivedPtr)> Callback
+        );
+
         class GS2INBOX_API FSubscribeWithInitialCallTask final :
             public Gs2::Core::Util::TGs2Future<Gs2::Core::Domain::CallbackID>,
             public TSharedFromThis<FSubscribeWithInitialCallTask>
@@ -117,9 +125,9 @@ namespace Gs2::Inbox::Domain::Model
             const TSharedPtr<FReceivedAccessTokenDomain> Self;
             const TFunction<void(Gs2::Inbox::Model::FReceivedPtr)> Callback;
         public:
-            explicit FSubscribeWithInitialCallTask(
-                const TSharedPtr<FReceivedAccessTokenDomain> Self,
-                const TFunction<void(Gs2::Inbox::Model::FReceivedPtr)>& Callback
+            FSubscribeWithInitialCallTask(
+                const TSharedPtr<FReceivedAccessTokenDomain>& Self,
+                TFunction<void(Gs2::Inbox::Model::FReceivedPtr)> Callback
             );
 
             FSubscribeWithInitialCallTask(
@@ -130,16 +138,8 @@ namespace Gs2::Inbox::Domain::Model
                 TSharedPtr<TSharedPtr<Gs2::Core::Domain::CallbackID>> Result
             ) override;
         };
-        friend FSubscribeWithInitialCallTask;
 
-        TSharedPtr<FAsyncTask<FReceivedAccessTokenDomain::FSubscribeWithInitialCallTask>> SubscribeWithInitialCall(
-            TFunction<void(Gs2::Inbox::Model::FReceivedPtr)> Callback
-        );
-        void Invalidate();
-
-        TSharedPtr<FAsyncTask<FModelTask>> Model();
-
-        Gs2::Core::Domain::CallbackID Subscribe(
+        TSharedPtr<FAsyncTask<FSubscribeWithInitialCallTask>> SubscribeWithInitialCall(
             TFunction<void(Gs2::Inbox::Model::FReceivedPtr)> Callback
         );
 

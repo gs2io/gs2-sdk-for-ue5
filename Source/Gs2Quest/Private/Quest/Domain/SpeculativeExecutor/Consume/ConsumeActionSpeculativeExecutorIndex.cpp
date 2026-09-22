@@ -73,6 +73,7 @@ namespace Gs2::Quest::Domain::SpeculativeExecutor
                 return nullptr;
             }
             auto Request = Request::FDeleteProgressByUserIdRequest::FromJson(RequestModelJson);
+            Request = FDeleteProgressByUserIdSpeculativeExecutor::Rate(Request, Rate);
             auto Future = FDeleteProgressByUserIdSpeculativeExecutor::Execute(
                 Domain,
                 Service,
@@ -85,7 +86,6 @@ namespace Gs2::Quest::Domain::SpeculativeExecutor
                 return Future->GetTask().Error();
             }
             *Result = Future->GetTask().Result();
-            return nullptr;
         }
         return nullptr;
     }

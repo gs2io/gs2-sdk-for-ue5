@@ -124,16 +124,17 @@ namespace Gs2::Matchmaking::Model
                 }() : TOptional<FString>())
             ->WithAttributes(Data->HasField(ANSI_TO_TCHAR("attributes")) ? [Data]() -> TSharedPtr<TArray<Model::FAttributePtr>>
                 {
-                    auto v = MakeShared<TArray<Model::FAttributePtr>>();
-                    if (!Data->HasTypedField<EJson::Null>(ANSI_TO_TCHAR("attributes")) && Data->HasTypedField<EJson::Array>(ANSI_TO_TCHAR("attributes")))
+                    if (!Data->HasTypedField<EJson::Array>(ANSI_TO_TCHAR("attributes")))
                     {
-                        for (auto JsonObjectValue : Data->GetArrayField(ANSI_TO_TCHAR("attributes")))
-                        {
-                            v->Add(Model::FAttribute::FromJson(JsonObjectValue->AsObject()));
-                        }
+                        return nullptr;
+                    }
+                    auto v = MakeShared<TArray<Model::FAttributePtr>>();
+                    for (auto JsonObjectValue : Data->GetArrayField(ANSI_TO_TCHAR("attributes")))
+                    {
+                        v->Add(Model::FAttribute::FromJson(JsonObjectValue->AsObject()));
                     }
                     return v;
-                 }() : MakeShared<TArray<Model::FAttributePtr>>())
+                 }() : nullptr)
             ->WithRoleName(Data->HasField(ANSI_TO_TCHAR("roleName")) ? [Data]() -> TOptional<FString>
                 {
                     FString v("");
@@ -145,16 +146,17 @@ namespace Gs2::Matchmaking::Model
                 }() : TOptional<FString>())
             ->WithDenyUserIds(Data->HasField(ANSI_TO_TCHAR("denyUserIds")) ? [Data]() -> TSharedPtr<TArray<FString>>
                 {
-                    auto v = MakeShared<TArray<FString>>();
-                    if (!Data->HasTypedField<EJson::Null>(ANSI_TO_TCHAR("denyUserIds")) && Data->HasTypedField<EJson::Array>(ANSI_TO_TCHAR("denyUserIds")))
+                    if (!Data->HasTypedField<EJson::Array>(ANSI_TO_TCHAR("denyUserIds")))
                     {
-                        for (auto JsonObjectValue : Data->GetArrayField(ANSI_TO_TCHAR("denyUserIds")))
-                        {
-                            v->Add(JsonObjectValue->AsString());
-                        }
+                        return nullptr;
+                    }
+                    auto v = MakeShared<TArray<FString>>();
+                    for (auto JsonObjectValue : Data->GetArrayField(ANSI_TO_TCHAR("denyUserIds")))
+                    {
+                        v->Add(JsonObjectValue->AsString());
                     }
                     return v;
-                 }() : MakeShared<TArray<FString>>())
+                 }() : nullptr)
             ->WithCreatedAt(Data->HasField(ANSI_TO_TCHAR("createdAt")) ? [Data]() -> TOptional<int64>
                 {
                     int64 v;

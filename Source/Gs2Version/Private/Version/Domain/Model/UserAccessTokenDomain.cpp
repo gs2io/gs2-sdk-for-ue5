@@ -89,7 +89,6 @@ namespace Gs2::Version::Domain::Model
 
     Gs2::Core::Domain::CallbackID FUserAccessTokenDomain::SubscribeAcceptVersions(
     TFunction<void()> Callback
-
     )
     {
         return Gs2->Cache->ListSubscribe(

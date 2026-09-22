@@ -280,7 +280,6 @@ namespace Gs2::Enhance::Domain::Model
 
         Gs2::Core::Domain::CallbackID SubscribeUnleashRateModels(
             TFunction<void()> Callback
-
         );
 
         class FCollectUnleashRateModelsTask;
@@ -321,7 +320,6 @@ namespace Gs2::Enhance::Domain::Model
 
         Gs2::Core::Domain::CallbackID SubscribeUnleashRateModelMasters(
             TFunction<void()> Callback
-
         );
 
         class FCollectUnleashRateModelMastersTask;
@@ -361,7 +359,6 @@ namespace Gs2::Enhance::Domain::Model
 
         Gs2::Core::Domain::CallbackID SubscribeRateModels(
             TFunction<void()> Callback
-
         );
 
         class FCollectRateModelsTask;
@@ -410,7 +407,6 @@ namespace Gs2::Enhance::Domain::Model
 
         Gs2::Core::Domain::CallbackID SubscribeRateModelMasters(
             TFunction<void()> Callback
-
         );
 
         class FCollectRateModelMastersTask;

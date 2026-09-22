@@ -41,6 +41,7 @@
 #include "LoginReward/Model/Cache/CurrentBonusMaster.h"
 #include "LoginReward/Model/Cache/ReceiveStatus.h"
 #include "LoginReward/Model/Cache/BonusModel.h"
+#include "LoginReward/Model/Cache/ReceiveStatus.h"
 
 #include "Core/Domain/Gs2.h"
 
@@ -441,7 +442,6 @@ namespace Gs2::LoginReward::Domain
 
     Gs2::Core::Domain::CallbackID FGs2LoginRewardDomain::SubscribeNamespaces(
     TFunction<void()> Callback
-
     )
     {
         return Gs2->Cache->ListSubscribe(
@@ -664,6 +664,46 @@ namespace Gs2::LoginReward::Domain
 
 
         }
+    }
+
+    TOptional<FString> FGs2LoginRewardDomain::PutUserData(
+        const TOptional<FString> NamespaceName,
+        const TOptional<FString> UserId,
+        const TOptional<int32> TimeOffset,
+        const FString Kind,
+        const FString Payload
+    ) {
+        TSharedPtr<FJsonObject> PayloadJson;
+        if (const TSharedRef<TJsonReader<>> JsonReader = TJsonReaderFactory<>::Create(Payload);
+            !FJsonSerializer::Deserialize(JsonReader, PayloadJson) || !PayloadJson.IsValid())
+        {
+            return TOptional<FString>();
+        }
+        if (Kind == "receiveStatus") {
+            const auto Item = Gs2::LoginReward::Model::FReceiveStatus::FromJson(PayloadJson);
+            if (!Item.IsValid()) return TOptional<FString>();
+            const auto ParentKey = Gs2::LoginReward::Model::Cache::FReceiveStatusCache::PutUserData(
+                Gs2->Cache,
+                NamespaceName,
+                UserId,
+                TimeOffset,
+                Item
+            );
+            return ParentKey.IsEmpty() ? TOptional<FString>() : TOptional<FString>(ParentKey);
+        }
+        return TOptional<FString>();
+    }
+
+    bool FGs2LoginRewardDomain::SetListCached(
+        const TOptional<int32> TimeOffset,
+        const FString Kind,
+        const FString ParentKey
+    ) {
+        if (Kind == "receiveStatus") {
+            Gs2->Cache->SetListCached(Gs2::LoginReward::Model::FReceiveStatus::TypeName, ParentKey);
+            return true;
+        }
+        return false;
     }
 
     void FGs2LoginRewardDomain::UpdateCacheFromStampTask(

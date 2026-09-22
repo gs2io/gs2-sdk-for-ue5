@@ -45,6 +45,8 @@
 #include "Quest/Model/Cache/Progress.h"
 #include "Quest/Model/Cache/CompletedQuestList.h"
 #include "Quest/Model/Cache/QuestModelMaster.h"
+#include "Quest/Model/Cache/CompletedQuestList.h"
+#include "Quest/Model/Cache/Progress.h"
 
 #include "Core/Domain/Gs2.h"
 
@@ -445,7 +447,6 @@ namespace Gs2::Quest::Domain
 
     Gs2::Core::Domain::CallbackID FGs2QuestDomain::SubscribeNamespaces(
     TFunction<void()> Callback
-
     )
     {
         return Gs2->Cache->ListSubscribe(
@@ -602,6 +603,62 @@ namespace Gs2::Quest::Domain
                     }
 
         }
+    }
+
+    TOptional<FString> FGs2QuestDomain::PutUserData(
+        const TOptional<FString> NamespaceName,
+        const TOptional<FString> UserId,
+        const TOptional<int32> TimeOffset,
+        const FString Kind,
+        const FString Payload
+    ) {
+        TSharedPtr<FJsonObject> PayloadJson;
+        if (const TSharedRef<TJsonReader<>> JsonReader = TJsonReaderFactory<>::Create(Payload);
+            !FJsonSerializer::Deserialize(JsonReader, PayloadJson) || !PayloadJson.IsValid())
+        {
+            return TOptional<FString>();
+        }
+        if (Kind == "completedQuestList") {
+            const auto Item = Gs2::Quest::Model::FCompletedQuestList::FromJson(PayloadJson);
+            if (!Item.IsValid()) return TOptional<FString>();
+            const auto ParentKey = Gs2::Quest::Model::Cache::FCompletedQuestListCache::PutUserData(
+                Gs2->Cache,
+                NamespaceName,
+                UserId,
+                TimeOffset,
+                Item
+            );
+            return ParentKey.IsEmpty() ? TOptional<FString>() : TOptional<FString>(ParentKey);
+        }
+        if (Kind == "progress") {
+            const auto Item = Gs2::Quest::Model::FProgress::FromJson(PayloadJson);
+            if (!Item.IsValid()) return TOptional<FString>();
+            const auto ParentKey = Gs2::Quest::Model::Cache::FProgressCache::PutUserData(
+                Gs2->Cache,
+                NamespaceName,
+                UserId,
+                TimeOffset,
+                Item
+            );
+            return ParentKey.IsEmpty() ? TOptional<FString>() : TOptional<FString>(ParentKey);
+        }
+        return TOptional<FString>();
+    }
+
+    bool FGs2QuestDomain::SetListCached(
+        const TOptional<int32> TimeOffset,
+        const FString Kind,
+        const FString ParentKey
+    ) {
+        if (Kind == "completedQuestList") {
+            Gs2->Cache->SetListCached(Gs2::Quest::Model::FCompletedQuestList::TypeName, ParentKey);
+            return true;
+        }
+        if (Kind == "progress") {
+            Gs2->Cache->SetListCached(Gs2::Quest::Model::FProgress::TypeName, ParentKey);
+            return true;
+        }
+        return false;
     }
 
     void FGs2QuestDomain::UpdateCacheFromStampTask(

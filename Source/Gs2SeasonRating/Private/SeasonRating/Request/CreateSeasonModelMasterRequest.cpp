@@ -195,16 +195,17 @@ namespace Gs2::SeasonRating::Request
               }() : TOptional<FString>())
           ->WithTiers(Data->HasField(ANSI_TO_TCHAR("tiers")) ? [Data]() -> TSharedPtr<TArray<Model::FTierModelPtr>>
               {
-                  auto v = MakeShared<TArray<Model::FTierModelPtr>>();
-                  if (!Data->HasTypedField<EJson::Null>(ANSI_TO_TCHAR("tiers")) && Data->HasTypedField<EJson::Array>(ANSI_TO_TCHAR("tiers")))
+                  if (!Data->HasTypedField<EJson::Array>(ANSI_TO_TCHAR("tiers")))
                   {
-                      for (auto JsonObjectValue : Data->GetArrayField(ANSI_TO_TCHAR("tiers")))
-                      {
-                          v->Add(Model::FTierModel::FromJson(JsonObjectValue->AsObject()));
-                      }
+                      return nullptr;
                   }
+                  auto v = MakeShared<TArray<Model::FTierModelPtr>>();
+                  for (auto JsonObjectValue : Data->GetArrayField(ANSI_TO_TCHAR("tiers")))
+                      {
+                      v->Add(Model::FTierModel::FromJson(JsonObjectValue->AsObject()));
+                      }
                   return v;
-              }() : MakeShared<TArray<Model::FTierModelPtr>>())
+              }() : nullptr)
             ->WithExperienceModelId(Data->HasField(ANSI_TO_TCHAR("experienceModelId")) ? [Data]() -> TOptional<FString>
               {
                   FString v("");

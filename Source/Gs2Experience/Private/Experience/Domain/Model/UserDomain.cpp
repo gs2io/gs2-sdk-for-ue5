@@ -90,8 +90,7 @@ namespace Gs2::Experience::Domain::Model
     }
 
     Gs2::Core::Domain::CallbackID FUserDomain::SubscribeStatuses(
-    TFunction<void()> Callback
-        , const TOptional<FString> ExperienceName
+    TFunction<void()> Callback, const TOptional<FString> ExperienceName
     )
     {
         return Gs2->Cache->ListSubscribe(

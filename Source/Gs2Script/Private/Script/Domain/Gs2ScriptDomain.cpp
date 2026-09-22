@@ -127,7 +127,6 @@ namespace Gs2::Script::Domain
 
     Gs2::Core::Domain::CallbackID FGs2ScriptDomain::SubscribeNamespaces(
     TFunction<void()> Callback
-
     )
     {
         return Gs2->Cache->ListSubscribe(
@@ -267,6 +266,24 @@ namespace Gs2::Script::Domain
             const auto ResultModel = Gs2::Script::Result::FInvokeScriptResult::FromJson(ResultModelJson);
 
         }
+    }
+
+    TOptional<FString> FGs2ScriptDomain::PutUserData(
+        const TOptional<FString> NamespaceName,
+        const TOptional<FString> UserId,
+        const TOptional<int32> TimeOffset,
+        const FString Kind,
+        const FString Payload
+    ) {
+        return TOptional<FString>();
+    }
+
+    bool FGs2ScriptDomain::SetListCached(
+        const TOptional<int32> TimeOffset,
+        const FString Kind,
+        const FString ParentKey
+    ) {
+        return false;
     }
 
     void FGs2ScriptDomain::UpdateCacheFromStampTask(

@@ -145,9 +145,10 @@ namespace Gs2::Ranking::Domain::Model
             Self->Gs2->Cache,
 
             Request->GetNamespaceName(),
-            Request->GetScorerUserId(),
-            Request->GetCategoryName(),
-            Request->GetUniqueId(),
+            (ResultModel.IsValid() && ResultModel->GetItem().IsValid() ? ResultModel->GetItem()->GetUserId() : TOptional<FString>()),
+            ResultModel->GetItem()->GetCategoryName(),
+            ResultModel->GetItem()->GetScorerUserId(),
+            ResultModel->GetItem()->GetUniqueId(),
             TOptional<int32>(),
             ResultModel->GetItem()
         );
@@ -213,12 +214,13 @@ namespace Gs2::Ranking::Domain::Model
         const auto CacheParentKey = Gs2::Ranking::Model::Cache::FScoreCache::CreateCacheParentKey(
 
             Self->NamespaceName,
-            Self->ScorerUserId,
+            Self->UserId,
             TOptional<int32>()
         );
         const auto CacheKey = Gs2::Ranking::Model::Cache::FScoreCache::CreateCacheKey(
 
             Self->CategoryName,
+            Self->ScorerUserId,
             Self->UniqueId
         );
         return Self->Gs2->Cache->ExecuteWithKeyLock(
@@ -232,8 +234,9 @@ namespace Gs2::Ranking::Domain::Model
                     Self->Gs2->Cache,
 
                     Self->NamespaceName,
-                    Self->ScorerUserId,
+                    Self->UserId,
                     Self->CategoryName,
+                    Self->ScorerUserId,
                     Self->UniqueId,
                     TOptional<int32>(),
                     &Value
@@ -247,8 +250,9 @@ namespace Gs2::Ranking::Domain::Model
                     Self->Gs2->Cache,
 
                     Self->NamespaceName,
-                    Self->ScorerUserId,
+                    Self->UserId,
                     Self->CategoryName,
+                    Self->ScorerUserId,
                     Self->UniqueId,
                     TOptional<int32>(),
                     [Self](Gs2::Ranking::Model::FScorePtr* OutItem) -> Gs2::Core::Model::FGs2ErrorPtr
@@ -281,8 +285,9 @@ namespace Gs2::Ranking::Domain::Model
             Gs2->Cache,
 
             NamespaceName,
-            ScorerUserId,
+            UserId,
             CategoryName,
+            ScorerUserId,
             UniqueId,
             TOptional<int32>()
         );
@@ -335,12 +340,13 @@ namespace Gs2::Ranking::Domain::Model
         const auto SubscriptionParentKey = Gs2::Ranking::Model::Cache::FScoreCache::CreateCacheParentKey(
 
             NamespaceName,
-            ScorerUserId,
+            UserId,
             TOptional<int32>()
         );
         const auto SubscriptionCacheKey = Gs2::Ranking::Model::Cache::FScoreCache::CreateCacheKey(
 
             CategoryName,
+            ScorerUserId,
             UniqueId
         );
         const TWeakPtr<Gs2::Core::Domain::FGs2> WeakGs2 = Gs2;
@@ -389,12 +395,13 @@ namespace Gs2::Ranking::Domain::Model
         const auto SubscriptionParentKey = Gs2::Ranking::Model::Cache::FScoreCache::CreateCacheParentKey(
 
             NamespaceName,
-            ScorerUserId,
+            UserId,
             TOptional<int32>()
         );
         const auto SubscriptionCacheKey = Gs2::Ranking::Model::Cache::FScoreCache::CreateCacheKey(
 
             CategoryName,
+            ScorerUserId,
             UniqueId
         );
         Gs2->Cache->Unsubscribe(

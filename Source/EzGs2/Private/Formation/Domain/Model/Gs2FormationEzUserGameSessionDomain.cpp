@@ -86,7 +86,7 @@ namespace Gs2::UE5::Formation::Domain::Model
     Gs2::Core::Domain::CallbackID FEzUserGameSessionDomain::SubscribePropertyForms(TFunction<void()> Callback, const FString PropertyFormModelName)
     {
         return Domain->SubscribePropertyForms(
-            Callback, PropertyFormModelName
+            PropertyFormModelName, Callback
         );
     }
 

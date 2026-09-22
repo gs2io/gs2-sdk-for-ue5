@@ -240,7 +240,6 @@ namespace Gs2::Inventory::Domain::Model
 
         Gs2::Core::Domain::CallbackID SubscribeSimpleItemModelMasters(
             TFunction<void()> Callback
-
         );
 
         class FCollectSimpleItemModelMastersTask;

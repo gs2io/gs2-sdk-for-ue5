@@ -188,7 +188,6 @@ namespace Gs2::Datastore::Domain::Model
 
         Gs2::Core::Domain::CallbackID SubscribeDataObjects(
             TFunction<void()> Callback
-
         );
 
         class FCollectDataObjectsTask;

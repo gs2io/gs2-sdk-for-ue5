@@ -365,7 +365,6 @@ namespace Gs2::Dictionary::Domain::Model
 
     Gs2::Core::Domain::CallbackID FUserAccessTokenDomain::SubscribeEntries(
     TFunction<void()> Callback
-
     )
     {
         return Gs2->Cache->ListSubscribe(
@@ -511,7 +510,6 @@ namespace Gs2::Dictionary::Domain::Model
 
     Gs2::Core::Domain::CallbackID FUserAccessTokenDomain::SubscribeLikes(
     TFunction<void()> Callback
-
     )
     {
         return Gs2->Cache->ListSubscribe(

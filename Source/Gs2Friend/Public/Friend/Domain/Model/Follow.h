@@ -138,7 +138,6 @@ namespace Gs2::Friend::Domain::Model
 
         Gs2::Core::Domain::CallbackID SubscribeFollows(
             TFunction<void()> Callback
-
         );
 
         class FCollectFollowsTask;

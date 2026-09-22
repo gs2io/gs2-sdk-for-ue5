@@ -234,28 +234,30 @@ namespace Gs2::Ranking::Model
                 }() : TOptional<FString>())
             ->WithTargetUserIds(Data->HasField(ANSI_TO_TCHAR("targetUserIds")) ? [Data]() -> TSharedPtr<TArray<FString>>
                 {
-                    auto v = MakeShared<TArray<FString>>();
-                    if (!Data->HasTypedField<EJson::Null>(ANSI_TO_TCHAR("targetUserIds")) && Data->HasTypedField<EJson::Array>(ANSI_TO_TCHAR("targetUserIds")))
+                    if (!Data->HasTypedField<EJson::Array>(ANSI_TO_TCHAR("targetUserIds")))
                     {
-                        for (auto JsonObjectValue : Data->GetArrayField(ANSI_TO_TCHAR("targetUserIds")))
-                        {
-                            v->Add(JsonObjectValue->AsString());
-                        }
+                        return nullptr;
+                    }
+                    auto v = MakeShared<TArray<FString>>();
+                    for (auto JsonObjectValue : Data->GetArrayField(ANSI_TO_TCHAR("targetUserIds")))
+                    {
+                        v->Add(JsonObjectValue->AsString());
                     }
                     return v;
-                 }() : MakeShared<TArray<FString>>())
+                 }() : nullptr)
             ->WithSubscribedUserIds(Data->HasField(ANSI_TO_TCHAR("subscribedUserIds")) ? [Data]() -> TSharedPtr<TArray<FString>>
                 {
-                    auto v = MakeShared<TArray<FString>>();
-                    if (!Data->HasTypedField<EJson::Null>(ANSI_TO_TCHAR("subscribedUserIds")) && Data->HasTypedField<EJson::Array>(ANSI_TO_TCHAR("subscribedUserIds")))
+                    if (!Data->HasTypedField<EJson::Array>(ANSI_TO_TCHAR("subscribedUserIds")))
                     {
-                        for (auto JsonObjectValue : Data->GetArrayField(ANSI_TO_TCHAR("subscribedUserIds")))
-                        {
-                            v->Add(JsonObjectValue->AsString());
-                        }
+                        return nullptr;
+                    }
+                    auto v = MakeShared<TArray<FString>>();
+                    for (auto JsonObjectValue : Data->GetArrayField(ANSI_TO_TCHAR("subscribedUserIds")))
+                    {
+                        v->Add(JsonObjectValue->AsString());
                     }
                     return v;
-                 }() : MakeShared<TArray<FString>>())
+                 }() : nullptr)
             ->WithCreatedAt(Data->HasField(ANSI_TO_TCHAR("createdAt")) ? [Data]() -> TOptional<int64>
                 {
                     int64 v;
@@ -416,6 +418,33 @@ namespace Gs2::Ranking::Model::Cache
         }
         CacheSnapshot->Put(Gs2::Ranking::Model::FSubscribe::TypeName, CacheOwnerParentKey, CacheOwnerKey, CacheOwnerValue,
             FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
+        );
+    }
+
+    FString FSubscribeCache::PutUserData(
+        const Gs2::Core::Domain::FCacheDatabasePtr& Cache,
+        TOptional<FString> NamespaceName,
+        TOptional<FString> UserId,
+        TOptional<int32> TimeOffset,
+        const Gs2::Ranking::Model::FSubscribePtr& Item
+    )
+    {
+        if (!Item.IsValid()) return FString();
+        Put(
+            Cache,
+            NamespaceName,
+            UserId,
+            Item->GetCategoryName(),
+            TOptional<FString>() /* TODO: 一括取得のエントリから additionalScopeName を決められない。手書きで値を入れる */,
+            TimeOffset,
+            Item
+        );
+        return CreateCacheParentKey(
+            NamespaceName,
+            UserId,
+            Item->GetCategoryName(),
+            TOptional<FString>() /* TODO: 一括取得のエントリから additionalScopeName を決められない。手書きで値を入れる */,
+            TimeOffset
         );
     }
 

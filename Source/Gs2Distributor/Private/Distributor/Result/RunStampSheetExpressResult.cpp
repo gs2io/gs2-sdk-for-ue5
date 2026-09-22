@@ -151,52 +151,56 @@ namespace Gs2::Distributor::Result
         return MakeShared<FRunStampSheetExpressResult>()
             ->WithVerifyTaskResultCodes(Data->HasField(ANSI_TO_TCHAR("verifyTaskResultCodes")) ? [Data]() -> TSharedPtr<TArray<int32>>
                  {
-                    auto v = MakeShared<TArray<int32>>();
-                    if (!Data->HasTypedField<EJson::Null>(ANSI_TO_TCHAR("verifyTaskResultCodes")) && Data->HasTypedField<EJson::Array>(ANSI_TO_TCHAR("verifyTaskResultCodes")))
+                    if (!Data->HasTypedField<EJson::Array>(ANSI_TO_TCHAR("verifyTaskResultCodes")))
                     {
-                        for (auto JsonObjectValue : Data->GetArrayField(ANSI_TO_TCHAR("verifyTaskResultCodes")))
-                        {
-                            v->Add(JsonObjectValue->AsNumber());
-                        }
+                        return nullptr;
+                    }
+                    auto v = MakeShared<TArray<int32>>();
+                    for (auto JsonObjectValue : Data->GetArrayField(ANSI_TO_TCHAR("verifyTaskResultCodes")))
+                    {
+                        v->Add(JsonObjectValue->AsNumber());
                     }
                     return v;
-                 }() : MakeShared<TArray<int32>>())
+                 }() : nullptr)
             ->WithVerifyTaskResults(Data->HasField(ANSI_TO_TCHAR("verifyTaskResults")) ? [Data]() -> TSharedPtr<TArray<FString>>
                  {
-                    auto v = MakeShared<TArray<FString>>();
-                    if (!Data->HasTypedField<EJson::Null>(ANSI_TO_TCHAR("verifyTaskResults")) && Data->HasTypedField<EJson::Array>(ANSI_TO_TCHAR("verifyTaskResults")))
+                    if (!Data->HasTypedField<EJson::Array>(ANSI_TO_TCHAR("verifyTaskResults")))
                     {
-                        for (auto JsonObjectValue : Data->GetArrayField(ANSI_TO_TCHAR("verifyTaskResults")))
-                        {
-                            v->Add(JsonObjectValue->AsString());
-                        }
+                        return nullptr;
+                    }
+                    auto v = MakeShared<TArray<FString>>();
+                    for (auto JsonObjectValue : Data->GetArrayField(ANSI_TO_TCHAR("verifyTaskResults")))
+                    {
+                        v->Add(JsonObjectValue->AsString());
                     }
                     return v;
-                 }() : MakeShared<TArray<FString>>())
+                 }() : nullptr)
             ->WithTaskResultCodes(Data->HasField(ANSI_TO_TCHAR("taskResultCodes")) ? [Data]() -> TSharedPtr<TArray<int32>>
                  {
-                    auto v = MakeShared<TArray<int32>>();
-                    if (!Data->HasTypedField<EJson::Null>(ANSI_TO_TCHAR("taskResultCodes")) && Data->HasTypedField<EJson::Array>(ANSI_TO_TCHAR("taskResultCodes")))
+                    if (!Data->HasTypedField<EJson::Array>(ANSI_TO_TCHAR("taskResultCodes")))
                     {
-                        for (auto JsonObjectValue : Data->GetArrayField(ANSI_TO_TCHAR("taskResultCodes")))
-                        {
-                            v->Add(JsonObjectValue->AsNumber());
-                        }
+                        return nullptr;
+                    }
+                    auto v = MakeShared<TArray<int32>>();
+                    for (auto JsonObjectValue : Data->GetArrayField(ANSI_TO_TCHAR("taskResultCodes")))
+                    {
+                        v->Add(JsonObjectValue->AsNumber());
                     }
                     return v;
-                 }() : MakeShared<TArray<int32>>())
+                 }() : nullptr)
             ->WithTaskResults(Data->HasField(ANSI_TO_TCHAR("taskResults")) ? [Data]() -> TSharedPtr<TArray<FString>>
                  {
-                    auto v = MakeShared<TArray<FString>>();
-                    if (!Data->HasTypedField<EJson::Null>(ANSI_TO_TCHAR("taskResults")) && Data->HasTypedField<EJson::Array>(ANSI_TO_TCHAR("taskResults")))
+                    if (!Data->HasTypedField<EJson::Array>(ANSI_TO_TCHAR("taskResults")))
                     {
-                        for (auto JsonObjectValue : Data->GetArrayField(ANSI_TO_TCHAR("taskResults")))
-                        {
-                            v->Add(JsonObjectValue->AsString());
-                        }
+                        return nullptr;
+                    }
+                    auto v = MakeShared<TArray<FString>>();
+                    for (auto JsonObjectValue : Data->GetArrayField(ANSI_TO_TCHAR("taskResults")))
+                    {
+                        v->Add(JsonObjectValue->AsString());
                     }
                     return v;
-                 }() : MakeShared<TArray<FString>>())
+                 }() : nullptr)
             ->WithSheetResultCode(Data->HasField(ANSI_TO_TCHAR("sheetResultCode")) ? [Data]() -> TOptional<int32>
                 {
                     int32 v;

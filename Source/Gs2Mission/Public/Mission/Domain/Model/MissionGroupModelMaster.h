@@ -212,7 +212,6 @@ namespace Gs2::Mission::Domain::Model
 
         Gs2::Core::Domain::CallbackID SubscribeMissionTaskModelMasters(
             TFunction<void()> Callback
-
         );
 
         class FCollectMissionTaskModelMastersTask;

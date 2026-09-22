@@ -353,7 +353,6 @@ namespace Gs2::Realtime::Domain::Model
 
     Gs2::Core::Domain::CallbackID FNamespaceDomain::SubscribeRooms(
     TFunction<void()> Callback
-
     )
     {
         return Gs2->Cache->ListSubscribe(

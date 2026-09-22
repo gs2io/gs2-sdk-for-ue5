@@ -364,7 +364,6 @@ namespace Gs2::Chat::Domain::Model
 
     Gs2::Core::Domain::CallbackID FRoomAccessTokenDomain::SubscribeMessages(
     TFunction<void()> Callback
-
     )
     {
         return Gs2->Cache->ListSubscribe(
@@ -508,7 +507,6 @@ namespace Gs2::Chat::Domain::Model
 
     Gs2::Core::Domain::CallbackID FRoomAccessTokenDomain::SubscribeLatestMessages(
     TFunction<void()> Callback
-
     )
     {
         return Gs2->Cache->ListSubscribe(

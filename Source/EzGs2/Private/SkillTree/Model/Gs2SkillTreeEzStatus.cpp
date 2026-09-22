@@ -35,6 +35,14 @@ namespace Gs2::UE5::SkillTree::Model
         return SharedThis(this);
     }
 
+    TSharedPtr<FEzStatus> FEzStatus::WithPropertyId(
+        const TOptional<FString> PropertyId
+    )
+    {
+        this->PropertyIdValue = PropertyId;
+        return SharedThis(this);
+    }
+
     TSharedPtr<FEzStatus> FEzStatus::WithReleasedNodeNames(
         const TSharedPtr<TArray<FString>> ReleasedNodeNames
     )
@@ -50,6 +58,10 @@ namespace Gs2::UE5::SkillTree::Model
     {
         return UserIdValue;
     }
+    TOptional<FString> FEzStatus::GetPropertyId() const
+    {
+        return PropertyIdValue;
+    }
     TSharedPtr<TArray<FString>> FEzStatus::GetReleasedNodeNames() const
     {
         return ReleasedNodeNamesValue;
@@ -60,6 +72,7 @@ namespace Gs2::UE5::SkillTree::Model
         return MakeShared<Gs2::SkillTree::Model::FStatus>()
             ->WithStatusId(StatusIdValue)
             ->WithUserId(UserIdValue)
+            ->WithPropertyId(PropertyIdValue)
             ->WithReleasedNodeNames(ReleasedNodeNamesValue);
     }
 
@@ -72,6 +85,7 @@ namespace Gs2::UE5::SkillTree::Model
         return MakeShared<FEzStatus>()
             ->WithStatusId(Model->GetStatusId())
             ->WithUserId(Model->GetUserId())
+            ->WithPropertyId(Model->GetPropertyId())
             ->WithReleasedNodeNames(Model->GetReleasedNodeNames());
     }
 }

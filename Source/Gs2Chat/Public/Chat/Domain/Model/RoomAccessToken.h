@@ -216,7 +216,6 @@ namespace Gs2::Chat::Domain::Model
 
         Gs2::Core::Domain::CallbackID SubscribeMessages(
             TFunction<void()> Callback
-
         );
 
         class FCollectMessagesTask;
@@ -253,7 +252,6 @@ namespace Gs2::Chat::Domain::Model
 
         Gs2::Core::Domain::CallbackID SubscribeLatestMessages(
             TFunction<void()> Callback
-
         );
 
         class FCollectLatestMessagesTask;

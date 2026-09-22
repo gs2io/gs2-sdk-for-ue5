@@ -83,6 +83,8 @@ namespace Gs2::Limit::Domain::Model
             const FCounterAccessTokenDomain& From
         );
 
+
+
         class GS2LIMIT_API FGetTask final :
             public Gs2::Core::Util::TGs2Future<Gs2::Limit::Model::FCounter>,
             public TSharedFromThis<FGetTask>
@@ -109,6 +111,8 @@ namespace Gs2::Limit::Domain::Model
             Request::FGetCounterRequestPtr Request
         );
 
+
+
         class GS2LIMIT_API FCountUpTask final :
             public Gs2::Core::Util::TGs2Future<Gs2::Limit::Domain::Model::FCounterAccessTokenDomain>,
             public TSharedFromThis<FCountUpTask>
@@ -134,6 +138,8 @@ namespace Gs2::Limit::Domain::Model
         TSharedPtr<FAsyncTask<FCountUpTask>> CountUp(
             Request::FCountUpRequestPtr Request
         );
+
+
 
         class GS2LIMIT_API FVerifyTask final :
             public Gs2::Core::Util::TGs2Future<Gs2::Limit::Domain::Model::FCounterAccessTokenDomain>,
@@ -196,6 +202,12 @@ namespace Gs2::Limit::Domain::Model
 
         TSharedPtr<FAsyncTask<FModelTask>> Model();
 
+        void Invalidate();
+
+        Gs2::Core::Domain::CallbackID Subscribe(
+            TFunction<void(Gs2::Limit::Model::FCounterPtr)> Callback
+        );
+
         class GS2LIMIT_API FSubscribeWithInitialCallTask final :
             public Gs2::Core::Util::TGs2Future<Gs2::Core::Domain::CallbackID>,
             public TSharedFromThis<FSubscribeWithInitialCallTask>
@@ -203,9 +215,9 @@ namespace Gs2::Limit::Domain::Model
             const TSharedPtr<FCounterAccessTokenDomain> Self;
             const TFunction<void(Gs2::Limit::Model::FCounterPtr)> Callback;
         public:
-            explicit FSubscribeWithInitialCallTask(
-                const TSharedPtr<FCounterAccessTokenDomain> Self,
-                const TFunction<void(Gs2::Limit::Model::FCounterPtr)>& Callback
+            FSubscribeWithInitialCallTask(
+                const TSharedPtr<FCounterAccessTokenDomain>& Self,
+                TFunction<void(Gs2::Limit::Model::FCounterPtr)> Callback
             );
 
             FSubscribeWithInitialCallTask(
@@ -216,15 +228,8 @@ namespace Gs2::Limit::Domain::Model
                 TSharedPtr<TSharedPtr<Gs2::Core::Domain::CallbackID>> Result
             ) override;
         };
-        friend FSubscribeWithInitialCallTask;
 
         TSharedPtr<FAsyncTask<FSubscribeWithInitialCallTask>> SubscribeWithInitialCall(
-            TFunction<void(Gs2::Limit::Model::FCounterPtr)> Callback
-        );
-
-        void Invalidate();
-
-        Gs2::Core::Domain::CallbackID Subscribe(
             TFunction<void(Gs2::Limit::Model::FCounterPtr)> Callback
         );
 

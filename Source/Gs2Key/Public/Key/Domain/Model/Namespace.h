@@ -252,7 +252,6 @@ namespace Gs2::Key::Domain::Model
 
         Gs2::Core::Domain::CallbackID SubscribeKeys(
             TFunction<void()> Callback
-
         );
 
         class FCollectKeysTask;
@@ -292,7 +291,6 @@ namespace Gs2::Key::Domain::Model
 
         Gs2::Core::Domain::CallbackID SubscribeGitHubApiKeys(
             TFunction<void()> Callback
-
         );
 
         class FCollectGitHubApiKeysTask;

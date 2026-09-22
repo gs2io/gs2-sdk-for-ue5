@@ -91,11 +91,7 @@ namespace Gs2::Friend::Domain::Iterator
 
         if (!RangeIteratorOpt || (!*RangeIteratorOpt && !bLast))
         {
-            const auto ListParentKey = Gs2::Friend::Domain::Model::FUserDomain::CreateCacheParentKey(
-                Self->NamespaceName,
-                Self->AccessToken == nullptr ? TOptional<FString>() : Self->AccessToken->GetUserId(),
-                Gs2::Friend::Model::FBlackListEntry::TypeName
-            );
+            const auto ListParentKey = "friend:UserId";
             if (!RangeIteratorOpt)
             {
                 Range = Self->Gs2->Cache->TryGetList<Gs2::Friend::Model::FBlackListEntry>(ListParentKey);
@@ -143,8 +139,7 @@ namespace Gs2::Friend::Domain::Iterator
                 Self->Gs2->Cache->Put(
                     Gs2::Friend::Model::FBlackListEntry::TypeName,
                     ListParentKey,
-                    Gs2::Friend::Domain::Model::FUserDomain::CreateCacheKey(
-                        TOptional<FString>(Item)
+                    Gs2::Friend::Domain::Model::FBlackListDomain::CreateCacheKey(
                     ),
                     MakeShared<Friend::Model::FBlackListEntry>(Item),
                     FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)

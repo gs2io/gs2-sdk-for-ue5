@@ -250,16 +250,17 @@ namespace Gs2::Gateway::Request
               }() : TOptional<FString>())
           ->WithMobileNotificationMessages(Data->HasField(ANSI_TO_TCHAR("mobileNotificationMessages")) ? [Data]() -> TSharedPtr<TArray<Model::FMobileNotificationMessagePtr>>
               {
-                  auto v = MakeShared<TArray<Model::FMobileNotificationMessagePtr>>();
-                  if (!Data->HasTypedField<EJson::Null>(ANSI_TO_TCHAR("mobileNotificationMessages")) && Data->HasTypedField<EJson::Array>(ANSI_TO_TCHAR("mobileNotificationMessages")))
+                  if (!Data->HasTypedField<EJson::Array>(ANSI_TO_TCHAR("mobileNotificationMessages")))
                   {
-                      for (auto JsonObjectValue : Data->GetArrayField(ANSI_TO_TCHAR("mobileNotificationMessages")))
-                      {
-                          v->Add(Model::FMobileNotificationMessage::FromJson(JsonObjectValue->AsObject()));
-                      }
+                      return nullptr;
                   }
+                  auto v = MakeShared<TArray<Model::FMobileNotificationMessagePtr>>();
+                  for (auto JsonObjectValue : Data->GetArrayField(ANSI_TO_TCHAR("mobileNotificationMessages")))
+                      {
+                      v->Add(Model::FMobileNotificationMessage::FromJson(JsonObjectValue->AsObject()));
+                      }
                   return v;
-              }() : MakeShared<TArray<Model::FMobileNotificationMessagePtr>>())
+              }() : nullptr)
             ->WithTimeOffsetToken(Data->HasField(ANSI_TO_TCHAR("timeOffsetToken")) ? [Data]() -> TOptional<FString>
               {
                   FString v("");

@@ -23,8 +23,6 @@
 #endif
 
 #include "Money/Domain/Model/Wallet.h"
-
-#include "Money/Model/Cache/Wallet.h"
 #include "Money/Domain/Model/Namespace.h"
 #include "Money/Domain/Model/User.h"
 #include "Money/Domain/Model/UserAccessToken.h"
@@ -32,6 +30,7 @@
 #include "Money/Domain/Model/WalletAccessToken.h"
 #include "Money/Domain/Model/Receipt.h"
 #include "Money/Domain/Model/ReceiptAccessToken.h"
+#include "Money/Model/Cache/Wallet.h"
 
 #include "Core/Domain/Gs2.h"
 #include "Core/Domain/Transaction/JobQueueJobDomainFactory.h"
@@ -55,10 +54,10 @@ namespace Gs2::Money::Domain::Model
         NamespaceName(NamespaceName),
         UserId(UserId),
         Slot(Slot),
-        ParentKey(Gs2::Money::Model::Cache::FWalletCache::CreateCacheParentKey(
+        ParentKey(Gs2::Money::Domain::Model::FUserDomain::CreateCacheParentKey(
             NamespaceName,
             UserId,
-            TOptional<int32>()
+            "Wallet"
         ))
     {
     }
@@ -113,11 +112,23 @@ namespace Gs2::Money::Domain::Model
 
             if (ResultModel.IsValid() && ResultModel->GetItem() != nullptr)
             {
-                Gs2::Money::Model::Cache::FWalletCache::Put(
+
+        if (!ResultModel.IsValid() || !ResultModel->GetItem().IsValid())
+            {
+              const auto Details = MakeShared<TArray<TSharedPtr<Gs2::Core::Model::FGs2ErrorDetail>>>();
+                Details->Add(MakeShared<Gs2::Core::Model::FGs2ErrorDetail>(TEXT("result.item"), TEXT("result.item is invalid."), TEXT("invalid_response")));
+                return MakeShared<Gs2::Core::Model::FUnknownError>(Details);
+              }if (!ResultModel.IsValid() || !((ResultModel.IsValid() && ResultModel->GetItem().IsValid() ? ResultModel->GetItem()->GetUserId() : TOptional<FString>())).IsSet())
+            {
+              const auto Details = MakeShared<TArray<TSharedPtr<Gs2::Core::Model::FGs2ErrorDetail>>>();
+                Details->Add(MakeShared<Gs2::Core::Model::FGs2ErrorDetail>(TEXT("userId"), TEXT("userId is invalid."), TEXT("invalid_response")));
+                return MakeShared<Gs2::Core::Model::FUnknownError>(Details);
+              }
+        Gs2::Money::Model::Cache::FWalletCache::Put(
             Self->Gs2->Cache,
 
             Request->GetNamespaceName(),
-            Request->GetUserId(),
+            (ResultModel.IsValid() && ResultModel->GetItem().IsValid() ? ResultModel->GetItem()->GetUserId() : TOptional<FString>()),
             ResultModel->GetItem()->GetSlot().Get(int32{}),
             TOptional<int32>(),
             ResultModel->GetItem()
@@ -169,11 +180,23 @@ namespace Gs2::Money::Domain::Model
 
             if (ResultModel.IsValid() && ResultModel->GetItem() != nullptr)
             {
-                Gs2::Money::Model::Cache::FWalletCache::Put(
+
+        if (!ResultModel.IsValid() || !ResultModel->GetItem().IsValid())
+            {
+              const auto Details = MakeShared<TArray<TSharedPtr<Gs2::Core::Model::FGs2ErrorDetail>>>();
+                Details->Add(MakeShared<Gs2::Core::Model::FGs2ErrorDetail>(TEXT("result.item"), TEXT("result.item is invalid."), TEXT("invalid_response")));
+                return MakeShared<Gs2::Core::Model::FUnknownError>(Details);
+              }if (!ResultModel.IsValid() || !((ResultModel.IsValid() && ResultModel->GetItem().IsValid() ? ResultModel->GetItem()->GetUserId() : TOptional<FString>())).IsSet())
+            {
+              const auto Details = MakeShared<TArray<TSharedPtr<Gs2::Core::Model::FGs2ErrorDetail>>>();
+                Details->Add(MakeShared<Gs2::Core::Model::FGs2ErrorDetail>(TEXT("userId"), TEXT("userId is invalid."), TEXT("invalid_response")));
+                return MakeShared<Gs2::Core::Model::FUnknownError>(Details);
+              }
+        Gs2::Money::Model::Cache::FWalletCache::Put(
             Self->Gs2->Cache,
 
             Request->GetNamespaceName(),
-            Request->GetUserId(),
+            (ResultModel.IsValid() && ResultModel->GetItem().IsValid() ? ResultModel->GetItem()->GetUserId() : TOptional<FString>()),
             ResultModel->GetItem()->GetSlot().Get(int32{}),
             TOptional<int32>(),
             ResultModel->GetItem()
@@ -227,11 +250,23 @@ namespace Gs2::Money::Domain::Model
 
             if (ResultModel.IsValid() && ResultModel->GetItem() != nullptr)
             {
-                Gs2::Money::Model::Cache::FWalletCache::Put(
+
+        if (!ResultModel.IsValid() || !ResultModel->GetItem().IsValid())
+            {
+              const auto Details = MakeShared<TArray<TSharedPtr<Gs2::Core::Model::FGs2ErrorDetail>>>();
+                Details->Add(MakeShared<Gs2::Core::Model::FGs2ErrorDetail>(TEXT("result.item"), TEXT("result.item is invalid."), TEXT("invalid_response")));
+                return MakeShared<Gs2::Core::Model::FUnknownError>(Details);
+              }if (!ResultModel.IsValid() || !((ResultModel.IsValid() && ResultModel->GetItem().IsValid() ? ResultModel->GetItem()->GetUserId() : TOptional<FString>())).IsSet())
+            {
+              const auto Details = MakeShared<TArray<TSharedPtr<Gs2::Core::Model::FGs2ErrorDetail>>>();
+                Details->Add(MakeShared<Gs2::Core::Model::FGs2ErrorDetail>(TEXT("userId"), TEXT("userId is invalid."), TEXT("invalid_response")));
+                return MakeShared<Gs2::Core::Model::FUnknownError>(Details);
+              }
+        Gs2::Money::Model::Cache::FWalletCache::Put(
             Self->Gs2->Cache,
 
             Request->GetNamespaceName(),
-            Request->GetUserId(),
+            (ResultModel.IsValid() && ResultModel->GetItem().IsValid() ? ResultModel->GetItem()->GetUserId() : TOptional<FString>()),
             ResultModel->GetItem()->GetSlot().Get(int32{}),
             TOptional<int32>(),
             ResultModel->GetItem()
@@ -310,10 +345,10 @@ namespace Gs2::Money::Domain::Model
             Gs2::Money::Model::FWallet::TypeName,
             CacheParentKey,
             CacheKey,
-            [this, Result, CacheParentKey, CacheKey]() -> Gs2::Core::Model::FGs2ErrorPtr
+            [Self = Self, Result]() -> Gs2::Core::Model::FGs2ErrorPtr
             {
                 Gs2::Money::Model::FWalletPtr Value;
-                if (Gs2::Money::Model::Cache::FWalletCache::TryGet(
+                const auto CacheHit = Gs2::Money::Model::Cache::FWalletCache::TryGet(
                     Self->Gs2->Cache,
 
                     Self->NamespaceName,
@@ -321,7 +356,8 @@ namespace Gs2::Money::Domain::Model
                     Self->Slot,
                     TOptional<int32>(),
                     &Value
-                ))
+                );
+                if (CacheHit)
                 {
                     *Result = Value;
                     return nullptr;
@@ -333,26 +369,20 @@ namespace Gs2::Money::Domain::Model
                     Self->UserId,
                     Self->Slot,
                     TOptional<int32>(),
-                    [Self = Self](Gs2::Money::Model::FWalletPtr* OutItem) -> Gs2::Core::Model::FGs2ErrorPtr
+                    [Self](Gs2::Money::Model::FWalletPtr* OutItem) -> Gs2::Core::Model::FGs2ErrorPtr
                     {
                         const auto Future = Self->Get(
                             MakeShared<Gs2::Money::Request::FGetWalletByUserIdRequest>()
                         );
                         Future->StartSynchronousTask();
-                        if (Future->GetTask().IsError())
-                        {
-                            return Future->GetTask().Error();
-                        }
+                        if (Future->GetTask().IsError()) return Future->GetTask().Error();
                         *OutItem = Future->GetTask().Result();
                         Future->EnsureCompletion();
                         return nullptr;
                     },
                     &Value
                 );
-                if (Error.IsValid())
-                {
-                    return Error;
-                }
+                if (Error.IsValid()) return Error;
                 *Result = Value;
                 return nullptr;
             }
@@ -419,26 +449,26 @@ namespace Gs2::Money::Domain::Model
         TFunction<void(Gs2::Money::Model::FWalletPtr)> Callback
     )
     {
-        const TWeakPtr<Gs2::Core::Domain::FGs2> WeakGs2 = Gs2;
-        const TWeakPtr<Money::Domain::FGs2MoneyDomain> WeakService = Service;
-        const FString RegisteredParentKey = ParentKey;
-        const TOptional<FString> QueryNamespaceName = NamespaceName;
-        const TOptional<FString> QueryUserId = UserId;
-        const TOptional<int32> QuerySlot = Slot;
-        const auto OwnerSubscriptionParentKey = Gs2::Money::Model::Cache::FWalletCache::CreateCacheParentKey(
+        const auto SubscriptionParentKey = Gs2::Money::Model::Cache::FWalletCache::CreateCacheParentKey(
 
             NamespaceName,
             UserId,
             TOptional<int32>()
         );
-        const auto OwnerSubscriptionKey = Gs2::Money::Model::Cache::FWalletCache::CreateCacheKey(
+        const auto SubscriptionCacheKey = Gs2::Money::Model::Cache::FWalletCache::CreateCacheKey(
 
             Slot
         );
+        const TWeakPtr<Gs2::Core::Domain::FGs2> WeakGs2 = Gs2;
+        const TWeakPtr<Money::Domain::FGs2MoneyDomain> WeakService = Service;
+        const FString RegisteredParentKey = SubscriptionParentKey;
+        const TOptional<FString> QueryNamespaceName = NamespaceName;
+        const TOptional<FString> QueryUserId = UserId;
+        const TOptional<int32> QuerySlot = Slot;
         return Gs2->Cache->Subscribe(
             Gs2::Money::Model::FWallet::TypeName,
-            OwnerSubscriptionParentKey,
-            OwnerSubscriptionKey,
+            SubscriptionParentKey,
+            SubscriptionCacheKey,
             [Callback](TSharedPtr<FGs2Object> obj)
             {
                 Callback(StaticCastSharedPtr<Gs2::Money::Model::FWallet>(obj));
@@ -468,20 +498,20 @@ namespace Gs2::Money::Domain::Model
         Gs2::Core::Domain::CallbackID CallbackID
     )
     {
-        const auto OwnerSubscriptionParentKey = Gs2::Money::Model::Cache::FWalletCache::CreateCacheParentKey(
+        const auto SubscriptionParentKey = Gs2::Money::Model::Cache::FWalletCache::CreateCacheParentKey(
 
             NamespaceName,
             UserId,
             TOptional<int32>()
         );
-        const auto OwnerSubscriptionKey = Gs2::Money::Model::Cache::FWalletCache::CreateCacheKey(
+        const auto SubscriptionCacheKey = Gs2::Money::Model::Cache::FWalletCache::CreateCacheKey(
 
             Slot
         );
         Gs2->Cache->Unsubscribe(
             Gs2::Money::Model::FWallet::TypeName,
-            OwnerSubscriptionParentKey,
-            OwnerSubscriptionKey,
+            SubscriptionParentKey,
+            SubscriptionCacheKey,
             CallbackID
         );
     }

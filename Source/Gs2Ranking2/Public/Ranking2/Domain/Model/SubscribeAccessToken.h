@@ -112,6 +112,8 @@ namespace Gs2::Ranking2::Domain::Model
         TOptional<FString> RankingName;
     private:
 
+        FString ParentKey;
+
     public:
 
         FSubscribeAccessTokenDomain(
@@ -126,6 +128,8 @@ namespace Gs2::Ranking2::Domain::Model
         FSubscribeAccessTokenDomain(
             const FSubscribeAccessTokenDomain& From
         );
+
+
 
         class GS2RANKING2_API FAddTask final :
             public Gs2::Core::Util::TGs2Future<Gs2::Ranking2::Domain::Model::FSubscribeUserAccessTokenDomain>,
@@ -190,6 +194,12 @@ namespace Gs2::Ranking2::Domain::Model
 
         TSharedPtr<FAsyncTask<FModelTask>> Model();
 
+        void Invalidate();
+
+        Gs2::Core::Domain::CallbackID Subscribe(
+            TFunction<void(Gs2::Ranking2::Model::FSubscribePtr)> Callback
+        );
+
         class GS2RANKING2_API FSubscribeWithInitialCallTask final :
             public Gs2::Core::Util::TGs2Future<Gs2::Core::Domain::CallbackID>,
             public TSharedFromThis<FSubscribeWithInitialCallTask>
@@ -197,9 +207,9 @@ namespace Gs2::Ranking2::Domain::Model
             const TSharedPtr<FSubscribeAccessTokenDomain> Self;
             const TFunction<void(Gs2::Ranking2::Model::FSubscribePtr)> Callback;
         public:
-            explicit FSubscribeWithInitialCallTask(
-                const TSharedPtr<FSubscribeAccessTokenDomain> Self,
-                const TFunction<void(Gs2::Ranking2::Model::FSubscribePtr)>& Callback
+            FSubscribeWithInitialCallTask(
+                const TSharedPtr<FSubscribeAccessTokenDomain>& Self,
+                TFunction<void(Gs2::Ranking2::Model::FSubscribePtr)> Callback
             );
 
             FSubscribeWithInitialCallTask(
@@ -210,15 +220,8 @@ namespace Gs2::Ranking2::Domain::Model
                 TSharedPtr<TSharedPtr<Gs2::Core::Domain::CallbackID>> Result
             ) override;
         };
-        friend FSubscribeWithInitialCallTask;
 
         TSharedPtr<FAsyncTask<FSubscribeWithInitialCallTask>> SubscribeWithInitialCall(
-            TFunction<void(Gs2::Ranking2::Model::FSubscribePtr)> Callback
-        );
-
-        void Invalidate();
-
-        Gs2::Core::Domain::CallbackID Subscribe(
             TFunction<void(Gs2::Ranking2::Model::FSubscribePtr)> Callback
         );
 

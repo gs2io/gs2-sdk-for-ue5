@@ -169,16 +169,17 @@ namespace Gs2::Inventory::Request
               }() : TOptional<FString>())
           ->WithCounts(Data->HasField(ANSI_TO_TCHAR("counts")) ? [Data]() -> TSharedPtr<TArray<Model::FHeldCountPtr>>
               {
-                  auto v = MakeShared<TArray<Model::FHeldCountPtr>>();
-                  if (!Data->HasTypedField<EJson::Null>(ANSI_TO_TCHAR("counts")) && Data->HasTypedField<EJson::Array>(ANSI_TO_TCHAR("counts")))
+                  if (!Data->HasTypedField<EJson::Array>(ANSI_TO_TCHAR("counts")))
                   {
-                      for (auto JsonObjectValue : Data->GetArrayField(ANSI_TO_TCHAR("counts")))
-                      {
-                          v->Add(Model::FHeldCount::FromJson(JsonObjectValue->AsObject()));
-                      }
+                      return nullptr;
                   }
+                  auto v = MakeShared<TArray<Model::FHeldCountPtr>>();
+                  for (auto JsonObjectValue : Data->GetArrayField(ANSI_TO_TCHAR("counts")))
+                      {
+                      v->Add(Model::FHeldCount::FromJson(JsonObjectValue->AsObject()));
+                      }
                   return v;
-              }() : MakeShared<TArray<Model::FHeldCountPtr>>())
+              }() : nullptr)
             ->WithTimeOffsetToken(Data->HasField(ANSI_TO_TCHAR("timeOffsetToken")) ? [Data]() -> TOptional<FString>
               {
                   FString v("");

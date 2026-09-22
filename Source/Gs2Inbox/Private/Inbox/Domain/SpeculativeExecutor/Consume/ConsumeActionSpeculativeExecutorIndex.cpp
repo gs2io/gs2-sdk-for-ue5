@@ -87,7 +87,6 @@ namespace Gs2::Inbox::Domain::SpeculativeExecutor
                 return Future->GetTask().Error();
             }
             *Result = Future->GetTask().Result();
-            return nullptr;
         }
         if (FDeleteMessageByUserIdSpeculativeExecutor::Action() == NewConsumeAction->GetAction()) {
             TSharedPtr<FJsonObject> RequestModelJson;
@@ -97,6 +96,7 @@ namespace Gs2::Inbox::Domain::SpeculativeExecutor
                 return nullptr;
             }
             auto Request = Request::FDeleteMessageByUserIdRequest::FromJson(RequestModelJson);
+            Request = FDeleteMessageByUserIdSpeculativeExecutor::Rate(Request, Rate);
             auto Future = FDeleteMessageByUserIdSpeculativeExecutor::Execute(
                 Domain,
                 Service,
@@ -109,7 +109,6 @@ namespace Gs2::Inbox::Domain::SpeculativeExecutor
                 return Future->GetTask().Error();
             }
             *Result = Future->GetTask().Result();
-            return nullptr;
         }
         return nullptr;
     }

@@ -217,16 +217,17 @@ namespace Gs2::Enhance::Request
               }() : TOptional<FString>())
           ->WithMaterials(Data->HasField(ANSI_TO_TCHAR("materials")) ? [Data]() -> TSharedPtr<TArray<Model::FMaterialPtr>>
               {
-                  auto v = MakeShared<TArray<Model::FMaterialPtr>>();
-                  if (!Data->HasTypedField<EJson::Null>(ANSI_TO_TCHAR("materials")) && Data->HasTypedField<EJson::Array>(ANSI_TO_TCHAR("materials")))
+                  if (!Data->HasTypedField<EJson::Array>(ANSI_TO_TCHAR("materials")))
                   {
-                      for (auto JsonObjectValue : Data->GetArrayField(ANSI_TO_TCHAR("materials")))
-                      {
-                          v->Add(Model::FMaterial::FromJson(JsonObjectValue->AsObject()));
-                      }
+                      return nullptr;
                   }
+                  auto v = MakeShared<TArray<Model::FMaterialPtr>>();
+                  for (auto JsonObjectValue : Data->GetArrayField(ANSI_TO_TCHAR("materials")))
+                      {
+                      v->Add(Model::FMaterial::FromJson(JsonObjectValue->AsObject()));
+                      }
                   return v;
-              }() : MakeShared<TArray<Model::FMaterialPtr>>())
+              }() : nullptr)
             ->WithForce(Data->HasField(ANSI_TO_TCHAR("force")) ? [Data]() -> TOptional<bool>
               {
                   bool v;

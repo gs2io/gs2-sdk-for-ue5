@@ -248,7 +248,6 @@ namespace Gs2::LoginReward::Domain::Model
 
         Gs2::Core::Domain::CallbackID SubscribeBonusModelMasters(
             TFunction<void()> Callback
-
         );
 
         class FCollectBonusModelMastersTask;
@@ -299,7 +298,6 @@ namespace Gs2::LoginReward::Domain::Model
 
         Gs2::Core::Domain::CallbackID SubscribeBonusModels(
             TFunction<void()> Callback
-
         );
 
         class FCollectBonusModelsTask;

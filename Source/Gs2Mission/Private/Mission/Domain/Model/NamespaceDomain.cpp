@@ -445,7 +445,6 @@ namespace Gs2::Mission::Domain::Model
 
     Gs2::Core::Domain::CallbackID FNamespaceDomain::SubscribeMissionGroupModels(
     TFunction<void()> Callback
-
     )
     {
         return Gs2->Cache->ListSubscribe(
@@ -580,7 +579,6 @@ namespace Gs2::Mission::Domain::Model
 
     Gs2::Core::Domain::CallbackID FNamespaceDomain::SubscribeCounterModels(
     TFunction<void()> Callback
-
     )
     {
         return Gs2->Cache->ListSubscribe(
@@ -741,7 +739,6 @@ namespace Gs2::Mission::Domain::Model
 
     Gs2::Core::Domain::CallbackID FNamespaceDomain::SubscribeCounterModelMasters(
     TFunction<void()> Callback
-
     )
     {
         return Gs2->Cache->ListSubscribe(
@@ -879,7 +876,6 @@ namespace Gs2::Mission::Domain::Model
 
     Gs2::Core::Domain::CallbackID FNamespaceDomain::SubscribeMissionGroupModelMasters(
     TFunction<void()> Callback
-
     )
     {
         return Gs2->Cache->ListSubscribe(

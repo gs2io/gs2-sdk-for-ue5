@@ -82,16 +82,17 @@ namespace Gs2::StateMachine::Model
                 }() : TOptional<int64>())
             ->WithUsed(Data->HasField(ANSI_TO_TCHAR("used")) ? [Data]() -> TSharedPtr<TArray<Model::FRandomUsedPtr>>
                 {
-                    auto v = MakeShared<TArray<Model::FRandomUsedPtr>>();
-                    if (!Data->HasTypedField<EJson::Null>(ANSI_TO_TCHAR("used")) && Data->HasTypedField<EJson::Array>(ANSI_TO_TCHAR("used")))
+                    if (!Data->HasTypedField<EJson::Array>(ANSI_TO_TCHAR("used")))
                     {
-                        for (auto JsonObjectValue : Data->GetArrayField(ANSI_TO_TCHAR("used")))
-                        {
-                            v->Add(Model::FRandomUsed::FromJson(JsonObjectValue->AsObject()));
-                        }
+                        return nullptr;
+                    }
+                    auto v = MakeShared<TArray<Model::FRandomUsedPtr>>();
+                    for (auto JsonObjectValue : Data->GetArrayField(ANSI_TO_TCHAR("used")))
+                    {
+                        v->Add(Model::FRandomUsed::FromJson(JsonObjectValue->AsObject()));
                     }
                     return v;
-                 }() : MakeShared<TArray<Model::FRandomUsedPtr>>());
+                 }() : nullptr);
     }
 
     TSharedPtr<FJsonObject> FRandomStatus::ToJson() const

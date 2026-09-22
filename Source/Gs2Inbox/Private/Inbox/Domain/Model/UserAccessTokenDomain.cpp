@@ -124,20 +124,6 @@ namespace Gs2::Inbox::Domain::Model
                 );
             }
         }
-        Self->Gs2->Cache->ClearListCache(
-            Gs2::Inbox::Model::FMessage::TypeName,
-            Gs2::Inbox::Model::Cache::FMessageCache::CreateCacheParentKey(
-                Request->GetNamespaceName(),
-                CacheOwnerSnapshotUserId,
-                CacheOwnerSnapshotTimeOffset
-            )
-        );
-        Gs2::Inbox::Model::Cache::FReceivedCache::Delete(
-            Self->Gs2->Cache,
-            Request->GetNamespaceName(),
-            CacheOwnerSnapshotUserId,
-            CacheOwnerSnapshotTimeOffset
-        );
 
         auto Domain = MakeShared<TArray<TSharedPtr<Gs2::Inbox::Domain::Model::FMessageAccessTokenDomain>>>();
         if (ResultModel.IsValid() && ResultModel->GetItem().IsValid())
@@ -255,7 +241,6 @@ namespace Gs2::Inbox::Domain::Model
 
     Gs2::Core::Domain::CallbackID FUserAccessTokenDomain::SubscribeMessages(
     TFunction<void()> Callback
-
     )
     {
         return Gs2->Cache->ListSubscribe(

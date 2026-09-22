@@ -385,28 +385,30 @@ namespace Gs2::StateMachine::Model
                  }() : nullptr)
             ->WithStacks(Data->HasField(ANSI_TO_TCHAR("stacks")) ? [Data]() -> TSharedPtr<TArray<Model::FStackEntryPtr>>
                 {
-                    auto v = MakeShared<TArray<Model::FStackEntryPtr>>();
-                    if (!Data->HasTypedField<EJson::Null>(ANSI_TO_TCHAR("stacks")) && Data->HasTypedField<EJson::Array>(ANSI_TO_TCHAR("stacks")))
+                    if (!Data->HasTypedField<EJson::Array>(ANSI_TO_TCHAR("stacks")))
                     {
-                        for (auto JsonObjectValue : Data->GetArrayField(ANSI_TO_TCHAR("stacks")))
-                        {
-                            v->Add(Model::FStackEntry::FromJson(JsonObjectValue->AsObject()));
-                        }
+                        return nullptr;
+                    }
+                    auto v = MakeShared<TArray<Model::FStackEntryPtr>>();
+                    for (auto JsonObjectValue : Data->GetArrayField(ANSI_TO_TCHAR("stacks")))
+                    {
+                        v->Add(Model::FStackEntry::FromJson(JsonObjectValue->AsObject()));
                     }
                     return v;
-                 }() : MakeShared<TArray<Model::FStackEntryPtr>>())
+                 }() : nullptr)
             ->WithVariables(Data->HasField(ANSI_TO_TCHAR("variables")) ? [Data]() -> TSharedPtr<TArray<Model::FVariablePtr>>
                 {
-                    auto v = MakeShared<TArray<Model::FVariablePtr>>();
-                    if (!Data->HasTypedField<EJson::Null>(ANSI_TO_TCHAR("variables")) && Data->HasTypedField<EJson::Array>(ANSI_TO_TCHAR("variables")))
+                    if (!Data->HasTypedField<EJson::Array>(ANSI_TO_TCHAR("variables")))
                     {
-                        for (auto JsonObjectValue : Data->GetArrayField(ANSI_TO_TCHAR("variables")))
-                        {
-                            v->Add(Model::FVariable::FromJson(JsonObjectValue->AsObject()));
-                        }
+                        return nullptr;
+                    }
+                    auto v = MakeShared<TArray<Model::FVariablePtr>>();
+                    for (auto JsonObjectValue : Data->GetArrayField(ANSI_TO_TCHAR("variables")))
+                    {
+                        v->Add(Model::FVariable::FromJson(JsonObjectValue->AsObject()));
                     }
                     return v;
-                 }() : MakeShared<TArray<Model::FVariablePtr>>())
+                 }() : nullptr)
             ->WithStatus(Data->HasField(ANSI_TO_TCHAR("status")) ? [Data]() -> TOptional<FString>
                 {
                     FString v("");
@@ -610,6 +612,30 @@ namespace Gs2::StateMachine::Model::Cache
         auto CacheOwnerValue = CacheOwnerArgumentItem;
         CacheSnapshot->Put(Gs2::StateMachine::Model::FStatus::TypeName, CacheOwnerParentKey, CacheOwnerKey, CacheOwnerValue,
             FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
+        );
+    }
+
+    FString FStatusCache::PutUserData(
+        const Gs2::Core::Domain::FCacheDatabasePtr& Cache,
+        TOptional<FString> NamespaceName,
+        TOptional<FString> UserId,
+        TOptional<int32> TimeOffset,
+        const Gs2::StateMachine::Model::FStatusPtr& Item
+    )
+    {
+        if (!Item.IsValid()) return FString();
+        Put(
+            Cache,
+            NamespaceName,
+            UserId,
+            Item->GetName(),
+            TimeOffset,
+            Item
+        );
+        return CreateCacheParentKey(
+            NamespaceName,
+            UserId,
+            TimeOffset
         );
     }
 

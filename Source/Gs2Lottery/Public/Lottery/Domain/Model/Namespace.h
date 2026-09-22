@@ -288,7 +288,6 @@ namespace Gs2::Lottery::Domain::Model
 
         Gs2::Core::Domain::CallbackID SubscribePrizeTables(
             TFunction<void()> Callback
-
         );
 
         class FCollectPrizeTablesTask;
@@ -328,7 +327,6 @@ namespace Gs2::Lottery::Domain::Model
 
         Gs2::Core::Domain::CallbackID SubscribeLotteryModels(
             TFunction<void()> Callback
-
         );
 
         class FCollectLotteryModelsTask;
@@ -377,7 +375,6 @@ namespace Gs2::Lottery::Domain::Model
 
         Gs2::Core::Domain::CallbackID SubscribePrizeTableMasters(
             TFunction<void()> Callback
-
         );
 
         class FCollectPrizeTableMastersTask;
@@ -418,7 +415,6 @@ namespace Gs2::Lottery::Domain::Model
 
         Gs2::Core::Domain::CallbackID SubscribeLotteryModelMasters(
             TFunction<void()> Callback
-
         );
 
         class FCollectLotteryModelMastersTask;

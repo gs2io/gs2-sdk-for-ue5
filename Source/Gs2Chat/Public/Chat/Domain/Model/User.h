@@ -98,7 +98,6 @@ namespace Gs2::Chat::Domain::Model
 
         Gs2::Core::Domain::CallbackID SubscribeRooms(
             TFunction<void()> Callback
-
         );
 
         class FCollectRoomsTask;
@@ -141,7 +140,6 @@ namespace Gs2::Chat::Domain::Model
 
         Gs2::Core::Domain::CallbackID SubscribeSubscribes(
             TFunction<void()> Callback
-
         );
 
         class FCollectSubscribesTask;
@@ -178,7 +176,6 @@ namespace Gs2::Chat::Domain::Model
 
         Gs2::Core::Domain::CallbackID SubscribeSubscribesByRoomName(
             TFunction<void()> Callback
-
         );
 
         class FCollectSubscribesByRoomNameTask;

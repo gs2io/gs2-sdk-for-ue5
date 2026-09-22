@@ -280,7 +280,6 @@ namespace Gs2::Exchange::Domain::Model
 
         Gs2::Core::Domain::CallbackID SubscribeRateModelMasters(
             TFunction<void()> Callback
-
         );
 
         class FCollectRateModelMastersTask;
@@ -323,7 +322,6 @@ namespace Gs2::Exchange::Domain::Model
 
         Gs2::Core::Domain::CallbackID SubscribeRateModels(
             TFunction<void()> Callback
-
         );
 
         class FCollectRateModelsTask;
@@ -371,7 +369,6 @@ namespace Gs2::Exchange::Domain::Model
 
         Gs2::Core::Domain::CallbackID SubscribeIncrementalRateModels(
             TFunction<void()> Callback
-
         );
 
         class FCollectIncrementalRateModelsTask;
@@ -412,7 +409,6 @@ namespace Gs2::Exchange::Domain::Model
 
         Gs2::Core::Domain::CallbackID SubscribeIncrementalRateModelMasters(
             TFunction<void()> Callback
-
         );
 
         class FCollectIncrementalRateModelMastersTask;

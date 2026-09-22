@@ -32,6 +32,7 @@ namespace Gs2::UE5::SkillTree::Model
         TSharedPtr<TArray<TSharedPtr<Gs2::UE5::SkillTree::Model::FEzConsumeAction>>> ReleaseConsumeActionsValue;
         TSharedPtr<TArray<TSharedPtr<Gs2::UE5::SkillTree::Model::FEzAcquireAction>>> ReturnAcquireActionsValue;
         TOptional<float> RestrainReturnRateValue;
+        TSharedPtr<TArray<FString>> PremiseNodeNamesValue;
 
 	public:
         TSharedPtr<FEzNodeModel> WithName(const TOptional<FString> Name);
@@ -40,6 +41,7 @@ namespace Gs2::UE5::SkillTree::Model
         TSharedPtr<FEzNodeModel> WithReleaseConsumeActions(const TSharedPtr<TArray<TSharedPtr<Gs2::UE5::SkillTree::Model::FEzConsumeAction>>> ReleaseConsumeActions);
         TSharedPtr<FEzNodeModel> WithReturnAcquireActions(const TSharedPtr<TArray<TSharedPtr<Gs2::UE5::SkillTree::Model::FEzAcquireAction>>> ReturnAcquireActions);
         TSharedPtr<FEzNodeModel> WithRestrainReturnRate(const TOptional<float> RestrainReturnRate);
+        TSharedPtr<FEzNodeModel> WithPremiseNodeNames(const TSharedPtr<TArray<FString>> PremiseNodeNames);
 
         TOptional<FString> GetName() const;
 
@@ -53,6 +55,8 @@ namespace Gs2::UE5::SkillTree::Model
 
         TOptional<float> GetRestrainReturnRate() const;
         FString GetRestrainReturnRateString() const;
+
+        TSharedPtr<TArray<FString>> GetPremiseNodeNames() const;
 
         Gs2::SkillTree::Model::FNodeModelPtr ToModel() const;
         static TSharedPtr<FEzNodeModel> FromModel(Gs2::SkillTree::Model::FNodeModelPtr Model);

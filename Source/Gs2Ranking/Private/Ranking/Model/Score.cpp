@@ -409,12 +409,14 @@ namespace Gs2::Ranking::Model::Cache
 
     FString FScoreCache::CreateCacheKey(
         TOptional<FString> CacheOwnerArgumentCategoryName,
+        TOptional<FString> CacheOwnerArgumentScorerUserId,
         TOptional<FString> CacheOwnerArgumentUniqueId
     )
     {
         return
             FString()
             + CacheOwnerArgumentCategoryName.Get(FString()) + FString(":")
+            + CacheOwnerArgumentScorerUserId.Get(FString()) + FString(":")
             + CacheOwnerArgumentUniqueId.Get(FString())
             ;
     }
@@ -424,6 +426,7 @@ namespace Gs2::Ranking::Model::Cache
         TOptional<FString> CacheOwnerArgumentNamespaceName,
         TOptional<FString> CacheOwnerArgumentUserId,
         TOptional<FString> CacheOwnerArgumentCategoryName,
+        TOptional<FString> CacheOwnerArgumentScorerUserId,
         TOptional<FString> CacheOwnerArgumentUniqueId,
         TOptional<int32> CacheOwnerArgumentTimeOffset,
         Gs2::Ranking::Model::FScorePtr* CacheOwnerArgumentOutItem
@@ -446,6 +449,7 @@ namespace Gs2::Ranking::Model::Cache
             ),
             CreateCacheKey(
                 CacheOwnerArgumentCategoryName,
+                CacheOwnerArgumentScorerUserId,
                 CacheOwnerArgumentUniqueId
             ),
             &CacheOwnerValue
@@ -459,6 +463,7 @@ namespace Gs2::Ranking::Model::Cache
         TOptional<FString> CacheOwnerArgumentNamespaceName,
         TOptional<FString> CacheOwnerArgumentUserId,
         TOptional<FString> CacheOwnerArgumentCategoryName,
+        TOptional<FString> CacheOwnerArgumentScorerUserId,
         TOptional<FString> CacheOwnerArgumentUniqueId,
         TOptional<int32> CacheOwnerArgumentTimeOffset,
         const Gs2::Ranking::Model::FScorePtr& CacheOwnerArgumentItem
@@ -474,11 +479,46 @@ namespace Gs2::Ranking::Model::Cache
         );
         const auto CacheOwnerKey = CreateCacheKey(
             CacheOwnerArgumentCategoryName,
+            CacheOwnerArgumentScorerUserId,
             CacheOwnerArgumentUniqueId
         );
         auto CacheOwnerValue = CacheOwnerArgumentItem;
+        Gs2::Ranking::Model::FScorePtr CacheOwnerExisting;
+        if (CacheSnapshot->TryGet<Gs2::Ranking::Model::FScore>(CacheOwnerParentKey, CacheOwnerKey, &CacheOwnerExisting))
+        {
+            const int64 CacheOwnerOldRevision = CacheOwnerExisting.IsValid() ? CacheOwnerExisting->GetRevision().Get(-1) : -1;
+            const int64 CacheOwnerNewRevision = CacheOwnerValue.IsValid() ? CacheOwnerValue->GetRevision().Get(-1) : -1;
+            if (CacheOwnerOldRevision > CacheOwnerNewRevision && CacheOwnerNewRevision > 1) return;
+            if (CacheOwnerOldRevision == CacheOwnerNewRevision) return;
+        }
         CacheSnapshot->Put(Gs2::Ranking::Model::FScore::TypeName, CacheOwnerParentKey, CacheOwnerKey, CacheOwnerValue,
             FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
+        );
+    }
+
+    FString FScoreCache::PutUserData(
+        const Gs2::Core::Domain::FCacheDatabasePtr& Cache,
+        TOptional<FString> NamespaceName,
+        TOptional<FString> UserId,
+        TOptional<int32> TimeOffset,
+        const Gs2::Ranking::Model::FScorePtr& Item
+    )
+    {
+        if (!Item.IsValid()) return FString();
+        Put(
+            Cache,
+            NamespaceName,
+            UserId,
+            Item->GetCategoryName(),
+            Item->GetScorerUserId(),
+            Item->GetUniqueId(),
+            TimeOffset,
+            Item
+        );
+        return CreateCacheParentKey(
+            NamespaceName,
+            UserId,
+            TimeOffset
         );
     }
 
@@ -487,6 +527,7 @@ namespace Gs2::Ranking::Model::Cache
         TOptional<FString> CacheOwnerArgumentNamespaceName,
         TOptional<FString> CacheOwnerArgumentUserId,
         TOptional<FString> CacheOwnerArgumentCategoryName,
+        TOptional<FString> CacheOwnerArgumentScorerUserId,
         TOptional<FString> CacheOwnerArgumentUniqueId,
         TOptional<int32> CacheOwnerArgumentTimeOffset
     )
@@ -500,6 +541,7 @@ namespace Gs2::Ranking::Model::Cache
             CacheOwnerArgumentTimeOffset
         ), CreateCacheKey(
             CacheOwnerArgumentCategoryName,
+            CacheOwnerArgumentScorerUserId,
             CacheOwnerArgumentUniqueId
         ));
     }
@@ -509,6 +551,7 @@ namespace Gs2::Ranking::Model::Cache
         TOptional<FString> CacheOwnerArgumentNamespaceName,
         TOptional<FString> CacheOwnerArgumentUserId,
         TOptional<FString> CacheOwnerArgumentCategoryName,
+        TOptional<FString> CacheOwnerArgumentScorerUserId,
         TOptional<FString> CacheOwnerArgumentUniqueId,
         TOptional<int32> CacheOwnerArgumentTimeOffset,
         const TFunction<Gs2::Core::Model::FGs2ErrorPtr(Gs2::Ranking::Model::FScorePtr*)>& CacheOwnerArgumentFetchImpl,
@@ -541,6 +584,7 @@ namespace Gs2::Ranking::Model::Cache
                 CacheOwnerArgumentNamespaceName,
                 CacheOwnerArgumentUserId,
                 CacheOwnerArgumentCategoryName,
+                CacheOwnerArgumentScorerUserId,
                 CacheOwnerArgumentUniqueId,
                 CacheOwnerArgumentTimeOffset,
                 CacheOwnerFetchedItem
@@ -558,6 +602,7 @@ namespace Gs2::Ranking::Model::Cache
             CacheOwnerArgumentNamespaceName,
             CacheOwnerArgumentUserId,
             CacheOwnerArgumentCategoryName,
+            CacheOwnerArgumentScorerUserId,
             CacheOwnerArgumentUniqueId,
             CacheOwnerArgumentTimeOffset,
             nullptr

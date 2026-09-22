@@ -79,16 +79,17 @@ namespace Gs2::Gateway::Result
                 }() : TOptional<FString>())
             ->WithSendConnectionIds(Data->HasField(ANSI_TO_TCHAR("sendConnectionIds")) ? [Data]() -> TSharedPtr<TArray<FString>>
                  {
-                    auto v = MakeShared<TArray<FString>>();
-                    if (!Data->HasTypedField<EJson::Null>(ANSI_TO_TCHAR("sendConnectionIds")) && Data->HasTypedField<EJson::Array>(ANSI_TO_TCHAR("sendConnectionIds")))
+                    if (!Data->HasTypedField<EJson::Array>(ANSI_TO_TCHAR("sendConnectionIds")))
                     {
-                        for (auto JsonObjectValue : Data->GetArrayField(ANSI_TO_TCHAR("sendConnectionIds")))
-                        {
-                            v->Add(JsonObjectValue->AsString());
-                        }
+                        return nullptr;
+                    }
+                    auto v = MakeShared<TArray<FString>>();
+                    for (auto JsonObjectValue : Data->GetArrayField(ANSI_TO_TCHAR("sendConnectionIds")))
+                    {
+                        v->Add(JsonObjectValue->AsString());
                     }
                     return v;
-                 }() : MakeShared<TArray<FString>>());
+                 }() : nullptr);
     }
 
     TSharedPtr<FJsonObject> FSendNotificationResult::ToJson() const

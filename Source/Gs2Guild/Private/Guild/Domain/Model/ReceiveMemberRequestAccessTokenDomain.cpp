@@ -35,7 +35,6 @@
 #include "Guild/Domain/Model/LastGuildMasterActivity.h"
 #include "Guild/Domain/Model/LastGuildMasterActivityAccessToken.h"
 #include "Guild/Domain/Model/CurrentGuildMaster.h"
-#include "Guild/Model/Cache/SendMemberRequest.h"
 #include "Guild/Domain/Model/ReceiveMemberRequest.h"
 #include "Guild/Domain/Model/ReceiveMemberRequestAccessToken.h"
 #include "Guild/Domain/Model/SendMemberRequest.h"
@@ -191,35 +190,24 @@ namespace Gs2::Guild::Domain::Model
         Future->EnsureCompletion();
 
 
-        if (ResultModel.IsValid() && ResultModel->GetItem().IsValid())
-        {
-            Gs2::Guild::Model::Cache::FReceiveMemberRequestCache::Delete(
-                Self->Gs2->Cache,
-                Request->GetNamespaceName(),
-                Request->GetGuildModelName(),
-                ResultModel->GetItem()->GetTargetGuildName(),
-                Request->GetFromUserId(),
-                CacheOwnerSnapshotTimeOffset
-            );
-            Gs2::Guild::Model::Cache::FSendMemberRequestCache::Delete(
-                Self->Gs2->Cache,
-                Request->GetNamespaceName(),
-                ResultModel->GetItem()->GetUserId(),
-                Request->GetGuildModelName(),
-                ResultModel->GetItem()->GetTargetGuildName(),
-                CacheOwnerSnapshotTimeOffset
-            );
-            if (ResultModel->GetGuild().IsValid())
-            {
-                Gs2::Guild::Model::Cache::FGuildCache::Delete(
-                    Self->Gs2->Cache,
-                    Request->GetNamespaceName(),
-                    Request->GetGuildModelName(),
-                    ResultModel->GetGuild()->GetName(),
-                    CacheOwnerSnapshotTimeOffset
-                );
-            }
-        }
+              Gs2::Guild::Model::Cache::FReceiveMemberRequestCache::Delete(
+            Self->Gs2->Cache,
+
+            Request->GetNamespaceName(),
+            Request->GetGuildModelName(),
+            TOptional<FString>(),
+            Request->GetFromUserId(),
+            CacheOwnerSnapshotTimeOffset
+        );
+
+              Gs2::Guild::Model::Cache::FGuildCache::Delete(
+            Self->Gs2->Cache,
+
+            Request->GetNamespaceName(),
+            Request->GetGuildModelName(),
+            TOptional<FString>(),
+            CacheOwnerSnapshotTimeOffset
+        );
         auto Domain = Self;
 
         *Result = Domain;
@@ -269,25 +257,15 @@ namespace Gs2::Guild::Domain::Model
         Future->EnsureCompletion();
 
 
-        if (ResultModel.IsValid() && ResultModel->GetItem().IsValid())
-        {
-            Gs2::Guild::Model::Cache::FReceiveMemberRequestCache::Delete(
-                Self->Gs2->Cache,
-                Request->GetNamespaceName(),
-                Request->GetGuildModelName(),
-                ResultModel->GetItem()->GetTargetGuildName(),
-                Request->GetFromUserId(),
-                CacheOwnerSnapshotTimeOffset
-            );
-            Gs2::Guild::Model::Cache::FSendMemberRequestCache::Delete(
-                Self->Gs2->Cache,
-                Request->GetNamespaceName(),
-                ResultModel->GetItem()->GetUserId(),
-                Request->GetGuildModelName(),
-                ResultModel->GetItem()->GetTargetGuildName(),
-                CacheOwnerSnapshotTimeOffset
-            );
-        }
+              Gs2::Guild::Model::Cache::FReceiveMemberRequestCache::Delete(
+            Self->Gs2->Cache,
+
+            Request->GetNamespaceName(),
+            Request->GetGuildModelName(),
+            TOptional<FString>(),
+            Request->GetFromUserId(),
+            CacheOwnerSnapshotTimeOffset
+        );
         auto Domain = Self;
 
         *Result = Domain;

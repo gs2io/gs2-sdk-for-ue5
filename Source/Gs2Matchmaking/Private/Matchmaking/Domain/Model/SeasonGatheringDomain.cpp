@@ -152,8 +152,8 @@ namespace Gs2::Matchmaking::Domain::Model
             Request->GetNamespaceName(),
             Self->UserId,
             ResultModel->GetItem()->GetSeasonName(),
-            ResultModel->GetItem()->GetSeason(),
-            ResultModel->GetItem()->GetTier(),
+            ResultModel->GetItem()->GetSeason().Get(int64{}),
+            ResultModel->GetItem()->GetTier().Get(int64{}),
             Request->GetSeasonGatheringName(),
             TOptional<int32>(),
             ResultModel->GetItem()
@@ -294,8 +294,8 @@ namespace Gs2::Matchmaking::Domain::Model
             Request->GetNamespaceName(),
             Self->UserId,
             ResultModel->GetItem()->GetSeasonName(),
-            ResultModel->GetItem()->GetSeason(),
-            ResultModel->GetItem()->GetTier(),
+            ResultModel->GetItem()->GetSeason().Get(int64{}),
+            ResultModel->GetItem()->GetTier().Get(int64{}),
             Request->GetSeasonGatheringName(),
             TOptional<int32>()
         );

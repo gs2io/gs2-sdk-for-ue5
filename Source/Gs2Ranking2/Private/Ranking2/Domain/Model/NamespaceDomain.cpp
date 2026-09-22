@@ -537,7 +537,6 @@ namespace Gs2::Ranking2::Domain::Model
 
     Gs2::Core::Domain::CallbackID FNamespaceDomain::SubscribeGlobalRankingModels(
     TFunction<void()> Callback
-
     )
     {
         return Gs2->Cache->ListSubscribe(
@@ -674,7 +673,6 @@ namespace Gs2::Ranking2::Domain::Model
 
     Gs2::Core::Domain::CallbackID FNamespaceDomain::SubscribeGlobalRankingModelMasters(
     TFunction<void()> Callback
-
     )
     {
         return Gs2->Cache->ListSubscribe(
@@ -834,7 +832,6 @@ namespace Gs2::Ranking2::Domain::Model
 
     Gs2::Core::Domain::CallbackID FNamespaceDomain::SubscribeSubscribeRankingModels(
     TFunction<void()> Callback
-
     )
     {
         return Gs2->Cache->ListSubscribe(
@@ -971,7 +968,6 @@ namespace Gs2::Ranking2::Domain::Model
 
     Gs2::Core::Domain::CallbackID FNamespaceDomain::SubscribeSubscribeRankingModelMasters(
     TFunction<void()> Callback
-
     )
     {
         return Gs2->Cache->ListSubscribe(
@@ -1107,7 +1103,6 @@ namespace Gs2::Ranking2::Domain::Model
 
     Gs2::Core::Domain::CallbackID FNamespaceDomain::SubscribeClusterRankingModels(
     TFunction<void()> Callback
-
     )
     {
         return Gs2->Cache->ListSubscribe(
@@ -1244,7 +1239,6 @@ namespace Gs2::Ranking2::Domain::Model
 
     Gs2::Core::Domain::CallbackID FNamespaceDomain::SubscribeClusterRankingModelMasters(
     TFunction<void()> Callback
-
     )
     {
         return Gs2->Cache->ListSubscribe(

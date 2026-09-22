@@ -266,16 +266,17 @@ namespace Gs2::LoginReward::Model
                 }() : TOptional<FString>())
             ->WithReceivedSteps(Data->HasField(ANSI_TO_TCHAR("receivedSteps")) ? [Data]() -> TSharedPtr<TArray<bool>>
                 {
-                    auto v = MakeShared<TArray<bool>>();
-                    if (!Data->HasTypedField<EJson::Null>(ANSI_TO_TCHAR("receivedSteps")) && Data->HasTypedField<EJson::Array>(ANSI_TO_TCHAR("receivedSteps")))
+                    if (!Data->HasTypedField<EJson::Array>(ANSI_TO_TCHAR("receivedSteps")))
                     {
-                        for (auto JsonObjectValue : Data->GetArrayField(ANSI_TO_TCHAR("receivedSteps")))
-                        {
-                            v->Add(JsonObjectValue->AsBool());
-                        }
+                        return nullptr;
+                    }
+                    auto v = MakeShared<TArray<bool>>();
+                    for (auto JsonObjectValue : Data->GetArrayField(ANSI_TO_TCHAR("receivedSteps")))
+                    {
+                        v->Add(JsonObjectValue->AsBool());
                     }
                     return v;
-                 }() : MakeShared<TArray<bool>>())
+                 }() : nullptr)
             ->WithLastReceivedAt(Data->HasField(ANSI_TO_TCHAR("lastReceivedAt")) ? [Data]() -> TOptional<int64>
                 {
                     int64 v;
@@ -449,6 +450,30 @@ namespace Gs2::LoginReward::Model::Cache
         }
         CacheSnapshot->Put(Gs2::LoginReward::Model::FReceiveStatus::TypeName, CacheOwnerParentKey, CacheOwnerKey, CacheOwnerValue,
             FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
+        );
+    }
+
+    FString FReceiveStatusCache::PutUserData(
+        const Gs2::Core::Domain::FCacheDatabasePtr& Cache,
+        TOptional<FString> NamespaceName,
+        TOptional<FString> UserId,
+        TOptional<int32> TimeOffset,
+        const Gs2::LoginReward::Model::FReceiveStatusPtr& Item
+    )
+    {
+        if (!Item.IsValid()) return FString();
+        Put(
+            Cache,
+            NamespaceName,
+            UserId,
+            Item->GetBonusModelName(),
+            TimeOffset,
+            Item
+        );
+        return CreateCacheParentKey(
+            NamespaceName,
+            UserId,
+            TimeOffset
         );
     }
 

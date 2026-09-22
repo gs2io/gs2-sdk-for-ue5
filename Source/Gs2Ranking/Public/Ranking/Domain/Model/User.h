@@ -107,8 +107,7 @@ namespace Gs2::Ranking::Domain::Model
         ) const;
 
         Gs2::Core::Domain::CallbackID SubscribeScores(
-            TFunction<void()> Callback
-            , const FString CategoryName, const FString ScorerUserId
+             const FString CategoryName, const FString ScorerUserId, TFunction<void()> Callback
         );
 
         class FCollectScoresTask;

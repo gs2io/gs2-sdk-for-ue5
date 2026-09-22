@@ -349,6 +349,27 @@ namespace Gs2::Identifier::Model::Cache
         );
     }
 
+    FString FPasswordCache::PutUserData(
+        const Gs2::Core::Domain::FCacheDatabasePtr& Cache,
+        TOptional<FString> NamespaceName,
+        TOptional<FString> UserId,
+        TOptional<int32> TimeOffset,
+        const Gs2::Identifier::Model::FPasswordPtr& Item
+    )
+    {
+        if (!Item.IsValid()) return FString();
+        Put(
+            Cache,
+            Item->GetUserName(),
+            TimeOffset,
+            Item
+        );
+        return CreateCacheParentKey(
+            Item->GetUserName(),
+            TimeOffset
+        );
+    }
+
     void FPasswordCache::Delete(
         const Gs2::Core::Domain::FCacheDatabasePtr& CacheOwnerArgumentCache,
         TOptional<FString> CacheOwnerArgumentUserName,

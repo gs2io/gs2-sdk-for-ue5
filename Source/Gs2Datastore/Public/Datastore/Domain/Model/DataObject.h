@@ -272,7 +272,6 @@ namespace Gs2::Datastore::Domain::Model
 
         Gs2::Core::Domain::CallbackID SubscribeDataObjectHistories(
             TFunction<void()> Callback
-
         );
 
         class FCollectDataObjectHistoriesTask;

@@ -92,6 +92,10 @@
 #include "Task/WebSocket/FreezeMasterDataByTimestampTask.h"
 #include "Request/BatchExecuteApiRequest.h"
 #include "Task/WebSocket/BatchExecuteApiTask.h"
+#include "Request/DescribeUserDataRequest.h"
+#include "Task/WebSocket/DescribeUserDataTask.h"
+#include "Request/DescribeUserDataByUserIdRequest.h"
+#include "Task/WebSocket/DescribeUserDataByUserIdTask.h"
 #include "Request/IfExpressionByUserIdRequest.h"
 #include "Task/WebSocket/IfExpressionByUserIdTask.h"
 #include "Request/AndExpressionByUserIdRequest.h"
@@ -272,6 +276,14 @@ namespace Gs2::Distributor
 
         TSharedPtr<FAsyncTask<Task::WebSocket::FBatchExecuteApiTask>> BatchExecuteApi(
             const Request::FBatchExecuteApiRequestPtr Request
+        ) const;
+
+        TSharedPtr<FAsyncTask<Task::WebSocket::FDescribeUserDataTask>> DescribeUserData(
+            const Request::FDescribeUserDataRequestPtr Request
+        ) const;
+
+        TSharedPtr<FAsyncTask<Task::WebSocket::FDescribeUserDataByUserIdTask>> DescribeUserDataByUserId(
+            const Request::FDescribeUserDataByUserIdRequestPtr Request
         ) const;
 
         TSharedPtr<FAsyncTask<Task::WebSocket::FIfExpressionByUserIdTask>> IfExpressionByUserId(

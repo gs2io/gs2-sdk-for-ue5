@@ -209,28 +209,30 @@ namespace Gs2::Enchant::Model
                 }() : TOptional<int32>())
             ->WithParameterCounts(Data->HasField(ANSI_TO_TCHAR("parameterCounts")) ? [Data]() -> TSharedPtr<TArray<Model::FRarityParameterCountModelPtr>>
                 {
-                    auto v = MakeShared<TArray<Model::FRarityParameterCountModelPtr>>();
-                    if (!Data->HasTypedField<EJson::Null>(ANSI_TO_TCHAR("parameterCounts")) && Data->HasTypedField<EJson::Array>(ANSI_TO_TCHAR("parameterCounts")))
+                    if (!Data->HasTypedField<EJson::Array>(ANSI_TO_TCHAR("parameterCounts")))
                     {
-                        for (auto JsonObjectValue : Data->GetArrayField(ANSI_TO_TCHAR("parameterCounts")))
-                        {
-                            v->Add(Model::FRarityParameterCountModel::FromJson(JsonObjectValue->AsObject()));
-                        }
+                        return nullptr;
+                    }
+                    auto v = MakeShared<TArray<Model::FRarityParameterCountModelPtr>>();
+                    for (auto JsonObjectValue : Data->GetArrayField(ANSI_TO_TCHAR("parameterCounts")))
+                    {
+                        v->Add(Model::FRarityParameterCountModel::FromJson(JsonObjectValue->AsObject()));
                     }
                     return v;
-                 }() : MakeShared<TArray<Model::FRarityParameterCountModelPtr>>())
+                 }() : nullptr)
             ->WithParameters(Data->HasField(ANSI_TO_TCHAR("parameters")) ? [Data]() -> TSharedPtr<TArray<Model::FRarityParameterValueModelPtr>>
                 {
-                    auto v = MakeShared<TArray<Model::FRarityParameterValueModelPtr>>();
-                    if (!Data->HasTypedField<EJson::Null>(ANSI_TO_TCHAR("parameters")) && Data->HasTypedField<EJson::Array>(ANSI_TO_TCHAR("parameters")))
+                    if (!Data->HasTypedField<EJson::Array>(ANSI_TO_TCHAR("parameters")))
                     {
-                        for (auto JsonObjectValue : Data->GetArrayField(ANSI_TO_TCHAR("parameters")))
-                        {
-                            v->Add(Model::FRarityParameterValueModel::FromJson(JsonObjectValue->AsObject()));
-                        }
+                        return nullptr;
+                    }
+                    auto v = MakeShared<TArray<Model::FRarityParameterValueModelPtr>>();
+                    for (auto JsonObjectValue : Data->GetArrayField(ANSI_TO_TCHAR("parameters")))
+                    {
+                        v->Add(Model::FRarityParameterValueModel::FromJson(JsonObjectValue->AsObject()));
                     }
                     return v;
-                 }() : MakeShared<TArray<Model::FRarityParameterValueModelPtr>>());
+                 }() : nullptr);
     }
 
     TSharedPtr<FJsonObject> FRarityParameterModel::ToJson() const
@@ -349,6 +351,28 @@ namespace Gs2::Enchant::Model::Cache
         auto CacheOwnerValue = CacheOwnerArgumentItem;
         CacheSnapshot->Put(Gs2::Enchant::Model::FRarityParameterModel::TypeName, CacheOwnerParentKey, CacheOwnerKey, CacheOwnerValue,
             FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
+        );
+    }
+
+    FString FRarityParameterModelCache::PutUserData(
+        const Gs2::Core::Domain::FCacheDatabasePtr& Cache,
+        TOptional<FString> NamespaceName,
+        TOptional<FString> UserId,
+        TOptional<int32> TimeOffset,
+        const Gs2::Enchant::Model::FRarityParameterModelPtr& Item
+    )
+    {
+        if (!Item.IsValid()) return FString();
+        Put(
+            Cache,
+            NamespaceName,
+            Item->GetName(),
+            TimeOffset,
+            Item
+        );
+        return CreateCacheParentKey(
+            NamespaceName,
+            TimeOffset
         );
     }
 

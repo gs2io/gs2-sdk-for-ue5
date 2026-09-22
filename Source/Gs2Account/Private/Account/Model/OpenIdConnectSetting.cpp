@@ -225,28 +225,30 @@ namespace Gs2::Account::Model
                 }() : TOptional<FString>())
             ->WithAdditionalScopeValues(Data->HasField(ANSI_TO_TCHAR("additionalScopeValues")) ? [Data]() -> TSharedPtr<TArray<Model::FScopeValuePtr>>
                 {
-                    auto v = MakeShared<TArray<Model::FScopeValuePtr>>();
-                    if (!Data->HasTypedField<EJson::Null>(ANSI_TO_TCHAR("additionalScopeValues")) && Data->HasTypedField<EJson::Array>(ANSI_TO_TCHAR("additionalScopeValues")))
+                    if (!Data->HasTypedField<EJson::Array>(ANSI_TO_TCHAR("additionalScopeValues")))
                     {
-                        for (auto JsonObjectValue : Data->GetArrayField(ANSI_TO_TCHAR("additionalScopeValues")))
-                        {
-                            v->Add(Model::FScopeValue::FromJson(JsonObjectValue->AsObject()));
-                        }
+                        return nullptr;
+                    }
+                    auto v = MakeShared<TArray<Model::FScopeValuePtr>>();
+                    for (auto JsonObjectValue : Data->GetArrayField(ANSI_TO_TCHAR("additionalScopeValues")))
+                    {
+                        v->Add(Model::FScopeValue::FromJson(JsonObjectValue->AsObject()));
                     }
                     return v;
-                 }() : MakeShared<TArray<Model::FScopeValuePtr>>())
+                 }() : nullptr)
             ->WithAdditionalReturnValues(Data->HasField(ANSI_TO_TCHAR("additionalReturnValues")) ? [Data]() -> TSharedPtr<TArray<FString>>
                 {
-                    auto v = MakeShared<TArray<FString>>();
-                    if (!Data->HasTypedField<EJson::Null>(ANSI_TO_TCHAR("additionalReturnValues")) && Data->HasTypedField<EJson::Array>(ANSI_TO_TCHAR("additionalReturnValues")))
+                    if (!Data->HasTypedField<EJson::Array>(ANSI_TO_TCHAR("additionalReturnValues")))
                     {
-                        for (auto JsonObjectValue : Data->GetArrayField(ANSI_TO_TCHAR("additionalReturnValues")))
-                        {
-                            v->Add(JsonObjectValue->AsString());
-                        }
+                        return nullptr;
+                    }
+                    auto v = MakeShared<TArray<FString>>();
+                    for (auto JsonObjectValue : Data->GetArrayField(ANSI_TO_TCHAR("additionalReturnValues")))
+                    {
+                        v->Add(JsonObjectValue->AsString());
                     }
                     return v;
-                 }() : MakeShared<TArray<FString>>());
+                 }() : nullptr);
     }
 
     TSharedPtr<FJsonObject> FOpenIdConnectSetting::ToJson() const

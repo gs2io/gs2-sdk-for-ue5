@@ -376,7 +376,6 @@ namespace Gs2::MegaField::Domain::Model
 
     Gs2::Core::Domain::CallbackID FNamespaceDomain::SubscribeAreaModels(
     TFunction<void()> Callback
-
     )
     {
         return Gs2->Cache->ListSubscribe(
@@ -535,7 +534,6 @@ namespace Gs2::MegaField::Domain::Model
 
     Gs2::Core::Domain::CallbackID FNamespaceDomain::SubscribeAreaModelMasters(
     TFunction<void()> Callback
-
     )
     {
         return Gs2->Cache->ListSubscribe(

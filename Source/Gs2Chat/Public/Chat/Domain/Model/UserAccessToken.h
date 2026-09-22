@@ -133,7 +133,6 @@ namespace Gs2::Chat::Domain::Model
 
         Gs2::Core::Domain::CallbackID SubscribeSubscribes(
             TFunction<void()> Callback
-
         );
 
         class FCollectSubscribesTask;

@@ -39,6 +39,7 @@
 #include "Idle/Model/Cache/CurrentCategoryMaster.h"
 #include "Idle/Model/Cache/CategoryModel.h"
 #include "Idle/Model/Cache/Status.h"
+#include "Idle/Model/Cache/Status.h"
 
 #include "Core/Domain/Gs2.h"
 
@@ -439,7 +440,6 @@ namespace Gs2::Idle::Domain
 
     Gs2::Core::Domain::CallbackID FGs2IdleDomain::SubscribeNamespaces(
     TFunction<void()> Callback
-
     )
     {
         return Gs2->Cache->ListSubscribe(
@@ -673,6 +673,46 @@ namespace Gs2::Idle::Domain
                     }
 
         }
+    }
+
+    TOptional<FString> FGs2IdleDomain::PutUserData(
+        const TOptional<FString> NamespaceName,
+        const TOptional<FString> UserId,
+        const TOptional<int32> TimeOffset,
+        const FString Kind,
+        const FString Payload
+    ) {
+        TSharedPtr<FJsonObject> PayloadJson;
+        if (const TSharedRef<TJsonReader<>> JsonReader = TJsonReaderFactory<>::Create(Payload);
+            !FJsonSerializer::Deserialize(JsonReader, PayloadJson) || !PayloadJson.IsValid())
+        {
+            return TOptional<FString>();
+        }
+        if (Kind == "status") {
+            const auto Item = Gs2::Idle::Model::FStatus::FromJson(PayloadJson);
+            if (!Item.IsValid()) return TOptional<FString>();
+            const auto ParentKey = Gs2::Idle::Model::Cache::FStatusCache::PutUserData(
+                Gs2->Cache,
+                NamespaceName,
+                UserId,
+                TimeOffset,
+                Item
+            );
+            return ParentKey.IsEmpty() ? TOptional<FString>() : TOptional<FString>(ParentKey);
+        }
+        return TOptional<FString>();
+    }
+
+    bool FGs2IdleDomain::SetListCached(
+        const TOptional<int32> TimeOffset,
+        const FString Kind,
+        const FString ParentKey
+    ) {
+        if (Kind == "status") {
+            Gs2->Cache->SetListCached(Gs2::Idle::Model::FStatus::TypeName, ParentKey);
+            return true;
+        }
+        return false;
     }
 
     void FGs2IdleDomain::UpdateCacheFromStampTask(

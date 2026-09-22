@@ -94,16 +94,17 @@ namespace Gs2::Log::Result
         return MakeShared<FQueryLogResult>()
             ->WithItems(Data->HasField(ANSI_TO_TCHAR("items")) ? [Data]() -> TSharedPtr<TArray<Model::FLogEntryPtr>>
                  {
-                    auto v = MakeShared<TArray<Model::FLogEntryPtr>>();
-                    if (!Data->HasTypedField<EJson::Null>(ANSI_TO_TCHAR("items")) && Data->HasTypedField<EJson::Array>(ANSI_TO_TCHAR("items")))
+                    if (!Data->HasTypedField<EJson::Array>(ANSI_TO_TCHAR("items")))
                     {
-                        for (auto JsonObjectValue : Data->GetArrayField(ANSI_TO_TCHAR("items")))
-                        {
-                            v->Add(Model::FLogEntry::FromJson(JsonObjectValue->AsObject()));
-                        }
+                        return nullptr;
+                    }
+                    auto v = MakeShared<TArray<Model::FLogEntryPtr>>();
+                    for (auto JsonObjectValue : Data->GetArrayField(ANSI_TO_TCHAR("items")))
+                    {
+                        v->Add(Model::FLogEntry::FromJson(JsonObjectValue->AsObject()));
                     }
                     return v;
-                 }() : MakeShared<TArray<Model::FLogEntryPtr>>())
+                 }() : nullptr)
             ->WithTotalEntryCount(Data->HasField(ANSI_TO_TCHAR("totalEntryCount")) ? [Data]() -> TOptional<int32>
                 {
                     int32 v;

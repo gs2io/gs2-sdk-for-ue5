@@ -206,7 +206,6 @@ namespace Gs2::News::Domain::Model
 
         Gs2::Core::Domain::CallbackID SubscribeProgresses(
             TFunction<void()> Callback
-
         );
 
         class FCollectProgressesTask;

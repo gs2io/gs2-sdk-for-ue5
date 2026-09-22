@@ -544,7 +544,6 @@ namespace Gs2::SeasonRating::Domain::Model
 
     Gs2::Core::Domain::CallbackID FNamespaceDomain::SubscribeSeasonModels(
     TFunction<void()> Callback
-
     )
     {
         return Gs2->Cache->ListSubscribe(
@@ -681,7 +680,6 @@ namespace Gs2::SeasonRating::Domain::Model
 
     Gs2::Core::Domain::CallbackID FNamespaceDomain::SubscribeSeasonModelMasters(
     TFunction<void()> Callback
-
     )
     {
         return Gs2->Cache->ListSubscribe(
@@ -841,7 +839,6 @@ namespace Gs2::SeasonRating::Domain::Model
 
     Gs2::Core::Domain::CallbackID FNamespaceDomain::SubscribeMatchSessions(
     TFunction<void()> Callback
-
     )
     {
         return Gs2->Cache->ListSubscribe(

@@ -451,7 +451,6 @@ namespace Gs2::JobQueue::Domain
 
     Gs2::Core::Domain::CallbackID FGs2JobQueueDomain::SubscribeNamespaces(
     TFunction<void()> Callback
-
     )
     {
         return Gs2->Cache->ListSubscribe(
@@ -608,6 +607,24 @@ namespace Gs2::JobQueue::Domain
         }
     }
 
+    TOptional<FString> FGs2JobQueueDomain::PutUserData(
+        const TOptional<FString> NamespaceName,
+        const TOptional<FString> UserId,
+        const TOptional<int32> TimeOffset,
+        const FString Kind,
+        const FString Payload
+    ) {
+        return TOptional<FString>();
+    }
+
+    bool FGs2JobQueueDomain::SetListCached(
+        const TOptional<int32> TimeOffset,
+        const FString Kind,
+        const FString ParentKey
+    ) {
+        return false;
+    }
+
     void FGs2JobQueueDomain::UpdateCacheFromStampTask(
         const FString Method,
         const FString Request,
@@ -745,85 +762,80 @@ namespace Gs2::JobQueue::Domain
         TSharedPtr<TSharedPtr<FGs2JobQueueDomain>> Result
     )
     {
-        if (!AccessToken.IsValid() || !AccessToken->GetUserId().IsSet())
+        if (Self->CopiedCompletedJobsMutex->TryLock())
         {
-            return nullptr;
-        }
-        const FString TargetUserId = *AccessToken->GetUserId();
-        TArray<Gs2::JobQueue::Model::FRunNotificationPtr> CompletedJobs;
-        {
-            FScopeLock Lock(Self->CopiedCompletedJobsMutex.Get());
-            TArray<Gs2::JobQueue::Model::FRunNotificationPtr> Remaining;
-            for (const auto& Notification : *Self->CopiedCompletedJobs)
+            TArray CopiedCopiedCompletedJobsTemp(*Self->CopiedCompletedJobs);
             {
-                if (Notification.IsValid() && Notification->GetUserId().IsSet() && *Notification->GetUserId() == TargetUserId)
+                if (Self->CopiedCompletedJobs->Num() == 0)
                 {
-                    CompletedJobs.Add(Notification);
+                    return nullptr;
                 }
-                else
-                {
-                    Remaining.Add(Notification);
-                }
-            }
-            *Self->CopiedCompletedJobs = MoveTemp(Remaining);
-        }
 
-        for (const auto& CompletedJob : CompletedJobs)
-        {
-            if (!CompletedJob.IsValid() || !CompletedJob->GetNamespaceName().IsSet() || !CompletedJob->GetJobName().IsSet())
-            {
-                continue;
-            }
-            {
-                auto Future = Self->Namespace(
-                    *CompletedJob->GetNamespaceName()
-                )->AccessToken(
-                    AccessToken
-                )->Job(
-                    *CompletedJob->GetJobName()
-                )->JobResult()->ModelNoCache();
-                Future->StartSynchronousTask();
-                if (Future->GetTask().IsError())
-                {
-                    if (Future->GetTask().Error()->Type() == Gs2::Core::Model::FNotFoundError::TypeString)
-                    {
-                        continue;
-                    }
-                    return Future->GetTask().Error();
-                }
-                Future->EnsureCompletion();
-            }
-            {
-                const auto AutoRun = Gs2::Core::Domain::FJobQueueJobDomainFactory::ToTransaction(
-                    Self->Gs2,
-                    [](
-                        bool bAutoRun,
-                        FString TransactionId,
-                        FString StampSheet,
-                        FString StampSheetEncryptionKeyId,
-                        bool bAtomicCommit,
-                        Gs2::Core::Model::FTransactionResultPtr TransactionResult
-                    ) -> TSharedPtr<Gs2::Core::Domain::FTransactionAccessTokenDomain>
-                    {
-                        return nullptr;
-                    },
-                    AccessToken,
-                    true,
-                    *CompletedJob->GetNamespaceName(),
-                    *CompletedJob->GetJobName()
+                const auto Client = MakeShared<Gs2::JobQueue::FGs2JobQueueRestClient>(
+                    Self->Gs2->RestSession
                 );
-                const auto Future = AutoRun->Wait();
-                Future->StartSynchronousTask();
-                if (Future->GetTask().IsError())
+                for (auto CompletedJob : CopiedCopiedCompletedJobsTemp)
                 {
-                    if (Future->GetTask().Error()->Type() == Gs2::Core::Model::FNotFoundError::TypeString)
+                    if (!CompletedJob.IsValid()) continue;
                     {
-                        continue;
+                        auto Future = Self->Namespace(
+                            *CompletedJob->GetNamespaceName()
+                        )->AccessToken(
+                            AccessToken
+                        )->Job(
+                            *CompletedJob->GetJobName()
+                        )->JobResult()->ModelNoCache();
+                        Future->StartSynchronousTask();
+                        if (Future->GetTask().IsError())
+                        {
+                            if (Future->GetTask().Error()->Type() == Gs2::Core::Model::FNotFoundError::TypeString)
+                            {
+                            }
+                            else
+                            {
+                                return Future->GetTask().Error();
+                            }
+                        }
+                        Future->EnsureCompletion();
                     }
-                    return Future->GetTask().Error();
+                    {
+                        const auto AutoRun = Gs2::Core::Domain::FJobQueueJobDomainFactory::ToTransaction(
+                            Self->Gs2,
+                            [](
+                                bool bAutoRun,
+                                FString TransactionId,
+                                FString StampSheet,
+                                FString StampSheetEncryptionKeyId,
+                                bool bAtomicCommit,
+                                Gs2::Core::Model::FTransactionResultPtr TransactionResult
+                            ) -> TSharedPtr<Gs2::Core::Domain::FTransactionAccessTokenDomain>
+                            {
+                                return nullptr;
+                            },
+                            AccessToken,
+                            true,
+                            *CompletedJob->GetNamespaceName(),
+                            *CompletedJob->GetJobName()
+                        );
+                        const auto Future = AutoRun->Wait();
+                        Future->StartSynchronousTask();
+                        if (Future->GetTask().IsError())
+                        {
+                            if (Future->GetTask().Error()->Type() == Gs2::Core::Model::FNotFoundError::TypeString)
+                            {
+                            }
+                            else
+                            {
+                                return Future->GetTask().Error();
+                            }
+                        }
+                        Future->EnsureCompletion();
+                    }
                 }
-                Future->EnsureCompletion();
+
+                Self->CopiedCompletedJobs->Reset();
             }
+            Self->CopiedCompletedJobsMutex->Unlock();
         }
         return nullptr;
     }
@@ -848,80 +860,80 @@ namespace Gs2::JobQueue::Domain
         TSharedPtr<TSharedPtr<FGs2JobQueueDomain>> Result
     )
     {
-        TArray<Gs2::JobQueue::Model::FRunNotificationPtr> CompletedJobs;
+        if (Self->CopiedCompletedJobsMutex->TryLock())
         {
-            FScopeLock Lock(Self->CopiedCompletedJobsMutex.Get());
-            TArray<Gs2::JobQueue::Model::FRunNotificationPtr> Remaining;
-            for (const auto& Notification : *Self->CopiedCompletedJobs)
+            TArray CopiedCopiedCompletedJobsTemp(*Self->CopiedCompletedJobs);
             {
-                if (Notification.IsValid() && Notification->GetUserId().IsSet() && *Notification->GetUserId() == UserId)
+                if (Self->CopiedCompletedJobs->Num() == 0)
                 {
-                    CompletedJobs.Add(Notification);
+                    return nullptr;
                 }
-                else
-                {
-                    Remaining.Add(Notification);
-                }
-            }
-            *Self->CopiedCompletedJobs = MoveTemp(Remaining);
-        }
 
-        for (const auto& CompletedJob : CompletedJobs)
-        {
-            if (!CompletedJob.IsValid() || !CompletedJob->GetNamespaceName().IsSet() || !CompletedJob->GetJobName().IsSet())
-            {
-                continue;
-            }
-            {
-                auto Future = Self->Namespace(
-                    *CompletedJob->GetNamespaceName()
-                )->User(
-                    UserId
-                )->Job(
-                    *CompletedJob->GetJobName()
-                )->JobResult()->ModelNoCache();
-                Future->StartSynchronousTask();
-                if (Future->GetTask().IsError())
-                {
-                    if (Future->GetTask().Error()->Type() == Gs2::Core::Model::FNotFoundError::TypeString)
-                    {
-                        continue;
-                    }
-                    return Future->GetTask().Error();
-                }
-                Future->EnsureCompletion();
-            }
-            {
-                const auto AutoRun = Gs2::Core::Domain::FJobQueueJobDomainFactory::ToTransaction(
-                    Self->Gs2,
-                    [](
-                        bool bAutoRun,
-                        FString TransactionId,
-                        FString StampSheet,
-                        FString StampSheetEncryptionKeyId,
-                        bool bAtomicCommit,
-                        Gs2::Core::Model::FTransactionResultPtr TransactionResult
-                    ) -> TSharedPtr<Gs2::Core::Domain::FTransactionDomain>
-                    {
-                        return nullptr;
-                    },
-                    UserId,
-                    true,
-                    *CompletedJob->GetNamespaceName(),
-                    *CompletedJob->GetJobName()
+                const auto Client = MakeShared<Gs2::JobQueue::FGs2JobQueueRestClient>(
+                    Self->Gs2->RestSession
                 );
-                const auto Future = AutoRun->Wait();
-                Future->StartSynchronousTask();
-                if (Future->GetTask().IsError())
+                for (auto CompletedJob : CopiedCopiedCompletedJobsTemp)
                 {
-                    if (Future->GetTask().Error()->Type() == Gs2::Core::Model::FNotFoundError::TypeString)
+                    if (!CompletedJob.IsValid()) continue;
                     {
-                        continue;
+                        auto Future = Self->Namespace(
+                            *CompletedJob->GetNamespaceName()
+                        )->User(
+                            UserId
+                        )->Job(
+                            *CompletedJob->GetJobName()
+                        )->JobResult()->ModelNoCache();
+                        Future->StartSynchronousTask();
+                        if (Future->GetTask().IsError())
+                        {
+                            if (Future->GetTask().Error()->Type() == Gs2::Core::Model::FNotFoundError::TypeString)
+                            {
+                            }
+                            else
+                            {
+                                return Future->GetTask().Error();
+                            }
+                        }
+                        Future->EnsureCompletion();
                     }
-                    return Future->GetTask().Error();
+                    {
+                        const auto AutoRun = Gs2::Core::Domain::FJobQueueJobDomainFactory::ToTransaction(
+                            Self->Gs2,
+                            [](
+                                bool bAutoRun,
+                                FString TransactionId,
+                                FString StampSheet,
+                                FString StampSheetEncryptionKeyId,
+                                bool bAtomicCommit,
+                                Gs2::Core::Model::FTransactionResultPtr TransactionResult
+                            ) -> TSharedPtr<Gs2::Core::Domain::FTransactionDomain>
+                            {
+                                return nullptr;
+                            },
+                            UserId,
+                            true,
+                            *CompletedJob->GetNamespaceName(),
+                            *CompletedJob->GetJobName()
+                        );
+                        const auto Future = AutoRun->Wait();
+                        Future->StartSynchronousTask();
+                        if (Future->GetTask().IsError())
+                        {
+                            if (Future->GetTask().Error()->Type() == Gs2::Core::Model::FNotFoundError::TypeString)
+                            {
+                            }
+                            else
+                            {
+                                return Future->GetTask().Error();
+                            }
+                        }
+                        Future->EnsureCompletion();
+                    }
                 }
-                Future->EnsureCompletion();
+
+                Self->CopiedCompletedJobs->Reset();
             }
+            Self->CopiedCompletedJobsMutex->Unlock();
         }
         return nullptr;
     }

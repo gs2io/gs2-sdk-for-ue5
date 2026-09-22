@@ -271,8 +271,8 @@ namespace Gs2::Ranking2::Domain::Model
     }
 
     FSubscribeAccessTokenDomain::FSubscribeWithInitialCallTask::FSubscribeWithInitialCallTask(
-        const TSharedPtr<FSubscribeAccessTokenDomain> Self,
-        const TFunction<void(Gs2::Ranking2::Model::FSubscribePtr)>& Callback
+        const TSharedPtr<FSubscribeAccessTokenDomain>& Self,
+        TFunction<void(Gs2::Ranking2::Model::FSubscribePtr)> Callback
     ): Self(Self), Callback(Callback)
     {
     }

@@ -228,8 +228,8 @@ namespace Gs2::Matchmaking::Domain::Model
             Request->GetNamespaceName(),
             (CacheOwnerSnapshotUserId),
             ResultModel->GetItem()->GetSeasonName(),
-            ResultModel->GetItem()->GetSeason(),
-            ResultModel->GetItem()->GetTier(),
+            ResultModel->GetItem()->GetSeason().Get(int64{}),
+            ResultModel->GetItem()->GetTier().Get(int64{}),
             Request->GetSeasonGatheringName(),
             CacheOwnerSnapshotTimeOffset,
             ResultModel->GetItem()

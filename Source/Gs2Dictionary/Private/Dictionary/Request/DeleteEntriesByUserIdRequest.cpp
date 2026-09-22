@@ -145,16 +145,17 @@ namespace Gs2::Dictionary::Request
               }() : TOptional<FString>())
           ->WithEntryModelNames(Data->HasField(ANSI_TO_TCHAR("entryModelNames")) ? [Data]() -> TSharedPtr<TArray<FString>>
               {
-                  auto v = MakeShared<TArray<FString>>();
-                  if (!Data->HasTypedField<EJson::Null>(ANSI_TO_TCHAR("entryModelNames")) && Data->HasTypedField<EJson::Array>(ANSI_TO_TCHAR("entryModelNames")))
+                  if (!Data->HasTypedField<EJson::Array>(ANSI_TO_TCHAR("entryModelNames")))
                   {
-                      for (auto JsonObjectValue : Data->GetArrayField(ANSI_TO_TCHAR("entryModelNames")))
-                      {
-                          v->Add(JsonObjectValue->AsString());
-                      }
+                      return nullptr;
                   }
+                  auto v = MakeShared<TArray<FString>>();
+                  for (auto JsonObjectValue : Data->GetArrayField(ANSI_TO_TCHAR("entryModelNames")))
+                      {
+                      v->Add(JsonObjectValue->AsString());
+                      }
                   return v;
-              }() : MakeShared<TArray<FString>>())
+              }() : nullptr)
             ->WithTimeOffsetToken(Data->HasField(ANSI_TO_TCHAR("timeOffsetToken")) ? [Data]() -> TOptional<FString>
               {
                   FString v("");

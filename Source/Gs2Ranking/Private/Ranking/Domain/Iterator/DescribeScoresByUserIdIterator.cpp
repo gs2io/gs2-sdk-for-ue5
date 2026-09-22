@@ -161,7 +161,7 @@ namespace Gs2::Ranking::Domain::Iterator
                     if (!Item.IsValid()) continue;
                     Gs2::Ranking::Model::Cache::FScoreCache::Put(
                         Self->Gs2->Cache,
-                        Request->GetNamespaceName(), Item->GetScorerUserId(), Item->GetCategoryName(), Item->GetUniqueId(),
+                        Request->GetNamespaceName(), Request->GetUserId(), Item->GetCategoryName(), Item->GetScorerUserId(), Item->GetUniqueId(),
                         TOptional<int32>(), Item
                     );
                 }

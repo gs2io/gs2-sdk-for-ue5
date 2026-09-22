@@ -289,16 +289,17 @@ namespace Gs2::Log::Request
               }() : TOptional<FString>())
           ->WithGroupBy(Data->HasField(ANSI_TO_TCHAR("groupBy")) ? [Data]() -> TSharedPtr<TArray<FString>>
               {
-                  auto v = MakeShared<TArray<FString>>();
-                  if (!Data->HasTypedField<EJson::Null>(ANSI_TO_TCHAR("groupBy")) && Data->HasTypedField<EJson::Array>(ANSI_TO_TCHAR("groupBy")))
+                  if (!Data->HasTypedField<EJson::Array>(ANSI_TO_TCHAR("groupBy")))
                   {
-                      for (auto JsonObjectValue : Data->GetArrayField(ANSI_TO_TCHAR("groupBy")))
-                      {
-                          v->Add(JsonObjectValue->AsString());
-                      }
+                      return nullptr;
                   }
+                  auto v = MakeShared<TArray<FString>>();
+                  for (auto JsonObjectValue : Data->GetArrayField(ANSI_TO_TCHAR("groupBy")))
+                      {
+                      v->Add(JsonObjectValue->AsString());
+                      }
                   return v;
-              }() : MakeShared<TArray<FString>>())
+              }() : nullptr)
           ->WithAggregation(Data->HasField(ANSI_TO_TCHAR("aggregation")) ? [Data]() -> Model::FAggregationConfigPtr
               {
                   if (Data->HasTypedField<EJson::Null>(ANSI_TO_TCHAR("aggregation")))

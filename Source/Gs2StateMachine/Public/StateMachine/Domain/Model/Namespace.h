@@ -242,7 +242,6 @@ namespace Gs2::StateMachine::Domain::Model
 
         Gs2::Core::Domain::CallbackID SubscribeStateMachineMasters(
             TFunction<void()> Callback
-
         );
 
         class FCollectStateMachineMastersTask;

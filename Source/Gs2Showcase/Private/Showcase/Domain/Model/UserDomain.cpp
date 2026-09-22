@@ -100,7 +100,6 @@ namespace Gs2::Showcase::Domain::Model
 
     Gs2::Core::Domain::CallbackID FUserDomain::SubscribeShowcases(
     TFunction<void()> Callback
-
     )
     {
         return Gs2->Cache->ListSubscribe(

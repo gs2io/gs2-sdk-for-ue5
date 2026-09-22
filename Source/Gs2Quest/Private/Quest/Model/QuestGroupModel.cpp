@@ -177,16 +177,17 @@ namespace Gs2::Quest::Model
                 }() : TOptional<FString>())
             ->WithQuests(Data->HasField(ANSI_TO_TCHAR("quests")) ? [Data]() -> TSharedPtr<TArray<Model::FQuestModelPtr>>
                 {
-                    auto v = MakeShared<TArray<Model::FQuestModelPtr>>();
-                    if (!Data->HasTypedField<EJson::Null>(ANSI_TO_TCHAR("quests")) && Data->HasTypedField<EJson::Array>(ANSI_TO_TCHAR("quests")))
+                    if (!Data->HasTypedField<EJson::Array>(ANSI_TO_TCHAR("quests")))
                     {
-                        for (auto JsonObjectValue : Data->GetArrayField(ANSI_TO_TCHAR("quests")))
-                        {
-                            v->Add(Model::FQuestModel::FromJson(JsonObjectValue->AsObject()));
-                        }
+                        return nullptr;
+                    }
+                    auto v = MakeShared<TArray<Model::FQuestModelPtr>>();
+                    for (auto JsonObjectValue : Data->GetArrayField(ANSI_TO_TCHAR("quests")))
+                    {
+                        v->Add(Model::FQuestModel::FromJson(JsonObjectValue->AsObject()));
                     }
                     return v;
-                 }() : MakeShared<TArray<Model::FQuestModelPtr>>())
+                 }() : nullptr)
             ->WithChallengePeriodEventId(Data->HasField(ANSI_TO_TCHAR("challengePeriodEventId")) ? [Data]() -> TOptional<FString>
                 {
                     FString v("");
@@ -305,6 +306,28 @@ namespace Gs2::Quest::Model::Cache
         auto CacheOwnerValue = CacheOwnerArgumentItem;
         CacheSnapshot->Put(Gs2::Quest::Model::FQuestGroupModel::TypeName, CacheOwnerParentKey, CacheOwnerKey, CacheOwnerValue,
             FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
+        );
+    }
+
+    FString FQuestGroupModelCache::PutUserData(
+        const Gs2::Core::Domain::FCacheDatabasePtr& Cache,
+        TOptional<FString> NamespaceName,
+        TOptional<FString> UserId,
+        TOptional<int32> TimeOffset,
+        const Gs2::Quest::Model::FQuestGroupModelPtr& Item
+    )
+    {
+        if (!Item.IsValid()) return FString();
+        Put(
+            Cache,
+            NamespaceName,
+            Item->GetName(),
+            TimeOffset,
+            Item
+        );
+        return CreateCacheParentKey(
+            NamespaceName,
+            TimeOffset
         );
     }
 

@@ -49,6 +49,7 @@
 #include "Showcase/Model/Cache/RandomDisplayItem.h"
 #include "Showcase/Model/Cache/Showcase.h"
 #include "Showcase/Model/Cache/DisplayItem.h"
+#include "Showcase/Model/Cache/RandomDisplayItem.h"
 
 #include "Core/Domain/Gs2.h"
 
@@ -449,7 +450,6 @@ namespace Gs2::Showcase::Domain
 
     Gs2::Core::Domain::CallbackID FGs2ShowcaseDomain::SubscribeNamespaces(
     TFunction<void()> Callback
-
     )
     {
         return Gs2->Cache->ListSubscribe(
@@ -588,6 +588,25 @@ namespace Gs2::Showcase::Domain
             const auto RequestModel = Gs2::Showcase::Request::FDecrementPurchaseCountByUserIdRequest::FromJson(RequestModelJson);
             const auto ResultModel = Gs2::Showcase::Result::FDecrementPurchaseCountByUserIdResult::FromJson(ResultModelJson);
 
+            if (ResultModel->GetItem() != nullptr)
+            {
+                const auto ParentKey = Gs2::Showcase::Model::Cache::FRandomDisplayItemCache::CreateCacheParentKey(
+                    RequestModel->GetNamespaceName(),
+                    RequestModel->GetUserId(),
+                    RequestModel->GetShowcaseName(),
+                    TimeOffset
+                );
+                const auto Key = Gs2::Showcase::Domain::Model::FRandomDisplayItemDomain::CreateCacheKey(
+                    ResultModel->GetItem()->GetName()
+                );
+                Gs2->Cache->Put(
+                    Gs2::Showcase::Model::FRandomDisplayItem::TypeName,
+                    ParentKey,
+                    Key,
+                    ResultModel->GetItem(),
+                    FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
+                );
+            }
         }
         if (Method == "ForceReDrawByUserId") {
             TSharedPtr<FJsonObject> RequestModelJson;
@@ -620,6 +639,46 @@ namespace Gs2::Showcase::Domain
         }
     }
 
+    TOptional<FString> FGs2ShowcaseDomain::PutUserData(
+        const TOptional<FString> NamespaceName,
+        const TOptional<FString> UserId,
+        const TOptional<int32> TimeOffset,
+        const FString Kind,
+        const FString Payload
+    ) {
+        TSharedPtr<FJsonObject> PayloadJson;
+        if (const TSharedRef<TJsonReader<>> JsonReader = TJsonReaderFactory<>::Create(Payload);
+            !FJsonSerializer::Deserialize(JsonReader, PayloadJson) || !PayloadJson.IsValid())
+        {
+            return TOptional<FString>();
+        }
+        if (Kind == "randomDisplayItem") {
+            const auto Item = Gs2::Showcase::Model::FRandomDisplayItem::FromJson(PayloadJson);
+            if (!Item.IsValid()) return TOptional<FString>();
+            const auto ParentKey = Gs2::Showcase::Model::Cache::FRandomDisplayItemCache::PutUserData(
+                Gs2->Cache,
+                NamespaceName,
+                UserId,
+                TimeOffset,
+                Item
+            );
+            return ParentKey.IsEmpty() ? TOptional<FString>() : TOptional<FString>(ParentKey);
+        }
+        return TOptional<FString>();
+    }
+
+    bool FGs2ShowcaseDomain::SetListCached(
+        const TOptional<int32> TimeOffset,
+        const FString Kind,
+        const FString ParentKey
+    ) {
+        if (Kind == "randomDisplayItem") {
+            Gs2->Cache->SetListCached(Gs2::Showcase::Model::FRandomDisplayItem::TypeName, ParentKey);
+            return true;
+        }
+        return false;
+    }
+
     void FGs2ShowcaseDomain::UpdateCacheFromStampTask(
         const FString Method,
         const FString Request,
@@ -642,6 +701,25 @@ namespace Gs2::Showcase::Domain
             const auto RequestModel = Gs2::Showcase::Request::FIncrementPurchaseCountByUserIdRequest::FromJson(RequestModelJson);
             const auto ResultModel = Gs2::Showcase::Result::FIncrementPurchaseCountByUserIdResult::FromJson(ResultModelJson);
 
+            if (ResultModel->GetItem() != nullptr)
+            {
+                const auto ParentKey = Gs2::Showcase::Model::Cache::FRandomDisplayItemCache::CreateCacheParentKey(
+                    RequestModel->GetNamespaceName(),
+                    RequestModel->GetUserId(),
+                    RequestModel->GetShowcaseName(),
+                    TimeOffset
+                );
+                const auto Key = Gs2::Showcase::Domain::Model::FRandomDisplayItemDomain::CreateCacheKey(
+                    ResultModel->GetItem()->GetName()
+                );
+                Gs2->Cache->Put(
+                    Gs2::Showcase::Model::FRandomDisplayItem::TypeName,
+                    ParentKey,
+                    Key,
+                    ResultModel->GetItem(),
+                    FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
+                );
+            }
         }
     }
 
@@ -675,6 +753,25 @@ namespace Gs2::Showcase::Domain
             const auto RequestModel = Gs2::Showcase::Request::FDecrementPurchaseCountByUserIdRequest::FromJson(RequestModelJson);
             const auto ResultModel = Gs2::Showcase::Result::FDecrementPurchaseCountByUserIdResult::FromJson(ResultModelJson);
 
+            if (ResultModel->GetItem() != nullptr)
+            {
+                const auto ParentKey = Gs2::Showcase::Model::Cache::FRandomDisplayItemCache::CreateCacheParentKey(
+                    RequestModel->GetNamespaceName(),
+                    RequestModel->GetUserId(),
+                    RequestModel->GetShowcaseName(),
+                    TimeOffset
+                );
+                const auto Key = Gs2::Showcase::Domain::Model::FRandomDisplayItemDomain::CreateCacheKey(
+                    ResultModel->GetItem()->GetName()
+                );
+                Gs2->Cache->Put(
+                    Gs2::Showcase::Model::FRandomDisplayItem::TypeName,
+                    ParentKey,
+                    Key,
+                    ResultModel->GetItem(),
+                    FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
+                );
+            }
         }
         if (Method == "force_re_draw_by_user_id") {
             TSharedPtr<FJsonObject> RequestModelJson;

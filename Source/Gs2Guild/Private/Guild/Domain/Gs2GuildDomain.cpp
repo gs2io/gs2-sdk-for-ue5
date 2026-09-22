@@ -51,6 +51,8 @@
 #include "Guild/Model/Cache/IgnoreUser.h"
 #include "Guild/Model/Cache/LastGuildMasterActivity.h"
 #include "Guild/Model/Cache/ReceiveMemberRequest.h"
+#include "Guild/Model/Cache/JoinedGuild.h"
+#include "Guild/Model/Cache/SendMemberRequest.h"
 
 #include "Core/Domain/Gs2.h"
 
@@ -451,7 +453,6 @@ namespace Gs2::Guild::Domain
 
     Gs2::Core::Domain::CallbackID FGs2GuildDomain::SubscribeNamespaces(
     TFunction<void()> Callback
-
     )
     {
         return Gs2->Cache->ListSubscribe(
@@ -644,6 +645,62 @@ namespace Gs2::Guild::Domain
                     }
 
         }
+    }
+
+    TOptional<FString> FGs2GuildDomain::PutUserData(
+        const TOptional<FString> NamespaceName,
+        const TOptional<FString> UserId,
+        const TOptional<int32> TimeOffset,
+        const FString Kind,
+        const FString Payload
+    ) {
+        TSharedPtr<FJsonObject> PayloadJson;
+        if (const TSharedRef<TJsonReader<>> JsonReader = TJsonReaderFactory<>::Create(Payload);
+            !FJsonSerializer::Deserialize(JsonReader, PayloadJson) || !PayloadJson.IsValid())
+        {
+            return TOptional<FString>();
+        }
+        if (Kind == "joinedGuild") {
+            const auto Item = Gs2::Guild::Model::FJoinedGuild::FromJson(PayloadJson);
+            if (!Item.IsValid()) return TOptional<FString>();
+            const auto ParentKey = Gs2::Guild::Model::Cache::FJoinedGuildCache::PutUserData(
+                Gs2->Cache,
+                NamespaceName,
+                UserId,
+                TimeOffset,
+                Item
+            );
+            return ParentKey.IsEmpty() ? TOptional<FString>() : TOptional<FString>(ParentKey);
+        }
+        if (Kind == "sendMemberRequest") {
+            const auto Item = Gs2::Guild::Model::FSendMemberRequest::FromJson(PayloadJson);
+            if (!Item.IsValid()) return TOptional<FString>();
+            const auto ParentKey = Gs2::Guild::Model::Cache::FSendMemberRequestCache::PutUserData(
+                Gs2->Cache,
+                NamespaceName,
+                UserId,
+                TimeOffset,
+                Item
+            );
+            return ParentKey.IsEmpty() ? TOptional<FString>() : TOptional<FString>(ParentKey);
+        }
+        return TOptional<FString>();
+    }
+
+    bool FGs2GuildDomain::SetListCached(
+        const TOptional<int32> TimeOffset,
+        const FString Kind,
+        const FString ParentKey
+    ) {
+        if (Kind == "joinedGuild") {
+            Gs2->Cache->SetListCached(Gs2::Guild::Model::FJoinedGuild::TypeName, ParentKey);
+            return true;
+        }
+        if (Kind == "sendMemberRequest") {
+            Gs2->Cache->SetListCached(Gs2::Guild::Model::FSendMemberRequest::TypeName, ParentKey);
+            return true;
+        }
+        return false;
     }
 
     void FGs2GuildDomain::UpdateCacheFromStampTask(

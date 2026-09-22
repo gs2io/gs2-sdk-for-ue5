@@ -99,7 +99,6 @@ namespace Gs2::Exchange::Domain::Model
 
         Gs2::Core::Domain::CallbackID SubscribeAwaits(
             TFunction<void()> Callback
-
         );
 
         class FCollectAwaitsTask;

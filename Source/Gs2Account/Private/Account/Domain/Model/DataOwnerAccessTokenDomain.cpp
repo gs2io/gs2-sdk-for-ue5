@@ -24,8 +24,6 @@
 
 #include "Account/Domain/Model/DataOwnerAccessToken.h"
 #include "Account/Domain/Model/DataOwner.h"
-
-#include "Account/Model/Cache/DataOwner.h"
 #include "Account/Domain/Model/Namespace.h"
 #include "Account/Domain/Model/Account.h"
 #include "Account/Domain/Model/AccountAccessToken.h"
@@ -38,6 +36,7 @@
 #include "Account/Domain/Model/TakeOverTypeModel.h"
 #include "Account/Domain/Model/TakeOverTypeModelMaster.h"
 #include "Account/Domain/Model/CurrentModelMaster.h"
+#include "Account/Model/Cache/DataOwner.h"
 
 #include "Core/Domain/Gs2.h"
 #include "Core/Domain/Transaction/JobQueueJobDomainFactory.h"
@@ -58,7 +57,12 @@ namespace Gs2::Account::Domain::Model
         Service(Service),
         Client(MakeShared<Gs2::Account::FGs2AccountRestClient>(Gs2->RestSession)),
         NamespaceName(NamespaceName),
-        AccessToken(AccessToken)
+        AccessToken(AccessToken),
+        ParentKey(Gs2::Account::Domain::Model::FAccountDomain::CreateCacheParentKey(
+            NamespaceName,
+            UserId(),
+            "DataOwner"
+        ))
     {
     }
 
@@ -69,7 +73,8 @@ namespace Gs2::Account::Domain::Model
         Service(From.Service),
         Client(From.Client),
         NamespaceName(From.NamespaceName),
-        AccessToken(From.AccessToken)
+        AccessToken(From.AccessToken),
+        ParentKey(From.ParentKey)
     {
 
     }
@@ -123,10 +128,10 @@ namespace Gs2::Account::Domain::Model
             Gs2::Account::Model::FDataOwner::TypeName,
             CacheParentKey,
             CacheKey,
-            [this, Result]() -> Gs2::Core::Model::FGs2ErrorPtr
+            [Self = Self, Result]() -> Gs2::Core::Model::FGs2ErrorPtr
             {
                 Gs2::Account::Model::FDataOwnerPtr Value;
-                Gs2::Account::Model::Cache::FDataOwnerCache::TryGet(
+                const auto CacheHit = Gs2::Account::Model::Cache::FDataOwnerCache::TryGet(
                     Self->Gs2->Cache,
 
                     Self->NamespaceName,
@@ -134,6 +139,11 @@ namespace Gs2::Account::Domain::Model
                     Self->AccessToken.IsValid() ? Self->AccessToken->GetTimeOffset() : TOptional<int32>(),
                     &Value
                 );
+                if (CacheHit)
+                {
+                    *Result = Value;
+                    return nullptr;
+                }
                 *Result = Value;
                 return nullptr;
             }
@@ -144,16 +154,32 @@ namespace Gs2::Account::Domain::Model
         return Gs2::Core::Util::New<FAsyncTask<FDataOwnerAccessTokenDomain::FModelTask>>(this->AsShared());
     }
 
+    void FDataOwnerAccessTokenDomain::Invalidate()
+    {
+        Gs2::Account::Model::Cache::FDataOwnerCache::Delete(
+            Gs2->Cache,
+
+            NamespaceName,
+            AccessToken.IsValid() ? UserId() : TOptional<FString>(),
+            AccessToken.IsValid() ? AccessToken->GetTimeOffset() : TOptional<int32>()
+        );
+    }
+
     FDataOwnerAccessTokenDomain::FSubscribeWithInitialCallTask::FSubscribeWithInitialCallTask(
-        const TSharedPtr<FDataOwnerAccessTokenDomain> Self,
-        const TFunction<void(Gs2::Account::Model::FDataOwnerPtr)>& Callback
-    ): Self(Self), Callback(Callback)
+        const TSharedPtr<FDataOwnerAccessTokenDomain>& Self,
+        TFunction<void(Gs2::Account::Model::FDataOwnerPtr)> Callback
+    ):
+        Self(Self),
+        Callback(Callback)
     {
     }
 
     FDataOwnerAccessTokenDomain::FSubscribeWithInitialCallTask::FSubscribeWithInitialCallTask(
         const FSubscribeWithInitialCallTask& From
-    ): TGs2Future(From), Self(From.Self), Callback(From.Callback)
+    ):
+        TGs2Future(From),
+        Self(From.Self),
+        Callback(From.Callback)
     {
     }
 
@@ -161,17 +187,14 @@ namespace Gs2::Account::Domain::Model
         TSharedPtr<TSharedPtr<Gs2::Core::Domain::CallbackID>> Result
     )
     {
-        const auto Future = Self->Model();
-        Future->StartSynchronousTask();
-        Future->EnsureCompletion();
-        if (Future->GetTask().IsError())
-        {
-            return Future->GetTask().Error();
-        }
-        const auto Item = Future->GetTask().Result();
-        const auto ID = Self->Subscribe(Callback);
+        const auto Task = Self->Model();
+        Task->StartSynchronousTask();
+        Task->EnsureCompletion();
+        if (Task->GetTask().IsError()) return Task->GetTask().Error();
+        const auto Item = Task->GetTask().Result();
+        const auto CallbackId = Self->Subscribe(Callback);
         Callback(Item);
-        *Result = MakeShared<Gs2::Core::Domain::CallbackID>(ID);
+        *Result = MakeShared<Gs2::Core::Domain::CallbackID>(CallbackId);
         return nullptr;
     }
 
@@ -179,49 +202,40 @@ namespace Gs2::Account::Domain::Model
         TFunction<void(Gs2::Account::Model::FDataOwnerPtr)> Callback
     )
     {
-        return Gs2::Core::Util::New<FAsyncTask<FDataOwnerAccessTokenDomain::FSubscribeWithInitialCallTask>>(this->AsShared(), Callback);
-    }
-    void FDataOwnerAccessTokenDomain::Invalidate()
-    {
-        Gs2::Account::Model::Cache::FDataOwnerCache::Delete(
-            Gs2->Cache,
-            NamespaceName,
-            AccessToken.IsValid() ? UserId() : TOptional<FString>(),
-            AccessToken.IsValid() ? AccessToken->GetTimeOffset() : TOptional<int32>()
-        );
+        return Gs2::Core::Util::New<FAsyncTask<FSubscribeWithInitialCallTask>>(this->AsShared(), Callback);
     }
 
     Gs2::Core::Domain::CallbackID FDataOwnerAccessTokenDomain::Subscribe(
         TFunction<void(Gs2::Account::Model::FDataOwnerPtr)> Callback
     )
     {
+        const auto SubscriptionParentKey = Gs2::Account::Model::Cache::FDataOwnerCache::CreateCacheParentKey(
+
+            NamespaceName,
+            AccessToken.IsValid() ? UserId() : TOptional<FString>(),
+            AccessToken.IsValid() ? AccessToken->GetTimeOffset() : TOptional<int32>()
+        );
+        const auto SubscriptionCacheKey = Gs2::Account::Model::Cache::FDataOwnerCache::CreateCacheKey(
+
+        );
         const TWeakPtr<Gs2::Core::Domain::FGs2> WeakGs2 = Gs2;
         const TWeakPtr<Account::Domain::FGs2AccountDomain> WeakService = Service;
+        const FString RegisteredParentKey = SubscriptionParentKey;
         const TOptional<FString> QueryNamespaceName = NamespaceName;
         const auto SourceToken = AccessToken;
         const TOptional<FString> RegisteredUserId = SourceToken.IsValid()
-            ? SourceToken->GetUserId()
+            ? TOptional<FString>(SourceToken->GetUserId())
             : TOptional<FString>();
-        const TOptional<int32> RegisteredTimeOffset = SourceToken.IsValid()
-            ? SourceToken->GetTimeOffset()
-            : TOptional<int32>();
-        const auto OwnerSubscriptionParentKey = Gs2::Account::Model::Cache::FDataOwnerCache::CreateCacheParentKey(
-            QueryNamespaceName,
-            RegisteredUserId,
-            RegisteredTimeOffset
-        );
-        const auto OwnerSubscriptionKey = Gs2::Account::Model::Cache::FDataOwnerCache::CreateCacheKey(
-
-        );
+        const int32 RegisteredTimeOffset = SourceToken.IsValid() ? SourceToken->GetTimeOffset().Get(0) : 0;
         return Gs2->Cache->Subscribe(
             Gs2::Account::Model::FDataOwner::TypeName,
-            OwnerSubscriptionParentKey,
-            OwnerSubscriptionKey,
+            SubscriptionParentKey,
+            SubscriptionCacheKey,
             [Callback](TSharedPtr<FGs2Object> obj)
             {
                 Callback(StaticCastSharedPtr<Gs2::Account::Model::FDataOwner>(obj));
             },
-            [WeakGs2, WeakService, QueryNamespaceName, SourceToken, RegisteredUserId, RegisteredTimeOffset]()
+            [WeakGs2, WeakService, RegisteredParentKey, QueryNamespaceName, SourceToken, RegisteredUserId, RegisteredTimeOffset]()
             {
                 const auto Owner = WeakGs2.Pin();
                 if (!Owner.IsValid() || !SourceToken.IsValid() || !RegisteredUserId.IsSet())
@@ -229,7 +243,7 @@ namespace Gs2::Account::Domain::Model
                     return;
                 }
                 const auto TokenSnapshot = MakeShared<Gs2::Auth::Model::FAccessToken>(*SourceToken);
-                if (TokenSnapshot->GetUserId() != RegisteredUserId || TokenSnapshot->GetTimeOffset() != RegisteredTimeOffset)
+                if (TokenSnapshot->GetUserId() != RegisteredUserId || TokenSnapshot->GetTimeOffset().Get(0) != RegisteredTimeOffset)
                 {
                     return;
                 }
@@ -239,6 +253,7 @@ namespace Gs2::Account::Domain::Model
                     QueryNamespaceName,
                     TokenSnapshot
                 );
+                Domain->ParentKey = RegisteredParentKey;
                 const auto Task = Domain->Model();
                 Task->StartBackgroundTask();
             }
@@ -249,19 +264,19 @@ namespace Gs2::Account::Domain::Model
         Gs2::Core::Domain::CallbackID CallbackID
     )
     {
-        const auto OwnerSubscriptionParentKey = Gs2::Account::Model::Cache::FDataOwnerCache::CreateCacheParentKey(
+        const auto SubscriptionParentKey = Gs2::Account::Model::Cache::FDataOwnerCache::CreateCacheParentKey(
 
             NamespaceName,
             AccessToken.IsValid() ? UserId() : TOptional<FString>(),
             AccessToken.IsValid() ? AccessToken->GetTimeOffset() : TOptional<int32>()
         );
-        const auto OwnerSubscriptionKey = Gs2::Account::Model::Cache::FDataOwnerCache::CreateCacheKey(
+        const auto SubscriptionCacheKey = Gs2::Account::Model::Cache::FDataOwnerCache::CreateCacheKey(
 
         );
         Gs2->Cache->Unsubscribe(
             Gs2::Account::Model::FDataOwner::TypeName,
-            OwnerSubscriptionParentKey,
-            OwnerSubscriptionKey,
+            SubscriptionParentKey,
+            SubscriptionCacheKey,
             CallbackID
         );
     }

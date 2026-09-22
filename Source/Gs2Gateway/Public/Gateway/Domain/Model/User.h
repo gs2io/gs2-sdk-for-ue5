@@ -175,13 +175,15 @@ namespace Gs2::Gateway::Domain::Model
             Request::FDisconnectAllRequestPtr Request
         );
 
+        TSharedPtr<Gs2::Gateway::Domain::Model::FFirebaseTokenDomain> FirebaseToken(
+        );
+
         Gs2::Gateway::Domain::Iterator::FDescribeWebSocketSessionsByUserIdIteratorPtr WebSocketSessions(
             const TOptional<FString> TimeOffsetToken = TOptional<FString>()
         ) const;
 
         Gs2::Core::Domain::CallbackID SubscribeWebSocketSessions(
             TFunction<void()> Callback
-
         );
 
         class FCollectWebSocketSessionsTask;
@@ -213,9 +215,6 @@ namespace Gs2::Gateway::Domain::Model
         );
 
         TSharedPtr<Gs2::Gateway::Domain::Model::FWebSocketSessionDomain> WebSocketSession(
-        );
-
-        TSharedPtr<Gs2::Gateway::Domain::Model::FFirebaseTokenDomain> FirebaseToken(
         );
 
         static FString CreateCacheParentKey(

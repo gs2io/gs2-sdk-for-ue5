@@ -39,6 +39,7 @@
 #include "Schedule/Model/Cache/CurrentEventMaster.h"
 #include "Schedule/Model/Cache/Trigger.h"
 #include "Schedule/Model/Cache/Event.h"
+#include "Schedule/Model/Cache/Trigger.h"
 
 #include "Core/Domain/Gs2.h"
 
@@ -439,7 +440,6 @@ namespace Gs2::Schedule::Domain
 
     Gs2::Core::Domain::CallbackID FGs2ScheduleDomain::SubscribeNamespaces(
     TFunction<void()> Callback
-
     )
     {
         return Gs2->Cache->ListSubscribe(
@@ -632,6 +632,46 @@ namespace Gs2::Schedule::Domain
                     }
 
         }
+    }
+
+    TOptional<FString> FGs2ScheduleDomain::PutUserData(
+        const TOptional<FString> NamespaceName,
+        const TOptional<FString> UserId,
+        const TOptional<int32> TimeOffset,
+        const FString Kind,
+        const FString Payload
+    ) {
+        TSharedPtr<FJsonObject> PayloadJson;
+        if (const TSharedRef<TJsonReader<>> JsonReader = TJsonReaderFactory<>::Create(Payload);
+            !FJsonSerializer::Deserialize(JsonReader, PayloadJson) || !PayloadJson.IsValid())
+        {
+            return TOptional<FString>();
+        }
+        if (Kind == "trigger") {
+            const auto Item = Gs2::Schedule::Model::FTrigger::FromJson(PayloadJson);
+            if (!Item.IsValid()) return TOptional<FString>();
+            const auto ParentKey = Gs2::Schedule::Model::Cache::FTriggerCache::PutUserData(
+                Gs2->Cache,
+                NamespaceName,
+                UserId,
+                TimeOffset,
+                Item
+            );
+            return ParentKey.IsEmpty() ? TOptional<FString>() : TOptional<FString>(ParentKey);
+        }
+        return TOptional<FString>();
+    }
+
+    bool FGs2ScheduleDomain::SetListCached(
+        const TOptional<int32> TimeOffset,
+        const FString Kind,
+        const FString ParentKey
+    ) {
+        if (Kind == "trigger") {
+            Gs2->Cache->SetListCached(Gs2::Schedule::Model::FTrigger::TypeName, ParentKey);
+            return true;
+        }
+        return false;
     }
 
     void FGs2ScheduleDomain::UpdateCacheFromStampTask(

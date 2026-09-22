@@ -33,6 +33,7 @@
 
 #include "AdReward/Model/Cache/Namespace.h"
 #include "AdReward/Model/Cache/Point.h"
+#include "AdReward/Model/Cache/Point.h"
 
 #include "Core/Domain/Gs2.h"
 
@@ -433,7 +434,6 @@ namespace Gs2::AdReward::Domain
 
     Gs2::Core::Domain::CallbackID FGs2AdRewardDomain::SubscribeNamespaces(
     TFunction<void()> Callback
-
     )
     {
         return Gs2->Cache->ListSubscribe(
@@ -590,6 +590,46 @@ namespace Gs2::AdReward::Domain
                     }
 
         }
+    }
+
+    TOptional<FString> FGs2AdRewardDomain::PutUserData(
+        const TOptional<FString> NamespaceName,
+        const TOptional<FString> UserId,
+        const TOptional<int32> TimeOffset,
+        const FString Kind,
+        const FString Payload
+    ) {
+        TSharedPtr<FJsonObject> PayloadJson;
+        if (const TSharedRef<TJsonReader<>> JsonReader = TJsonReaderFactory<>::Create(Payload);
+            !FJsonSerializer::Deserialize(JsonReader, PayloadJson) || !PayloadJson.IsValid())
+        {
+            return TOptional<FString>();
+        }
+        if (Kind == "point") {
+            const auto Item = Gs2::AdReward::Model::FPoint::FromJson(PayloadJson);
+            if (!Item.IsValid()) return TOptional<FString>();
+            const auto ParentKey = Gs2::AdReward::Model::Cache::FPointCache::PutUserData(
+                Gs2->Cache,
+                NamespaceName,
+                UserId,
+                TimeOffset,
+                Item
+            );
+            return ParentKey.IsEmpty() ? TOptional<FString>() : TOptional<FString>(ParentKey);
+        }
+        return TOptional<FString>();
+    }
+
+    bool FGs2AdRewardDomain::SetListCached(
+        const TOptional<int32> TimeOffset,
+        const FString Kind,
+        const FString ParentKey
+    ) {
+        if (Kind == "point") {
+            Gs2->Cache->SetListCached(Gs2::AdReward::Model::FPoint::TypeName, ParentKey);
+            return true;
+        }
+        return false;
     }
 
     void FGs2AdRewardDomain::UpdateCacheFromStampTask(

@@ -79,6 +79,10 @@
 #include "Inventory/Model/Cache/BigInventoryModel.h"
 #include "Inventory/Model/Cache/BigItemModelMaster.h"
 #include "Inventory/Model/Cache/ItemModelMaster.h"
+#include "Inventory/Model/Cache/BigItem.h"
+#include "Inventory/Model/Cache/Inventory.h"
+#include "Inventory/Model/Cache/ItemSet.h"
+#include "Inventory/Model/Cache/SimpleItem.h"
 
 #include "Core/Domain/Gs2.h"
 
@@ -479,7 +483,6 @@ namespace Gs2::Inventory::Domain
 
     Gs2::Core::Domain::CallbackID FGs2InventoryDomain::SubscribeNamespaces(
     TFunction<void()> Callback
-
     )
     {
         return Gs2->Cache->ListSubscribe(
@@ -719,11 +722,6 @@ namespace Gs2::Inventory::Domain
                             TimeOffset, Item
                         );
                     }
-                    Gs2::Inventory::Model::Cache::FItemSetCache::Put(
-                        Gs2->Cache,
-                        RequestModel->GetNamespaceName(), RequestModel->GetUserId(), RequestModel->GetInventoryName(), RequestModel->GetItemName(),
-                        TimeOffset, ResultModel->GetItems()
-                    );
                 }
                 Gs2->Cache->SetListCached(
                     Gs2::Inventory::Model::FItemSet::TypeName,
@@ -742,7 +740,7 @@ namespace Gs2::Inventory::Domain
                     RequestModel->GetUserId(),
                     TimeOffset
                 );
-                const auto Key = Gs2::Inventory::Model::Cache::FInventoryCache::CreateCacheKey(
+                const auto Key = Gs2::Inventory::Domain::Model::FInventoryDomain::CreateCacheKey(
                     ResultModel->GetInventory()->GetInventoryName()
                 );
                 TSharedPtr<Gs2::Inventory::Model::FInventory> Item;
@@ -1135,6 +1133,126 @@ namespace Gs2::Inventory::Domain
         }
     }
 
+    TOptional<FString> FGs2InventoryDomain::PutUserData(
+        const TOptional<FString> NamespaceName,
+        const TOptional<FString> UserId,
+        const TOptional<int32> TimeOffset,
+        const FString Kind,
+        const FString Payload
+    ) {
+        TSharedPtr<FJsonObject> PayloadJson;
+        if (const TSharedRef<TJsonReader<>> JsonReader = TJsonReaderFactory<>::Create(Payload);
+            !FJsonSerializer::Deserialize(JsonReader, PayloadJson) || !PayloadJson.IsValid())
+        {
+            return TOptional<FString>();
+        }
+        if (Kind == "bigItem") {
+            const auto Item = Gs2::Inventory::Model::FBigItem::FromJson(PayloadJson);
+            if (!Item.IsValid()) return TOptional<FString>();
+            const auto ParentKey = Gs2::Inventory::Model::Cache::FBigItemCache::PutUserData(
+                Gs2->Cache,
+                NamespaceName,
+                UserId,
+                TimeOffset,
+                Item
+            );
+            return ParentKey.IsEmpty() ? TOptional<FString>() : TOptional<FString>(ParentKey);
+        }
+        if (Kind == "inventory") {
+            const auto Item = Gs2::Inventory::Model::FInventory::FromJson(PayloadJson);
+            if (!Item.IsValid()) return TOptional<FString>();
+            const auto ParentKey = Gs2::Inventory::Model::Cache::FInventoryCache::PutUserData(
+                Gs2->Cache,
+                NamespaceName,
+                UserId,
+                TimeOffset,
+                Item
+            );
+            return ParentKey.IsEmpty() ? TOptional<FString>() : TOptional<FString>(ParentKey);
+        }
+        if (Kind == "itemSet") {
+            const auto Item = Gs2::Inventory::Model::FItemSet::FromJson(PayloadJson);
+            if (!Item.IsValid()) return TOptional<FString>();
+            const auto ParentKey = Gs2::Inventory::Model::Cache::FItemSetCache::PutUserData(
+                Gs2->Cache,
+                NamespaceName,
+                UserId,
+                TimeOffset,
+                Item
+            );
+            return ParentKey.IsEmpty() ? TOptional<FString>() : TOptional<FString>(ParentKey);
+        }
+        if (Kind == "simpleItem") {
+            const auto Item = Gs2::Inventory::Model::FSimpleItem::FromJson(PayloadJson);
+            if (!Item.IsValid()) return TOptional<FString>();
+            const auto ParentKey = Gs2::Inventory::Model::Cache::FSimpleItemCache::PutUserData(
+                Gs2->Cache,
+                NamespaceName,
+                UserId,
+                TimeOffset,
+                Item
+            );
+            return ParentKey.IsEmpty() ? TOptional<FString>() : TOptional<FString>(ParentKey);
+        }
+        return TOptional<FString>();
+    }
+
+    bool FGs2InventoryDomain::SetListCached(
+        const TOptional<int32> TimeOffset,
+        const FString Kind,
+        const FString ParentKey
+    ) {
+        if (Kind == "bigItem") {
+            Gs2->Cache->SetListCached(Gs2::Inventory::Model::FBigItem::TypeName, ParentKey);
+            return true;
+        }
+        if (Kind == "inventory") {
+            Gs2->Cache->SetListCached(Gs2::Inventory::Model::FInventory::TypeName, ParentKey);
+            return true;
+        }
+        if (Kind == "itemSet") {
+            Gs2->Cache->SetListCached(Gs2::Inventory::Model::FItemSet::TypeName, ParentKey);
+            // ItemSet(itemName) の Model() は ItemSet[]（キー itemName）の配列キャッシュを読むので、
+            // 親ごとに itemName で束ねて配列も入れる（DescribeItemSets と同じ像）
+            if (const auto Items = Gs2->Cache->TryGetList<Gs2::Inventory::Model::FItemSet>(ParentKey); Items.IsValid())
+            {
+                TArray<FString> ItemNames;
+                TMap<FString, TSharedPtr<TArray<Gs2::Inventory::Model::FItemSetPtr>>> Groups;
+                for (const auto& Item : *Items)
+                {
+                    if (!Item.IsValid() || !Item->GetItemName().IsSet()) continue;
+                    auto& Group = Groups.FindOrAdd(*Item->GetItemName());
+                    if (!Group.IsValid())
+                    {
+                        Group = MakeShared<TArray<Gs2::Inventory::Model::FItemSetPtr>>();
+                        ItemNames.Add(*Item->GetItemName());
+                    }
+                    Group->Add(Item);
+                }
+                for (const auto& ItemName : ItemNames)
+                {
+                    const auto Group = Groups[ItemName];
+                    const auto First = (*Group)[0];
+                    Gs2::Inventory::Model::Cache::FItemSetCache::Put(
+                        Gs2->Cache,
+                        (First->GetItemSetId().IsSet() ? Gs2::Inventory::Model::FItemSet::GetNamespaceNameFromGrn(*First->GetItemSetId()) : TOptional<FString>()),
+                        First->GetUserId(),
+                        First->GetInventoryName(),
+                        TOptional<FString>(ItemName),
+                        TimeOffset,
+                        Group
+                    );
+                }
+            }
+            return true;
+        }
+        if (Kind == "simpleItem") {
+            Gs2->Cache->SetListCached(Gs2::Inventory::Model::FSimpleItem::TypeName, ParentKey);
+            return true;
+        }
+        return false;
+    }
+
     void FGs2InventoryDomain::UpdateCacheFromStampTask(
         const FString Method,
         const FString Request,
@@ -1182,11 +1300,6 @@ namespace Gs2::Inventory::Domain
                             TimeOffset, Item
                         );
                     }
-                    Gs2::Inventory::Model::Cache::FItemSetCache::Put(
-                        Gs2->Cache,
-                        RequestModel->GetNamespaceName(), RequestModel->GetUserId(), RequestModel->GetInventoryName(), RequestModel->GetItemName(),
-                        TimeOffset, ResultModel->GetItems()
-                    );
                 }
                 Gs2->Cache->SetListCached(
                     Gs2::Inventory::Model::FItemSet::TypeName,
@@ -1205,7 +1318,7 @@ namespace Gs2::Inventory::Domain
                     RequestModel->GetUserId(),
                     TimeOffset
                 );
-                const auto Key = Gs2::Inventory::Model::Cache::FInventoryCache::CreateCacheKey(
+                const auto Key = Gs2::Inventory::Domain::Model::FInventoryDomain::CreateCacheKey(
                     ResultModel->GetInventory()->GetInventoryName()
                 );
                 TSharedPtr<Gs2::Inventory::Model::FInventory> Item;
@@ -1454,11 +1567,6 @@ namespace Gs2::Inventory::Domain
                             TimeOffset, Item
                         );
                     }
-                    Gs2::Inventory::Model::Cache::FItemSetCache::Put(
-                        Gs2->Cache,
-                        RequestModel->GetNamespaceName(), RequestModel->GetUserId(), RequestModel->GetInventoryName(), RequestModel->GetItemName(),
-                        TimeOffset, ResultModel->GetItems()
-                    );
                 }
                 Gs2->Cache->SetListCached(
                     Gs2::Inventory::Model::FItemSet::TypeName,
@@ -1477,7 +1585,7 @@ namespace Gs2::Inventory::Domain
                     RequestModel->GetUserId(),
                     TimeOffset
                 );
-                const auto Key = Gs2::Inventory::Model::Cache::FInventoryCache::CreateCacheKey(
+                const auto Key = Gs2::Inventory::Domain::Model::FInventoryDomain::CreateCacheKey(
                     ResultModel->GetInventory()->GetInventoryName()
                 );
                 TSharedPtr<Gs2::Inventory::Model::FInventory> Item;

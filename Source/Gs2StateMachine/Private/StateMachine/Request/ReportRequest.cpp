@@ -154,16 +154,17 @@ namespace Gs2::StateMachine::Request
               }() : TOptional<FString>())
           ->WithEvents(Data->HasField(ANSI_TO_TCHAR("events")) ? [Data]() -> TSharedPtr<TArray<Model::FEventPtr>>
               {
-                  auto v = MakeShared<TArray<Model::FEventPtr>>();
-                  if (!Data->HasTypedField<EJson::Null>(ANSI_TO_TCHAR("events")) && Data->HasTypedField<EJson::Array>(ANSI_TO_TCHAR("events")))
+                  if (!Data->HasTypedField<EJson::Array>(ANSI_TO_TCHAR("events")))
                   {
-                      for (auto JsonObjectValue : Data->GetArrayField(ANSI_TO_TCHAR("events")))
-                      {
-                          v->Add(Model::FEvent::FromJson(JsonObjectValue->AsObject()));
-                      }
+                      return nullptr;
                   }
+                  auto v = MakeShared<TArray<Model::FEventPtr>>();
+                  for (auto JsonObjectValue : Data->GetArrayField(ANSI_TO_TCHAR("events")))
+                      {
+                      v->Add(Model::FEvent::FromJson(JsonObjectValue->AsObject()));
+                      }
                   return v;
-              }() : MakeShared<TArray<Model::FEventPtr>>())
+              }() : nullptr)
           ->WithDuplicationAvoider(Data->HasField(ANSI_TO_TCHAR("duplicationAvoider")) ? TOptional<FString>(Data->GetStringField(ANSI_TO_TCHAR("duplicationAvoider"))) : TOptional<FString>());
     }
 

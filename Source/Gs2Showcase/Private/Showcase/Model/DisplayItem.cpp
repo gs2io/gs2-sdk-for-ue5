@@ -268,6 +268,32 @@ namespace Gs2::Showcase::Model::Cache
         );
     }
 
+    FString FDisplayItemCache::PutUserData(
+        const Gs2::Core::Domain::FCacheDatabasePtr& Cache,
+        TOptional<FString> NamespaceName,
+        TOptional<FString> UserId,
+        TOptional<int32> TimeOffset,
+        const Gs2::Showcase::Model::FDisplayItemPtr& Item
+    )
+    {
+        if (!Item.IsValid()) return FString();
+        Put(
+            Cache,
+            NamespaceName,
+            UserId,
+            TOptional<FString>() /* TODO: 一括取得のエントリから showcaseName を決められない。手書きで値を入れる */,
+            Item->GetDisplayItemId(),
+            TimeOffset,
+            Item
+        );
+        return CreateCacheParentKey(
+            NamespaceName,
+            UserId,
+            TOptional<FString>() /* TODO: 一括取得のエントリから showcaseName を決められない。手書きで値を入れる */,
+            TimeOffset
+        );
+    }
+
     void FDisplayItemCache::Delete(
         const Gs2::Core::Domain::FCacheDatabasePtr& CacheOwnerArgumentCache,
         TOptional<FString> CacheOwnerArgumentNamespaceName,

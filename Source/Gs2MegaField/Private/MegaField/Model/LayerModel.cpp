@@ -263,6 +263,30 @@ namespace Gs2::MegaField::Model::Cache
         );
     }
 
+    FString FLayerModelCache::PutUserData(
+        const Gs2::Core::Domain::FCacheDatabasePtr& Cache,
+        TOptional<FString> NamespaceName,
+        TOptional<FString> UserId,
+        TOptional<int32> TimeOffset,
+        const Gs2::MegaField::Model::FLayerModelPtr& Item
+    )
+    {
+        if (!Item.IsValid()) return FString();
+        Put(
+            Cache,
+            NamespaceName,
+            (Item->GetLayerModelId().IsSet() ? Gs2::MegaField::Model::FLayerModel::GetAreaModelNameFromGrn(*Item->GetLayerModelId()) : TOptional<FString>()),
+            Item->GetName(),
+            TimeOffset,
+            Item
+        );
+        return CreateCacheParentKey(
+            NamespaceName,
+            (Item->GetLayerModelId().IsSet() ? Gs2::MegaField::Model::FLayerModel::GetAreaModelNameFromGrn(*Item->GetLayerModelId()) : TOptional<FString>()),
+            TimeOffset
+        );
+    }
+
     void FLayerModelCache::Delete(
         const Gs2::Core::Domain::FCacheDatabasePtr& CacheOwnerArgumentCache,
         TOptional<FString> CacheOwnerArgumentNamespaceName,

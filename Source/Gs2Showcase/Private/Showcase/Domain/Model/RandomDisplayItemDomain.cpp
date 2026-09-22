@@ -171,16 +171,6 @@ namespace Gs2::Showcase::Domain::Model
         const auto ResultModel = Future->GetTask().Result();
         Future->EnsureCompletion();
 
-        Self->Gs2->Cache->ClearListCache(
-            Gs2::Showcase::Model::FRandomDisplayItem::TypeName,
-            Gs2::Showcase::Model::Cache::FRandomDisplayItemCache::CreateCacheParentKey(
-                Self->NamespaceName,
-                Self->UserId,
-                Self->ShowcaseName,
-                TOptional<int32>()
-            )
-        );
-
         const auto Transaction = Gs2::Core::Domain::Internal::FTransactionDomainFactory::ToTransaction(
             Self->Gs2,
             *Self->UserId,

@@ -97,7 +97,6 @@ namespace Gs2::Showcase::Domain::Model
 
         Gs2::Core::Domain::CallbackID SubscribeShowcases(
             TFunction<void()> Callback
-
         );
 
         class FCollectShowcasesTask;
