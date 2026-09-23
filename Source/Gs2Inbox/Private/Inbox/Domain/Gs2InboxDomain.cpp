@@ -667,14 +667,29 @@ namespace Gs2::Inbox::Domain
                           {
                             return;
                             }
-                      Gs2::Inbox::Model::Cache::FMessageCache::Delete(
-                    Gs2->Cache,
+                    if (ResultModel.IsValid() && ResultModel->GetItem().IsValid() && ResultModel->GetItem()->GetIsRead().IsSet() && *ResultModel->GetItem()->GetIsRead())
+                    {
+                        Gs2::Inbox::Model::Cache::FMessageCache::Put(
+                            Gs2->Cache,
 
-                    RequestModel->GetNamespaceName(),
-                    (ResultModel.IsValid() && ResultModel->GetItem().IsValid() ? ResultModel->GetItem()->GetUserId() : TOptional<FString>()),
-                    RequestModel->GetMessageName(),
-                    TimeOffset
-                );
+                            RequestModel->GetNamespaceName(),
+                            (ResultModel.IsValid() && ResultModel->GetItem().IsValid() ? ResultModel->GetItem()->GetUserId() : TOptional<FString>()),
+                            RequestModel->GetMessageName(),
+                            TimeOffset,
+                            ResultModel->GetItem()
+                        );
+                    }
+                    else
+                    {
+                        Gs2::Inbox::Model::Cache::FMessageCache::Delete(
+                            Gs2->Cache,
+
+                            RequestModel->GetNamespaceName(),
+                            (ResultModel.IsValid() && ResultModel->GetItem().IsValid() ? ResultModel->GetItem()->GetUserId() : TOptional<FString>()),
+                            RequestModel->GetMessageName(),
+                            TimeOffset
+                        );
+                    }
 
         }
         if (Method == "DeleteMessageByUserId") {

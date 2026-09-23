@@ -182,14 +182,29 @@ namespace Gs2::Inbox::Domain::Model
                       Details->Add(MakeShared<Gs2::Core::Model::FGs2ErrorDetail>(TEXT("userId"), TEXT("userId is invalid."), TEXT("invalid_response")));
                       return MakeShared<Gs2::Core::Model::FUnknownError>(Details);
                     }
-              Gs2::Inbox::Model::Cache::FMessageCache::Delete(
-            Self->Gs2->Cache,
+            if (ResultModel.IsValid() && ResultModel->GetItem().IsValid() && ResultModel->GetItem()->GetIsRead().IsSet() && *ResultModel->GetItem()->GetIsRead())
+            {
+                Gs2::Inbox::Model::Cache::FMessageCache::Put(
+                    Self->Gs2->Cache,
 
-            Request->GetNamespaceName(),
-            (ResultModel.IsValid() && ResultModel->GetItem().IsValid() ? ResultModel->GetItem()->GetUserId() : TOptional<FString>()),
-            Request->GetMessageName(),
-            TOptional<int32>()
-        );
+                    Request->GetNamespaceName(),
+                    (ResultModel.IsValid() && ResultModel->GetItem().IsValid() ? ResultModel->GetItem()->GetUserId() : TOptional<FString>()),
+                    Request->GetMessageName(),
+                    TOptional<int32>(),
+                    ResultModel->GetItem()
+                );
+            }
+            else
+            {
+                Gs2::Inbox::Model::Cache::FMessageCache::Delete(
+                    Self->Gs2->Cache,
+
+                    Request->GetNamespaceName(),
+                    (ResultModel.IsValid() && ResultModel->GetItem().IsValid() ? ResultModel->GetItem()->GetUserId() : TOptional<FString>()),
+                    Request->GetMessageName(),
+                    TOptional<int32>()
+                );
+            }
         auto Domain = Self;
 
         *Result = Domain;

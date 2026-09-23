@@ -16,6 +16,7 @@
 
 #pragma once
 
+#include "HAL/CriticalSection.h"
 #include "Core/Domain/Transaction/TransactionDomain.h"
 #include "Core/Domain/Transaction/TransactionAccessTokenDomain.h"
 
@@ -29,6 +30,16 @@ namespace Gs2::Core::Domain
 		FString TransactionId;
 		FString StampSheet;
 		FString StampSheetEncryptionKeyId;
+		// The stamp sheet runs once per instance: the SDK waits on it inside the
+		// action that issued it, and a caller that waits again shares that run
+		// instead of sending every task a second time.
+		FCriticalSection RunLock;
+		bool bRan = false;
+		FTransactionAccessTokenDomainPtr RunResult;
+
+		Gs2::Core::Model::FGs2ErrorPtr RunImpl(
+			TSharedPtr<TSharedPtr<FTransactionAccessTokenDomain>> Result
+		);
 
 		FTransactionAccessTokenDomainPtr HandleResult(
 			FString Action,

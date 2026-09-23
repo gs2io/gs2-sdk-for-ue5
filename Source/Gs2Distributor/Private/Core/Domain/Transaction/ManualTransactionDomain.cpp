@@ -17,6 +17,7 @@
 #include "../Public/Core/Domain/Transaction/ManualTransactionDomain.h"
 
 #include "Core/Domain/Gs2.h"
+#include "Misc/ScopeLock.h"
 #include "Distributor/Gs2DistributorRestClient.h"
 
 namespace Gs2::Core::Domain
@@ -111,6 +112,40 @@ namespace Gs2::Core::Domain
 		TSharedPtr<TSharedPtr<FTransactionDomain>> Result
 	)
 	{
+		FTransactionDomainPtr Transaction;
+		{
+			FScopeLock Lock(&RunLock);
+			if (!bRan)
+			{
+				const auto Run = MakeShared<FTransactionDomainPtr>();
+				if (const auto Error = RunImpl(Run); Error.IsValid())
+				{
+					// A failed run is forgotten so that waiting again retries it.
+					return Error;
+				}
+				RunResult = *Run;
+				bRan = true;
+			}
+			Transaction = RunResult;
+		}
+        if (All && Transaction.IsValid()) {
+        	auto Future = Transaction->Wait(true);
+        	Future->StartSynchronousTask();
+        	if (Future->GetTask().IsError())
+        	{
+        		return Future->GetTask().Error();
+        	}
+        	*Result = nullptr;
+			return nullptr;
+        }
+        *Result = Transaction;
+		return nullptr;
+	}
+
+	Gs2::Core::Model::FGs2ErrorPtr FManualTransactionDomain::RunImpl(
+		TSharedPtr<TSharedPtr<FTransactionDomain>> Result
+	)
+	{
         auto Client = MakeShared<Gs2::Distributor::FGs2DistributorRestClient>(
             Gs2->RestSession
         );
@@ -186,14 +221,7 @@ namespace Gs2::Core::Domain
                     {
                     	if (Gs2->TransactionConfiguration.IsValid()) {
                     		Gs2->TransactionConfiguration->NamespaceName = TOptional<FString>();
-                    		auto Future2 = Wait(All);
-                    		Future2->StartSynchronousTask();
-                    		if (Future2->GetTask().IsError())
-                    		{
-                    			return Future2->GetTask().Error();
-                    		}
-                    		*Result = Future2->GetTask().Result();
-                    		return nullptr;
+                    		return RunImpl(Result);
                     	}
                     }
             		return Future->GetTask().Error();
@@ -266,14 +294,7 @@ namespace Gs2::Core::Domain
                     {
                     	if (Gs2->TransactionConfiguration.IsValid()) {
                     		Gs2->TransactionConfiguration->NamespaceName = TOptional<FString>();
-                    		auto Future2 = Wait(All);
-                    		Future2->StartSynchronousTask();
-                    		if (Future2->GetTask().IsError())
-                    		{
-                    			return Future2->GetTask().Error();
-                    		}
-                    		*Result = Future2->GetTask().Result();
-                    		return nullptr;
+                    		return RunImpl(Result);
                     	}
                     }
             		return Future->GetTask().Error();
@@ -338,14 +359,7 @@ namespace Gs2::Core::Domain
         		{
         			if (Gs2->TransactionConfiguration.IsValid()) {
         				Gs2->TransactionConfiguration->NamespaceName = TOptional<FString>();
-        				auto Future2 = Wait(All);
-        				Future2->StartSynchronousTask();
-        				if (Future2->GetTask().IsError())
-        				{
-        					return Future2->GetTask().Error();
-        				}
-        				*Result = Future2->GetTask().Result();
-        				return nullptr;
+        				return RunImpl(Result);
         			}
         		}
         		return Future->GetTask().Error();
@@ -367,18 +381,7 @@ namespace Gs2::Core::Domain
         	}
         }
 
-        auto Transaction = HandleResult(*action, resultJson);
-        if (All && Transaction.IsValid()) {
-        	auto Future = Transaction->Wait(true);
-        	Future->StartSynchronousTask();
-        	if (Future->GetTask().IsError())
-        	{
-        		return Future->GetTask().Error();
-        	}
-        	*Result = nullptr;
-			return nullptr;
-        }
-        *Result = Transaction;
+        *Result = HandleResult(*action, resultJson);
 		return nullptr;
 	}
 
