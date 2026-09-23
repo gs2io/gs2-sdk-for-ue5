@@ -159,21 +159,32 @@ namespace Gs2::Inbox::Domain::Model
         }
         const auto ResultModel = Future->GetTask().Result();
         Future->EnsureCompletion();
-        Gs2::Inbox::Model::Cache::FMessageCache::Delete(
-            Self->Gs2->Cache,
-            Request->GetNamespaceName(),
-            Self->UserId(),
-            Request->GetMessageName(),
-            Self->AccessToken.IsValid() ? Self->AccessToken->GetTimeOffset() : TOptional<int32>()
-        );
-        Self->Gs2->Cache->ClearListCache(
-            Gs2::Inbox::Model::FMessage::TypeName,
-            Gs2::Inbox::Model::Cache::FMessageCache::CreateCacheParentKey(
+        // Opening a message deletes it when the namespace deletes opened
+        // messages, and otherwise keeps it marked read. The result tells the two
+        // apart: a kept message comes back read, a deleted one comes back as it
+        // was before it was opened. Dropping the entry and the list regardless
+        // makes every list subscriber rebuild the row once it is fetched again.
+        if (ResultModel.IsValid() && ResultModel->GetItem().IsValid() && ResultModel->GetItem()->GetIsRead().IsSet() && *ResultModel->GetItem()->GetIsRead())
+        {
+            Gs2::Inbox::Model::Cache::FMessageCache::Put(
+                Self->Gs2->Cache,
                 Request->GetNamespaceName(),
                 Self->UserId(),
+                Request->GetMessageName(),
+                Self->AccessToken.IsValid() ? Self->AccessToken->GetTimeOffset() : TOptional<int32>(),
+                ResultModel->GetItem()
+            );
+        }
+        else
+        {
+            Gs2::Inbox::Model::Cache::FMessageCache::Delete(
+                Self->Gs2->Cache,
+                Request->GetNamespaceName(),
+                Self->UserId(),
+                Request->GetMessageName(),
                 Self->AccessToken.IsValid() ? Self->AccessToken->GetTimeOffset() : TOptional<int32>()
-            )
-        );
+            );
+        }
         auto Domain = Self;
 
         *Result = Domain;
@@ -220,6 +231,31 @@ namespace Gs2::Inbox::Domain::Model
         }
         const auto ResultModel = Future->GetTask().Result();
         Future->EnsureCompletion();
+        // A message without rewards is opened on the spot: it comes back read
+        // when kept, or as it was before it was opened when the namespace
+        // deletes opened messages. A message with rewards is opened by the
+        // stamp task, which updates the entry itself, so it is left alone here.
+        if (ResultModel.IsValid() && ResultModel->GetItem().IsValid() && ResultModel->GetItem()->GetIsRead().IsSet() && *ResultModel->GetItem()->GetIsRead())
+        {
+            Gs2::Inbox::Model::Cache::FMessageCache::Put(
+                Self->Gs2->Cache,
+                Request->GetNamespaceName(),
+                Self->UserId(),
+                Request->GetMessageName(),
+                Self->AccessToken.IsValid() ? Self->AccessToken->GetTimeOffset() : TOptional<int32>(),
+                ResultModel->GetItem()
+            );
+        }
+        else if (!ResultModel.IsValid() || !ResultModel->GetItem().IsValid() || !ResultModel->GetItem()->GetReadAcquireActions().IsValid() || ResultModel->GetItem()->GetReadAcquireActions()->Num() == 0)
+        {
+            Gs2::Inbox::Model::Cache::FMessageCache::Delete(
+                Self->Gs2->Cache,
+                Request->GetNamespaceName(),
+                Self->UserId(),
+                Request->GetMessageName(),
+                Self->AccessToken.IsValid() ? Self->AccessToken->GetTimeOffset() : TOptional<int32>()
+            );
+        }
         const auto Transaction = Gs2::Core::Domain::Internal::FTransactionDomainFactory::ToTransaction(
             Self->Gs2,
             Self->AccessToken,
@@ -236,21 +272,6 @@ namespace Gs2::Inbox::Domain::Model
         {
             return Future3->GetTask().Error();
         }
-        if (Self->MessageName.IsSet())
-        {
-            const auto Key = Gs2::Inbox::Domain::Model::FMessageDomain::CreateCacheKey(
-                Self->MessageName
-            );
-            Self->Gs2->Cache->Delete(
-                Gs2::Inbox::Model::FMessage::TypeName,
-                Self->ParentKey,
-                Key
-            );
-        }
-        Self->Gs2->Cache->ClearListCache(
-            Gs2::Inbox::Model::FMessage::TypeName,
-            Self->ParentKey
-        );
         *Result = Transaction;
         return nullptr;
     }
