@@ -48,6 +48,29 @@ namespace Gs2::UE5::Distributor::Domain
         FAutoRunStampSheetNotificationEvent& OnAutoRunStampSheetNotification();
 
         FAutoRunTransactionNotificationEvent& OnAutoRunTransactionNotification();
+
+        // 一括取得（Gs2Distributor:DescribeUserData）でこのユーザーの全データを各モデルのキャッシュへ入れる。ログイン直後に 1 回待つと、
+        // 以後の Get / Describe はサーバーへ出ない。キー方式 v2 のプロジェクトでだけ使える。結果はキャッシュへ入れたエントリ数
+        class EZGS2_API FLoadUserDataTask final :
+            public Gs2::Core::Util::TGs2Future<int32>,
+            public TSharedFromThis<FLoadUserDataTask>
+        {
+            const Gs2::Distributor::Domain::FGs2DistributorDomainPtr Domain;
+            const Gs2::UE5::Util::FGameSessionPtr GameSession;
+        public:
+            explicit FLoadUserDataTask(
+                const Gs2::Distributor::Domain::FGs2DistributorDomainPtr Domain,
+                const Gs2::UE5::Util::FGameSessionPtr GameSession
+            );
+
+            virtual Gs2::Core::Model::FGs2ErrorPtr Action(
+                TSharedPtr<TSharedPtr<int32>> Result
+            ) override;
+        };
+
+        TSharedPtr<FAsyncTask<FLoadUserDataTask>> LoadUserData(
+            Gs2::UE5::Util::FGameSessionPtr GameSession
+        );
     };
     typedef TSharedPtr<FEzGs2Distributor> FEzGs2DistributorPtr;
 }

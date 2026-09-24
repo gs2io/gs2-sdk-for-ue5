@@ -24,6 +24,7 @@
 #include "Distributor/Model/Gs2DistributorEzStampSheetResult.h"
 #include "Distributor/Model/Gs2DistributorEzBatchRequestPayload.h"
 #include "Distributor/Model/Gs2DistributorEzBatchResultPayload.h"
+#include "Distributor/Model/Gs2DistributorEzUserDataEntry.h"
 #include "Distributor/Model/Gs2DistributorEzAcquireAction.h"
 #include "Distributor/Model/Gs2DistributorEzConsumeAction.h"
 #include "Distributor/Model/Gs2DistributorEzVerifyAction.h"
@@ -50,6 +51,7 @@ namespace Gs2::UE5::Distributor::Domain::Model
         Gs2::UE5::Util::FGs2ConnectionPtr ConnectionValue;
 
         public:
+        TOptional<FString> NextPageToken() const;
         TOptional<FString> NamespaceName() const;
         TOptional<FString> UserId() const;
 

@@ -24,6 +24,7 @@
 #include "Distributor/Model/Gs2DistributorEzStampSheetResult.h"
 #include "Distributor/Model/Gs2DistributorEzBatchRequestPayload.h"
 #include "Distributor/Model/Gs2DistributorEzBatchResultPayload.h"
+#include "Distributor/Model/Gs2DistributorEzUserDataEntry.h"
 #include "Distributor/Model/Gs2DistributorEzAcquireAction.h"
 #include "Distributor/Model/Gs2DistributorEzConsumeAction.h"
 #include "Distributor/Model/Gs2DistributorEzVerifyAction.h"

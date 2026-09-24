@@ -19,6 +19,11 @@
 namespace Gs2::UE5::Distributor::Domain::Model
 {
 
+    TOptional<FString> FEzUserDomain::NextPageToken() const
+    {
+        return Domain->NextPageToken;
+    }
+
     TOptional<FString> FEzUserDomain::NamespaceName() const
     {
         return Domain->NamespaceName;

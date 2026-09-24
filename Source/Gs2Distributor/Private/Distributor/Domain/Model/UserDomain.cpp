@@ -153,6 +153,136 @@ namespace Gs2::Distributor::Domain::Model
         return Gs2::Core::Util::New<FAsyncTask<FRunTransactionTask>>(this->AsShared(), Request);
     }
 
+    Gs2::Distributor::Domain::Iterator::FDescribeUserDataByUserIdIteratorPtr FUserDomain::UserData(
+        const TOptional<FString> TimeOffsetToken
+    ) const
+    {
+        return MakeShared<Gs2::Distributor::Domain::Iterator::FDescribeUserDataByUserIdIterator>(
+            Gs2,
+            Client,
+            UserId,
+            TimeOffsetToken
+        );
+    }
+
+    Gs2::Core::Domain::CallbackID FUserDomain::SubscribeUserData(
+    TFunction<void()> Callback
+    )
+    {
+        return Gs2->Cache->ListSubscribe(
+            Gs2::Distributor::Model::FUserDataEntry::TypeName,
+            Gs2::Distributor::Domain::Model::FUserDomain::CreateCacheParentKey(
+                NamespaceName,
+                UserId,
+                "UserDataEntry"
+            ),
+            Callback,
+            Callback
+        );
+    }
+    void FUserDomain::UnsubscribeUserData(
+        Gs2::Core::Domain::CallbackID CallbackID
+    )
+    {
+        Gs2->Cache->ListUnsubscribe(
+            Gs2::Distributor::Model::FUserDataEntry::TypeName,
+            Gs2::Distributor::Domain::Model::FUserDomain::CreateCacheParentKey(
+                NamespaceName,
+                UserId,
+                "UserDataEntry"
+            ),
+            CallbackID
+        );
+    }
+    class FUserDomain::FCollectUserDataTask : public Gs2::Core::Util::TGs2Future<TArray<Gs2::Distributor::Model::FUserDataEntryPtr>>, public TSharedFromThis<FCollectUserDataTask>
+    {
+        const TSharedPtr<FUserDomain> Self;
+        const TFunction<void(TArray<Gs2::Distributor::Model::FUserDataEntryPtr>)> OnCollected;
+    const TOptional<FString> QueryTimeOffsetToken;
+    public:
+        explicit FCollectUserDataTask(const TSharedPtr<FUserDomain>& Self, TFunction<void(TArray<Gs2::Distributor::Model::FUserDataEntryPtr>)> OnCollected,const TOptional<FString> TimeOffsetToken) : Self(Self), OnCollected(OnCollected), QueryTimeOffsetToken(TimeOffsetToken) {}
+        FCollectUserDataTask(const FCollectUserDataTask& From) : TGs2Future(From), Self(From.Self), OnCollected(From.OnCollected), QueryTimeOffsetToken(From.QueryTimeOffsetToken) {}
+        virtual Gs2::Core::Model::FGs2ErrorPtr Action(TSharedPtr<TSharedPtr<TArray<Gs2::Distributor::Model::FUserDataEntryPtr>>> Result) override
+        {
+            TArray<Gs2::Distributor::Model::FUserDataEntryPtr> Items;
+            auto Iterator = Self->UserData(QueryTimeOffsetToken)->begin();
+            while (Iterator.HasNext())
+            {
+                if (Iterator.IsError()) return Iterator.Error();
+                if (Iterator.IsCurrentValid()) Items.Add(Iterator.Current());
+                ++Iterator;
+            }
+            if (Iterator.IsError()) return Iterator.Error();
+            *Result = MakeShared<TArray<Gs2::Distributor::Model::FUserDataEntryPtr>>(Items);
+            if (OnCollected) OnCollected(Items);
+            return nullptr;
+        }
+    };
+
+    Gs2::Core::Domain::CallbackID FUserDomain::SubscribeUserData(
+        TFunction<void(TArray<Gs2::Distributor::Model::FUserDataEntryPtr>)> Callback,const TOptional<FString> TimeOffsetToken
+    )
+    {
+        const TWeakPtr<Gs2::Core::Domain::FGs2> WeakGs2 = this->Gs2;
+        const TWeakPtr<Distributor::Domain::FGs2DistributorDomain> WeakService = this->Service;
+        const auto QueryNamespaceName = NamespaceName;
+        const auto QueryUserId = UserId;
+        const auto QueryTimeOffsetToken = TimeOffsetToken;
+        const auto Parent = Gs2::Distributor::Domain::Model::FUserDomain::CreateCacheParentKey(
+        NamespaceName,
+        UserId,
+        "UserDataEntry"
+    );
+        return Gs2->Cache->ListSubscribeTyped(
+            Gs2::Distributor::Model::FUserDataEntry::TypeName,
+            Parent,
+            [Callback, WeakGs2](const TArray<FGs2ObjectPtr>& Values)
+            {
+                if (!WeakGs2.Pin().IsValid()) return;
+                TArray<Gs2::Distributor::Model::FUserDataEntryPtr> TypedValues;
+                for (const auto& Value : Values) if (Value.IsValid()) TypedValues.Add(StaticCastSharedPtr<Gs2::Distributor::Model::FUserDataEntry>(Value));
+                Callback(TypedValues);
+            },
+            [WeakGs2, WeakService, Callback, QueryNamespaceName, QueryUserId, QueryTimeOffsetToken]()
+            {
+                const auto Owner = WeakGs2.Pin();
+                if (!Owner.IsValid()) return;
+                const auto Domain = MakeShared<FUserDomain>(Owner, WeakService.Pin(), QueryNamespaceName, QueryUserId);
+                const auto Task = Gs2::Core::Util::New<FAsyncTask<FCollectUserDataTask>>(Domain, Callback, QueryTimeOffsetToken);
+                Task->StartBackgroundTask();
+            }
+        );
+    }
+
+    void FUserDomain::InvalidateUserData(const TOptional<FString> TimeOffsetToken)
+    {
+        Gs2->Cache->ClearListCache(
+            Gs2::Distributor::Model::FUserDataEntry::TypeName,
+            Gs2::Distributor::Domain::Model::FUserDomain::CreateCacheParentKey(
+        NamespaceName,
+        UserId,
+        "UserDataEntry"
+    )
+        );
+    }
+
+    FUserDomain::FSubscribeUserDataWithInitialCallTask::FSubscribeUserDataWithInitialCallTask(const TSharedPtr<FUserDomain>& Self, TFunction<void(TArray<Gs2::Distributor::Model::FUserDataEntryPtr>)> Callback,const TOptional<FString> TimeOffsetToken) : Self(Self), Callback(Callback), QueryTimeOffsetToken(TimeOffsetToken) {}
+    FUserDomain::FSubscribeUserDataWithInitialCallTask::FSubscribeUserDataWithInitialCallTask(const FSubscribeUserDataWithInitialCallTask& From) : TGs2Future(From), Self(From.Self), Callback(From.Callback), QueryTimeOffsetToken(From.QueryTimeOffsetToken) {}
+    Gs2::Core::Model::FGs2ErrorPtr FUserDomain::FSubscribeUserDataWithInitialCallTask::Action(TSharedPtr<TSharedPtr<Gs2::Core::Domain::CallbackID>> Result)
+    {
+        const auto Task = Gs2::Core::Util::New<FAsyncTask<FCollectUserDataTask>>(Self, TFunction<void(TArray<Gs2::Distributor::Model::FUserDataEntryPtr>)>(), QueryTimeOffsetToken);
+        Task->StartSynchronousTask(); Task->EnsureCompletion();
+        if (Task->GetTask().IsError()) return Task->GetTask().Error();
+        const auto Values = Task->GetTask().Result();
+        const auto CallbackId = Self->SubscribeUserData(Callback, QueryTimeOffsetToken);
+        Callback(*Values); *Result = MakeShared<Gs2::Core::Domain::CallbackID>(CallbackId);
+        return nullptr;
+    }
+    TSharedPtr<FAsyncTask<FUserDomain::FSubscribeUserDataWithInitialCallTask>> FUserDomain::SubscribeUserDataWithInitialCall(TFunction<void(TArray<Gs2::Distributor::Model::FUserDataEntryPtr>)> Callback,const TOptional<FString> TimeOffsetToken)
+    {
+        return Gs2::Core::Util::New<FAsyncTask<FSubscribeUserDataWithInitialCallTask>>(this->AsShared(), Callback, TimeOffsetToken);
+    }
+
     TSharedPtr<Gs2::Distributor::Domain::Model::FStampSheetResultDomain> FUserDomain::StampSheetResult(
         const FString TransactionId
     )

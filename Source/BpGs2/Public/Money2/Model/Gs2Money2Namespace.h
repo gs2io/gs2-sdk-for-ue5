@@ -38,4 +38,10 @@ class BPGS2_API UGs2Money2NamespaceFunctionLibrary : public UBlueprintFunctionLi
         FGs2Money2Namespace Namespace,
         FGs2AccessToken AccessToken
     );
+
+    UFUNCTION(BlueprintCallable, DisplayName="Gs2::Money2::StoreContentModel", Category="Game Server Services|GS2-Money2|Namespace|StoreContentModel", meta=(WorldContext="WorldContextObject"))
+    static UPARAM(DisplayName="StoreContentModel") FGs2Money2StoreContentModel StoreContentModel(
+        FGs2Money2Namespace Namespace,
+        FString ContentName
+    );
 };

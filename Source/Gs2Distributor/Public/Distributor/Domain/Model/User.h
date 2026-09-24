@@ -23,6 +23,8 @@
 #include "Distributor/Domain/Iterator/DescribeNamespacesIterator.h"
 #include "Distributor/Domain/Iterator/DescribeDistributorModelMastersIterator.h"
 #include "Distributor/Domain/Iterator/DescribeDistributorModelsIterator.h"
+#include "Distributor/Domain/Iterator/DescribeUserDataIterator.h"
+#include "Distributor/Domain/Iterator/DescribeUserDataByUserIdIterator.h"
 
 namespace Gs2::Core::Domain
 {
@@ -59,6 +61,11 @@ namespace Gs2::Distributor::Domain::Model
         const Gs2::Distributor::FGs2DistributorRestClientPtr Client;
 
         public:
+        TOptional<FString> NextPageToken;
+        TOptional<FString> GetNextPageToken() const
+        {
+            return NextPageToken;
+        }
         TOptional<FString> NamespaceName;
         TOptional<FString> UserId;
     private:
@@ -105,6 +112,42 @@ namespace Gs2::Distributor::Domain::Model
 
         TSharedPtr<FAsyncTask<FRunTransactionTask>> RunTransaction(
             Request::FRunTransactionRequestPtr Request
+        );
+
+        Gs2::Distributor::Domain::Iterator::FDescribeUserDataByUserIdIteratorPtr UserData(
+            const TOptional<FString> TimeOffsetToken = TOptional<FString>()
+        ) const;
+
+        Gs2::Core::Domain::CallbackID SubscribeUserData(
+            TFunction<void()> Callback
+        );
+
+        class FCollectUserDataTask;
+
+        Gs2::Core::Domain::CallbackID SubscribeUserData(
+            TFunction<void(TArray<Gs2::Distributor::Model::FUserDataEntryPtr>)> Callback,const TOptional<FString> TimeOffsetToken = TOptional<FString>()
+        );
+
+        void InvalidateUserData(const TOptional<FString> TimeOffsetToken = TOptional<FString>());
+
+        class GS2DISTRIBUTOR_API FSubscribeUserDataWithInitialCallTask final :
+            public Gs2::Core::Util::TGs2Future<Gs2::Core::Domain::CallbackID>,
+            public TSharedFromThis<FSubscribeUserDataWithInitialCallTask>
+        {
+            const TSharedPtr<FUserDomain> Self;
+            const TFunction<void(TArray<Gs2::Distributor::Model::FUserDataEntryPtr>)> Callback;
+        const TOptional<FString> QueryTimeOffsetToken;
+        public:
+            FSubscribeUserDataWithInitialCallTask(const TSharedPtr<FUserDomain>& Self, TFunction<void(TArray<Gs2::Distributor::Model::FUserDataEntryPtr>)> Callback,const TOptional<FString> TimeOffsetToken);
+            FSubscribeUserDataWithInitialCallTask(const FSubscribeUserDataWithInitialCallTask& From);
+            virtual Gs2::Core::Model::FGs2ErrorPtr Action(TSharedPtr<TSharedPtr<Gs2::Core::Domain::CallbackID>> Result) override;
+        };
+
+        TSharedPtr<FAsyncTask<FSubscribeUserDataWithInitialCallTask>> SubscribeUserDataWithInitialCall(
+            TFunction<void(TArray<Gs2::Distributor::Model::FUserDataEntryPtr>)> Callback,const TOptional<FString> TimeOffsetToken = TOptional<FString>()
+        );
+        void UnsubscribeUserData(
+            Gs2::Core::Domain::CallbackID CallbackID
         );
 
         TSharedPtr<Gs2::Distributor::Domain::Model::FStampSheetResultDomain> StampSheetResult(

@@ -533,6 +533,17 @@ namespace Gs2::Core::Domain
         Deploy = MakeShared<Deploy::Domain::FGs2DeployDomain>(SharedThis(this));
         Dictionary = MakeShared<Dictionary::Domain::FGs2DictionaryDomain>(SharedThis(this));
         Distributor = MakeShared<Distributor::Domain::FGs2DistributorDomain>(SharedThis(this));
+        // 一括取得（DescribeUserData）の振り分け（service → 生成物）は Core にしか置けないので、distributor のローダーへ登録する
+        Distributor->SetUserDataStore(
+            [this](const FString& Service, const TOptional<FString>& NamespaceName, const TOptional<FString>& UserId, const TOptional<int32>& TimeOffset, const FString& Kind, const FString& Payload)
+            {
+                return PutUserData(Service, NamespaceName, UserId, TimeOffset, Kind, Payload);
+            },
+            [this](const FString& Service, const TOptional<int32>& TimeOffset, const FString& Kind, const FString& ParentKey)
+            {
+                return SetListCached(Service, TimeOffset, Kind, ParentKey);
+            }
+        );
         Enchant = MakeShared<Enchant::Domain::FGs2EnchantDomain>(SharedThis(this));
         Enhance = MakeShared<Enhance::Domain::FGs2EnhanceDomain>(SharedThis(this));
         Exchange = MakeShared<Exchange::Domain::FGs2ExchangeDomain>(SharedThis(this));
@@ -1417,75 +1428,15 @@ namespace Gs2::Core::Domain
         {
             Self->Initialize();
         }
-        const auto Client = MakeShared<Gs2::Distributor::FGs2DistributorRestClient>(Self->RestSession);
-        int32 Loaded = 0;
-        // 全ページを読み終えてからまとめて「リストが揃った印」を立てる (Service, Kind, 親キー) の集合（順序は初出順）
-        TSet<FString> ListCachedKeys;
-        TArray<TTuple<FString, FString, FString>> ListCached;
-        TOptional<FString> PageToken;
-        while (true)
+        // 実態は distributor ドメイン（生成物 FGs2DistributorDomain::LoadUserData）。ここは糖衣
+        const auto Future = Self->Distributor->LoadUserData(AccessToken);
+        Future->StartSynchronousTask();
+        if (Future->GetTask().IsError())
         {
-            const auto Future = Client->DescribeUserData(
-                MakeShared<Gs2::Distributor::Request::FDescribeUserDataRequest>()
-                    ->WithContextStack(Self->DefaultContextStack)
-                    ->WithAccessToken(AccessToken->GetToken())
-                    ->WithPageToken(PageToken)
-                    ->WithLimit(100)
-            );
-            Future->StartSynchronousTask();
-            if (Future->GetTask().IsError())
-            {
-                return Future->GetTask().Error();
-            }
-            const auto ResultModel = Future->GetTask().Result();
-            Future->EnsureCompletion();
-            if (!ResultModel.IsValid())
-            {
-                break;
-            }
-            if (ResultModel->GetItems().IsValid())
-            {
-                for (const auto& Entry : *ResultModel->GetItems())
-                {
-                    if (!Entry.IsValid())
-                    {
-                        continue;
-                    }
-                    const auto Service = Entry->GetService().Get(FString());
-                    const auto Kind = Entry->GetKind().Get(FString());
-                    // 1 件の JSON が読めなくても（未設定が返る）他のエントリは入れる（個別 API で取り直せる）
-                    const auto ParentKey = Self->PutUserData(
-                        Service,
-                        Entry->GetNamespaceName(),
-                        AccessToken->GetUserId(),
-                        AccessToken->GetTimeOffset(),
-                        Kind,
-                        Entry->GetPayload().Get(FString())
-                    );
-                    if (!ParentKey.IsSet())
-                    {
-                        continue;
-                    }
-                    Loaded++;
-                    const auto ListCachedKey = Service + TEXT("\t") + Kind + TEXT("\t") + *ParentKey;
-                    if (!ListCachedKeys.Contains(ListCachedKey))
-                    {
-                        ListCachedKeys.Add(ListCachedKey);
-                        ListCached.Add(MakeTuple(Service, Kind, *ParentKey));
-                    }
-                }
-            }
-            PageToken = ResultModel->GetNextPageToken();
-            if (!PageToken.IsSet() || PageToken->IsEmpty())
-            {
-                break;
-            }
+            return Future->GetTask().Error();
         }
-        for (const auto& Item : ListCached)
-        {
-            Self->SetListCached(Item.Get<0>(), AccessToken->GetTimeOffset(), Item.Get<1>(), Item.Get<2>());
-        }
-        *Result = MakeShared<int32>(Loaded);
+        *Result = Future->GetTask().Result();
+        Future->EnsureCompletion();
         return nullptr;
     }
 

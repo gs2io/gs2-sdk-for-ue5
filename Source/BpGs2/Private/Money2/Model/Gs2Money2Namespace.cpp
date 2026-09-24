@@ -19,6 +19,7 @@
 #include "Money2/Model/Gs2Money2StoreContentModel.h"
 #include "Core/Model/Gs2AccessToken.h"
 #include "Money2/Model/Gs2Money2User.h"
+#include "Money2/Model/Gs2Money2StoreContentModel.h"
 #include "Core/BpGs2Constant.h"
 
 FGs2Money2OwnUser UGs2Money2NamespaceFunctionLibrary::Me(
@@ -36,5 +37,25 @@ FGs2Money2OwnUser UGs2Money2NamespaceFunctionLibrary::Me(
         return Return;
     }
     Return.Value = Namespace.Value->Me(AccessToken.Value);
+    return Return;
+}
+
+FGs2Money2StoreContentModel UGs2Money2NamespaceFunctionLibrary::StoreContentModel(
+    FGs2Money2Namespace Namespace,
+    FString ContentName
+)
+{
+    FGs2Money2StoreContentModel Return;
+    if (Namespace.Value == nullptr) {
+        UE_LOG(BpGs2Log, Error, TEXT("[UGs2Money2NamespaceFunctionLibrary::StoreContentModel] Namespace parameter specification is missing."))
+        return Return;
+    }
+    if (ContentName == "") {
+        UE_LOG(BpGs2Log, Error, TEXT("[UGs2Money2NamespaceFunctionLibrary::StoreContentModel] ContentName parameter specification is missing."))
+        return Return;
+    }
+    Return.Value = Namespace.Value->StoreContentModel(
+        ContentName
+    );
     return Return;
 }

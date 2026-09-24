@@ -23,6 +23,8 @@
 #include "Distributor/Domain/Iterator/DescribeNamespacesIterator.h"
 #include "Distributor/Domain/Iterator/DescribeDistributorModelMastersIterator.h"
 #include "Distributor/Domain/Iterator/DescribeDistributorModelsIterator.h"
+#include "Distributor/Domain/Iterator/DescribeUserDataIterator.h"
+#include "Distributor/Domain/Iterator/DescribeUserDataByUserIdIterator.h"
 
 namespace Gs2::Core::Domain
 {

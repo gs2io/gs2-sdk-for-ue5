@@ -24,6 +24,7 @@
 #include "Distributor/Model/Gs2DistributorEzStampSheetResult.h"
 #include "Distributor/Model/Gs2DistributorEzBatchRequestPayload.h"
 #include "Distributor/Model/Gs2DistributorEzBatchResultPayload.h"
+#include "Distributor/Model/Gs2DistributorEzUserDataEntry.h"
 #include "Distributor/Model/Gs2DistributorEzAcquireAction.h"
 #include "Distributor/Model/Gs2DistributorEzConsumeAction.h"
 #include "Distributor/Model/Gs2DistributorEzVerifyAction.h"
@@ -31,11 +32,11 @@
 #include "Distributor/Model/Gs2DistributorEzAcquireActionResult.h"
 #include "Distributor/Model/Gs2DistributorEzConsumeActionResult.h"
 #include "Distributor/Model/Gs2DistributorEzVerifyActionResult.h"
-#include "Gs2DistributorEzDistributorModelDomain.h"
-#include "Distributor/Domain/Iterator/Gs2DistributorEzDescribeDistributorModelsIterator.h"
 #include "Gs2DistributorEzUserDomain.h"
 #include "Gs2DistributorEzUserDomain.h"
 #include "Gs2DistributorEzUserGameSessionDomain.h"
+#include "Gs2DistributorEzDistributorModelDomain.h"
+#include "Distributor/Domain/Iterator/Gs2DistributorEzDescribeDistributorModelsIterator.h"
 #include "Gs2DistributorEzNamespaceDomain.h"
 #include "Core/EzTransactionDomain.h"
 #include "Util/Net/GameSession.h"
@@ -102,16 +103,16 @@ namespace Gs2::UE5::Distributor::Domain::Model
         void UnsubscribeDistributorModels(
                 Gs2::Core::Domain::CallbackID CallbackId);
 
-        Gs2::UE5::Distributor::Domain::Model::FEzDistributorModelDomainPtr DistributorModel(
-            const FString DistributorName
-        ) const;
-
         Gs2::UE5::Distributor::Domain::Model::FEzUserDomainPtr User(
             const FString UserId
         ) const;
 
         Gs2::UE5::Distributor::Domain::Model::FEzUserGameSessionDomainPtr Me(
             Gs2::UE5::Util::IGameSessionPtr GameSession
+        ) const;
+
+        Gs2::UE5::Distributor::Domain::Model::FEzDistributorModelDomainPtr DistributorModel(
+            const FString DistributorName
         ) const;
 
     };

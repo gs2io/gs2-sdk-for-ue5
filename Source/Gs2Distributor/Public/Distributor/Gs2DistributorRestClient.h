@@ -92,10 +92,6 @@
 #include "Task/Rest/FreezeMasterDataByTimestampTask.h"
 #include "Request/BatchExecuteApiRequest.h"
 #include "Task/Rest/BatchExecuteApiTask.h"
-#include "Request/DescribeUserDataRequest.h"
-#include "Task/Rest/DescribeUserDataTask.h"
-#include "Request/DescribeUserDataByUserIdRequest.h"
-#include "Task/Rest/DescribeUserDataByUserIdTask.h"
 #include "Request/IfExpressionByUserIdRequest.h"
 #include "Task/Rest/IfExpressionByUserIdTask.h"
 #include "Request/AndExpressionByUserIdRequest.h"
@@ -112,6 +108,10 @@
 #include "Task/Rest/GetStampSheetResultTask.h"
 #include "Request/GetStampSheetResultByUserIdRequest.h"
 #include "Task/Rest/GetStampSheetResultByUserIdTask.h"
+#include "Request/DescribeUserDataRequest.h"
+#include "Task/Rest/DescribeUserDataTask.h"
+#include "Request/DescribeUserDataByUserIdRequest.h"
+#include "Task/Rest/DescribeUserDataByUserIdTask.h"
 #include "Request/RunTransactionRequest.h"
 #include "Task/Rest/RunTransactionTask.h"
 #include "Request/GetTransactionResultRequest.h"
@@ -278,14 +278,6 @@ namespace Gs2::Distributor
             const Request::FBatchExecuteApiRequestPtr Request
         ) const;
 
-        TSharedPtr<FAsyncTask<Task::Rest::FDescribeUserDataTask>> DescribeUserData(
-            const Request::FDescribeUserDataRequestPtr Request
-        ) const;
-
-        TSharedPtr<FAsyncTask<Task::Rest::FDescribeUserDataByUserIdTask>> DescribeUserDataByUserId(
-            const Request::FDescribeUserDataByUserIdRequestPtr Request
-        ) const;
-
         TSharedPtr<FAsyncTask<Task::Rest::FIfExpressionByUserIdTask>> IfExpressionByUserId(
             const Request::FIfExpressionByUserIdRequestPtr Request
         ) const;
@@ -316,6 +308,14 @@ namespace Gs2::Distributor
 
         TSharedPtr<FAsyncTask<Task::Rest::FGetStampSheetResultByUserIdTask>> GetStampSheetResultByUserId(
             const Request::FGetStampSheetResultByUserIdRequestPtr Request
+        ) const;
+
+        TSharedPtr<FAsyncTask<Task::Rest::FDescribeUserDataTask>> DescribeUserData(
+            const Request::FDescribeUserDataRequestPtr Request
+        ) const;
+
+        TSharedPtr<FAsyncTask<Task::Rest::FDescribeUserDataByUserIdTask>> DescribeUserDataByUserId(
+            const Request::FDescribeUserDataByUserIdRequestPtr Request
         ) const;
 
         TSharedPtr<FAsyncTask<Task::Rest::FRunTransactionTask>> RunTransaction(

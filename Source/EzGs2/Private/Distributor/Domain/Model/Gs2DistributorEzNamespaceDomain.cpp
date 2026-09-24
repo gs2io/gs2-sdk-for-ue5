@@ -192,18 +192,6 @@ namespace Gs2::UE5::Distributor::Domain::Model
         );
     }
 
-    Gs2::UE5::Distributor::Domain::Model::FEzDistributorModelDomainPtr FEzNamespaceDomain::DistributorModel(
-        const FString DistributorName
-    ) const
-    {
-        return MakeShared<Gs2::UE5::Distributor::Domain::Model::FEzDistributorModelDomain>(
-            Domain->DistributorModel(
-                DistributorName
-            ),
-            ConnectionValue
-        );
-    }
-
     Gs2::UE5::Distributor::Domain::Model::FEzUserDomainPtr FEzNamespaceDomain::User(
         const FString UserId
     ) const
@@ -225,6 +213,18 @@ namespace Gs2::UE5::Distributor::Domain::Model
                 GameSession->AccessToken()
             ),
             GameSession,
+            ConnectionValue
+        );
+    }
+
+    Gs2::UE5::Distributor::Domain::Model::FEzDistributorModelDomainPtr FEzNamespaceDomain::DistributorModel(
+        const FString DistributorName
+    ) const
+    {
+        return MakeShared<Gs2::UE5::Distributor::Domain::Model::FEzDistributorModelDomain>(
+            Domain->DistributorModel(
+                DistributorName
+            ),
             ConnectionValue
         );
     }

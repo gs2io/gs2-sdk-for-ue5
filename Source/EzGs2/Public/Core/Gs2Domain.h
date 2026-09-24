@@ -399,6 +399,29 @@ namespace Gs2::UE5::Core::Domain
             Gs2::UE5::Util::FGameSessionPtr GameSession
             );
 
+        // 一括取得（Gs2Distributor:DescribeUserData）でこのユーザーの全データを各モデルのキャッシュへ入れる。実態は Distributor->LoadUserData
+        class EZGS2_API FLoadUserDataTask final :
+            public Gs2::Core::Util::TGs2Future<int32>,
+            public TSharedFromThis<FLoadUserDataTask>
+        {
+            const TSharedPtr<FGs2Domain> Self;
+            const Gs2::UE5::Util::FGameSessionPtr GameSession;
+        public:
+            explicit FLoadUserDataTask(
+                const TSharedPtr<FGs2Domain> Self,
+                const Gs2::UE5::Util::FGameSessionPtr GameSession
+            );
+
+            virtual Gs2::Core::Model::FGs2ErrorPtr Action(
+                TSharedPtr<TSharedPtr<int32>> Result
+            ) override;
+        };
+        friend FLoadUserDataTask;
+
+        TSharedPtr<FAsyncTask<FLoadUserDataTask>> LoadUserData(
+            Gs2::UE5::Util::FGameSessionPtr GameSession
+            );
+
         class EZGS2_API FDisconnectTask final :
             public Gs2::Core::Util::TGs2Future<void>,
             public TSharedFromThis<FDisconnectTask>

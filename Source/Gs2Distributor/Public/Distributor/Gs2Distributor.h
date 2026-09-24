@@ -263,18 +263,6 @@
 #include "Task/Rest/BatchExecuteApiTask.h"
 #include "Task/WebSocket/BatchExecuteApiTask.h"
 
-// DescribeUserData
-#include "Request/DescribeUserDataRequest.h"
-#include "Result/DescribeUserDataResult.h"
-#include "Task/Rest/DescribeUserDataTask.h"
-#include "Task/WebSocket/DescribeUserDataTask.h"
-
-// DescribeUserDataByUserId
-#include "Request/DescribeUserDataByUserIdRequest.h"
-#include "Result/DescribeUserDataByUserIdResult.h"
-#include "Task/Rest/DescribeUserDataByUserIdTask.h"
-#include "Task/WebSocket/DescribeUserDataByUserIdTask.h"
-
 // IfExpressionByUserId
 #include "Request/IfExpressionByUserIdRequest.h"
 #include "Result/IfExpressionByUserIdResult.h"
@@ -322,6 +310,18 @@
 #include "Result/GetStampSheetResultByUserIdResult.h"
 #include "Task/Rest/GetStampSheetResultByUserIdTask.h"
 #include "Task/WebSocket/GetStampSheetResultByUserIdTask.h"
+
+// DescribeUserData
+#include "Request/DescribeUserDataRequest.h"
+#include "Result/DescribeUserDataResult.h"
+#include "Task/Rest/DescribeUserDataTask.h"
+#include "Task/WebSocket/DescribeUserDataTask.h"
+
+// DescribeUserDataByUserId
+#include "Request/DescribeUserDataByUserIdRequest.h"
+#include "Result/DescribeUserDataByUserIdResult.h"
+#include "Task/Rest/DescribeUserDataByUserIdTask.h"
+#include "Task/WebSocket/DescribeUserDataByUserIdTask.h"
 
 // RunTransaction
 #include "Request/RunTransactionRequest.h"

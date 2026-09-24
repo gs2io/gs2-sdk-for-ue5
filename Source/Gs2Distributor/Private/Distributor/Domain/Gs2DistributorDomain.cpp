@@ -358,6 +358,141 @@ namespace Gs2::Distributor::Domain
         return AutoRunTransactionNotificationEvent;
     }
 
+/* diff +++ start */
+    void FGs2DistributorDomain::SetUserDataStore(
+        TFunction<TOptional<FString>(const FString&, const TOptional<FString>&, const TOptional<FString>&, const TOptional<int32>&, const FString&, const FString&)> Put,
+        TFunction<bool(const FString&, const TOptional<int32>&, const FString&, const FString&)> SetListCached
+    )
+    {
+        PutUserDataFunc = Put;
+        SetListCachedFunc = SetListCached;
+    }
+
+    TOptional<FString> FGs2DistributorDomain::PutUserData(
+        const FString& Service,
+        const TOptional<FString>& NamespaceName,
+        const TOptional<FString>& UserId,
+        const TOptional<int32>& TimeOffset,
+        const FString& Kind,
+        const FString& Payload
+    ) const
+    {
+        if (!PutUserDataFunc) return TOptional<FString>();
+        return PutUserDataFunc(Service, NamespaceName, UserId, TimeOffset, Kind, Payload);
+    }
+    bool FGs2DistributorDomain::SetListCached(
+        const FString& Service,
+        const TOptional<int32>& TimeOffset,
+        const FString& Kind,
+        const FString& ParentKey
+    ) const
+    {
+        if (!SetListCachedFunc) return false;
+        return SetListCachedFunc(Service, TimeOffset, Kind, ParentKey);
+    }
+
+    FGs2DistributorDomain::FLoadUserDataTask::FLoadUserDataTask(
+        const TSharedPtr<FGs2DistributorDomain> Self,
+        const Gs2::Auth::Model::FAccessTokenPtr AccessToken
+    ): Self(Self), AccessToken(AccessToken)
+    {
+    }
+
+    Gs2::Core::Model::FGs2ErrorPtr FGs2DistributorDomain::FLoadUserDataTask::Action(
+        TSharedPtr<TSharedPtr<int32>> Result
+    )
+    {
+        if (!AccessToken.IsValid())
+        {
+            const auto Details = MakeShared<TArray<TSharedPtr<Gs2::Core::Model::FGs2ErrorDetail>>>();
+            Details->Add(MakeShared<Gs2::Core::Model::FGs2ErrorDetail>(TEXT("accessToken"), TEXT("accessToken is required."), TEXT("required")));
+            return MakeShared<Gs2::Core::Model::FBadRequestError>(Details);
+        }
+        if (!Self->PutUserDataFunc || !Self->SetListCachedFunc)
+        {
+            const auto Details = MakeShared<TArray<TSharedPtr<Gs2::Core::Model::FGs2ErrorDetail>>>();
+            Details->Add(MakeShared<Gs2::Core::Model::FGs2ErrorDetail>(TEXT("userDataStore"), TEXT("user data store is not registered. Call FGs2::Initialize first."), TEXT("invalid")));
+            return MakeShared<Gs2::Core::Model::FBadRequestError>(Details);
+        }
+        int32 Loaded = 0;
+        // 全ページを読み終えてからまとめて「リストが揃った印」を立てる (Service, Kind, 親キー) の集合（順序は初出順）
+        TSet<FString> ListCachedKeys;
+        TArray<TTuple<FString, FString, FString>> ListCached;
+        TOptional<FString> PageToken;
+        while (true)
+        {
+            const auto Future = Self->Client->DescribeUserData(
+                MakeShared<Gs2::Distributor::Request::FDescribeUserDataRequest>()
+                    ->WithContextStack(Self->Gs2->DefaultContextStack)
+                    ->WithAccessToken(AccessToken->GetToken())
+                    ->WithPageToken(PageToken)
+                    ->WithLimit(100)
+            );
+            Future->StartSynchronousTask();
+            if (Future->GetTask().IsError())
+            {
+                return Future->GetTask().Error();
+            }
+            const auto ResultModel = Future->GetTask().Result();
+            Future->EnsureCompletion();
+            if (!ResultModel.IsValid())
+            {
+                break;
+            }
+            if (ResultModel->GetItems().IsValid())
+            {
+                for (const auto& Entry : *ResultModel->GetItems())
+                {
+                    if (!Entry.IsValid())
+                    {
+                        continue;
+                    }
+                    const auto Service = Entry->GetService().Get(FString());
+                    const auto Kind = Entry->GetKind().Get(FString());
+                    // 1 件の JSON が読めなくても（未設定が返る）他のエントリは入れる（個別 API で取り直せる）
+                    const auto ParentKey = Self->PutUserDataFunc(
+                        Service,
+                        Entry->GetNamespaceName(),
+                        AccessToken->GetUserId(),
+                        AccessToken->GetTimeOffset(),
+                        Kind,
+                        Entry->GetPayload().Get(FString())
+                    );
+                    if (!ParentKey.IsSet())
+                    {
+                        continue;
+                    }
+                    Loaded++;
+                    const auto ListCachedKey = Service + TEXT("\t") + Kind + TEXT("\t") + *ParentKey;
+                    if (!ListCachedKeys.Contains(ListCachedKey))
+                    {
+                        ListCachedKeys.Add(ListCachedKey);
+                        ListCached.Add(MakeTuple(Service, Kind, *ParentKey));
+                    }
+                }
+            }
+            PageToken = ResultModel->GetNextPageToken();
+            if (!PageToken.IsSet() || PageToken->IsEmpty())
+            {
+                break;
+            }
+        }
+        for (const auto& Item : ListCached)
+        {
+            Self->SetListCachedFunc(Item.Get<0>(), AccessToken->GetTimeOffset(), Item.Get<1>(), Item.Get<2>());
+        }
+        *Result = MakeShared<int32>(Loaded);
+        return nullptr;
+    }
+
+    TSharedPtr<FAsyncTask<FGs2DistributorDomain::FLoadUserDataTask>> FGs2DistributorDomain::LoadUserData(
+        const Gs2::Auth::Model::FAccessTokenPtr AccessToken
+    )
+    {
+        return Gs2::Core::Util::New<FAsyncTask<FGs2DistributorDomain::FLoadUserDataTask>>(this->AsShared(), AccessToken);
+    }
+
+/* diff +++ end */
     FGs2DistributorDomain::FDispatchTask::FDispatchTask(
         const TSharedPtr<FGs2DistributorDomain> Self,
         const Gs2::Auth::Model::FAccessTokenPtr AccessToken

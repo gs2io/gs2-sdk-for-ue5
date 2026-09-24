@@ -17,10 +17,10 @@
 #pragma once
 
 #include "CoreMinimal.h"
-
-#include "Money2/Model/Gs2Money2EzStoreContentModel.h"
+#include "Money2/Domain/Model/Gs2Money2EzStoreContentModelDomain.h"
 #include "Money2/Model/Gs2Money2AppleAppStoreContent.h"
 #include "Money2/Model/Gs2Money2GooglePlayContent.h"
+#include "Core/BpGs2Constant.h"
 #include "Gs2Money2StoreContentModel.generated.h"
 
 USTRUCT(BlueprintType)
@@ -28,21 +28,33 @@ struct FGs2Money2StoreContentModel
 {
     GENERATED_BODY()
 
-    UPROPERTY(Category = Gs2, BlueprintReadWrite)
+    Gs2::UE5::Money2::Domain::Model::FEzStoreContentModelDomainPtr Value = nullptr;
+};
+
+USTRUCT(BlueprintType)
+struct FGs2Money2StoreContentModelValue
+{
+    GENERATED_BODY()
+
+    UPROPERTY(Category = Gs2, BlueprintReadOnly)
     FString Name = "";
-    UPROPERTY(Category = Gs2, BlueprintReadWrite)
+    UPROPERTY(Category = Gs2, BlueprintReadOnly)
     FString Metadata = "";
-    UPROPERTY(Category = Gs2, BlueprintReadWrite)
+    UPROPERTY(Category = Gs2, BlueprintReadOnly)
     FGs2Money2AppleAppStoreContent AppleAppStore = FGs2Money2AppleAppStoreContent();
-    UPROPERTY(Category = Gs2, BlueprintReadWrite)
+    UPROPERTY(Category = Gs2, BlueprintReadOnly)
     FGs2Money2GooglePlayContent GooglePlay = FGs2Money2GooglePlayContent();
 };
 
-inline FGs2Money2StoreContentModel EzStoreContentModelToFGs2Money2StoreContentModel(
+inline FGs2Money2StoreContentModelValue EzStoreContentModelToFGs2Money2StoreContentModelValue(
     const Gs2::UE5::Money2::Model::FEzStoreContentModelPtr Model
 )
 {
-    FGs2Money2StoreContentModel Value;
+    FGs2Money2StoreContentModelValue Value;
+    if (Model == nullptr) {
+        UE_LOG(BpGs2Log, Error, TEXT("[UGs2Money2StoreContentModelFunctionLibrary::EzStoreContentModelToFGs2Money2StoreContentModelValue] Model parameter specification is missing."))
+        return Value;
+    }
     Value.Name = Model->GetName() ? *Model->GetName() : "";
     Value.Metadata = Model->GetMetadata() ? *Model->GetMetadata() : "";
     Value.AppleAppStore = Model->GetAppleAppStore() ? EzAppleAppStoreContentToFGs2Money2AppleAppStoreContent(Model->GetAppleAppStore()) : FGs2Money2AppleAppStoreContent();
@@ -50,8 +62,8 @@ inline FGs2Money2StoreContentModel EzStoreContentModelToFGs2Money2StoreContentMo
     return Value;
 }
 
-inline Gs2::UE5::Money2::Model::FEzStoreContentModelPtr FGs2Money2StoreContentModelToEzStoreContentModel(
-    const FGs2Money2StoreContentModel Model
+inline Gs2::UE5::Money2::Model::FEzStoreContentModelPtr FGs2Money2StoreContentModelValueToEzStoreContentModel(
+    const FGs2Money2StoreContentModelValue Model
 )
 {
     return MakeShared<Gs2::UE5::Money2::Model::FEzStoreContentModel>()
@@ -60,3 +72,9 @@ inline Gs2::UE5::Money2::Model::FEzStoreContentModelPtr FGs2Money2StoreContentMo
         ->WithAppleAppStore(FGs2Money2AppleAppStoreContentToEzAppleAppStoreContent(Model.AppleAppStore))
         ->WithGooglePlay(FGs2Money2GooglePlayContentToEzGooglePlayContent(Model.GooglePlay));
 }
+
+UCLASS()
+class BPGS2_API UGs2Money2StoreContentModelFunctionLibrary : public UBlueprintFunctionLibrary
+{
+    GENERATED_BODY()
+};

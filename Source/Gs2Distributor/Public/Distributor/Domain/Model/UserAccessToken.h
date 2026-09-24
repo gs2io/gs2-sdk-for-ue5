@@ -24,6 +24,8 @@
 #include "Distributor/Domain/Iterator/DescribeNamespacesIterator.h"
 #include "Distributor/Domain/Iterator/DescribeDistributorModelMastersIterator.h"
 #include "Distributor/Domain/Iterator/DescribeDistributorModelsIterator.h"
+#include "Distributor/Domain/Iterator/DescribeUserDataIterator.h"
+#include "Distributor/Domain/Iterator/DescribeUserDataByUserIdIterator.h"
 
 namespace Gs2::Core::Domain
 {
@@ -60,6 +62,11 @@ namespace Gs2::Distributor::Domain::Model
         const Gs2::Distributor::FGs2DistributorRestClientPtr Client;
 
         public:
+        TOptional<FString> NextPageToken;
+        TOptional<FString> GetNextPageToken() const
+        {
+            return NextPageToken;
+        }
         TOptional<FString> NamespaceName;
         Gs2::Auth::Model::FAccessTokenPtr AccessToken;
         TOptional<FString> UserId() const { return AccessToken->GetUserId(); }
@@ -79,6 +86,41 @@ namespace Gs2::Distributor::Domain::Model
 
         FUserAccessTokenDomain(
             const FUserAccessTokenDomain& From
+        );
+
+        Gs2::Distributor::Domain::Iterator::FDescribeUserDataIteratorPtr UserData(
+        ) const;
+
+        Gs2::Core::Domain::CallbackID SubscribeUserData(
+            TFunction<void()> Callback
+        );
+
+        class FCollectUserDataTask;
+
+        Gs2::Core::Domain::CallbackID SubscribeUserData(
+            TFunction<void(TArray<Gs2::Distributor::Model::FUserDataEntryPtr>)> Callback
+        );
+
+        void InvalidateUserData();
+
+        class GS2DISTRIBUTOR_API FSubscribeUserDataWithInitialCallTask final :
+            public Gs2::Core::Util::TGs2Future<Gs2::Core::Domain::CallbackID>,
+            public TSharedFromThis<FSubscribeUserDataWithInitialCallTask>
+        {
+            const TSharedPtr<FUserAccessTokenDomain> Self;
+            const TFunction<void(TArray<Gs2::Distributor::Model::FUserDataEntryPtr>)> Callback;
+
+        public:
+            FSubscribeUserDataWithInitialCallTask(const TSharedPtr<FUserAccessTokenDomain>& Self, TFunction<void(TArray<Gs2::Distributor::Model::FUserDataEntryPtr>)> Callback);
+            FSubscribeUserDataWithInitialCallTask(const FSubscribeUserDataWithInitialCallTask& From);
+            virtual Gs2::Core::Model::FGs2ErrorPtr Action(TSharedPtr<TSharedPtr<Gs2::Core::Domain::CallbackID>> Result) override;
+        };
+
+        TSharedPtr<FAsyncTask<FSubscribeUserDataWithInitialCallTask>> SubscribeUserDataWithInitialCall(
+            TFunction<void(TArray<Gs2::Distributor::Model::FUserDataEntryPtr>)> Callback
+        );
+        void UnsubscribeUserData(
+            Gs2::Core::Domain::CallbackID CallbackID
         );
 
         TSharedPtr<Gs2::Distributor::Domain::Model::FStampSheetResultAccessTokenDomain> StampSheetResult(

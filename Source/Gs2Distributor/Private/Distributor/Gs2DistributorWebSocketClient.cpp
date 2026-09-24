@@ -352,24 +352,6 @@ namespace Gs2::Distributor
         );
     }
 
-    TSharedPtr<FAsyncTask<Task::WebSocket::FDescribeUserDataTask>> FGs2DistributorWebSocketClient::DescribeUserData(
-        const Request::FDescribeUserDataRequestPtr Request) const
-    {
-        return Gs2::Core::Util::New<FAsyncTask<Task::WebSocket::FDescribeUserDataTask>>(
-            Session,
-            Request
-        );
-    }
-
-    TSharedPtr<FAsyncTask<Task::WebSocket::FDescribeUserDataByUserIdTask>> FGs2DistributorWebSocketClient::DescribeUserDataByUserId(
-        const Request::FDescribeUserDataByUserIdRequestPtr Request) const
-    {
-        return Gs2::Core::Util::New<FAsyncTask<Task::WebSocket::FDescribeUserDataByUserIdTask>>(
-            Session,
-            Request
-        );
-    }
-
     TSharedPtr<FAsyncTask<Task::WebSocket::FIfExpressionByUserIdTask>> FGs2DistributorWebSocketClient::IfExpressionByUserId(
         const Request::FIfExpressionByUserIdRequestPtr Request) const
     {
@@ -437,6 +419,24 @@ namespace Gs2::Distributor
         const Request::FGetStampSheetResultByUserIdRequestPtr Request) const
     {
         return Gs2::Core::Util::New<FAsyncTask<Task::WebSocket::FGetStampSheetResultByUserIdTask>>(
+            Session,
+            Request
+        );
+    }
+
+    TSharedPtr<FAsyncTask<Task::WebSocket::FDescribeUserDataTask>> FGs2DistributorWebSocketClient::DescribeUserData(
+        const Request::FDescribeUserDataRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::WebSocket::FDescribeUserDataTask>>(
+            Session,
+            Request
+        );
+    }
+
+    TSharedPtr<FAsyncTask<Task::WebSocket::FDescribeUserDataByUserIdTask>> FGs2DistributorWebSocketClient::DescribeUserDataByUserId(
+        const Request::FDescribeUserDataByUserIdRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::WebSocket::FDescribeUserDataByUserIdTask>>(
             Session,
             Request
         );

@@ -262,6 +262,35 @@ namespace Gs2::UE5::Core::Domain
         return Gs2::Core::Util::New<FAsyncTask<FDispatchTask>>(AsShared(), GameSession);
     }
 
+    FGs2Domain::FLoadUserDataTask::FLoadUserDataTask(
+        const TSharedPtr<FGs2Domain> Self,
+        const Gs2::UE5::Util::FGameSessionPtr GameSession
+    ): Self(Self), GameSession(GameSession)
+    {
+    }
+
+    Gs2::Core::Model::FGs2ErrorPtr FGs2Domain::FLoadUserDataTask::Action(
+        TSharedPtr<TSharedPtr<int32>> Result
+    )
+    {
+        const auto Future = Self->Super->LoadUserData(GameSession->AccessToken());
+        Future->StartSynchronousTask();
+        if (Future->GetTask().IsError())
+        {
+            return Future->GetTask().Error();
+        }
+        *Result = Future->GetTask().Result();
+        Future->EnsureCompletion();
+        return nullptr;
+    }
+
+    TSharedPtr<FAsyncTask<FGs2Domain::FLoadUserDataTask>> FGs2Domain::LoadUserData(
+        Gs2::UE5::Util::FGameSessionPtr GameSession
+    )
+    {
+        return Gs2::Core::Util::New<FAsyncTask<FLoadUserDataTask>>(AsShared(), GameSession);
+    }
+
     FGs2Domain::FDisconnectTask::FDisconnectTask(
         const TSharedPtr<FGs2Domain> Self
     ): Self(Self)

@@ -50,4 +50,33 @@ namespace Gs2::UE5::Distributor::Domain
     {
         return AutoRunTransactionNotificationEvent;
     }
+
+    FEzGs2Distributor::FLoadUserDataTask::FLoadUserDataTask(
+        const Gs2::Distributor::Domain::FGs2DistributorDomainPtr Domain,
+        const Gs2::UE5::Util::FGameSessionPtr GameSession
+    ): Domain(Domain), GameSession(GameSession)
+    {
+    }
+
+    Gs2::Core::Model::FGs2ErrorPtr FEzGs2Distributor::FLoadUserDataTask::Action(
+        TSharedPtr<TSharedPtr<int32>> Result
+    )
+    {
+        const auto Future = Domain->LoadUserData(GameSession->AccessToken());
+        Future->StartSynchronousTask();
+        if (Future->GetTask().IsError())
+        {
+            return Future->GetTask().Error();
+        }
+        *Result = Future->GetTask().Result();
+        Future->EnsureCompletion();
+        return nullptr;
+    }
+
+    TSharedPtr<FAsyncTask<FEzGs2Distributor::FLoadUserDataTask>> FEzGs2Distributor::LoadUserData(
+        Gs2::UE5::Util::FGameSessionPtr GameSession
+    )
+    {
+        return Gs2::Core::Util::New<FAsyncTask<FLoadUserDataTask>>(Domain, GameSession);
+    }
 }

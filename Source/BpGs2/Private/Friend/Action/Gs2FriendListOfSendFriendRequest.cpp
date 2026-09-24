@@ -16,6 +16,7 @@
 
 #include "Friend/Action/Gs2FriendListOfSendFriendRequest.h"
 #include "Friend/Model/Gs2FriendSendFriendRequest.h"
+#include "Friend/Model/Gs2FriendFriendRequest.h"
 #include "Core/BpGs2Constant.h"
 
 UGs2FriendListOfSendFriendRequestAsyncFunction::UGs2FriendListOfSendFriendRequestAsyncFunction(

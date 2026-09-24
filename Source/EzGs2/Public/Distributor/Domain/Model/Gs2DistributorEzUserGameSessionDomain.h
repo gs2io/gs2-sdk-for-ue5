@@ -24,6 +24,7 @@
 #include "Distributor/Model/Gs2DistributorEzStampSheetResult.h"
 #include "Distributor/Model/Gs2DistributorEzBatchRequestPayload.h"
 #include "Distributor/Model/Gs2DistributorEzBatchResultPayload.h"
+#include "Distributor/Model/Gs2DistributorEzUserDataEntry.h"
 #include "Distributor/Model/Gs2DistributorEzAcquireAction.h"
 #include "Distributor/Model/Gs2DistributorEzConsumeAction.h"
 #include "Distributor/Model/Gs2DistributorEzVerifyAction.h"
@@ -31,6 +32,7 @@
 #include "Distributor/Model/Gs2DistributorEzAcquireActionResult.h"
 #include "Distributor/Model/Gs2DistributorEzConsumeActionResult.h"
 #include "Distributor/Model/Gs2DistributorEzVerifyActionResult.h"
+#include "Distributor/Domain/Iterator/Gs2DistributorEzDescribeUserDataIterator.h"
 #include "Gs2DistributorEzStampSheetResultGameSessionDomain.h"
 #include "Gs2DistributorEzTransactionResultGameSessionDomain.h"
 #include "Gs2DistributorEzUserGameSessionDomain.h"
@@ -49,6 +51,7 @@ namespace Gs2::UE5::Distributor::Domain::Model
         Gs2::UE5::Util::FGs2ConnectionPtr ConnectionValue;
 
         public:
+        TOptional<FString> NextPageToken() const;
         TOptional<FString> NamespaceName() const;
         TOptional<FString> UserId() const;
 
@@ -57,6 +60,14 @@ namespace Gs2::UE5::Distributor::Domain::Model
             Gs2::UE5::Util::IGameSessionPtr GameSession,
             Gs2::UE5::Util::FGs2ConnectionPtr Connection
         );
+
+        Gs2::UE5::Distributor::Domain::Iterator::FEzDescribeUserDataIteratorPtr UserData(
+        ) const;
+
+        Gs2::Core::Domain::CallbackID SubscribeUserData(TFunction<void()> Callback);
+
+        void UnsubscribeUserData(
+                Gs2::Core::Domain::CallbackID CallbackId);
 
         Gs2::UE5::Distributor::Domain::Model::FEzStampSheetResultGameSessionDomainPtr StampSheetResult(
             const FString TransactionId

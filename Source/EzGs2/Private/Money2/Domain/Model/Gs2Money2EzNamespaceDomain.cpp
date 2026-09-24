@@ -61,6 +61,42 @@ namespace Gs2::UE5::Money2::Domain::Model
 
     }
 
+/* diff +++ start */
+    Gs2::UE5::Money2::Domain::Iterator::FEzDescribeStoreContentModelsIteratorPtr FEzNamespaceDomain::StoreContentModels(
+    ) const
+    {
+        return MakeShared<Gs2::UE5::Money2::Domain::Iterator::FEzDescribeStoreContentModelsIterator>(
+            Domain,
+            ConnectionValue
+        );
+    }
+    Gs2::Core::Domain::CallbackID FEzNamespaceDomain::SubscribeStoreContentModels(TFunction<void()> Callback)
+    {
+        return Domain->SubscribeStoreContentModels(
+            Callback
+        );
+    }
+    void FEzNamespaceDomain::UnsubscribeStoreContentModels(
+            Gs2::Core::Domain::CallbackID CallbackId)
+    {
+        Domain->UnsubscribeStoreContentModels(
+            CallbackId
+        );
+    }
+
+    Gs2::UE5::Money2::Domain::Model::FEzStoreContentModelDomainPtr FEzNamespaceDomain::StoreContentModel(
+        const FString ContentName
+    ) const
+    {
+        return MakeShared<Gs2::UE5::Money2::Domain::Model::FEzStoreContentModelDomain>(
+            Domain->StoreContentModel(
+                ContentName
+            ),
+            ConnectionValue
+        );
+    }
+/* diff +++ end */
+
     Gs2::UE5::Money2::Domain::Model::FEzUserDomainPtr FEzNamespaceDomain::User(
         const FString UserId
     ) const

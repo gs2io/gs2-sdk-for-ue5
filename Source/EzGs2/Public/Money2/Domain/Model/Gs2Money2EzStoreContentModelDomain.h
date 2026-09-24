@@ -12,14 +12,12 @@
  * on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either
  * express or implied. See the License for the specific language governing
  * permissions and limitations under the License.
- *
- * deny overwrite
  */
 
 #pragma once
 
 #include "CoreMinimal.h"
-#include "Money2/Domain/Model/Namespace.h"
+#include "Money2/Domain/Model/StoreContentModel.h"
 #include "Money2/Model/Gs2Money2EzWallet.h"
 #include "Money2/Model/Gs2Money2EzWalletSummary.h"
 #include "Money2/Model/Gs2Money2EzDepositTransaction.h"
@@ -30,14 +28,8 @@
 #include "Money2/Model/Gs2Money2EzGooglePlayContent.h"
 #include "Money2/Model/Gs2Money2EzAppleAppStoreSubscriptionContent.h"
 #include "Money2/Model/Gs2Money2EzGooglePlaySubscriptionContent.h"
-#include "Gs2Money2EzUserDomain.h"
-#include "Gs2Money2EzUserDomain.h"
-#include "Gs2Money2EzUserGameSessionDomain.h"
-#include "Gs2Money2EzNamespaceDomain.h"
-/* diff +++ start */
 #include "Gs2Money2EzStoreContentModelDomain.h"
 #include "Money2/Domain/Iterator/Gs2Money2EzDescribeStoreContentModelsIterator.h"
-/* diff +++ end */
 #include "Core/EzTransactionDomain.h"
 #include "Util/Net/GameSession.h"
 #include "Util/Net/Gs2Connection.h"
@@ -45,45 +37,43 @@
 namespace Gs2::UE5::Money2::Domain::Model
 {
 
-    class EZGS2_API FEzNamespaceDomain final :
-        public TSharedFromThis<FEzNamespaceDomain>
+    class EZGS2_API FEzStoreContentModelDomain final :
+        public TSharedFromThis<FEzStoreContentModelDomain>
     {
-        Gs2::Money2::Domain::Model::FNamespaceDomainPtr Domain;
+        Gs2::Money2::Domain::Model::FStoreContentModelDomainPtr Domain;
         Gs2::UE5::Util::FGs2ConnectionPtr ConnectionValue;
 
         public:
-        TOptional<FString> Status() const;
-        TOptional<FString> Url() const;
-        TOptional<FString> UploadToken() const;
-        TOptional<FString> UploadUrl() const;
-        TOptional<FString> NextPageToken() const;
         TOptional<FString> NamespaceName() const;
+        TOptional<FString> ContentName() const;
 
-        FEzNamespaceDomain(
-            Gs2::Money2::Domain::Model::FNamespaceDomainPtr Domain,
+        FEzStoreContentModelDomain(
+            Gs2::Money2::Domain::Model::FStoreContentModelDomainPtr Domain,
             Gs2::UE5::Util::FGs2ConnectionPtr Connection
         );
 
-/* diff +++ start */
-        Gs2::UE5::Money2::Domain::Iterator::FEzDescribeStoreContentModelsIteratorPtr StoreContentModels(
-        ) const;
-        Gs2::Core::Domain::CallbackID SubscribeStoreContentModels(TFunction<void()> Callback);
-        void UnsubscribeStoreContentModels(
-                Gs2::Core::Domain::CallbackID CallbackId);
+        class EZGS2_API FModelTask :
+            public Gs2::Core::Util::TGs2Future<Gs2::UE5::Money2::Model::FEzStoreContentModel>,
+            public TSharedFromThis<FModelTask>
+        {
+            TSharedPtr<FEzStoreContentModelDomain> Self;
 
-        Gs2::UE5::Money2::Domain::Model::FEzStoreContentModelDomainPtr StoreContentModel(
-            const FString ContentName
-        ) const;
-/* diff +++ end */
+        public:
+            explicit FModelTask(
+                TSharedPtr<FEzStoreContentModelDomain> Self
+            );
 
-        Gs2::UE5::Money2::Domain::Model::FEzUserDomainPtr User(
-            const FString UserId
-        ) const;
+            virtual Gs2::Core::Model::FGs2ErrorPtr Action(
+                TSharedPtr<Gs2::UE5::Money2::Model::FEzStoreContentModelPtr> Result
+            ) override;
+        };
 
-        Gs2::UE5::Money2::Domain::Model::FEzUserGameSessionDomainPtr Me(
-            Gs2::UE5::Util::IGameSessionPtr GameSession
-        ) const;
+        TSharedPtr<FAsyncTask<FModelTask>> Model();
+
+        Gs2::Core::Domain::CallbackID Subscribe(TFunction<void(Gs2::UE5::Money2::Model::FEzStoreContentModelPtr)> Callback);
+
+        void Unsubscribe(Gs2::Core::Domain::CallbackID CallbackId);
 
     };
-    typedef TSharedPtr<FEzNamespaceDomain> FEzNamespaceDomainPtr;
+    typedef TSharedPtr<FEzStoreContentModelDomain> FEzStoreContentModelDomainPtr;
 }

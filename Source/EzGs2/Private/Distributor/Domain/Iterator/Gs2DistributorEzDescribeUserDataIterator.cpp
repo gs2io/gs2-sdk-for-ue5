@@ -14,7 +14,8 @@
  * permissions and limitations under the License.
  */
 
-#include "Money2/Model/Gs2Money2StoreContentModel.h"
-#include "Money2/Domain/EzGs2Money2.h"
-#include "Core/Model/Gs2AccessToken.h"
-#include "Core/BpGs2Constant.h"
+#include "Distributor/Domain/Iterator/Gs2DistributorEzDescribeUserDataIterator.h"
+
+namespace Gs2::UE5::Distributor::Domain::Iterator
+{
+}

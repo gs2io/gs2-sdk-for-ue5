@@ -19,6 +19,11 @@
 namespace Gs2::UE5::Distributor::Domain::Model
 {
 
+    TOptional<FString> FEzUserGameSessionDomain::NextPageToken() const
+    {
+        return Domain->NextPageToken;
+    }
+
     TOptional<FString> FEzUserGameSessionDomain::NamespaceName() const
     {
         return Domain->NamespaceName;
@@ -39,6 +44,31 @@ namespace Gs2::UE5::Distributor::Domain::Model
         ConnectionValue(Connection)
     {
 
+    }
+
+    Gs2::UE5::Distributor::Domain::Iterator::FEzDescribeUserDataIteratorPtr FEzUserGameSessionDomain::UserData(
+    ) const
+    {
+        return MakeShared<Gs2::UE5::Distributor::Domain::Iterator::FEzDescribeUserDataIterator>(
+            Domain,
+            GameSession,
+            ConnectionValue
+        );
+    }
+
+    Gs2::Core::Domain::CallbackID FEzUserGameSessionDomain::SubscribeUserData(TFunction<void()> Callback)
+    {
+        return Domain->SubscribeUserData(
+            Callback
+        );
+    }
+
+    void FEzUserGameSessionDomain::UnsubscribeUserData(
+            Gs2::Core::Domain::CallbackID CallbackId)
+    {
+        Domain->UnsubscribeUserData(
+            CallbackId
+        );
     }
 
     Gs2::UE5::Distributor::Domain::Model::FEzStampSheetResultGameSessionDomainPtr FEzUserGameSessionDomain::StampSheetResult(
