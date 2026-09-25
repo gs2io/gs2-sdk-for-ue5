@@ -30,7 +30,6 @@ namespace Gs2::Distributor::Domain::Iterator
     {
         const TSharedPtr<Core::Domain::FGs2> Gs2;
         const Gs2::Distributor::FGs2DistributorRestClientPtr Client;
-        // 一括取得: 読んだページの各エントリを kind ごとのモデルのキャッシュへ入れ、最終ページで (Service, Kind, 親キー) ごとに「リストが揃った印」を立てる
         TSet<FString> ListCachedKeys;
         TArray<TTuple<FString, FString, FString>> ListCached;
         const Gs2::Auth::Model::FAccessTokenPtr AccessToken;

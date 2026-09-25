@@ -31,10 +31,6 @@ namespace Gs2::Inbox::Model::Cache
             const Gs2::Inbox::Model::FNamespacePtr& CacheOwnerArgumentItem
         );
 
-        // Gs2Distributor:DescribeUserData（ユーザーの全データの一括取得）の 1 エントリ（この kind）をキャッシュへ入れる。
-        // 鍵はエントリの namespaceName / 読み込むユーザーの userId / モデル自身のプロパティ / 主キー GRN から取る
-        // （sdk-gen の BaseModel.user_data_cache_keys）。戻り値は親キーで、呼び手が全ページを読み終えてから
-        // FGs2InboxDomain::SetListCached(TimeOffset, Kind, ParentKey) で「リストが揃った印」を立てる。
         static FString PutUserData(
             const Gs2::Core::Domain::FCacheDatabasePtr& Cache,
             TOptional<FString> NamespaceName,

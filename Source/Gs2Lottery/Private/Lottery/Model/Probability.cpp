@@ -210,15 +210,15 @@ namespace Gs2::Lottery::Model::Cache
             Cache,
             NamespaceName,
             UserId,
-            TOptional<FString>() /* TODO: 一括取得のエントリから lotteryName を決められない。手書きで値を入れる */,
-            TOptional<FString>() /* TODO: 一括取得のエントリから prizeId を決められない。手書きで値を入れる */,
+            TOptional<FString>(),
+            TOptional<FString>(),
             TimeOffset,
             Item
         );
         return CreateCacheParentKey(
             NamespaceName,
             UserId,
-            TOptional<FString>() /* TODO: 一括取得のエントリから lotteryName を決められない。手書きで値を入れる */,
+            TOptional<FString>(),
             TimeOffset
         );
     }

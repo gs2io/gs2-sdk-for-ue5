@@ -43,11 +43,9 @@
 #include "Distributor/Model/Cache/Namespace.h"
 #include "Distributor/Model/Cache/StampSheetResult.h"
 #include "Distributor/Model/Cache/TransactionResult.h"
-/* diff +++ start */
 #include "Distributor/Model/Cache/DistributorModelMaster.h"
 #include "Distributor/Model/Cache/CurrentDistributorMaster.h"
 #include "Distributor/Model/Cache/DistributorModel.h"
-/* diff +++ end */
 #include "Core/Domain/Gs2.h"
 
 namespace Gs2::Distributor::Domain
@@ -262,7 +260,6 @@ namespace Gs2::Distributor::Domain
     ) {
     }
 
-    /* diff +++ start */
     TOptional<FString> FGs2DistributorDomain::PutUserData(
         const TOptional<FString> NamespaceName,
         const TOptional<FString> UserId,
@@ -280,7 +277,6 @@ namespace Gs2::Distributor::Domain
     ) {
         return false;
     }
-    /* diff +++ end */
 
     void FGs2DistributorDomain::UpdateCacheFromStampTask(
         const FString Method,
@@ -358,7 +354,6 @@ namespace Gs2::Distributor::Domain
         return AutoRunTransactionNotificationEvent;
     }
 
-/* diff +++ start */
     void FGs2DistributorDomain::SetUserDataStore(
         TFunction<TOptional<FString>(const FString&, const TOptional<FString>&, const TOptional<FString>&, const TOptional<int32>&, const FString&, const FString&)> Put,
         TFunction<bool(const FString&, const TOptional<int32>&, const FString&, const FString&)> SetListCached
@@ -415,7 +410,6 @@ namespace Gs2::Distributor::Domain
             return MakeShared<Gs2::Core::Model::FBadRequestError>(Details);
         }
         int32 Loaded = 0;
-        // 全ページを読み終えてからまとめて「リストが揃った印」を立てる (Service, Kind, 親キー) の集合（順序は初出順）
         TSet<FString> ListCachedKeys;
         TArray<TTuple<FString, FString, FString>> ListCached;
         TOptional<FString> PageToken;
@@ -449,7 +443,6 @@ namespace Gs2::Distributor::Domain
                     }
                     const auto Service = Entry->GetService().Get(FString());
                     const auto Kind = Entry->GetKind().Get(FString());
-                    // 1 件の JSON が読めなくても（未設定が返る）他のエントリは入れる（個別 API で取り直せる）
                     const auto ParentKey = Self->PutUserDataFunc(
                         Service,
                         Entry->GetNamespaceName(),
@@ -492,7 +485,6 @@ namespace Gs2::Distributor::Domain
         return Gs2::Core::Util::New<FAsyncTask<FGs2DistributorDomain::FLoadUserDataTask>>(this->AsShared(), AccessToken);
     }
 
-/* diff +++ end */
     FGs2DistributorDomain::FDispatchTask::FDispatchTask(
         const TSharedPtr<FGs2DistributorDomain> Self,
         const Gs2::Auth::Model::FAccessTokenPtr AccessToken

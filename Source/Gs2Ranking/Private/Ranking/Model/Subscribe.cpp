@@ -435,7 +435,7 @@ namespace Gs2::Ranking::Model::Cache
             NamespaceName,
             UserId,
             Item->GetCategoryName(),
-            TOptional<FString>() /* TODO: 一括取得のエントリから additionalScopeName を決められない。手書きで値を入れる */,
+            TOptional<FString>(),
             TimeOffset,
             Item
         );
@@ -443,7 +443,7 @@ namespace Gs2::Ranking::Model::Cache
             NamespaceName,
             UserId,
             Item->GetCategoryName(),
-            TOptional<FString>() /* TODO: 一括取得のエントリから additionalScopeName を決められない。手書きで値を入れる */,
+            TOptional<FString>(),
             TimeOffset
         );
     }

@@ -281,7 +281,7 @@ namespace Gs2::Showcase::Model::Cache
             Cache,
             NamespaceName,
             UserId,
-            TOptional<FString>() /* TODO: 一括取得のエントリから showcaseName を決められない。手書きで値を入れる */,
+            TOptional<FString>(),
             Item->GetDisplayItemId(),
             TimeOffset,
             Item
@@ -289,7 +289,7 @@ namespace Gs2::Showcase::Model::Cache
         return CreateCacheParentKey(
             NamespaceName,
             UserId,
-            TOptional<FString>() /* TODO: 一括取得のエントリから showcaseName を決められない。手書きで値を入れる */,
+            TOptional<FString>(),
             TimeOffset
         );
     }

@@ -392,7 +392,7 @@ namespace Gs2::Friend::Model::Cache
             Cache,
             NamespaceName,
             UserId,
-            TOptional<bool>() /* TODO: 一括取得のエントリから withProfile を決められない。手書きで値を入れる */,
+            TOptional<bool>(),
             TimeOffset,
             Item
         );

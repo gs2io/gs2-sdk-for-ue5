@@ -262,16 +262,16 @@ namespace Gs2::Guild::Model::Cache
         Put(
             Cache,
             NamespaceName,
-            TOptional<FString>() /* TODO: 一括取得のエントリから guildModelName を決められない。手書きで値を入れる */,
-            TOptional<FString>() /* TODO: 一括取得のエントリから guildName を決められない。手書きで値を入れる */,
+            TOptional<FString>(),
+            TOptional<FString>(),
             Item->GetUserId(),
             TimeOffset,
             Item
         );
         return CreateCacheParentKey(
             NamespaceName,
-            TOptional<FString>() /* TODO: 一括取得のエントリから guildModelName を決められない。手書きで値を入れる */,
-            TOptional<FString>() /* TODO: 一括取得のエントリから guildName を決められない。手書きで値を入れる */,
+            TOptional<FString>(),
+            TOptional<FString>(),
             TimeOffset
         );
     }

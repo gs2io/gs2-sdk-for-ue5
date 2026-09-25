@@ -1212,8 +1212,6 @@ namespace Gs2::Inventory::Domain
         }
         if (Kind == "itemSet") {
             Gs2->Cache->SetListCached(Gs2::Inventory::Model::FItemSet::TypeName, ParentKey);
-            // ItemSet(itemName) の Model() は ItemSet[]（キー itemName）の配列キャッシュを読むので、
-            // 親ごとに itemName で束ねて配列も入れる（DescribeItemSets と同じ像）
             if (const auto Items = Gs2->Cache->TryGetList<Gs2::Inventory::Model::FItemSet>(ParentKey); Items.IsValid())
             {
                 TArray<FString> ItemNames;

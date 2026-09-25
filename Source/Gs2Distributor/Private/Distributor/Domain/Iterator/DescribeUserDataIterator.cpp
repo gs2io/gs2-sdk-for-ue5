@@ -113,7 +113,6 @@ namespace Gs2::Distributor::Domain::Iterator
             for (const auto& Entry : *Range)
             {
                 if (!Entry.IsValid()) continue;
-                // 1 件の JSON が読めなくても（未設定が返る）他のエントリは入れる（個別 API で取り直せる）
                 const auto ParentKey = Self->Gs2->Distributor->PutUserData(
                     Entry->GetService().Get(FString()),
                     Entry->GetNamespaceName(),

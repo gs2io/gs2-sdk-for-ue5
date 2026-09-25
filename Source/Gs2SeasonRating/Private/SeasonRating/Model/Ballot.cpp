@@ -280,7 +280,7 @@ namespace Gs2::SeasonRating::Model::Cache
             Item->GetSeasonName(),
             Item->GetSessionName(),
             Item->GetNumberOfPlayer(),
-            TOptional<FString>() /* TODO: 一括取得のエントリから keyId を決められない。手書きで値を入れる */,
+            TOptional<FString>(),
             TimeOffset,
             Item
         );
