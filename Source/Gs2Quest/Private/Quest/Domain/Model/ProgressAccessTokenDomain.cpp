@@ -40,6 +40,7 @@
 #include "Quest/Model/Cache/Progress.h"
 #include "Quest/Model/Cache/QuestGroupModel.h"
 #include "Quest/Model/Cache/QuestModel.h"
+#include "Quest/Model/Cache/CompletedQuestList.h"
 
 #include "Core/Domain/Gs2.h"
 #include "Core/Domain/Transaction/JobQueueJobDomainFactory.h"
@@ -220,6 +221,30 @@ namespace Gs2::Quest::Domain::Model
             Request->GetNamespaceName(),
             (CacheOwnerSnapshotUserId),
             CacheOwnerSnapshotTimeOffset
+        );
+        if (ResultModel.IsValid() && ResultModel->GetItem().IsValid() && ResultModel->GetItem()->GetQuestModelId().IsSet())
+        {
+            const auto QuestGroupName = Gs2::Quest::Model::FQuestModel::GetQuestGroupNameFromGrn(*ResultModel->GetItem()->GetQuestModelId());
+            if (QuestGroupName.IsSet())
+            {
+                Gs2::Quest::Model::Cache::FCompletedQuestListCache::Delete(
+                    Self->Gs2->Cache,
+
+                    Request->GetNamespaceName(),
+                    (CacheOwnerSnapshotUserId),
+                    QuestGroupName,
+                    CacheOwnerSnapshotTimeOffset
+                );
+            }
+        }
+        Self->Gs2->Cache->ClearListCache(
+            Gs2::Quest::Model::FCompletedQuestList::TypeName,
+            Gs2::Quest::Model::Cache::FCompletedQuestListCache::CreateCacheParentKey(
+
+                Request->GetNamespaceName(),
+                (CacheOwnerSnapshotUserId),
+                CacheOwnerSnapshotTimeOffset
+            )
         );
         const auto Transaction = Gs2::Core::Domain::Internal::FTransactionDomainFactory::ToTransaction(
             Self->Gs2,

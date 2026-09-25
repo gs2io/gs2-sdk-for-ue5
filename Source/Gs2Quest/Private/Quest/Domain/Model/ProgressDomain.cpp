@@ -38,6 +38,7 @@
 #include "Quest/Model/Cache/Progress.h"
 #include "Quest/Model/Cache/QuestGroupModel.h"
 #include "Quest/Model/Cache/QuestModel.h"
+#include "Quest/Model/Cache/CompletedQuestList.h"
 
 #include "Core/Domain/Gs2.h"
 #include "Core/Domain/Transaction/JobQueueJobDomainFactory.h"
@@ -213,6 +214,30 @@ namespace Gs2::Quest::Domain::Model
             Request->GetNamespaceName(),
             (ResultModel.IsValid() && ResultModel->GetItem().IsValid() ? ResultModel->GetItem()->GetUserId() : TOptional<FString>()),
             TOptional<int32>()
+        );
+        if (ResultModel.IsValid() && ResultModel->GetItem().IsValid() && ResultModel->GetItem()->GetQuestModelId().IsSet())
+        {
+            const auto QuestGroupName = Gs2::Quest::Model::FQuestModel::GetQuestGroupNameFromGrn(*ResultModel->GetItem()->GetQuestModelId());
+            if (QuestGroupName.IsSet())
+            {
+                Gs2::Quest::Model::Cache::FCompletedQuestListCache::Delete(
+                    Self->Gs2->Cache,
+
+                    Request->GetNamespaceName(),
+                    (ResultModel.IsValid() && ResultModel->GetItem().IsValid() ? ResultModel->GetItem()->GetUserId() : TOptional<FString>()),
+                    QuestGroupName,
+                    TOptional<int32>()
+                );
+            }
+        }
+        Self->Gs2->Cache->ClearListCache(
+            Gs2::Quest::Model::FCompletedQuestList::TypeName,
+            Gs2::Quest::Model::Cache::FCompletedQuestListCache::CreateCacheParentKey(
+
+                Request->GetNamespaceName(),
+                (ResultModel.IsValid() && ResultModel->GetItem().IsValid() ? ResultModel->GetItem()->GetUserId() : TOptional<FString>()),
+                TOptional<int32>()
+            )
         );
         const auto Transaction = Gs2::Core::Domain::Internal::FTransactionDomainFactory::ToTransaction(
             Self->Gs2,
