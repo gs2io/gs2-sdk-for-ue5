@@ -42,6 +42,8 @@ struct FGs2IdleStatusValue
     int32 IdleMinutes = 0;
     UPROPERTY(Category = Gs2, BlueprintReadOnly)
     int32 MaximumIdleMinutes = 0;
+    UPROPERTY(Category = Gs2, BlueprintReadOnly)
+    int64 NextRewardsAt = 0;
 };
 
 inline FGs2IdleStatusValue EzStatusToFGs2IdleStatusValue(
@@ -57,6 +59,7 @@ inline FGs2IdleStatusValue EzStatusToFGs2IdleStatusValue(
     Value.RandomSeed = Model->GetRandomSeed() ? *Model->GetRandomSeed() : 0;
     Value.IdleMinutes = Model->GetIdleMinutes() ? *Model->GetIdleMinutes() : 0;
     Value.MaximumIdleMinutes = Model->GetMaximumIdleMinutes() ? *Model->GetMaximumIdleMinutes() : 0;
+    Value.NextRewardsAt = Model->GetNextRewardsAt() ? *Model->GetNextRewardsAt() : 0;
     return Value;
 }
 
@@ -68,7 +71,8 @@ inline Gs2::UE5::Idle::Model::FEzStatusPtr FGs2IdleStatusValueToEzStatus(
         ->WithCategoryName(Model.CategoryName)
         ->WithRandomSeed(Model.RandomSeed)
         ->WithIdleMinutes(Model.IdleMinutes)
-        ->WithMaximumIdleMinutes(Model.MaximumIdleMinutes);
+        ->WithMaximumIdleMinutes(Model.MaximumIdleMinutes)
+        ->WithNextRewardsAt(Model.NextRewardsAt);
 }
 
 UCLASS()

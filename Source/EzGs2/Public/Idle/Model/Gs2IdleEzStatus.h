@@ -27,12 +27,14 @@ namespace Gs2::UE5::Idle::Model
         TOptional<int64> RandomSeedValue;
         TOptional<int32> IdleMinutesValue;
         TOptional<int32> MaximumIdleMinutesValue;
+        TOptional<int64> NextRewardsAtValue;
 
 	public:
         TSharedPtr<FEzStatus> WithCategoryName(const TOptional<FString> CategoryName);
         TSharedPtr<FEzStatus> WithRandomSeed(const TOptional<int64> RandomSeed);
         TSharedPtr<FEzStatus> WithIdleMinutes(const TOptional<int32> IdleMinutes);
         TSharedPtr<FEzStatus> WithMaximumIdleMinutes(const TOptional<int32> MaximumIdleMinutes);
+        TSharedPtr<FEzStatus> WithNextRewardsAt(const TOptional<int64> NextRewardsAt);
 
         TOptional<FString> GetCategoryName() const;
 
@@ -44,6 +46,9 @@ namespace Gs2::UE5::Idle::Model
 
         TOptional<int32> GetMaximumIdleMinutes() const;
         FString GetMaximumIdleMinutesString() const;
+
+        TOptional<int64> GetNextRewardsAt() const;
+        FString GetNextRewardsAtString() const;
 
         Gs2::Idle::Model::FStatusPtr ToModel() const;
         static TSharedPtr<FEzStatus> FromModel(Gs2::Idle::Model::FStatusPtr Model);

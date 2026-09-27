@@ -50,6 +50,14 @@ namespace Gs2::UE5::Idle::Model
         this->MaximumIdleMinutesValue = MaximumIdleMinutes;
         return SharedThis(this);
     }
+
+    TSharedPtr<FEzStatus> FEzStatus::WithNextRewardsAt(
+        const TOptional<int64> NextRewardsAt
+    )
+    {
+        this->NextRewardsAtValue = NextRewardsAt;
+        return SharedThis(this);
+    }
     TOptional<FString> FEzStatus::GetCategoryName() const
     {
         return CategoryNameValue;
@@ -93,6 +101,19 @@ namespace Gs2::UE5::Idle::Model
         }
         return FString::Printf(TEXT("%d"), MaximumIdleMinutesValue.GetValue());
     }
+    TOptional<int64> FEzStatus::GetNextRewardsAt() const
+    {
+        return NextRewardsAtValue;
+    }
+
+    FString FEzStatus::GetNextRewardsAtString() const
+    {
+        if (!NextRewardsAtValue.IsSet())
+        {
+            return FString("null");
+        }
+        return FString::Printf(TEXT("%lld"), NextRewardsAtValue.GetValue());
+    }
 
     Gs2::Idle::Model::FStatusPtr FEzStatus::ToModel() const
     {
@@ -100,7 +121,8 @@ namespace Gs2::UE5::Idle::Model
             ->WithCategoryName(CategoryNameValue)
             ->WithRandomSeed(RandomSeedValue)
             ->WithIdleMinutes(IdleMinutesValue)
-            ->WithMaximumIdleMinutes(MaximumIdleMinutesValue);
+            ->WithMaximumIdleMinutes(MaximumIdleMinutesValue)
+            ->WithNextRewardsAt(NextRewardsAtValue);
     }
 
     TSharedPtr<FEzStatus> FEzStatus::FromModel(const Gs2::Idle::Model::FStatusPtr Model)
@@ -113,6 +135,7 @@ namespace Gs2::UE5::Idle::Model
             ->WithCategoryName(Model->GetCategoryName())
             ->WithRandomSeed(Model->GetRandomSeed())
             ->WithIdleMinutes(Model->GetIdleMinutes())
-            ->WithMaximumIdleMinutes(Model->GetMaximumIdleMinutes());
+            ->WithMaximumIdleMinutes(Model->GetMaximumIdleMinutes())
+            ->WithNextRewardsAt(Model->GetNextRewardsAt());
     }
 }
