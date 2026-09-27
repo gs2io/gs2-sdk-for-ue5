@@ -31,6 +31,7 @@ namespace Gs2::UE5::Buff::Model
         TSharedPtr<Gs2::UE5::Buff::Model::FEzBuffTargetModel> TargetModelValue;
         TSharedPtr<Gs2::UE5::Buff::Model::FEzBuffTargetAction> TargetActionValue;
         TOptional<FString> ExpressionValue;
+        TOptional<int32> PriorityValue;
         TOptional<FString> ApplyPeriodScheduleEventIdValue;
 
 	public:
@@ -40,6 +41,7 @@ namespace Gs2::UE5::Buff::Model
         TSharedPtr<FEzBuffEntryModel> WithTargetModel(const TSharedPtr<Gs2::UE5::Buff::Model::FEzBuffTargetModel> TargetModel);
         TSharedPtr<FEzBuffEntryModel> WithTargetAction(const TSharedPtr<Gs2::UE5::Buff::Model::FEzBuffTargetAction> TargetAction);
         TSharedPtr<FEzBuffEntryModel> WithExpression(const TOptional<FString> Expression);
+        TSharedPtr<FEzBuffEntryModel> WithPriority(const TOptional<int32> Priority);
         TSharedPtr<FEzBuffEntryModel> WithApplyPeriodScheduleEventId(const TOptional<FString> ApplyPeriodScheduleEventId);
 
         TOptional<FString> GetName() const;
@@ -53,6 +55,9 @@ namespace Gs2::UE5::Buff::Model
         TSharedPtr<Gs2::UE5::Buff::Model::FEzBuffTargetAction> GetTargetAction() const;
 
         TOptional<FString> GetExpression() const;
+
+        TOptional<int32> GetPriority() const;
+        FString GetPriorityString() const;
 
         TOptional<FString> GetApplyPeriodScheduleEventId() const;
 

@@ -67,6 +67,14 @@ namespace Gs2::UE5::Buff::Model
         return SharedThis(this);
     }
 
+    TSharedPtr<FEzBuffEntryModel> FEzBuffEntryModel::WithPriority(
+        const TOptional<int32> Priority
+    )
+    {
+        this->PriorityValue = Priority;
+        return SharedThis(this);
+    }
+
     TSharedPtr<FEzBuffEntryModel> FEzBuffEntryModel::WithApplyPeriodScheduleEventId(
         const TOptional<FString> ApplyPeriodScheduleEventId
     )
@@ -98,6 +106,19 @@ namespace Gs2::UE5::Buff::Model
     {
         return ExpressionValue;
     }
+    TOptional<int32> FEzBuffEntryModel::GetPriority() const
+    {
+        return PriorityValue;
+    }
+
+    FString FEzBuffEntryModel::GetPriorityString() const
+    {
+        if (!PriorityValue.IsSet())
+        {
+            return FString("null");
+        }
+        return FString::Printf(TEXT("%d"), PriorityValue.GetValue());
+    }
     TOptional<FString> FEzBuffEntryModel::GetApplyPeriodScheduleEventId() const
     {
         return ApplyPeriodScheduleEventIdValue;
@@ -112,6 +133,7 @@ namespace Gs2::UE5::Buff::Model
             ->WithTargetModel(TargetModelValue == nullptr ? nullptr : TargetModelValue->ToModel())
             ->WithTargetAction(TargetActionValue == nullptr ? nullptr : TargetActionValue->ToModel())
             ->WithExpression(ExpressionValue)
+            ->WithPriority(PriorityValue)
             ->WithApplyPeriodScheduleEventId(ApplyPeriodScheduleEventIdValue);
     }
 
@@ -128,6 +150,7 @@ namespace Gs2::UE5::Buff::Model
             ->WithTargetModel(Model->GetTargetModel() != nullptr ? Gs2::UE5::Buff::Model::FEzBuffTargetModel::FromModel(Model->GetTargetModel()) : nullptr)
             ->WithTargetAction(Model->GetTargetAction() != nullptr ? Gs2::UE5::Buff::Model::FEzBuffTargetAction::FromModel(Model->GetTargetAction()) : nullptr)
             ->WithExpression(Model->GetExpression())
+            ->WithPriority(Model->GetPriority())
             ->WithApplyPeriodScheduleEventId(Model->GetApplyPeriodScheduleEventId());
     }
 }

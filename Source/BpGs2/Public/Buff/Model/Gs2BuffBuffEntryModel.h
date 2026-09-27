@@ -49,6 +49,8 @@ struct FGs2BuffBuffEntryModelValue
     UPROPERTY(Category = Gs2, BlueprintReadOnly)
     FString Expression = "";
     UPROPERTY(Category = Gs2, BlueprintReadOnly)
+    int32 Priority = 0;
+    UPROPERTY(Category = Gs2, BlueprintReadOnly)
     FString ApplyPeriodScheduleEventId = "";
 };
 
@@ -67,6 +69,7 @@ inline FGs2BuffBuffEntryModelValue EzBuffEntryModelToFGs2BuffBuffEntryModelValue
     Value.TargetModel = Model->GetTargetModel() ? EzBuffTargetModelToFGs2BuffBuffTargetModel(Model->GetTargetModel()) : FGs2BuffBuffTargetModel();
     Value.TargetAction = Model->GetTargetAction() ? EzBuffTargetActionToFGs2BuffBuffTargetAction(Model->GetTargetAction()) : FGs2BuffBuffTargetAction();
     Value.Expression = Model->GetExpression() ? *Model->GetExpression() : "";
+    Value.Priority = Model->GetPriority() ? *Model->GetPriority() : 0;
     Value.ApplyPeriodScheduleEventId = Model->GetApplyPeriodScheduleEventId() ? *Model->GetApplyPeriodScheduleEventId() : "";
     return Value;
 }
@@ -82,6 +85,7 @@ inline Gs2::UE5::Buff::Model::FEzBuffEntryModelPtr FGs2BuffBuffEntryModelValueTo
         ->WithTargetModel(FGs2BuffBuffTargetModelToEzBuffTargetModel(Model.TargetModel))
         ->WithTargetAction(FGs2BuffBuffTargetActionToEzBuffTargetAction(Model.TargetAction))
         ->WithExpression(Model.Expression)
+        ->WithPriority(Model.Priority)
         ->WithApplyPeriodScheduleEventId(Model.ApplyPeriodScheduleEventId);
 }
 
