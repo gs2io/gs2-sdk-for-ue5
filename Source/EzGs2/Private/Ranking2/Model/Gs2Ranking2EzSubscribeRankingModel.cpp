@@ -43,6 +43,38 @@ namespace Gs2::UE5::Ranking2::Model
         return SharedThis(this);
     }
 
+    TSharedPtr<FEzSubscribeRankingModel> FEzSubscribeRankingModel::WithMinimumValue(
+        const TOptional<int64> MinimumValue
+    )
+    {
+        this->MinimumValueValue = MinimumValue;
+        return SharedThis(this);
+    }
+
+    TSharedPtr<FEzSubscribeRankingModel> FEzSubscribeRankingModel::WithMaximumValue(
+        const TOptional<int64> MaximumValue
+    )
+    {
+        this->MaximumValueValue = MaximumValue;
+        return SharedThis(this);
+    }
+
+    TSharedPtr<FEzSubscribeRankingModel> FEzSubscribeRankingModel::WithSum(
+        const TOptional<bool> Sum
+    )
+    {
+        this->SumValue = Sum;
+        return SharedThis(this);
+    }
+
+    TSharedPtr<FEzSubscribeRankingModel> FEzSubscribeRankingModel::WithOrderDirection(
+        const TOptional<FString> OrderDirection
+    )
+    {
+        this->OrderDirectionValue = OrderDirection;
+        return SharedThis(this);
+    }
+
     TSharedPtr<FEzSubscribeRankingModel> FEzSubscribeRankingModel::WithEntryPeriodEventId(
         const TOptional<FString> EntryPeriodEventId
     )
@@ -70,6 +102,49 @@ namespace Gs2::UE5::Ranking2::Model
     {
         return MetadataValue;
     }
+    TOptional<int64> FEzSubscribeRankingModel::GetMinimumValue() const
+    {
+        return MinimumValueValue;
+    }
+
+    FString FEzSubscribeRankingModel::GetMinimumValueString() const
+    {
+        if (!MinimumValueValue.IsSet())
+        {
+            return FString("null");
+        }
+        return FString::Printf(TEXT("%lld"), MinimumValueValue.GetValue());
+    }
+    TOptional<int64> FEzSubscribeRankingModel::GetMaximumValue() const
+    {
+        return MaximumValueValue;
+    }
+
+    FString FEzSubscribeRankingModel::GetMaximumValueString() const
+    {
+        if (!MaximumValueValue.IsSet())
+        {
+            return FString("null");
+        }
+        return FString::Printf(TEXT("%lld"), MaximumValueValue.GetValue());
+    }
+    TOptional<bool> FEzSubscribeRankingModel::GetSum() const
+    {
+        return SumValue;
+    }
+
+    FString FEzSubscribeRankingModel::GetSumString() const
+    {
+        if (!SumValue.IsSet())
+        {
+            return FString("null");
+        }
+        return FString(SumValue.GetValue() ? "true" : "false");
+    }
+    TOptional<FString> FEzSubscribeRankingModel::GetOrderDirection() const
+    {
+        return OrderDirectionValue;
+    }
     TOptional<FString> FEzSubscribeRankingModel::GetEntryPeriodEventId() const
     {
         return EntryPeriodEventIdValue;
@@ -85,6 +160,10 @@ namespace Gs2::UE5::Ranking2::Model
             ->WithSubscribeRankingModelId(SubscribeRankingModelIdValue)
             ->WithName(NameValue)
             ->WithMetadata(MetadataValue)
+            ->WithMinimumValue(MinimumValueValue)
+            ->WithMaximumValue(MaximumValueValue)
+            ->WithSum(SumValue)
+            ->WithOrderDirection(OrderDirectionValue)
             ->WithEntryPeriodEventId(EntryPeriodEventIdValue)
             ->WithAccessPeriodEventId(AccessPeriodEventIdValue);
     }
@@ -99,6 +178,10 @@ namespace Gs2::UE5::Ranking2::Model
             ->WithSubscribeRankingModelId(Model->GetSubscribeRankingModelId())
             ->WithName(Model->GetName())
             ->WithMetadata(Model->GetMetadata())
+            ->WithMinimumValue(Model->GetMinimumValue())
+            ->WithMaximumValue(Model->GetMaximumValue())
+            ->WithSum(Model->GetSum())
+            ->WithOrderDirection(Model->GetOrderDirection())
             ->WithEntryPeriodEventId(Model->GetEntryPeriodEventId())
             ->WithAccessPeriodEventId(Model->GetAccessPeriodEventId());
     }

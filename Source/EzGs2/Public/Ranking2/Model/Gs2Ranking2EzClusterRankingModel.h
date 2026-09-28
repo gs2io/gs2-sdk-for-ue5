@@ -27,6 +27,10 @@ namespace Gs2::UE5::Ranking2::Model
         TOptional<FString> ClusterRankingModelIdValue;
         TOptional<FString> NameValue;
         TOptional<FString> MetadataValue;
+        TOptional<int64> MinimumValueValue;
+        TOptional<int64> MaximumValueValue;
+        TOptional<bool> SumValue;
+        TOptional<FString> OrderDirectionValue;
         TOptional<FString> ClusterTypeValue;
         TSharedPtr<TArray<TSharedPtr<Gs2::UE5::Ranking2::Model::FEzRankingReward>>> RankingRewardsValue;
         TOptional<FString> EntryPeriodEventIdValue;
@@ -36,6 +40,10 @@ namespace Gs2::UE5::Ranking2::Model
         TSharedPtr<FEzClusterRankingModel> WithClusterRankingModelId(const TOptional<FString> ClusterRankingModelId);
         TSharedPtr<FEzClusterRankingModel> WithName(const TOptional<FString> Name);
         TSharedPtr<FEzClusterRankingModel> WithMetadata(const TOptional<FString> Metadata);
+        TSharedPtr<FEzClusterRankingModel> WithMinimumValue(const TOptional<int64> MinimumValue);
+        TSharedPtr<FEzClusterRankingModel> WithMaximumValue(const TOptional<int64> MaximumValue);
+        TSharedPtr<FEzClusterRankingModel> WithSum(const TOptional<bool> Sum);
+        TSharedPtr<FEzClusterRankingModel> WithOrderDirection(const TOptional<FString> OrderDirection);
         TSharedPtr<FEzClusterRankingModel> WithClusterType(const TOptional<FString> ClusterType);
         TSharedPtr<FEzClusterRankingModel> WithRankingRewards(const TSharedPtr<TArray<TSharedPtr<Gs2::UE5::Ranking2::Model::FEzRankingReward>>> RankingRewards);
         TSharedPtr<FEzClusterRankingModel> WithEntryPeriodEventId(const TOptional<FString> EntryPeriodEventId);
@@ -46,6 +54,17 @@ namespace Gs2::UE5::Ranking2::Model
         TOptional<FString> GetName() const;
 
         TOptional<FString> GetMetadata() const;
+
+        TOptional<int64> GetMinimumValue() const;
+        FString GetMinimumValueString() const;
+
+        TOptional<int64> GetMaximumValue() const;
+        FString GetMaximumValueString() const;
+
+        TOptional<bool> GetSum() const;
+        FString GetSumString() const;
+
+        TOptional<FString> GetOrderDirection() const;
 
         TOptional<FString> GetClusterType() const;
 

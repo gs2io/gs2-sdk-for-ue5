@@ -74,6 +74,14 @@ namespace Gs2::UE5::Version::Model
         this->NeedSignatureValue = NeedSignature;
         return SharedThis(this);
     }
+
+    TSharedPtr<FEzVersionModel> FEzVersionModel::WithApproveRequirement(
+        const TOptional<FString> ApproveRequirement
+    )
+    {
+        this->ApproveRequirementValue = ApproveRequirement;
+        return SharedThis(this);
+    }
     TOptional<FString> FEzVersionModel::GetName() const
     {
         return NameValue;
@@ -111,6 +119,10 @@ namespace Gs2::UE5::Version::Model
         }
         return FString(NeedSignatureValue.GetValue() ? "true" : "false");
     }
+    TOptional<FString> FEzVersionModel::GetApproveRequirement() const
+    {
+        return ApproveRequirementValue;
+    }
 
     Gs2::Version::Model::FVersionModelPtr FEzVersionModel::ToModel() const
     {
@@ -121,7 +133,8 @@ namespace Gs2::UE5::Version::Model
             ->WithErrorVersion(ErrorVersionValue == nullptr ? nullptr : ErrorVersionValue->ToModel())
             ->WithScope(ScopeValue)
             ->WithCurrentVersion(CurrentVersionValue == nullptr ? nullptr : CurrentVersionValue->ToModel())
-            ->WithNeedSignature(NeedSignatureValue);
+            ->WithNeedSignature(NeedSignatureValue)
+            ->WithApproveRequirement(ApproveRequirementValue);
     }
 
     TSharedPtr<FEzVersionModel> FEzVersionModel::FromModel(const Gs2::Version::Model::FVersionModelPtr Model)
@@ -137,6 +150,7 @@ namespace Gs2::UE5::Version::Model
             ->WithErrorVersion(Model->GetErrorVersion() != nullptr ? Gs2::UE5::Version::Model::FEzVersion::FromModel(Model->GetErrorVersion()) : nullptr)
             ->WithScope(Model->GetScope())
             ->WithCurrentVersion(Model->GetCurrentVersion() != nullptr ? Gs2::UE5::Version::Model::FEzVersion::FromModel(Model->GetCurrentVersion()) : nullptr)
-            ->WithNeedSignature(Model->GetNeedSignature());
+            ->WithNeedSignature(Model->GetNeedSignature())
+            ->WithApproveRequirement(Model->GetApproveRequirement());
     }
 }

@@ -33,6 +33,7 @@ namespace Gs2::UE5::Version::Model
         TOptional<FString> ScopeValue;
         TSharedPtr<Gs2::UE5::Version::Model::FEzVersion> CurrentVersionValue;
         TOptional<bool> NeedSignatureValue;
+        TOptional<FString> ApproveRequirementValue;
 
 	public:
         TSharedPtr<FEzVersionModel> WithName(const TOptional<FString> Name);
@@ -42,6 +43,7 @@ namespace Gs2::UE5::Version::Model
         TSharedPtr<FEzVersionModel> WithScope(const TOptional<FString> Scope);
         TSharedPtr<FEzVersionModel> WithCurrentVersion(const TSharedPtr<Gs2::UE5::Version::Model::FEzVersion> CurrentVersion);
         TSharedPtr<FEzVersionModel> WithNeedSignature(const TOptional<bool> NeedSignature);
+        TSharedPtr<FEzVersionModel> WithApproveRequirement(const TOptional<FString> ApproveRequirement);
 
         TOptional<FString> GetName() const;
 
@@ -57,6 +59,8 @@ namespace Gs2::UE5::Version::Model
 
         TOptional<bool> GetNeedSignature() const;
         FString GetNeedSignatureString() const;
+
+        TOptional<FString> GetApproveRequirement() const;
 
         Gs2::Version::Model::FVersionModelPtr ToModel() const;
         static TSharedPtr<FEzVersionModel> FromModel(Gs2::Version::Model::FVersionModelPtr Model);

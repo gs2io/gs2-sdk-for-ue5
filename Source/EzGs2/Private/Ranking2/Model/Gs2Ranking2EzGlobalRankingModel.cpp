@@ -43,6 +43,38 @@ namespace Gs2::UE5::Ranking2::Model
         return SharedThis(this);
     }
 
+    TSharedPtr<FEzGlobalRankingModel> FEzGlobalRankingModel::WithMinimumValue(
+        const TOptional<int64> MinimumValue
+    )
+    {
+        this->MinimumValueValue = MinimumValue;
+        return SharedThis(this);
+    }
+
+    TSharedPtr<FEzGlobalRankingModel> FEzGlobalRankingModel::WithMaximumValue(
+        const TOptional<int64> MaximumValue
+    )
+    {
+        this->MaximumValueValue = MaximumValue;
+        return SharedThis(this);
+    }
+
+    TSharedPtr<FEzGlobalRankingModel> FEzGlobalRankingModel::WithSum(
+        const TOptional<bool> Sum
+    )
+    {
+        this->SumValue = Sum;
+        return SharedThis(this);
+    }
+
+    TSharedPtr<FEzGlobalRankingModel> FEzGlobalRankingModel::WithOrderDirection(
+        const TOptional<FString> OrderDirection
+    )
+    {
+        this->OrderDirectionValue = OrderDirection;
+        return SharedThis(this);
+    }
+
     TSharedPtr<FEzGlobalRankingModel> FEzGlobalRankingModel::WithRankingRewards(
         const TSharedPtr<TArray<TSharedPtr<Gs2::UE5::Ranking2::Model::FEzRankingReward>>> RankingRewards
     )
@@ -78,6 +110,49 @@ namespace Gs2::UE5::Ranking2::Model
     {
         return MetadataValue;
     }
+    TOptional<int64> FEzGlobalRankingModel::GetMinimumValue() const
+    {
+        return MinimumValueValue;
+    }
+
+    FString FEzGlobalRankingModel::GetMinimumValueString() const
+    {
+        if (!MinimumValueValue.IsSet())
+        {
+            return FString("null");
+        }
+        return FString::Printf(TEXT("%lld"), MinimumValueValue.GetValue());
+    }
+    TOptional<int64> FEzGlobalRankingModel::GetMaximumValue() const
+    {
+        return MaximumValueValue;
+    }
+
+    FString FEzGlobalRankingModel::GetMaximumValueString() const
+    {
+        if (!MaximumValueValue.IsSet())
+        {
+            return FString("null");
+        }
+        return FString::Printf(TEXT("%lld"), MaximumValueValue.GetValue());
+    }
+    TOptional<bool> FEzGlobalRankingModel::GetSum() const
+    {
+        return SumValue;
+    }
+
+    FString FEzGlobalRankingModel::GetSumString() const
+    {
+        if (!SumValue.IsSet())
+        {
+            return FString("null");
+        }
+        return FString(SumValue.GetValue() ? "true" : "false");
+    }
+    TOptional<FString> FEzGlobalRankingModel::GetOrderDirection() const
+    {
+        return OrderDirectionValue;
+    }
     TSharedPtr<TArray<TSharedPtr<Gs2::UE5::Ranking2::Model::FEzRankingReward>>> FEzGlobalRankingModel::GetRankingRewards() const
     {
         return RankingRewardsValue;
@@ -97,6 +172,10 @@ namespace Gs2::UE5::Ranking2::Model
             ->WithGlobalRankingModelId(GlobalRankingModelIdValue)
             ->WithName(NameValue)
             ->WithMetadata(MetadataValue)
+            ->WithMinimumValue(MinimumValueValue)
+            ->WithMaximumValue(MaximumValueValue)
+            ->WithSum(SumValue)
+            ->WithOrderDirection(OrderDirectionValue)
             ->WithRankingRewards([&]
                 {
                     auto v = MakeShared<TArray<TSharedPtr<Gs2::Ranking2::Model::FRankingReward>>>();
@@ -125,6 +204,10 @@ namespace Gs2::UE5::Ranking2::Model
             ->WithGlobalRankingModelId(Model->GetGlobalRankingModelId())
             ->WithName(Model->GetName())
             ->WithMetadata(Model->GetMetadata())
+            ->WithMinimumValue(Model->GetMinimumValue())
+            ->WithMaximumValue(Model->GetMaximumValue())
+            ->WithSum(Model->GetSum())
+            ->WithOrderDirection(Model->GetOrderDirection())
             ->WithRankingRewards([&]
                 {
                     auto v = MakeShared<TArray<TSharedPtr<FEzRankingReward>>>();

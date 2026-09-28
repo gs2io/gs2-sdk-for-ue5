@@ -26,6 +26,10 @@ namespace Gs2::UE5::Ranking2::Model
         TOptional<FString> SubscribeRankingModelIdValue;
         TOptional<FString> NameValue;
         TOptional<FString> MetadataValue;
+        TOptional<int64> MinimumValueValue;
+        TOptional<int64> MaximumValueValue;
+        TOptional<bool> SumValue;
+        TOptional<FString> OrderDirectionValue;
         TOptional<FString> EntryPeriodEventIdValue;
         TOptional<FString> AccessPeriodEventIdValue;
 
@@ -33,6 +37,10 @@ namespace Gs2::UE5::Ranking2::Model
         TSharedPtr<FEzSubscribeRankingModel> WithSubscribeRankingModelId(const TOptional<FString> SubscribeRankingModelId);
         TSharedPtr<FEzSubscribeRankingModel> WithName(const TOptional<FString> Name);
         TSharedPtr<FEzSubscribeRankingModel> WithMetadata(const TOptional<FString> Metadata);
+        TSharedPtr<FEzSubscribeRankingModel> WithMinimumValue(const TOptional<int64> MinimumValue);
+        TSharedPtr<FEzSubscribeRankingModel> WithMaximumValue(const TOptional<int64> MaximumValue);
+        TSharedPtr<FEzSubscribeRankingModel> WithSum(const TOptional<bool> Sum);
+        TSharedPtr<FEzSubscribeRankingModel> WithOrderDirection(const TOptional<FString> OrderDirection);
         TSharedPtr<FEzSubscribeRankingModel> WithEntryPeriodEventId(const TOptional<FString> EntryPeriodEventId);
         TSharedPtr<FEzSubscribeRankingModel> WithAccessPeriodEventId(const TOptional<FString> AccessPeriodEventId);
 
@@ -41,6 +49,17 @@ namespace Gs2::UE5::Ranking2::Model
         TOptional<FString> GetName() const;
 
         TOptional<FString> GetMetadata() const;
+
+        TOptional<int64> GetMinimumValue() const;
+        FString GetMinimumValueString() const;
+
+        TOptional<int64> GetMaximumValue() const;
+        FString GetMaximumValueString() const;
+
+        TOptional<bool> GetSum() const;
+        FString GetSumString() const;
+
+        TOptional<FString> GetOrderDirection() const;
 
         TOptional<FString> GetEntryPeriodEventId() const;
 

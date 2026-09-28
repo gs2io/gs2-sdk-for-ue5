@@ -42,6 +42,14 @@ namespace Gs2::UE5::Version::Model
         this->VersionValue = Version;
         return SharedThis(this);
     }
+
+    TSharedPtr<FEzAcceptVersion> FEzAcceptVersion::WithStatus(
+        const TOptional<FString> Status
+    )
+    {
+        this->StatusValue = Status;
+        return SharedThis(this);
+    }
     TOptional<FString> FEzAcceptVersion::GetVersionName() const
     {
         return VersionNameValue;
@@ -54,13 +62,18 @@ namespace Gs2::UE5::Version::Model
     {
         return VersionValue;
     }
+    TOptional<FString> FEzAcceptVersion::GetStatus() const
+    {
+        return StatusValue;
+    }
 
     Gs2::Version::Model::FAcceptVersionPtr FEzAcceptVersion::ToModel() const
     {
         return MakeShared<Gs2::Version::Model::FAcceptVersion>()
             ->WithVersionName(VersionNameValue)
             ->WithUserId(UserIdValue)
-            ->WithVersion(VersionValue == nullptr ? nullptr : VersionValue->ToModel());
+            ->WithVersion(VersionValue == nullptr ? nullptr : VersionValue->ToModel())
+            ->WithStatus(StatusValue);
     }
 
     TSharedPtr<FEzAcceptVersion> FEzAcceptVersion::FromModel(const Gs2::Version::Model::FAcceptVersionPtr Model)
@@ -72,6 +85,7 @@ namespace Gs2::UE5::Version::Model
         return MakeShared<FEzAcceptVersion>()
             ->WithVersionName(Model->GetVersionName())
             ->WithUserId(Model->GetUserId())
-            ->WithVersion(Model->GetVersion() != nullptr ? Gs2::UE5::Version::Model::FEzVersion::FromModel(Model->GetVersion()) : nullptr);
+            ->WithVersion(Model->GetVersion() != nullptr ? Gs2::UE5::Version::Model::FEzVersion::FromModel(Model->GetVersion()) : nullptr)
+            ->WithStatus(Model->GetStatus());
     }
 }

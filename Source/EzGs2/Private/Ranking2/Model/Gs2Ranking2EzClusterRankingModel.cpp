@@ -43,6 +43,38 @@ namespace Gs2::UE5::Ranking2::Model
         return SharedThis(this);
     }
 
+    TSharedPtr<FEzClusterRankingModel> FEzClusterRankingModel::WithMinimumValue(
+        const TOptional<int64> MinimumValue
+    )
+    {
+        this->MinimumValueValue = MinimumValue;
+        return SharedThis(this);
+    }
+
+    TSharedPtr<FEzClusterRankingModel> FEzClusterRankingModel::WithMaximumValue(
+        const TOptional<int64> MaximumValue
+    )
+    {
+        this->MaximumValueValue = MaximumValue;
+        return SharedThis(this);
+    }
+
+    TSharedPtr<FEzClusterRankingModel> FEzClusterRankingModel::WithSum(
+        const TOptional<bool> Sum
+    )
+    {
+        this->SumValue = Sum;
+        return SharedThis(this);
+    }
+
+    TSharedPtr<FEzClusterRankingModel> FEzClusterRankingModel::WithOrderDirection(
+        const TOptional<FString> OrderDirection
+    )
+    {
+        this->OrderDirectionValue = OrderDirection;
+        return SharedThis(this);
+    }
+
     TSharedPtr<FEzClusterRankingModel> FEzClusterRankingModel::WithClusterType(
         const TOptional<FString> ClusterType
     )
@@ -86,6 +118,49 @@ namespace Gs2::UE5::Ranking2::Model
     {
         return MetadataValue;
     }
+    TOptional<int64> FEzClusterRankingModel::GetMinimumValue() const
+    {
+        return MinimumValueValue;
+    }
+
+    FString FEzClusterRankingModel::GetMinimumValueString() const
+    {
+        if (!MinimumValueValue.IsSet())
+        {
+            return FString("null");
+        }
+        return FString::Printf(TEXT("%lld"), MinimumValueValue.GetValue());
+    }
+    TOptional<int64> FEzClusterRankingModel::GetMaximumValue() const
+    {
+        return MaximumValueValue;
+    }
+
+    FString FEzClusterRankingModel::GetMaximumValueString() const
+    {
+        if (!MaximumValueValue.IsSet())
+        {
+            return FString("null");
+        }
+        return FString::Printf(TEXT("%lld"), MaximumValueValue.GetValue());
+    }
+    TOptional<bool> FEzClusterRankingModel::GetSum() const
+    {
+        return SumValue;
+    }
+
+    FString FEzClusterRankingModel::GetSumString() const
+    {
+        if (!SumValue.IsSet())
+        {
+            return FString("null");
+        }
+        return FString(SumValue.GetValue() ? "true" : "false");
+    }
+    TOptional<FString> FEzClusterRankingModel::GetOrderDirection() const
+    {
+        return OrderDirectionValue;
+    }
     TOptional<FString> FEzClusterRankingModel::GetClusterType() const
     {
         return ClusterTypeValue;
@@ -109,6 +184,10 @@ namespace Gs2::UE5::Ranking2::Model
             ->WithClusterRankingModelId(ClusterRankingModelIdValue)
             ->WithName(NameValue)
             ->WithMetadata(MetadataValue)
+            ->WithMinimumValue(MinimumValueValue)
+            ->WithMaximumValue(MaximumValueValue)
+            ->WithSum(SumValue)
+            ->WithOrderDirection(OrderDirectionValue)
             ->WithClusterType(ClusterTypeValue)
             ->WithRankingRewards([&]
                 {
@@ -138,6 +217,10 @@ namespace Gs2::UE5::Ranking2::Model
             ->WithClusterRankingModelId(Model->GetClusterRankingModelId())
             ->WithName(Model->GetName())
             ->WithMetadata(Model->GetMetadata())
+            ->WithMinimumValue(Model->GetMinimumValue())
+            ->WithMaximumValue(Model->GetMaximumValue())
+            ->WithSum(Model->GetSum())
+            ->WithOrderDirection(Model->GetOrderDirection())
             ->WithClusterType(Model->GetClusterType())
             ->WithRankingRewards([&]
                 {

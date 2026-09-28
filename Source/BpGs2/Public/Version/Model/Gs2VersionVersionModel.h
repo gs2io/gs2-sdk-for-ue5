@@ -51,6 +51,8 @@ struct FGs2VersionVersionModelValue
     FGs2VersionVersion CurrentVersion = FGs2VersionVersion();
     UPROPERTY(Category = Gs2, BlueprintReadOnly)
     bool NeedSignature = false;
+    UPROPERTY(Category = Gs2, BlueprintReadOnly)
+    FString ApproveRequirement = "";
 };
 
 inline FGs2VersionVersionModelValue EzVersionModelToFGs2VersionVersionModelValue(
@@ -69,6 +71,7 @@ inline FGs2VersionVersionModelValue EzVersionModelToFGs2VersionVersionModelValue
     Value.Scope = Model->GetScope() ? *Model->GetScope() : "";
     Value.CurrentVersion = Model->GetCurrentVersion() ? EzVersionToFGs2VersionVersion(Model->GetCurrentVersion()) : FGs2VersionVersion();
     Value.NeedSignature = Model->GetNeedSignature() ? *Model->GetNeedSignature() : false;
+    Value.ApproveRequirement = Model->GetApproveRequirement() ? *Model->GetApproveRequirement() : "";
     return Value;
 }
 
@@ -83,7 +86,8 @@ inline Gs2::UE5::Version::Model::FEzVersionModelPtr FGs2VersionVersionModelValue
         ->WithErrorVersion(FGs2VersionVersionToEzVersion(Model.ErrorVersion))
         ->WithScope(Model.Scope)
         ->WithCurrentVersion(FGs2VersionVersionToEzVersion(Model.CurrentVersion))
-        ->WithNeedSignature(Model.NeedSignature);
+        ->WithNeedSignature(Model.NeedSignature)
+        ->WithApproveRequirement(Model.ApproveRequirement);
 }
 
 UCLASS()

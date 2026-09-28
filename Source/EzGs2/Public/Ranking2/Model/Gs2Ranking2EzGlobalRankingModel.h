@@ -27,6 +27,10 @@ namespace Gs2::UE5::Ranking2::Model
         TOptional<FString> GlobalRankingModelIdValue;
         TOptional<FString> NameValue;
         TOptional<FString> MetadataValue;
+        TOptional<int64> MinimumValueValue;
+        TOptional<int64> MaximumValueValue;
+        TOptional<bool> SumValue;
+        TOptional<FString> OrderDirectionValue;
         TSharedPtr<TArray<TSharedPtr<Gs2::UE5::Ranking2::Model::FEzRankingReward>>> RankingRewardsValue;
         TOptional<FString> EntryPeriodEventIdValue;
         TOptional<FString> AccessPeriodEventIdValue;
@@ -35,6 +39,10 @@ namespace Gs2::UE5::Ranking2::Model
         TSharedPtr<FEzGlobalRankingModel> WithGlobalRankingModelId(const TOptional<FString> GlobalRankingModelId);
         TSharedPtr<FEzGlobalRankingModel> WithName(const TOptional<FString> Name);
         TSharedPtr<FEzGlobalRankingModel> WithMetadata(const TOptional<FString> Metadata);
+        TSharedPtr<FEzGlobalRankingModel> WithMinimumValue(const TOptional<int64> MinimumValue);
+        TSharedPtr<FEzGlobalRankingModel> WithMaximumValue(const TOptional<int64> MaximumValue);
+        TSharedPtr<FEzGlobalRankingModel> WithSum(const TOptional<bool> Sum);
+        TSharedPtr<FEzGlobalRankingModel> WithOrderDirection(const TOptional<FString> OrderDirection);
         TSharedPtr<FEzGlobalRankingModel> WithRankingRewards(const TSharedPtr<TArray<TSharedPtr<Gs2::UE5::Ranking2::Model::FEzRankingReward>>> RankingRewards);
         TSharedPtr<FEzGlobalRankingModel> WithEntryPeriodEventId(const TOptional<FString> EntryPeriodEventId);
         TSharedPtr<FEzGlobalRankingModel> WithAccessPeriodEventId(const TOptional<FString> AccessPeriodEventId);
@@ -44,6 +52,17 @@ namespace Gs2::UE5::Ranking2::Model
         TOptional<FString> GetName() const;
 
         TOptional<FString> GetMetadata() const;
+
+        TOptional<int64> GetMinimumValue() const;
+        FString GetMinimumValueString() const;
+
+        TOptional<int64> GetMaximumValue() const;
+        FString GetMaximumValueString() const;
+
+        TOptional<bool> GetSum() const;
+        FString GetSumString() const;
+
+        TOptional<FString> GetOrderDirection() const;
 
         TSharedPtr<TArray<TSharedPtr<Gs2::UE5::Ranking2::Model::FEzRankingReward>>> GetRankingRewards() const;
 

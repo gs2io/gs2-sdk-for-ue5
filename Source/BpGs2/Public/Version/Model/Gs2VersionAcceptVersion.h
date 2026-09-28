@@ -41,6 +41,8 @@ struct FGs2VersionAcceptVersionValue
     FString UserId = "";
     UPROPERTY(Category = Gs2, BlueprintReadOnly)
     FGs2VersionVersion Version = FGs2VersionVersion();
+    UPROPERTY(Category = Gs2, BlueprintReadOnly)
+    FString Status = "";
 };
 
 inline FGs2VersionAcceptVersionValue EzAcceptVersionToFGs2VersionAcceptVersionValue(
@@ -55,6 +57,7 @@ inline FGs2VersionAcceptVersionValue EzAcceptVersionToFGs2VersionAcceptVersionVa
     Value.VersionName = Model->GetVersionName() ? *Model->GetVersionName() : "";
     Value.UserId = Model->GetUserId() ? *Model->GetUserId() : "";
     Value.Version = Model->GetVersion() ? EzVersionToFGs2VersionVersion(Model->GetVersion()) : FGs2VersionVersion();
+    Value.Status = Model->GetStatus() ? *Model->GetStatus() : "";
     return Value;
 }
 
@@ -65,7 +68,8 @@ inline Gs2::UE5::Version::Model::FEzAcceptVersionPtr FGs2VersionAcceptVersionVal
     return MakeShared<Gs2::UE5::Version::Model::FEzAcceptVersion>()
         ->WithVersionName(Model.VersionName)
         ->WithUserId(Model.UserId)
-        ->WithVersion(FGs2VersionVersionToEzVersion(Model.Version));
+        ->WithVersion(FGs2VersionVersionToEzVersion(Model.Version))
+        ->WithStatus(Model.Status);
 }
 
 UCLASS()

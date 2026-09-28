@@ -27,17 +27,21 @@ namespace Gs2::UE5::Version::Model
         TOptional<FString> VersionNameValue;
         TOptional<FString> UserIdValue;
         TSharedPtr<Gs2::UE5::Version::Model::FEzVersion> VersionValue;
+        TOptional<FString> StatusValue;
 
 	public:
         TSharedPtr<FEzAcceptVersion> WithVersionName(const TOptional<FString> VersionName);
         TSharedPtr<FEzAcceptVersion> WithUserId(const TOptional<FString> UserId);
         TSharedPtr<FEzAcceptVersion> WithVersion(const TSharedPtr<Gs2::UE5::Version::Model::FEzVersion> Version);
+        TSharedPtr<FEzAcceptVersion> WithStatus(const TOptional<FString> Status);
 
         TOptional<FString> GetVersionName() const;
 
         TOptional<FString> GetUserId() const;
 
         TSharedPtr<Gs2::UE5::Version::Model::FEzVersion> GetVersion() const;
+
+        TOptional<FString> GetStatus() const;
 
         Gs2::Version::Model::FAcceptVersionPtr ToModel() const;
         static TSharedPtr<FEzAcceptVersion> FromModel(Gs2::Version::Model::FAcceptVersionPtr Model);
