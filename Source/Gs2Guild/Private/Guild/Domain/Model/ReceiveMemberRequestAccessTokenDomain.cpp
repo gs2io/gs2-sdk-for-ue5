@@ -43,6 +43,7 @@
 #include "Guild/Domain/Model/IgnoreUserAccessToken.h"
 #include "Guild/Model/Cache/ReceiveMemberRequest.h"
 #include "Guild/Model/Cache/Guild.h"
+#include "Guild/Model/Cache/JoinedGuild.h"
 
 #include "Core/Domain/Gs2.h"
 #include "Core/Domain/Transaction/JobQueueJobDomainFactory.h"
@@ -207,6 +208,14 @@ namespace Gs2::Guild::Domain::Model
             Request->GetGuildModelName(),
             TOptional<FString>(),
             CacheOwnerSnapshotTimeOffset
+        );
+        Self->Gs2->Cache->ClearListCache(
+            Gs2::Guild::Model::FJoinedGuild::TypeName,
+            Gs2::Guild::Model::Cache::FJoinedGuildCache::CreateCacheParentKey(
+                Request->GetNamespaceName(),
+                Request->GetFromUserId(),
+                Self->AccessToken->GetTimeOffset()
+            )
         );
         auto Domain = Self;
 

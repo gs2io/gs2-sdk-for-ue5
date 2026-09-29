@@ -43,6 +43,7 @@
 #include "Guild/Domain/Model/SendMemberRequestAccessToken.h"
 #include "Guild/Domain/Model/IgnoreUser.h"
 #include "Guild/Domain/Model/IgnoreUserAccessToken.h"
+#include "Guild/Model/Cache/JoinedGuild.h"
 
 #include "Core/Domain/Gs2.h"
 #include "Core/Domain/Transaction/JobQueueJobDomainFactory.h"
@@ -222,6 +223,22 @@ namespace Gs2::Guild::Domain::Model
         }
         const auto ResultModel = Future->GetTask().Result();
         Future->EnsureCompletion();
+        Gs2::Guild::Model::Cache::FJoinedGuildCache::Delete(
+            Self->Gs2->Cache,
+            Self->NamespaceName,
+            Self->UserId(),
+            Self->GuildModelName,
+            Self->GuildName,
+            Self->AccessToken->GetTimeOffset()
+        );
+        Self->Gs2->Cache->ClearListCache(
+            Gs2::Guild::Model::FJoinedGuild::TypeName,
+            Gs2::Guild::Model::Cache::FJoinedGuildCache::CreateCacheParentKey(
+                Self->NamespaceName,
+                Self->UserId(),
+                Self->AccessToken->GetTimeOffset()
+            )
+        );
         auto Domain = Self;
 
         *Result = Domain;

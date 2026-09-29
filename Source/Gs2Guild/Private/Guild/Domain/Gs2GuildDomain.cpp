@@ -934,6 +934,33 @@ namespace Gs2::Guild::Domain
                 );
                 Gs2->Cache->Delete(Gs2::Guild::Model::FGuild::TypeName, ParentKey, Key);
             }
+            Gs2->Cache->ClearListCache(
+                Gs2::Guild::Model::FJoinedGuild::TypeName,
+                Gs2::Guild::Model::Cache::FJoinedGuildCache::CreateCacheParentKey(
+                    PayloadJson->GetStringField(ANSI_TO_TCHAR("namespaceName")),
+                    PayloadJson->GetStringField(ANSI_TO_TCHAR("joinedUserId")),
+                    TOptional<int32>()
+                )
+            );
+            {
+                Gs2::Guild::Model::Cache::FSendMemberRequestCache::Delete(
+                    Gs2->Cache,
+                    PayloadJson->GetStringField(ANSI_TO_TCHAR("namespaceName")),
+                    PayloadJson->GetStringField(ANSI_TO_TCHAR("joinedUserId")),
+                    PayloadJson->GetStringField(ANSI_TO_TCHAR("guildModelName")),
+                    PayloadJson->GetStringField(ANSI_TO_TCHAR("guildName")),
+                    TOptional<int32>()
+                );
+                Gs2->Cache->ClearListCache(
+                    Gs2::Guild::Model::FSendMemberRequest::TypeName,
+                    Gs2::Guild::Model::Cache::FSendMemberRequestCache::CreateCacheParentKey(
+                        PayloadJson->GetStringField(ANSI_TO_TCHAR("namespaceName")),
+                        PayloadJson->GetStringField(ANSI_TO_TCHAR("guildModelName")),
+                        PayloadJson->GetStringField(ANSI_TO_TCHAR("joinedUserId")),
+                        TOptional<int32>()
+                    )
+                );
+            }
             JoinNotificationEvent.Broadcast(Gs2::Guild::Model::FJoinNotification::FromJson(PayloadJson));
         }
         if (Action == "LeaveNotification") {
@@ -953,6 +980,24 @@ namespace Gs2::Guild::Domain
                     PayloadJson->GetStringField(ANSI_TO_TCHAR("guildName"))
                 );
                 Gs2->Cache->Delete(Gs2::Guild::Model::FGuild::TypeName, ParentKey, Key);
+            }
+            {
+                Gs2::Guild::Model::Cache::FJoinedGuildCache::Delete(
+                    Gs2->Cache,
+                    PayloadJson->GetStringField(ANSI_TO_TCHAR("namespaceName")),
+                    PayloadJson->GetStringField(ANSI_TO_TCHAR("leavedUserId")),
+                    PayloadJson->GetStringField(ANSI_TO_TCHAR("guildModelName")),
+                    PayloadJson->GetStringField(ANSI_TO_TCHAR("guildName")),
+                    TOptional<int32>()
+                );
+                Gs2->Cache->ClearListCache(
+                    Gs2::Guild::Model::FJoinedGuild::TypeName,
+                    Gs2::Guild::Model::Cache::FJoinedGuildCache::CreateCacheParentKey(
+                        PayloadJson->GetStringField(ANSI_TO_TCHAR("namespaceName")),
+                        PayloadJson->GetStringField(ANSI_TO_TCHAR("leavedUserId")),
+                        TOptional<int32>()
+                    )
+                );
             }
             LeaveNotificationEvent.Broadcast(Gs2::Guild::Model::FLeaveNotification::FromJson(PayloadJson));
         }

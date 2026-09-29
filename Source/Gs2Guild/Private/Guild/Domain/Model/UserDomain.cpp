@@ -136,6 +136,14 @@ namespace Gs2::Guild::Domain::Model
                 );
             }
         }
+        Self->Gs2->Cache->ClearListCache(
+            Gs2::Guild::Model::FJoinedGuild::TypeName,
+            Gs2::Guild::Model::Cache::FJoinedGuildCache::CreateCacheParentKey(
+                Self->NamespaceName,
+                Self->UserId,
+                TOptional<int32>()
+            )
+        );
         auto Domain = MakeShared<Gs2::Guild::Domain::Model::FGuildDomain>(
             Self->Gs2,
             Self->Service,
@@ -280,6 +288,17 @@ namespace Gs2::Guild::Domain::Model
                 );
             }
         }
+        if (ResultModel.IsValid() && ResultModel->GetItem().IsValid())
+        {
+            Self->Gs2->Cache->ClearListCache(
+                Gs2::Guild::Model::FJoinedGuild::TypeName,
+                Gs2::Guild::Model::Cache::FJoinedGuildCache::CreateCacheParentKey(
+                    Self->NamespaceName,
+                    Self->UserId,
+                    TOptional<int32>()
+                )
+            );
+        }
         auto Domain = MakeShared<Gs2::Guild::Domain::Model::FGuildDomain>(
             Self->Gs2,
             Self->Service,
@@ -326,7 +345,28 @@ namespace Gs2::Guild::Domain::Model
         Future->StartSynchronousTask();
         if (Future->GetTask().IsError())
         {
-            return Future->GetTask().Error();
+            const auto Error = Future->GetTask().Error();
+            if (Error.IsValid() && Error->IsChildOf(Gs2::Core::Model::FNotFoundError::Class))
+            {
+                Gs2::Guild::Model::Cache::FSendMemberRequestCache::Delete(
+                    Self->Gs2->Cache,
+                    Self->NamespaceName,
+                    Self->UserId,
+                    Request->GetGuildModelName(),
+                    Request->GetTargetGuildName(),
+                    TOptional<int32>()
+                );
+                Self->Gs2->Cache->ClearListCache(
+                    Gs2::Guild::Model::FSendMemberRequest::TypeName,
+                    Gs2::Guild::Model::Cache::FSendMemberRequestCache::CreateCacheParentKey(
+                        Self->NamespaceName,
+                        Request->GetGuildModelName(),
+                        Self->UserId,
+                        TOptional<int32>()
+                    )
+                );
+            }
+            return Error;
         }
         const auto RequestModel = Request;
         const auto ResultModel = Future->GetTask().Result();

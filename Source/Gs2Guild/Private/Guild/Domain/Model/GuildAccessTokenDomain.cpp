@@ -47,6 +47,7 @@
 #include "Guild/Model/Cache/IgnoreUser.h"
 #include "Guild/Model/Cache/Guild.h"
 #include "Guild/Model/Cache/ReceiveMemberRequest.h"
+#include "Guild/Model/Cache/JoinedGuild.h"
 #include "Core/Domain/Gs2.h"
 #include "Core/Domain/Transaction/JobQueueJobDomainFactory.h"
 #include "Core/Domain/Transaction/InternalTransactionDomainFactory.h"
@@ -275,6 +276,22 @@ namespace Gs2::Guild::Domain::Model
                 Self->Gs2->Cache->Delete(Gs2::Guild::Model::FGuild::TypeName, ParentKey, Key);
             }
         }
+        Gs2::Guild::Model::Cache::FJoinedGuildCache::Delete(
+            Self->Gs2->Cache,
+            Self->NamespaceName,
+            Request->GetTargetUserId(),
+            Self->GuildModelName,
+            Self->GuildName(),
+            Self->AccessToken->GetTimeOffset()
+        );
+        Self->Gs2->Cache->ClearListCache(
+            Gs2::Guild::Model::FJoinedGuild::TypeName,
+            Gs2::Guild::Model::Cache::FJoinedGuildCache::CreateCacheParentKey(
+                Self->NamespaceName,
+                Request->GetTargetUserId(),
+                Self->AccessToken->GetTimeOffset()
+            )
+        );
         auto Domain = Self;
 
         *Result = Domain;
@@ -452,6 +469,32 @@ namespace Gs2::Guild::Domain::Model
                     ResultModel->GetItem()->GetName()
                 );
                 Self->Gs2->Cache->Delete(Gs2::Guild::Model::FGuild::TypeName, ParentKey, Key);
+            }
+        }
+        if (ResultModel.IsValid() && ResultModel->GetItem().IsValid() && ResultModel->GetItem()->GetMembers().IsValid())
+        {
+            for (const auto& Member : *ResultModel->GetItem()->GetMembers())
+            {
+                if (!Member.IsValid() || !Member->GetUserId().IsSet())
+                {
+                    continue;
+                }
+                Gs2::Guild::Model::Cache::FJoinedGuildCache::Delete(
+                    Self->Gs2->Cache,
+                    Self->NamespaceName,
+                    Member->GetUserId(),
+                    ResultModel->GetItem()->GetGuildModelName(),
+                    ResultModel->GetItem()->GetName(),
+                    Self->AccessToken->GetTimeOffset()
+                );
+                Self->Gs2->Cache->ClearListCache(
+                    Gs2::Guild::Model::FJoinedGuild::TypeName,
+                    Gs2::Guild::Model::Cache::FJoinedGuildCache::CreateCacheParentKey(
+                        Self->NamespaceName,
+                        Member->GetUserId(),
+                        Self->AccessToken->GetTimeOffset()
+                    )
+                );
             }
         }
         auto Domain = Self;
