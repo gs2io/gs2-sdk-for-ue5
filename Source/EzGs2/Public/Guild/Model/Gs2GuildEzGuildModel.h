@@ -29,7 +29,10 @@ namespace Gs2::UE5::Guild::Model
         TOptional<int32> DefaultMaximumMemberCountValue;
         TOptional<int32> MaximumMemberCountValue;
         TSharedPtr<TArray<TSharedPtr<Gs2::UE5::Guild::Model::FEzRoleModel>>> RolesValue;
+        TOptional<int32> InactivityPeriodDaysValue;
         TOptional<int32> RejoinCoolTimeMinutesValue;
+        TOptional<int32> MaxConcurrentJoinGuildsValue;
+        TOptional<int32> MaxConcurrentGuildMasterCountValue;
 
 	public:
         TSharedPtr<FEzGuildModel> WithName(const TOptional<FString> Name);
@@ -37,7 +40,10 @@ namespace Gs2::UE5::Guild::Model
         TSharedPtr<FEzGuildModel> WithDefaultMaximumMemberCount(const TOptional<int32> DefaultMaximumMemberCount);
         TSharedPtr<FEzGuildModel> WithMaximumMemberCount(const TOptional<int32> MaximumMemberCount);
         TSharedPtr<FEzGuildModel> WithRoles(const TSharedPtr<TArray<TSharedPtr<Gs2::UE5::Guild::Model::FEzRoleModel>>> Roles);
+        TSharedPtr<FEzGuildModel> WithInactivityPeriodDays(const TOptional<int32> InactivityPeriodDays);
         TSharedPtr<FEzGuildModel> WithRejoinCoolTimeMinutes(const TOptional<int32> RejoinCoolTimeMinutes);
+        TSharedPtr<FEzGuildModel> WithMaxConcurrentJoinGuilds(const TOptional<int32> MaxConcurrentJoinGuilds);
+        TSharedPtr<FEzGuildModel> WithMaxConcurrentGuildMasterCount(const TOptional<int32> MaxConcurrentGuildMasterCount);
 
         TOptional<FString> GetName() const;
 
@@ -51,8 +57,17 @@ namespace Gs2::UE5::Guild::Model
 
         TSharedPtr<TArray<TSharedPtr<Gs2::UE5::Guild::Model::FEzRoleModel>>> GetRoles() const;
 
+        TOptional<int32> GetInactivityPeriodDays() const;
+        FString GetInactivityPeriodDaysString() const;
+
         TOptional<int32> GetRejoinCoolTimeMinutes() const;
         FString GetRejoinCoolTimeMinutesString() const;
+
+        TOptional<int32> GetMaxConcurrentJoinGuilds() const;
+        FString GetMaxConcurrentJoinGuildsString() const;
+
+        TOptional<int32> GetMaxConcurrentGuildMasterCount() const;
+        FString GetMaxConcurrentGuildMasterCountString() const;
 
         Gs2::Guild::Model::FGuildModelPtr ToModel() const;
         static TSharedPtr<FEzGuildModel> FromModel(Gs2::Guild::Model::FGuildModelPtr Model);

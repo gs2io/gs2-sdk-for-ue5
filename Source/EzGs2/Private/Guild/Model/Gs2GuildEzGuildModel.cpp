@@ -59,11 +59,35 @@ namespace Gs2::UE5::Guild::Model
         return SharedThis(this);
     }
 
+    TSharedPtr<FEzGuildModel> FEzGuildModel::WithInactivityPeriodDays(
+        const TOptional<int32> InactivityPeriodDays
+    )
+    {
+        this->InactivityPeriodDaysValue = InactivityPeriodDays;
+        return SharedThis(this);
+    }
+
     TSharedPtr<FEzGuildModel> FEzGuildModel::WithRejoinCoolTimeMinutes(
         const TOptional<int32> RejoinCoolTimeMinutes
     )
     {
         this->RejoinCoolTimeMinutesValue = RejoinCoolTimeMinutes;
+        return SharedThis(this);
+    }
+
+    TSharedPtr<FEzGuildModel> FEzGuildModel::WithMaxConcurrentJoinGuilds(
+        const TOptional<int32> MaxConcurrentJoinGuilds
+    )
+    {
+        this->MaxConcurrentJoinGuildsValue = MaxConcurrentJoinGuilds;
+        return SharedThis(this);
+    }
+
+    TSharedPtr<FEzGuildModel> FEzGuildModel::WithMaxConcurrentGuildMasterCount(
+        const TOptional<int32> MaxConcurrentGuildMasterCount
+    )
+    {
+        this->MaxConcurrentGuildMasterCountValue = MaxConcurrentGuildMasterCount;
         return SharedThis(this);
     }
     TOptional<FString> FEzGuildModel::GetName() const
@@ -104,6 +128,19 @@ namespace Gs2::UE5::Guild::Model
     {
         return RolesValue;
     }
+    TOptional<int32> FEzGuildModel::GetInactivityPeriodDays() const
+    {
+        return InactivityPeriodDaysValue;
+    }
+
+    FString FEzGuildModel::GetInactivityPeriodDaysString() const
+    {
+        if (!InactivityPeriodDaysValue.IsSet())
+        {
+            return FString("null");
+        }
+        return FString::Printf(TEXT("%d"), InactivityPeriodDaysValue.GetValue());
+    }
     TOptional<int32> FEzGuildModel::GetRejoinCoolTimeMinutes() const
     {
         return RejoinCoolTimeMinutesValue;
@@ -116,6 +153,32 @@ namespace Gs2::UE5::Guild::Model
             return FString("null");
         }
         return FString::Printf(TEXT("%d"), RejoinCoolTimeMinutesValue.GetValue());
+    }
+    TOptional<int32> FEzGuildModel::GetMaxConcurrentJoinGuilds() const
+    {
+        return MaxConcurrentJoinGuildsValue;
+    }
+
+    FString FEzGuildModel::GetMaxConcurrentJoinGuildsString() const
+    {
+        if (!MaxConcurrentJoinGuildsValue.IsSet())
+        {
+            return FString("null");
+        }
+        return FString::Printf(TEXT("%d"), MaxConcurrentJoinGuildsValue.GetValue());
+    }
+    TOptional<int32> FEzGuildModel::GetMaxConcurrentGuildMasterCount() const
+    {
+        return MaxConcurrentGuildMasterCountValue;
+    }
+
+    FString FEzGuildModel::GetMaxConcurrentGuildMasterCountString() const
+    {
+        if (!MaxConcurrentGuildMasterCountValue.IsSet())
+        {
+            return FString("null");
+        }
+        return FString::Printf(TEXT("%d"), MaxConcurrentGuildMasterCountValue.GetValue());
     }
 
     Gs2::Guild::Model::FGuildModelPtr FEzGuildModel::ToModel() const
@@ -139,7 +202,10 @@ namespace Gs2::UE5::Guild::Model
                     return v;
                 }()
             )
-            ->WithRejoinCoolTimeMinutes(RejoinCoolTimeMinutesValue);
+            ->WithInactivityPeriodDays(InactivityPeriodDaysValue)
+            ->WithRejoinCoolTimeMinutes(RejoinCoolTimeMinutesValue)
+            ->WithMaxConcurrentJoinGuilds(MaxConcurrentJoinGuildsValue)
+            ->WithMaxConcurrentGuildMasterCount(MaxConcurrentGuildMasterCountValue);
     }
 
     TSharedPtr<FEzGuildModel> FEzGuildModel::FromModel(const Gs2::Guild::Model::FGuildModelPtr Model)
@@ -167,6 +233,9 @@ namespace Gs2::UE5::Guild::Model
                     return v;
                 }()
             )
-            ->WithRejoinCoolTimeMinutes(Model->GetRejoinCoolTimeMinutes());
+            ->WithInactivityPeriodDays(Model->GetInactivityPeriodDays())
+            ->WithRejoinCoolTimeMinutes(Model->GetRejoinCoolTimeMinutes())
+            ->WithMaxConcurrentJoinGuilds(Model->GetMaxConcurrentJoinGuilds())
+            ->WithMaxConcurrentGuildMasterCount(Model->GetMaxConcurrentGuildMasterCount());
     }
 }
