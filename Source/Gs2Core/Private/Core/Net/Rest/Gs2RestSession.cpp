@@ -35,12 +35,6 @@ namespace Gs2::Core::Net::Rest
 {
     namespace
     {
-        /**
-         * 応答が得られなかった要求を、接続段階の失敗かどうかで分類する。
-         * ★UE 5.3 以前: DNS 失敗 / TCP 拒否だけが EHttpRequestStatus::Failed_ConnectionError（CurlHttp が
-         *   "safe to retry" と註記する経路）。TLS 失敗や SetTimeout の満了は Failed になり区別できないので Other。
-         * UE 5.4 以降: IHttpRequest::GetFailureReason() の ConnectionError / TimedOut を使う。
-         */
         ERestTransportFailure ClassifyTransportFailure(const FHttpRequestPtr& Request)
         {
             if (!Request.IsValid())
@@ -66,7 +60,6 @@ namespace Gs2::Core::Net::Rest
 #endif
         }
 
-        /** 生成タスクの送信部と同じ形で 1 回だけ送る。TimeoutSec が正なら要求全体のタイムアウトを掛ける。 */
         FRestSessionResponse InvokeOnce(const FRestSessionRequest& Request, const float TimeoutSec)
         {
             const auto Completion = MakeShared<FRestResponseState, ESPMode::ThreadSafe>();
@@ -175,8 +168,6 @@ namespace Gs2::Core::Net::Rest
     void FGs2RestSession::SetSteadyEndpoint(const FString& SteadyEndpoint)
     {
         SteadyEndpointValue = FGs2Steady::NormalizeEndpoint(SteadyEndpoint);
-        // ★生成タスクはセッションを見ずに FGs2Constant::EndpointHost を読むので、そこにも反映する。
-        // アプリが自分で上書きしているときは何も書かない（静的な上書きが優先）。
         FGs2Constant::ApplySteadyEndpointHost(SteadyEndpointValue);
     }
 
@@ -192,7 +183,6 @@ namespace Gs2::Core::Net::Rest
 
     FString FGs2RestSession::EndpointHost(const FString& Service) const
     {
-        // 優先順: アプリによる静的な上書き ＞ SteadyEndpoint ＞ 共有クラウドの既定値。
         FString Template = FGs2Constant::EndpointHost;
         if (!FGs2Constant::IsEndpointHostOverridden())
         {
@@ -210,15 +200,11 @@ namespace Gs2::Core::Net::Rest
     FRestSessionResponse FGs2RestSession::Send(const FRestSessionRequest& Request) const
     {
         const bool bViaSteady = FGs2Steady::IsSteadyUrl(SteadyEndpointValue, Request.Url);
-        // ★UE には接続専用のタイムアウトが無い。要求全体の上限は冪等な動詞にだけ掛ける（POST / PUT は殺さない）。
         const float TimeoutSec = bViaSteady && Request.IsIdempotent() ? FGs2Steady::ConnectTimeoutSeconds : 0.f;
 
         auto Response = InvokeOnce(Request, TimeoutSec);
         if (bViaSteady && Response.TransportFailure == ERestTransportFailure::ConnectFailed)
         {
-            // ★Steady の再送: 基点への接続段階の失敗（DNS / TCP 拒否。1 バイトも送っていない）だけ、同じ要求を
-            // もう 1 回だけ送る。フリートが手放した IP に当たったとき、名前を引き直して別のノードへ着く機会を
-            // 1 回だけ作る。送信後の失敗は届いたかもしれないので再送しない（非冪等要求の二重実行を作らない）。
             UE_LOG(Gs2Log, Warning, TEXT("steady endpoint connect failed, retrying once: %s"), ToCStr(Request.Url));
             Response = InvokeOnce(Request, TimeoutSec);
             Response.bRetried = true;

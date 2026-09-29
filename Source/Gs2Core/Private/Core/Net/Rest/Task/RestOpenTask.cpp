@@ -55,11 +55,9 @@ namespace Gs2::Core::Net::Rest::Task
             FJsonSerializer::Serialize(JsonRootObject.ToSharedRef(), Writer);
         }
 
-        // steady 未設定なら従来どおり FGs2Constant::EndpointHost の置換、設定済みなら <steady>/identifier。
         const auto Url = this->Session->EndpointHost(TEXT("identifier"))
                          .Append("/projectToken/login");
 
-        // ★セッションの Send 経路を通す（Steady のときだけ接続段階の失敗で同じ要求を 1 回だけ再送する）。
         FRestSessionRequest Request(TEXT("POST"), Url);
         Request
             .AddHeader("Content-Type", "application/json")
@@ -68,7 +66,6 @@ namespace Gs2::Core::Net::Rest::Task
         const auto Response = Session->Send(Request);
         if (!Response.HasResponse())
         {
-            // 応答が 1 つも得られなかった（接続段階の失敗・タイムアウト・送信後の切断）。
             UE_LOG(Gs2Log, Warning, TEXT("no response from %s"), ToCStr(Url));
             const auto Details = MakeShared<TArray<TSharedPtr<Core::Model::FGs2ErrorDetail>>>();
             return MakeShared<Core::Model::FUnknownError>(Details);

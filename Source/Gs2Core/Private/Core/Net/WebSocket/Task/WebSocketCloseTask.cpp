@@ -33,8 +33,6 @@ namespace Gs2::Core::Net::WebSocket::Task
 
     Model::FGs2ErrorPtr FWebSocketCloseTask::Action(TSharedPtr<TSharedPtr<Result::FCloseTaskResult>> Result)
     {
-        // ★明示的に閉じるときも、応答待ちの要求は FSessionNotOpenError で終わらせる（socket も閉じる）。
-        //   以前は DisconnectEvent を鳴らすだけで、接続も待ち側もそのまま放置していた。
         if (Session->DropConnection(TEXT("close")))
         {
             Session->OnDisconnect().Broadcast();

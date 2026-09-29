@@ -533,7 +533,6 @@ namespace Gs2::Core::Domain
         Deploy = MakeShared<Deploy::Domain::FGs2DeployDomain>(SharedThis(this));
         Dictionary = MakeShared<Dictionary::Domain::FGs2DictionaryDomain>(SharedThis(this));
         Distributor = MakeShared<Distributor::Domain::FGs2DistributorDomain>(SharedThis(this));
-        // 一括取得（DescribeUserData）の振り分け（service → 生成物）は Core にしか置けないので、distributor のローダーへ登録する
         Distributor->SetUserDataStore(
             [this](const FString& Service, const TOptional<FString>& NamespaceName, const TOptional<FString>& UserId, const TOptional<int32>& TimeOffset, const FString& Kind, const FString& Payload)
             {
@@ -1428,7 +1427,6 @@ namespace Gs2::Core::Domain
         {
             Self->Initialize();
         }
-        // 実態は distributor ドメイン（生成物 FGs2DistributorDomain::LoadUserData）。ここは糖衣
         const auto Future = Self->Distributor->LoadUserData(AccessToken);
         Future->StartSynchronousTask();
         if (Future->GetTask().IsError())

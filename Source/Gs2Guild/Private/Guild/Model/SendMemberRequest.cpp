@@ -299,8 +299,8 @@ namespace Gs2::Guild::Model::Cache
             Cache,
             NamespaceName,
             UserId,
-            Item->GetTargetGuildModelName() /* モデルは送信先の guildModelName を targetGuildModelName として持つ */,
-            Item->GetTargetGuildName() /* モデルは送信先の guildName を targetGuildName として持つ */,
+            Item->GetTargetGuildModelName(),
+            Item->GetTargetGuildName(),
             TimeOffset,
             Item
         );

@@ -528,8 +528,6 @@ namespace Gs2::Core::Domain
             Gs2::Auth::Model::FAccessTokenPtr AccessToken
         );
 
-        // 一括取得の 1 エントリを、Service の生成物へ振り分けてキャッシュへ入れる。戻り値は親キー（知らない Service / Kind は未設定）。
-        // Service は seed のディレクトリ名の綴り（"stamina" / "skill_tree"）。
         TOptional<FString> PutUserData(
             const FString Service,
             const TOptional<FString> NamespaceName,
@@ -539,7 +537,6 @@ namespace Gs2::Core::Domain
             const FString Payload
         ) const;
 
-        // 一括取得で入れた (Service, Kind, 親キー) に「リストが揃った印」を立てる。
         bool SetListCached(
             const FString Service,
             const TOptional<int32> TimeOffset,

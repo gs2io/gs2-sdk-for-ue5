@@ -61,11 +61,9 @@ namespace Gs2::Core::Net
         }
         else
         {
-            // 解釈できない基点（scheme 無し）は空を返し、呼び手は従来の接続先に落ちる。
             return FString();
         }
 
-        // パスが付いていても authority だけを使う（Go の url.Parse().Host と同じ）。
         int32 SlashIndex = INDEX_NONE;
         if (Authority.FindChar(TEXT('/'), SlashIndex))
         {

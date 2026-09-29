@@ -13,8 +13,7 @@
  * express or implied. See the License for the specific language governing
  * permissions and limitations under the License.
  *
- * deny overwrite: RepeatSchedule はモデルキャッシュを持たない seed だが、Model/Cache/RepeatSchedule.h（手書き）の
- * FRepeatScheduleCache の実装をこのファイルに手で足している。再生成すると消えてリンクで落ちる
+ * deny overwrite
  */
 
 #include "Schedule/Model/RepeatSchedule.h"

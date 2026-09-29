@@ -57,7 +57,6 @@ namespace Gs2::Core::Net::WebSocket
         Mutex(MakeShared<FCriticalSection>()),
         LoginTaskId(),
         SteadyEndpointValue(""),
-        // ★まだ接続が無いので Closed から始める（この間の送信は待たせずに失敗させる）。
         ClosedValue(true),
         GenerationValue(0),
         Disposed(false)
@@ -90,28 +89,18 @@ namespace Gs2::Core::Net::WebSocket
 
     void FGs2WebSocketSession::Connect()
     {
-        // ★前の接続が残っていたら、応答待ちの要求をここで終わらせる。
-        //   黙って捨てると、待ち側は応答も誤りも受け取れないまま永久に回る。
         DropConnection(TEXT("reconnect"));
 
-        // ★Processing は共有で持つ。以前は Connect() のローカル変数を参照でラムダへ渡していたので、
-        //   Connect() が返った後に OnConnectionError / OnClosed が書き込むと、
-        //   既に消えたスタックを触っていた。
         const TSharedPtr<bool> Processing = MakeShared<bool>(true);
 
         int32 Generation;
         {
             FScopeLock Lock(Mutex.Get());
-            // ★世代を進める。古い socket から遅れて届くイベントはこれで弾く。
             GenerationValue++;
             Generation = GenerationValue;
-            // 前回のログイン応答が残っていても使わないので捨てる（TaskId は毎回変わる）。
             Results.Remove(LoginTaskId);
         }
 
-        // steady 未設定なら従来どおり FGs2Constant::WebSocketEndpointHost の置換、設定済みなら wss://<host>/。
-        // ★UE の IWebSocket / FWebSocketsModule には handshake の上限を渡す口が無いので、
-        // Steady のときでも接続段階の上限は掛けられない（REST 側の再送だけが効く）。
         const auto Socket = WebSocketFactory(EndpointUrl());
         Socket->OnConnected().AddLambda([this, Processing, Generation]
         {
@@ -152,7 +141,6 @@ namespace Gs2::Core::Net::WebSocket
                 UE_LOG(Gs2Log, Error, TEXT("[Socket::OnMessage] FGs2WebSocketSession is already disposed."));
                 return;
             }
-            // ★古い socket から遅れて届いた応答を今の接続へ混ぜない。
             if (!IsCurrentGeneration(Generation))
             {
                 return;
@@ -272,15 +260,11 @@ namespace Gs2::Core::Net::WebSocket
         Socket->OnConnectionError().AddLambda([this, Processing, Generation](const FString& Error)
         {
             UE_LOG(Gs2Log, Warning, TEXT("disconnect websocket session: %s"), ToCStr(Error));
-            // ★ログイン待ちの Connect() を必ず起こす。
             *Processing = false;
             if (Disposed || !IsCurrentGeneration(Generation))
             {
                 return;
             }
-            // ★応答待ちの要求すべてを FSessionNotOpenError で終わらせる。
-            //   以前はここで Close() を呼んで非同期タスクを作るだけ（誰も走らせない）だったので、
-            //   待ち側は応答も誤りも受け取れず永久に回っていた。
             if (DropConnection(FString::Printf(TEXT("connection error: %s"), *Error)))
             {
                 DisconnectEvent.Broadcast();
@@ -288,16 +272,11 @@ namespace Gs2::Core::Net::WebSocket
         });
         Socket->OnClosed().AddLambda([this, Processing, Generation](int32 StatusCode, const FString& Reason, bool bWasClean)
         {
-            // ★サーバーは応答を返す前に閉じることがある（gateway の setUserId が呼び手自身の接続を
-            //   切る形、ノードの停止、ネットワーク断）。ログイン待ちの最中に閉じられることもあるので、
-            //   Connect() の待ち合わせも必ず起こす。
             *Processing = false;
             if (Disposed || !IsCurrentGeneration(Generation))
             {
                 return;
             }
-            // ★以前はここで InflightRequests を捨てるだけだったので、待ち側の IsComplete は
-            //   永久に false のままだった（同期呼び出しが返らない）。
             if (DropConnection(FString::Printf(
                 TEXT("closed: status=%d, clean=%s, reason=%s"),
                 StatusCode,
@@ -312,7 +291,6 @@ namespace Gs2::Core::Net::WebSocket
         {
             FScopeLock Lock(Mutex.Get());
             SocketValue = Socket;
-            // ★ここから送信を受け付ける（ログイン要求は OnConnected から送られる）。
             ClosedValue = false;
         }
         Socket->Connect();
@@ -345,7 +323,6 @@ namespace Gs2::Core::Net::WebSocket
             ""
         ));
         const Model::FGs2ErrorPtr Error = MakeShared<Model::FSessionNotOpenError>(Detail);
-        // ★転送が切れただけなので HTTP の状態番号は無い。0 でも IsError() は true になる。
         return MakeShared<Task::FWebSocketResult>(
             TaskId,
             0,
@@ -361,11 +338,9 @@ namespace Gs2::Core::Net::WebSocket
             FScopeLock Lock(Mutex.Get());
             if (ClosedValue)
             {
-                // 既に接続は無い（二度 DisconnectEvent を鳴らさない）。
                 return false;
             }
             ClosedValue = true;
-            // ★古い socket から遅れて届くイベントを弾くため、世代を進める。
             GenerationValue++;
             InflightRequests.GetKeys(Pending);
             InflightRequests.Reset();
@@ -373,7 +348,6 @@ namespace Gs2::Core::Net::WebSocket
             {
                 if (!Results.Contains(TaskId))
                 {
-                    // ★待ち側はここに結果が入るまで回り続けるので、必ず入れる。
                     Results.Emplace(TaskId, MakeConnectionLostResult(TaskId, Reason));
                 }
             }
@@ -383,8 +357,6 @@ namespace Gs2::Core::Net::WebSocket
         {
             UE_LOG(Gs2Log, Warning, TEXT("websocket closed with %d pending request(s): %s"), Pending.Num(), ToCStr(Reason));
         }
-        // ★ラムダは socket を値で掴んでいないので（掴むと socket 自身との循環参照で漏れる）、
-        //   ここで閉じても自分のラムダを壊さない。
         if (Socket.IsValid() && Socket->IsConnected())
         {
             Socket->Close();
@@ -403,9 +375,6 @@ namespace Gs2::Core::Net::WebSocket
             Socket = SocketValue;
             if (ClosedValue || !Socket.IsValid())
             {
-                // ★接続が無いときの送信は待たせずその場で失敗させる。
-                //   InflightRequests に積んでしまうと、応答を入れる者が居ないので
-                //   待ち側が永久に回る（以前は SocketValue が無ければ落ちてもいた）。
                 ClosedValue = true;
                 if (!Results.Contains(Request->TaskId()))
                 {
@@ -419,18 +388,12 @@ namespace Gs2::Core::Net::WebSocket
             }
             InflightRequests.Add(Request->TaskId(), Request);
         }
-        // ★錠は手放してから書く（書き込み中に受信側の切断処理を止めない）。
         Socket->Send(Body);
     }
 
     bool FGs2WebSocketSession::IsConnected() const
     {
         FScopeLock Lock(Mutex.Get());
-        // ★接続が無いと分かっているときは true を返す（宣言側の注記を参照）。
-        //   生成された各タスクの待ち合わせは
-        //   while (!IsConnected() || !IsComplete(TaskId)) なので、ここで false を返し続けると
-        //   切断後の待ち側が永久に抜けられない。待ち側には DropConnection / Send が積んだ
-        //   FSessionNotOpenError を読ませる。
         return ClosedValue || (SocketValue.IsValid() && SocketValue->IsConnected());
     }
 
@@ -455,7 +418,6 @@ namespace Gs2::Core::Net::WebSocket
             Results.Remove(TaskId);
             return WebSocketResult;
         }
-        // ★空で返すと呼び手がその場で辿って落ちるので、接続が無い旨の結果を返す。
         InflightRequests.Remove(TaskId);
         return MakeConnectionLostResult(TaskId, TEXT("no result for the request"));
     }
@@ -463,7 +425,6 @@ namespace Gs2::Core::Net::WebSocket
     void FGs2WebSocketSession::OnMessage(TSharedPtr<Task::FWebSocketResult> Result)
     {
         FScopeLock Lock(Mutex.Get());
-        // ★既に切断で終わらせた要求（InflightRequests から外れている）には二度入れない。
         if (InflightRequests.Contains(Result->TaskId()))
         {
             Results.Emplace(Result->TaskId(), Result);

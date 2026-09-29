@@ -399,7 +399,6 @@ namespace Gs2::UE5::Core::Domain
             Gs2::UE5::Util::FGameSessionPtr GameSession
             );
 
-        // 一括取得（Gs2Distributor:DescribeUserData）でこのユーザーの全データを各モデルのキャッシュへ入れる。実態は Distributor->LoadUserData
         class FLoadUserDataTask final :
             public Gs2::Core::Util::TGs2Future<int32>,
             public TSharedFromThis<FLoadUserDataTask>

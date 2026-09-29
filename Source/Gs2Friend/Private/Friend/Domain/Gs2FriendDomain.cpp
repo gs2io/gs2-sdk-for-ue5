@@ -894,6 +894,14 @@ namespace Gs2::Friend::Domain
             const auto Notification = Gs2::Friend::Model::FDeleteFriendNotification::FromJson(PayloadJson);
             for (const auto& WithProfile : {TOptional<bool>(false), TOptional<bool>(true), TOptional<bool>()})
             {
+                Gs2::Friend::Model::Cache::FFriendUserCache::Delete(
+                    Gs2->Cache,
+                    Notification->GetNamespaceName(),
+                    Notification->GetUserId(),
+                    WithProfile,
+                    Notification->GetFromUserId(),
+                    TOptional<int32>()
+                );
                 Gs2->Cache->ClearListCache(
                     Gs2::Friend::Model::FFriendUser::TypeName,
                     Gs2::Friend::Model::Cache::FFriendUserCache::CreateCacheParentKey(
@@ -945,16 +953,17 @@ namespace Gs2::Friend::Domain
                 return;
             }
             const auto Notification = Gs2::Friend::Model::FCancelRequestNotification::FromJson(PayloadJson);
-            Gs2->Cache->ClearListCache(
-                Gs2::Friend::Model::FSendFriendRequest::TypeName,
-                Gs2::Friend::Model::Cache::FSendFriendRequestCache::CreateCacheParentKey(
-                    Notification->GetNamespaceName(), Notification->GetUserId(), TOptional<int32>()
-                )
+            Gs2::Friend::Model::Cache::FReceiveFriendRequestCache::Delete(
+                Gs2->Cache,
+                Notification->GetNamespaceName(),
+                Notification->GetUserId(),
+                Notification->GetFromUserId(),
+                TOptional<int32>()
             );
             Gs2->Cache->ClearListCache(
                 Gs2::Friend::Model::FReceiveFriendRequest::TypeName,
                 Gs2::Friend::Model::Cache::FReceiveFriendRequestCache::CreateCacheParentKey(
-                    Notification->GetNamespaceName(), Notification->GetFromUserId(), TOptional<int32>()
+                    Notification->GetNamespaceName(), Notification->GetUserId(), TOptional<int32>()
                 )
             );
             CancelRequestNotificationEvent.Broadcast(Notification);

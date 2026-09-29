@@ -194,7 +194,26 @@ namespace Gs2::Friend::Domain::Model
         Future->StartSynchronousTask();
         if (Future->GetTask().IsError())
         {
-            return Future->GetTask().Error();
+            const auto Error = Future->GetTask().Error();
+            if (Error.IsValid() && Error->IsChildOf(Gs2::Core::Model::FNotFoundError::Class))
+            {
+                Gs2::Friend::Model::Cache::FReceiveFriendRequestCache::Delete(
+                    Self->Gs2->Cache,
+                    Request->GetNamespaceName(),
+                    Self->AccessToken->GetUserId(),
+                    Request->GetFromUserId(),
+                    Self->AccessToken->GetTimeOffset()
+                );
+                Self->Gs2->Cache->ClearListCache(
+                    Gs2::Friend::Model::FReceiveFriendRequest::TypeName,
+                    Gs2::Friend::Model::Cache::FReceiveFriendRequestCache::CreateCacheParentKey(
+                        Request->GetNamespaceName(),
+                        Self->AccessToken->GetUserId(),
+                        Self->AccessToken->GetTimeOffset()
+                    )
+                );
+            }
+            return Error;
         }
         const auto ResultModel = Future->GetTask().Result();
         Future->EnsureCompletion();
@@ -262,7 +281,26 @@ namespace Gs2::Friend::Domain::Model
         Future->StartSynchronousTask();
         if (Future->GetTask().IsError())
         {
-            return Future->GetTask().Error();
+            const auto Error = Future->GetTask().Error();
+            if (Error.IsValid() && Error->IsChildOf(Gs2::Core::Model::FNotFoundError::Class))
+            {
+                Gs2::Friend::Model::Cache::FReceiveFriendRequestCache::Delete(
+                    Self->Gs2->Cache,
+                    Request->GetNamespaceName(),
+                    Self->AccessToken->GetUserId(),
+                    Request->GetFromUserId(),
+                    Self->AccessToken->GetTimeOffset()
+                );
+                Self->Gs2->Cache->ClearListCache(
+                    Gs2::Friend::Model::FReceiveFriendRequest::TypeName,
+                    Gs2::Friend::Model::Cache::FReceiveFriendRequestCache::CreateCacheParentKey(
+                        Request->GetNamespaceName(),
+                        Self->AccessToken->GetUserId(),
+                        Self->AccessToken->GetTimeOffset()
+                    )
+                );
+            }
+            return Error;
         }
         const auto ResultModel = Future->GetTask().Result();
         Future->EnsureCompletion();

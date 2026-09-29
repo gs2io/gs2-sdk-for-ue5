@@ -219,8 +219,6 @@ namespace Gs2::UE5::Util
 
 	bool FGs2Connection::IsDisconnected()
 	{
-		// ★IsConnected() は「これ以上待っても無駄か」も兼ねる口（切断後は true）なので、
-		//   本当に繋がっているかは IsAlive() で見る。
 		return !WebSocketSession()->IsAlive();
 	}
 }

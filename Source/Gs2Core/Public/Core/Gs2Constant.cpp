@@ -40,7 +40,6 @@ namespace Gs2::Core
     {
         if (IsEndpointHostOverridden())
         {
-            // アプリが自分で template を入れている。静的な上書きは Steady より強い。
             return;
         }
         const auto Template = Net::FGs2Steady::RestTemplate(SteadyEndpoint);

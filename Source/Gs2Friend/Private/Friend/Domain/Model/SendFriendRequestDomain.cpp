@@ -189,7 +189,26 @@ namespace Gs2::Friend::Domain::Model
         Future->StartSynchronousTask();
         if (Future->GetTask().IsError())
         {
-            return Future->GetTask().Error();
+            const auto Error = Future->GetTask().Error();
+            if (Error.IsValid() && Error->IsChildOf(Gs2::Core::Model::FNotFoundError::Class))
+            {
+                Gs2::Friend::Model::Cache::FSendFriendRequestCache::Delete(
+                    Self->Gs2->Cache,
+                    Request->GetNamespaceName(),
+                    Request->GetUserId(),
+                    Request->GetTargetUserId(),
+                    TOptional<int32>()
+                );
+                Self->Gs2->Cache->ClearListCache(
+                    Gs2::Friend::Model::FSendFriendRequest::TypeName,
+                    Gs2::Friend::Model::Cache::FSendFriendRequestCache::CreateCacheParentKey(
+                        Request->GetNamespaceName(),
+                        Request->GetUserId(),
+                        TOptional<int32>()
+                    )
+                );
+            }
+            return Error;
         }
         const auto ResultModel = Future->GetTask().Result();
         Future->EnsureCompletion();

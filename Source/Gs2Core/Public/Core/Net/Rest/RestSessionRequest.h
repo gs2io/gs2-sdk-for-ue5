@@ -20,23 +20,14 @@
 
 namespace Gs2::Core::Net::Rest
 {
-    /** HTTP 応答が 1 つも得られなかった理由（FGs2RestSession::Send）。 */
     enum class ERestTransportFailure : uint8
     {
-        /** 応答あり（ステータスコードは FRestSessionResponse::ResponseCode）。 */
         None,
-        /** 接続段階の失敗（DNS / TCP 拒否。要求が 1 バイトも出ていない）。これだけが再送の対象。 */
         ConnectFailed,
-        /** 要求タイムアウト（UE 5.4 以降だけ区別できる）。送信後かもしれないので再送しない。 */
         Timeout,
-        /** それ以外（TLS 失敗・送信後の切断・キャンセル等）。届いたかもしれないので再送しない。 */
         Other,
     };
 
-    /**
-     * FGs2RestSession::Send に渡す 1 要求。生成タスクが IHttpRequest に積むものと同じ（動詞・URL・ヘッダ・本文）。
-     * ★本文は FString で持ち、要求ごとに IHttpRequest を組み直す（Steady の再送で同じ要求をもう一度組むため）。
-     */
     class GS2CORE_API FRestSessionRequest final
     {
     public:
@@ -54,11 +45,9 @@ namespace Gs2::Core::Net::Rest
         FRestSessionRequest& AddHeader(const FString& Name, const FString& Value);
         FRestSessionRequest& SetBody(const FString& InBody);
 
-        /** GET / DELETE だけを冪等とみなす（要求全体のタイムアウトを掛けてよい動詞）。 */
         bool IsIdempotent() const;
     };
 
-    /** FGs2RestSession::Send の結果。 */
     class GS2CORE_API FRestSessionResponse final
     {
     public:
@@ -66,7 +55,6 @@ namespace Gs2::Core::Net::Rest
         int32 ResponseCode = 999;
         FString ResponseBody;
         ERestTransportFailure TransportFailure = ERestTransportFailure::Other;
-        /** 接続段階の失敗で同じ要求をもう 1 回送ったか。 */
         bool bRetried = false;
 
         bool HasResponse() const

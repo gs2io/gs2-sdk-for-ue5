@@ -31,10 +31,6 @@ namespace Gs2::UE5::Util
 		Gs2::Core::Net::WebSocket::FGs2WebSocketSessionPtr WebSocketSession();
 		Gs2::Core::Model::ERegion Region() const;
 
-		/**
-		 * Steady（専用フリート）の基点（https://<host>）。Connect の前に設定する。空で共有クラウド。
-		 * REST と WebSocket の両セッションに同じ値を入れる。
-		 */
 		void SetSteadyEndpoint(const FString& SteadyEndpoint);
 		FString SteadyEndpoint() const;
 		bool HasSteadyEndpoint() const;

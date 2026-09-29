@@ -232,7 +232,7 @@ namespace Gs2::Friend::Model::Cache
             Cache,
             NamespaceName,
             UserId,
-            TOptional<bool>(false) /* サーバーの一括取得は withProfile 無しで展開する */,
+            TOptional<bool>(false),
             Item->GetUserId(),
             TimeOffset,
             Item
@@ -240,7 +240,7 @@ namespace Gs2::Friend::Model::Cache
         return CreateCacheParentKey(
             NamespaceName,
             UserId,
-            TOptional<bool>(false) /* サーバーの一括取得は withProfile 無しで展開する */,
+            TOptional<bool>(false),
             TimeOffset
         );
     }
