@@ -133,7 +133,7 @@ namespace Gs2::Guild::Domain::Model
 
             Request->GetNamespaceName(),
             Request->GetGuildModelName(),
-            TOptional<FString>(),
+            Self->AccessToken->GetUserId(),
             CacheOwnerSnapshotTimeOffset,
             ResultModel->GetItem()
         );
@@ -195,7 +195,7 @@ namespace Gs2::Guild::Domain::Model
 
             Request->GetNamespaceName(),
             Request->GetGuildModelName(),
-            TOptional<FString>(),
+            Self->AccessToken->GetUserId(),
             CacheOwnerSnapshotTimeOffset
         );
         auto Domain = Self;

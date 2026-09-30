@@ -47,6 +47,7 @@
 #include "Friend/Domain/Model/FriendRequest.h"
 #include "Friend/Model/Cache/ReceiveFriendRequest.h"
 #include "Friend/Model/Cache/FriendRequest.h"
+#include "Friend/Model/Cache/FriendUser.h"
 
 #include "Core/Domain/Gs2.h"
 #include "Core/Domain/Transaction/JobQueueJobDomainFactory.h"
@@ -213,7 +214,7 @@ namespace Gs2::Friend::Domain::Model
         const auto ResultModel = Future->GetTask().Result();
         Future->EnsureCompletion();
 
-              if (!ResultModel.IsValid() || !((ResultModel.IsValid() && ResultModel->GetItem().IsValid() ? ResultModel->GetItem()->GetUserId() : TOptional<FString>())).IsSet())
+              if (!ResultModel.IsValid() || !(Request->GetUserId()).IsSet())
                   {
                     const auto Details = MakeShared<TArray<TSharedPtr<Gs2::Core::Model::FGs2ErrorDetail>>>();
                       Details->Add(MakeShared<Gs2::Core::Model::FGs2ErrorDetail>(TEXT("userId"), TEXT("userId is invalid."), TEXT("invalid_response")));
@@ -223,15 +224,30 @@ namespace Gs2::Friend::Domain::Model
             Self->Gs2->Cache,
 
             Request->GetNamespaceName(),
-            (ResultModel.IsValid() && ResultModel->GetItem().IsValid() ? ResultModel->GetItem()->GetUserId() : TOptional<FString>()),
+            Request->GetUserId(),
             Request->GetFromUserId(),
             TOptional<int32>()
         );
+        for (const auto& FriendUserId : {Request->GetUserId(), Request->GetFromUserId()})
+        {
+            for (const auto& WithProfile : {TOptional<bool>(false), TOptional<bool>(true), TOptional<bool>()})
+            {
+                Self->Gs2->Cache->ClearListCache(
+                    Gs2::Friend::Model::FFriendUser::TypeName,
+                    Gs2::Friend::Model::Cache::FFriendUserCache::CreateCacheParentKey(
+                        Request->GetNamespaceName(),
+                        FriendUserId,
+                        WithProfile,
+                        TOptional<int32>()
+                    )
+                );
+            }
+        }
         auto Domain = MakeShared<Gs2::Friend::Domain::Model::FReceiveFriendRequestDomain>(
             Self->Gs2,
             Self->Service,
             Request->GetNamespaceName(),
-            ResultModel->GetItem()->GetUserId(),
+            Request->GetUserId(),
             Self->FromUserId
         );
 
@@ -298,7 +314,7 @@ namespace Gs2::Friend::Domain::Model
         const auto ResultModel = Future->GetTask().Result();
         Future->EnsureCompletion();
 
-              if (!ResultModel.IsValid() || !((ResultModel.IsValid() && ResultModel->GetItem().IsValid() ? ResultModel->GetItem()->GetUserId() : TOptional<FString>())).IsSet())
+              if (!ResultModel.IsValid() || !(Request->GetUserId()).IsSet())
                   {
                     const auto Details = MakeShared<TArray<TSharedPtr<Gs2::Core::Model::FGs2ErrorDetail>>>();
                       Details->Add(MakeShared<Gs2::Core::Model::FGs2ErrorDetail>(TEXT("userId"), TEXT("userId is invalid."), TEXT("invalid_response")));
@@ -308,7 +324,7 @@ namespace Gs2::Friend::Domain::Model
             Self->Gs2->Cache,
 
             Request->GetNamespaceName(),
-            (ResultModel.IsValid() && ResultModel->GetItem().IsValid() ? ResultModel->GetItem()->GetUserId() : TOptional<FString>()),
+            Request->GetUserId(),
             Request->GetFromUserId(),
             TOptional<int32>()
         );
@@ -316,7 +332,7 @@ namespace Gs2::Friend::Domain::Model
             Self->Gs2,
             Self->Service,
             Request->GetNamespaceName(),
-            ResultModel->GetItem()->GetUserId(),
+            Request->GetUserId(),
             Self->FromUserId
         );
 
@@ -418,7 +434,7 @@ namespace Gs2::Friend::Domain::Model
                             TOptional<int32>(),
                             nullptr
                         );
-                        if (!Error->GetErrors().IsValid() || Error->Count() == 0 || !Error->Detail(0).IsValid() || Error->Detail(0)->GetComponent() != "receiveFriendRequest")
+                        if (!Error->GetErrors().IsValid() || Error->Count() == 0 || !Error->Detail(0).IsValid() || (Error->Detail(0)->GetComponent() != "fromUserId" && Error->Detail(0)->GetComponent() != "inbox"))
                         {
                             return Error;
                         }

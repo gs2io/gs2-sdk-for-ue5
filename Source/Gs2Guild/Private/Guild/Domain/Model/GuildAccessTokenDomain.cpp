@@ -72,9 +72,9 @@ namespace Gs2::Guild::Domain::Model
         GuildModelName(GuildModelName),
         AccessToken(AccessToken),
         GuildNameValue(GuildName.IsSet() ? GuildName : AccessToken->GetUserId()),
-        ParentKey(Gs2::Guild::Domain::Model::FNamespaceDomain::CreateCacheParentKey(
+        ParentKey(Gs2::Guild::Model::Cache::FGuildCache::CreateCacheParentKey(
             NamespaceName,
-            "Guild"
+            AccessToken.IsValid() ? AccessToken->GetTimeOffset() : TOptional<int32>()
         ))
     {
     }
@@ -133,20 +133,13 @@ namespace Gs2::Guild::Domain::Model
             
             if (ResultModel->GetItem() != nullptr)
             {
-                const auto ParentKey = Gs2::Guild::Domain::Model::FNamespaceDomain::CreateCacheParentKey(
+                Gs2::Guild::Model::Cache::FGuildCache::Put(
+                    Self->Gs2->Cache,
                     Self->NamespaceName,
-                    "Guild"
-                );
-                const auto Key = Gs2::Guild::Domain::Model::FGuildDomain::CreateCacheKey(
                     ResultModel->GetItem()->GetGuildModelName(),
-                    ResultModel->GetItem()->GetName()
-                );
-                Self->Gs2->Cache->Put(
-                    Gs2::Guild::Model::FGuild::TypeName,
-                    ParentKey,
-                    Key,
-                    ResultModel->GetItem(),
-                    FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
+                    ResultModel->GetItem()->GetName(),
+                    Self->AccessToken.IsValid() ? Self->AccessToken->GetTimeOffset() : TOptional<int32>(),
+                    ResultModel->GetItem()
                 );
             }
         }
@@ -198,20 +191,13 @@ namespace Gs2::Guild::Domain::Model
             
             if (ResultModel->GetItem() != nullptr)
             {
-                const auto ParentKey = Gs2::Guild::Domain::Model::FNamespaceDomain::CreateCacheParentKey(
+                Gs2::Guild::Model::Cache::FGuildCache::Put(
+                    Self->Gs2->Cache,
                     Self->NamespaceName,
-                    "Guild"
-                );
-                const auto Key = Gs2::Guild::Domain::Model::FGuildDomain::CreateCacheKey(
                     ResultModel->GetItem()->GetGuildModelName(),
-                    ResultModel->GetItem()->GetName()
-                );
-                Self->Gs2->Cache->Put(
-                    Gs2::Guild::Model::FGuild::TypeName,
-                    ParentKey,
-                    Key,
-                    ResultModel->GetItem(),
-                    FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
+                    ResultModel->GetItem()->GetName(),
+                    Self->AccessToken.IsValid() ? Self->AccessToken->GetTimeOffset() : TOptional<int32>(),
+                    ResultModel->GetItem()
                 );
             }
         }
@@ -265,15 +251,13 @@ namespace Gs2::Guild::Domain::Model
             
             if (ResultModel->GetItem() != nullptr)
             {
-                const auto ParentKey = Gs2::Guild::Domain::Model::FNamespaceDomain::CreateCacheParentKey(
+                Gs2::Guild::Model::Cache::FGuildCache::Delete(
+                    Self->Gs2->Cache,
                     Self->NamespaceName,
-                    "Guild"
-                );
-                const auto Key = Gs2::Guild::Domain::Model::FGuildDomain::CreateCacheKey(
                     ResultModel->GetItem()->GetGuildModelName(),
-                    ResultModel->GetItem()->GetName()
+                    ResultModel->GetItem()->GetName(),
+                    Self->AccessToken.IsValid() ? Self->AccessToken->GetTimeOffset() : TOptional<int32>()
                 );
-                Self->Gs2->Cache->Delete(Gs2::Guild::Model::FGuild::TypeName, ParentKey, Key);
             }
         }
         Gs2::Guild::Model::Cache::FJoinedGuildCache::Delete(
@@ -460,15 +444,13 @@ namespace Gs2::Guild::Domain::Model
             
             if (ResultModel->GetItem() != nullptr)
             {
-                const auto ParentKey = Gs2::Guild::Domain::Model::FNamespaceDomain::CreateCacheParentKey(
+                Gs2::Guild::Model::Cache::FGuildCache::Delete(
+                    Self->Gs2->Cache,
                     Self->NamespaceName,
-                    "Guild"
-                );
-                const auto Key = Gs2::Guild::Domain::Model::FGuildDomain::CreateCacheKey(
                     ResultModel->GetItem()->GetGuildModelName(),
-                    ResultModel->GetItem()->GetName()
+                    ResultModel->GetItem()->GetName(),
+                    Self->AccessToken.IsValid() ? Self->AccessToken->GetTimeOffset() : TOptional<int32>()
                 );
-                Self->Gs2->Cache->Delete(Gs2::Guild::Model::FGuild::TypeName, ParentKey, Key);
             }
         }
         if (ResultModel.IsValid() && ResultModel->GetItem().IsValid() && ResultModel->GetItem()->GetMembers().IsValid())
@@ -614,20 +596,13 @@ namespace Gs2::Guild::Domain::Model
             }
             if (ResultModel->GetGuild() != nullptr)
             {
-                const auto ParentKey = Gs2::Guild::Domain::Model::FNamespaceDomain::CreateCacheParentKey(
+                Gs2::Guild::Model::Cache::FGuildCache::Put(
+                    Self->Gs2->Cache,
                     Self->NamespaceName,
-                    "Guild"
-                );
-                const auto Key = Gs2::Guild::Domain::Model::FGuildDomain::CreateCacheKey(
                     ResultModel->GetGuild()->GetGuildModelName(),
-                    ResultModel->GetGuild()->GetName()
-                );
-                Self->Gs2->Cache->Put(
-                    Gs2::Guild::Model::FGuild::TypeName,
-                    ParentKey,
-                    Key,
-                    ResultModel->GetGuild(),
-                    FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
+                    ResultModel->GetGuild()->GetName(),
+                    Self->AccessToken.IsValid() ? Self->AccessToken->GetTimeOffset() : TOptional<int32>(),
+                    ResultModel->GetGuild()
                 );
             }
         }
@@ -705,20 +680,13 @@ namespace Gs2::Guild::Domain::Model
             }
             if (ResultModel->GetGuild() != nullptr)
             {
-                const auto ParentKey = Gs2::Guild::Domain::Model::FNamespaceDomain::CreateCacheParentKey(
+                Gs2::Guild::Model::Cache::FGuildCache::Put(
+                    Self->Gs2->Cache,
                     Self->NamespaceName,
-                    "Guild"
-                );
-                const auto Key = Gs2::Guild::Domain::Model::FGuildDomain::CreateCacheKey(
                     ResultModel->GetGuild()->GetGuildModelName(),
-                    ResultModel->GetGuild()->GetName()
-                );
-                Self->Gs2->Cache->Put(
-                    Gs2::Guild::Model::FGuild::TypeName,
-                    ParentKey,
-                    Key,
-                    ResultModel->GetGuild(),
-                    FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
+                    ResultModel->GetGuild()->GetName(),
+                    Self->AccessToken.IsValid() ? Self->AccessToken->GetTimeOffset() : TOptional<int32>(),
+                    ResultModel->GetGuild()
                 );
             }
         }
@@ -788,20 +756,13 @@ namespace Gs2::Guild::Domain::Model
             }
             if (ResultModel->GetGuild() != nullptr)
             {
-                const auto ParentKey = Gs2::Guild::Domain::Model::FNamespaceDomain::CreateCacheParentKey(
+                Gs2::Guild::Model::Cache::FGuildCache::Put(
+                    Self->Gs2->Cache,
                     Self->NamespaceName,
-                    "Guild"
-                );
-                const auto Key = Gs2::Guild::Domain::Model::FGuildDomain::CreateCacheKey(
                     ResultModel->GetGuild()->GetGuildModelName(),
-                    ResultModel->GetGuild()->GetName()
-                );
-                Self->Gs2->Cache->Put(
-                    Gs2::Guild::Model::FGuild::TypeName,
-                    ParentKey,
-                    Key,
-                    ResultModel->GetGuild(),
-                    FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
+                    ResultModel->GetGuild()->GetName(),
+                    Self->AccessToken.IsValid() ? Self->AccessToken->GetTimeOffset() : TOptional<int32>(),
+                    ResultModel->GetGuild()
                 );
             }
         }
@@ -1179,7 +1140,7 @@ namespace Gs2::Guild::Domain::Model
         TSharedPtr<TSharedPtr<Gs2::Guild::Model::FGuild>> Result
     )
     {
-        const FString CacheKey = Gs2::Guild::Domain::Model::FGuildDomain::CreateCacheKey(
+        const FString CacheKey = Gs2::Guild::Model::Cache::FGuildCache::CreateCacheKey(
             Self->GuildModelName,
             Self->GuildName()
         );
@@ -1276,7 +1237,7 @@ namespace Gs2::Guild::Domain::Model
         return Gs2->Cache->Subscribe(
             Gs2::Guild::Model::FGuild::TypeName,
             ParentKey,
-            Gs2::Guild::Domain::Model::FGuildDomain::CreateCacheKey(
+            Gs2::Guild::Model::Cache::FGuildCache::CreateCacheKey(
                 GuildModelName,
                 GuildName()
             ),
@@ -1319,7 +1280,7 @@ namespace Gs2::Guild::Domain::Model
         Gs2->Cache->Unsubscribe(
             Gs2::Guild::Model::FGuild::TypeName,
             ParentKey,
-            Gs2::Guild::Domain::Model::FGuildDomain::CreateCacheKey(
+            Gs2::Guild::Model::Cache::FGuildCache::CreateCacheKey(
                 GuildModelName,
                 GuildName()
             ),

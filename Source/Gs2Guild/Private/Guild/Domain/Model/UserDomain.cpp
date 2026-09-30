@@ -38,6 +38,7 @@
 #include "Guild/Domain/Model/ReceiveMemberRequest.h"
 #include "Guild/Domain/Model/SendMemberRequest.h"
 #include "Guild/Domain/Model/SendMemberRequestAccessToken.h"
+#include "Guild/Model/Cache/Guild.h"
 #include "Guild/Model/Cache/SendMemberRequest.h"
 #include "Guild/Model/Cache/JoinedGuild.h"
 
@@ -119,20 +120,13 @@ namespace Gs2::Guild::Domain::Model
             
             if (ResultModel->GetItem() != nullptr)
             {
-                const auto ParentKey = Gs2::Guild::Domain::Model::FNamespaceDomain::CreateCacheParentKey(
+                Gs2::Guild::Model::Cache::FGuildCache::Put(
+                    Self->Gs2->Cache,
                     Self->NamespaceName,
-                    "Guild"
-                );
-                const auto Key = Gs2::Guild::Domain::Model::FGuildDomain::CreateCacheKey(
                     ResultModel->GetItem()->GetGuildModelName(),
-                    ResultModel->GetItem()->GetName()
-                );
-                Self->Gs2->Cache->Put(
-                    Gs2::Guild::Model::FGuild::TypeName,
-                    ParentKey,
-                    Key,
-                    ResultModel->GetItem(),
-                    FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
+                    ResultModel->GetItem()->GetName(),
+                    TOptional<int32>(),
+                    ResultModel->GetItem()
                 );
             }
         }
@@ -261,20 +255,13 @@ namespace Gs2::Guild::Domain::Model
             
             if (ResultModel->GetItem() != nullptr)
             {
-                const auto ParentKey = Gs2::Guild::Domain::Model::FNamespaceDomain::CreateCacheParentKey(
+                Gs2::Guild::Model::Cache::FGuildCache::Put(
+                    Self->Gs2->Cache,
                     Self->NamespaceName,
-                    "Guild"
-                );
-                const auto Key = Gs2::Guild::Domain::Model::FGuildDomain::CreateCacheKey(
                     ResultModel->GetItem()->GetGuildModelName(),
-                    ResultModel->GetItem()->GetName()
-                );
-                Self->Gs2->Cache->Put(
-                    Gs2::Guild::Model::FGuild::TypeName,
-                    ParentKey,
-                    Key,
-                    ResultModel->GetItem(),
-                    FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
+                    ResultModel->GetItem()->GetName(),
+                    TOptional<int32>(),
+                    ResultModel->GetItem()
                 );
             }
             if (ResultModel->GetSendMemberRequest() != nullptr)

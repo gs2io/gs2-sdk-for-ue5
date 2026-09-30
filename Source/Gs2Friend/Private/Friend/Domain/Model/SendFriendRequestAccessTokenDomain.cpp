@@ -343,7 +343,7 @@ namespace Gs2::Friend::Domain::Model
                             Self->AccessToken.IsValid() ? Self->AccessToken->GetTimeOffset() : TOptional<int32>(),
                             nullptr
                         );
-                        if (!Error->GetErrors().IsValid() || Error->Count() == 0 || !Error->Detail(0).IsValid() || Error->Detail(0)->GetComponent() != "sendFriendRequest")
+                        if (!Error->GetErrors().IsValid() || Error->Count() == 0 || !Error->Detail(0).IsValid() || (Error->Detail(0)->GetComponent() != "targetUserId" && Error->Detail(0)->GetComponent() != "sendBox"))
                         {
                             return Error;
                         }

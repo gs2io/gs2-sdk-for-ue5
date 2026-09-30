@@ -138,7 +138,7 @@ namespace Gs2::Guild::Domain::Model
 
             Request->GetNamespaceName(),
             Request->GetGuildModelName(),
-            TOptional<FString>(),
+            Self->AccessToken->GetUserId(),
             Request->GetFromUserId(),
             CacheOwnerSnapshotTimeOffset,
             ResultModel->GetItem()
@@ -196,7 +196,7 @@ namespace Gs2::Guild::Domain::Model
 
             Request->GetNamespaceName(),
             Request->GetGuildModelName(),
-            TOptional<FString>(),
+            Self->AccessToken->GetUserId(),
             Request->GetFromUserId(),
             CacheOwnerSnapshotTimeOffset
         );
@@ -206,7 +206,7 @@ namespace Gs2::Guild::Domain::Model
 
             Request->GetNamespaceName(),
             Request->GetGuildModelName(),
-            TOptional<FString>(),
+            Self->AccessToken->GetUserId(),
             CacheOwnerSnapshotTimeOffset
         );
         Self->Gs2->Cache->ClearListCache(
@@ -271,7 +271,7 @@ namespace Gs2::Guild::Domain::Model
 
             Request->GetNamespaceName(),
             Request->GetGuildModelName(),
-            TOptional<FString>(),
+            Self->AccessToken->GetUserId(),
             Request->GetFromUserId(),
             CacheOwnerSnapshotTimeOffset
         );

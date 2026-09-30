@@ -201,22 +201,25 @@ namespace Gs2::Friend::Domain::Model
         }
         const auto ResultModel = Future->GetTask().Result();
         Future->EnsureCompletion();
-
-              if (!((CacheOwnerSnapshotUserId)).IsSet())
-                  {
-                    const auto Details = MakeShared<TArray<TSharedPtr<Gs2::Core::Model::FGs2ErrorDetail>>>();
-                      Details->Add(MakeShared<Gs2::Core::Model::FGs2ErrorDetail>(TEXT("userId"), TEXT("userId is invalid."), TEXT("invalid_response")));
-                      return MakeShared<Gs2::Core::Model::FUnknownError>(Details);
-                    }
-              Gs2::Friend::Model::Cache::FFriendUserCache::Delete(
-            Self->Gs2->Cache,
-
-            Request->GetNamespaceName(),
-            (CacheOwnerSnapshotUserId),
-            TOptional<bool>(),
-            Request->GetTargetUserId(),
-            CacheOwnerSnapshotTimeOffset
-        );
+        for (const auto& WithProfile : {TOptional<bool>(false), TOptional<bool>(true), TOptional<bool>()})
+        {
+            Gs2::Friend::Model::Cache::FFriendUserCache::Delete(
+                Self->Gs2->Cache,
+                Request->GetNamespaceName(),
+                CacheOwnerSnapshotUserId,
+                WithProfile,
+                Request->GetTargetUserId(),
+                CacheOwnerSnapshotTimeOffset
+            );
+            Gs2::Friend::Model::Cache::FFriendUserCache::Delete(
+                Self->Gs2->Cache,
+                Request->GetNamespaceName(),
+                Request->GetTargetUserId(),
+                WithProfile,
+                CacheOwnerSnapshotUserId,
+                CacheOwnerSnapshotTimeOffset
+            );
+        }
         auto Domain = MakeShared<Gs2::Friend::Domain::Model::FFriendUserAccessTokenDomain>(
             Self->Gs2,
             Self->Service,

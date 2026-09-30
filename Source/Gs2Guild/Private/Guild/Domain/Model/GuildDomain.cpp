@@ -66,9 +66,9 @@ namespace Gs2::Guild::Domain::Model
         NamespaceName(NamespaceName),
         GuildModelName(GuildModelName),
         GuildName(GuildName),
-        ParentKey(Gs2::Guild::Domain::Model::FNamespaceDomain::CreateCacheParentKey(
+        ParentKey(Gs2::Guild::Model::Cache::FGuildCache::CreateCacheParentKey(
             NamespaceName,
-            "Guild"
+            TOptional<int32>()
         ))
     {
     }
@@ -971,7 +971,7 @@ namespace Gs2::Guild::Domain::Model
         TSharedPtr<TSharedPtr<Gs2::Guild::Model::FGuild>> Result
     )
     {
-        const FString CacheKey = Gs2::Guild::Domain::Model::FGuildDomain::CreateCacheKey(
+        const FString CacheKey = Gs2::Guild::Model::Cache::FGuildCache::CreateCacheKey(
             Self->GuildModelName,
             Self->GuildName
         );
@@ -1064,7 +1064,7 @@ namespace Gs2::Guild::Domain::Model
         return Gs2->Cache->Subscribe(
             Gs2::Guild::Model::FGuild::TypeName,
             ParentKey,
-            Gs2::Guild::Domain::Model::FGuildDomain::CreateCacheKey(
+            Gs2::Guild::Model::Cache::FGuildCache::CreateCacheKey(
                 GuildModelName,
                 GuildName
             ),
@@ -1082,7 +1082,7 @@ namespace Gs2::Guild::Domain::Model
         Gs2->Cache->Unsubscribe(
             Gs2::Guild::Model::FGuild::TypeName,
             ParentKey,
-            Gs2::Guild::Domain::Model::FGuildDomain::CreateCacheKey(
+            Gs2::Guild::Model::Cache::FGuildCache::CreateCacheKey(
                 GuildModelName,
                 GuildName
             ),

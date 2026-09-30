@@ -48,6 +48,7 @@
 #include "Friend/Domain/Model/FriendRequestAccessToken.h"
 #include "Friend/Model/Cache/ReceiveFriendRequest.h"
 #include "Friend/Model/Cache/FriendRequest.h"
+#include "Friend/Model/Cache/FriendUser.h"
 
 #include "Core/Domain/Gs2.h"
 #include "Core/Domain/Transaction/JobQueueJobDomainFactory.h"
@@ -232,6 +233,21 @@ namespace Gs2::Friend::Domain::Model
             Request->GetFromUserId(),
             CacheOwnerSnapshotTimeOffset
         );
+        for (const auto& FriendUserId : {CacheOwnerSnapshotUserId, Request->GetFromUserId()})
+        {
+            for (const auto& WithProfile : {TOptional<bool>(false), TOptional<bool>(true), TOptional<bool>()})
+            {
+                Self->Gs2->Cache->ClearListCache(
+                    Gs2::Friend::Model::FFriendUser::TypeName,
+                    Gs2::Friend::Model::Cache::FFriendUserCache::CreateCacheParentKey(
+                        Request->GetNamespaceName(),
+                        FriendUserId,
+                        WithProfile,
+                        CacheOwnerSnapshotTimeOffset
+                    )
+                );
+            }
+        }
         auto Domain = MakeShared<Gs2::Friend::Domain::Model::FReceiveFriendRequestAccessTokenDomain>(
             Self->Gs2,
             Self->Service,
@@ -425,7 +441,7 @@ namespace Gs2::Friend::Domain::Model
                             Self->AccessToken.IsValid() ? Self->AccessToken->GetTimeOffset() : TOptional<int32>(),
                             nullptr
                         );
-                        if (!Error->GetErrors().IsValid() || Error->Count() == 0 || !Error->Detail(0).IsValid() || Error->Detail(0)->GetComponent() != "receiveFriendRequest")
+                        if (!Error->GetErrors().IsValid() || Error->Count() == 0 || !Error->Detail(0).IsValid() || (Error->Detail(0)->GetComponent() != "fromUserId" && Error->Detail(0)->GetComponent() != "inbox"))
                         {
                             return Error;
                         }
