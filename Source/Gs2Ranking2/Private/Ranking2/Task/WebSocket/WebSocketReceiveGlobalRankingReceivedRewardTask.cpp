@@ -20,6 +20,7 @@
 #include "Core/Gs2Constant.h"
 #include "Core/Net/WebSocket/Gs2WebSocketSession.h"
 #include "Core/Net/WebSocket/Task/WebSocketResult.h"
+#include "Ranking2/Gs2Ranking2ErrorResolver.h"
 
 namespace Gs2::Ranking2::Task::WebSocket
 {
@@ -73,5 +74,10 @@ namespace Gs2::Ranking2::Task::WebSocket
         *Result = Result::FReceiveGlobalRankingReceivedRewardResult::FromJson(WebSocketResult->Body());
 
         return nullptr;
+    }
+
+    void FReceiveGlobalRankingReceivedRewardTask::OnError(Core::Model::FGs2ErrorPtr Error)
+    {
+        TGs2Future<Result::FReceiveGlobalRankingReceivedRewardResult>::OnError(FGs2Ranking2ErrorResolver::Resolve(TEXT("ReceiveGlobalRankingReceivedReward"), Error));
     }
 }

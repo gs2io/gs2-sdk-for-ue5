@@ -20,7 +20,7 @@
 #include "Core/Gs2Constant.h"
 #include "Core/Net/WebSocket/Gs2WebSocketSession.h"
 #include "Core/Net/WebSocket/Task/WebSocketResult.h"
-#include "Money2/Error/ReceiptInvalidError.h"
+#include "Money2/Gs2Money2ErrorResolver.h"
 
 namespace Gs2::Money2::Task::WebSocket
 {
@@ -78,11 +78,6 @@ namespace Gs2::Money2::Task::WebSocket
 
     void FVerifyReceiptByUserIdTask::OnError(Core::Model::FGs2ErrorPtr Error)
     {
-        if (Error->Count() > 0 && Error->Detail(0)->Code() == "receipt.payload.invalid") {
-            TGs2Future<Result::FVerifyReceiptByUserIdResult>::OnError(MakeShared<Money2::Error::FReceiptInvalidError>(Error));
-        }
-        else {
-            TGs2Future<Result::FVerifyReceiptByUserIdResult>::OnError(Error);
-        }
+        TGs2Future<Result::FVerifyReceiptByUserIdResult>::OnError(FGs2Money2ErrorResolver::Resolve(TEXT("VerifyReceiptByUserId"), Error));
     }
 }

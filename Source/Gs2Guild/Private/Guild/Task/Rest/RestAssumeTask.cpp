@@ -22,7 +22,7 @@
 #include "Core/Gs2Constant.h"
 #include "Core/Net/Rest/Gs2RestSession.h"
 #include "Core/Net/Rest/RestResponseState.h"
-#include "Guild/Error/NotIncludedGuildMemberError.h"
+#include "Guild/Gs2GuildErrorResolver.h"
 #include "Interfaces/IHttpResponse.h"
 
 namespace Gs2::Guild::Task::Rest
@@ -158,11 +158,6 @@ namespace Gs2::Guild::Task::Rest
 
     void FAssumeTask::OnError(Core::Model::FGs2ErrorPtr Error)
     {
-        if (Error->Count() > 0 && Error->Detail(0)->Code() == "guild.member.notFound") {
-            TGs2Future<Result::FAssumeResult>::OnError(MakeShared<Guild::Error::FNotIncludedGuildMemberError>(Error));
-        }
-        else {
-            TGs2Future<Result::FAssumeResult>::OnError(Error);
-        }
+        TGs2Future<Result::FAssumeResult>::OnError(FGs2GuildErrorResolver::Resolve(TEXT("Assume"), Error));
     }
 }

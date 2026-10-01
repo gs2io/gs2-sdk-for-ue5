@@ -100,12 +100,31 @@ namespace Gs2::Core::Model
         TSharedPtr<FJsonValue> OuterValue;
         if (const TSharedRef<TJsonReader<>> JsonReader = TJsonReaderFactory<>::Create(Response);
             !FJsonSerializer::Deserialize(JsonReader, OuterValue) ||
-            !OuterValue.IsValid() ||
-            OuterValue->Type != EJson::Object)
+            !OuterValue.IsValid())
+        {
+            auto Error = FromJson(ResponseCode, TArray<TSharedPtr<FJsonValue>>(), nullptr);
+            Error->GetErrors()->Add(MakeShared<FGs2ErrorDetail>(TEXT("unknown"), Response, TEXT("")));
+            return Error;
+        }
+        if (OuterValue->Type == EJson::Array)
+        {
+            return FromJson(ResponseCode, OuterValue->AsArray(), nullptr);
+        }
+        if (OuterValue->Type != EJson::Object)
         {
             return ParseFailed();
         }
         const auto JsonRootObject = OuterValue->AsObject();
+        if (JsonRootObject.IsValid() &&
+            JsonRootObject->HasTypedField<EJson::Array>(ANSI_TO_TCHAR("errors")))
+        {
+            FResultMetadataPtr ParsedMetadata;
+            if (JsonRootObject->HasTypedField<EJson::Object>(ANSI_TO_TCHAR("metadata")))
+            {
+                ParsedMetadata = FResultMetadata::FromJson(JsonRootObject->GetObjectField(ANSI_TO_TCHAR("metadata")));
+            }
+            return FromJson(ResponseCode, JsonRootObject->GetArrayField(ANSI_TO_TCHAR("errors")), ParsedMetadata);
+        }
         if (!JsonRootObject.IsValid() ||
             !JsonRootObject->HasField(ANSI_TO_TCHAR("message")) ||
             !JsonRootObject->HasTypedField<EJson::String>(ANSI_TO_TCHAR("message")) ||

@@ -20,9 +20,7 @@
 #include "Core/Gs2Constant.h"
 #include "Core/Net/WebSocket/Gs2WebSocketSession.h"
 #include "Core/Net/WebSocket/Task/WebSocketResult.h"
-#include "Chat/Error/NoAccessPrivilegesError.h"
-#include "Chat/Error/PasswordRequiredError.h"
-#include "Chat/Error/PasswordIncorrectError.h"
+#include "Chat/Gs2ChatErrorResolver.h"
 
 namespace Gs2::Chat::Task::WebSocket
 {
@@ -80,17 +78,6 @@ namespace Gs2::Chat::Task::WebSocket
 
     void FPostTask::OnError(Core::Model::FGs2ErrorPtr Error)
     {
-        if (Error->Count() > 0 && Error->Detail(0)->Code() == "room.allowUserIds.notInclude") {
-            TGs2Future<Result::FPostResult>::OnError(MakeShared<Chat::Error::FNoAccessPrivilegesError>(Error));
-        }
-        else if (Error->Count() > 0 && Error->Detail(0)->Code() == "room.password.require") {
-            TGs2Future<Result::FPostResult>::OnError(MakeShared<Chat::Error::FPasswordRequiredError>(Error));
-        }
-        else if (Error->Count() > 0 && Error->Detail(0)->Code() == "room.password.invalid") {
-            TGs2Future<Result::FPostResult>::OnError(MakeShared<Chat::Error::FPasswordIncorrectError>(Error));
-        }
-        else {
-            TGs2Future<Result::FPostResult>::OnError(Error);
-        }
+        TGs2Future<Result::FPostResult>::OnError(FGs2ChatErrorResolver::Resolve(TEXT("Post"), Error));
     }
 }

@@ -39,6 +39,8 @@ namespace Gs2::Ranking2::Task::WebSocket
         virtual ~FPutClusterRankingScoreByUserIdTask() override = default;
 
         virtual Core::Model::FGs2ErrorPtr Action(const TSharedPtr<Result::FPutClusterRankingScoreByUserIdResultPtr> Result) override;
+    protected:
+        virtual void OnError(Core::Model::FGs2ErrorPtr Error) override;
     };
     typedef TSharedPtr<FPutClusterRankingScoreByUserIdTask, ESPMode::ThreadSafe> FPutClusterRankingScoreByUserIdTaskPtr;
 }

@@ -22,6 +22,7 @@
 #include "Core/Gs2Constant.h"
 #include "Core/Net/Rest/Gs2RestSession.h"
 #include "Core/Net/Rest/RestResponseState.h"
+#include "Ranking2/Gs2Ranking2ErrorResolver.h"
 #include "Interfaces/IHttpResponse.h"
 
 namespace Gs2::Ranking2::Task::Rest
@@ -166,5 +167,10 @@ namespace Gs2::Ranking2::Task::Rest
             return MakeShared<Core::Model::FUnknownError>(Details);
         }
         return Core::Model::FGs2Error::FromResponse(ResponseCode, ResponseBody);
+    }
+
+    void FPutClusterRankingScoreByUserIdTask::OnError(Core::Model::FGs2ErrorPtr Error)
+    {
+        TGs2Future<Result::FPutClusterRankingScoreByUserIdResult>::OnError(FGs2Ranking2ErrorResolver::Resolve(TEXT("PutClusterRankingScoreByUserId"), Error));
     }
 }

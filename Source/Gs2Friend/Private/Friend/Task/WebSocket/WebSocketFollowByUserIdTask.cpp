@@ -20,6 +20,7 @@
 #include "Core/Gs2Constant.h"
 #include "Core/Net/WebSocket/Gs2WebSocketSession.h"
 #include "Core/Net/WebSocket/Task/WebSocketResult.h"
+#include "Friend/Gs2FriendErrorResolver.h"
 
 namespace Gs2::Friend::Task::WebSocket
 {
@@ -73,5 +74,10 @@ namespace Gs2::Friend::Task::WebSocket
         *Result = Result::FFollowByUserIdResult::FromJson(WebSocketResult->Body());
 
         return nullptr;
+    }
+
+    void FFollowByUserIdTask::OnError(Core::Model::FGs2ErrorPtr Error)
+    {
+        TGs2Future<Result::FFollowByUserIdResult>::OnError(FGs2FriendErrorResolver::Resolve(TEXT("FollowByUserId"), Error));
     }
 }

@@ -20,7 +20,7 @@
 #include "Core/Gs2Constant.h"
 #include "Core/Net/WebSocket/Gs2WebSocketSession.h"
 #include "Core/Net/WebSocket/Task/WebSocketResult.h"
-#include "Inbox/Error/MessageExpiredError.h"
+#include "Inbox/Gs2InboxErrorResolver.h"
 
 namespace Gs2::Inbox::Task::WebSocket
 {
@@ -78,11 +78,6 @@ namespace Gs2::Inbox::Task::WebSocket
 
     void FReadMessageByUserIdTask::OnError(Core::Model::FGs2ErrorPtr Error)
     {
-        if (Error->Count() > 0 && Error->Detail(0)->Code() == "inbox.message.expired") {
-            TGs2Future<Result::FReadMessageByUserIdResult>::OnError(MakeShared<Inbox::Error::FMessageExpiredError>(Error));
-        }
-        else {
-            TGs2Future<Result::FReadMessageByUserIdResult>::OnError(Error);
-        }
+        TGs2Future<Result::FReadMessageByUserIdResult>::OnError(FGs2InboxErrorResolver::Resolve(TEXT("ReadMessageByUserId"), Error));
     }
 }

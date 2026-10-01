@@ -20,6 +20,7 @@
 #include "Core/Gs2Constant.h"
 #include "Core/Net/WebSocket/Gs2WebSocketSession.h"
 #include "Core/Net/WebSocket/Task/WebSocketResult.h"
+#include "Formation/Gs2FormationErrorResolver.h"
 
 namespace Gs2::Formation::Task::WebSocket
 {
@@ -73,5 +74,10 @@ namespace Gs2::Formation::Task::WebSocket
         *Result = Result::FSetPropertyFormWithSignatureResult::FromJson(WebSocketResult->Body());
 
         return nullptr;
+    }
+
+    void FSetPropertyFormWithSignatureTask::OnError(Core::Model::FGs2ErrorPtr Error)
+    {
+        TGs2Future<Result::FSetPropertyFormWithSignatureResult>::OnError(FGs2FormationErrorResolver::Resolve(TEXT("SetPropertyFormWithSignature"), Error));
     }
 }

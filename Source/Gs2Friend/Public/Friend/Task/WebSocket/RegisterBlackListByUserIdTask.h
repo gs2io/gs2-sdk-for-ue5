@@ -39,6 +39,8 @@ namespace Gs2::Friend::Task::WebSocket
         virtual ~FRegisterBlackListByUserIdTask() override = default;
 
         virtual Core::Model::FGs2ErrorPtr Action(const TSharedPtr<Result::FRegisterBlackListByUserIdResultPtr> Result) override;
+    protected:
+        virtual void OnError(Core::Model::FGs2ErrorPtr Error) override;
     };
     typedef TSharedPtr<FRegisterBlackListByUserIdTask, ESPMode::ThreadSafe> FRegisterBlackListByUserIdTaskPtr;
 }

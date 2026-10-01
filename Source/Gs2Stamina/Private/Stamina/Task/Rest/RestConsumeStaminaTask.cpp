@@ -22,7 +22,7 @@
 #include "Core/Gs2Constant.h"
 #include "Core/Net/Rest/Gs2RestSession.h"
 #include "Core/Net/Rest/RestResponseState.h"
-#include "Stamina/Error/InsufficientError.h"
+#include "Stamina/Gs2StaminaErrorResolver.h"
 #include "Interfaces/IHttpResponse.h"
 
 namespace Gs2::Stamina::Task::Rest
@@ -157,11 +157,6 @@ namespace Gs2::Stamina::Task::Rest
 
     void FConsumeStaminaTask::OnError(Core::Model::FGs2ErrorPtr Error)
     {
-        if (Error->Count() > 0 && Error->Detail(0)->Code() == "stamina.stamina.insufficient") {
-            TGs2Future<Result::FConsumeStaminaResult>::OnError(MakeShared<Stamina::Error::FInsufficientError>(Error));
-        }
-        else {
-            TGs2Future<Result::FConsumeStaminaResult>::OnError(Error);
-        }
+        TGs2Future<Result::FConsumeStaminaResult>::OnError(FGs2StaminaErrorResolver::Resolve(TEXT("ConsumeStamina"), Error));
     }
 }

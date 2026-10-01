@@ -20,6 +20,7 @@
 #include "Core/Gs2Constant.h"
 #include "Core/Net/WebSocket/Gs2WebSocketSession.h"
 #include "Core/Net/WebSocket/Task/WebSocketResult.h"
+#include "Friend/Gs2FriendErrorResolver.h"
 
 namespace Gs2::Friend::Task::WebSocket
 {
@@ -73,5 +74,10 @@ namespace Gs2::Friend::Task::WebSocket
         *Result = Result::FRegisterBlackListResult::FromJson(WebSocketResult->Body());
 
         return nullptr;
+    }
+
+    void FRegisterBlackListTask::OnError(Core::Model::FGs2ErrorPtr Error)
+    {
+        TGs2Future<Result::FRegisterBlackListResult>::OnError(FGs2FriendErrorResolver::Resolve(TEXT("RegisterBlackList"), Error));
     }
 }

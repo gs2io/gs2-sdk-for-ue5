@@ -22,7 +22,7 @@
 #include "Core/Gs2Constant.h"
 #include "Core/Net/Rest/Gs2RestSession.h"
 #include "Core/Net/Rest/RestResponseState.h"
-#include "Datastore/Error/InvalidStatusError.h"
+#include "Datastore/Gs2DatastoreErrorResolver.h"
 #include "Interfaces/IHttpResponse.h"
 
 namespace Gs2::Datastore::Task::Rest
@@ -144,11 +144,6 @@ namespace Gs2::Datastore::Task::Rest
 
     void FRestoreDataObjectTask::OnError(Core::Model::FGs2ErrorPtr Error)
     {
-        if (Error->Count() > 0 && Error->Detail(0)->Code() == "dataObject.status.invalid") {
-            TGs2Future<Result::FRestoreDataObjectResult>::OnError(MakeShared<Datastore::Error::FInvalidStatusError>(Error));
-        }
-        else {
-            TGs2Future<Result::FRestoreDataObjectResult>::OnError(Error);
-        }
+        TGs2Future<Result::FRestoreDataObjectResult>::OnError(FGs2DatastoreErrorResolver::Resolve(TEXT("RestoreDataObject"), Error));
     }
 }

@@ -39,6 +39,8 @@ namespace Gs2::Formation::Task::Rest
         virtual ~FSetPropertyFormTask() override = default;
 
         virtual Core::Model::FGs2ErrorPtr Action(const TSharedPtr<Result::FSetPropertyFormResultPtr> Result) override;
+    protected:
+        virtual void OnError(Core::Model::FGs2ErrorPtr Error) override;
     };
     typedef TSharedPtr<FSetPropertyFormTask, ESPMode::ThreadSafe> FSetPropertyFormTaskPtr;
 }

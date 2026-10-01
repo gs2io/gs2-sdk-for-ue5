@@ -22,7 +22,7 @@
 #include "Core/Gs2Constant.h"
 #include "Core/Net/Rest/Gs2RestSession.h"
 #include "Core/Net/Rest/RestResponseState.h"
-#include "Money2/Error/AlreadyUsedError.h"
+#include "Money2/Gs2Money2ErrorResolver.h"
 #include "Interfaces/IHttpResponse.h"
 
 namespace Gs2::Money2::Task::Rest
@@ -157,11 +157,6 @@ namespace Gs2::Money2::Task::Rest
 
     void FAllocateSubscriptionStatusByUserIdTask::OnError(Core::Model::FGs2ErrorPtr Error)
     {
-        if (Error->Count() > 0 && Error->Detail(0)->Code() == "subscription.transaction.used") {
-            TGs2Future<Result::FAllocateSubscriptionStatusByUserIdResult>::OnError(MakeShared<Money2::Error::FAlreadyUsedError>(Error));
-        }
-        else {
-            TGs2Future<Result::FAllocateSubscriptionStatusByUserIdResult>::OnError(Error);
-        }
+        TGs2Future<Result::FAllocateSubscriptionStatusByUserIdResult>::OnError(FGs2Money2ErrorResolver::Resolve(TEXT("AllocateSubscriptionStatusByUserId"), Error));
     }
 }

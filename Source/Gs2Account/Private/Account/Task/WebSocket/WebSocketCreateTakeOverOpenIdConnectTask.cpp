@@ -20,6 +20,7 @@
 #include "Core/Gs2Constant.h"
 #include "Core/Net/WebSocket/Gs2WebSocketSession.h"
 #include "Core/Net/WebSocket/Task/WebSocketResult.h"
+#include "Account/Gs2AccountErrorResolver.h"
 
 namespace Gs2::Account::Task::WebSocket
 {
@@ -73,5 +74,10 @@ namespace Gs2::Account::Task::WebSocket
         *Result = Result::FCreateTakeOverOpenIdConnectResult::FromJson(WebSocketResult->Body());
 
         return nullptr;
+    }
+
+    void FCreateTakeOverOpenIdConnectTask::OnError(Core::Model::FGs2ErrorPtr Error)
+    {
+        TGs2Future<Result::FCreateTakeOverOpenIdConnectResult>::OnError(FGs2AccountErrorResolver::Resolve(TEXT("CreateTakeOverOpenIdConnect"), Error));
     }
 }

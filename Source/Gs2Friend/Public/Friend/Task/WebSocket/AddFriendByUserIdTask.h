@@ -39,6 +39,8 @@ namespace Gs2::Friend::Task::WebSocket
         virtual ~FAddFriendByUserIdTask() override = default;
 
         virtual Core::Model::FGs2ErrorPtr Action(const TSharedPtr<Result::FAddFriendByUserIdResultPtr> Result) override;
+    protected:
+        virtual void OnError(Core::Model::FGs2ErrorPtr Error) override;
     };
     typedef TSharedPtr<FAddFriendByUserIdTask, ESPMode::ThreadSafe> FAddFriendByUserIdTaskPtr;
 }

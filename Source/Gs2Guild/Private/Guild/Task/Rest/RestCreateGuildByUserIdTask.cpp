@@ -22,6 +22,7 @@
 #include "Core/Gs2Constant.h"
 #include "Core/Net/Rest/Gs2RestSession.h"
 #include "Core/Net/Rest/RestResponseState.h"
+#include "Guild/Gs2GuildErrorResolver.h"
 #include "Interfaces/IHttpResponse.h"
 
 namespace Gs2::Guild::Task::Rest
@@ -202,5 +203,10 @@ namespace Gs2::Guild::Task::Rest
             return MakeShared<Core::Model::FUnknownError>(Details);
         }
         return Core::Model::FGs2Error::FromResponse(ResponseCode, ResponseBody);
+    }
+
+    void FCreateGuildByUserIdTask::OnError(Core::Model::FGs2ErrorPtr Error)
+    {
+        TGs2Future<Result::FCreateGuildByUserIdResult>::OnError(FGs2GuildErrorResolver::Resolve(TEXT("CreateGuildByUserId"), Error));
     }
 }

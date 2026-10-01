@@ -17,6 +17,7 @@
 #include "../Public/Core/Domain/Transaction/AutoTransactionDomain.h"
 
 #include "Core/Domain/Gs2.h"
+#include "Core/Model/Gs2ErrorResolver.h"
 #include "Distributor/Domain/Gs2Distributor.h"
 #include "Distributor/Model/Cache/TransactionResult.h"
 #include "Misc/ScopeLock.h"
@@ -27,14 +28,18 @@ namespace Gs2::Core::Domain
     {
         Gs2::Core::Model::FGs2ErrorPtr ValidateStatus(
             const TOptional<int32>& StatusCode,
-            const TOptional<FString>& Body
+            const TOptional<FString>& Body,
+            const TOptional<FString>& Action = TOptional<FString>()
         )
         {
             if (!StatusCode.IsSet() || *StatusCode < 200 || *StatusCode >= 300)
             {
-                return Gs2::Core::Model::FGs2Error::FromResponse(
-                    StatusCode.IsSet() ? *StatusCode : 999,
-                    Body.IsSet() ? *Body : FString()
+                return Gs2::Core::Model::FGs2ErrorResolver::ResolveAction(
+                    Action.IsSet() ? *Action : FString(),
+                    Gs2::Core::Model::FGs2Error::FromResponse(
+                        StatusCode.IsSet() ? *StatusCode : 999,
+                        Body.IsSet() ? *Body : FString()
+                    )
                 );
             }
             return nullptr;
@@ -91,7 +96,9 @@ namespace Gs2::Core::Domain
             );
         }
 
+        template <typename RequestType>
         Gs2::Core::Model::FGs2ErrorPtr ValidateStampEntries(
+            const TSharedPtr<TArray<TSharedPtr<RequestType>>>& Requests,
             const int32 RequestCount,
             const int32 BodyCount,
             const TSharedPtr<TArray<int32>>& Codes,
@@ -106,7 +113,10 @@ namespace Gs2::Core::Domain
                     ? TOptional<int32>((*Codes)[Index])
                     : TOptional<int32>();
                 const TOptional<FString> Body = TOptional<FString>((*Bodies)[Index]);
-                const auto Error = ValidateStatus(Status, Body);
+                const TOptional<FString> Action = Requests.IsValid() && Index < Requests->Num() && (*Requests)[Index].IsValid()
+                    ? (*Requests)[Index]->GetAction()
+                    : TOptional<FString>();
+                const auto Error = ValidateStatus(Status, Body, Action);
                 if (Error.IsValid())
                 {
                     return Error;
@@ -134,7 +144,7 @@ namespace Gs2::Core::Domain
                 for (const auto& Item : *VerifyResults)
                 {
                     if (!Item.IsValid()) return MissingResult();
-                    const auto Error = ValidateStatus(Item->GetStatusCode(), Item->GetVerifyResult());
+                    const auto Error = ValidateStatus(Item->GetStatusCode(), Item->GetVerifyResult(), Item->GetAction());
                     if (Error.IsValid()) return Error;
                 }
             }
@@ -144,7 +154,7 @@ namespace Gs2::Core::Domain
                 for (const auto& Item : *ConsumeResults)
                 {
                     if (!Item.IsValid()) return MissingResult();
-                    const auto Error = ValidateStatus(Item->GetStatusCode(), Item->GetConsumeResult());
+                    const auto Error = ValidateStatus(Item->GetStatusCode(), Item->GetConsumeResult(), Item->GetAction());
                     if (Error.IsValid()) return Error;
                 }
             }
@@ -154,7 +164,7 @@ namespace Gs2::Core::Domain
                 for (const auto& Item : *AcquireResults)
                 {
                     if (!Item.IsValid()) return MissingResult();
-                    const auto Error = ValidateStatus(Item->GetStatusCode(), Item->GetAcquireResult());
+                    const auto Error = ValidateStatus(Item->GetStatusCode(), Item->GetAcquireResult(), Item->GetAction());
                     if (Error.IsValid()) return Error;
                 }
             }
@@ -244,6 +254,7 @@ namespace Gs2::Core::Domain
             }
         }
         Error = ValidateStampEntries(
+            VerifyRequests,
             VerifyRequests.IsValid() ? VerifyRequests->Num() : 0,
             VerifyBodies.IsValid() ? VerifyBodies->Num() : 0,
             VerifyCodes,
@@ -266,6 +277,7 @@ namespace Gs2::Core::Domain
             }
         }
         Error = ValidateStampEntries(
+            TaskRequests,
             TaskRequests.IsValid() ? TaskRequests->Num() : 0,
             TaskBodies.IsValid() ? TaskBodies->Num() : 0,
             TaskCodes,
@@ -275,7 +287,11 @@ namespace Gs2::Core::Domain
 
         if (Result->GetSheetResult().IsSet() || Result->GetSheetResultCode().IsSet())
         {
-            Error = ValidateStatus(Result->GetSheetResultCode(), Result->GetSheetResult());
+            Error = ValidateStatus(
+                Result->GetSheetResultCode(),
+                Result->GetSheetResult(),
+                Result->GetSheetRequest().IsValid() ? Result->GetSheetRequest()->GetAction() : TOptional<FString>()
+            );
             if (Error.IsValid())
             {
                 return nullptr;
@@ -418,7 +434,7 @@ namespace Gs2::Core::Domain
                 }
                 else
                 {
-                    Error = ValidateStatus(Item->GetStatusCode(), Item->GetVerifyResult());
+                    Error = ValidateStatus(Item->GetStatusCode(), Item->GetVerifyResult(), Item->GetAction());
                     if (Error.IsValid()) return nullptr;
                 }
             }
@@ -435,7 +451,7 @@ namespace Gs2::Core::Domain
                 }
                 else
                 {
-                    Error = ValidateStatus(Item->GetStatusCode(), Item->GetConsumeResult());
+                    Error = ValidateStatus(Item->GetStatusCode(), Item->GetConsumeResult(), Item->GetAction());
                     if (Error.IsValid()) return nullptr;
                 }
             }
@@ -452,7 +468,7 @@ namespace Gs2::Core::Domain
                 }
                 else
                 {
-                    Error = ValidateStatus(Item->GetStatusCode(), Item->GetAcquireResult());
+                    Error = ValidateStatus(Item->GetStatusCode(), Item->GetAcquireResult(), Item->GetAction());
                     if (Error.IsValid()) return nullptr;
                 }
             }

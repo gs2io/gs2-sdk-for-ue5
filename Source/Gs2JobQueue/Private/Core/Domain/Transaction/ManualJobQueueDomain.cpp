@@ -19,6 +19,7 @@
 #include "Core/Domain/Gs2.h"
 #include "JobQueue/Domain/Gs2JobQueue.h"
 #include "JobQueue/Request/RunByUserIdRequest.h"
+#include "Core/Model/Gs2ErrorResolver.h"
 
 namespace
 {
@@ -154,8 +155,11 @@ namespace Gs2::Core::Domain
 		}
 		const auto StatusCode = JobResult->GetStatusCode();
 		if (!StatusCode.IsSet() || StatusCode.Get(0) / 100 != 2) {
-			return Gs2::Core::Model::FGs2Error::FromResponse(
-				StatusCode.Get(0), JobResult->GetResult().Get(FString())
+			return Gs2::Core::Model::FGs2ErrorResolver::ResolveJobScript(
+				Job->GetScriptId().Get(FString()),
+				Gs2::Core::Model::FGs2Error::FromResponse(
+					StatusCode.Get(0), JobResult->GetResult().Get(FString())
+				)
 			);
 		}
 		if (Job->GetScriptId().IsSet() && Job->GetScriptId()->EndsWith("push_by_user_id"))

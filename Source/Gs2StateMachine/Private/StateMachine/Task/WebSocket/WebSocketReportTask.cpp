@@ -20,7 +20,7 @@
 #include "Core/Gs2Constant.h"
 #include "Core/Net/WebSocket/Gs2WebSocketSession.h"
 #include "Core/Net/WebSocket/Task/WebSocketResult.h"
-#include "StateMachine/Error/StateMismatchError.h"
+#include "StateMachine/Gs2StateMachineErrorResolver.h"
 
 namespace Gs2::StateMachine::Task::WebSocket
 {
@@ -78,11 +78,6 @@ namespace Gs2::StateMachine::Task::WebSocket
 
     void FReportTask::OnError(Core::Model::FGs2ErrorPtr Error)
     {
-        if (Error->Count() > 0 && Error->Detail(0)->Code() == "stateMachine.state.mismatch") {
-            TGs2Future<Result::FReportResult>::OnError(MakeShared<StateMachine::Error::FStateMismatchError>(Error));
-        }
-        else {
-            TGs2Future<Result::FReportResult>::OnError(Error);
-        }
+        TGs2Future<Result::FReportResult>::OnError(FGs2StateMachineErrorResolver::Resolve(TEXT("Report"), Error));
     }
 }

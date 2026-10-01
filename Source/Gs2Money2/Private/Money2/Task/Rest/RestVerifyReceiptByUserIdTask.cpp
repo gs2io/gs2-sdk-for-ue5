@@ -22,7 +22,7 @@
 #include "Core/Gs2Constant.h"
 #include "Core/Net/Rest/Gs2RestSession.h"
 #include "Core/Net/Rest/RestResponseState.h"
-#include "Money2/Error/ReceiptInvalidError.h"
+#include "Money2/Gs2Money2ErrorResolver.h"
 #include "Interfaces/IHttpResponse.h"
 
 namespace Gs2::Money2::Task::Rest
@@ -162,11 +162,6 @@ namespace Gs2::Money2::Task::Rest
 
     void FVerifyReceiptByUserIdTask::OnError(Core::Model::FGs2ErrorPtr Error)
     {
-        if (Error->Count() > 0 && Error->Detail(0)->Code() == "receipt.payload.invalid") {
-            TGs2Future<Result::FVerifyReceiptByUserIdResult>::OnError(MakeShared<Money2::Error::FReceiptInvalidError>(Error));
-        }
-        else {
-            TGs2Future<Result::FVerifyReceiptByUserIdResult>::OnError(Error);
-        }
+        TGs2Future<Result::FVerifyReceiptByUserIdResult>::OnError(FGs2Money2ErrorResolver::Resolve(TEXT("VerifyReceiptByUserId"), Error));
     }
 }

@@ -20,7 +20,7 @@
 #include "Core/Gs2Constant.h"
 #include "Core/Net/WebSocket/Gs2WebSocketSession.h"
 #include "Core/Net/WebSocket/Task/WebSocketResult.h"
-#include "JobQueue/Error/ConflictError.h"
+#include "JobQueue/Gs2JobQueueErrorResolver.h"
 
 namespace Gs2::JobQueue::Task::WebSocket
 {
@@ -78,11 +78,6 @@ namespace Gs2::JobQueue::Task::WebSocket
 
     void FRunByUserIdTask::OnError(Core::Model::FGs2ErrorPtr Error)
     {
-        if (Error->Count() > 0 && Error->Detail(0)->Code() == "jobQueue.execution.conflict") {
-            TGs2Future<Result::FRunByUserIdResult>::OnError(MakeShared<JobQueue::Error::FConflictError>(Error));
-        }
-        else {
-            TGs2Future<Result::FRunByUserIdResult>::OnError(Error);
-        }
+        TGs2Future<Result::FRunByUserIdResult>::OnError(FGs2JobQueueErrorResolver::Resolve(TEXT("RunByUserId"), Error));
     }
 }

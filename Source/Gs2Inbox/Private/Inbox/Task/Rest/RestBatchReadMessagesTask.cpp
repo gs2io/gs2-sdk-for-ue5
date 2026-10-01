@@ -22,7 +22,7 @@
 #include "Core/Gs2Constant.h"
 #include "Core/Net/Rest/Gs2RestSession.h"
 #include "Core/Net/Rest/RestResponseState.h"
-#include "Inbox/Error/MessageExpiredError.h"
+#include "Inbox/Gs2InboxErrorResolver.h"
 #include "Interfaces/IHttpResponse.h"
 
 namespace Gs2::Inbox::Task::Rest
@@ -166,11 +166,6 @@ namespace Gs2::Inbox::Task::Rest
 
     void FBatchReadMessagesTask::OnError(Core::Model::FGs2ErrorPtr Error)
     {
-        if (Error->Count() > 0 && Error->Detail(0)->Code() == "inbox.message.expired") {
-            TGs2Future<Result::FBatchReadMessagesResult>::OnError(MakeShared<Inbox::Error::FMessageExpiredError>(Error));
-        }
-        else {
-            TGs2Future<Result::FBatchReadMessagesResult>::OnError(Error);
-        }
+        TGs2Future<Result::FBatchReadMessagesResult>::OnError(FGs2InboxErrorResolver::Resolve(TEXT("BatchReadMessages"), Error));
     }
 }

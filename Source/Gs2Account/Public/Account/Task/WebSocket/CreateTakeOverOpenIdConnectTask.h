@@ -39,6 +39,8 @@ namespace Gs2::Account::Task::WebSocket
         virtual ~FCreateTakeOverOpenIdConnectTask() override = default;
 
         virtual Core::Model::FGs2ErrorPtr Action(const TSharedPtr<Result::FCreateTakeOverOpenIdConnectResultPtr> Result) override;
+    protected:
+        virtual void OnError(Core::Model::FGs2ErrorPtr Error) override;
     };
     typedef TSharedPtr<FCreateTakeOverOpenIdConnectTask, ESPMode::ThreadSafe> FCreateTakeOverOpenIdConnectTaskPtr;
 }

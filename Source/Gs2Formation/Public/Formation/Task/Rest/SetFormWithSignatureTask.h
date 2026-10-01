@@ -39,6 +39,8 @@ namespace Gs2::Formation::Task::Rest
         virtual ~FSetFormWithSignatureTask() override = default;
 
         virtual Core::Model::FGs2ErrorPtr Action(const TSharedPtr<Result::FSetFormWithSignatureResultPtr> Result) override;
+    protected:
+        virtual void OnError(Core::Model::FGs2ErrorPtr Error) override;
     };
     typedef TSharedPtr<FSetFormWithSignatureTask, ESPMode::ThreadSafe> FSetFormWithSignatureTaskPtr;
 }

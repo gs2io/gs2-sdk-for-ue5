@@ -22,8 +22,7 @@
 #include "Core/Gs2Constant.h"
 #include "Core/Net/Rest/Gs2RestSession.h"
 #include "Core/Net/Rest/RestResponseState.h"
-#include "Money/Error/ConflictError.h"
-#include "Money/Error/InsufficientError.h"
+#include "Money/Gs2MoneyErrorResolver.h"
 #include "Interfaces/IHttpResponse.h"
 
 namespace Gs2::Money::Task::Rest
@@ -166,14 +165,6 @@ namespace Gs2::Money::Task::Rest
 
     void FWithdrawByUserIdTask::OnError(Core::Model::FGs2ErrorPtr Error)
     {
-        if (Error->Count() > 0 && Error->Detail(0)->Code() == "wallet.operation.conflict") {
-            TGs2Future<Result::FWithdrawByUserIdResult>::OnError(MakeShared<Money::Error::FConflictError>(Error));
-        }
-        else if (Error->Count() > 0 && Error->Detail(0)->Code() == "wallet.balance.insufficient") {
-            TGs2Future<Result::FWithdrawByUserIdResult>::OnError(MakeShared<Money::Error::FInsufficientError>(Error));
-        }
-        else {
-            TGs2Future<Result::FWithdrawByUserIdResult>::OnError(Error);
-        }
+        TGs2Future<Result::FWithdrawByUserIdResult>::OnError(FGs2MoneyErrorResolver::Resolve(TEXT("WithdrawByUserId"), Error));
     }
 }

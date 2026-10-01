@@ -22,7 +22,7 @@
 #include "Core/Gs2Constant.h"
 #include "Core/Net/Rest/Gs2RestSession.h"
 #include "Core/Net/Rest/RestResponseState.h"
-#include "Inventory/Error/ConflictError.h"
+#include "Inventory/Gs2InventoryErrorResolver.h"
 #include "Interfaces/IHttpResponse.h"
 
 namespace Gs2::Inventory::Task::Rest
@@ -179,11 +179,6 @@ namespace Gs2::Inventory::Task::Rest
 
     void FAcquireItemSetByUserIdTask::OnError(Core::Model::FGs2ErrorPtr Error)
     {
-        if (Error->Count() > 0 && Error->Detail(0)->Code() == "itemSet.operation.conflict") {
-            TGs2Future<Result::FAcquireItemSetByUserIdResult>::OnError(MakeShared<Inventory::Error::FConflictError>(Error));
-        }
-        else {
-            TGs2Future<Result::FAcquireItemSetByUserIdResult>::OnError(Error);
-        }
+        TGs2Future<Result::FAcquireItemSetByUserIdResult>::OnError(FGs2InventoryErrorResolver::Resolve(TEXT("AcquireItemSetByUserId"), Error));
     }
 }

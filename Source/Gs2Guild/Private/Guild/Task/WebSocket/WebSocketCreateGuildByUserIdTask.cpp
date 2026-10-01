@@ -20,6 +20,7 @@
 #include "Core/Gs2Constant.h"
 #include "Core/Net/WebSocket/Gs2WebSocketSession.h"
 #include "Core/Net/WebSocket/Task/WebSocketResult.h"
+#include "Guild/Gs2GuildErrorResolver.h"
 
 namespace Gs2::Guild::Task::WebSocket
 {
@@ -73,5 +74,10 @@ namespace Gs2::Guild::Task::WebSocket
         *Result = Result::FCreateGuildByUserIdResult::FromJson(WebSocketResult->Body());
 
         return nullptr;
+    }
+
+    void FCreateGuildByUserIdTask::OnError(Core::Model::FGs2ErrorPtr Error)
+    {
+        TGs2Future<Result::FCreateGuildByUserIdResult>::OnError(FGs2GuildErrorResolver::Resolve(TEXT("CreateGuildByUserId"), Error));
     }
 }

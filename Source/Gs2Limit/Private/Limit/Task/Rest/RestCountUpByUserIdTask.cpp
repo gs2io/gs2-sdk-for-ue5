@@ -22,7 +22,7 @@
 #include "Core/Gs2Constant.h"
 #include "Core/Net/Rest/Gs2RestSession.h"
 #include "Core/Net/Rest/RestResponseState.h"
-#include "Limit/Error/OverflowError.h"
+#include "Limit/Gs2LimitErrorResolver.h"
 #include "Interfaces/IHttpResponse.h"
 
 namespace Gs2::Limit::Task::Rest
@@ -171,11 +171,6 @@ namespace Gs2::Limit::Task::Rest
 
     void FCountUpByUserIdTask::OnError(Core::Model::FGs2ErrorPtr Error)
     {
-        if (Error->Count() > 0 && Error->Detail(0)->Code() == "limit.counter.overflow") {
-            TGs2Future<Result::FCountUpByUserIdResult>::OnError(MakeShared<Limit::Error::FOverflowError>(Error));
-        }
-        else {
-            TGs2Future<Result::FCountUpByUserIdResult>::OnError(Error);
-        }
+        TGs2Future<Result::FCountUpByUserIdResult>::OnError(FGs2LimitErrorResolver::Resolve(TEXT("CountUpByUserId"), Error));
     }
 }

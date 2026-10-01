@@ -22,8 +22,7 @@
 #include "Core/Gs2Constant.h"
 #include "Core/Net/Rest/Gs2RestSession.h"
 #include "Core/Net/Rest/RestResponseState.h"
-#include "Guild/Error/MaximumJoinedGuildsReachedError.h"
-#include "Guild/Error/MaximumMembersReachedError.h"
+#include "Guild/Gs2GuildErrorResolver.h"
 #include "Interfaces/IHttpResponse.h"
 
 namespace Gs2::Guild::Task::Rest
@@ -160,14 +159,6 @@ namespace Gs2::Guild::Task::Rest
 
     void FAcceptRequestByGuildNameTask::OnError(Core::Model::FGs2ErrorPtr Error)
     {
-        if (Error->Count() > 0 && Error->Detail(0)->Code() == "user.joinedGuild.tooMany") {
-            TGs2Future<Result::FAcceptRequestByGuildNameResult>::OnError(MakeShared<Guild::Error::FMaximumJoinedGuildsReachedError>(Error));
-        }
-        else if (Error->Count() > 0 && Error->Detail(0)->Code() == "guild.members.tooMany") {
-            TGs2Future<Result::FAcceptRequestByGuildNameResult>::OnError(MakeShared<Guild::Error::FMaximumMembersReachedError>(Error));
-        }
-        else {
-            TGs2Future<Result::FAcceptRequestByGuildNameResult>::OnError(Error);
-        }
+        TGs2Future<Result::FAcceptRequestByGuildNameResult>::OnError(FGs2GuildErrorResolver::Resolve(TEXT("AcceptRequestByGuildName"), Error));
     }
 }

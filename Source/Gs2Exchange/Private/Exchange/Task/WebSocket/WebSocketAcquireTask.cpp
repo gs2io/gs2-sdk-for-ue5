@@ -20,6 +20,7 @@
 #include "Core/Gs2Constant.h"
 #include "Core/Net/WebSocket/Gs2WebSocketSession.h"
 #include "Core/Net/WebSocket/Task/WebSocketResult.h"
+#include "Exchange/Gs2ExchangeErrorResolver.h"
 
 namespace Gs2::Exchange::Task::WebSocket
 {
@@ -73,5 +74,10 @@ namespace Gs2::Exchange::Task::WebSocket
         *Result = Result::FAcquireResult::FromJson(WebSocketResult->Body());
 
         return nullptr;
+    }
+
+    void FAcquireTask::OnError(Core::Model::FGs2ErrorPtr Error)
+    {
+        TGs2Future<Result::FAcquireResult>::OnError(FGs2ExchangeErrorResolver::Resolve(TEXT("Acquire"), Error));
     }
 }

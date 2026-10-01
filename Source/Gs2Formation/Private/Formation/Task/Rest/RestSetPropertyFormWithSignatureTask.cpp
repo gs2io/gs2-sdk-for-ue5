@@ -22,6 +22,7 @@
 #include "Core/Gs2Constant.h"
 #include "Core/Net/Rest/Gs2RestSession.h"
 #include "Core/Net/Rest/RestResponseState.h"
+#include "Formation/Gs2FormationErrorResolver.h"
 #include "Interfaces/IHttpResponse.h"
 
 namespace Gs2::Formation::Task::Rest
@@ -166,5 +167,10 @@ namespace Gs2::Formation::Task::Rest
             return MakeShared<Core::Model::FUnknownError>(Details);
         }
         return Core::Model::FGs2Error::FromResponse(ResponseCode, ResponseBody);
+    }
+
+    void FSetPropertyFormWithSignatureTask::OnError(Core::Model::FGs2ErrorPtr Error)
+    {
+        TGs2Future<Result::FSetPropertyFormWithSignatureResult>::OnError(FGs2FormationErrorResolver::Resolve(TEXT("SetPropertyFormWithSignature"), Error));
     }
 }

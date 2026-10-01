@@ -39,6 +39,8 @@ namespace Gs2::Account::Task::Rest
         virtual ~FCreateTakeOverTask() override = default;
 
         virtual Core::Model::FGs2ErrorPtr Action(const TSharedPtr<Result::FCreateTakeOverResultPtr> Result) override;
+    protected:
+        virtual void OnError(Core::Model::FGs2ErrorPtr Error) override;
     };
     typedef TSharedPtr<FCreateTakeOverTask, ESPMode::ThreadSafe> FCreateTakeOverTaskPtr;
 }

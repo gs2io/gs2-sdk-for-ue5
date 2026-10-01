@@ -22,8 +22,7 @@
 #include "Core/Gs2Constant.h"
 #include "Core/Net/Rest/Gs2RestSession.h"
 #include "Core/Net/Rest/RestResponseState.h"
-#include "Inventory/Error/ConflictError.h"
-#include "Inventory/Error/InsufficientError.h"
+#include "Inventory/Gs2InventoryErrorResolver.h"
 #include "Interfaces/IHttpResponse.h"
 
 namespace Gs2::Inventory::Task::Rest
@@ -168,14 +167,6 @@ namespace Gs2::Inventory::Task::Rest
 
     void FConsumeBigItemByUserIdTask::OnError(Core::Model::FGs2ErrorPtr Error)
     {
-        if (Error->Count() > 0 && Error->Detail(0)->Code() == "itemSet.operation.conflict") {
-            TGs2Future<Result::FConsumeBigItemByUserIdResult>::OnError(MakeShared<Inventory::Error::FConflictError>(Error));
-        }
-        else if (Error->Count() > 0 && Error->Detail(0)->Code() == "itemSet.count.insufficient") {
-            TGs2Future<Result::FConsumeBigItemByUserIdResult>::OnError(MakeShared<Inventory::Error::FInsufficientError>(Error));
-        }
-        else {
-            TGs2Future<Result::FConsumeBigItemByUserIdResult>::OnError(Error);
-        }
+        TGs2Future<Result::FConsumeBigItemByUserIdResult>::OnError(FGs2InventoryErrorResolver::Resolve(TEXT("ConsumeBigItemByUserId"), Error));
     }
 }

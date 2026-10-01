@@ -22,7 +22,7 @@
 #include "Core/Gs2Constant.h"
 #include "Core/Net/Rest/Gs2RestSession.h"
 #include "Core/Net/Rest/RestResponseState.h"
-#include "Mission/Error/ConflictError.h"
+#include "Mission/Gs2MissionErrorResolver.h"
 #include "Interfaces/IHttpResponse.h"
 
 namespace Gs2::Mission::Task::Rest
@@ -162,11 +162,6 @@ namespace Gs2::Mission::Task::Rest
 
     void FDecreaseCounterByUserIdTask::OnError(Core::Model::FGs2ErrorPtr Error)
     {
-        if (Error->Count() > 0 && Error->Detail(0)->Code() == "counter.increase.conflict") {
-            TGs2Future<Result::FDecreaseCounterByUserIdResult>::OnError(MakeShared<Mission::Error::FConflictError>(Error));
-        }
-        else {
-            TGs2Future<Result::FDecreaseCounterByUserIdResult>::OnError(Error);
-        }
+        TGs2Future<Result::FDecreaseCounterByUserIdResult>::OnError(FGs2MissionErrorResolver::Resolve(TEXT("DecreaseCounterByUserId"), Error));
     }
 }

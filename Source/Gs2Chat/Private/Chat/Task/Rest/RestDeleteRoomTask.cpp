@@ -22,7 +22,7 @@
 #include "Core/Gs2Constant.h"
 #include "Core/Net/Rest/Gs2RestSession.h"
 #include "Core/Net/Rest/RestResponseState.h"
-#include "Chat/Error/NoAccessPrivilegesError.h"
+#include "Chat/Gs2ChatErrorResolver.h"
 #include "Interfaces/IHttpResponse.h"
 
 namespace Gs2::Chat::Task::Rest
@@ -149,11 +149,6 @@ namespace Gs2::Chat::Task::Rest
 
     void FDeleteRoomTask::OnError(Core::Model::FGs2ErrorPtr Error)
     {
-        if (Error->Count() > 0 && Error->Detail(0)->Code() == "room.allowUserIds.notInclude") {
-            TGs2Future<Result::FDeleteRoomResult>::OnError(MakeShared<Chat::Error::FNoAccessPrivilegesError>(Error));
-        }
-        else {
-            TGs2Future<Result::FDeleteRoomResult>::OnError(Error);
-        }
+        TGs2Future<Result::FDeleteRoomResult>::OnError(FGs2ChatErrorResolver::Resolve(TEXT("DeleteRoom"), Error));
     }
 }

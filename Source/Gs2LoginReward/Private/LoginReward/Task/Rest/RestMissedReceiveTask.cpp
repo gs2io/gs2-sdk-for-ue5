@@ -22,7 +22,7 @@
 #include "Core/Gs2Constant.h"
 #include "Core/Net/Rest/Gs2RestSession.h"
 #include "Core/Net/Rest/RestResponseState.h"
-#include "LoginReward/Error/AlreadyReceivedError.h"
+#include "LoginReward/Gs2LoginRewardErrorResolver.h"
 #include "Interfaces/IHttpResponse.h"
 
 namespace Gs2::LoginReward::Task::Rest
@@ -166,11 +166,6 @@ namespace Gs2::LoginReward::Task::Rest
 
     void FMissedReceiveTask::OnError(Core::Model::FGs2ErrorPtr Error)
     {
-        if (Error->Count() > 0 && Error->Detail(0)->Code() == "loginReward.bonus.alreadyReceived") {
-            TGs2Future<Result::FMissedReceiveResult>::OnError(MakeShared<LoginReward::Error::FAlreadyReceivedError>(Error));
-        }
-        else {
-            TGs2Future<Result::FMissedReceiveResult>::OnError(Error);
-        }
+        TGs2Future<Result::FMissedReceiveResult>::OnError(FGs2LoginRewardErrorResolver::Resolve(TEXT("MissedReceive"), Error));
     }
 }

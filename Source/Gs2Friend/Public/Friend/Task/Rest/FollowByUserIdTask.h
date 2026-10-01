@@ -39,6 +39,8 @@ namespace Gs2::Friend::Task::Rest
         virtual ~FFollowByUserIdTask() override = default;
 
         virtual Core::Model::FGs2ErrorPtr Action(const TSharedPtr<Result::FFollowByUserIdResultPtr> Result) override;
+    protected:
+        virtual void OnError(Core::Model::FGs2ErrorPtr Error) override;
     };
     typedef TSharedPtr<FFollowByUserIdTask, ESPMode::ThreadSafe> FFollowByUserIdTaskPtr;
 }

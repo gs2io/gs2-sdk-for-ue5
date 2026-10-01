@@ -17,6 +17,7 @@
 #include "../Public/Core/Domain/Transaction/AutoTransactionAccessTokenDomain.h"
 
 #include "Core/Domain/Gs2.h"
+#include "Core/Model/Gs2ErrorResolver.h"
 #include "Distributor/Domain/Gs2Distributor.h"
 #include "Distributor/Model/Cache/TransactionResult.h"
 #include "Misc/ScopeLock.h"
@@ -27,14 +28,18 @@ namespace Gs2::Core::Domain
 	{
 		Gs2::Core::Model::FGs2ErrorPtr ValidateAccessTokenStatus(
 			const TOptional<int32>& StatusCode,
-			const TOptional<FString>& Body
+			const TOptional<FString>& Body,
+			const TOptional<FString>& Action = TOptional<FString>()
 		)
 		{
 			if (!StatusCode.IsSet() || *StatusCode < 200 || *StatusCode >= 300)
 			{
-				return Gs2::Core::Model::FGs2Error::FromResponse(
-					StatusCode.IsSet() ? *StatusCode : 999,
-					Body.IsSet() ? *Body : FString()
+				return Gs2::Core::Model::FGs2ErrorResolver::ResolveAction(
+					Action.IsSet() ? *Action : FString(),
+					Gs2::Core::Model::FGs2Error::FromResponse(
+						StatusCode.IsSet() ? *StatusCode : 999,
+						Body.IsSet() ? *Body : FString()
+					)
 				);
 			}
 			return nullptr;
@@ -45,7 +50,9 @@ namespace Gs2::Core::Domain
 			return ValidateAccessTokenStatus(TOptional<int32>(), TOptional<FString>());
 		}
 
+		template <typename RequestType>
 		Gs2::Core::Model::FGs2ErrorPtr ValidateAccessTokenStampEntries(
+			const TSharedPtr<TArray<TSharedPtr<RequestType>>>& Requests,
 			const int32 RequestCount,
 			const int32 BodyCount,
 			const TSharedPtr<TArray<int32>>& Codes,
@@ -59,7 +66,10 @@ namespace Gs2::Core::Domain
 				const TOptional<int32> Status = Codes.IsValid() && Index < CodeCount
 					? TOptional<int32>((*Codes)[Index])
 					: TOptional<int32>();
-				const auto Error = ValidateAccessTokenStatus(Status, TOptional<FString>((*Bodies)[Index]));
+				const TOptional<FString> Action = Requests.IsValid() && Index < Requests->Num() && (*Requests)[Index].IsValid()
+					? (*Requests)[Index]->GetAction()
+					: TOptional<FString>();
+				const auto Error = ValidateAccessTokenStatus(Status, TOptional<FString>((*Bodies)[Index]), Action);
 				if (Error.IsValid())
 				{
 					return Error;
@@ -87,7 +97,7 @@ namespace Gs2::Core::Domain
 				for (const auto& Item : *VerifyResults)
 				{
 					if (!Item.IsValid()) return MissingAccessTokenResult();
-					const auto Error = ValidateAccessTokenStatus(Item->GetStatusCode(), Item->GetVerifyResult());
+					const auto Error = ValidateAccessTokenStatus(Item->GetStatusCode(), Item->GetVerifyResult(), Item->GetAction());
 					if (Error.IsValid()) return Error;
 				}
 			}
@@ -97,7 +107,7 @@ namespace Gs2::Core::Domain
 				for (const auto& Item : *ConsumeResults)
 				{
 					if (!Item.IsValid()) return MissingAccessTokenResult();
-					const auto Error = ValidateAccessTokenStatus(Item->GetStatusCode(), Item->GetConsumeResult());
+					const auto Error = ValidateAccessTokenStatus(Item->GetStatusCode(), Item->GetConsumeResult(), Item->GetAction());
 					if (Error.IsValid()) return Error;
 				}
 			}
@@ -107,7 +117,7 @@ namespace Gs2::Core::Domain
 				for (const auto& Item : *AcquireResults)
 				{
 					if (!Item.IsValid()) return MissingAccessTokenResult();
-					const auto Error = ValidateAccessTokenStatus(Item->GetStatusCode(), Item->GetAcquireResult());
+					const auto Error = ValidateAccessTokenStatus(Item->GetStatusCode(), Item->GetAcquireResult(), Item->GetAction());
 					if (Error.IsValid()) return Error;
 				}
 			}
@@ -197,6 +207,7 @@ namespace Gs2::Core::Domain
 			}
 		}
 		Error = ValidateAccessTokenStampEntries(
+			VerifyRequests,
 			VerifyRequests.IsValid() ? VerifyRequests->Num() : 0,
 			VerifyBodies.IsValid() ? VerifyBodies->Num() : 0,
 			VerifyCodes,
@@ -219,6 +230,7 @@ namespace Gs2::Core::Domain
 			}
 		}
 		Error = ValidateAccessTokenStampEntries(
+			TaskRequests,
 			TaskRequests.IsValid() ? TaskRequests->Num() : 0,
 			TaskBodies.IsValid() ? TaskBodies->Num() : 0,
 			TaskCodes,
@@ -228,7 +240,11 @@ namespace Gs2::Core::Domain
 
 		if (Result->GetSheetResult().IsSet() || Result->GetSheetResultCode().IsSet())
 		{
-			Error = ValidateAccessTokenStatus(Result->GetSheetResultCode(), Result->GetSheetResult());
+			Error = ValidateAccessTokenStatus(
+				Result->GetSheetResultCode(),
+				Result->GetSheetResult(),
+				Result->GetSheetRequest().IsValid() ? Result->GetSheetRequest()->GetAction() : TOptional<FString>()
+			);
 			if (Error.IsValid()) return nullptr;
 		}
 		const bool SkipCallback = MarkHandled();
@@ -347,7 +363,7 @@ namespace Gs2::Core::Domain
 					Error = MissingAccessTokenResult();
 					return nullptr;
 				}
-				Error = ValidateAccessTokenStatus(Item->GetStatusCode(), Item->GetVerifyResult());
+				Error = ValidateAccessTokenStatus(Item->GetStatusCode(), Item->GetVerifyResult(), Item->GetAction());
 				if (Error.IsValid())
 				{
 					return nullptr;
@@ -363,7 +379,7 @@ namespace Gs2::Core::Domain
 					Error = MissingAccessTokenResult();
 					return nullptr;
 				}
-				Error = ValidateAccessTokenStatus(Item->GetStatusCode(), Item->GetConsumeResult());
+				Error = ValidateAccessTokenStatus(Item->GetStatusCode(), Item->GetConsumeResult(), Item->GetAction());
 				if (Error.IsValid())
 				{
 					return nullptr;
@@ -379,7 +395,7 @@ namespace Gs2::Core::Domain
 					Error = MissingAccessTokenResult();
 					return nullptr;
 				}
-				Error = ValidateAccessTokenStatus(Item->GetStatusCode(), Item->GetAcquireResult());
+				Error = ValidateAccessTokenStatus(Item->GetStatusCode(), Item->GetAcquireResult(), Item->GetAction());
 				if (Error.IsValid())
 				{
 					return nullptr;

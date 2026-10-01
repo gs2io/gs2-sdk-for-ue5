@@ -39,6 +39,8 @@ namespace Gs2::Exchange::Task::Rest
         virtual ~FAcquireTask() override = default;
 
         virtual Core::Model::FGs2ErrorPtr Action(const TSharedPtr<Result::FAcquireResultPtr> Result) override;
+    protected:
+        virtual void OnError(Core::Model::FGs2ErrorPtr Error) override;
     };
     typedef TSharedPtr<FAcquireTask, ESPMode::ThreadSafe> FAcquireTaskPtr;
 }

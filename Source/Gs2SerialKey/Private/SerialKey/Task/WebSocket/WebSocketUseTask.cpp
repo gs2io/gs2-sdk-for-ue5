@@ -20,8 +20,7 @@
 #include "Core/Gs2Constant.h"
 #include "Core/Net/WebSocket/Gs2WebSocketSession.h"
 #include "Core/Net/WebSocket/Task/WebSocketResult.h"
-#include "SerialKey/Error/AlreadyUsedError.h"
-#include "SerialKey/Error/CodeNotFoundError.h"
+#include "SerialKey/Gs2SerialKeyErrorResolver.h"
 
 namespace Gs2::SerialKey::Task::WebSocket
 {
@@ -79,14 +78,6 @@ namespace Gs2::SerialKey::Task::WebSocket
 
     void FUseTask::OnError(Core::Model::FGs2ErrorPtr Error)
     {
-        if (Error->Count() > 0 && Error->Detail(0)->Code() == "code.status.invalid") {
-            TGs2Future<Result::FUseResult>::OnError(MakeShared<SerialKey::Error::FAlreadyUsedError>(Error));
-        }
-        else if (Error->Count() > 0 && Error->Detail(0)->Code() == "code.code.notFound") {
-            TGs2Future<Result::FUseResult>::OnError(MakeShared<SerialKey::Error::FCodeNotFoundError>(Error));
-        }
-        else {
-            TGs2Future<Result::FUseResult>::OnError(Error);
-        }
+        TGs2Future<Result::FUseResult>::OnError(FGs2SerialKeyErrorResolver::Resolve(TEXT("Use"), Error));
     }
 }

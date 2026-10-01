@@ -39,6 +39,8 @@ namespace Gs2::Guild::Task::Rest
         virtual ~FCreateGuildByUserIdTask() override = default;
 
         virtual Core::Model::FGs2ErrorPtr Action(const TSharedPtr<Result::FCreateGuildByUserIdResultPtr> Result) override;
+    protected:
+        virtual void OnError(Core::Model::FGs2ErrorPtr Error) override;
     };
     typedef TSharedPtr<FCreateGuildByUserIdTask, ESPMode::ThreadSafe> FCreateGuildByUserIdTaskPtr;
 }

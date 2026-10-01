@@ -20,6 +20,7 @@
 #include "Core/Gs2Constant.h"
 #include "Core/Net/WebSocket/Gs2WebSocketSession.h"
 #include "Core/Net/WebSocket/Task/WebSocketResult.h"
+#include "SerialKey/Gs2SerialKeyErrorResolver.h"
 
 namespace Gs2::SerialKey::Task::WebSocket
 {
@@ -73,5 +74,10 @@ namespace Gs2::SerialKey::Task::WebSocket
         *Result = Result::FUseByUserIdResult::FromJson(WebSocketResult->Body());
 
         return nullptr;
+    }
+
+    void FUseByUserIdTask::OnError(Core::Model::FGs2ErrorPtr Error)
+    {
+        TGs2Future<Result::FUseByUserIdResult>::OnError(FGs2SerialKeyErrorResolver::Resolve(TEXT("UseByUserId"), Error));
     }
 }

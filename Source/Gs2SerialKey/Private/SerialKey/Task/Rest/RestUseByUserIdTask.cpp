@@ -22,6 +22,7 @@
 #include "Core/Gs2Constant.h"
 #include "Core/Net/Rest/Gs2RestSession.h"
 #include "Core/Net/Rest/RestResponseState.h"
+#include "SerialKey/Gs2SerialKeyErrorResolver.h"
 #include "Interfaces/IHttpResponse.h"
 
 namespace Gs2::SerialKey::Task::Rest
@@ -152,5 +153,10 @@ namespace Gs2::SerialKey::Task::Rest
             return MakeShared<Core::Model::FUnknownError>(Details);
         }
         return Core::Model::FGs2Error::FromResponse(ResponseCode, ResponseBody);
+    }
+
+    void FUseByUserIdTask::OnError(Core::Model::FGs2ErrorPtr Error)
+    {
+        TGs2Future<Result::FUseByUserIdResult>::OnError(FGs2SerialKeyErrorResolver::Resolve(TEXT("UseByUserId"), Error));
     }
 }

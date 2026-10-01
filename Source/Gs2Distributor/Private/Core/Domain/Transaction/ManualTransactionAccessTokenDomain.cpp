@@ -17,6 +17,7 @@
 #include "../Public/Core/Domain/Transaction/ManualTransactionAccessTokenDomain.h"
 
 #include "Core/Domain/Gs2.h"
+#include "Core/Model/Gs2ErrorResolver.h"
 #include "Misc/ScopeLock.h"
 #include "Distributor/Gs2DistributorRestClient.h"
 
@@ -198,7 +199,7 @@ namespace Gs2::Core::Domain
             	Future->StartSynchronousTask();
             	if (Future->GetTask().IsError())
             	{
-            		return Future->GetTask().Error();
+            		return Gs2::Core::Model::FGs2ErrorResolver::ResolveAction(stampTaskPayloadJson->GetStringField(ANSI_TO_TCHAR("action")), Future->GetTask().Error());
             	}
             	const auto FutureResult = Future->GetTask().Result();
                 contextStack = FutureResult->GetContextStack();
@@ -230,7 +231,7 @@ namespace Gs2::Core::Domain
                     		return RunImpl(Result);
                     	}
                     }
-            		return Future->GetTask().Error();
+            		return Gs2::Core::Model::FGs2ErrorResolver::ResolveAction(stampTaskPayloadJson->GetStringField(ANSI_TO_TCHAR("action")), Future->GetTask().Error());
             	}
                 auto FutureResult = Future->GetTask().Result();
                 contextStack = FutureResult->GetContextStack();
@@ -271,7 +272,7 @@ namespace Gs2::Core::Domain
             	Future->StartSynchronousTask();
             	if (Future->GetTask().IsError())
             	{
-            		return Future->GetTask().Error();
+            		return Gs2::Core::Model::FGs2ErrorResolver::ResolveAction(stampTaskPayloadJson->GetStringField(ANSI_TO_TCHAR("action")), Future->GetTask().Error());
             	}
             	const auto FutureResult = Future->GetTask().Result();
                 contextStack = FutureResult->GetContextStack();
@@ -303,7 +304,7 @@ namespace Gs2::Core::Domain
                     		return RunImpl(Result);
                     	}
                     }
-            		return Future->GetTask().Error();
+            		return Gs2::Core::Model::FGs2ErrorResolver::ResolveAction(stampTaskPayloadJson->GetStringField(ANSI_TO_TCHAR("action")), Future->GetTask().Error());
             	}
                 auto FutureResult = Future->GetTask().Result();
                 contextStack = FutureResult->GetContextStack();
@@ -331,7 +332,7 @@ namespace Gs2::Core::Domain
         	Future->StartSynchronousTask();
         	if (Future->GetTask().IsError())
         	{
-        		return Future->GetTask().Error();
+        		return Gs2::Core::Model::FGs2ErrorResolver::ResolveAction(StampSheetPayloadJson->GetStringField(ANSI_TO_TCHAR("action")), Future->GetTask().Error());
         	}
         	const auto FutureResult = Future->GetTask().Result();
             Gs2->TransactionConfiguration->AcquireActionEventHandler(
@@ -368,7 +369,7 @@ namespace Gs2::Core::Domain
         				return RunImpl(Result);
         			}
         		}
-        		return Future->GetTask().Error();
+        		return Gs2::Core::Model::FGs2ErrorResolver::ResolveAction(StampSheetPayloadJson->GetStringField(ANSI_TO_TCHAR("action")), Future->GetTask().Error());
         	}
             auto FutureResult = Future->GetTask().Result();
             Gs2->TransactionConfiguration->AcquireActionEventHandler(

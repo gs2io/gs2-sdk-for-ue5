@@ -39,6 +39,8 @@ namespace Gs2::Formation::Task::WebSocket
         virtual ~FSetPropertyFormWithSignatureTask() override = default;
 
         virtual Core::Model::FGs2ErrorPtr Action(const TSharedPtr<Result::FSetPropertyFormWithSignatureResultPtr> Result) override;
+    protected:
+        virtual void OnError(Core::Model::FGs2ErrorPtr Error) override;
     };
     typedef TSharedPtr<FSetPropertyFormWithSignatureTask, ESPMode::ThreadSafe> FSetPropertyFormWithSignatureTaskPtr;
 }

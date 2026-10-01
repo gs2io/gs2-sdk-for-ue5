@@ -22,6 +22,7 @@
 #include "Core/Gs2Constant.h"
 #include "Core/Net/Rest/Gs2RestSession.h"
 #include "Core/Net/Rest/RestResponseState.h"
+#include "Exchange/Gs2ExchangeErrorResolver.h"
 #include "Interfaces/IHttpResponse.h"
 
 namespace Gs2::Exchange::Task::Rest
@@ -157,5 +158,10 @@ namespace Gs2::Exchange::Task::Rest
             return MakeShared<Core::Model::FUnknownError>(Details);
         }
         return Core::Model::FGs2Error::FromResponse(ResponseCode, ResponseBody);
+    }
+
+    void FAcquireTask::OnError(Core::Model::FGs2ErrorPtr Error)
+    {
+        TGs2Future<Result::FAcquireResult>::OnError(FGs2ExchangeErrorResolver::Resolve(TEXT("Acquire"), Error));
     }
 }

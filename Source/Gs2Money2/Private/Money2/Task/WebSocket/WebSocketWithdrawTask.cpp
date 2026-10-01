@@ -20,8 +20,7 @@
 #include "Core/Gs2Constant.h"
 #include "Core/Net/WebSocket/Gs2WebSocketSession.h"
 #include "Core/Net/WebSocket/Task/WebSocketResult.h"
-#include "Money2/Error/ConflictError.h"
-#include "Money2/Error/InsufficientError.h"
+#include "Money2/Gs2Money2ErrorResolver.h"
 
 namespace Gs2::Money2::Task::WebSocket
 {
@@ -79,14 +78,6 @@ namespace Gs2::Money2::Task::WebSocket
 
     void FWithdrawTask::OnError(Core::Model::FGs2ErrorPtr Error)
     {
-        if (Error->Count() > 0 && Error->Detail(0)->Code() == "wallet.operation.conflict") {
-            TGs2Future<Result::FWithdrawResult>::OnError(MakeShared<Money2::Error::FConflictError>(Error));
-        }
-        else if (Error->Count() > 0 && Error->Detail(0)->Code() == "wallet.balance.insufficient") {
-            TGs2Future<Result::FWithdrawResult>::OnError(MakeShared<Money2::Error::FInsufficientError>(Error));
-        }
-        else {
-            TGs2Future<Result::FWithdrawResult>::OnError(Error);
-        }
+        TGs2Future<Result::FWithdrawResult>::OnError(FGs2Money2ErrorResolver::Resolve(TEXT("Withdraw"), Error));
     }
 }

@@ -20,7 +20,7 @@
 #include "Core/Gs2Constant.h"
 #include "Core/Net/WebSocket/Gs2WebSocketSession.h"
 #include "Core/Net/WebSocket/Task/WebSocketResult.h"
-#include "Guild/Error/GuildMasterRequiredError.h"
+#include "Guild/Gs2GuildErrorResolver.h"
 
 namespace Gs2::Guild::Task::WebSocket
 {
@@ -78,11 +78,6 @@ namespace Gs2::Guild::Task::WebSocket
 
     void FDeleteMemberTask::OnError(Core::Model::FGs2ErrorPtr Error)
     {
-        if (Error->Count() > 0 && Error->Detail(0)->Code() == "guild.member.master.require") {
-            TGs2Future<Result::FDeleteMemberResult>::OnError(MakeShared<Guild::Error::FGuildMasterRequiredError>(Error));
-        }
-        else {
-            TGs2Future<Result::FDeleteMemberResult>::OnError(Error);
-        }
+        TGs2Future<Result::FDeleteMemberResult>::OnError(FGs2GuildErrorResolver::Resolve(TEXT("DeleteMember"), Error));
     }
 }

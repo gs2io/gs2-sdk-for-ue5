@@ -39,6 +39,8 @@ namespace Gs2::Ranking2::Task::WebSocket
         virtual ~FReceiveGlobalRankingReceivedRewardByUserIdTask() override = default;
 
         virtual Core::Model::FGs2ErrorPtr Action(const TSharedPtr<Result::FReceiveGlobalRankingReceivedRewardByUserIdResultPtr> Result) override;
+    protected:
+        virtual void OnError(Core::Model::FGs2ErrorPtr Error) override;
     };
     typedef TSharedPtr<FReceiveGlobalRankingReceivedRewardByUserIdTask, ESPMode::ThreadSafe> FReceiveGlobalRankingReceivedRewardByUserIdTaskPtr;
 }

@@ -20,7 +20,7 @@
 #include "Core/Gs2Constant.h"
 #include "Core/Net/WebSocket/Gs2WebSocketSession.h"
 #include "Core/Net/WebSocket/Task/WebSocketResult.h"
-#include "Money/Error/ConflictError.h"
+#include "Money/Gs2MoneyErrorResolver.h"
 
 namespace Gs2::Money::Task::WebSocket
 {
@@ -78,11 +78,6 @@ namespace Gs2::Money::Task::WebSocket
 
     void FDepositByUserIdTask::OnError(Core::Model::FGs2ErrorPtr Error)
     {
-        if (Error->Count() > 0 && Error->Detail(0)->Code() == "wallet.operation.conflict") {
-            TGs2Future<Result::FDepositByUserIdResult>::OnError(MakeShared<Money::Error::FConflictError>(Error));
-        }
-        else {
-            TGs2Future<Result::FDepositByUserIdResult>::OnError(Error);
-        }
+        TGs2Future<Result::FDepositByUserIdResult>::OnError(FGs2MoneyErrorResolver::Resolve(TEXT("DepositByUserId"), Error));
     }
 }

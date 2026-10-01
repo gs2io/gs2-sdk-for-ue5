@@ -20,8 +20,7 @@
 #include "Core/Gs2Constant.h"
 #include "Core/Net/WebSocket/Gs2WebSocketSession.h"
 #include "Core/Net/WebSocket/Task/WebSocketResult.h"
-#include "Guild/Error/MaximumJoinedGuildsReachedError.h"
-#include "Guild/Error/MaximumMembersReachedError.h"
+#include "Guild/Gs2GuildErrorResolver.h"
 
 namespace Gs2::Guild::Task::WebSocket
 {
@@ -79,14 +78,6 @@ namespace Gs2::Guild::Task::WebSocket
 
     void FAcceptRequestByGuildNameTask::OnError(Core::Model::FGs2ErrorPtr Error)
     {
-        if (Error->Count() > 0 && Error->Detail(0)->Code() == "user.joinedGuild.tooMany") {
-            TGs2Future<Result::FAcceptRequestByGuildNameResult>::OnError(MakeShared<Guild::Error::FMaximumJoinedGuildsReachedError>(Error));
-        }
-        else if (Error->Count() > 0 && Error->Detail(0)->Code() == "guild.members.tooMany") {
-            TGs2Future<Result::FAcceptRequestByGuildNameResult>::OnError(MakeShared<Guild::Error::FMaximumMembersReachedError>(Error));
-        }
-        else {
-            TGs2Future<Result::FAcceptRequestByGuildNameResult>::OnError(Error);
-        }
+        TGs2Future<Result::FAcceptRequestByGuildNameResult>::OnError(FGs2GuildErrorResolver::Resolve(TEXT("AcceptRequestByGuildName"), Error));
     }
 }

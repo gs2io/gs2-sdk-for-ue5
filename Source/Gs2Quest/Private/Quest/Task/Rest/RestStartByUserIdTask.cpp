@@ -22,7 +22,7 @@
 #include "Core/Gs2Constant.h"
 #include "Core/Net/Rest/Gs2RestSession.h"
 #include "Core/Net/Rest/RestResponseState.h"
-#include "Quest/Error/InProgressError.h"
+#include "Quest/Gs2QuestErrorResolver.h"
 #include "Interfaces/IHttpResponse.h"
 
 namespace Gs2::Quest::Task::Rest
@@ -176,11 +176,6 @@ namespace Gs2::Quest::Task::Rest
 
     void FStartByUserIdTask::OnError(Core::Model::FGs2ErrorPtr Error)
     {
-        if (Error->Count() > 0 && Error->Detail(0)->Code() == "quest.progress.exists") {
-            TGs2Future<Result::FStartByUserIdResult>::OnError(MakeShared<Quest::Error::FInProgressError>(Error));
-        }
-        else {
-            TGs2Future<Result::FStartByUserIdResult>::OnError(Error);
-        }
+        TGs2Future<Result::FStartByUserIdResult>::OnError(FGs2QuestErrorResolver::Resolve(TEXT("StartByUserId"), Error));
     }
 }

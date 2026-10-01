@@ -20,7 +20,7 @@
 #include "Core/Gs2Constant.h"
 #include "Core/Net/WebSocket/Gs2WebSocketSession.h"
 #include "Core/Net/WebSocket/Task/WebSocketResult.h"
-#include "Lottery/Error/EmptyError.h"
+#include "Lottery/Gs2LotteryErrorResolver.h"
 
 namespace Gs2::Lottery::Task::WebSocket
 {
@@ -78,11 +78,6 @@ namespace Gs2::Lottery::Task::WebSocket
 
     void FDrawByUserIdTask::OnError(Core::Model::FGs2ErrorPtr Error)
     {
-        if (Error->Count() > 0 && Error->Detail(0)->Code() == "box.items.empty") {
-            TGs2Future<Result::FDrawByUserIdResult>::OnError(MakeShared<Lottery::Error::FEmptyError>(Error));
-        }
-        else {
-            TGs2Future<Result::FDrawByUserIdResult>::OnError(Error);
-        }
+        TGs2Future<Result::FDrawByUserIdResult>::OnError(FGs2LotteryErrorResolver::Resolve(TEXT("DrawByUserId"), Error));
     }
 }

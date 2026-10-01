@@ -22,7 +22,7 @@
 #include "Core/Gs2Constant.h"
 #include "Core/Net/Rest/Gs2RestSession.h"
 #include "Core/Net/Rest/RestResponseState.h"
-#include "StateMachine/Error/StateMismatchError.h"
+#include "StateMachine/Gs2StateMachineErrorResolver.h"
 #include "Interfaces/IHttpResponse.h"
 
 namespace Gs2::StateMachine::Task::Rest
@@ -162,11 +162,6 @@ namespace Gs2::StateMachine::Task::Rest
 
     void FReportTask::OnError(Core::Model::FGs2ErrorPtr Error)
     {
-        if (Error->Count() > 0 && Error->Detail(0)->Code() == "stateMachine.state.mismatch") {
-            TGs2Future<Result::FReportResult>::OnError(MakeShared<StateMachine::Error::FStateMismatchError>(Error));
-        }
-        else {
-            TGs2Future<Result::FReportResult>::OnError(Error);
-        }
+        TGs2Future<Result::FReportResult>::OnError(FGs2StateMachineErrorResolver::Resolve(TEXT("Report"), Error));
     }
 }

@@ -39,6 +39,8 @@ namespace Gs2::Formation::Task::Rest
         virtual ~FSetFormByUserIdTask() override = default;
 
         virtual Core::Model::FGs2ErrorPtr Action(const TSharedPtr<Result::FSetFormByUserIdResultPtr> Result) override;
+    protected:
+        virtual void OnError(Core::Model::FGs2ErrorPtr Error) override;
     };
     typedef TSharedPtr<FSetFormByUserIdTask, ESPMode::ThreadSafe> FSetFormByUserIdTaskPtr;
 }

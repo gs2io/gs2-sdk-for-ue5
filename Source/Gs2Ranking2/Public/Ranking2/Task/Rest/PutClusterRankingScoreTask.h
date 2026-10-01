@@ -39,6 +39,8 @@ namespace Gs2::Ranking2::Task::Rest
         virtual ~FPutClusterRankingScoreTask() override = default;
 
         virtual Core::Model::FGs2ErrorPtr Action(const TSharedPtr<Result::FPutClusterRankingScoreResultPtr> Result) override;
+    protected:
+        virtual void OnError(Core::Model::FGs2ErrorPtr Error) override;
     };
     typedef TSharedPtr<FPutClusterRankingScoreTask, ESPMode::ThreadSafe> FPutClusterRankingScoreTaskPtr;
 }
