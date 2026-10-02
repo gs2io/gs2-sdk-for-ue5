@@ -69,11 +69,12 @@ namespace Gs2::Guild::Domain::Model
         GuildModelName(GuildModelName),
         AccessToken(AccessToken),
         FromUserId(FromUserId),
-        ParentKey(Gs2::Guild::Domain::Model::FGuildDomain::CreateCacheParentKey(
+        ParentKey(Gs2::Guild::Model::Cache::FReceiveMemberRequestCache::CreateCacheParentKey(
+
             NamespaceName,
             GuildModelName,
-            AccessToken->GetUserId(),
-            "ReceiveMemberRequest"
+            AccessToken.IsValid() ? GuildName() : TOptional<FString>(),
+            AccessToken.IsValid() ? AccessToken->GetTimeOffset() : TOptional<int32>()
         ))
     {
     }

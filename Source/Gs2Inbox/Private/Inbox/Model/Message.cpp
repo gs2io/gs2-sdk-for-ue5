@@ -513,7 +513,7 @@ namespace Gs2::Inbox::Model::Cache
         }
         CacheSnapshot->Put(Gs2::Inbox::Model::FMessage::TypeName, CacheOwnerParentKey, CacheOwnerKey, CacheOwnerValue,
             CacheOwnerValue.IsValid() && CacheOwnerValue->GetExpiresAt().IsSet() && CacheOwnerValue->GetExpiresAt().Get(0) != 0
-                ? FDateTime::FromUnixTimestamp(0) + FTimespan::FromMilliseconds(CacheOwnerValue->GetExpiresAt().Get(0))
+                ? Gs2::Core::Domain::ToCacheExpiry(CacheOwnerValue->GetExpiresAt().Get(0))
                 : FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
         );
     }

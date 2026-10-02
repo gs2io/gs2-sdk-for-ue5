@@ -562,7 +562,7 @@ namespace Gs2::Experience::Model::Cache
             const int64 CacheOwnerOldRevision = CacheOwnerExisting.IsValid() ? CacheOwnerExisting->GetRevision().Get(-1) : -1;
             const int64 CacheOwnerNewRevision = CacheOwnerValue.IsValid() ? CacheOwnerValue->GetRevision().Get(-1) : -1;
             if (CacheOwnerOldRevision > CacheOwnerNewRevision && CacheOwnerNewRevision > 1) return;
-            if (CacheOwnerOldRevision == CacheOwnerNewRevision) return;
+            if (CacheOwnerOldRevision == CacheOwnerNewRevision && CacheOwnerNewRevision != 0) return;
         }
         CacheSnapshot->Put(Gs2::Experience::Model::FStatus::TypeName, CacheOwnerParentKey, CacheOwnerKey, CacheOwnerValue,
             FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)

@@ -170,7 +170,7 @@ namespace Gs2::Inventory::Domain::Model
                     ParentKey,
                     Key,
                     ResultModel->GetItemSet(),
-                    ResultModel->GetItemSet()->GetExpiresAt().IsSet() && *ResultModel->GetItemSet()->GetExpiresAt() != 0 ? FDateTime::FromUnixTimestamp(*ResultModel->GetItemSet()->GetExpiresAt() / 1000) : FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
+                    ResultModel->GetItemSet()->GetExpiresAt().IsSet() && *ResultModel->GetItemSet()->GetExpiresAt() != 0 ? Gs2::Core::Domain::ToCacheExpiry(*ResultModel->GetItemSet()->GetExpiresAt()) : FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
                 );
             }
             if (ResultModel->GetItemModel() != nullptr)
@@ -280,7 +280,7 @@ namespace Gs2::Inventory::Domain::Model
                     ParentKey,
                     Key,
                     ResultModel->GetItemSet(),
-                    ResultModel->GetItemSet()->GetExpiresAt().IsSet() && *ResultModel->GetItemSet()->GetExpiresAt() != 0 ? FDateTime::FromUnixTimestamp(*ResultModel->GetItemSet()->GetExpiresAt() / 1000) : FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
+                    ResultModel->GetItemSet()->GetExpiresAt().IsSet() && *ResultModel->GetItemSet()->GetExpiresAt() != 0 ? Gs2::Core::Domain::ToCacheExpiry(*ResultModel->GetItemSet()->GetExpiresAt()) : FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
                 );
             }
             if (ResultModel->GetItemModel() != nullptr)

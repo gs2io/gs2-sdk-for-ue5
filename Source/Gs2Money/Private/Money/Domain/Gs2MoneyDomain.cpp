@@ -596,6 +596,13 @@ namespace Gs2::Money::Domain
                 );
                     }
 
+            Gs2->Cache->ClearListCache(
+                Gs2::Money::Model::FReceipt::TypeName,
+                Gs2::Money::Model::Cache::FReceiptCache::CreateCacheParentKey(
+                    RequestModel->GetNamespaceName(),
+                    ResultModel.IsValid() && ResultModel->GetItem().IsValid() ? ResultModel->GetItem()->GetUserId() : RequestModel->GetUserId()
+                )
+            );
         }
         if (Method == "RevertRecordReceipt") {
             TSharedPtr<FJsonObject> RequestModelJson;
@@ -720,6 +727,13 @@ namespace Gs2::Money::Domain
                 );
                     }
 
+            Gs2->Cache->ClearListCache(
+                Gs2::Money::Model::FReceipt::TypeName,
+                Gs2::Money::Model::Cache::FReceiptCache::CreateCacheParentKey(
+                    RequestModel->GetNamespaceName(),
+                    ResultModel.IsValid() && ResultModel->GetItem().IsValid() ? ResultModel->GetItem()->GetUserId() : RequestModel->GetUserId()
+                )
+            );
         }
         if (Method == "RecordReceipt") {
             TSharedPtr<FJsonObject> RequestModelJson;
@@ -812,6 +826,13 @@ namespace Gs2::Money::Domain
                 );
                     }
 
+            Gs2->Cache->ClearListCache(
+                Gs2::Money::Model::FReceipt::TypeName,
+                Gs2::Money::Model::Cache::FReceiptCache::CreateCacheParentKey(
+                    RequestModel->GetNamespaceName(),
+                    ResultModel.IsValid() && ResultModel->GetItem().IsValid() ? ResultModel->GetItem()->GetUserId() : RequestModel->GetUserId()
+                )
+            );
         }
         if (Method == "revert_record_receipt") {
             TSharedPtr<FJsonObject> RequestModelJson;

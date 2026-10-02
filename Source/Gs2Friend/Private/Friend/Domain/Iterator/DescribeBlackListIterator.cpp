@@ -91,20 +91,6 @@ namespace Gs2::Friend::Domain::Iterator
 
         if (!RangeIteratorOpt || (!*RangeIteratorOpt && !bLast))
         {
-            const auto ListParentKey = "friend:UserId";
-            if (!RangeIteratorOpt)
-            {
-                Range = Self->Gs2->Cache->TryGetList<Gs2::Friend::Model::FBlackListEntry>(ListParentKey);
-
-                if (Range)
-                {
-                    bLast = true;
-                    RangeIteratorOpt = Range->CreateIterator();
-                    PageToken = TOptional<FString>();
-                    bEnd = !static_cast<bool>(*RangeIteratorOpt) && bLast;
-                    return *this;
-                }
-            }
             const auto Future = Self->Client->DescribeBlackList(
                 MakeShared<Gs2::Friend::Request::FDescribeBlackListRequest>()
                     ->WithContextStack(Self->Gs2->DefaultContextStack)
@@ -134,29 +120,12 @@ namespace Gs2::Friend::Domain::Iterator
             {
                 Range->Add(MakeShared<Friend::Model::FBlackListEntry>(Item));
             }
-            for (auto Item : *R->GetItems())
-            {
-                Self->Gs2->Cache->Put(
-                    Gs2::Friend::Model::FBlackListEntry::TypeName,
-                    ListParentKey,
-                    Gs2::Friend::Domain::Model::FBlackListDomain::CreateCacheKey(
-                    ),
-                    MakeShared<Friend::Model::FBlackListEntry>(Item),
-                    FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
-                );
-            }
             if (Range)
             {
             }
             RangeIteratorOpt = Range->CreateIterator();
             PageToken = R->GetNextPageToken();
             bLast = !PageToken.IsSet();
-            if (bLast) {
-                Self->Gs2->Cache->SetListCached(
-                    Gs2::Friend::Model::FBlackListEntry::TypeName,
-                    ListParentKey
-                );
-            }
         }
 
         bEnd = bLast && !*RangeIteratorOpt;

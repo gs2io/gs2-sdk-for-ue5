@@ -611,13 +611,15 @@ namespace Gs2::Chat::Domain
             {
                 return;
             }
-            const auto ListParentKey = Gs2::Chat::Domain::Model::FRoomDomain::CreateCacheParentKey(
-                PayloadJson->GetStringField(ANSI_TO_TCHAR("namespaceName")),
-                TOptional<FString>("Singleton"),
-                PayloadJson->GetStringField(ANSI_TO_TCHAR("roomName")),
-                "Message"
+            Gs2->Cache->ClearListCache(
+                Gs2::Chat::Model::FMessage::TypeName,
+                Gs2::Chat::Model::Cache::FMessageCache::CreateCacheParentKey(
+                    PayloadJson->GetStringField(ANSI_TO_TCHAR("namespaceName")),
+                    TOptional<FString>(),
+                    PayloadJson->GetStringField(ANSI_TO_TCHAR("roomName")),
+                    TOptional<int32>()
+                )
             );
-            Gs2->Cache->ClearListCache(Gs2::Chat::Model::FMessage::TypeName, ListParentKey);
             PostNotificationEvent.Broadcast(Gs2::Chat::Model::FPostNotification::FromJson(PayloadJson));
         }
     }

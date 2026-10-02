@@ -42,6 +42,7 @@ namespace Gs2::Friend::Domain::Iterator
         const Gs2::Friend::FGs2FriendRestClientPtr Client,
         const TOptional<FString> NamespaceName,
         const TOptional<FString> UserId,
+        const TOptional<bool> WithProfile,
         const TOptional<FString> TimeOffsetToken
         // ReSharper disable once CppMemberInitializersOrder
     ):
@@ -49,6 +50,7 @@ namespace Gs2::Friend::Domain::Iterator
         Client(Client),
         NamespaceName(NamespaceName),
         UserId(UserId),
+        WithProfile(WithProfile),
         TimeOffsetToken(TimeOffsetToken)
     {
     }
@@ -60,6 +62,7 @@ namespace Gs2::Friend::Domain::Iterator
         Client(From.Client),
         NamespaceName(From.NamespaceName),
         UserId(From.UserId),
+        WithProfile(From.WithProfile),
         TimeOffsetToken(From.TimeOffsetToken)
     {
     }
@@ -104,7 +107,7 @@ namespace Gs2::Friend::Domain::Iterator
                 Self->UserId,
                 TOptional<int32>()
             );
-            if (!RangeIteratorOpt)
+            if (!RangeIteratorOpt && (!Self->WithProfile.Get(false)))
             {
                 Range = Self->Gs2->Cache->TryGetList<Gs2::Friend::Model::FSendFriendRequest>(ListParentKey);
 
@@ -122,6 +125,7 @@ namespace Gs2::Friend::Domain::Iterator
                     ->WithContextStack(Self->Gs2->DefaultContextStack)
                     ->WithNamespaceName(Self->NamespaceName)
                     ->WithUserId(Self->UserId)
+                    ->WithWithProfile(Self->WithProfile)
                     ->WithPageToken(PageToken)
                     ->WithLimit(FetchSize)
             ;
@@ -148,7 +152,8 @@ namespace Gs2::Friend::Domain::Iterator
                     {
                         ProjectedRange->Add(MakeShared<Gs2::Friend::Model::FSendFriendRequest>()
                             ->WithUserId(Item->GetUserId())
-                            ->WithTargetUserId(Item->GetTargetUserId()));
+                            ->WithTargetUserId(Item->GetTargetUserId())
+                            ->WithPublicProfile(Item->GetPublicProfile()));
                     }
                     else
                     {
@@ -162,18 +167,21 @@ namespace Gs2::Friend::Domain::Iterator
             }
             Range = ProjectedRange;
             const auto ResultModel = R;
-
-
-            if (Range.IsValid())
+            if (!Self->WithProfile.Get(false))
             {
-                for (const auto& Item : *Range)
+
+
+                if (Range.IsValid())
                 {
-                    if (!Item.IsValid()) continue;
-                    Gs2::Friend::Model::Cache::FSendFriendRequestCache::Put(
-                        Self->Gs2->Cache,
-                        Request->GetNamespaceName(), Request->GetUserId(), Item->GetTargetUserId(),
-                        TOptional<int32>(), Item
-                    );
+                    for (const auto& Item : *Range)
+                    {
+                        if (!Item.IsValid()) continue;
+                        Gs2::Friend::Model::Cache::FSendFriendRequestCache::Put(
+                            Self->Gs2->Cache,
+                            Request->GetNamespaceName(), Request->GetUserId(), Item->GetTargetUserId(),
+                            TOptional<int32>(), Item
+                        );
+                    }
                 }
             }
             if (Range)
@@ -182,7 +190,7 @@ namespace Gs2::Friend::Domain::Iterator
             RangeIteratorOpt = Range->CreateIterator();
             PageToken = R->GetNextPageToken();
             bLast = !PageToken.IsSet();
-            if (bLast) {
+            if (bLast && (!Self->WithProfile.Get(false))) {
                 Self->Gs2->Cache->SetListCached(
                     Gs2::Friend::Model::FSendFriendRequest::TypeName,
                     ListParentKey

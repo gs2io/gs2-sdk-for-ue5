@@ -379,7 +379,6 @@ namespace Gs2::Gateway::Model::Cache
             return false;
         }
         if (CacheOwnerArgumentOutItem) *CacheOwnerArgumentOutItem = nullptr;
-        if (!CacheOwnerArgumentUserId.IsSet()) return false;
         Gs2::Gateway::Model::FWebSocketSessionPtr CacheOwnerValue;
         const bool CacheOwnerFound = CacheSnapshot->TryGet<Gs2::Gateway::Model::FWebSocketSession>(
             CreateCacheParentKey(
@@ -420,7 +419,6 @@ namespace Gs2::Gateway::Model::Cache
             const int64 CacheOwnerOldRevision = CacheOwnerExisting.IsValid() ? CacheOwnerExisting->GetRevision().Get(-1) : -1;
             const int64 CacheOwnerNewRevision = CacheOwnerValue.IsValid() ? CacheOwnerValue->GetRevision().Get(-1) : -1;
             if (CacheOwnerOldRevision > CacheOwnerNewRevision && CacheOwnerNewRevision > 1) return;
-            if (CacheOwnerOldRevision == CacheOwnerNewRevision) return;
         }
         CacheSnapshot->Put(Gs2::Gateway::Model::FWebSocketSession::TypeName, CacheOwnerParentKey, CacheOwnerKey, CacheOwnerValue,
             FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
@@ -489,13 +487,6 @@ namespace Gs2::Gateway::Model::Cache
         }
         Gs2::Gateway::Model::FWebSocketSessionPtr CacheOwnerFetchedItem;
         const auto CacheOwnerError = FetchImplSnapshot(&CacheOwnerFetchedItem);
-        if ((!CacheOwnerError || CacheOwnerError->IsChildOf(Gs2::Core::Model::FNotFoundError::Class)) && !CacheOwnerArgumentUserId.IsSet())
-        {
-            if (CacheOwnerArgumentOutItem) *CacheOwnerArgumentOutItem = nullptr;
-            const auto Details = MakeShared<TArray<TSharedPtr<Gs2::Core::Model::FGs2ErrorDetail>>>();
-            Details->Add(MakeShared<Gs2::Core::Model::FGs2ErrorDetail>(TEXT("userId"), TEXT("userId is required."), TEXT("required")));
-            return MakeShared<Gs2::Core::Model::FBadRequestError>(Details);
-        }
         if (!CacheOwnerError)
         {
             Put(

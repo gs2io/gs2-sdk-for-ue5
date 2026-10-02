@@ -31,21 +31,25 @@ namespace Gs2::UE5::Friend::Domain::Iterator
         Gs2::Friend::Domain::Model::FUserAccessTokenDomainPtr Domain;
         Gs2::UE5::Util::IGameSessionPtr GameSession;
         Gs2::UE5::Util::FGs2ConnectionPtr Connection;
+        bool WithProfile;
 
 	public:
 
         explicit FEzDescribeReceiveRequestsIterator(
             Gs2::Friend::Domain::Model::FUserAccessTokenDomainPtr Domain,
             Gs2::UE5::Util::IGameSessionPtr GameSession,
-            Gs2::UE5::Util::FGs2ConnectionPtr Connection
+            Gs2::UE5::Util::FGs2ConnectionPtr Connection,
+            bool WithProfile
         ) :
             It(
                 Domain->ReceiveRequests(
+                    WithProfile
                 )
             ),
             Domain(Domain),
             GameSession(GameSession),
-            Connection(Connection)
+            Connection(Connection),
+            WithProfile(WithProfile)
         {
         }
 
@@ -55,7 +59,8 @@ namespace Gs2::UE5::Friend::Domain::Iterator
 			It(From.It),
 			Domain(From.Domain),
 			GameSession(From.GameSession),
-			Connection(From.Connection)
+			Connection(From.Connection),
+            WithProfile(From.WithProfile)
 		{
 		}
 

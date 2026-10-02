@@ -735,14 +735,12 @@ namespace Gs2::AdReward::Domain
             {
                 return;
             }
-            const auto ParentKey = Gs2::AdReward::Domain::Model::FUserDomain::CreateCacheParentKey(
+            Gs2::AdReward::Model::Cache::FPointCache::Delete(
+                Gs2->Cache,
                 PayloadJson->GetStringField(ANSI_TO_TCHAR("namespaceName")),
                 PayloadJson->GetStringField(ANSI_TO_TCHAR("userId")),
-                "Point"
+                TOptional<int32>()
             );
-            const auto Key = Gs2::AdReward::Domain::Model::FPointDomain::CreateCacheKey(
-            );
-            Gs2->Cache->Delete(Gs2::AdReward::Model::FPoint::TypeName, ParentKey, Key);
             ChangePointNotificationEvent.Broadcast(Gs2::AdReward::Model::FChangePointNotification::FromJson(PayloadJson));
         }
     }

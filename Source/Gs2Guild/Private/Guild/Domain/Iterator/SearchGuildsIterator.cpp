@@ -134,7 +134,7 @@ namespace Gs2::Guild::Domain::Iterator
                 if (Range)
                 {
                     Range->RemoveAll([this](const Gs2::Guild::Model::FGuildPtr& Item) { return Self->GuildModelName && Item->GetGuildModelName() != Self->GuildModelName; });
-                    Range->RemoveAll([this](const Gs2::Guild::Model::FGuildPtr& Item) { return Self->DisplayName && Item->GetDisplayName() != Self->DisplayName; });
+                    Range->RemoveAll([this](const Gs2::Guild::Model::FGuildPtr& Item) { return Self->DisplayName.IsSet() && (!Item->GetDisplayName().IsSet() || !Item->GetDisplayName()->Contains(*Self->DisplayName)); });
                     bLast = true;
                     RangeIteratorOpt = Range->CreateIterator();
                     PageToken = TOptional<FString>();
@@ -187,7 +187,7 @@ namespace Gs2::Guild::Domain::Iterator
                 }
             }
             Range->RemoveAll([this](const Gs2::Guild::Model::FGuildPtr& Item) { return Self->GuildModelName && Item->GetGuildModelName() != Self->GuildModelName; });
-            Range->RemoveAll([this](const Gs2::Guild::Model::FGuildPtr& Item) { return Self->DisplayName && Item->GetDisplayName() != Self->DisplayName; });
+            Range->RemoveAll([this](const Gs2::Guild::Model::FGuildPtr& Item) { return Self->DisplayName.IsSet() && (!Item->GetDisplayName().IsSet() || !Item->GetDisplayName()->Contains(*Self->DisplayName)); });
             RangeIteratorOpt = Range->CreateIterator();
             PageToken = R->GetNextPageToken();
             bLast = !PageToken.IsSet();

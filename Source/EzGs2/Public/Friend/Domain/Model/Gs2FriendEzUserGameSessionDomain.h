@@ -94,6 +94,7 @@ namespace Gs2::UE5::Friend::Domain::Model
                 , const TOptional<bool> WithProfile = TOptional<bool>());
 
         Gs2::UE5::Friend::Domain::Iterator::FEzDescribeSendRequestsIteratorPtr SendRequests(
+            const bool WithProfile = false
         ) const;
 
         Gs2::Core::Domain::CallbackID SubscribeSendRequests(TFunction<void()> Callback);
@@ -102,6 +103,7 @@ namespace Gs2::UE5::Friend::Domain::Model
                 Gs2::Core::Domain::CallbackID CallbackId);
 
         Gs2::UE5::Friend::Domain::Iterator::FEzDescribeReceiveRequestsIteratorPtr ReceiveRequests(
+            const bool WithProfile = false
         ) const;
 
         Gs2::Core::Domain::CallbackID SubscribeReceiveRequests(TFunction<void()> Callback);

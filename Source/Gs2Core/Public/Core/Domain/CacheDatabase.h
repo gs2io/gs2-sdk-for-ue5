@@ -33,7 +33,9 @@ namespace Gs2::Core::Domain
 
     // Configure this before starting SDK tasks; concurrent writes are unsupported.
     GS2CORE_API extern int32 DefaultCacheMinutes;
-    
+
+    GS2CORE_API FDateTime ToCacheExpiry(int64 UnixTimeMillis);
+
     class GS2CORE_API FCacheDatabase
     {
         struct FLockRegistry;

@@ -41,13 +41,15 @@ namespace Gs2::Friend::Domain::Iterator
         const TSharedPtr<Core::Domain::FGs2> Gs2,
         const Gs2::Friend::FGs2FriendRestClientPtr Client,
         const TOptional<FString> NamespaceName,
-        const Gs2::Auth::Model::FAccessTokenPtr AccessToken
+        const Gs2::Auth::Model::FAccessTokenPtr AccessToken,
+        const TOptional<bool> WithProfile
         // ReSharper disable once CppMemberInitializersOrder
     ):
         Gs2(Gs2),
         Client(Client),
         NamespaceName(NamespaceName),
-        AccessToken(AccessToken)
+        AccessToken(AccessToken),
+        WithProfile(WithProfile)
     {
     }
 
@@ -57,7 +59,8 @@ namespace Gs2::Friend::Domain::Iterator
         Gs2(From.Gs2),
         Client(From.Client),
         NamespaceName(From.NamespaceName),
-        AccessToken(From.AccessToken)
+        AccessToken(From.AccessToken),
+        WithProfile(From.WithProfile)
     {
     }
 
@@ -101,7 +104,7 @@ namespace Gs2::Friend::Domain::Iterator
                 Self->AccessToken.IsValid() ? Self->AccessToken->GetUserId() : TOptional<FString>(),
                 Self->AccessToken.IsValid() ? Self->AccessToken->GetTimeOffset() : TOptional<int32>()
             );
-            if (!RangeIteratorOpt)
+            if (!RangeIteratorOpt && (!Self->WithProfile.Get(false)))
             {
                 Range = Self->Gs2->Cache->TryGetList<Gs2::Friend::Model::FReceiveFriendRequest>(ListParentKey);
 
@@ -120,6 +123,7 @@ namespace Gs2::Friend::Domain::Iterator
                     ->WithContextStack(Self->Gs2->DefaultContextStack)
                     ->WithNamespaceName(Self->NamespaceName)
                     ->WithAccessToken(Self->AccessToken == nullptr ? TOptional<FString>() : Self->AccessToken->GetToken())
+                    ->WithWithProfile(Self->WithProfile)
                     ->WithPageToken(PageToken)
                     ->WithLimit(FetchSize)
             ;
@@ -146,7 +150,8 @@ namespace Gs2::Friend::Domain::Iterator
                     {
                         ProjectedRange->Add(MakeShared<Gs2::Friend::Model::FReceiveFriendRequest>()
                             ->WithUserId(Item->GetUserId())
-                            ->WithTargetUserId(Item->GetTargetUserId()));
+                            ->WithTargetUserId(Item->GetTargetUserId())
+                            ->WithPublicProfile(Item->GetPublicProfile()));
                     }
                     else
                     {
@@ -162,18 +167,21 @@ namespace Gs2::Friend::Domain::Iterator
             const auto CacheOwnerSnapshotUserId = Self->AccessToken.IsValid() ? Self->UserId() : TOptional<FString>();
             const auto CacheOwnerSnapshotTimeOffset = Self->AccessToken.IsValid() ? Self->AccessToken->GetTimeOffset() : TOptional<int32>();
             const auto ResultModel = R;
-
-
-            if (Range.IsValid())
+            if (!Self->WithProfile.Get(false))
             {
-                for (const auto& Item : *Range)
+
+
+                if (Range.IsValid())
                 {
-                    if (!Item.IsValid()) continue;
-                    Gs2::Friend::Model::Cache::FReceiveFriendRequestCache::Put(
-                        Self->Gs2->Cache,
-                        Request->GetNamespaceName(), CacheOwnerSnapshotUserId, Item->GetUserId(),
-                        CacheOwnerSnapshotTimeOffset, Item
-                    );
+                    for (const auto& Item : *Range)
+                    {
+                        if (!Item.IsValid()) continue;
+                        Gs2::Friend::Model::Cache::FReceiveFriendRequestCache::Put(
+                            Self->Gs2->Cache,
+                            Request->GetNamespaceName(), CacheOwnerSnapshotUserId, Item->GetUserId(),
+                            CacheOwnerSnapshotTimeOffset, Item
+                        );
+                    }
                 }
             }
             if (Range)
@@ -183,7 +191,7 @@ namespace Gs2::Friend::Domain::Iterator
             RangeIteratorOpt = Range->CreateIterator();
             PageToken = R->GetNextPageToken();
             bLast = !PageToken.IsSet();
-            if (bLast) {
+            if (bLast && (!Self->WithProfile.Get(false))) {
                 Self->Gs2->Cache->SetListCached(
                     Gs2::Friend::Model::FReceiveFriendRequest::TypeName,
                     Gs2::Friend::Model::Cache::FReceiveFriendRequestCache::CreateCacheParentKey(

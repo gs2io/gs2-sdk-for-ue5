@@ -32,6 +32,7 @@
 #include "Money/Domain/Model/Receipt.h"
 #include "Money/Domain/Model/ReceiptAccessToken.h"
 #include "Money/Model/Cache/Wallet.h"
+#include "Money/Model/Cache/Receipt.h"
 
 #include "Core/Domain/Gs2.h"
 #include "Core/Domain/Transaction/JobQueueJobDomainFactory.h"
@@ -207,6 +208,13 @@ namespace Gs2::Money::Domain::Model
             ResultModel->GetItem()
         );
             }
+        Self->Gs2->Cache->ClearListCache(
+            Gs2::Money::Model::FReceipt::TypeName,
+            Gs2::Money::Model::Cache::FReceiptCache::CreateCacheParentKey(
+                Request->GetNamespaceName(),
+                CacheOwnerSnapshotUserId
+            )
+        );
         auto Domain = Self;
         if (ResultModel != nullptr)
         {

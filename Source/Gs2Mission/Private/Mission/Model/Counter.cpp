@@ -325,6 +325,7 @@ namespace Gs2::Mission::Model
     FString FCounter::TypeName = "Counter";
 }
 #include "Mission/Model/Cache/Counter.h"
+#include "Mission/Model/Cache/Complete.h"
 
 namespace Gs2::Mission::Model::Cache
 {
@@ -410,10 +411,17 @@ namespace Gs2::Mission::Model::Cache
             const int64 CacheOwnerOldRevision = CacheOwnerExisting.IsValid() ? CacheOwnerExisting->GetRevision().Get(-1) : -1;
             const int64 CacheOwnerNewRevision = CacheOwnerValue.IsValid() ? CacheOwnerValue->GetRevision().Get(-1) : -1;
             if (CacheOwnerOldRevision > CacheOwnerNewRevision && CacheOwnerNewRevision > 1) return;
-            if (CacheOwnerOldRevision == CacheOwnerNewRevision) return;
         }
         CacheSnapshot->Put(Gs2::Mission::Model::FCounter::TypeName, CacheOwnerParentKey, CacheOwnerKey, CacheOwnerValue,
             FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
+        );
+        CacheSnapshot->ClearListCache(
+            Gs2::Mission::Model::FComplete::TypeName,
+            Gs2::Mission::Model::Cache::FCompleteCache::CreateCacheParentKey(
+                CacheOwnerArgumentNamespaceName,
+                CacheOwnerArgumentUserId,
+                CacheOwnerArgumentTimeOffset
+            )
         );
     }
 

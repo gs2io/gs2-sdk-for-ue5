@@ -689,12 +689,14 @@ namespace Gs2::Matchmaking::Domain
             {
                 return;
             }
-            const auto ListParentKey = Gs2::Matchmaking::Domain::Model::FUserDomain::CreateCacheParentKey(
-                PayloadJson->GetStringField(ANSI_TO_TCHAR("namespaceName")),
-                PayloadJson->GetStringField(ANSI_TO_TCHAR("userId")),
-                "Rating"
+            Gs2->Cache->ClearListCache(
+                Gs2::Matchmaking::Model::FRating::TypeName,
+                Gs2::Matchmaking::Model::Cache::FRatingCache::CreateCacheParentKey(
+                    PayloadJson->GetStringField(ANSI_TO_TCHAR("namespaceName")),
+                    PayloadJson->GetStringField(ANSI_TO_TCHAR("userId")),
+                    TOptional<int32>()
+                )
             );
-            Gs2->Cache->ClearListCache(Gs2::Matchmaking::Model::FRating::TypeName, ListParentKey);
             ChangeRatingNotificationEvent.Broadcast(Gs2::Matchmaking::Model::FChangeRatingNotification::FromJson(PayloadJson));
         }
     }

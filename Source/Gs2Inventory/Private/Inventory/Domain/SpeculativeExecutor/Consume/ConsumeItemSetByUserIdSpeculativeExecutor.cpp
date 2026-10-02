@@ -140,7 +140,7 @@ namespace
         }
         FItemSetEntryPtr Entry = MakeShared<Gs2::Inventory::Model::FItemSetEntry>(Remaining);
         const FDateTime Ttl = HasExpiry
-            ? FDateTime::FromUnixTimestamp(0) + FTimespan::FromMilliseconds(MinimumExpiry)
+            ? Gs2::Core::Domain::ToCacheExpiry(MinimumExpiry)
             : FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes);
         Cache->Put(
             Gs2::Inventory::Model::FItemSetEntry::TypeName,

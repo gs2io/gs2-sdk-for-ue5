@@ -851,13 +851,15 @@ namespace Gs2::Guild::Domain
             {
                 return;
             }
-            const auto ListParentKey = Gs2::Guild::Domain::Model::FGuildDomain::CreateCacheParentKey(
-                PayloadJson->GetStringField(ANSI_TO_TCHAR("namespaceName")),
-                PayloadJson->GetStringField(ANSI_TO_TCHAR("guildModelName")),
-                PayloadJson->GetStringField(ANSI_TO_TCHAR("guildName")),
-                "ReceiveMemberRequest"
+            Gs2->Cache->ClearListCache(
+                Gs2::Guild::Model::FReceiveMemberRequest::TypeName,
+                Gs2::Guild::Model::Cache::FReceiveMemberRequestCache::CreateCacheParentKey(
+                    PayloadJson->GetStringField(ANSI_TO_TCHAR("namespaceName")),
+                    PayloadJson->GetStringField(ANSI_TO_TCHAR("guildModelName")),
+                    PayloadJson->GetStringField(ANSI_TO_TCHAR("guildName")),
+                    TOptional<int32>()
+                )
             );
-            Gs2->Cache->ClearListCache(Gs2::Guild::Model::FReceiveMemberRequest::TypeName, ListParentKey);
             ReceiveRequestNotificationEvent.Broadcast(Gs2::Guild::Model::FReceiveRequestNotification::FromJson(PayloadJson));
         }
         if (Action == "RemoveRequestNotification") {

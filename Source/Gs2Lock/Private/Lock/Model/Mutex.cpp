@@ -401,11 +401,10 @@ namespace Gs2::Lock::Model::Cache
             const int64 CacheOwnerOldRevision = CacheOwnerExisting.IsValid() ? CacheOwnerExisting->GetRevision().Get(-1) : -1;
             const int64 CacheOwnerNewRevision = CacheOwnerValue.IsValid() ? CacheOwnerValue->GetRevision().Get(-1) : -1;
             if (CacheOwnerOldRevision > CacheOwnerNewRevision && CacheOwnerNewRevision > 1) return;
-            if (CacheOwnerOldRevision == CacheOwnerNewRevision) return;
         }
         CacheSnapshot->Put(Gs2::Lock::Model::FMutex::TypeName, CacheOwnerParentKey, CacheOwnerKey, CacheOwnerValue,
             CacheOwnerValue.IsValid() && CacheOwnerValue->GetTtlAt().IsSet() && CacheOwnerValue->GetTtlAt().Get(0) != 0
-                ? FDateTime::FromUnixTimestamp(0) + FTimespan::FromMilliseconds(CacheOwnerValue->GetTtlAt().Get(0))
+                ? Gs2::Core::Domain::ToCacheExpiry(CacheOwnerValue->GetTtlAt().Get(0))
                 : FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
         );
     }

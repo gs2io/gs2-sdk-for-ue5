@@ -191,6 +191,12 @@ namespace Gs2::Inbox::Domain::Model
             }
         }
 
+        Gs2::Inbox::Model::Cache::FReceivedCache::Delete(
+            Self->Gs2->Cache,
+            Request->GetNamespaceName(),
+            Request->GetUserId(),
+            TOptional<int32>()
+        );
         auto Domain = MakeShared<TArray<TSharedPtr<Gs2::Inbox::Domain::Model::FMessageDomain>>>();
         if (ResultModel.IsValid() && ResultModel->GetItem().IsValid())
         {

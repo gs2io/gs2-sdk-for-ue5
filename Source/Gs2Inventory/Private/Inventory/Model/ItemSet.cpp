@@ -512,7 +512,7 @@ namespace Gs2::Inventory::Model::Cache
                 }
             }
             return HasExpiry
-                ? FDateTime::FromUnixTimestamp(0) + FTimespan::FromMilliseconds(MinimumExpiry)
+                ? Gs2::Core::Domain::ToCacheExpiry(MinimumExpiry)
                 : FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes);
         }
 
@@ -674,7 +674,7 @@ namespace Gs2::Inventory::Model::Cache
         if (CacheOwnerValue.IsValid() && CacheOwnerValue->GetCount().IsSet() && CacheOwnerValue->GetCount().Get(0) == 0) CacheOwnerValue = nullptr;
         CacheSnapshot->Put(Gs2::Inventory::Model::FItemSet::TypeName, CacheOwnerParentKey, CacheOwnerKey, CacheOwnerValue,
             CacheOwnerValue.IsValid() && CacheOwnerValue->GetExpiresAt().IsSet() && CacheOwnerValue->GetExpiresAt().Get(0) != 0
-                ? FDateTime::FromUnixTimestamp(0) + FTimespan::FromMilliseconds(CacheOwnerValue->GetExpiresAt().Get(0))
+                ? Gs2::Core::Domain::ToCacheExpiry(CacheOwnerValue->GetExpiresAt().Get(0))
                 : FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
         );
     }

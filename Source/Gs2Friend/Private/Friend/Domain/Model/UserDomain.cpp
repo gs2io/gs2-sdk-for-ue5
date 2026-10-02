@@ -386,6 +386,7 @@ namespace Gs2::Friend::Domain::Model
     }
 
     Gs2::Friend::Domain::Iterator::FDescribeSendRequestsByUserIdIteratorPtr FUserDomain::SendRequests(
+        const TOptional<bool> WithProfile,
         const TOptional<FString> TimeOffsetToken
     ) const
     {
@@ -394,6 +395,7 @@ namespace Gs2::Friend::Domain::Model
             Client,
             NamespaceName,
             UserId,
+            WithProfile,
             TimeOffsetToken
         );
     }
@@ -431,14 +433,14 @@ namespace Gs2::Friend::Domain::Model
     {
         const TSharedPtr<FUserDomain> Self;
         const TFunction<void(TArray<Gs2::Friend::Model::FSendFriendRequestPtr>)> OnCollected;
-    const TOptional<FString> QueryTimeOffsetToken;
+    const TOptional<bool> QueryWithProfile;const TOptional<FString> QueryTimeOffsetToken;
     public:
-        explicit FCollectSendRequestsTask(const TSharedPtr<FUserDomain>& Self, TFunction<void(TArray<Gs2::Friend::Model::FSendFriendRequestPtr>)> OnCollected,const TOptional<FString> TimeOffsetToken) : Self(Self), OnCollected(OnCollected), QueryTimeOffsetToken(TimeOffsetToken) {}
-        FCollectSendRequestsTask(const FCollectSendRequestsTask& From) : TGs2Future(From), Self(From.Self), OnCollected(From.OnCollected), QueryTimeOffsetToken(From.QueryTimeOffsetToken) {}
+        explicit FCollectSendRequestsTask(const TSharedPtr<FUserDomain>& Self, TFunction<void(TArray<Gs2::Friend::Model::FSendFriendRequestPtr>)> OnCollected,const TOptional<bool> WithProfile,const TOptional<FString> TimeOffsetToken) : Self(Self), OnCollected(OnCollected), QueryWithProfile(WithProfile), QueryTimeOffsetToken(TimeOffsetToken) {}
+        FCollectSendRequestsTask(const FCollectSendRequestsTask& From) : TGs2Future(From), Self(From.Self), OnCollected(From.OnCollected), QueryWithProfile(From.QueryWithProfile), QueryTimeOffsetToken(From.QueryTimeOffsetToken) {}
         virtual Gs2::Core::Model::FGs2ErrorPtr Action(TSharedPtr<TSharedPtr<TArray<Gs2::Friend::Model::FSendFriendRequestPtr>>> Result) override
         {
             TArray<Gs2::Friend::Model::FSendFriendRequestPtr> Items;
-            auto Iterator = Self->SendRequests(QueryTimeOffsetToken)->begin();
+            auto Iterator = Self->SendRequests(QueryWithProfile, QueryTimeOffsetToken)->begin();
             while (Iterator.HasNext())
             {
                 if (Iterator.IsError()) return Iterator.Error();
@@ -453,13 +455,14 @@ namespace Gs2::Friend::Domain::Model
     };
 
     Gs2::Core::Domain::CallbackID FUserDomain::SubscribeSendRequests(
-        TFunction<void(TArray<Gs2::Friend::Model::FSendFriendRequestPtr>)> Callback,const TOptional<FString> TimeOffsetToken
+        TFunction<void(TArray<Gs2::Friend::Model::FSendFriendRequestPtr>)> Callback,const TOptional<bool> WithProfile,const TOptional<FString> TimeOffsetToken
     )
     {
         const TWeakPtr<Gs2::Core::Domain::FGs2> WeakGs2 = this->Gs2;
         const TWeakPtr<Friend::Domain::FGs2FriendDomain> WeakService = this->Service;
         const auto QueryNamespaceName = NamespaceName;
         const auto QueryUserId = UserId;
+        const auto QueryWithProfile = WithProfile;
         const auto QueryTimeOffsetToken = TimeOffsetToken;
         const auto Parent = Gs2::Friend::Model::Cache::FFriendRequestCache::CreateCacheParentKey(
         NamespaceName,
@@ -476,18 +479,18 @@ namespace Gs2::Friend::Domain::Model
                 for (const auto& Value : Values) if (Value.IsValid()) TypedValues.Add(StaticCastSharedPtr<Gs2::Friend::Model::FSendFriendRequest>(Value));
                 Callback(TypedValues);
             },
-            [WeakGs2, WeakService, Callback, QueryNamespaceName, QueryUserId, QueryTimeOffsetToken]()
+            [WeakGs2, WeakService, Callback, QueryNamespaceName, QueryUserId, QueryWithProfile, QueryTimeOffsetToken]()
             {
                 const auto Owner = WeakGs2.Pin();
                 if (!Owner.IsValid()) return;
                 const auto Domain = MakeShared<FUserDomain>(Owner, WeakService.Pin(), QueryNamespaceName, QueryUserId);
-                const auto Task = Gs2::Core::Util::New<FAsyncTask<FCollectSendRequestsTask>>(Domain, Callback, QueryTimeOffsetToken);
+                const auto Task = Gs2::Core::Util::New<FAsyncTask<FCollectSendRequestsTask>>(Domain, Callback, QueryWithProfile, QueryTimeOffsetToken);
                 Task->StartBackgroundTask();
             }
         );
     }
 
-    void FUserDomain::InvalidateSendRequests(const TOptional<FString> TimeOffsetToken)
+    void FUserDomain::InvalidateSendRequests(const TOptional<bool> WithProfile,const TOptional<FString> TimeOffsetToken)
     {
         Gs2->Cache->ClearListCache(
             Gs2::Friend::Model::FSendFriendRequest::TypeName,
@@ -499,21 +502,21 @@ namespace Gs2::Friend::Domain::Model
         );
     }
 
-    FUserDomain::FSubscribeSendRequestsWithInitialCallTask::FSubscribeSendRequestsWithInitialCallTask(const TSharedPtr<FUserDomain>& Self, TFunction<void(TArray<Gs2::Friend::Model::FSendFriendRequestPtr>)> Callback,const TOptional<FString> TimeOffsetToken) : Self(Self), Callback(Callback), QueryTimeOffsetToken(TimeOffsetToken) {}
-    FUserDomain::FSubscribeSendRequestsWithInitialCallTask::FSubscribeSendRequestsWithInitialCallTask(const FSubscribeSendRequestsWithInitialCallTask& From) : TGs2Future(From), Self(From.Self), Callback(From.Callback), QueryTimeOffsetToken(From.QueryTimeOffsetToken) {}
+    FUserDomain::FSubscribeSendRequestsWithInitialCallTask::FSubscribeSendRequestsWithInitialCallTask(const TSharedPtr<FUserDomain>& Self, TFunction<void(TArray<Gs2::Friend::Model::FSendFriendRequestPtr>)> Callback,const TOptional<bool> WithProfile,const TOptional<FString> TimeOffsetToken) : Self(Self), Callback(Callback), QueryWithProfile(WithProfile), QueryTimeOffsetToken(TimeOffsetToken) {}
+    FUserDomain::FSubscribeSendRequestsWithInitialCallTask::FSubscribeSendRequestsWithInitialCallTask(const FSubscribeSendRequestsWithInitialCallTask& From) : TGs2Future(From), Self(From.Self), Callback(From.Callback), QueryWithProfile(From.QueryWithProfile), QueryTimeOffsetToken(From.QueryTimeOffsetToken) {}
     Gs2::Core::Model::FGs2ErrorPtr FUserDomain::FSubscribeSendRequestsWithInitialCallTask::Action(TSharedPtr<TSharedPtr<Gs2::Core::Domain::CallbackID>> Result)
     {
-        const auto Task = Gs2::Core::Util::New<FAsyncTask<FCollectSendRequestsTask>>(Self, TFunction<void(TArray<Gs2::Friend::Model::FSendFriendRequestPtr>)>(), QueryTimeOffsetToken);
+        const auto Task = Gs2::Core::Util::New<FAsyncTask<FCollectSendRequestsTask>>(Self, TFunction<void(TArray<Gs2::Friend::Model::FSendFriendRequestPtr>)>(), QueryWithProfile, QueryTimeOffsetToken);
         Task->StartSynchronousTask(); Task->EnsureCompletion();
         if (Task->GetTask().IsError()) return Task->GetTask().Error();
         const auto Values = Task->GetTask().Result();
-        const auto CallbackId = Self->SubscribeSendRequests(Callback, QueryTimeOffsetToken);
+        const auto CallbackId = Self->SubscribeSendRequests(Callback, QueryWithProfile, QueryTimeOffsetToken);
         Callback(*Values); *Result = MakeShared<Gs2::Core::Domain::CallbackID>(CallbackId);
         return nullptr;
     }
-    TSharedPtr<FAsyncTask<FUserDomain::FSubscribeSendRequestsWithInitialCallTask>> FUserDomain::SubscribeSendRequestsWithInitialCall(TFunction<void(TArray<Gs2::Friend::Model::FSendFriendRequestPtr>)> Callback,const TOptional<FString> TimeOffsetToken)
+    TSharedPtr<FAsyncTask<FUserDomain::FSubscribeSendRequestsWithInitialCallTask>> FUserDomain::SubscribeSendRequestsWithInitialCall(TFunction<void(TArray<Gs2::Friend::Model::FSendFriendRequestPtr>)> Callback,const TOptional<bool> WithProfile,const TOptional<FString> TimeOffsetToken)
     {
-        return Gs2::Core::Util::New<FAsyncTask<FSubscribeSendRequestsWithInitialCallTask>>(this->AsShared(), Callback, TimeOffsetToken);
+        return Gs2::Core::Util::New<FAsyncTask<FSubscribeSendRequestsWithInitialCallTask>>(this->AsShared(), Callback, WithProfile, TimeOffsetToken);
     }
 
     TSharedPtr<Gs2::Friend::Domain::Model::FSendFriendRequestDomain> FUserDomain::SendFriendRequest(
@@ -530,6 +533,7 @@ namespace Gs2::Friend::Domain::Model
     }
 
     Gs2::Friend::Domain::Iterator::FDescribeReceiveRequestsByUserIdIteratorPtr FUserDomain::ReceiveRequests(
+        const TOptional<bool> WithProfile,
         const TOptional<FString> TimeOffsetToken
     ) const
     {
@@ -538,6 +542,7 @@ namespace Gs2::Friend::Domain::Model
             Client,
             NamespaceName,
             UserId,
+            WithProfile,
             TimeOffsetToken
         );
     }
@@ -575,14 +580,14 @@ namespace Gs2::Friend::Domain::Model
     {
         const TSharedPtr<FUserDomain> Self;
         const TFunction<void(TArray<Gs2::Friend::Model::FReceiveFriendRequestPtr>)> OnCollected;
-    const TOptional<FString> QueryTimeOffsetToken;
+    const TOptional<bool> QueryWithProfile;const TOptional<FString> QueryTimeOffsetToken;
     public:
-        explicit FCollectReceiveRequestsTask(const TSharedPtr<FUserDomain>& Self, TFunction<void(TArray<Gs2::Friend::Model::FReceiveFriendRequestPtr>)> OnCollected,const TOptional<FString> TimeOffsetToken) : Self(Self), OnCollected(OnCollected), QueryTimeOffsetToken(TimeOffsetToken) {}
-        FCollectReceiveRequestsTask(const FCollectReceiveRequestsTask& From) : TGs2Future(From), Self(From.Self), OnCollected(From.OnCollected), QueryTimeOffsetToken(From.QueryTimeOffsetToken) {}
+        explicit FCollectReceiveRequestsTask(const TSharedPtr<FUserDomain>& Self, TFunction<void(TArray<Gs2::Friend::Model::FReceiveFriendRequestPtr>)> OnCollected,const TOptional<bool> WithProfile,const TOptional<FString> TimeOffsetToken) : Self(Self), OnCollected(OnCollected), QueryWithProfile(WithProfile), QueryTimeOffsetToken(TimeOffsetToken) {}
+        FCollectReceiveRequestsTask(const FCollectReceiveRequestsTask& From) : TGs2Future(From), Self(From.Self), OnCollected(From.OnCollected), QueryWithProfile(From.QueryWithProfile), QueryTimeOffsetToken(From.QueryTimeOffsetToken) {}
         virtual Gs2::Core::Model::FGs2ErrorPtr Action(TSharedPtr<TSharedPtr<TArray<Gs2::Friend::Model::FReceiveFriendRequestPtr>>> Result) override
         {
             TArray<Gs2::Friend::Model::FReceiveFriendRequestPtr> Items;
-            auto Iterator = Self->ReceiveRequests(QueryTimeOffsetToken)->begin();
+            auto Iterator = Self->ReceiveRequests(QueryWithProfile, QueryTimeOffsetToken)->begin();
             while (Iterator.HasNext())
             {
                 if (Iterator.IsError()) return Iterator.Error();
@@ -597,13 +602,14 @@ namespace Gs2::Friend::Domain::Model
     };
 
     Gs2::Core::Domain::CallbackID FUserDomain::SubscribeReceiveRequests(
-        TFunction<void(TArray<Gs2::Friend::Model::FReceiveFriendRequestPtr>)> Callback,const TOptional<FString> TimeOffsetToken
+        TFunction<void(TArray<Gs2::Friend::Model::FReceiveFriendRequestPtr>)> Callback,const TOptional<bool> WithProfile,const TOptional<FString> TimeOffsetToken
     )
     {
         const TWeakPtr<Gs2::Core::Domain::FGs2> WeakGs2 = this->Gs2;
         const TWeakPtr<Friend::Domain::FGs2FriendDomain> WeakService = this->Service;
         const auto QueryNamespaceName = NamespaceName;
         const auto QueryUserId = UserId;
+        const auto QueryWithProfile = WithProfile;
         const auto QueryTimeOffsetToken = TimeOffsetToken;
         const auto Parent = Gs2::Friend::Model::Cache::FFriendRequestCache::CreateCacheParentKey(
         NamespaceName,
@@ -620,18 +626,18 @@ namespace Gs2::Friend::Domain::Model
                 for (const auto& Value : Values) if (Value.IsValid()) TypedValues.Add(StaticCastSharedPtr<Gs2::Friend::Model::FReceiveFriendRequest>(Value));
                 Callback(TypedValues);
             },
-            [WeakGs2, WeakService, Callback, QueryNamespaceName, QueryUserId, QueryTimeOffsetToken]()
+            [WeakGs2, WeakService, Callback, QueryNamespaceName, QueryUserId, QueryWithProfile, QueryTimeOffsetToken]()
             {
                 const auto Owner = WeakGs2.Pin();
                 if (!Owner.IsValid()) return;
                 const auto Domain = MakeShared<FUserDomain>(Owner, WeakService.Pin(), QueryNamespaceName, QueryUserId);
-                const auto Task = Gs2::Core::Util::New<FAsyncTask<FCollectReceiveRequestsTask>>(Domain, Callback, QueryTimeOffsetToken);
+                const auto Task = Gs2::Core::Util::New<FAsyncTask<FCollectReceiveRequestsTask>>(Domain, Callback, QueryWithProfile, QueryTimeOffsetToken);
                 Task->StartBackgroundTask();
             }
         );
     }
 
-    void FUserDomain::InvalidateReceiveRequests(const TOptional<FString> TimeOffsetToken)
+    void FUserDomain::InvalidateReceiveRequests(const TOptional<bool> WithProfile,const TOptional<FString> TimeOffsetToken)
     {
         Gs2->Cache->ClearListCache(
             Gs2::Friend::Model::FReceiveFriendRequest::TypeName,
@@ -643,21 +649,21 @@ namespace Gs2::Friend::Domain::Model
         );
     }
 
-    FUserDomain::FSubscribeReceiveRequestsWithInitialCallTask::FSubscribeReceiveRequestsWithInitialCallTask(const TSharedPtr<FUserDomain>& Self, TFunction<void(TArray<Gs2::Friend::Model::FReceiveFriendRequestPtr>)> Callback,const TOptional<FString> TimeOffsetToken) : Self(Self), Callback(Callback), QueryTimeOffsetToken(TimeOffsetToken) {}
-    FUserDomain::FSubscribeReceiveRequestsWithInitialCallTask::FSubscribeReceiveRequestsWithInitialCallTask(const FSubscribeReceiveRequestsWithInitialCallTask& From) : TGs2Future(From), Self(From.Self), Callback(From.Callback), QueryTimeOffsetToken(From.QueryTimeOffsetToken) {}
+    FUserDomain::FSubscribeReceiveRequestsWithInitialCallTask::FSubscribeReceiveRequestsWithInitialCallTask(const TSharedPtr<FUserDomain>& Self, TFunction<void(TArray<Gs2::Friend::Model::FReceiveFriendRequestPtr>)> Callback,const TOptional<bool> WithProfile,const TOptional<FString> TimeOffsetToken) : Self(Self), Callback(Callback), QueryWithProfile(WithProfile), QueryTimeOffsetToken(TimeOffsetToken) {}
+    FUserDomain::FSubscribeReceiveRequestsWithInitialCallTask::FSubscribeReceiveRequestsWithInitialCallTask(const FSubscribeReceiveRequestsWithInitialCallTask& From) : TGs2Future(From), Self(From.Self), Callback(From.Callback), QueryWithProfile(From.QueryWithProfile), QueryTimeOffsetToken(From.QueryTimeOffsetToken) {}
     Gs2::Core::Model::FGs2ErrorPtr FUserDomain::FSubscribeReceiveRequestsWithInitialCallTask::Action(TSharedPtr<TSharedPtr<Gs2::Core::Domain::CallbackID>> Result)
     {
-        const auto Task = Gs2::Core::Util::New<FAsyncTask<FCollectReceiveRequestsTask>>(Self, TFunction<void(TArray<Gs2::Friend::Model::FReceiveFriendRequestPtr>)>(), QueryTimeOffsetToken);
+        const auto Task = Gs2::Core::Util::New<FAsyncTask<FCollectReceiveRequestsTask>>(Self, TFunction<void(TArray<Gs2::Friend::Model::FReceiveFriendRequestPtr>)>(), QueryWithProfile, QueryTimeOffsetToken);
         Task->StartSynchronousTask(); Task->EnsureCompletion();
         if (Task->GetTask().IsError()) return Task->GetTask().Error();
         const auto Values = Task->GetTask().Result();
-        const auto CallbackId = Self->SubscribeReceiveRequests(Callback, QueryTimeOffsetToken);
+        const auto CallbackId = Self->SubscribeReceiveRequests(Callback, QueryWithProfile, QueryTimeOffsetToken);
         Callback(*Values); *Result = MakeShared<Gs2::Core::Domain::CallbackID>(CallbackId);
         return nullptr;
     }
-    TSharedPtr<FAsyncTask<FUserDomain::FSubscribeReceiveRequestsWithInitialCallTask>> FUserDomain::SubscribeReceiveRequestsWithInitialCall(TFunction<void(TArray<Gs2::Friend::Model::FReceiveFriendRequestPtr>)> Callback,const TOptional<FString> TimeOffsetToken)
+    TSharedPtr<FAsyncTask<FUserDomain::FSubscribeReceiveRequestsWithInitialCallTask>> FUserDomain::SubscribeReceiveRequestsWithInitialCall(TFunction<void(TArray<Gs2::Friend::Model::FReceiveFriendRequestPtr>)> Callback,const TOptional<bool> WithProfile,const TOptional<FString> TimeOffsetToken)
     {
-        return Gs2::Core::Util::New<FAsyncTask<FSubscribeReceiveRequestsWithInitialCallTask>>(this->AsShared(), Callback, TimeOffsetToken);
+        return Gs2::Core::Util::New<FAsyncTask<FSubscribeReceiveRequestsWithInitialCallTask>>(this->AsShared(), Callback, WithProfile, TimeOffsetToken);
     }
 
     TSharedPtr<Gs2::Friend::Domain::Model::FReceiveFriendRequestDomain> FUserDomain::ReceiveFriendRequest(

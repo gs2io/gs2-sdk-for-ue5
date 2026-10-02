@@ -465,7 +465,6 @@ namespace Gs2::Account::Model::Cache
             const int64 CacheOwnerOldRevision = CacheOwnerExisting.IsValid() ? CacheOwnerExisting->GetRevision().Get(-1) : -1;
             const int64 CacheOwnerNewRevision = CacheOwnerValue.IsValid() ? CacheOwnerValue->GetRevision().Get(-1) : -1;
             if (CacheOwnerOldRevision > CacheOwnerNewRevision && CacheOwnerNewRevision > 1) return;
-            if (CacheOwnerOldRevision == CacheOwnerNewRevision) return;
         }
         CacheSnapshot->Put(Gs2::Account::Model::FAccount::TypeName, CacheOwnerParentKey, CacheOwnerKey, CacheOwnerValue,
             FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)

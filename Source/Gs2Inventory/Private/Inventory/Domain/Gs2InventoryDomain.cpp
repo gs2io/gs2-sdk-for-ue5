@@ -751,7 +751,7 @@ namespace Gs2::Inventory::Domain
                 );
                 if (Item == nullptr || *Item->GetRevision() < *ResultModel->GetInventory()->GetRevision())
                 {
-                    int64 ExpiresAt = (FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)).ToUnixTimestamp() * 1000;
+                    int64 ExpiresAt = (FDateTime::UtcNow() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)).ToUnixTimestamp() * 1000;
                     for (auto Item2 : *ResultModel->GetItems())
                     {
                         if (Item2->GetExpiresAt().IsSet())
@@ -767,7 +767,7 @@ namespace Gs2::Inventory::Domain
                         ParentKey,
                         Key,
                         ResultModel->GetInventory(),
-                        FDateTime::FromUnixTimestamp(ExpiresAt / 1000)
+                        Gs2::Core::Domain::ToCacheExpiry(ExpiresAt)
                     );
                 }
             }
@@ -1327,7 +1327,7 @@ namespace Gs2::Inventory::Domain
                 );
                 if (Item == nullptr || *Item->GetRevision() < *ResultModel->GetInventory()->GetRevision())
                 {
-                    int64 ExpiresAt = (FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)).ToUnixTimestamp() * 1000;
+                    int64 ExpiresAt = (FDateTime::UtcNow() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)).ToUnixTimestamp() * 1000;
                     for (auto Item2 : *ResultModel->GetItems())
                     {
                         if (Item2->GetExpiresAt().IsSet())
@@ -1343,7 +1343,7 @@ namespace Gs2::Inventory::Domain
                         ParentKey,
                         Key,
                         ResultModel->GetInventory(),
-                        FDateTime::FromUnixTimestamp(ExpiresAt / 1000)
+                        Gs2::Core::Domain::ToCacheExpiry(ExpiresAt)
                     );
                 }
             }
@@ -1594,7 +1594,7 @@ namespace Gs2::Inventory::Domain
                 );
                 if (Item == nullptr || *Item->GetRevision() < *ResultModel->GetInventory()->GetRevision())
                 {
-                    int64 ExpiresAt = (FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)).ToUnixTimestamp() * 1000;
+                    int64 ExpiresAt = (FDateTime::UtcNow() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)).ToUnixTimestamp() * 1000;
                     for (auto Item2 : *ResultModel->GetItems())
                     {
                         if (Item2->GetExpiresAt().IsSet())
@@ -1610,7 +1610,7 @@ namespace Gs2::Inventory::Domain
                         ParentKey,
                         Key,
                         ResultModel->GetInventory(),
-                        FDateTime::FromUnixTimestamp(ExpiresAt / 1000)
+                        Gs2::Core::Domain::ToCacheExpiry(ExpiresAt)
                     );
                 }
             }

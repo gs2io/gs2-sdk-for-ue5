@@ -129,12 +129,14 @@ namespace Gs2::UE5::Friend::Domain::Model
     }
 
     Gs2::UE5::Friend::Domain::Iterator::FEzDescribeSendRequestsIteratorPtr FEzUserGameSessionDomain::SendRequests(
+        const bool WithProfile
     ) const
     {
         return MakeShared<Gs2::UE5::Friend::Domain::Iterator::FEzDescribeSendRequestsIterator>(
             Domain,
             GameSession,
-            ConnectionValue
+            ConnectionValue,
+            WithProfile
         );
     }
 
@@ -154,12 +156,14 @@ namespace Gs2::UE5::Friend::Domain::Model
     }
 
     Gs2::UE5::Friend::Domain::Iterator::FEzDescribeReceiveRequestsIteratorPtr FEzUserGameSessionDomain::ReceiveRequests(
+        const bool WithProfile
     ) const
     {
         return MakeShared<Gs2::UE5::Friend::Domain::Iterator::FEzDescribeReceiveRequestsIterator>(
             Domain,
             GameSession,
-            ConnectionValue
+            ConnectionValue,
+            WithProfile
         );
     }
 

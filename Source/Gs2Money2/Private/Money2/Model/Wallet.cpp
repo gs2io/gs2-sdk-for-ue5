@@ -481,7 +481,12 @@ namespace Gs2::Money2::Model::Cache
             const int64 CacheOwnerOldRevision = CacheOwnerExisting.IsValid() ? CacheOwnerExisting->GetRevision().Get(-1) : -1;
             const int64 CacheOwnerNewRevision = CacheOwnerValue.IsValid() ? CacheOwnerValue->GetRevision().Get(-1) : -1;
             if (CacheOwnerOldRevision > CacheOwnerNewRevision && CacheOwnerNewRevision > 1) return;
-            if (CacheOwnerOldRevision == CacheOwnerNewRevision) return;
+        }
+        if (CacheOwnerValue.IsValid() && CacheOwnerValue->GetSharedFreeCurrency().Get(false) &&
+            CacheOwnerArgumentSlot.Get(0) == 0 &&
+            CacheOwnerValue->GetRevision().Get(-1) != 0)
+        {
+            CacheSnapshot->ClearListCache(Gs2::Money2::Model::FWallet::TypeName, CacheOwnerParentKey);
         }
         CacheSnapshot->Put(Gs2::Money2::Model::FWallet::TypeName, CacheOwnerParentKey, CacheOwnerKey, CacheOwnerValue,
             FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)

@@ -37,6 +37,7 @@
 #include "Guild/Domain/Model/ReceiveMemberRequest.h"
 #include "Guild/Domain/Model/SendMemberRequest.h"
 #include "Guild/Domain/Model/SendMemberRequestAccessToken.h"
+#include "Guild/Model/Cache/ReceiveMemberRequest.h"
 
 #include "Core/Domain/Gs2.h"
 #include "Core/Domain/Transaction/JobQueueJobDomainFactory.h"
@@ -62,11 +63,11 @@ namespace Gs2::Guild::Domain::Model
         GuildModelName(GuildModelName),
         GuildName(GuildName),
         FromUserId(FromUserId),
-        ParentKey(Gs2::Guild::Domain::Model::FGuildDomain::CreateCacheParentKey(
+        ParentKey(Gs2::Guild::Model::Cache::FReceiveMemberRequestCache::CreateCacheParentKey(
             NamespaceName,
             GuildModelName,
             GuildName,
-            "ReceiveMemberRequest"
+            TOptional<int32>()
         ))
     {
     }
@@ -125,21 +126,14 @@ namespace Gs2::Guild::Domain::Model
             
             if (ResultModel->GetItem() != nullptr)
             {
-                const auto ParentKey = Gs2::Guild::Domain::Model::FGuildDomain::CreateCacheParentKey(
+                Gs2::Guild::Model::Cache::FReceiveMemberRequestCache::Put(
+                    Self->Gs2->Cache,
                     Self->NamespaceName,
                     Self->GuildModelName,
                     Self->GuildName,
-                    "ReceiveMemberRequest"
-                );
-                const auto Key = Gs2::Guild::Domain::Model::FReceiveMemberRequestDomain::CreateCacheKey(
-                    ResultModel->GetItem()->GetUserId()
-                );
-                Self->Gs2->Cache->Put(
-                    Gs2::Guild::Model::FReceiveMemberRequest::TypeName,
-                    ParentKey,
-                    Key,
-                    ResultModel->GetItem(),
-                    FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
+                    ResultModel->GetItem()->GetUserId(),
+                    TOptional<int32>(),
+                    ResultModel->GetItem()
                 );
             }
         }

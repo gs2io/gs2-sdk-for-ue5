@@ -565,7 +565,7 @@ namespace Gs2::Money2::Model::Cache
         }
         CacheSnapshot->Put(Gs2::Money2::Model::FSubscribeTransaction::TypeName, CacheOwnerParentKey, CacheOwnerKey, CacheOwnerValue,
             CacheOwnerValue.IsValid() && CacheOwnerValue->GetExpiresAt().IsSet() && CacheOwnerValue->GetExpiresAt().Get(0) != 0
-                ? FDateTime::FromUnixTimestamp(0) + FTimespan::FromMilliseconds(CacheOwnerValue->GetExpiresAt().Get(0))
+                ? Gs2::Core::Domain::ToCacheExpiry(CacheOwnerValue->GetExpiresAt().Get(0))
                 : FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
         );
     }

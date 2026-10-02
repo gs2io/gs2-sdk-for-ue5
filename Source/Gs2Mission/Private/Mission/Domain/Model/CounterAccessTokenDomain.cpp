@@ -149,7 +149,7 @@ namespace Gs2::Mission::Domain::Model
                     ),
                     ChangedComplete,
                     ChangedComplete->GetNextResetAt().IsSet() && *ChangedComplete->GetNextResetAt() != 0
-                        ? FDateTime::FromUnixTimestamp(*ChangedComplete->GetNextResetAt() / 1000)
+                        ? Gs2::Core::Domain::ToCacheExpiry(*ChangedComplete->GetNextResetAt())
                         : FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
                 );
             }

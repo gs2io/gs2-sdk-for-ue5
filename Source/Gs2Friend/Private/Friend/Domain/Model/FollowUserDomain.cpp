@@ -193,22 +193,17 @@ namespace Gs2::Friend::Domain::Model
         }
         const auto ResultModel = Future->GetTask().Result();
         Future->EnsureCompletion();
-
-              if (!ResultModel.IsValid() || !((ResultModel.IsValid() && ResultModel->GetItem().IsValid() ? ResultModel->GetItem()->GetUserId() : TOptional<FString>())).IsSet())
-                  {
-                    const auto Details = MakeShared<TArray<TSharedPtr<Gs2::Core::Model::FGs2ErrorDetail>>>();
-                      Details->Add(MakeShared<Gs2::Core::Model::FGs2ErrorDetail>(TEXT("userId"), TEXT("userId is invalid."), TEXT("invalid_response")));
-                      return MakeShared<Gs2::Core::Model::FUnknownError>(Details);
-                    }
-              Gs2::Friend::Model::Cache::FFollowUserCache::Delete(
-            Self->Gs2->Cache,
-
-            Request->GetNamespaceName(),
-            (ResultModel.IsValid() && ResultModel->GetItem().IsValid() ? ResultModel->GetItem()->GetUserId() : TOptional<FString>()),
-            TOptional<bool>(),
-            Request->GetTargetUserId(),
-            TOptional<int32>()
-        );
+        for (const auto& WithProfile : {TOptional<bool>(false), TOptional<bool>(true), TOptional<bool>()})
+        {
+            Gs2::Friend::Model::Cache::FFollowUserCache::Delete(
+                Self->Gs2->Cache,
+                Request->GetNamespaceName(),
+                Request->GetUserId(),
+                WithProfile,
+                Request->GetTargetUserId(),
+                TOptional<int32>()
+            );
+        }
         auto Domain = Self;
 
         *Result = Domain;

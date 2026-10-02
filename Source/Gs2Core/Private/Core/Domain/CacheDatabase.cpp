@@ -30,6 +30,12 @@ namespace Gs2::Core::Domain
 
 int32 DefaultCacheMinutes = 15;
 
+FDateTime ToCacheExpiry(const int64 UnixTimeMillis)
+{
+    const int64 NowUtcMillis = static_cast<int64>(FDateTime::UtcNow().ToUnixTimestampDecimal() * 1000.0);
+    return FDateTime::Now() + FTimespan::FromMilliseconds(static_cast<double>(UnixTimeMillis - NowUtcMillis));
+}
+
 struct FCacheDatabase::FLockRegistry
 {
     struct FLockEntry

@@ -397,6 +397,8 @@ namespace Gs2::Distributor::Model
     FString FTransactionResult::TypeName = "TransactionResult";
 }
 #include "Distributor/Model/Cache/TransactionResult.h"
+#include "Serialization/JsonReader.h"
+#include "Serialization/JsonSerializer.h"
 
 namespace Gs2::Distributor::Model::Cache
 {
@@ -482,11 +484,33 @@ namespace Gs2::Distributor::Model::Cache
             const int64 CacheOwnerOldRevision = CacheOwnerExisting.IsValid() ? CacheOwnerExisting->GetRevision().Get(-1) : -1;
             const int64 CacheOwnerNewRevision = CacheOwnerValue.IsValid() ? CacheOwnerValue->GetRevision().Get(-1) : -1;
             if (CacheOwnerOldRevision > CacheOwnerNewRevision && CacheOwnerNewRevision > 1) return;
-            if (CacheOwnerOldRevision == CacheOwnerNewRevision) return;
         }
         CacheSnapshot->Put(Gs2::Distributor::Model::FTransactionResult::TypeName, CacheOwnerParentKey, CacheOwnerKey, CacheOwnerValue,
             FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
         );
+        if (CacheOwnerValue.IsValid() && CacheOwnerValue->GetAcquireResults().IsValid())
+        {
+            for (const auto& CacheOwnerAcquireResult : *CacheOwnerValue->GetAcquireResults())
+            {
+                if (!CacheOwnerAcquireResult.IsValid() || !CacheOwnerAcquireResult->GetAcquireResult().IsSet()) continue;
+                TSharedPtr<FJsonObject> CacheOwnerAcquireResultJson;
+                if (const TSharedRef<TJsonReader<>> CacheOwnerJsonReader = TJsonReaderFactory<>::Create(*CacheOwnerAcquireResult->GetAcquireResult());
+                    !FJsonSerializer::Deserialize(CacheOwnerJsonReader, CacheOwnerAcquireResultJson) || !CacheOwnerAcquireResultJson.IsValid())
+                {
+                    continue;
+                }
+                const TSharedPtr<FJsonObject>* CacheOwnerNestedJson = nullptr;
+                if (!CacheOwnerAcquireResultJson->TryGetObjectField(TEXT("transactionResult"), CacheOwnerNestedJson) || CacheOwnerNestedJson == nullptr) continue;
+                Put(
+                    CacheOwnerArgumentCache,
+                    CacheOwnerArgumentNamespaceName,
+                    CacheOwnerArgumentUserId,
+                    CacheOwnerAcquireResult->GetAction(),
+                    CacheOwnerArgumentTimeOffset,
+                    Gs2::Distributor::Model::FTransactionResult::FromJson(*CacheOwnerNestedJson)
+                );
+            }
+        }
     }
 
     FString FTransactionResultCache::PutUserData(
