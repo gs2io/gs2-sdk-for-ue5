@@ -55,6 +55,7 @@ namespace Gs2::Script::Domain::Model
         TOptional<int32> Charged;
         TSharedPtr<TArray<FString>> Output;
         TOptional<FString> NextPageToken;
+        TSharedPtr<Gs2::Script::Model::FTransaction> Transaction;
         TOptional<FString> GetStatus() const
         {
             return Status;
@@ -82,6 +83,10 @@ namespace Gs2::Script::Domain::Model
         TOptional<FString> GetNextPageToken() const
         {
             return NextPageToken;
+        }
+        TSharedPtr<Gs2::Script::Model::FTransaction> GetTransaction() const
+        {
+            return Transaction;
         }
         TOptional<FString> NamespaceName;
     private:

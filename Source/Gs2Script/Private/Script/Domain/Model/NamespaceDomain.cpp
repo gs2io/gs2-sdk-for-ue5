@@ -395,6 +395,7 @@ namespace Gs2::Script::Domain::Model
                 Self->Charged = Domain->Charged = ResultModel->GetCharged();
             }
             Self->Output = Domain->Output = ResultModel->GetOutput();
+            Self->Transaction = Domain->Transaction = ResultModel->GetTransaction();
         }
         *Result = Domain;
         return nullptr;
@@ -456,6 +457,7 @@ namespace Gs2::Script::Domain::Model
                 Self->Charged = Domain->Charged = ResultModel->GetCharged();
             }
             Self->Output = Domain->Output = ResultModel->GetOutput();
+            Self->Transaction = Domain->Transaction = ResultModel->GetTransaction();
         }
         *Result = Domain;
         return nullptr;

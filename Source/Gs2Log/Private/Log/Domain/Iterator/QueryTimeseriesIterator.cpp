@@ -135,6 +135,8 @@ namespace Gs2::Log::Domain::Iterator
                     ->WithNamespaceName(Self->NamespaceName)
                     ->WithBegin(Self->Begin)
                     ->WithEnd(Self->End)
+                    ->WithQuery(Self->Query)
+                    ->WithGroupBy(Self->GroupBy)
                     ->WithAggregation(Self->Aggregation)
                     ->WithInterval(Self->Interval)
                     ->WithSeriesLimit(Self->SeriesLimit)
