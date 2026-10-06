@@ -18,13 +18,16 @@
 
 #include "CoreMinimal.h"
 #include "Core/Gs2Object.h"
+#include "UnleashRecipe.h"
 
 namespace Gs2::Enhance::Model
 {
     class GS2ENHANCE_API FUnleashRateEntryModel final : public FGs2Object, public TSharedFromThis<FUnleashRateEntryModel>
     {
         TOptional<int64> GradeValueValue;
+        TOptional<FString> TypeValue;
         TOptional<int32> NeedCountValue;
+        TSharedPtr<TArray<TSharedPtr<FUnleashRecipe>>> RecipesValue;
 
     public:
         FUnleashRateEntryModel();
@@ -34,12 +37,16 @@ namespace Gs2::Enhance::Model
         virtual ~FUnleashRateEntryModel() override = default;
 
         TSharedPtr<FUnleashRateEntryModel> WithGradeValue(const TOptional<int64> GradeValue);
+        TSharedPtr<FUnleashRateEntryModel> WithType(const TOptional<FString> Type);
         TSharedPtr<FUnleashRateEntryModel> WithNeedCount(const TOptional<int32> NeedCount);
+        TSharedPtr<FUnleashRateEntryModel> WithRecipes(const TSharedPtr<TArray<TSharedPtr<FUnleashRecipe>>> Recipes);
 
         TOptional<int64> GetGradeValue() const;
         FString GetGradeValueString() const;
+        TOptional<FString> GetType() const;
         TOptional<int32> GetNeedCount() const;
         FString GetNeedCountString() const;
+        TSharedPtr<TArray<TSharedPtr<FUnleashRecipe>>> GetRecipes() const;
 
 
         static TSharedPtr<FUnleashRateEntryModel> FromJson(const TSharedPtr<FJsonObject> Data);

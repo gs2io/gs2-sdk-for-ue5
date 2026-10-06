@@ -25,6 +25,7 @@ namespace Gs2::Enhance::Request
         MetadataValue(TOptional<FString>()),
         TargetInventoryModelIdValue(TOptional<FString>()),
         GradeModelIdValue(TOptional<FString>()),
+        GroupKeyHierarchyValue(nullptr),
         GradeEntriesValue(nullptr)
     {
     }
@@ -38,6 +39,7 @@ namespace Gs2::Enhance::Request
         MetadataValue(From.MetadataValue),
         TargetInventoryModelIdValue(From.TargetInventoryModelIdValue),
         GradeModelIdValue(From.GradeModelIdValue),
+        GroupKeyHierarchyValue(From.GroupKeyHierarchyValue),
         GradeEntriesValue(From.GradeEntriesValue)
     {
     }
@@ -98,6 +100,14 @@ namespace Gs2::Enhance::Request
         return SharedThis(this);
     }
 
+    TSharedPtr<FCreateUnleashRateModelMasterRequest> FCreateUnleashRateModelMasterRequest::WithGroupKeyHierarchy(
+        const TSharedPtr<TArray<FString>> GroupKeyHierarchy
+    )
+    {
+        this->GroupKeyHierarchyValue = GroupKeyHierarchy;
+        return SharedThis(this);
+    }
+
     TSharedPtr<FCreateUnleashRateModelMasterRequest> FCreateUnleashRateModelMasterRequest::WithGradeEntries(
         const TSharedPtr<TArray<TSharedPtr<Model::FUnleashRateEntryModel>>> GradeEntries
     )
@@ -139,6 +149,15 @@ namespace Gs2::Enhance::Request
     TOptional<FString> FCreateUnleashRateModelMasterRequest::GetGradeModelId() const
     {
         return GradeModelIdValue;
+    }
+
+    TSharedPtr<TArray<FString>> FCreateUnleashRateModelMasterRequest::GetGroupKeyHierarchy() const
+    {
+        if (!GroupKeyHierarchyValue.IsValid())
+        {
+            return nullptr;
+        }
+        return GroupKeyHierarchyValue;
     }
 
     TSharedPtr<TArray<TSharedPtr<Model::FUnleashRateEntryModel>>> FCreateUnleashRateModelMasterRequest::GetGradeEntries() const
@@ -211,6 +230,19 @@ namespace Gs2::Enhance::Request
                   }
                   return TOptional<FString>();
               }() : TOptional<FString>())
+          ->WithGroupKeyHierarchy(Data->HasField(ANSI_TO_TCHAR("groupKeyHierarchy")) ? [Data]() -> TSharedPtr<TArray<FString>>
+              {
+                  if (!Data->HasTypedField<EJson::Array>(ANSI_TO_TCHAR("groupKeyHierarchy")))
+                  {
+                      return nullptr;
+                  }
+                  auto v = MakeShared<TArray<FString>>();
+                  for (auto JsonObjectValue : Data->GetArrayField(ANSI_TO_TCHAR("groupKeyHierarchy")))
+                      {
+                      v->Add(JsonObjectValue->AsString());
+                      }
+                  return v;
+              }() : nullptr)
           ->WithGradeEntries(Data->HasField(ANSI_TO_TCHAR("gradeEntries")) ? [Data]() -> TSharedPtr<TArray<Model::FUnleashRateEntryModelPtr>>
               {
                   if (!Data->HasTypedField<EJson::Array>(ANSI_TO_TCHAR("gradeEntries")))
@@ -256,6 +288,15 @@ namespace Gs2::Enhance::Request
         if (GradeModelIdValue.IsSet())
         {
             JsonRootObject->SetStringField(TEXT("gradeModelId"), GradeModelIdValue.GetValue());
+        }
+        if (GroupKeyHierarchyValue != nullptr && GroupKeyHierarchyValue.IsValid())
+        {
+            TArray<TSharedPtr<FJsonValue>> v;
+            for (auto JsonObjectValue : *GroupKeyHierarchyValue)
+            {
+                v.Add(MakeShared<FJsonValueString>(JsonObjectValue));
+            }
+            JsonRootObject->SetArrayField(TEXT("groupKeyHierarchy"), v);
         }
         if (GradeEntriesValue != nullptr && GradeEntriesValue.IsValid())
         {

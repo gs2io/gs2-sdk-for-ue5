@@ -105,6 +105,15 @@ namespace Gs2::Enhance::Task::Rest
             {
                 JsonRootObject->SetStringField(TEXT("gradeModelId"), this->Request->GetGradeModelId().GetValue());
             }
+            if (this->Request->GetGroupKeyHierarchy() != nullptr && this->Request->GetGroupKeyHierarchy().IsValid())
+            {
+                TArray<TSharedPtr<FJsonValue>> v;
+                for (auto JsonObjectValue : *this->Request->GetGroupKeyHierarchy())
+                {
+                    v.Add(MakeShared<FJsonValueString>(JsonObjectValue));
+                }
+                JsonRootObject->SetArrayField(TEXT("groupKeyHierarchy"), v);
+            }
             if (this->Request->GetGradeEntries() != nullptr && this->Request->GetGradeEntries().IsValid())
             {
                 TArray<TSharedPtr<FJsonValue>> v;

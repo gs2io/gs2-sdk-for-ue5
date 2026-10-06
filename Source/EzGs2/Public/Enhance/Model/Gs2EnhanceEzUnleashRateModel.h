@@ -28,6 +28,7 @@ namespace Gs2::UE5::Enhance::Model
         TOptional<FString> MetadataValue;
         TOptional<FString> TargetInventoryModelIdValue;
         TOptional<FString> GradeModelIdValue;
+        TSharedPtr<TArray<FString>> GroupKeyHierarchyValue;
         TSharedPtr<TArray<TSharedPtr<Gs2::UE5::Enhance::Model::FEzUnleashRateEntryModel>>> GradeEntriesValue;
 
 	public:
@@ -35,6 +36,7 @@ namespace Gs2::UE5::Enhance::Model
         TSharedPtr<FEzUnleashRateModel> WithMetadata(const TOptional<FString> Metadata);
         TSharedPtr<FEzUnleashRateModel> WithTargetInventoryModelId(const TOptional<FString> TargetInventoryModelId);
         TSharedPtr<FEzUnleashRateModel> WithGradeModelId(const TOptional<FString> GradeModelId);
+        TSharedPtr<FEzUnleashRateModel> WithGroupKeyHierarchy(const TSharedPtr<TArray<FString>> GroupKeyHierarchy);
         TSharedPtr<FEzUnleashRateModel> WithGradeEntries(const TSharedPtr<TArray<TSharedPtr<Gs2::UE5::Enhance::Model::FEzUnleashRateEntryModel>>> GradeEntries);
 
         TOptional<FString> GetName() const;
@@ -44,6 +46,8 @@ namespace Gs2::UE5::Enhance::Model
         TOptional<FString> GetTargetInventoryModelId() const;
 
         TOptional<FString> GetGradeModelId() const;
+
+        TSharedPtr<TArray<FString>> GetGroupKeyHierarchy() const;
 
         TSharedPtr<TArray<TSharedPtr<Gs2::UE5::Enhance::Model::FEzUnleashRateEntryModel>>> GetGradeEntries() const;
 

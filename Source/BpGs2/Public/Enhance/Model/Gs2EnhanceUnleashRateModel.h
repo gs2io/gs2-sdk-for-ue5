@@ -44,6 +44,8 @@ struct FGs2EnhanceUnleashRateModelValue
     UPROPERTY(Category = Gs2, BlueprintReadOnly)
     FString GradeModelId = "";
     UPROPERTY(Category = Gs2, BlueprintReadOnly)
+    TArray<FString> GroupKeyHierarchy = TArray<FString>();
+    UPROPERTY(Category = Gs2, BlueprintReadOnly)
     TArray<FGs2EnhanceUnleashRateEntryModel> GradeEntries = TArray<FGs2EnhanceUnleashRateEntryModel>();
 };
 
@@ -60,6 +62,15 @@ inline FGs2EnhanceUnleashRateModelValue EzUnleashRateModelToFGs2EnhanceUnleashRa
     Value.Metadata = Model->GetMetadata() ? *Model->GetMetadata() : "";
     Value.TargetInventoryModelId = Model->GetTargetInventoryModelId() ? *Model->GetTargetInventoryModelId() : "";
     Value.GradeModelId = Model->GetGradeModelId() ? *Model->GetGradeModelId() : "";
+    Value.GroupKeyHierarchy = Model->GetGroupKeyHierarchy() ? [&]
+    {
+        TArray<FString> r;
+        for (auto v : *Model->GetGroupKeyHierarchy())
+        {
+            r.Add(v);
+        }
+        return r;
+    }() : TArray<FString>();
     Value.GradeEntries = Model->GetGradeEntries() ? [&]
     {
         TArray<FGs2EnhanceUnleashRateEntryModel> r;
@@ -81,6 +92,13 @@ inline Gs2::UE5::Enhance::Model::FEzUnleashRateModelPtr FGs2EnhanceUnleashRateMo
         ->WithMetadata(Model.Metadata)
         ->WithTargetInventoryModelId(Model.TargetInventoryModelId)
         ->WithGradeModelId(Model.GradeModelId)
+        ->WithGroupKeyHierarchy([&]{
+            auto r = MakeShared<TArray<FString>>();
+            for (auto v : Model.GroupKeyHierarchy) {
+                r->Add(v);
+            }
+            return r;
+        }())
         ->WithGradeEntries([&]{
             auto r = MakeShared<TArray<Gs2::UE5::Enhance::Model::FEzUnleashRateEntryModelPtr>>();
             for (auto v : Model.GradeEntries) {

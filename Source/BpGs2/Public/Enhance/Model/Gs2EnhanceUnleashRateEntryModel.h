@@ -19,6 +19,7 @@
 #include "CoreMinimal.h"
 
 #include "Enhance/Model/Gs2EnhanceEzUnleashRateEntryModel.h"
+#include "Enhance/Model/Gs2EnhanceUnleashRecipe.h"
 #include "Gs2EnhanceUnleashRateEntryModel.generated.h"
 
 USTRUCT(BlueprintType)
@@ -29,7 +30,11 @@ struct FGs2EnhanceUnleashRateEntryModel
     UPROPERTY(Category = Gs2, BlueprintReadWrite)
     int64 GradeValue = 0;
     UPROPERTY(Category = Gs2, BlueprintReadWrite)
+    FString Type = "";
+    UPROPERTY(Category = Gs2, BlueprintReadWrite)
     int32 NeedCount = 0;
+    UPROPERTY(Category = Gs2, BlueprintReadWrite)
+    TArray<FGs2EnhanceUnleashRecipe> Recipes = TArray<FGs2EnhanceUnleashRecipe>();
 };
 
 inline FGs2EnhanceUnleashRateEntryModel EzUnleashRateEntryModelToFGs2EnhanceUnleashRateEntryModel(
@@ -38,7 +43,16 @@ inline FGs2EnhanceUnleashRateEntryModel EzUnleashRateEntryModelToFGs2EnhanceUnle
 {
     FGs2EnhanceUnleashRateEntryModel Value;
     Value.GradeValue = Model->GetGradeValue() ? *Model->GetGradeValue() : 0;
+    Value.Type = Model->GetType() ? *Model->GetType() : "";
     Value.NeedCount = Model->GetNeedCount() ? *Model->GetNeedCount() : 0;
+    Value.Recipes = Model->GetRecipes() ? [&]
+    {
+        TArray<FGs2EnhanceUnleashRecipe> r;
+        for (auto v : *Model->GetRecipes())
+        {r.Add(EzUnleashRecipeToFGs2EnhanceUnleashRecipe(v));
+        }
+        return r;
+    }() : TArray<FGs2EnhanceUnleashRecipe>();
     return Value;
 }
 
@@ -48,5 +62,13 @@ inline Gs2::UE5::Enhance::Model::FEzUnleashRateEntryModelPtr FGs2EnhanceUnleashR
 {
     return MakeShared<Gs2::UE5::Enhance::Model::FEzUnleashRateEntryModel>()
         ->WithGradeValue(Model.GradeValue)
-        ->WithNeedCount(Model.NeedCount);
+        ->WithType(Model.Type)
+        ->WithNeedCount(Model.NeedCount)
+        ->WithRecipes([&]{
+            auto r = MakeShared<TArray<Gs2::UE5::Enhance::Model::FEzUnleashRecipePtr>>();
+            for (auto v : Model.Recipes) {
+                r->Add(FGs2EnhanceUnleashRecipeToEzUnleashRecipe(v));
+            }
+            return r;
+        }());
 }

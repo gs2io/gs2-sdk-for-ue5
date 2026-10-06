@@ -18,23 +18,32 @@
 
 #include "CoreMinimal.h"
 #include "Enhance/Model/UnleashRateEntryModel.h"
+#include "Gs2EnhanceEzUnleashRecipe.h"
 
 namespace Gs2::UE5::Enhance::Model
 {
 	class EZGS2_API FEzUnleashRateEntryModel final : public TSharedFromThis<FEzUnleashRateEntryModel>
 	{
         TOptional<int64> GradeValueValue;
+        TOptional<FString> TypeValue;
         TOptional<int32> NeedCountValue;
+        TSharedPtr<TArray<TSharedPtr<Gs2::UE5::Enhance::Model::FEzUnleashRecipe>>> RecipesValue;
 
 	public:
         TSharedPtr<FEzUnleashRateEntryModel> WithGradeValue(const TOptional<int64> GradeValue);
+        TSharedPtr<FEzUnleashRateEntryModel> WithType(const TOptional<FString> Type);
         TSharedPtr<FEzUnleashRateEntryModel> WithNeedCount(const TOptional<int32> NeedCount);
+        TSharedPtr<FEzUnleashRateEntryModel> WithRecipes(const TSharedPtr<TArray<TSharedPtr<Gs2::UE5::Enhance::Model::FEzUnleashRecipe>>> Recipes);
 
         TOptional<int64> GetGradeValue() const;
         FString GetGradeValueString() const;
 
+        TOptional<FString> GetType() const;
+
         TOptional<int32> GetNeedCount() const;
         FString GetNeedCountString() const;
+
+        TSharedPtr<TArray<TSharedPtr<Gs2::UE5::Enhance::Model::FEzUnleashRecipe>>> GetRecipes() const;
 
         Gs2::Enhance::Model::FUnleashRateEntryModelPtr ToModel() const;
         static TSharedPtr<FEzUnleashRateEntryModel> FromModel(Gs2::Enhance::Model::FUnleashRateEntryModelPtr Model);

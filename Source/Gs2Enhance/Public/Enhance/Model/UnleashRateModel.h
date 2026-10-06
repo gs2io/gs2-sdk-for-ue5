@@ -30,6 +30,7 @@ namespace Gs2::Enhance::Model
         TOptional<FString> MetadataValue;
         TOptional<FString> TargetInventoryModelIdValue;
         TOptional<FString> GradeModelIdValue;
+        TSharedPtr<TArray<FString>> GroupKeyHierarchyValue;
         TSharedPtr<TArray<TSharedPtr<FUnleashRateEntryModel>>> GradeEntriesValue;
 
     public:
@@ -45,6 +46,7 @@ namespace Gs2::Enhance::Model
         TSharedPtr<FUnleashRateModel> WithMetadata(const TOptional<FString> Metadata);
         TSharedPtr<FUnleashRateModel> WithTargetInventoryModelId(const TOptional<FString> TargetInventoryModelId);
         TSharedPtr<FUnleashRateModel> WithGradeModelId(const TOptional<FString> GradeModelId);
+        TSharedPtr<FUnleashRateModel> WithGroupKeyHierarchy(const TSharedPtr<TArray<FString>> GroupKeyHierarchy);
         TSharedPtr<FUnleashRateModel> WithGradeEntries(const TSharedPtr<TArray<TSharedPtr<FUnleashRateEntryModel>>> GradeEntries);
 
         TOptional<FString> GetUnleashRateModelId() const;
@@ -53,6 +55,7 @@ namespace Gs2::Enhance::Model
         TOptional<FString> GetMetadata() const;
         TOptional<FString> GetTargetInventoryModelId() const;
         TOptional<FString> GetGradeModelId() const;
+        TSharedPtr<TArray<FString>> GetGroupKeyHierarchy() const;
         TSharedPtr<TArray<TSharedPtr<FUnleashRateEntryModel>>> GetGradeEntries() const;
 
         static TOptional<FString> GetRegionFromGrn(const FString Grn);

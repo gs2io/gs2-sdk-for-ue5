@@ -18,6 +18,7 @@
 
 #include "CoreMinimal.h"
 #include "Dom/JsonObject.h"
+#include "../Model/UnleashMaterialSelection.h"
 #include "../Model/Config.h"
 
 namespace Gs2::Enhance::Request
@@ -32,6 +33,8 @@ namespace Gs2::Enhance::Request
         TOptional<FString> AccessTokenValue;
         TOptional<FString> TargetItemSetIdValue;
         TSharedPtr<TArray<FString>> MaterialsValue;
+        TOptional<FString> RecipeNameValue;
+        TSharedPtr<TArray<TSharedPtr<Model::FUnleashMaterialSelection>>> RecipeMaterialsValue;
         TSharedPtr<TArray<TSharedPtr<Model::FConfig>>> ConfigValue;
         TOptional<FString> DuplicationAvoiderValue;
         
@@ -50,6 +53,8 @@ namespace Gs2::Enhance::Request
         TSharedPtr<FUnleashRequest> WithTargetItemSetId(const TOptional<FString> TargetItemSetId);
         TSharedPtr<FUnleashRequest> WithMaterials(
             const TSharedPtr<TArray<FString>> Materials);
+        TSharedPtr<FUnleashRequest> WithRecipeName(const TOptional<FString> RecipeName);
+        TSharedPtr<FUnleashRequest> WithRecipeMaterials(const TSharedPtr<TArray<TSharedPtr<Model::FUnleashMaterialSelection>>> RecipeMaterials);
         TSharedPtr<FUnleashRequest> WithConfig(const TSharedPtr<TArray<TSharedPtr<Model::FConfig>>> Config);
         TSharedPtr<FUnleashRequest> WithDuplicationAvoider(const TOptional<FString> DuplicationAvoider);
 
@@ -58,7 +63,8 @@ namespace Gs2::Enhance::Request
         TOptional<FString> GetRateName() const;
         TOptional<FString> GetAccessToken() const;
         TOptional<FString> GetTargetItemSetId() const;
-        TSharedPtr<TArray<FString>> GetMaterials() const;TSharedPtr<TArray<TSharedPtr<Model::FConfig>>> GetConfig() const;
+        TSharedPtr<TArray<FString>> GetMaterials() const;
+        TOptional<FString> GetRecipeName() const;TSharedPtr<TArray<TSharedPtr<Model::FUnleashMaterialSelection>>> GetRecipeMaterials() const;TSharedPtr<TArray<TSharedPtr<Model::FConfig>>> GetConfig() const;
         TOptional<FString> GetDuplicationAvoider() const;
 
         static TSharedPtr<FUnleashRequest> FromJson(const TSharedPtr<FJsonObject> Data);

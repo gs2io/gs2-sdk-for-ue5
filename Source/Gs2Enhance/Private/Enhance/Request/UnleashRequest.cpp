@@ -24,6 +24,8 @@ namespace Gs2::Enhance::Request
         AccessTokenValue(TOptional<FString>()),
         TargetItemSetIdValue(TOptional<FString>()),
         MaterialsValue(nullptr),
+        RecipeNameValue(TOptional<FString>()),
+        RecipeMaterialsValue(nullptr),
         ConfigValue(nullptr)
     {
     }
@@ -36,6 +38,8 @@ namespace Gs2::Enhance::Request
         AccessTokenValue(From.AccessTokenValue),
         TargetItemSetIdValue(From.TargetItemSetIdValue),
         MaterialsValue(From.MaterialsValue),
+        RecipeNameValue(From.RecipeNameValue),
+        RecipeMaterialsValue(From.RecipeMaterialsValue),
         ConfigValue(From.ConfigValue)
     {
     }
@@ -88,6 +92,22 @@ namespace Gs2::Enhance::Request
         return SharedThis(this);
     }
 
+    TSharedPtr<FUnleashRequest> FUnleashRequest::WithRecipeName(
+        const TOptional<FString> RecipeName
+    )
+    {
+        this->RecipeNameValue = RecipeName;
+        return SharedThis(this);
+    }
+
+    TSharedPtr<FUnleashRequest> FUnleashRequest::WithRecipeMaterials(
+        const TSharedPtr<TArray<TSharedPtr<Model::FUnleashMaterialSelection>>> RecipeMaterials
+    )
+    {
+        this->RecipeMaterialsValue = RecipeMaterials;
+        return SharedThis(this);
+    }
+
     TSharedPtr<FUnleashRequest> FUnleashRequest::WithConfig(
         const TSharedPtr<TArray<TSharedPtr<Model::FConfig>>> Config
     )
@@ -136,6 +156,20 @@ namespace Gs2::Enhance::Request
             return nullptr;
         }
         return MaterialsValue;
+    }
+
+    TOptional<FString> FUnleashRequest::GetRecipeName() const
+    {
+        return RecipeNameValue;
+    }
+
+    TSharedPtr<TArray<TSharedPtr<Model::FUnleashMaterialSelection>>> FUnleashRequest::GetRecipeMaterials() const
+    {
+        if (!RecipeMaterialsValue.IsValid())
+        {
+            return nullptr;
+        }
+        return RecipeMaterialsValue;
     }
 
     TSharedPtr<TArray<TSharedPtr<Model::FConfig>>> FUnleashRequest::GetConfig() const
@@ -208,6 +242,28 @@ namespace Gs2::Enhance::Request
                       }
                   return v;
               }() : nullptr)
+            ->WithRecipeName(Data->HasField(ANSI_TO_TCHAR("recipeName")) ? [Data]() -> TOptional<FString>
+              {
+                  FString v("");
+                    if (Data->TryGetStringField(ANSI_TO_TCHAR("recipeName"), v))
+                  {
+                        return TOptional(v);
+                  }
+                  return TOptional<FString>();
+              }() : TOptional<FString>())
+          ->WithRecipeMaterials(Data->HasField(ANSI_TO_TCHAR("recipeMaterials")) ? [Data]() -> TSharedPtr<TArray<Model::FUnleashMaterialSelectionPtr>>
+              {
+                  if (!Data->HasTypedField<EJson::Array>(ANSI_TO_TCHAR("recipeMaterials")))
+                  {
+                      return nullptr;
+                  }
+                  auto v = MakeShared<TArray<Model::FUnleashMaterialSelectionPtr>>();
+                  for (auto JsonObjectValue : Data->GetArrayField(ANSI_TO_TCHAR("recipeMaterials")))
+                      {
+                      v->Add(Model::FUnleashMaterialSelection::FromJson(JsonObjectValue->AsObject()));
+                      }
+                  return v;
+              }() : nullptr)
           ->WithConfig(Data->HasField(ANSI_TO_TCHAR("config")) ? [Data]() -> TSharedPtr<TArray<Model::FConfigPtr>>
               {
                   if (!Data->HasTypedField<EJson::Array>(ANSI_TO_TCHAR("config")))
@@ -255,6 +311,19 @@ namespace Gs2::Enhance::Request
                 v.Add(MakeShared<FJsonValueString>(JsonObjectValue));
             }
             JsonRootObject->SetArrayField(TEXT("materials"), v);
+        }
+        if (RecipeNameValue.IsSet())
+        {
+            JsonRootObject->SetStringField(TEXT("recipeName"), RecipeNameValue.GetValue());
+        }
+        if (RecipeMaterialsValue != nullptr && RecipeMaterialsValue.IsValid())
+        {
+            TArray<TSharedPtr<FJsonValue>> v;
+            for (auto JsonObjectValue : *RecipeMaterialsValue)
+            {
+                v.Add(MakeShared<FJsonValueObject>(JsonObjectValue->ToJson()));
+            }
+            JsonRootObject->SetArrayField(TEXT("recipeMaterials"), v);
         }
         if (ConfigValue != nullptr && ConfigValue.IsValid())
         {

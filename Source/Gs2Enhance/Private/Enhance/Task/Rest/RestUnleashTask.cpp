@@ -102,6 +102,19 @@ namespace Gs2::Enhance::Task::Rest
                 }
                 JsonRootObject->SetArrayField(TEXT("materials"), v);
             }
+            if (this->Request->GetRecipeName().IsSet())
+            {
+                JsonRootObject->SetStringField(TEXT("recipeName"), this->Request->GetRecipeName().GetValue());
+            }
+            if (this->Request->GetRecipeMaterials() != nullptr && this->Request->GetRecipeMaterials().IsValid())
+            {
+                TArray<TSharedPtr<FJsonValue>> v;
+                for (auto JsonObjectValue : *this->Request->GetRecipeMaterials())
+                {
+                    v.Add(MakeShared<FJsonValueObject>(JsonObjectValue->ToJson()));
+                }
+                JsonRootObject->SetArrayField(TEXT("recipeMaterials"), v);
+            }
             if (this->Request->GetConfig() != nullptr && this->Request->GetConfig().IsValid())
             {
                 TArray<TSharedPtr<FJsonValue>> v;

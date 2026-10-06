@@ -18,6 +18,7 @@
 
 #include "CoreMinimal.h"
 #include "Dom/JsonObject.h"
+#include "../Model/UnleashMaterialSelection.h"
 #include "../Model/Config.h"
 
 namespace Gs2::Enhance::Request
@@ -32,6 +33,8 @@ namespace Gs2::Enhance::Request
         TOptional<FString> UserIdValue;
         TOptional<FString> TargetItemSetIdValue;
         TSharedPtr<TArray<FString>> MaterialsValue;
+        TOptional<FString> RecipeNameValue;
+        TSharedPtr<TArray<TSharedPtr<Model::FUnleashMaterialSelection>>> RecipeMaterialsValue;
         TSharedPtr<TArray<TSharedPtr<Model::FConfig>>> ConfigValue;
         TOptional<FString> TimeOffsetTokenValue;
         TOptional<FString> DuplicationAvoiderValue;
@@ -51,6 +54,8 @@ namespace Gs2::Enhance::Request
         TSharedPtr<FUnleashByUserIdRequest> WithTargetItemSetId(const TOptional<FString> TargetItemSetId);
         TSharedPtr<FUnleashByUserIdRequest> WithMaterials(
             const TSharedPtr<TArray<FString>> Materials);
+        TSharedPtr<FUnleashByUserIdRequest> WithRecipeName(const TOptional<FString> RecipeName);
+        TSharedPtr<FUnleashByUserIdRequest> WithRecipeMaterials(const TSharedPtr<TArray<TSharedPtr<Model::FUnleashMaterialSelection>>> RecipeMaterials);
         TSharedPtr<FUnleashByUserIdRequest> WithConfig(const TSharedPtr<TArray<TSharedPtr<Model::FConfig>>> Config);
         TSharedPtr<FUnleashByUserIdRequest> WithTimeOffsetToken(const TOptional<FString> TimeOffsetToken);
         TSharedPtr<FUnleashByUserIdRequest> WithDuplicationAvoider(const TOptional<FString> DuplicationAvoider);
@@ -60,7 +65,8 @@ namespace Gs2::Enhance::Request
         TOptional<FString> GetRateName() const;
         TOptional<FString> GetUserId() const;
         TOptional<FString> GetTargetItemSetId() const;
-        TSharedPtr<TArray<FString>> GetMaterials() const;TSharedPtr<TArray<TSharedPtr<Model::FConfig>>> GetConfig() const;
+        TSharedPtr<TArray<FString>> GetMaterials() const;
+        TOptional<FString> GetRecipeName() const;TSharedPtr<TArray<TSharedPtr<Model::FUnleashMaterialSelection>>> GetRecipeMaterials() const;TSharedPtr<TArray<TSharedPtr<Model::FConfig>>> GetConfig() const;
         TOptional<FString> GetTimeOffsetToken() const;
         TOptional<FString> GetDuplicationAvoider() const;
 

@@ -51,6 +51,14 @@ namespace Gs2::UE5::Enhance::Model
         return SharedThis(this);
     }
 
+    TSharedPtr<FEzUnleashRateModel> FEzUnleashRateModel::WithGroupKeyHierarchy(
+        const TSharedPtr<TArray<FString>> GroupKeyHierarchy
+    )
+    {
+        this->GroupKeyHierarchyValue = GroupKeyHierarchy;
+        return SharedThis(this);
+    }
+
     TSharedPtr<FEzUnleashRateModel> FEzUnleashRateModel::WithGradeEntries(
         const TSharedPtr<TArray<TSharedPtr<Gs2::UE5::Enhance::Model::FEzUnleashRateEntryModel>>> GradeEntries
     )
@@ -74,6 +82,10 @@ namespace Gs2::UE5::Enhance::Model
     {
         return GradeModelIdValue;
     }
+    TSharedPtr<TArray<FString>> FEzUnleashRateModel::GetGroupKeyHierarchy() const
+    {
+        return GroupKeyHierarchyValue;
+    }
     TSharedPtr<TArray<TSharedPtr<Gs2::UE5::Enhance::Model::FEzUnleashRateEntryModel>>> FEzUnleashRateModel::GetGradeEntries() const
     {
         return GradeEntriesValue;
@@ -86,6 +98,7 @@ namespace Gs2::UE5::Enhance::Model
             ->WithMetadata(MetadataValue)
             ->WithTargetInventoryModelId(TargetInventoryModelIdValue)
             ->WithGradeModelId(GradeModelIdValue)
+            ->WithGroupKeyHierarchy(GroupKeyHierarchyValue)
             ->WithGradeEntries([&]
                 {
                     auto v = MakeShared<TArray<TSharedPtr<Gs2::Enhance::Model::FUnleashRateEntryModel>>>();
@@ -113,6 +126,7 @@ namespace Gs2::UE5::Enhance::Model
             ->WithMetadata(Model->GetMetadata())
             ->WithTargetInventoryModelId(Model->GetTargetInventoryModelId())
             ->WithGradeModelId(Model->GetGradeModelId())
+            ->WithGroupKeyHierarchy(Model->GetGroupKeyHierarchy())
             ->WithGradeEntries([&]
                 {
                     auto v = MakeShared<TArray<TSharedPtr<FEzUnleashRateEntryModel>>>();

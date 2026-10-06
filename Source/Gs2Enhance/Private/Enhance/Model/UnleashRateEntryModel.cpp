@@ -20,7 +20,9 @@ namespace Gs2::Enhance::Model
 {
     FUnleashRateEntryModel::FUnleashRateEntryModel():
         GradeValueValue(TOptional<int64>()),
-        NeedCountValue(TOptional<int32>())
+        TypeValue(TOptional<FString>()),
+        NeedCountValue(TOptional<int32>()),
+        RecipesValue(nullptr)
     {
     }
 
@@ -28,7 +30,9 @@ namespace Gs2::Enhance::Model
         const FUnleashRateEntryModel& From
     ):
         GradeValueValue(From.GradeValueValue),
-        NeedCountValue(From.NeedCountValue)
+        TypeValue(From.TypeValue),
+        NeedCountValue(From.NeedCountValue),
+        RecipesValue(From.RecipesValue)
     {
     }
 
@@ -40,11 +44,27 @@ namespace Gs2::Enhance::Model
         return SharedThis(this);
     }
 
+    TSharedPtr<FUnleashRateEntryModel> FUnleashRateEntryModel::WithType(
+        const TOptional<FString> Type
+    )
+    {
+        this->TypeValue = Type;
+        return SharedThis(this);
+    }
+
     TSharedPtr<FUnleashRateEntryModel> FUnleashRateEntryModel::WithNeedCount(
         const TOptional<int32> NeedCount
     )
     {
         this->NeedCountValue = NeedCount;
+        return SharedThis(this);
+    }
+
+    TSharedPtr<FUnleashRateEntryModel> FUnleashRateEntryModel::WithRecipes(
+        const TSharedPtr<TArray<TSharedPtr<Model::FUnleashRecipe>>> Recipes
+    )
+    {
+        this->RecipesValue = Recipes;
         return SharedThis(this);
     }
     TOptional<int64> FUnleashRateEntryModel::GetGradeValue() const
@@ -60,6 +80,10 @@ namespace Gs2::Enhance::Model
         }
         return FString::Printf(TEXT("%lld"), GradeValueValue.GetValue());
     }
+    TOptional<FString> FUnleashRateEntryModel::GetType() const
+    {
+        return TypeValue;
+    }
     TOptional<int32> FUnleashRateEntryModel::GetNeedCount() const
     {
         return NeedCountValue;
@@ -72,6 +96,10 @@ namespace Gs2::Enhance::Model
             return FString("null");
         }
         return FString::Printf(TEXT("%d"), NeedCountValue.GetValue());
+    }
+    TSharedPtr<TArray<TSharedPtr<Model::FUnleashRecipe>>> FUnleashRateEntryModel::GetRecipes() const
+    {
+        return RecipesValue;
     }
 
     TSharedPtr<FUnleashRateEntryModel> FUnleashRateEntryModel::FromJson(const TSharedPtr<FJsonObject> Data)
@@ -89,6 +117,15 @@ namespace Gs2::Enhance::Model
                     }
                     return TOptional<int64>();
                 }() : TOptional<int64>())
+            ->WithType(Data->HasField(ANSI_TO_TCHAR("type")) ? [Data]() -> TOptional<FString>
+                {
+                    FString v("");
+                    if (Data->TryGetStringField(ANSI_TO_TCHAR("type"), v))
+                    {
+                        return TOptional(v);
+                    }
+                    return TOptional<FString>();
+                }() : TOptional<FString>())
             ->WithNeedCount(Data->HasField(ANSI_TO_TCHAR("needCount")) ? [Data]() -> TOptional<int32>
                 {
                     int32 v;
@@ -97,7 +134,20 @@ namespace Gs2::Enhance::Model
                         return TOptional(v);
                     }
                     return TOptional<int32>();
-                }() : TOptional<int32>());
+                }() : TOptional<int32>())
+            ->WithRecipes(Data->HasField(ANSI_TO_TCHAR("recipes")) ? [Data]() -> TSharedPtr<TArray<Model::FUnleashRecipePtr>>
+                {
+                    if (!Data->HasTypedField<EJson::Array>(ANSI_TO_TCHAR("recipes")))
+                    {
+                        return nullptr;
+                    }
+                    auto v = MakeShared<TArray<Model::FUnleashRecipePtr>>();
+                    for (auto JsonObjectValue : Data->GetArrayField(ANSI_TO_TCHAR("recipes")))
+                    {
+                        v->Add(Model::FUnleashRecipe::FromJson(JsonObjectValue->AsObject()));
+                    }
+                    return v;
+                 }() : nullptr);
     }
 
     TSharedPtr<FJsonObject> FUnleashRateEntryModel::ToJson() const
@@ -107,9 +157,22 @@ namespace Gs2::Enhance::Model
         {
             JsonRootObject->SetStringField(TEXT("gradeValue"), FString::Printf(TEXT("%lld"), GradeValueValue.GetValue()));
         }
+        if (TypeValue.IsSet())
+        {
+            JsonRootObject->SetStringField(TEXT("type"), TypeValue.GetValue());
+        }
         if (NeedCountValue.IsSet())
         {
             JsonRootObject->SetNumberField(TEXT("needCount"), NeedCountValue.GetValue());
+        }
+        if (RecipesValue != nullptr && RecipesValue.IsValid())
+        {
+            TArray<TSharedPtr<FJsonValue>> v;
+            for (auto JsonObjectValue : *RecipesValue)
+            {
+                v.Add(MakeShared<FJsonValueObject>(JsonObjectValue->ToJson()));
+            }
+            JsonRootObject->SetArrayField(TEXT("recipes"), v);
         }
         return JsonRootObject;
     }

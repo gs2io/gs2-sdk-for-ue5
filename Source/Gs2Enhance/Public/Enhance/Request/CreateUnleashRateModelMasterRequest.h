@@ -33,6 +33,7 @@ namespace Gs2::Enhance::Request
         TOptional<FString> MetadataValue;
         TOptional<FString> TargetInventoryModelIdValue;
         TOptional<FString> GradeModelIdValue;
+        TSharedPtr<TArray<FString>> GroupKeyHierarchyValue;
         TSharedPtr<TArray<TSharedPtr<Model::FUnleashRateEntryModel>>> GradeEntriesValue;
         
     public:
@@ -50,6 +51,8 @@ namespace Gs2::Enhance::Request
         TSharedPtr<FCreateUnleashRateModelMasterRequest> WithMetadata(const TOptional<FString> Metadata);
         TSharedPtr<FCreateUnleashRateModelMasterRequest> WithTargetInventoryModelId(const TOptional<FString> TargetInventoryModelId);
         TSharedPtr<FCreateUnleashRateModelMasterRequest> WithGradeModelId(const TOptional<FString> GradeModelId);
+        TSharedPtr<FCreateUnleashRateModelMasterRequest> WithGroupKeyHierarchy(
+            const TSharedPtr<TArray<FString>> GroupKeyHierarchy);
         TSharedPtr<FCreateUnleashRateModelMasterRequest> WithGradeEntries(const TSharedPtr<TArray<TSharedPtr<Model::FUnleashRateEntryModel>>> GradeEntries);
 
         TOptional<FString> GetContextStack() const;
@@ -58,7 +61,8 @@ namespace Gs2::Enhance::Request
         TOptional<FString> GetDescription() const;
         TOptional<FString> GetMetadata() const;
         TOptional<FString> GetTargetInventoryModelId() const;
-        TOptional<FString> GetGradeModelId() const;TSharedPtr<TArray<TSharedPtr<Model::FUnleashRateEntryModel>>> GetGradeEntries() const;
+        TOptional<FString> GetGradeModelId() const;
+        TSharedPtr<TArray<FString>> GetGroupKeyHierarchy() const;TSharedPtr<TArray<TSharedPtr<Model::FUnleashRateEntryModel>>> GetGradeEntries() const;
 
         static TSharedPtr<FCreateUnleashRateModelMasterRequest> FromJson(const TSharedPtr<FJsonObject> Data);
         TSharedPtr<FJsonObject> ToJson() const;

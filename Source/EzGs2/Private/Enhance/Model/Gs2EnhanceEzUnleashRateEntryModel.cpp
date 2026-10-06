@@ -27,11 +27,27 @@ namespace Gs2::UE5::Enhance::Model
         return SharedThis(this);
     }
 
+    TSharedPtr<FEzUnleashRateEntryModel> FEzUnleashRateEntryModel::WithType(
+        const TOptional<FString> Type
+    )
+    {
+        this->TypeValue = Type;
+        return SharedThis(this);
+    }
+
     TSharedPtr<FEzUnleashRateEntryModel> FEzUnleashRateEntryModel::WithNeedCount(
         const TOptional<int32> NeedCount
     )
     {
         this->NeedCountValue = NeedCount;
+        return SharedThis(this);
+    }
+
+    TSharedPtr<FEzUnleashRateEntryModel> FEzUnleashRateEntryModel::WithRecipes(
+        const TSharedPtr<TArray<TSharedPtr<Gs2::UE5::Enhance::Model::FEzUnleashRecipe>>> Recipes
+    )
+    {
+        this->RecipesValue = Recipes;
         return SharedThis(this);
     }
     TOptional<int64> FEzUnleashRateEntryModel::GetGradeValue() const
@@ -47,6 +63,10 @@ namespace Gs2::UE5::Enhance::Model
         }
         return FString::Printf(TEXT("%lld"), GradeValueValue.GetValue());
     }
+    TOptional<FString> FEzUnleashRateEntryModel::GetType() const
+    {
+        return TypeValue;
+    }
     TOptional<int32> FEzUnleashRateEntryModel::GetNeedCount() const
     {
         return NeedCountValue;
@@ -60,12 +80,31 @@ namespace Gs2::UE5::Enhance::Model
         }
         return FString::Printf(TEXT("%d"), NeedCountValue.GetValue());
     }
+    TSharedPtr<TArray<TSharedPtr<Gs2::UE5::Enhance::Model::FEzUnleashRecipe>>> FEzUnleashRateEntryModel::GetRecipes() const
+    {
+        return RecipesValue;
+    }
 
     Gs2::Enhance::Model::FUnleashRateEntryModelPtr FEzUnleashRateEntryModel::ToModel() const
     {
         return MakeShared<Gs2::Enhance::Model::FUnleashRateEntryModel>()
             ->WithGradeValue(GradeValueValue)
-            ->WithNeedCount(NeedCountValue);
+            ->WithType(TypeValue)
+            ->WithNeedCount(NeedCountValue)
+            ->WithRecipes([&]
+                {
+                    auto v = MakeShared<TArray<TSharedPtr<Gs2::Enhance::Model::FUnleashRecipe>>>();
+                    if (RecipesValue == nullptr)
+                    {
+                        return v;
+                    }
+                    for (auto v2 : *RecipesValue)
+                    {
+                        v->Add(v2->ToModel());
+                    }
+                    return v;
+                }()
+            );
     }
 
     TSharedPtr<FEzUnleashRateEntryModel> FEzUnleashRateEntryModel::FromModel(const Gs2::Enhance::Model::FUnleashRateEntryModelPtr Model)
@@ -76,6 +115,21 @@ namespace Gs2::UE5::Enhance::Model
         }
         return MakeShared<FEzUnleashRateEntryModel>()
             ->WithGradeValue(Model->GetGradeValue())
-            ->WithNeedCount(Model->GetNeedCount());
+            ->WithType(Model->GetType())
+            ->WithNeedCount(Model->GetNeedCount())
+            ->WithRecipes([&]
+                {
+                    auto v = MakeShared<TArray<TSharedPtr<FEzUnleashRecipe>>>();
+                    if (Model->GetRecipes() == nullptr)
+                    {
+                        return v;
+                    }
+                    for (auto v2 : *Model->GetRecipes())
+                    {
+                        v->Add(FEzUnleashRecipe::FromModel(v2));
+                    }
+                    return v;
+                }()
+            );
     }
 }
