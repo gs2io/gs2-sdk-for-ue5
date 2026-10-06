@@ -159,6 +159,7 @@ namespace Gs2::Log::Domain::Iterator
                     ->WithContextStack(Self->Gs2->DefaultContextStack)
                     ->WithNamespaceName(Self->NamespaceName)
                     ->WithUserId(Self->UserId)
+                    ->WithTags(Self->Tags)
                     ->WithBegin(Self->Begin)
                     ->WithEnd(Self->End)
                     ->WithLongTerm(Self->LongTerm)
