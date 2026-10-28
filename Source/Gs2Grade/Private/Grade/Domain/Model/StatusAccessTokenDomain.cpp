@@ -12,8 +12,6 @@
  * on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either
  * express or implied. See the License for the specific language governing
  * permissions and limitations under the License.
- *
- * deny overwrite
  */
 
 #if defined(_MSC_VER)
@@ -35,12 +33,13 @@
 #include "Grade/Domain/Model/StatusAccessToken.h"
 #include "Grade/Domain/Model/CurrentGradeMaster.h"
 #include "Grade/Domain/SpeculativeExecutor/Transaction/MultiplyAcquireActionsByUserIdSpeculativeExecutor.h"
+#include "Grade/Model/Cache/Status.h"
+#include "Experience/Model/Cache/Status.h"
 
 #include "Core/Domain/Gs2.h"
 #include "Core/Domain/Transaction/JobQueueJobDomainFactory.h"
 #include "Core/Domain/Transaction/InternalTransactionDomainFactory.h"
 #include "Core/Domain/Transaction/ManualTransactionAccessTokenDomain.h"
-#include "Experience/Domain/Model/Status.h"
 
 namespace Gs2::Grade::Domain::Model
 {
@@ -103,11 +102,13 @@ namespace Gs2::Grade::Domain::Model
     )
     {
         Request
-            ->WithContextStack(Self->Gs2->DefaultContextStack)
+            ->WithContextStack((!Request->GetContextStack().IsSet() || Request->GetContextStack()->IsEmpty()) ? Self->Gs2->DefaultContextStack : Request->GetContextStack())
             ->WithNamespaceName(Self->NamespaceName)
             ->WithAccessToken(Self->AccessToken->GetToken())
             ->WithGradeName(Self->GradeName)
             ->WithPropertyId(Self->PropertyId);
+        const auto CacheOwnerSnapshotUserId = Self->AccessToken.IsValid() ? Self->UserId() : TOptional<FString>();
+        const auto CacheOwnerSnapshotTimeOffset = Self->AccessToken.IsValid() ? Self->AccessToken->GetTimeOffset() : TOptional<int32>();
         const auto Future = Self->Client->GetStatus(
             Request
         );
@@ -116,31 +117,34 @@ namespace Gs2::Grade::Domain::Model
         {
             return Future->GetTask().Error();
         }
-        const auto RequestModel = Request;
         const auto ResultModel = Future->GetTask().Result();
         Future->EnsureCompletion();
-        if (ResultModel != nullptr) {
-            
-            if (ResultModel->GetItem() != nullptr)
+
+            if (ResultModel.IsValid() && ResultModel->GetItem() != nullptr)
             {
-                const auto ParentKey = Gs2::Grade::Domain::Model::FUserDomain::CreateCacheParentKey(
-                    Self->NamespaceName,
-                    Self->UserId(),
-                    "Status"
-                );
-                const auto Key = Gs2::Grade::Domain::Model::FStatusDomain::CreateCacheKey(
-                    ResultModel->GetItem()->GetGradeName(),
-                    ResultModel->GetItem()->GetPropertyId()
-                );
-                Self->Gs2->Cache->Put(
-                    Gs2::Grade::Model::FStatus::TypeName,
-                    ParentKey,
-                    Key,
-                    ResultModel->GetItem(),
-                    FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
-                );
+
+        if (!ResultModel.IsValid() || !ResultModel->GetItem().IsValid())
+            {
+              const auto Details = MakeShared<TArray<TSharedPtr<Gs2::Core::Model::FGs2ErrorDetail>>>();
+                Details->Add(MakeShared<Gs2::Core::Model::FGs2ErrorDetail>(TEXT("result.item"), TEXT("result.item is invalid."), TEXT("invalid_response")));
+                return MakeShared<Gs2::Core::Model::FUnknownError>(Details);
+              }if (!((CacheOwnerSnapshotUserId)).IsSet())
+            {
+              const auto Details = MakeShared<TArray<TSharedPtr<Gs2::Core::Model::FGs2ErrorDetail>>>();
+                Details->Add(MakeShared<Gs2::Core::Model::FGs2ErrorDetail>(TEXT("userId"), TEXT("userId is invalid."), TEXT("invalid_response")));
+                return MakeShared<Gs2::Core::Model::FUnknownError>(Details);
+              }
+        Gs2::Grade::Model::Cache::FStatusCache::Put(
+            Self->Gs2->Cache,
+
+            Request->GetNamespaceName(),
+            (CacheOwnerSnapshotUserId),
+            ResultModel->GetItem()->GetGradeName(),
+            ResultModel->GetItem()->GetPropertyId(),
+            CacheOwnerSnapshotTimeOffset,
+            ResultModel->GetItem()
+        );
             }
-        }
         *Result = ResultModel->GetItem();
         return nullptr;
     }
@@ -170,11 +174,13 @@ namespace Gs2::Grade::Domain::Model
     )
     {
         Request
-            ->WithContextStack(Self->Gs2->DefaultContextStack)
+            ->WithContextStack((!Request->GetContextStack().IsSet() || Request->GetContextStack()->IsEmpty()) ? Self->Gs2->DefaultContextStack : Request->GetContextStack())
             ->WithNamespaceName(Self->NamespaceName)
             ->WithAccessToken(Self->AccessToken->GetToken())
             ->WithGradeName(Self->GradeName)
             ->WithPropertyId(Self->PropertyId);
+        const auto CacheOwnerSnapshotUserId = Self->AccessToken.IsValid() ? Self->UserId() : TOptional<FString>();
+        const auto CacheOwnerSnapshotTimeOffset = Self->AccessToken.IsValid() ? Self->AccessToken->GetTimeOffset() : TOptional<int32>();
         const auto Future = Self->Client->SubGrade(
             Request
         );
@@ -183,54 +189,66 @@ namespace Gs2::Grade::Domain::Model
         {
             return Future->GetTask().Error();
         }
-        const auto RequestModel = Request;
         const auto ResultModel = Future->GetTask().Result();
         Future->EnsureCompletion();
-        if (ResultModel != nullptr) {
-            
-            if (ResultModel->GetItem() != nullptr)
+
+            if (ResultModel.IsValid() && ResultModel->GetItem() != nullptr)
             {
-                const auto ParentKey = Gs2::Grade::Domain::Model::FUserDomain::CreateCacheParentKey(
-                    Self->NamespaceName,
-                    Self->UserId(),
-                    "Status"
-                );
-                const auto Key = Gs2::Grade::Domain::Model::FStatusDomain::CreateCacheKey(
-                    ResultModel->GetItem()->GetGradeName(),
-                    ResultModel->GetItem()->GetPropertyId()
-                );
-                Self->Gs2->Cache->Put(
-                    Gs2::Grade::Model::FStatus::TypeName,
-                    ParentKey,
-                    Key,
-                    ResultModel->GetItem(),
-                    FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
-                );
-            }
-            if (ResultModel->GetExperienceStatus() != nullptr)
+
+        if (!ResultModel.IsValid() || !ResultModel->GetItem().IsValid())
             {
-                const auto ParentKey = Gs2::Grade::Domain::Model::FUserDomain::CreateCacheParentKey(
-                    Self->NamespaceName,
-                    Self->UserId(),
-                    "Status"
-                );
-                const auto Key = Gs2::Experience::Domain::Model::FStatusDomain::CreateCacheKey(
-                    ResultModel->GetExperienceStatus()->GetExperienceName(),
-                    ResultModel->GetExperienceStatus()->GetPropertyId()
-                );
-                Self->Gs2->Cache->Put(
-                    Gs2::Experience::Model::FStatus::TypeName,
-                    ParentKey,
-                    Key,
-                    ResultModel->GetExperienceStatus(),
-                    FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
-                );
+              const auto Details = MakeShared<TArray<TSharedPtr<Gs2::Core::Model::FGs2ErrorDetail>>>();
+                Details->Add(MakeShared<Gs2::Core::Model::FGs2ErrorDetail>(TEXT("result.item"), TEXT("result.item is invalid."), TEXT("invalid_response")));
+                return MakeShared<Gs2::Core::Model::FUnknownError>(Details);
+              }if (!((CacheOwnerSnapshotUserId)).IsSet())
+            {
+              const auto Details = MakeShared<TArray<TSharedPtr<Gs2::Core::Model::FGs2ErrorDetail>>>();
+                Details->Add(MakeShared<Gs2::Core::Model::FGs2ErrorDetail>(TEXT("userId"), TEXT("userId is invalid."), TEXT("invalid_response")));
+                return MakeShared<Gs2::Core::Model::FUnknownError>(Details);
+              }
+        Gs2::Grade::Model::Cache::FStatusCache::Put(
+            Self->Gs2->Cache,
+
+            Request->GetNamespaceName(),
+            (CacheOwnerSnapshotUserId),
+            ResultModel->GetItem()->GetGradeName(),
+            ResultModel->GetItem()->GetPropertyId(),
+            CacheOwnerSnapshotTimeOffset,
+            ResultModel->GetItem()
+        );
             }
-        }
+            if (ResultModel.IsValid() && ResultModel->GetExperienceStatus() != nullptr)
+            {
+
+        if (!ResultModel.IsValid() || !ResultModel->GetItem().IsValid())
+            {
+              const auto Details = MakeShared<TArray<TSharedPtr<Gs2::Core::Model::FGs2ErrorDetail>>>();
+                Details->Add(MakeShared<Gs2::Core::Model::FGs2ErrorDetail>(TEXT("result.item"), TEXT("result.item is invalid."), TEXT("invalid_response")));
+                return MakeShared<Gs2::Core::Model::FUnknownError>(Details);
+              }if (!((CacheOwnerSnapshotUserId)).IsSet())
+            {
+              const auto Details = MakeShared<TArray<TSharedPtr<Gs2::Core::Model::FGs2ErrorDetail>>>();
+                Details->Add(MakeShared<Gs2::Core::Model::FGs2ErrorDetail>(TEXT("userId"), TEXT("userId is invalid."), TEXT("invalid_response")));
+                return MakeShared<Gs2::Core::Model::FUnknownError>(Details);
+              }
+        Gs2::Experience::Model::Cache::FStatusCache::Put(
+            Self->Gs2->Cache,
+
+            Gs2::Experience::Model::FStatus::GetNamespaceNameFromGrn(ResultModel->GetExperienceStatus()->GetStatusId().Get(FString())),
+            (CacheOwnerSnapshotUserId),
+            ResultModel->GetExperienceStatus()->GetExperienceName(),
+            ResultModel->GetItem()->GetPropertyId(),
+            CacheOwnerSnapshotTimeOffset,
+            ResultModel->GetExperienceStatus()
+        );
+            }
         auto Domain = Self;
         if (ResultModel != nullptr)
         {
-            Domain->ExperienceNamespaceName = *ResultModel->GetExperienceNamespaceName();
+            if (ResultModel->GetExperienceNamespaceName().IsSet())
+            {
+                Domain->ExperienceNamespaceName = *ResultModel->GetExperienceNamespaceName();
+            }
         }
 
         *Result = Domain;
@@ -262,11 +280,13 @@ namespace Gs2::Grade::Domain::Model
     )
     {
         Request
-            ->WithContextStack(Self->Gs2->DefaultContextStack)
+            ->WithContextStack((!Request->GetContextStack().IsSet() || Request->GetContextStack()->IsEmpty()) ? Self->Gs2->DefaultContextStack : Request->GetContextStack())
             ->WithNamespaceName(Self->NamespaceName)
             ->WithAccessToken(Self->AccessToken->GetToken())
             ->WithGradeName(Self->GradeName)
             ->WithPropertyId(Self->PropertyId);
+        const auto CacheOwnerSnapshotUserId = Self->AccessToken.IsValid() ? Self->UserId() : TOptional<FString>();
+        const auto CacheOwnerSnapshotTimeOffset = Self->AccessToken.IsValid() ? Self->AccessToken->GetTimeOffset() : TOptional<int32>();
         const auto Future = Self->Client->ApplyRankCap(
             Request
         );
@@ -275,54 +295,66 @@ namespace Gs2::Grade::Domain::Model
         {
             return Future->GetTask().Error();
         }
-        const auto RequestModel = Request;
         const auto ResultModel = Future->GetTask().Result();
         Future->EnsureCompletion();
-        if (ResultModel != nullptr) {
-            
-            if (ResultModel->GetItem() != nullptr)
+
+            if (ResultModel.IsValid() && ResultModel->GetItem() != nullptr)
             {
-                const auto ParentKey = Gs2::Grade::Domain::Model::FUserDomain::CreateCacheParentKey(
-                    Self->NamespaceName,
-                    Self->UserId(),
-                    "Status"
-                );
-                const auto Key = Gs2::Grade::Domain::Model::FStatusDomain::CreateCacheKey(
-                    ResultModel->GetItem()->GetGradeName(),
-                    ResultModel->GetItem()->GetPropertyId()
-                );
-                Self->Gs2->Cache->Put(
-                    Gs2::Grade::Model::FStatus::TypeName,
-                    ParentKey,
-                    Key,
-                    ResultModel->GetItem(),
-                    FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
-                );
-            }
-            if (ResultModel->GetExperienceStatus() != nullptr)
+
+        if (!ResultModel.IsValid() || !ResultModel->GetItem().IsValid())
             {
-                const auto ParentKey = Gs2::Grade::Domain::Model::FUserDomain::CreateCacheParentKey(
-                    Self->NamespaceName,
-                    Self->UserId(),
-                    "Status"
-                );
-                const auto Key = Gs2::Experience::Domain::Model::FStatusDomain::CreateCacheKey(
-                    ResultModel->GetExperienceStatus()->GetExperienceName(),
-                    ResultModel->GetExperienceStatus()->GetPropertyId()
-                );
-                Self->Gs2->Cache->Put(
-                    Gs2::Experience::Model::FStatus::TypeName,
-                    ParentKey,
-                    Key,
-                    ResultModel->GetExperienceStatus(),
-                    FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
-                );
+              const auto Details = MakeShared<TArray<TSharedPtr<Gs2::Core::Model::FGs2ErrorDetail>>>();
+                Details->Add(MakeShared<Gs2::Core::Model::FGs2ErrorDetail>(TEXT("result.item"), TEXT("result.item is invalid."), TEXT("invalid_response")));
+                return MakeShared<Gs2::Core::Model::FUnknownError>(Details);
+              }if (!((CacheOwnerSnapshotUserId)).IsSet())
+            {
+              const auto Details = MakeShared<TArray<TSharedPtr<Gs2::Core::Model::FGs2ErrorDetail>>>();
+                Details->Add(MakeShared<Gs2::Core::Model::FGs2ErrorDetail>(TEXT("userId"), TEXT("userId is invalid."), TEXT("invalid_response")));
+                return MakeShared<Gs2::Core::Model::FUnknownError>(Details);
+              }
+        Gs2::Grade::Model::Cache::FStatusCache::Put(
+            Self->Gs2->Cache,
+
+            Request->GetNamespaceName(),
+            (CacheOwnerSnapshotUserId),
+            ResultModel->GetItem()->GetGradeName(),
+            ResultModel->GetItem()->GetPropertyId(),
+            CacheOwnerSnapshotTimeOffset,
+            ResultModel->GetItem()
+        );
             }
-        }
+            if (ResultModel.IsValid() && ResultModel->GetExperienceStatus() != nullptr)
+            {
+
+        if (!ResultModel.IsValid() || !ResultModel->GetItem().IsValid())
+            {
+              const auto Details = MakeShared<TArray<TSharedPtr<Gs2::Core::Model::FGs2ErrorDetail>>>();
+                Details->Add(MakeShared<Gs2::Core::Model::FGs2ErrorDetail>(TEXT("result.item"), TEXT("result.item is invalid."), TEXT("invalid_response")));
+                return MakeShared<Gs2::Core::Model::FUnknownError>(Details);
+              }if (!((CacheOwnerSnapshotUserId)).IsSet())
+            {
+              const auto Details = MakeShared<TArray<TSharedPtr<Gs2::Core::Model::FGs2ErrorDetail>>>();
+                Details->Add(MakeShared<Gs2::Core::Model::FGs2ErrorDetail>(TEXT("userId"), TEXT("userId is invalid."), TEXT("invalid_response")));
+                return MakeShared<Gs2::Core::Model::FUnknownError>(Details);
+              }
+        Gs2::Experience::Model::Cache::FStatusCache::Put(
+            Self->Gs2->Cache,
+
+            Gs2::Experience::Model::FStatus::GetNamespaceNameFromGrn(ResultModel->GetExperienceStatus()->GetStatusId().Get(FString())),
+            (CacheOwnerSnapshotUserId),
+            ResultModel->GetExperienceStatus()->GetExperienceName(),
+            ResultModel->GetItem()->GetPropertyId(),
+            CacheOwnerSnapshotTimeOffset,
+            ResultModel->GetExperienceStatus()
+        );
+            }
         auto Domain = Self;
         if (ResultModel != nullptr)
         {
-            Domain->ExperienceNamespaceName = *ResultModel->GetExperienceNamespaceName();
+            if (ResultModel->GetExperienceNamespaceName().IsSet())
+            {
+                Domain->ExperienceNamespaceName = *ResultModel->GetExperienceNamespaceName();
+            }
         }
 
         *Result = Domain;
@@ -354,11 +386,13 @@ namespace Gs2::Grade::Domain::Model
     )
     {
         Request
-            ->WithContextStack(Self->Gs2->DefaultContextStack)
+            ->WithContextStack((!Request->GetContextStack().IsSet() || Request->GetContextStack()->IsEmpty()) ? Self->Gs2->DefaultContextStack : Request->GetContextStack())
             ->WithNamespaceName(Self->NamespaceName)
             ->WithAccessToken(Self->AccessToken->GetToken())
             ->WithGradeName(Self->GradeName)
             ->WithPropertyId(Self->PropertyId);
+        const auto CacheOwnerSnapshotUserId = Self->AccessToken.IsValid() ? Self->UserId() : TOptional<FString>();
+        const auto CacheOwnerSnapshotTimeOffset = Self->AccessToken.IsValid() ? Self->AccessToken->GetTimeOffset() : TOptional<int32>();
         const auto Future = Self->Client->VerifyGrade(
             Request
         );
@@ -367,13 +401,36 @@ namespace Gs2::Grade::Domain::Model
         {
             return Future->GetTask().Error();
         }
-        const auto RequestModel = Request;
         const auto ResultModel = Future->GetTask().Result();
         Future->EnsureCompletion();
-        if (ResultModel != nullptr) {
-            
-        }
-        const auto Domain = Self;
+
+            if (ResultModel.IsValid() && ResultModel->GetItem() != nullptr)
+            {
+
+        if (!ResultModel.IsValid() || !ResultModel->GetItem().IsValid())
+            {
+              const auto Details = MakeShared<TArray<TSharedPtr<Gs2::Core::Model::FGs2ErrorDetail>>>();
+                Details->Add(MakeShared<Gs2::Core::Model::FGs2ErrorDetail>(TEXT("result.item"), TEXT("result.item is invalid."), TEXT("invalid_response")));
+                return MakeShared<Gs2::Core::Model::FUnknownError>(Details);
+              }if (!((CacheOwnerSnapshotUserId)).IsSet())
+            {
+              const auto Details = MakeShared<TArray<TSharedPtr<Gs2::Core::Model::FGs2ErrorDetail>>>();
+                Details->Add(MakeShared<Gs2::Core::Model::FGs2ErrorDetail>(TEXT("userId"), TEXT("userId is invalid."), TEXT("invalid_response")));
+                return MakeShared<Gs2::Core::Model::FUnknownError>(Details);
+              }
+        Gs2::Grade::Model::Cache::FStatusCache::Put(
+            Self->Gs2->Cache,
+
+            Request->GetNamespaceName(),
+            (CacheOwnerSnapshotUserId),
+            ResultModel->GetItem()->GetGradeName(),
+            ResultModel->GetItem()->GetPropertyId(),
+            CacheOwnerSnapshotTimeOffset,
+            ResultModel->GetItem()
+        );
+            }
+        auto Domain = Self;
+
         *Result = Domain;
         return nullptr;
     }
@@ -403,7 +460,7 @@ namespace Gs2::Grade::Domain::Model
     )
     {
         Request
-            ->WithContextStack(Self->Gs2->DefaultContextStack)
+            ->WithContextStack((!Request->GetContextStack().IsSet() || Request->GetContextStack()->IsEmpty()) ? Self->Gs2->DefaultContextStack : Request->GetContextStack())
             ->WithNamespaceName(Self->NamespaceName)
             ->WithAccessToken(Self->AccessToken->GetToken())
             ->WithGradeName(Self->GradeName)
@@ -416,12 +473,9 @@ namespace Gs2::Grade::Domain::Model
         {
             return Future->GetTask().Error();
         }
-        const auto RequestModel = Request;
         const auto ResultModel = Future->GetTask().Result();
         Future->EnsureCompletion();
-        if (ResultModel != nullptr) {
-            
-        }
+
         const auto Domain = Self;
         *Result = Domain;
         return nullptr;
@@ -455,7 +509,7 @@ namespace Gs2::Grade::Domain::Model
     )
     {
         return FString("") +
-            (GradeName.IsSet() ? *GradeName : "null") + ":" + 
+            (GradeName.IsSet() ? *GradeName : "null") + ":" +
             (PropertyId.IsSet() ? *PropertyId : "null");
     }
 
@@ -477,77 +531,62 @@ namespace Gs2::Grade::Domain::Model
         TSharedPtr<TSharedPtr<Gs2::Grade::Model::FStatus>> Result
     )
     {
-        const FString CacheKey = Gs2::Grade::Domain::Model::FStatusDomain::CreateCacheKey(
+        const auto CacheParentKey = Gs2::Grade::Model::Cache::FStatusCache::CreateCacheParentKey(
+
+            Self->NamespaceName,
+            Self->AccessToken.IsValid() ? Self->UserId() : TOptional<FString>(),
+            Self->AccessToken.IsValid() ? Self->AccessToken->GetTimeOffset() : TOptional<int32>()
+        );
+        const auto CacheKey = Gs2::Grade::Model::Cache::FStatusCache::CreateCacheKey(
+
             Self->GradeName,
             Self->PropertyId
         );
         return Self->Gs2->Cache->ExecuteWithKeyLock(
             Gs2::Grade::Model::FStatus::TypeName,
-            Self->ParentKey,
+            CacheParentKey,
             CacheKey,
-            [this, Result, CacheKey]() -> Gs2::Core::Model::FGs2ErrorPtr
+            [Self = Self, Result]() -> Gs2::Core::Model::FGs2ErrorPtr
             {
-                // ReSharper disable once CppLocalVariableMayBeConst
-                TSharedPtr<Gs2::Grade::Model::FStatus> Value;
-                auto bCacheHit = Self->Gs2->Cache->TryGet<Gs2::Grade::Model::FStatus>(
-                    Self->ParentKey,
-                    CacheKey,
+                Gs2::Grade::Model::FStatusPtr Value;
+                const auto CacheHit = Gs2::Grade::Model::Cache::FStatusCache::TryGet(
+                    Self->Gs2->Cache,
+
+                    Self->NamespaceName,
+                    Self->AccessToken.IsValid() ? Self->UserId() : TOptional<FString>(),
+                    Self->GradeName,
+                    Self->PropertyId,
+                    Self->AccessToken.IsValid() ? Self->AccessToken->GetTimeOffset() : TOptional<int32>(),
                     &Value
                 );
-                if (!bCacheHit) {
-                    const auto Future = Self->Get(
-                        MakeShared<Gs2::Grade::Request::FGetStatusRequest>()
-                    );
-                    Future->StartSynchronousTask();
-                    if (Future->GetTask().IsError())
-                    {
-                        const auto Error = Future->GetTask().Error();
-                        if (!Error.IsValid() || Error->Type() != Gs2::Core::Model::FNotFoundError::TypeString)
-                        {
-                            return Error;
-                        }
-                        Self->Gs2->Cache->Put(
-                            Gs2::Grade::Model::FStatus::TypeName,
-                            Self->ParentKey,
-                            CacheKey,
-                            nullptr,
-                            FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
-                        );
-
-                        if (!Error->GetErrors().IsValid() || Error->Count() == 0 || !Error->Detail(0).IsValid() || Error->Detail(0)->GetComponent() != "status")
-                        {
-                            return Error;
-                        }
-                    }
-                    else
-                    {
-                        Value = Future->GetTask().Result();
-                    }
-                    Future->EnsureCompletion();
-                }
-                if (!bCacheHit)
+                if (CacheHit)
                 {
-                    FGs2ObjectPtr ExistingObject;
-                    const bool Existing = Self->Gs2->Cache->TryGet(
-                        Gs2::Grade::Model::FStatus::TypeName,
-                        Self->ParentKey,
-                        CacheKey,
-                        &ExistingObject
-                    );
-                    if (!Existing || ExistingObject != Value)
-                    {
-                        Self->Gs2->Cache->Put(
-                            Gs2::Grade::Model::FStatus::TypeName,
-                            Self->ParentKey,
-                            CacheKey,
-                            Value,
-                            FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
-                        );
-                    }
+                    *Result = Value;
+                    return nullptr;
                 }
+                const auto Error = Gs2::Grade::Model::Cache::FStatusCache::Fetch(
+                    Self->Gs2->Cache,
 
+                    Self->NamespaceName,
+                    Self->AccessToken.IsValid() ? Self->UserId() : TOptional<FString>(),
+                    Self->GradeName,
+                    Self->PropertyId,
+                    Self->AccessToken.IsValid() ? Self->AccessToken->GetTimeOffset() : TOptional<int32>(),
+                    [Self](Gs2::Grade::Model::FStatusPtr* OutItem) -> Gs2::Core::Model::FGs2ErrorPtr
+                    {
+                        const auto Future = Self->Get(
+                            MakeShared<Gs2::Grade::Request::FGetStatusRequest>()
+                        );
+                        Future->StartSynchronousTask();
+                        if (Future->GetTask().IsError()) return Future->GetTask().Error();
+                        *OutItem = Future->GetTask().Result();
+                        Future->EnsureCompletion();
+                        return nullptr;
+                    },
+                    &Value
+                );
+                if (Error.IsValid()) return Error;
                 *Result = Value;
-
                 return nullptr;
             }
         );
@@ -557,13 +596,77 @@ namespace Gs2::Grade::Domain::Model
         return Gs2::Core::Util::New<FAsyncTask<FStatusAccessTokenDomain::FModelTask>>(this->AsShared());
     }
 
+    void FStatusAccessTokenDomain::Invalidate()
+    {
+        Gs2::Grade::Model::Cache::FStatusCache::Delete(
+            Gs2->Cache,
+
+            NamespaceName,
+            AccessToken.IsValid() ? UserId() : TOptional<FString>(),
+            GradeName,
+            PropertyId,
+            AccessToken.IsValid() ? AccessToken->GetTimeOffset() : TOptional<int32>()
+        );
+    }
+
+    FStatusAccessTokenDomain::FSubscribeWithInitialCallTask::FSubscribeWithInitialCallTask(
+        const TSharedPtr<FStatusAccessTokenDomain>& Self,
+        TFunction<void(Gs2::Grade::Model::FStatusPtr)> Callback
+    ):
+        Self(Self),
+        Callback(Callback)
+    {
+    }
+
+    FStatusAccessTokenDomain::FSubscribeWithInitialCallTask::FSubscribeWithInitialCallTask(
+        const FSubscribeWithInitialCallTask& From
+    ):
+        TGs2Future(From),
+        Self(From.Self),
+        Callback(From.Callback)
+    {
+    }
+
+    Gs2::Core::Model::FGs2ErrorPtr FStatusAccessTokenDomain::FSubscribeWithInitialCallTask::Action(
+        TSharedPtr<TSharedPtr<Gs2::Core::Domain::CallbackID>> Result
+    )
+    {
+        const auto Task = Self->Model();
+        Task->StartSynchronousTask();
+        Task->EnsureCompletion();
+        if (Task->GetTask().IsError()) return Task->GetTask().Error();
+        const auto Item = Task->GetTask().Result();
+        const auto CallbackId = Self->Subscribe(Callback);
+        Callback(Item);
+        *Result = MakeShared<Gs2::Core::Domain::CallbackID>(CallbackId);
+        return nullptr;
+    }
+
+    TSharedPtr<FAsyncTask<FStatusAccessTokenDomain::FSubscribeWithInitialCallTask>> FStatusAccessTokenDomain::SubscribeWithInitialCall(
+        TFunction<void(Gs2::Grade::Model::FStatusPtr)> Callback
+    )
+    {
+        return Gs2::Core::Util::New<FAsyncTask<FSubscribeWithInitialCallTask>>(this->AsShared(), Callback);
+    }
+
     Gs2::Core::Domain::CallbackID FStatusAccessTokenDomain::Subscribe(
         TFunction<void(Gs2::Grade::Model::FStatusPtr)> Callback
     )
     {
+        const auto SubscriptionParentKey = Gs2::Grade::Model::Cache::FStatusCache::CreateCacheParentKey(
+
+            NamespaceName,
+            AccessToken.IsValid() ? UserId() : TOptional<FString>(),
+            AccessToken.IsValid() ? AccessToken->GetTimeOffset() : TOptional<int32>()
+        );
+        const auto SubscriptionCacheKey = Gs2::Grade::Model::Cache::FStatusCache::CreateCacheKey(
+
+            GradeName,
+            PropertyId
+        );
         const TWeakPtr<Gs2::Core::Domain::FGs2> WeakGs2 = Gs2;
         const TWeakPtr<Grade::Domain::FGs2GradeDomain> WeakService = Service;
-        const FString RegisteredParentKey = ParentKey;
+        const FString RegisteredParentKey = SubscriptionParentKey;
         const TOptional<FString> QueryNamespaceName = NamespaceName;
         const TOptional<FString> QueryGradeName = GradeName;
         const TOptional<FString> QueryPropertyId = PropertyId;
@@ -571,18 +674,16 @@ namespace Gs2::Grade::Domain::Model
         const TOptional<FString> RegisteredUserId = SourceToken.IsValid()
             ? TOptional<FString>(SourceToken->GetUserId())
             : TOptional<FString>();
+        const int32 RegisteredTimeOffset = SourceToken.IsValid() ? SourceToken->GetTimeOffset().Get(0) : 0;
         return Gs2->Cache->Subscribe(
             Gs2::Grade::Model::FStatus::TypeName,
-            ParentKey,
-            Gs2::Grade::Domain::Model::FStatusDomain::CreateCacheKey(
-                GradeName,
-                PropertyId
-            ),
+            SubscriptionParentKey,
+            SubscriptionCacheKey,
             [Callback](TSharedPtr<FGs2Object> obj)
             {
                 Callback(StaticCastSharedPtr<Gs2::Grade::Model::FStatus>(obj));
             },
-            [WeakGs2, WeakService, RegisteredParentKey, QueryNamespaceName, QueryGradeName, QueryPropertyId, SourceToken, RegisteredUserId]()
+            [WeakGs2, WeakService, RegisteredParentKey, QueryNamespaceName, QueryGradeName, QueryPropertyId, SourceToken, RegisteredUserId, RegisteredTimeOffset]()
             {
                 const auto Owner = WeakGs2.Pin();
                 if (!Owner.IsValid() || !SourceToken.IsValid() || !RegisteredUserId.IsSet())
@@ -590,7 +691,7 @@ namespace Gs2::Grade::Domain::Model
                     return;
                 }
                 const auto TokenSnapshot = MakeShared<Gs2::Auth::Model::FAccessToken>(*SourceToken);
-                if (TokenSnapshot->GetUserId() != RegisteredUserId)
+                if (TokenSnapshot->GetUserId() != RegisteredUserId || TokenSnapshot->GetTimeOffset().Get(0) != RegisteredTimeOffset)
                 {
                     return;
                 }
@@ -613,13 +714,21 @@ namespace Gs2::Grade::Domain::Model
         Gs2::Core::Domain::CallbackID CallbackID
     )
     {
+        const auto SubscriptionParentKey = Gs2::Grade::Model::Cache::FStatusCache::CreateCacheParentKey(
+
+            NamespaceName,
+            AccessToken.IsValid() ? UserId() : TOptional<FString>(),
+            AccessToken.IsValid() ? AccessToken->GetTimeOffset() : TOptional<int32>()
+        );
+        const auto SubscriptionCacheKey = Gs2::Grade::Model::Cache::FStatusCache::CreateCacheKey(
+
+            GradeName,
+            PropertyId
+        );
         Gs2->Cache->Unsubscribe(
             Gs2::Grade::Model::FStatus::TypeName,
-            ParentKey,
-            Gs2::Grade::Domain::Model::FStatusDomain::CreateCacheKey(
-                GradeName,
-                PropertyId
-            ),
+            SubscriptionParentKey,
+            SubscriptionCacheKey,
             CallbackID
         );
     }
@@ -630,4 +739,3 @@ namespace Gs2::Grade::Domain::Model
 #elif defined(__clang__)
 #pragma clang diagnostic pop
 #endif
-
