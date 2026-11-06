@@ -104,6 +104,18 @@ namespace Gs2::Realtime::Task::Rest
             {
                 JsonRootObject->SetStringField(TEXT("serverSpec"), this->Request->GetServerSpec().GetValue());
             }
+            if (this->Request->GetObjectCatalog().IsSet())
+            {
+                JsonRootObject->SetStringField(TEXT("objectCatalog"), this->Request->GetObjectCatalog().GetValue());
+            }
+            if (this->Request->GetStateMachineNamespaceId().IsSet())
+            {
+                JsonRootObject->SetStringField(TEXT("stateMachineNamespaceId"), this->Request->GetStateMachineNamespaceId().GetValue());
+            }
+            if (this->Request->GetStateMachineVersion().IsSet())
+            {
+                JsonRootObject->SetStringField(TEXT("stateMachineVersion"), FString::Printf(TEXT("%lld"), this->Request->GetStateMachineVersion().GetValue()));
+            }
             if (this->Request->GetCreateNotification() != nullptr && this->Request->GetCreateNotification().IsValid())
             {
                 JsonRootObject->SetObjectField(TEXT("createNotification"), this->Request->GetCreateNotification()->ToJson());

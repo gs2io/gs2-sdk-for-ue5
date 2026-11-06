@@ -36,6 +36,9 @@ namespace Gs2::Realtime::Request
         TSharedPtr<Model::FTransactionSettingV2> TransactionSettingV2Value;
         TOptional<FString> ServerTypeValue;
         TOptional<FString> ServerSpecValue;
+        TOptional<FString> ObjectCatalogValue;
+        TOptional<FString> StateMachineNamespaceIdValue;
+        TOptional<int64> StateMachineVersionValue;
         TSharedPtr<Model::FNotificationSetting> CreateNotificationValue;
         TSharedPtr<Model::FLogSetting> LogSettingValue;
         
@@ -54,6 +57,9 @@ namespace Gs2::Realtime::Request
         TSharedPtr<FCreateNamespaceRequest> WithTransactionSettingV2(const TSharedPtr<Model::FTransactionSettingV2> TransactionSettingV2);
         TSharedPtr<FCreateNamespaceRequest> WithServerType(const TOptional<FString> ServerType);
         TSharedPtr<FCreateNamespaceRequest> WithServerSpec(const TOptional<FString> ServerSpec);
+        TSharedPtr<FCreateNamespaceRequest> WithObjectCatalog(const TOptional<FString> ObjectCatalog);
+        TSharedPtr<FCreateNamespaceRequest> WithStateMachineNamespaceId(const TOptional<FString> StateMachineNamespaceId);
+        TSharedPtr<FCreateNamespaceRequest> WithStateMachineVersion(const TOptional<int64> StateMachineVersion);
         TSharedPtr<FCreateNamespaceRequest> WithCreateNotification(const TSharedPtr<Model::FNotificationSetting> CreateNotification);
         TSharedPtr<FCreateNamespaceRequest> WithLogSetting(const TSharedPtr<Model::FLogSetting> LogSetting);
 
@@ -64,6 +70,10 @@ namespace Gs2::Realtime::Request
         TSharedPtr<Model::FTransactionSettingV2> GetTransactionSettingV2() const;
         TOptional<FString> GetServerType() const;
         TOptional<FString> GetServerSpec() const;
+        TOptional<FString> GetObjectCatalog() const;
+        TOptional<FString> GetStateMachineNamespaceId() const;
+        TOptional<int64> GetStateMachineVersion() const;
+        FString GetStateMachineVersionString() const;
         TSharedPtr<Model::FNotificationSetting> GetCreateNotification() const;
         TSharedPtr<Model::FLogSetting> GetLogSetting() const;
 
