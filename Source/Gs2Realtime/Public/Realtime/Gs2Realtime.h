@@ -24,6 +24,8 @@
 #include "Model/LogSetting.h"
 #include "Model/TransactionSetting.h"
 #include "Model/TransactionSettingV2.h"
+#include "Model/SyncSetting.h"
+#include "Model/StateMachineSetting.h"
 
 // DescribeNamespaces
 #include "Request/DescribeNamespacesRequest.h"

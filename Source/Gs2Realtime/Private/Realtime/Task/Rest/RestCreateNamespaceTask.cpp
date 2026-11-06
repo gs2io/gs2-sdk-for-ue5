@@ -102,17 +102,13 @@ namespace Gs2::Realtime::Task::Rest
             {
                 JsonRootObject->SetStringField(TEXT("serverSpec"), this->Request->GetServerSpec().GetValue());
             }
-            if (this->Request->GetObjectCatalog().IsSet())
+            if (this->Request->GetSyncSetting() != nullptr && this->Request->GetSyncSetting().IsValid())
             {
-                JsonRootObject->SetStringField(TEXT("objectCatalog"), this->Request->GetObjectCatalog().GetValue());
+                JsonRootObject->SetObjectField(TEXT("syncSetting"), this->Request->GetSyncSetting()->ToJson());
             }
-            if (this->Request->GetStateMachineNamespaceId().IsSet())
+            if (this->Request->GetStateMachineSetting() != nullptr && this->Request->GetStateMachineSetting().IsValid())
             {
-                JsonRootObject->SetStringField(TEXT("stateMachineNamespaceId"), this->Request->GetStateMachineNamespaceId().GetValue());
-            }
-            if (this->Request->GetStateMachineVersion().IsSet())
-            {
-                JsonRootObject->SetStringField(TEXT("stateMachineVersion"), FString::Printf(TEXT("%lld"), this->Request->GetStateMachineVersion().GetValue()));
+                JsonRootObject->SetObjectField(TEXT("stateMachineSetting"), this->Request->GetStateMachineSetting()->ToJson());
             }
             if (this->Request->GetCreateNotification() != nullptr && this->Request->GetCreateNotification().IsValid())
             {

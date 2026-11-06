@@ -20,6 +20,8 @@
 #include "Core/Gs2Object.h"
 #include "TransactionSetting.h"
 #include "TransactionSettingV2.h"
+#include "SyncSetting.h"
+#include "StateMachineSetting.h"
 #include "NotificationSetting.h"
 #include "LogSetting.h"
 
@@ -34,9 +36,8 @@ namespace Gs2::Realtime::Model
         TSharedPtr<FTransactionSettingV2> TransactionSettingV2Value;
         TOptional<FString> ServerTypeValue;
         TOptional<FString> ServerSpecValue;
-        TOptional<FString> ObjectCatalogValue;
-        TOptional<FString> StateMachineNamespaceIdValue;
-        TOptional<int64> StateMachineVersionValue;
+        TSharedPtr<FSyncSetting> SyncSettingValue;
+        TSharedPtr<FStateMachineSetting> StateMachineSettingValue;
         TSharedPtr<FNotificationSetting> CreateNotificationValue;
         TSharedPtr<FLogSetting> LogSettingValue;
         TOptional<int64> CreatedAtValue;
@@ -57,9 +58,8 @@ namespace Gs2::Realtime::Model
         TSharedPtr<FNamespace> WithTransactionSettingV2(const TSharedPtr<FTransactionSettingV2> TransactionSettingV2);
         TSharedPtr<FNamespace> WithServerType(const TOptional<FString> ServerType);
         TSharedPtr<FNamespace> WithServerSpec(const TOptional<FString> ServerSpec);
-        TSharedPtr<FNamespace> WithObjectCatalog(const TOptional<FString> ObjectCatalog);
-        TSharedPtr<FNamespace> WithStateMachineNamespaceId(const TOptional<FString> StateMachineNamespaceId);
-        TSharedPtr<FNamespace> WithStateMachineVersion(const TOptional<int64> StateMachineVersion);
+        TSharedPtr<FNamespace> WithSyncSetting(const TSharedPtr<FSyncSetting> SyncSetting);
+        TSharedPtr<FNamespace> WithStateMachineSetting(const TSharedPtr<FStateMachineSetting> StateMachineSetting);
         TSharedPtr<FNamespace> WithCreateNotification(const TSharedPtr<FNotificationSetting> CreateNotification);
         TSharedPtr<FNamespace> WithLogSetting(const TSharedPtr<FLogSetting> LogSetting);
         TSharedPtr<FNamespace> WithCreatedAt(const TOptional<int64> CreatedAt);
@@ -73,10 +73,8 @@ namespace Gs2::Realtime::Model
         TSharedPtr<FTransactionSettingV2> GetTransactionSettingV2() const;
         TOptional<FString> GetServerType() const;
         TOptional<FString> GetServerSpec() const;
-        TOptional<FString> GetObjectCatalog() const;
-        TOptional<FString> GetStateMachineNamespaceId() const;
-        TOptional<int64> GetStateMachineVersion() const;
-        FString GetStateMachineVersionString() const;
+        TSharedPtr<FSyncSetting> GetSyncSetting() const;
+        TSharedPtr<FStateMachineSetting> GetStateMachineSetting() const;
         TSharedPtr<FNotificationSetting> GetCreateNotification() const;
         TSharedPtr<FLogSetting> GetLogSetting() const;
         TOptional<int64> GetCreatedAt() const;

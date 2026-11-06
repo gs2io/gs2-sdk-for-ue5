@@ -26,9 +26,8 @@ namespace Gs2::Realtime::Model
         TransactionSettingV2Value(nullptr),
         ServerTypeValue(TOptional<FString>()),
         ServerSpecValue(TOptional<FString>()),
-        ObjectCatalogValue(TOptional<FString>()),
-        StateMachineNamespaceIdValue(TOptional<FString>()),
-        StateMachineVersionValue(TOptional<int64>()),
+        SyncSettingValue(nullptr),
+        StateMachineSettingValue(nullptr),
         CreateNotificationValue(nullptr),
         LogSettingValue(nullptr),
         CreatedAtValue(TOptional<int64>()),
@@ -47,9 +46,8 @@ namespace Gs2::Realtime::Model
         TransactionSettingV2Value(From.TransactionSettingV2Value),
         ServerTypeValue(From.ServerTypeValue),
         ServerSpecValue(From.ServerSpecValue),
-        ObjectCatalogValue(From.ObjectCatalogValue),
-        StateMachineNamespaceIdValue(From.StateMachineNamespaceIdValue),
-        StateMachineVersionValue(From.StateMachineVersionValue),
+        SyncSettingValue(From.SyncSettingValue),
+        StateMachineSettingValue(From.StateMachineSettingValue),
         CreateNotificationValue(From.CreateNotificationValue),
         LogSettingValue(From.LogSettingValue),
         CreatedAtValue(From.CreatedAtValue),
@@ -114,27 +112,19 @@ namespace Gs2::Realtime::Model
         return SharedThis(this);
     }
 
-    TSharedPtr<FNamespace> FNamespace::WithObjectCatalog(
-        const TOptional<FString> ObjectCatalog
+    TSharedPtr<FNamespace> FNamespace::WithSyncSetting(
+        const TSharedPtr<FSyncSetting> SyncSetting
     )
     {
-        this->ObjectCatalogValue = ObjectCatalog;
+        this->SyncSettingValue = SyncSetting;
         return SharedThis(this);
     }
 
-    TSharedPtr<FNamespace> FNamespace::WithStateMachineNamespaceId(
-        const TOptional<FString> StateMachineNamespaceId
+    TSharedPtr<FNamespace> FNamespace::WithStateMachineSetting(
+        const TSharedPtr<FStateMachineSetting> StateMachineSetting
     )
     {
-        this->StateMachineNamespaceIdValue = StateMachineNamespaceId;
-        return SharedThis(this);
-    }
-
-    TSharedPtr<FNamespace> FNamespace::WithStateMachineVersion(
-        const TOptional<int64> StateMachineVersion
-    )
-    {
-        this->StateMachineVersionValue = StateMachineVersion;
+        this->StateMachineSettingValue = StateMachineSetting;
         return SharedThis(this);
     }
 
@@ -205,26 +195,13 @@ namespace Gs2::Realtime::Model
     {
         return ServerSpecValue;
     }
-    TOptional<FString> FNamespace::GetObjectCatalog() const
+    TSharedPtr<FSyncSetting> FNamespace::GetSyncSetting() const
     {
-        return ObjectCatalogValue;
+        return SyncSettingValue;
     }
-    TOptional<FString> FNamespace::GetStateMachineNamespaceId() const
+    TSharedPtr<FStateMachineSetting> FNamespace::GetStateMachineSetting() const
     {
-        return StateMachineNamespaceIdValue;
-    }
-    TOptional<int64> FNamespace::GetStateMachineVersion() const
-    {
-        return StateMachineVersionValue;
-    }
-
-    FString FNamespace::GetStateMachineVersionString() const
-    {
-        if (!StateMachineVersionValue.IsSet())
-        {
-            return FString("null");
-        }
-        return FString::Printf(TEXT("%lld"), StateMachineVersionValue.GetValue());
+        return StateMachineSettingValue;
     }
     TSharedPtr<FNotificationSetting> FNamespace::GetCreateNotification() const
     {
@@ -374,33 +351,22 @@ namespace Gs2::Realtime::Model
                     }
                     return TOptional<FString>();
                 }() : TOptional<FString>())
-            ->WithObjectCatalog(Data->HasField(ANSI_TO_TCHAR("objectCatalog")) ? [Data]() -> TOptional<FString>
+            ->WithSyncSetting(Data->HasField(ANSI_TO_TCHAR("syncSetting")) ? [Data]() -> Model::FSyncSettingPtr
                 {
-                    FString v("");
-                    if (Data->TryGetStringField(ANSI_TO_TCHAR("objectCatalog"), v))
+                    if (Data->HasTypedField<EJson::Null>(ANSI_TO_TCHAR("syncSetting")))
                     {
-                        return TOptional(v);
+                        return nullptr;
                     }
-                    return TOptional<FString>();
-                }() : TOptional<FString>())
-            ->WithStateMachineNamespaceId(Data->HasField(ANSI_TO_TCHAR("stateMachineNamespaceId")) ? [Data]() -> TOptional<FString>
+                    return Model::FSyncSetting::FromJson(Data->GetObjectField(ANSI_TO_TCHAR("syncSetting")));
+                 }() : nullptr)
+            ->WithStateMachineSetting(Data->HasField(ANSI_TO_TCHAR("stateMachineSetting")) ? [Data]() -> Model::FStateMachineSettingPtr
                 {
-                    FString v("");
-                    if (Data->TryGetStringField(ANSI_TO_TCHAR("stateMachineNamespaceId"), v))
+                    if (Data->HasTypedField<EJson::Null>(ANSI_TO_TCHAR("stateMachineSetting")))
                     {
-                        return TOptional(v);
+                        return nullptr;
                     }
-                    return TOptional<FString>();
-                }() : TOptional<FString>())
-            ->WithStateMachineVersion(Data->HasField(ANSI_TO_TCHAR("stateMachineVersion")) ? [Data]() -> TOptional<int64>
-                {
-                    int64 v;
-                    if (Data->TryGetNumberField(ANSI_TO_TCHAR("stateMachineVersion"), v))
-                    {
-                        return TOptional(v);
-                    }
-                    return TOptional<int64>();
-                }() : TOptional<int64>())
+                    return Model::FStateMachineSetting::FromJson(Data->GetObjectField(ANSI_TO_TCHAR("stateMachineSetting")));
+                 }() : nullptr)
             ->WithCreateNotification(Data->HasField(ANSI_TO_TCHAR("createNotification")) ? [Data]() -> Model::FNotificationSettingPtr
                 {
                     if (Data->HasTypedField<EJson::Null>(ANSI_TO_TCHAR("createNotification")))
@@ -477,17 +443,13 @@ namespace Gs2::Realtime::Model
         {
             JsonRootObject->SetStringField(TEXT("serverSpec"), ServerSpecValue.GetValue());
         }
-        if (ObjectCatalogValue.IsSet())
+        if (SyncSettingValue != nullptr && SyncSettingValue.IsValid())
         {
-            JsonRootObject->SetStringField(TEXT("objectCatalog"), ObjectCatalogValue.GetValue());
+            JsonRootObject->SetObjectField(TEXT("syncSetting"), SyncSettingValue->ToJson());
         }
-        if (StateMachineNamespaceIdValue.IsSet())
+        if (StateMachineSettingValue != nullptr && StateMachineSettingValue.IsValid())
         {
-            JsonRootObject->SetStringField(TEXT("stateMachineNamespaceId"), StateMachineNamespaceIdValue.GetValue());
-        }
-        if (StateMachineVersionValue.IsSet())
-        {
-            JsonRootObject->SetStringField(TEXT("stateMachineVersion"), FString::Printf(TEXT("%lld"), StateMachineVersionValue.GetValue()));
+            JsonRootObject->SetObjectField(TEXT("stateMachineSetting"), StateMachineSettingValue->ToJson());
         }
         if (CreateNotificationValue != nullptr && CreateNotificationValue.IsValid())
         {
