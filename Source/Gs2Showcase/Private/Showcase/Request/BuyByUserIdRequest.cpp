@@ -25,6 +25,7 @@ namespace Gs2::Showcase::Request
         UserIdValue(TOptional<FString>()),
         QuantityValue(TOptional<int32>()),
         ConfigValue(nullptr),
+        RouteKeyValue(TOptional<FString>()),
         TimeOffsetTokenValue(TOptional<FString>())
     {
     }
@@ -38,6 +39,7 @@ namespace Gs2::Showcase::Request
         UserIdValue(From.UserIdValue),
         QuantityValue(From.QuantityValue),
         ConfigValue(From.ConfigValue),
+        RouteKeyValue(From.RouteKeyValue),
         TimeOffsetTokenValue(From.TimeOffsetTokenValue)
     {
     }
@@ -95,6 +97,14 @@ namespace Gs2::Showcase::Request
     )
     {
         this->ConfigValue = Config;
+        return SharedThis(this);
+    }
+
+    TSharedPtr<FBuyByUserIdRequest> FBuyByUserIdRequest::WithRouteKey(
+        const TOptional<FString> RouteKey
+    )
+    {
+        this->RouteKeyValue = RouteKey;
         return SharedThis(this);
     }
 
@@ -160,6 +170,11 @@ namespace Gs2::Showcase::Request
             return nullptr;
         }
         return ConfigValue;
+    }
+
+    TOptional<FString> FBuyByUserIdRequest::GetRouteKey() const
+    {
+        return RouteKeyValue;
     }
 
     TOptional<FString> FBuyByUserIdRequest::GetTimeOffsetToken() const
@@ -237,6 +252,15 @@ namespace Gs2::Showcase::Request
                       }
                   return v;
               }() : nullptr)
+            ->WithRouteKey(Data->HasField(ANSI_TO_TCHAR("routeKey")) ? [Data]() -> TOptional<FString>
+              {
+                  FString v("");
+                    if (Data->TryGetStringField(ANSI_TO_TCHAR("routeKey"), v))
+                  {
+                        return TOptional(v);
+                  }
+                  return TOptional<FString>();
+              }() : TOptional<FString>())
             ->WithTimeOffsetToken(Data->HasField(ANSI_TO_TCHAR("timeOffsetToken")) ? [Data]() -> TOptional<FString>
               {
                   FString v("");
@@ -284,6 +308,10 @@ namespace Gs2::Showcase::Request
                 v.Add(MakeShared<FJsonValueObject>(JsonObjectValue->ToJson()));
             }
             JsonRootObject->SetArrayField(TEXT("config"), v);
+        }
+        if (RouteKeyValue.IsSet())
+        {
+            JsonRootObject->SetStringField(TEXT("routeKey"), RouteKeyValue.GetValue());
         }
         if (TimeOffsetTokenValue.IsSet())
         {

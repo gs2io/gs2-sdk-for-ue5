@@ -21,6 +21,7 @@
 #include "VerifyAction.h"
 #include "ConsumeAction.h"
 #include "AcquireAction.h"
+#include "Bonus.h"
 
 namespace Gs2::Showcase::Model
 {
@@ -31,6 +32,7 @@ namespace Gs2::Showcase::Model
         TSharedPtr<TArray<TSharedPtr<FVerifyAction>>> VerifyActionsValue;
         TSharedPtr<TArray<TSharedPtr<FConsumeAction>>> ConsumeActionsValue;
         TSharedPtr<TArray<TSharedPtr<FAcquireAction>>> AcquireActionsValue;
+        TSharedPtr<TArray<TSharedPtr<FBonus>>> BonusesValue;
 
     public:
         FSalesItem();
@@ -44,12 +46,14 @@ namespace Gs2::Showcase::Model
         TSharedPtr<FSalesItem> WithVerifyActions(const TSharedPtr<TArray<TSharedPtr<FVerifyAction>>> VerifyActions);
         TSharedPtr<FSalesItem> WithConsumeActions(const TSharedPtr<TArray<TSharedPtr<FConsumeAction>>> ConsumeActions);
         TSharedPtr<FSalesItem> WithAcquireActions(const TSharedPtr<TArray<TSharedPtr<FAcquireAction>>> AcquireActions);
+        TSharedPtr<FSalesItem> WithBonuses(const TSharedPtr<TArray<TSharedPtr<FBonus>>> Bonuses);
 
         TOptional<FString> GetName() const;
         TOptional<FString> GetMetadata() const;
         TSharedPtr<TArray<TSharedPtr<FVerifyAction>>> GetVerifyActions() const;
         TSharedPtr<TArray<TSharedPtr<FConsumeAction>>> GetConsumeActions() const;
         TSharedPtr<TArray<TSharedPtr<FAcquireAction>>> GetAcquireActions() const;
+        TSharedPtr<TArray<TSharedPtr<FBonus>>> GetBonuses() const;
 
 
         static TSharedPtr<FSalesItem> FromJson(const TSharedPtr<FJsonObject> Data);

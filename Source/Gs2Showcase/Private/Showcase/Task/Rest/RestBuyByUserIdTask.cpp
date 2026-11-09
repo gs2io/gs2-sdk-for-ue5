@@ -112,6 +112,10 @@ namespace Gs2::Showcase::Task::Rest
                 }
                 JsonRootObject->SetArrayField(TEXT("config"), v);
             }
+            if (this->Request->GetRouteKey().IsSet())
+            {
+                JsonRootObject->SetStringField(TEXT("routeKey"), this->Request->GetRouteKey().GetValue());
+            }
             if (this->Request->GetContextStack().IsSet())
             {
                 JsonRootObject->SetStringField(TEXT("contextStack"), this->Request->GetContextStack().GetValue());

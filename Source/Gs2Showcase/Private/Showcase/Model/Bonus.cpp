@@ -1,0 +1,109 @@
+/*
+ * Copyright 2016 Game Server Services, Inc. or its affiliates. All Rights
+ * Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License").
+ * You may not use this file except in compliance with the License.
+ * A copy of the License is located at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * or in the "license" file accompanying this file. This file is distributed
+ * on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either
+ * express or implied. See the License for the specific language governing
+ * permissions and limitations under the License.
+ */
+
+#include "Showcase/Model/Bonus.h"
+
+namespace Gs2::Showcase::Model
+{
+    FBonus::FBonus():
+        RouteKeyValue(TOptional<FString>()),
+        AcquireActionsValue(nullptr)
+    {
+    }
+
+    FBonus::FBonus(
+        const FBonus& From
+    ):
+        RouteKeyValue(From.RouteKeyValue),
+        AcquireActionsValue(From.AcquireActionsValue)
+    {
+    }
+
+    TSharedPtr<FBonus> FBonus::WithRouteKey(
+        const TOptional<FString> RouteKey
+    )
+    {
+        this->RouteKeyValue = RouteKey;
+        return SharedThis(this);
+    }
+
+    TSharedPtr<FBonus> FBonus::WithAcquireActions(
+        const TSharedPtr<TArray<TSharedPtr<Model::FAcquireAction>>> AcquireActions
+    )
+    {
+        this->AcquireActionsValue = AcquireActions;
+        return SharedThis(this);
+    }
+    TOptional<FString> FBonus::GetRouteKey() const
+    {
+        return RouteKeyValue;
+    }
+    TSharedPtr<TArray<TSharedPtr<Model::FAcquireAction>>> FBonus::GetAcquireActions() const
+    {
+        return AcquireActionsValue;
+    }
+
+    TSharedPtr<FBonus> FBonus::FromJson(const TSharedPtr<FJsonObject> Data)
+    {
+        if (Data == nullptr) {
+            return nullptr;
+        }
+        return MakeShared<FBonus>()
+            ->WithRouteKey(Data->HasField(ANSI_TO_TCHAR("routeKey")) ? [Data]() -> TOptional<FString>
+                {
+                    FString v("");
+                    if (Data->TryGetStringField(ANSI_TO_TCHAR("routeKey"), v))
+                    {
+                        return TOptional(v);
+                    }
+                    return TOptional<FString>();
+                }() : TOptional<FString>())
+            ->WithAcquireActions(Data->HasField(ANSI_TO_TCHAR("acquireActions")) ? [Data]() -> TSharedPtr<TArray<Model::FAcquireActionPtr>>
+                {
+                    if (!Data->HasTypedField<EJson::Array>(ANSI_TO_TCHAR("acquireActions")))
+                    {
+                        return nullptr;
+                    }
+                    auto v = MakeShared<TArray<Model::FAcquireActionPtr>>();
+                    for (auto JsonObjectValue : Data->GetArrayField(ANSI_TO_TCHAR("acquireActions")))
+                    {
+                        v->Add(Model::FAcquireAction::FromJson(JsonObjectValue->AsObject()));
+                    }
+                    return v;
+                 }() : nullptr);
+    }
+
+    TSharedPtr<FJsonObject> FBonus::ToJson() const
+    {
+        const TSharedPtr<FJsonObject> JsonRootObject = MakeShared<FJsonObject>();
+        if (RouteKeyValue.IsSet())
+        {
+            JsonRootObject->SetStringField(TEXT("routeKey"), RouteKeyValue.GetValue());
+        }
+        if (AcquireActionsValue != nullptr && AcquireActionsValue.IsValid())
+        {
+            TArray<TSharedPtr<FJsonValue>> v;
+            for (auto JsonObjectValue : *AcquireActionsValue)
+            {
+                v.Add(MakeShared<FJsonValueObject>(JsonObjectValue->ToJson()));
+            }
+            JsonRootObject->SetArrayField(TEXT("acquireActions"), v);
+        }
+        return JsonRootObject;
+    }
+
+    FString FBonus::TypeName = "Bonus";
+}

@@ -124,6 +124,15 @@ namespace Gs2::Showcase::Task::Rest
                 }
                 JsonRootObject->SetArrayField(TEXT("acquireActions"), v);
             }
+            if (this->Request->GetBonuses() != nullptr && this->Request->GetBonuses().IsValid())
+            {
+                TArray<TSharedPtr<FJsonValue>> v;
+                for (auto JsonObjectValue : *this->Request->GetBonuses())
+                {
+                    v.Add(MakeShared<FJsonValueObject>(JsonObjectValue->ToJson()));
+                }
+                JsonRootObject->SetArrayField(TEXT("bonuses"), v);
+            }
             if (this->Request->GetContextStack().IsSet())
             {
                 JsonRootObject->SetStringField(TEXT("contextStack"), this->Request->GetContextStack().GetValue());

@@ -21,6 +21,7 @@
 #include "../Model/VerifyAction.h"
 #include "../Model/ConsumeAction.h"
 #include "../Model/AcquireAction.h"
+#include "../Model/Bonus.h"
 
 namespace Gs2::Showcase::Request
 {
@@ -36,6 +37,7 @@ namespace Gs2::Showcase::Request
         TSharedPtr<TArray<TSharedPtr<Model::FVerifyAction>>> VerifyActionsValue;
         TSharedPtr<TArray<TSharedPtr<Model::FConsumeAction>>> ConsumeActionsValue;
         TSharedPtr<TArray<TSharedPtr<Model::FAcquireAction>>> AcquireActionsValue;
+        TSharedPtr<TArray<TSharedPtr<Model::FBonus>>> BonusesValue;
         
     public:
         
@@ -53,12 +55,13 @@ namespace Gs2::Showcase::Request
         TSharedPtr<FUpdateSalesItemMasterRequest> WithVerifyActions(const TSharedPtr<TArray<TSharedPtr<Model::FVerifyAction>>> VerifyActions);
         TSharedPtr<FUpdateSalesItemMasterRequest> WithConsumeActions(const TSharedPtr<TArray<TSharedPtr<Model::FConsumeAction>>> ConsumeActions);
         TSharedPtr<FUpdateSalesItemMasterRequest> WithAcquireActions(const TSharedPtr<TArray<TSharedPtr<Model::FAcquireAction>>> AcquireActions);
+        TSharedPtr<FUpdateSalesItemMasterRequest> WithBonuses(const TSharedPtr<TArray<TSharedPtr<Model::FBonus>>> Bonuses);
 
         TOptional<FString> GetContextStack() const;
         TOptional<FString> GetNamespaceName() const;
         TOptional<FString> GetSalesItemName() const;
         TOptional<FString> GetDescription() const;
-        TOptional<FString> GetMetadata() const;TSharedPtr<TArray<TSharedPtr<Model::FVerifyAction>>> GetVerifyActions() const;TSharedPtr<TArray<TSharedPtr<Model::FConsumeAction>>> GetConsumeActions() const;TSharedPtr<TArray<TSharedPtr<Model::FAcquireAction>>> GetAcquireActions() const;
+        TOptional<FString> GetMetadata() const;TSharedPtr<TArray<TSharedPtr<Model::FVerifyAction>>> GetVerifyActions() const;TSharedPtr<TArray<TSharedPtr<Model::FConsumeAction>>> GetConsumeActions() const;TSharedPtr<TArray<TSharedPtr<Model::FAcquireAction>>> GetAcquireActions() const;TSharedPtr<TArray<TSharedPtr<Model::FBonus>>> GetBonuses() const;
 
         static TSharedPtr<FUpdateSalesItemMasterRequest> FromJson(const TSharedPtr<FJsonObject> Data);
         TSharedPtr<FJsonObject> ToJson() const;

@@ -21,6 +21,7 @@
 #include "VerifyAction.h"
 #include "ConsumeAction.h"
 #include "AcquireAction.h"
+#include "Bonus.h"
 
 namespace Gs2::Showcase::Model
 {
@@ -33,6 +34,7 @@ namespace Gs2::Showcase::Model
         TSharedPtr<TArray<TSharedPtr<FVerifyAction>>> VerifyActionsValue;
         TSharedPtr<TArray<TSharedPtr<FConsumeAction>>> ConsumeActionsValue;
         TSharedPtr<TArray<TSharedPtr<FAcquireAction>>> AcquireActionsValue;
+        TSharedPtr<TArray<TSharedPtr<FBonus>>> BonusesValue;
         TOptional<int64> CreatedAtValue;
         TOptional<int64> UpdatedAtValue;
         TOptional<int64> RevisionValue;
@@ -51,6 +53,7 @@ namespace Gs2::Showcase::Model
         TSharedPtr<FSalesItemMaster> WithVerifyActions(const TSharedPtr<TArray<TSharedPtr<FVerifyAction>>> VerifyActions);
         TSharedPtr<FSalesItemMaster> WithConsumeActions(const TSharedPtr<TArray<TSharedPtr<FConsumeAction>>> ConsumeActions);
         TSharedPtr<FSalesItemMaster> WithAcquireActions(const TSharedPtr<TArray<TSharedPtr<FAcquireAction>>> AcquireActions);
+        TSharedPtr<FSalesItemMaster> WithBonuses(const TSharedPtr<TArray<TSharedPtr<FBonus>>> Bonuses);
         TSharedPtr<FSalesItemMaster> WithCreatedAt(const TOptional<int64> CreatedAt);
         TSharedPtr<FSalesItemMaster> WithUpdatedAt(const TOptional<int64> UpdatedAt);
         TSharedPtr<FSalesItemMaster> WithRevision(const TOptional<int64> Revision);
@@ -62,6 +65,7 @@ namespace Gs2::Showcase::Model
         TSharedPtr<TArray<TSharedPtr<FVerifyAction>>> GetVerifyActions() const;
         TSharedPtr<TArray<TSharedPtr<FConsumeAction>>> GetConsumeActions() const;
         TSharedPtr<TArray<TSharedPtr<FAcquireAction>>> GetAcquireActions() const;
+        TSharedPtr<TArray<TSharedPtr<FBonus>>> GetBonuses() const;
         TOptional<int64> GetCreatedAt() const;
         FString GetCreatedAtString() const;
         TOptional<int64> GetUpdatedAt() const;

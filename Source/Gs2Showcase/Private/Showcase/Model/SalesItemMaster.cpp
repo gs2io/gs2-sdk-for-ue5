@@ -26,6 +26,7 @@ namespace Gs2::Showcase::Model
         VerifyActionsValue(nullptr),
         ConsumeActionsValue(nullptr),
         AcquireActionsValue(nullptr),
+        BonusesValue(nullptr),
         CreatedAtValue(TOptional<int64>()),
         UpdatedAtValue(TOptional<int64>()),
         RevisionValue(TOptional<int64>())
@@ -42,6 +43,7 @@ namespace Gs2::Showcase::Model
         VerifyActionsValue(From.VerifyActionsValue),
         ConsumeActionsValue(From.ConsumeActionsValue),
         AcquireActionsValue(From.AcquireActionsValue),
+        BonusesValue(From.BonusesValue),
         CreatedAtValue(From.CreatedAtValue),
         UpdatedAtValue(From.UpdatedAtValue),
         RevisionValue(From.RevisionValue)
@@ -104,6 +106,14 @@ namespace Gs2::Showcase::Model
         return SharedThis(this);
     }
 
+    TSharedPtr<FSalesItemMaster> FSalesItemMaster::WithBonuses(
+        const TSharedPtr<TArray<TSharedPtr<Model::FBonus>>> Bonuses
+    )
+    {
+        this->BonusesValue = Bonuses;
+        return SharedThis(this);
+    }
+
     TSharedPtr<FSalesItemMaster> FSalesItemMaster::WithCreatedAt(
         const TOptional<int64> CreatedAt
     )
@@ -154,6 +164,10 @@ namespace Gs2::Showcase::Model
     TSharedPtr<TArray<TSharedPtr<Model::FAcquireAction>>> FSalesItemMaster::GetAcquireActions() const
     {
         return AcquireActionsValue;
+    }
+    TSharedPtr<TArray<TSharedPtr<Model::FBonus>>> FSalesItemMaster::GetBonuses() const
+    {
+        return BonusesValue;
     }
     TOptional<int64> FSalesItemMaster::GetCreatedAt() const
     {
@@ -320,6 +334,19 @@ namespace Gs2::Showcase::Model
                     }
                     return v;
                  }() : nullptr)
+            ->WithBonuses(Data->HasField(ANSI_TO_TCHAR("bonuses")) ? [Data]() -> TSharedPtr<TArray<Model::FBonusPtr>>
+                {
+                    if (!Data->HasTypedField<EJson::Array>(ANSI_TO_TCHAR("bonuses")))
+                    {
+                        return nullptr;
+                    }
+                    auto v = MakeShared<TArray<Model::FBonusPtr>>();
+                    for (auto JsonObjectValue : Data->GetArrayField(ANSI_TO_TCHAR("bonuses")))
+                    {
+                        v->Add(Model::FBonus::FromJson(JsonObjectValue->AsObject()));
+                    }
+                    return v;
+                 }() : nullptr)
             ->WithCreatedAt(Data->HasField(ANSI_TO_TCHAR("createdAt")) ? [Data]() -> TOptional<int64>
                 {
                     int64 v;
@@ -394,6 +421,15 @@ namespace Gs2::Showcase::Model
                 v.Add(MakeShared<FJsonValueObject>(JsonObjectValue->ToJson()));
             }
             JsonRootObject->SetArrayField(TEXT("acquireActions"), v);
+        }
+        if (BonusesValue != nullptr && BonusesValue.IsValid())
+        {
+            TArray<TSharedPtr<FJsonValue>> v;
+            for (auto JsonObjectValue : *BonusesValue)
+            {
+                v.Add(MakeShared<FJsonValueObject>(JsonObjectValue->ToJson()));
+            }
+            JsonRootObject->SetArrayField(TEXT("bonuses"), v);
         }
         if (CreatedAtValue.IsSet())
         {

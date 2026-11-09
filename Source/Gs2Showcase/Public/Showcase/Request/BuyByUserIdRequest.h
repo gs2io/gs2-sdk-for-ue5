@@ -33,6 +33,7 @@ namespace Gs2::Showcase::Request
         TOptional<FString> UserIdValue;
         TOptional<int32> QuantityValue;
         TSharedPtr<TArray<TSharedPtr<Model::FConfig>>> ConfigValue;
+        TOptional<FString> RouteKeyValue;
         TOptional<FString> TimeOffsetTokenValue;
         TOptional<FString> DuplicationAvoiderValue;
         
@@ -51,6 +52,7 @@ namespace Gs2::Showcase::Request
         TSharedPtr<FBuyByUserIdRequest> WithUserId(const TOptional<FString> UserId);
         TSharedPtr<FBuyByUserIdRequest> WithQuantity(const TOptional<int32> Quantity);
         TSharedPtr<FBuyByUserIdRequest> WithConfig(const TSharedPtr<TArray<TSharedPtr<Model::FConfig>>> Config);
+        TSharedPtr<FBuyByUserIdRequest> WithRouteKey(const TOptional<FString> RouteKey);
         TSharedPtr<FBuyByUserIdRequest> WithTimeOffsetToken(const TOptional<FString> TimeOffsetToken);
         TSharedPtr<FBuyByUserIdRequest> WithDuplicationAvoider(const TOptional<FString> DuplicationAvoider);
 
@@ -61,6 +63,7 @@ namespace Gs2::Showcase::Request
         TOptional<FString> GetUserId() const;
         TOptional<int32> GetQuantity() const;
         FString GetQuantityString() const;TSharedPtr<TArray<TSharedPtr<Model::FConfig>>> GetConfig() const;
+        TOptional<FString> GetRouteKey() const;
         TOptional<FString> GetTimeOffsetToken() const;
         TOptional<FString> GetDuplicationAvoider() const;
 
