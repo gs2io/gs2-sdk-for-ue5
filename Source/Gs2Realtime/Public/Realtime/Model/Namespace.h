@@ -22,6 +22,7 @@
 #include "TransactionSettingV2.h"
 #include "SyncSetting.h"
 #include "StateMachineSetting.h"
+#include "ParticipantSetting.h"
 #include "NotificationSetting.h"
 #include "LogSetting.h"
 
@@ -38,6 +39,7 @@ namespace Gs2::Realtime::Model
         TOptional<FString> ServerSpecValue;
         TSharedPtr<FSyncSetting> SyncSettingValue;
         TSharedPtr<FStateMachineSetting> StateMachineSettingValue;
+        TSharedPtr<FParticipantSetting> ParticipantSettingValue;
         TSharedPtr<FNotificationSetting> CreateNotificationValue;
         TSharedPtr<FLogSetting> LogSettingValue;
         TOptional<int64> CreatedAtValue;
@@ -60,6 +62,7 @@ namespace Gs2::Realtime::Model
         TSharedPtr<FNamespace> WithServerSpec(const TOptional<FString> ServerSpec);
         TSharedPtr<FNamespace> WithSyncSetting(const TSharedPtr<FSyncSetting> SyncSetting);
         TSharedPtr<FNamespace> WithStateMachineSetting(const TSharedPtr<FStateMachineSetting> StateMachineSetting);
+        TSharedPtr<FNamespace> WithParticipantSetting(const TSharedPtr<FParticipantSetting> ParticipantSetting);
         TSharedPtr<FNamespace> WithCreateNotification(const TSharedPtr<FNotificationSetting> CreateNotification);
         TSharedPtr<FNamespace> WithLogSetting(const TSharedPtr<FLogSetting> LogSetting);
         TSharedPtr<FNamespace> WithCreatedAt(const TOptional<int64> CreatedAt);
@@ -75,6 +78,7 @@ namespace Gs2::Realtime::Model
         TOptional<FString> GetServerSpec() const;
         TSharedPtr<FSyncSetting> GetSyncSetting() const;
         TSharedPtr<FStateMachineSetting> GetStateMachineSetting() const;
+        TSharedPtr<FParticipantSetting> GetParticipantSetting() const;
         TSharedPtr<FNotificationSetting> GetCreateNotification() const;
         TSharedPtr<FLogSetting> GetLogSetting() const;
         TOptional<int64> GetCreatedAt() const;

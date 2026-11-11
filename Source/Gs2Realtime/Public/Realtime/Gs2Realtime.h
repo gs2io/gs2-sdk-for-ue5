@@ -26,6 +26,7 @@
 #include "Model/TransactionSettingV2.h"
 #include "Model/SyncSetting.h"
 #include "Model/StateMachineSetting.h"
+#include "Model/ParticipantSetting.h"
 
 // DescribeNamespaces
 #include "Request/DescribeNamespacesRequest.h"

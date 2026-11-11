@@ -112,6 +112,10 @@ namespace Gs2::Realtime::Task::Rest
             {
                 JsonRootObject->SetObjectField(TEXT("stateMachineSetting"), this->Request->GetStateMachineSetting()->ToJson());
             }
+            if (this->Request->GetParticipantSetting() != nullptr && this->Request->GetParticipantSetting().IsValid())
+            {
+                JsonRootObject->SetObjectField(TEXT("participantSetting"), this->Request->GetParticipantSetting()->ToJson());
+            }
             if (this->Request->GetCreateNotification() != nullptr && this->Request->GetCreateNotification().IsValid())
             {
                 JsonRootObject->SetObjectField(TEXT("createNotification"), this->Request->GetCreateNotification()->ToJson());

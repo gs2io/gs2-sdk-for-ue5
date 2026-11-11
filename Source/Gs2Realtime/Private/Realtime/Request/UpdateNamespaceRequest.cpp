@@ -27,6 +27,7 @@ namespace Gs2::Realtime::Request
         ServerSpecValue(TOptional<FString>()),
         SyncSettingValue(nullptr),
         StateMachineSettingValue(nullptr),
+        ParticipantSettingValue(nullptr),
         CreateNotificationValue(nullptr),
         LogSettingValue(nullptr)
     {
@@ -43,6 +44,7 @@ namespace Gs2::Realtime::Request
         ServerSpecValue(From.ServerSpecValue),
         SyncSettingValue(From.SyncSettingValue),
         StateMachineSettingValue(From.StateMachineSettingValue),
+        ParticipantSettingValue(From.ParticipantSettingValue),
         CreateNotificationValue(From.CreateNotificationValue),
         LogSettingValue(From.LogSettingValue)
     {
@@ -117,6 +119,14 @@ namespace Gs2::Realtime::Request
     )
     {
         this->StateMachineSettingValue = StateMachineSetting;
+        return SharedThis(this);
+    }
+
+    TSharedPtr<FUpdateNamespaceRequest> FUpdateNamespaceRequest::WithParticipantSetting(
+        const TSharedPtr<Model::FParticipantSetting> ParticipantSetting
+    )
+    {
+        this->ParticipantSettingValue = ParticipantSetting;
         return SharedThis(this);
     }
 
@@ -195,6 +205,15 @@ namespace Gs2::Realtime::Request
             return nullptr;
         }
         return StateMachineSettingValue;
+    }
+
+    TSharedPtr<Model::FParticipantSetting> FUpdateNamespaceRequest::GetParticipantSetting() const
+    {
+        if (!ParticipantSettingValue.IsValid())
+        {
+            return nullptr;
+        }
+        return ParticipantSettingValue;
     }
 
     TSharedPtr<Model::FNotificationSetting> FUpdateNamespaceRequest::GetCreateNotification() const
@@ -290,6 +309,14 @@ namespace Gs2::Realtime::Request
                   }
                   return Model::FStateMachineSetting::FromJson(Data->GetObjectField(ANSI_TO_TCHAR("stateMachineSetting")));
               }() : nullptr)
+          ->WithParticipantSetting(Data->HasField(ANSI_TO_TCHAR("participantSetting")) ? [Data]() -> Model::FParticipantSettingPtr
+              {
+                  if (Data->HasTypedField<EJson::Null>(ANSI_TO_TCHAR("participantSetting")))
+                  {
+                      return nullptr;
+                  }
+                  return Model::FParticipantSetting::FromJson(Data->GetObjectField(ANSI_TO_TCHAR("participantSetting")));
+              }() : nullptr)
           ->WithCreateNotification(Data->HasField(ANSI_TO_TCHAR("createNotification")) ? [Data]() -> Model::FNotificationSettingPtr
               {
                   if (Data->HasTypedField<EJson::Null>(ANSI_TO_TCHAR("createNotification")))
@@ -346,6 +373,10 @@ namespace Gs2::Realtime::Request
         if (StateMachineSettingValue != nullptr && StateMachineSettingValue.IsValid())
         {
             JsonRootObject->SetObjectField(TEXT("stateMachineSetting"), StateMachineSettingValue->ToJson());
+        }
+        if (ParticipantSettingValue != nullptr && ParticipantSettingValue.IsValid())
+        {
+            JsonRootObject->SetObjectField(TEXT("participantSetting"), ParticipantSettingValue->ToJson());
         }
         if (CreateNotificationValue != nullptr && CreateNotificationValue.IsValid())
         {
