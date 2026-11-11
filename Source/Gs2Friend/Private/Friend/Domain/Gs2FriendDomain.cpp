@@ -796,6 +796,7 @@ namespace Gs2::Friend::Domain
                 return;
             }
             const auto Notification = Gs2::Friend::Model::FAcceptRequestNotification::FromJson(PayloadJson);
+/* diff --- start
             Gs2::Friend::Model::Cache::FSendFriendRequestCache::Delete(
                 Gs2->Cache,
                 Notification->GetNamespaceName(),
@@ -803,6 +804,21 @@ namespace Gs2::Friend::Domain
                 Notification->GetTargetUserId(),
                 TOptional<int32>()
             );
+ diff --- end */
+/* diff +++ start */
+            for (const auto& WithProfile : {TOptional<bool>(false), TOptional<bool>(true), TOptional<bool>()})
+            {
+                Gs2::Friend::Model::Cache::FSendFriendRequestCache::Delete(
+                    Gs2->Cache,
+                    Notification->GetNamespaceName(),
+                    Notification->GetUserId(),
+                    WithProfile,
+                    Notification->GetTargetUserId(),
+                    TOptional<int32>()
+                );
+            }
+/* diff +++ end */
+/* diff --- start
             Gs2::Friend::Model::Cache::FReceiveFriendRequestCache::Delete(
                 Gs2->Cache,
                 Notification->GetNamespaceName(),
@@ -810,6 +826,20 @@ namespace Gs2::Friend::Domain
                 Notification->GetUserId(),
                 TOptional<int32>()
             );
+ diff --- end */
+/* diff +++ start */
+            for (const auto& WithProfile : {TOptional<bool>(false), TOptional<bool>(true), TOptional<bool>()})
+            {
+                Gs2::Friend::Model::Cache::FReceiveFriendRequestCache::Delete(
+                    Gs2->Cache,
+                    Notification->GetNamespaceName(),
+                    Notification->GetTargetUserId(),
+                    WithProfile,
+                    Notification->GetUserId(),
+                    TOptional<int32>()
+                );
+            }
+/* diff +++ end */
             Gs2->Cache->ClearListCache(
                 Gs2::Friend::Model::FFriendUser::TypeName,
                 Gs2::Friend::Model::Cache::FFriendUserCache::CreateCacheParentKey(
@@ -856,6 +886,7 @@ namespace Gs2::Friend::Domain
                 return;
             }
             const auto Notification = Gs2::Friend::Model::FRejectRequestNotification::FromJson(PayloadJson);
+/* diff --- start
             Gs2::Friend::Model::Cache::FSendFriendRequestCache::Delete(
                 Gs2->Cache,
                 Notification->GetNamespaceName(),
@@ -863,6 +894,21 @@ namespace Gs2::Friend::Domain
                 Notification->GetTargetUserId(),
                 TOptional<int32>()
             );
+ diff --- end */
+/* diff +++ start */
+            for (const auto& WithProfile : {TOptional<bool>(false), TOptional<bool>(true), TOptional<bool>()})
+            {
+                Gs2::Friend::Model::Cache::FSendFriendRequestCache::Delete(
+                    Gs2->Cache,
+                    Notification->GetNamespaceName(),
+                    Notification->GetUserId(),
+                    WithProfile,
+                    Notification->GetTargetUserId(),
+                    TOptional<int32>()
+                );
+            }
+/* diff +++ end */
+/* diff --- start
             Gs2::Friend::Model::Cache::FReceiveFriendRequestCache::Delete(
                 Gs2->Cache,
                 Notification->GetNamespaceName(),
@@ -870,6 +916,20 @@ namespace Gs2::Friend::Domain
                 Notification->GetUserId(),
                 TOptional<int32>()
             );
+ diff --- end */
+/* diff +++ start */
+            for (const auto& WithProfile : {TOptional<bool>(false), TOptional<bool>(true), TOptional<bool>()})
+            {
+                Gs2::Friend::Model::Cache::FReceiveFriendRequestCache::Delete(
+                    Gs2->Cache,
+                    Notification->GetNamespaceName(),
+                    Notification->GetTargetUserId(),
+                    WithProfile,
+                    Notification->GetUserId(),
+                    TOptional<int32>()
+                );
+            }
+/* diff +++ end */
             for (const auto& UserId : {Notification->GetUserId(), Notification->GetTargetUserId()})
             {
                 for (const auto& WithProfile : {TOptional<bool>(false), TOptional<bool>(true), TOptional<bool>()})
@@ -919,18 +979,44 @@ namespace Gs2::Friend::Domain
                 return;
             }
             const auto Notification = Gs2::Friend::Model::FReceiveRequestNotification::FromJson(PayloadJson);
+/* diff --- start
             Gs2->Cache->ClearListCache(
                 Gs2::Friend::Model::FSendFriendRequest::TypeName,
                 Gs2::Friend::Model::Cache::FSendFriendRequestCache::CreateCacheParentKey(
                     Notification->GetNamespaceName(), Notification->GetFromUserId(), TOptional<int32>()
                 )
             );
+ diff --- end */
+/* diff +++ start */
+            for (const auto& WithProfile : {TOptional<bool>(false), TOptional<bool>(true), TOptional<bool>()})
+            {
+                Gs2->Cache->ClearListCache(
+                    Gs2::Friend::Model::FSendFriendRequest::TypeName,
+                    Gs2::Friend::Model::Cache::FSendFriendRequestCache::CreateCacheParentKey(
+                        Notification->GetNamespaceName(), Notification->GetFromUserId(), WithProfile, TOptional<int32>()
+                    )
+                );
+            }
+/* diff +++ end */
+/* diff --- start
             Gs2->Cache->ClearListCache(
                 Gs2::Friend::Model::FReceiveFriendRequest::TypeName,
                 Gs2::Friend::Model::Cache::FReceiveFriendRequestCache::CreateCacheParentKey(
                     Notification->GetNamespaceName(), Notification->GetUserId(), TOptional<int32>()
                 )
             );
+ diff --- end */
+/* diff +++ start */
+            for (const auto& WithProfile : {TOptional<bool>(false), TOptional<bool>(true), TOptional<bool>()})
+            {
+                Gs2->Cache->ClearListCache(
+                    Gs2::Friend::Model::FReceiveFriendRequest::TypeName,
+                    Gs2::Friend::Model::Cache::FReceiveFriendRequestCache::CreateCacheParentKey(
+                        Notification->GetNamespaceName(), Notification->GetUserId(), WithProfile, TOptional<int32>()
+                    )
+                );
+            }
+/* diff +++ end */
             for (const auto& UserId : {Notification->GetUserId(), Notification->GetFromUserId()})
             {
                 for (const auto& WithProfile : {TOptional<bool>(false), TOptional<bool>(true), TOptional<bool>()})
@@ -953,6 +1039,7 @@ namespace Gs2::Friend::Domain
                 return;
             }
             const auto Notification = Gs2::Friend::Model::FCancelRequestNotification::FromJson(PayloadJson);
+/* diff --- start
             Gs2::Friend::Model::Cache::FReceiveFriendRequestCache::Delete(
                 Gs2->Cache,
                 Notification->GetNamespaceName(),
@@ -960,12 +1047,39 @@ namespace Gs2::Friend::Domain
                 Notification->GetFromUserId(),
                 TOptional<int32>()
             );
+ diff --- end */
+/* diff +++ start */
+            for (const auto& WithProfile : {TOptional<bool>(false), TOptional<bool>(true), TOptional<bool>()})
+            {
+                Gs2::Friend::Model::Cache::FReceiveFriendRequestCache::Delete(
+                    Gs2->Cache,
+                    Notification->GetNamespaceName(),
+                    Notification->GetUserId(),
+                    WithProfile,
+                    Notification->GetFromUserId(),
+                    TOptional<int32>()
+                );
+            }
+/* diff +++ end */
+/* diff --- start
             Gs2->Cache->ClearListCache(
                 Gs2::Friend::Model::FReceiveFriendRequest::TypeName,
                 Gs2::Friend::Model::Cache::FReceiveFriendRequestCache::CreateCacheParentKey(
                     Notification->GetNamespaceName(), Notification->GetUserId(), TOptional<int32>()
                 )
             );
+ diff --- end */
+/* diff +++ start */
+            for (const auto& WithProfile : {TOptional<bool>(false), TOptional<bool>(true), TOptional<bool>()})
+            {
+                Gs2->Cache->ClearListCache(
+                    Gs2::Friend::Model::FReceiveFriendRequest::TypeName,
+                    Gs2::Friend::Model::Cache::FReceiveFriendRequestCache::CreateCacheParentKey(
+                        Notification->GetNamespaceName(), Notification->GetUserId(), WithProfile, TOptional<int32>()
+                    )
+                );
+            }
+/* diff +++ end */
             CancelRequestNotificationEvent.Broadcast(Notification);
         }
     }

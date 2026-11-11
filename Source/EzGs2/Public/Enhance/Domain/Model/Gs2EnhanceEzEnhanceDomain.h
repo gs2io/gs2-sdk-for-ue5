@@ -25,6 +25,7 @@
 #include "Enhance/Model/Gs2EnhanceEzUnleashMaterial.h"
 #include "Enhance/Model/Gs2EnhanceEzUnleashIndividualMaterialSetting.h"
 #include "Enhance/Model/Gs2EnhanceEzUnleashQuantityMaterialSetting.h"
+#include "Enhance/Model/Gs2EnhanceEzUnleashMaterialSelection.h"
 #include "Enhance/Model/Gs2EnhanceEzProgress.h"
 #include "Enhance/Model/Gs2EnhanceEzConfig.h"
 #include "Enhance/Model/Gs2EnhanceEzMaterial.h"

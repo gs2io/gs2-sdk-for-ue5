@@ -48,6 +48,7 @@ namespace Gs2::Exchange
             return Source;
         }
         Resolved->SetMetadata(Source->GetMetadata());
+        Resolved->SetResult(Source->GetResult());
         return Resolved;
     }
 }

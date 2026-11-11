@@ -62,7 +62,8 @@ namespace Gs2::Friend::Domain::Model
         const Friend::Domain::FGs2FriendDomainPtr& Service,
         const TOptional<FString> NamespaceName,
         const Gs2::Auth::Model::FAccessTokenPtr& AccessToken,
-        const TOptional<FString> TargetUserId
+        const TOptional<FString> TargetUserId,
+        const TOptional<bool> WithProfile
         // ReSharper disable once CppMemberInitializersOrder
     ):
         Gs2(Gs2),
@@ -71,6 +72,7 @@ namespace Gs2::Friend::Domain::Model
         NamespaceName(NamespaceName),
         AccessToken(AccessToken),
         TargetUserId(TargetUserId),
+        WithProfile(WithProfile),
         ParentKey(Gs2::Friend::Domain::Model::FUserDomain::CreateCacheParentKey(
             NamespaceName,
             UserId(),
@@ -88,6 +90,7 @@ namespace Gs2::Friend::Domain::Model
         NamespaceName(From.NamespaceName),
         AccessToken(From.AccessToken),
         TargetUserId(From.TargetUserId),
+        WithProfile(From.WithProfile),
         ParentKey(From.ParentKey)
     {
 
@@ -116,6 +119,7 @@ namespace Gs2::Friend::Domain::Model
             ->WithNamespaceName(Self->NamespaceName)
             ->WithAccessToken(Self->AccessToken->GetToken())
             ->WithTargetUserId(Self->TargetUserId);
+        Request->WithWithProfile(Self->WithProfile);
         const auto CacheOwnerSnapshotUserId = Self->AccessToken.IsValid() ? Self->UserId() : TOptional<FString>();
         const auto CacheOwnerSnapshotTimeOffset = Self->AccessToken.IsValid() ? Self->AccessToken->GetTimeOffset() : TOptional<int32>();
         const auto Future = Self->Client->GetSendRequest(
@@ -197,21 +201,26 @@ namespace Gs2::Friend::Domain::Model
             const auto Error = Future->GetTask().Error();
             if (Error.IsValid() && Error->IsChildOf(Gs2::Core::Model::FNotFoundError::Class))
             {
-                Gs2::Friend::Model::Cache::FSendFriendRequestCache::Delete(
-                    Self->Gs2->Cache,
-                    Request->GetNamespaceName(),
-                    Self->AccessToken->GetUserId(),
-                    Request->GetTargetUserId(),
-                    Self->AccessToken->GetTimeOffset()
-                );
-                Self->Gs2->Cache->ClearListCache(
-                    Gs2::Friend::Model::FSendFriendRequest::TypeName,
-                    Gs2::Friend::Model::Cache::FSendFriendRequestCache::CreateCacheParentKey(
+                for (const auto& CacheWithProfile : {TOptional<bool>(false), TOptional<bool>(true), TOptional<bool>()})
+                {
+                    Gs2::Friend::Model::Cache::FSendFriendRequestCache::Delete(
+                        Self->Gs2->Cache,
                         Request->GetNamespaceName(),
                         Self->AccessToken->GetUserId(),
+                        CacheWithProfile,
+                        Request->GetTargetUserId(),
                         Self->AccessToken->GetTimeOffset()
-                    )
-                );
+                    );
+                    Self->Gs2->Cache->ClearListCache(
+                        Gs2::Friend::Model::FSendFriendRequest::TypeName,
+                        Gs2::Friend::Model::Cache::FSendFriendRequestCache::CreateCacheParentKey(
+                            Request->GetNamespaceName(),
+                            Self->AccessToken->GetUserId(),
+                            CacheWithProfile,
+                            Self->AccessToken->GetTimeOffset()
+                        )
+                    );
+                }
             }
             return Error;
         }
@@ -229,14 +238,18 @@ namespace Gs2::Friend::Domain::Model
                       Details->Add(MakeShared<Gs2::Core::Model::FGs2ErrorDetail>(TEXT("userId"), TEXT("userId is invalid."), TEXT("invalid_response")));
                       return MakeShared<Gs2::Core::Model::FUnknownError>(Details);
                     }
-              Gs2::Friend::Model::Cache::FSendFriendRequestCache::Delete(
-            Self->Gs2->Cache,
+              for (const auto& CacheWithProfile : {TOptional<bool>(false), TOptional<bool>(true), TOptional<bool>()})
+        {
+            Gs2::Friend::Model::Cache::FSendFriendRequestCache::Delete(
+                Self->Gs2->Cache,
 
-            Request->GetNamespaceName(),
-            (CacheOwnerSnapshotUserId),
-            ResultModel->GetItem()->GetTargetUserId(),
-            CacheOwnerSnapshotTimeOffset
-        );
+                Request->GetNamespaceName(),
+                (CacheOwnerSnapshotUserId),
+                CacheWithProfile,
+                ResultModel->GetItem()->GetTargetUserId(),
+                CacheOwnerSnapshotTimeOffset
+            );
+        };
         auto Domain = MakeShared<Gs2::Friend::Domain::Model::FSendFriendRequestAccessTokenDomain>(
             Self->Gs2,
             Self->Service,
@@ -258,6 +271,7 @@ namespace Gs2::Friend::Domain::Model
     FString FSendFriendRequestAccessTokenDomain::CreateCacheParentKey(
         TOptional<FString> NamespaceName,
         TOptional<FString> UserId,
+        TOptional<FString> WithProfile,
         TOptional<FString> TargetUserId,
         FString ChildType
     )
@@ -265,6 +279,7 @@ namespace Gs2::Friend::Domain::Model
         return FString("") +
             (NamespaceName.IsSet() ? *NamespaceName : "null") + ":" +
             (UserId.IsSet() ? *UserId : "null") + ":" +
+            (WithProfile.IsSet() ? *WithProfile : "null") + ":" +
             (TargetUserId.IsSet() ? *TargetUserId : "null") + ":" +
             ChildType;
     }
@@ -299,6 +314,7 @@ namespace Gs2::Friend::Domain::Model
 
             Self->NamespaceName,
             Self->AccessToken.IsValid() ? Self->UserId() : TOptional<FString>(),
+            Self->WithProfile,
             Self->AccessToken.IsValid() ? Self->AccessToken->GetTimeOffset() : TOptional<int32>()
         );
         const auto CacheKey = Gs2::Friend::Model::Cache::FSendFriendRequestCache::CreateCacheKey(
@@ -317,6 +333,7 @@ namespace Gs2::Friend::Domain::Model
 
                     Self->NamespaceName,
                     Self->AccessToken.IsValid() ? Self->UserId() : TOptional<FString>(),
+                    Self->WithProfile,
                     Self->TargetUserId,
                     Self->AccessToken.IsValid() ? Self->AccessToken->GetTimeOffset() : TOptional<int32>(),
                     &Value
@@ -339,6 +356,7 @@ namespace Gs2::Friend::Domain::Model
 
                             Self->NamespaceName,
                             Self->AccessToken.IsValid() ? Self->UserId() : TOptional<FString>(),
+                            Self->WithProfile,
                             Self->TargetUserId,
                             Self->AccessToken.IsValid() ? Self->AccessToken->GetTimeOffset() : TOptional<int32>(),
                             nullptr
@@ -364,6 +382,7 @@ namespace Gs2::Friend::Domain::Model
 
                         Self->NamespaceName,
                         Self->AccessToken.IsValid() ? Self->UserId() : TOptional<FString>(),
+                        Self->WithProfile,
                         Self->TargetUserId,
                         Self->AccessToken.IsValid() ? Self->AccessToken->GetTimeOffset() : TOptional<int32>(),
                         Value
@@ -386,6 +405,7 @@ namespace Gs2::Friend::Domain::Model
 
             NamespaceName,
             AccessToken.IsValid() ? UserId() : TOptional<FString>(),
+            WithProfile,
             TargetUserId,
             AccessToken.IsValid() ? AccessToken->GetTimeOffset() : TOptional<int32>()
         );
@@ -439,6 +459,7 @@ namespace Gs2::Friend::Domain::Model
 
             NamespaceName,
             AccessToken.IsValid() ? UserId() : TOptional<FString>(),
+            WithProfile,
             AccessToken.IsValid() ? AccessToken->GetTimeOffset() : TOptional<int32>()
         );
         const auto SubscriptionCacheKey = Gs2::Friend::Model::Cache::FSendFriendRequestCache::CreateCacheKey(
@@ -497,6 +518,7 @@ namespace Gs2::Friend::Domain::Model
 
             NamespaceName,
             AccessToken.IsValid() ? UserId() : TOptional<FString>(),
+            WithProfile,
             AccessToken.IsValid() ? AccessToken->GetTimeOffset() : TOptional<int32>()
         );
         const auto SubscriptionCacheKey = Gs2::Friend::Model::Cache::FSendFriendRequestCache::CreateCacheKey(

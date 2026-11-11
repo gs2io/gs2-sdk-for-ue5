@@ -105,6 +105,7 @@ namespace Gs2::Friend::Domain::Iterator
             const auto ListParentKey = Gs2::Friend::Model::Cache::FReceiveFriendRequestCache::CreateCacheParentKey(
                 Self->NamespaceName,
                 Self->UserId,
+                Self->WithProfile,
                 TOptional<int32>()
             );
             if (!RangeIteratorOpt && (!Self->WithProfile.Get(false)))
@@ -179,7 +180,7 @@ namespace Gs2::Friend::Domain::Iterator
                         if (!Item.IsValid()) continue;
                         Gs2::Friend::Model::Cache::FReceiveFriendRequestCache::Put(
                             Self->Gs2->Cache,
-                            Request->GetNamespaceName(), Request->GetUserId(), Item->GetUserId(),
+                            Request->GetNamespaceName(), Request->GetUserId(), Request->GetWithProfile().Get(bool{}), Item->GetUserId(),
                             TOptional<int32>(), Item
                         );
                     }

@@ -1190,10 +1190,28 @@ namespace Gs2::Inventory::Domain::Model
         Future->EnsureCompletion();
         if (ResultModel != nullptr)
         {
-            Gs2::Inventory::Model::Cache::FItemSetCache::Put(
-                Self->Gs2->Cache, Self->NamespaceName, Self->UserId, Self->InventoryName, Self->ItemName,
-                TOptional<int32>(), ResultModel->GetItems()
-            );
+            // itemSetName を指定した検証はそのスタックしか返さないので、アイテムの一覧としては載せない
+            if (RequestModel->GetItemSetName().IsSet())
+            {
+                if (ResultModel->GetItems().IsValid())
+                {
+                    for (const auto& Item : *ResultModel->GetItems())
+                    {
+                        if (!Item.IsValid()) continue;
+                        Gs2::Inventory::Model::Cache::FItemSetCache::Put(
+                            Self->Gs2->Cache, Self->NamespaceName, Self->UserId, Self->InventoryName, Self->ItemName,
+                            Item->GetName(), TOptional<int32>(), Item
+                        );
+                    }
+                }
+            }
+            else
+            {
+                Gs2::Inventory::Model::Cache::FItemSetCache::Put(
+                    Self->Gs2->Cache, Self->NamespaceName, Self->UserId, Self->InventoryName, Self->ItemName,
+                    TOptional<int32>(), ResultModel->GetItems()
+                );
+            }
         }
         if (ResultModel != nullptr) {
             

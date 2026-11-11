@@ -33,6 +33,7 @@ class BPGS2_API UGs2FriendListOfSendFriendRequestAsyncFunction : public UBluepri
     FGs2FriendOwnUser User;
 
 public:
+    bool WithProfile;
 
     UPROPERTY(Category = Gs2, BlueprintAssignable)
     FGs2FriendListOfSendFriendRequestSuccessDelegate OnSuccess;
@@ -45,7 +46,8 @@ public:
 	UFUNCTION(BlueprintCallable, DisplayName="Gs2::Friend::Fetch::ListOfSendFriendRequest", Category="Game Server Services|GS2-Friend|Namespace|User|SendFriendRequest|Fetch", meta=(WorldContext="WorldContextObject", BlueprintInternalUseOnly="true"))
     static UGs2FriendListOfSendFriendRequestAsyncFunction* ListOfSendFriendRequest(
         UObject* WorldContextObject,
-        FGs2FriendOwnUser User
+        FGs2FriendOwnUser User,
+        bool WithProfile
     );
 
     virtual void Activate() override;

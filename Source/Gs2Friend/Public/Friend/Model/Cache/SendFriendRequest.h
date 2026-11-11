@@ -12,6 +12,7 @@ namespace Gs2::Friend::Model::Cache
         static FString CreateCacheParentKey(
             TOptional<FString> CacheOwnerArgumentNamespaceName,
             TOptional<FString> CacheOwnerArgumentUserId,
+            TOptional<bool> CacheOwnerArgumentWithProfile,
             TOptional<int32> CacheOwnerArgumentTimeOffset = TOptional<int32>()
         );
 
@@ -23,6 +24,7 @@ namespace Gs2::Friend::Model::Cache
             const Gs2::Core::Domain::FCacheDatabasePtr& CacheOwnerArgumentCache,
             TOptional<FString> CacheOwnerArgumentNamespaceName,
             TOptional<FString> CacheOwnerArgumentUserId,
+            TOptional<bool> CacheOwnerArgumentWithProfile,
             TOptional<FString> CacheOwnerArgumentTargetUserId,
             TOptional<int32> CacheOwnerArgumentTimeOffset,
             Gs2::Friend::Model::FSendFriendRequestPtr* CacheOwnerArgumentOutItem
@@ -32,6 +34,7 @@ namespace Gs2::Friend::Model::Cache
             const Gs2::Core::Domain::FCacheDatabasePtr& CacheOwnerArgumentCache,
             TOptional<FString> CacheOwnerArgumentNamespaceName,
             TOptional<FString> CacheOwnerArgumentUserId,
+            TOptional<bool> CacheOwnerArgumentWithProfile,
             TOptional<FString> CacheOwnerArgumentTargetUserId,
             TOptional<int32> CacheOwnerArgumentTimeOffset,
             const Gs2::Friend::Model::FSendFriendRequestPtr& CacheOwnerArgumentItem
@@ -49,6 +52,7 @@ namespace Gs2::Friend::Model::Cache
             const Gs2::Core::Domain::FCacheDatabasePtr& CacheOwnerArgumentCache,
             TOptional<FString> CacheOwnerArgumentNamespaceName,
             TOptional<FString> CacheOwnerArgumentUserId,
+            TOptional<bool> CacheOwnerArgumentWithProfile,
             TOptional<FString> CacheOwnerArgumentTargetUserId,
             TOptional<int32> CacheOwnerArgumentTimeOffset
         );
@@ -57,6 +61,7 @@ namespace Gs2::Friend::Model::Cache
             const Gs2::Core::Domain::FCacheDatabasePtr& CacheOwnerArgumentCache,
             TOptional<FString> CacheOwnerArgumentNamespaceName,
             TOptional<FString> CacheOwnerArgumentUserId,
+            TOptional<bool> CacheOwnerArgumentWithProfile,
             TOptional<FString> CacheOwnerArgumentTargetUserId,
             TOptional<int32> CacheOwnerArgumentTimeOffset,
             const TFunction<Gs2::Core::Model::FGs2ErrorPtr(Gs2::Friend::Model::FSendFriendRequestPtr*)>& CacheOwnerArgumentFetchImpl,
@@ -67,6 +72,7 @@ namespace Gs2::Friend::Model::Cache
             const Gs2::Core::Domain::FCacheDatabasePtr& CacheOwnerArgumentCache,
             TOptional<FString> CacheOwnerArgumentNamespaceName,
             TOptional<FString> CacheOwnerArgumentUserId,
+            TOptional<bool> CacheOwnerArgumentWithProfile,
             TOptional<int32> CacheOwnerArgumentTimeOffset,
             TFunction<void(TArray<Gs2::Friend::Model::FSendFriendRequestPtr>)> CacheOwnerArgumentCallback
         );
@@ -75,6 +81,7 @@ namespace Gs2::Friend::Model::Cache
             const Gs2::Core::Domain::FCacheDatabasePtr& CacheOwnerArgumentCache,
             TOptional<FString> CacheOwnerArgumentNamespaceName,
             TOptional<FString> CacheOwnerArgumentUserId,
+            TOptional<bool> CacheOwnerArgumentWithProfile,
             TOptional<int32> CacheOwnerArgumentTimeOffset,
             Gs2::Core::Domain::CallbackID CacheOwnerArgumentCallbackID
         );

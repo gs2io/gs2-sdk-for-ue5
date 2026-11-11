@@ -33,6 +33,7 @@ class BPGS2_API UGs2ChatListOfSubscribeAsyncFunction : public UBlueprintAsyncAct
     FGs2ChatOwnUser User;
 
 public:
+    FString RoomNamePrefix;
 
     UPROPERTY(Category = Gs2, BlueprintAssignable)
     FGs2ChatListOfSubscribeSuccessDelegate OnSuccess;
@@ -45,7 +46,8 @@ public:
 	UFUNCTION(BlueprintCallable, DisplayName="Gs2::Chat::Fetch::ListOfSubscribe", Category="Game Server Services|GS2-Chat|Namespace|User|Subscribe|Fetch", meta=(WorldContext="WorldContextObject", BlueprintInternalUseOnly="true"))
     static UGs2ChatListOfSubscribeAsyncFunction* ListOfSubscribe(
         UObject* WorldContextObject,
-        FGs2ChatOwnUser User
+        FGs2ChatOwnUser User,
+        FString RoomNamePrefix
     );
 
     virtual void Activate() override;

@@ -110,6 +110,7 @@ namespace Gs2::Core::Net::WebSocket::Task
                 FJsonSerializer::Deserialize(JsonReader, JsonRootObject))
             {
                 auto Error = Gs2::Core::Model::FGs2Error::FromJson(Status, JsonRootObject, Metadata);
+                Error->SetResult(Gs2::Core::Model::FGs2Error::ExtractResult(Body));
                 return MakeShared<FWebSocketResult>(
                     RequestId,
                     Status,

@@ -53,6 +53,7 @@ namespace Gs2::SerialKey
             return Source;
         }
         Resolved->SetMetadata(Source->GetMetadata());
+        Resolved->SetResult(Source->GetResult());
         return Resolved;
     }
 }

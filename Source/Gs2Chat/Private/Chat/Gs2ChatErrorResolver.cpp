@@ -65,6 +65,7 @@ namespace Gs2::Chat
             return Source;
         }
         Resolved->SetMetadata(Source->GetMetadata());
+        Resolved->SetResult(Source->GetResult());
         return Resolved;
     }
 }

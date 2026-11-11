@@ -33,6 +33,7 @@ class BPGS2_API UGs2ChatListOfMessageAsyncFunction : public UBlueprintAsyncActio
     FGs2ChatOwnRoom Room;
 
 public:
+    int32 Category;
 
     UPROPERTY(Category = Gs2, BlueprintAssignable)
     FGs2ChatListOfMessageSuccessDelegate OnSuccess;
@@ -45,7 +46,8 @@ public:
 	UFUNCTION(BlueprintCallable, DisplayName="Gs2::Chat::Fetch::ListOfMessage", Category="Game Server Services|GS2-Chat|Namespace|User|Room|Message|Fetch", meta=(WorldContext="WorldContextObject", BlueprintInternalUseOnly="true"))
     static UGs2ChatListOfMessageAsyncFunction* ListOfMessage(
         UObject* WorldContextObject,
-        FGs2ChatOwnRoom Room
+        FGs2ChatOwnRoom Room,
+        int32 Category
     );
 
     virtual void Activate() override;

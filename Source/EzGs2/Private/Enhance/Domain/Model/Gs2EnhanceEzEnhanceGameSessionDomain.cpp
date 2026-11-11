@@ -130,4 +130,104 @@ namespace Gs2::UE5::Enhance::Domain::Model
             Config
         );
     }
+
+    FEzEnhanceGameSessionDomain::FUnleashTask::FUnleashTask(
+        TSharedPtr<FEzEnhanceGameSessionDomain> Self,
+        FString RateName,
+        FString TargetItemSetId,
+        TOptional<TArray<FString>> Materials,
+        TOptional<FString> RecipeName,
+        TOptional<TArray<TSharedPtr<Gs2::UE5::Enhance::Model::FEzUnleashMaterialSelection>>> RecipeMaterials,
+        TOptional<TArray<TSharedPtr<Gs2::UE5::Enhance::Model::FEzConfig>>> Config
+    ): Self(Self), RateName(RateName), TargetItemSetId(TargetItemSetId), Materials(Materials), RecipeName(RecipeName), RecipeMaterials(RecipeMaterials), Config(Config)
+    {
+
+    }
+
+    Gs2::Core::Model::FGs2ErrorPtr FEzEnhanceGameSessionDomain::FUnleashTask::Action(
+        TSharedPtr<TSharedPtr<Gs2::UE5::Core::Domain::FEzTransactionGameSessionDomain>> Result
+    )
+    {
+        const auto Future = Self->ConnectionValue->Run(
+            [&]() -> Gs2::Core::Model::FGs2ErrorPtr {
+                const auto Task = Self->Domain->Unleash(
+                    MakeShared<Gs2::Enhance::Request::FUnleashRequest>()
+                        ->WithRateName(RateName)
+                        ->WithTargetItemSetId(TargetItemSetId)
+                        ->WithMaterials([&]{
+                            auto Arr = MakeShared<TArray<FString>>();
+                            if (!Materials.IsSet()) {
+                                return Arr;
+                            }
+                            for (auto Value : *Materials) {
+                                Arr->Add(Value);
+                            }
+                            return Arr;
+                        }())
+                        ->WithRecipeName(RecipeName)
+                        ->WithRecipeMaterials([&]{
+                            auto Arr = MakeShared<TArray<TSharedPtr<Gs2::Enhance::Model::FUnleashMaterialSelection>>>();
+                            if (!RecipeMaterials.IsSet()) {
+                                return Arr;
+                            }
+                            for (auto Value : *RecipeMaterials) {
+                                Arr->Add(Value->ToModel());
+                            }
+                            return Arr;
+                        }())
+                        ->WithConfig([&]{
+                            auto Arr = MakeShared<TArray<TSharedPtr<Gs2::Enhance::Model::FConfig>>>();
+                            if (!Config.IsSet()) {
+                                return Arr;
+                            }
+                            for (auto Value : *Config) {
+                                Arr->Add(Value->ToModel());
+                            }
+                            return Arr;
+                        }())
+                );
+                Task->StartSynchronousTask();
+                if (Task->GetTask().IsError())
+                {
+                    Task->EnsureCompletion();
+                    return Task->GetTask().Error();
+                }
+                *Result = MakeShared<Gs2::UE5::Core::Domain::FEzTransactionGameSessionDomain>(
+                    Task->GetTask().Result(),
+                    Self->ConnectionValue
+                );
+                Task->EnsureCompletion();
+                return nullptr;
+            },
+            nullptr
+        );
+        Future->StartSynchronousTask();
+        if (Future->GetTask().IsError())
+        {
+            Future->EnsureCompletion();
+            return Future->GetTask().Error();
+        }
+        Future->EnsureCompletion();
+        return nullptr;
+    }
+
+    TSharedPtr<FAsyncTask<FEzEnhanceGameSessionDomain::FUnleashTask>> FEzEnhanceGameSessionDomain::Unleash(
+        FString RateName,
+        FString TargetItemSetId,
+        TOptional<TArray<FString>> Materials,
+        TOptional<FString> RecipeName,
+        TOptional<TArray<TSharedPtr<Gs2::UE5::Enhance::Model::FEzUnleashMaterialSelection>>> RecipeMaterials,
+        TOptional<TArray<TSharedPtr<Gs2::UE5::Enhance::Model::FEzConfig>>> Config
+    )
+    {
+        return Gs2::Core::Util::New<FAsyncTask<FUnleashTask>>(
+            this->AsShared(),
+            RateName,
+            TargetItemSetId,
+            Materials,
+            RecipeName,
+            RecipeMaterials,
+            Config
+        );
+    }
 }

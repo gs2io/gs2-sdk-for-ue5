@@ -821,6 +821,136 @@ namespace Gs2::Ranking2::Domain
                     }
 
         }
+        if (Method == "VerifyGlobalRankingScoreByUserId") {
+            if (Result.IsEmpty())
+            {
+                return;
+            }
+            TSharedPtr<FJsonObject> RequestModelJson;
+            if (const TSharedRef<TJsonReader<>> JsonReader = TJsonReaderFactory<>::Create(Request);
+                !FJsonSerializer::Deserialize(JsonReader, RequestModelJson))
+            {
+                return;
+            }
+            TSharedPtr<FJsonObject> ResultModelJson;
+            if (const TSharedRef<TJsonReader<>> JsonReader = TJsonReaderFactory<>::Create(Result);
+                !FJsonSerializer::Deserialize(JsonReader, ResultModelJson))
+            {
+                return;
+            }
+            const auto RequestModel = Gs2::Ranking2::Request::FVerifyGlobalRankingScoreByUserIdRequest::FromJson(RequestModelJson);
+            const auto ResultModel = Gs2::Ranking2::Result::FVerifyGlobalRankingScoreByUserIdResult::FromJson(ResultModelJson);
+
+                    if (ResultModel.IsValid() && ResultModel->GetItem() != nullptr)
+                    {
+
+                if (!ResultModel.IsValid() || !ResultModel->GetItem().IsValid())
+                    {
+                      return;
+                      }if (!ResultModel.IsValid() || !(ResultModel->GetItem()->GetUserId()).IsSet())
+                    {
+                      return;
+                      }
+                Gs2::Ranking2::Model::Cache::FGlobalRankingScoreCache::Put(
+                    Gs2->Cache,
+
+                    RequestModel->GetNamespaceName(),
+                    ResultModel->GetItem()->GetRankingName(),
+                    ResultModel->GetItem()->GetSeason().Get(int64{}),
+                    ResultModel->GetItem()->GetUserId(),
+                    TimeOffset,
+                    ResultModel->GetItem()
+                );
+                    }
+
+        }
+        if (Method == "VerifyClusterRankingScoreByUserId") {
+            if (Result.IsEmpty())
+            {
+                return;
+            }
+            TSharedPtr<FJsonObject> RequestModelJson;
+            if (const TSharedRef<TJsonReader<>> JsonReader = TJsonReaderFactory<>::Create(Request);
+                !FJsonSerializer::Deserialize(JsonReader, RequestModelJson))
+            {
+                return;
+            }
+            TSharedPtr<FJsonObject> ResultModelJson;
+            if (const TSharedRef<TJsonReader<>> JsonReader = TJsonReaderFactory<>::Create(Result);
+                !FJsonSerializer::Deserialize(JsonReader, ResultModelJson))
+            {
+                return;
+            }
+            const auto RequestModel = Gs2::Ranking2::Request::FVerifyClusterRankingScoreByUserIdRequest::FromJson(RequestModelJson);
+            const auto ResultModel = Gs2::Ranking2::Result::FVerifyClusterRankingScoreByUserIdResult::FromJson(ResultModelJson);
+
+                    if (ResultModel.IsValid() && ResultModel->GetItem() != nullptr)
+                    {
+
+                if (!ResultModel.IsValid() || !ResultModel->GetItem().IsValid())
+                    {
+                      return;
+                      }if (!ResultModel.IsValid() || !(ResultModel->GetItem()->GetUserId()).IsSet())
+                    {
+                      return;
+                      }
+                Gs2::Ranking2::Model::Cache::FClusterRankingScoreCache::Put(
+                    Gs2->Cache,
+
+                    RequestModel->GetNamespaceName(),
+                    ResultModel->GetItem()->GetRankingName(),
+                    ResultModel->GetItem()->GetClusterName(),
+                    ResultModel->GetItem()->GetSeason().Get(int64{}),
+                    ResultModel->GetItem()->GetUserId(),
+                    TimeOffset,
+                    ResultModel->GetItem()
+                );
+                    }
+
+        }
+        if (Method == "VerifySubscribeRankingScoreByUserId") {
+            if (Result.IsEmpty())
+            {
+                return;
+            }
+            TSharedPtr<FJsonObject> RequestModelJson;
+            if (const TSharedRef<TJsonReader<>> JsonReader = TJsonReaderFactory<>::Create(Request);
+                !FJsonSerializer::Deserialize(JsonReader, RequestModelJson))
+            {
+                return;
+            }
+            TSharedPtr<FJsonObject> ResultModelJson;
+            if (const TSharedRef<TJsonReader<>> JsonReader = TJsonReaderFactory<>::Create(Result);
+                !FJsonSerializer::Deserialize(JsonReader, ResultModelJson))
+            {
+                return;
+            }
+            const auto RequestModel = Gs2::Ranking2::Request::FVerifySubscribeRankingScoreByUserIdRequest::FromJson(RequestModelJson);
+            const auto ResultModel = Gs2::Ranking2::Result::FVerifySubscribeRankingScoreByUserIdResult::FromJson(ResultModelJson);
+
+                    if (ResultModel.IsValid() && ResultModel->GetItem() != nullptr)
+                    {
+
+                if (!ResultModel.IsValid() || !ResultModel->GetItem().IsValid())
+                    {
+                      return;
+                      }if (!ResultModel.IsValid() || !(ResultModel->GetItem()->GetUserId()).IsSet())
+                    {
+                      return;
+                      }
+                Gs2::Ranking2::Model::Cache::FSubscribeRankingScoreCache::Put(
+                    Gs2->Cache,
+
+                    RequestModel->GetNamespaceName(),
+                    ResultModel->GetItem()->GetRankingName(),
+                    ResultModel->GetItem()->GetSeason().Get(int64{}),
+                    ResultModel->GetItem()->GetUserId(),
+                    TimeOffset,
+                    ResultModel->GetItem()
+                );
+                    }
+
+        }
     }
 
     void FGs2Ranking2Domain::UpdateCacheFromJobResult(

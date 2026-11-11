@@ -33,6 +33,7 @@ class BPGS2_API UGs2FriendSendFriendRequestGetValueAsyncFunction : public UBluep
     FGs2FriendOwnSendFriendRequest SendFriendRequest;
 
 public:
+    bool WithProfile;
 
     UPROPERTY(Category = Gs2, BlueprintAssignable)
     FGs2FriendSendFriendRequestGetValueSuccessDelegate OnSuccess;

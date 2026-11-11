@@ -1416,6 +1416,241 @@ namespace Gs2::Inventory::Domain
                     }
 
         }
+        if (Method == "VerifyInventoryCurrentMaxCapacityByUserId") {
+            if (Result.IsEmpty())
+            {
+                return;
+            }
+            TSharedPtr<FJsonObject> RequestModelJson;
+            if (const TSharedRef<TJsonReader<>> JsonReader = TJsonReaderFactory<>::Create(Request);
+                !FJsonSerializer::Deserialize(JsonReader, RequestModelJson))
+            {
+                return;
+            }
+            TSharedPtr<FJsonObject> ResultModelJson;
+            if (const TSharedRef<TJsonReader<>> JsonReader = TJsonReaderFactory<>::Create(Result);
+                !FJsonSerializer::Deserialize(JsonReader, ResultModelJson))
+            {
+                return;
+            }
+            const auto RequestModel = Gs2::Inventory::Request::FVerifyInventoryCurrentMaxCapacityByUserIdRequest::FromJson(RequestModelJson);
+            const auto ResultModel = Gs2::Inventory::Result::FVerifyInventoryCurrentMaxCapacityByUserIdResult::FromJson(ResultModelJson);
+
+                    if (ResultModel.IsValid() && ResultModel->GetItem() != nullptr)
+                    {
+
+                if (!ResultModel.IsValid() || !ResultModel->GetItem().IsValid())
+                    {
+                      return;
+                      }if (!ResultModel.IsValid() || !((ResultModel.IsValid() && ResultModel->GetItem().IsValid() ? ResultModel->GetItem()->GetUserId() : TOptional<FString>())).IsSet())
+                    {
+                      return;
+                      }
+                Gs2::Inventory::Model::Cache::FInventoryCache::Put(
+                    Gs2->Cache,
+
+                    RequestModel->GetNamespaceName(),
+                    (ResultModel.IsValid() && ResultModel->GetItem().IsValid() ? ResultModel->GetItem()->GetUserId() : TOptional<FString>()),
+                    ResultModel->GetItem()->GetInventoryName(),
+                    TimeOffset,
+                    ResultModel->GetItem()
+                );
+                    }
+
+        }
+        if (Method == "VerifyItemSetByUserId") {
+            if (Result.IsEmpty())
+            {
+                return;
+            }
+            TSharedPtr<FJsonObject> RequestModelJson;
+            if (const TSharedRef<TJsonReader<>> JsonReader = TJsonReaderFactory<>::Create(Request);
+                !FJsonSerializer::Deserialize(JsonReader, RequestModelJson))
+            {
+                return;
+            }
+            TSharedPtr<FJsonObject> ResultModelJson;
+            if (const TSharedRef<TJsonReader<>> JsonReader = TJsonReaderFactory<>::Create(Result);
+                !FJsonSerializer::Deserialize(JsonReader, ResultModelJson))
+            {
+                return;
+            }
+            const auto RequestModel = Gs2::Inventory::Request::FVerifyItemSetByUserIdRequest::FromJson(RequestModelJson);
+            const auto ResultModel = Gs2::Inventory::Result::FVerifyItemSetByUserIdResult::FromJson(ResultModelJson);
+
+                if (ResultModel.IsValid() && ResultModel->GetItems().IsValid())
+                {
+                    for (const auto& Item : *ResultModel->GetItems())
+                    {
+                        if (!Item.IsValid()) continue;
+                        Gs2::Inventory::Model::Cache::FItemSetCache::Put(
+                            Gs2->Cache,
+                            RequestModel->GetNamespaceName(), RequestModel->GetUserId(), RequestModel->GetInventoryName(), Item->GetItemName(), Item->GetName(),
+                            TimeOffset, Item
+                        );
+                    }
+                }
+        }
+        if (Method == "VerifyReferenceOfByUserId") {
+            if (Result.IsEmpty())
+            {
+                return;
+            }
+            TSharedPtr<FJsonObject> RequestModelJson;
+            if (const TSharedRef<TJsonReader<>> JsonReader = TJsonReaderFactory<>::Create(Request);
+                !FJsonSerializer::Deserialize(JsonReader, RequestModelJson))
+            {
+                return;
+            }
+            TSharedPtr<FJsonObject> ResultModelJson;
+            if (const TSharedRef<TJsonReader<>> JsonReader = TJsonReaderFactory<>::Create(Result);
+                !FJsonSerializer::Deserialize(JsonReader, ResultModelJson))
+            {
+                return;
+            }
+            const auto RequestModel = Gs2::Inventory::Request::FVerifyReferenceOfByUserIdRequest::FromJson(RequestModelJson);
+            const auto ResultModel = Gs2::Inventory::Result::FVerifyReferenceOfByUserIdResult::FromJson(ResultModelJson);
+
+                    if (ResultModel.IsValid() && ResultModel->GetItemSet() != nullptr)
+                    {
+
+                if (!(RequestModel->GetUserId()).IsSet())
+                    {
+                      return;
+                      }
+                Gs2::Inventory::Model::Cache::FItemSetCache::Put(
+                    Gs2->Cache,
+
+                    RequestModel->GetNamespaceName(),
+                    RequestModel->GetUserId(),
+                    RequestModel->GetInventoryName(),
+                    RequestModel->GetItemName(),
+                    RequestModel->GetItemSetName(),
+                    TimeOffset,
+                    ResultModel->GetItemSet()
+                );
+                    }
+                    if (ResultModel.IsValid() && ResultModel->GetItemModel() != nullptr)
+                    {
+
+
+                Gs2::Inventory::Model::Cache::FItemModelCache::Put(
+                    Gs2->Cache,
+
+                    RequestModel->GetNamespaceName(),
+                    RequestModel->GetInventoryName(),
+                    RequestModel->GetItemName(),
+                    TimeOffset,
+                    ResultModel->GetItemModel()
+                );
+                    }
+                    if (ResultModel.IsValid() && ResultModel->GetInventory() != nullptr)
+                    {
+
+                if (!(RequestModel->GetUserId()).IsSet())
+                    {
+                      return;
+                      }
+                Gs2::Inventory::Model::Cache::FInventoryCache::Put(
+                    Gs2->Cache,
+
+                    RequestModel->GetNamespaceName(),
+                    RequestModel->GetUserId(),
+                    RequestModel->GetInventoryName(),
+                    TimeOffset,
+                    ResultModel->GetInventory()
+                );
+                    }
+
+
+
+        }
+        if (Method == "VerifySimpleItemByUserId") {
+            if (Result.IsEmpty())
+            {
+                return;
+            }
+            TSharedPtr<FJsonObject> RequestModelJson;
+            if (const TSharedRef<TJsonReader<>> JsonReader = TJsonReaderFactory<>::Create(Request);
+                !FJsonSerializer::Deserialize(JsonReader, RequestModelJson))
+            {
+                return;
+            }
+            TSharedPtr<FJsonObject> ResultModelJson;
+            if (const TSharedRef<TJsonReader<>> JsonReader = TJsonReaderFactory<>::Create(Result);
+                !FJsonSerializer::Deserialize(JsonReader, ResultModelJson))
+            {
+                return;
+            }
+            const auto RequestModel = Gs2::Inventory::Request::FVerifySimpleItemByUserIdRequest::FromJson(RequestModelJson);
+            const auto ResultModel = Gs2::Inventory::Result::FVerifySimpleItemByUserIdResult::FromJson(ResultModelJson);
+
+                    if (ResultModel.IsValid() && ResultModel->GetItem() != nullptr)
+                    {
+
+                if (!ResultModel.IsValid() || !ResultModel->GetItem().IsValid())
+                    {
+                      return;
+                      }if (!ResultModel.IsValid() || !((ResultModel.IsValid() && ResultModel->GetItem().IsValid() ? ResultModel->GetItem()->GetUserId() : TOptional<FString>())).IsSet())
+                    {
+                      return;
+                      }
+                Gs2::Inventory::Model::Cache::FSimpleItemCache::Put(
+                    Gs2->Cache,
+
+                    RequestModel->GetNamespaceName(),
+                    (ResultModel.IsValid() && ResultModel->GetItem().IsValid() ? ResultModel->GetItem()->GetUserId() : TOptional<FString>()),
+                    RequestModel->GetInventoryName(),
+                    ResultModel->GetItem()->GetItemName(),
+                    TimeOffset,
+                    ResultModel->GetItem()
+                );
+                    }
+
+        }
+        if (Method == "VerifyBigItemByUserId") {
+            if (Result.IsEmpty())
+            {
+                return;
+            }
+            TSharedPtr<FJsonObject> RequestModelJson;
+            if (const TSharedRef<TJsonReader<>> JsonReader = TJsonReaderFactory<>::Create(Request);
+                !FJsonSerializer::Deserialize(JsonReader, RequestModelJson))
+            {
+                return;
+            }
+            TSharedPtr<FJsonObject> ResultModelJson;
+            if (const TSharedRef<TJsonReader<>> JsonReader = TJsonReaderFactory<>::Create(Result);
+                !FJsonSerializer::Deserialize(JsonReader, ResultModelJson))
+            {
+                return;
+            }
+            const auto RequestModel = Gs2::Inventory::Request::FVerifyBigItemByUserIdRequest::FromJson(RequestModelJson);
+            const auto ResultModel = Gs2::Inventory::Result::FVerifyBigItemByUserIdResult::FromJson(ResultModelJson);
+
+                    if (ResultModel.IsValid() && ResultModel->GetItem() != nullptr)
+                    {
+
+                if (!ResultModel.IsValid() || !ResultModel->GetItem().IsValid())
+                    {
+                      return;
+                      }if (!ResultModel.IsValid() || !((ResultModel.IsValid() && ResultModel->GetItem().IsValid() ? ResultModel->GetItem()->GetUserId() : TOptional<FString>())).IsSet())
+                    {
+                      return;
+                      }
+                Gs2::Inventory::Model::Cache::FBigItemCache::Put(
+                    Gs2->Cache,
+
+                    RequestModel->GetNamespaceName(),
+                    (ResultModel.IsValid() && ResultModel->GetItem().IsValid() ? ResultModel->GetItem()->GetUserId() : TOptional<FString>()),
+                    RequestModel->GetInventoryName(),
+                    ResultModel->GetItem()->GetItemName(),
+                    TimeOffset,
+                    ResultModel->GetItem()
+                );
+                    }
+
+        }
     }
 
     void FGs2InventoryDomain::UpdateCacheFromJobResult(

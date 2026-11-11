@@ -25,6 +25,7 @@
 #include "Enhance/Model/Gs2EnhanceEzUnleashMaterial.h"
 #include "Enhance/Model/Gs2EnhanceEzUnleashIndividualMaterialSetting.h"
 #include "Enhance/Model/Gs2EnhanceEzUnleashQuantityMaterialSetting.h"
+#include "Enhance/Model/Gs2EnhanceEzUnleashMaterialSelection.h"
 #include "Enhance/Model/Gs2EnhanceEzProgress.h"
 #include "Enhance/Model/Gs2EnhanceEzConfig.h"
 #include "Enhance/Model/Gs2EnhanceEzMaterial.h"
@@ -88,6 +89,44 @@ namespace Gs2::UE5::Enhance::Domain::Model
             FString RateName,
             FString TargetItemSetId,
             TArray<TSharedPtr<Gs2::UE5::Enhance::Model::FEzMaterial>> Materials,
+            TOptional<TArray<TSharedPtr<Gs2::UE5::Enhance::Model::FEzConfig>>> Config = TOptional<TArray<TSharedPtr<Gs2::UE5::Enhance::Model::FEzConfig>>>()
+        );
+
+        class EZGS2_API FUnleashTask :
+            public Gs2::Core::Util::TGs2Future<Gs2::UE5::Core::Domain::FEzTransactionGameSessionDomain>,
+            public TSharedFromThis<FUnleashTask>
+        {
+            TSharedPtr<FEzEnhanceGameSessionDomain> Self;
+            FString RateName;
+            FString TargetItemSetId;
+            TOptional<TArray<FString>> Materials;
+            TOptional<FString> RecipeName;
+            TOptional<TArray<TSharedPtr<Gs2::UE5::Enhance::Model::FEzUnleashMaterialSelection>>> RecipeMaterials;
+            TOptional<TArray<TSharedPtr<Gs2::UE5::Enhance::Model::FEzConfig>>> Config;
+
+        public:
+            explicit FUnleashTask(
+                TSharedPtr<FEzEnhanceGameSessionDomain> Self,
+                FString RateName,
+                FString TargetItemSetId,
+                TOptional<TArray<FString>> Materials = TOptional<TArray<FString>>(),
+                TOptional<FString> RecipeName = TOptional<FString>(),
+                TOptional<TArray<TSharedPtr<Gs2::UE5::Enhance::Model::FEzUnleashMaterialSelection>>> RecipeMaterials = TOptional<TArray<TSharedPtr<Gs2::UE5::Enhance::Model::FEzUnleashMaterialSelection>>>(),
+                TOptional<TArray<TSharedPtr<Gs2::UE5::Enhance::Model::FEzConfig>>> Config = TOptional<TArray<TSharedPtr<Gs2::UE5::Enhance::Model::FEzConfig>>>()
+            );
+
+            virtual Gs2::Core::Model::FGs2ErrorPtr Action(
+                TSharedPtr<TSharedPtr<Gs2::UE5::Core::Domain::FEzTransactionGameSessionDomain>> Result
+            ) override;
+        };
+        friend FUnleashTask;
+
+        TSharedPtr<FAsyncTask<FUnleashTask>> Unleash(
+            FString RateName,
+            FString TargetItemSetId,
+            TOptional<TArray<FString>> Materials = TOptional<TArray<FString>>(),
+            TOptional<FString> RecipeName = TOptional<FString>(),
+            TOptional<TArray<TSharedPtr<Gs2::UE5::Enhance::Model::FEzUnleashMaterialSelection>>> RecipeMaterials = TOptional<TArray<TSharedPtr<Gs2::UE5::Enhance::Model::FEzUnleashMaterialSelection>>>(),
             TOptional<TArray<TSharedPtr<Gs2::UE5::Enhance::Model::FEzConfig>>> Config = TOptional<TArray<TSharedPtr<Gs2::UE5::Enhance::Model::FEzConfig>>>()
         );
 

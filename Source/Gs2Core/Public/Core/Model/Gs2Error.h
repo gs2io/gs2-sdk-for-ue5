@@ -63,6 +63,8 @@ namespace Gs2::Core::Model
     {
         TSharedPtr<TArray<TSharedPtr<FGs2ErrorDetail>>> Details;
         FResultMetadataPtr Metadata;
+        // 失敗の本文の最上位にある result（JSON）。検証 API は失敗しても検証した時点の状態をここに入れて返す
+        TOptional<FString> Result;
     public:
         inline static const FGs2ErrorType TypeString = "FGs2Error";
         inline static const FGs2ErrorType Class = TypeString;
@@ -100,6 +102,19 @@ namespace Gs2::Core::Model
         {
             return this->Metadata;
         }
+
+        void SetResult(const TOptional<FString> InResult)
+        {
+            this->Result = InResult;
+        }
+
+        TOptional<FString> GetResult() const
+        {
+            return this->Result;
+        }
+
+        // トランザクションの失敗（{"errors":…,"result":…}）と REST の失敗（{"message":…,"result":…}）のどちらも最上位に result を持つ
+        static TOptional<FString> ExtractResult(const TSharedPtr<FJsonObject>& Body);
         
         virtual FGs2ErrorType Type() const = 0;
         virtual FGs2ErrorType SuperType() const = 0;

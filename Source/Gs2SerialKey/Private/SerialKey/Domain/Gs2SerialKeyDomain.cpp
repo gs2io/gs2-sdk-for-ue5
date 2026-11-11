@@ -579,6 +579,62 @@ namespace Gs2::SerialKey::Domain
                 );
             }
         }
+        if (Method == "VerifyCodeByUserId") {
+            if (Result.IsEmpty())
+            {
+                return;
+            }
+            TSharedPtr<FJsonObject> RequestModelJson;
+            if (const TSharedRef<TJsonReader<>> JsonReader = TJsonReaderFactory<>::Create(Request);
+                !FJsonSerializer::Deserialize(JsonReader, RequestModelJson))
+            {
+                return;
+            }
+            TSharedPtr<FJsonObject> ResultModelJson;
+            if (const TSharedRef<TJsonReader<>> JsonReader = TJsonReaderFactory<>::Create(Result);
+                !FJsonSerializer::Deserialize(JsonReader, ResultModelJson))
+            {
+                return;
+            }
+            const auto RequestModel = Gs2::SerialKey::Request::FVerifyCodeByUserIdRequest::FromJson(RequestModelJson);
+            const auto ResultModel = Gs2::SerialKey::Result::FVerifyCodeByUserIdResult::FromJson(ResultModelJson);
+
+                    if (ResultModel.IsValid() && ResultModel->GetItem() != nullptr)
+                    {
+
+                if (!(RequestModel->GetUserId()).IsSet())
+                    {
+                      return;
+                      }
+                Gs2::SerialKey::Model::Cache::FSerialKeyCache::Put(
+                    Gs2->Cache,
+
+                    RequestModel->GetNamespaceName(),
+                    RequestModel->GetUserId(),
+                    ResultModel->GetItem()->GetCode(),
+                    TimeOffset,
+                    ResultModel->GetItem()
+                );
+                    }
+                    if (ResultModel.IsValid() && ResultModel->GetCampaignModel() != nullptr)
+                    {
+
+                if (!ResultModel.IsValid() || !ResultModel->GetItem().IsValid())
+                    {
+                      return;
+                      }
+                Gs2::SerialKey::Model::Cache::FCampaignModelCache::Put(
+                    Gs2->Cache,
+
+                    RequestModel->GetNamespaceName(),
+                    ResultModel->GetItem()->GetCampaignModelName(),
+                    TimeOffset,
+                    ResultModel->GetCampaignModel()
+                );
+                    }
+
+
+        }
     }
 
     void FGs2SerialKeyDomain::UpdateCacheFromJobResult(

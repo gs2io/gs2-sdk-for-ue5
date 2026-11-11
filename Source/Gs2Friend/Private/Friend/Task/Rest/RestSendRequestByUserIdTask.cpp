@@ -95,6 +95,10 @@ namespace Gs2::Friend::Task::Rest
             FString Body;
             const TSharedRef<TJsonWriter<TCHAR>> Writer = TJsonWriterFactory<TCHAR>::Create(&Body);
             const TSharedPtr<FJsonObject> JsonRootObject = MakeShared<FJsonObject>();
+            if (this->Request->GetWithProfile().IsSet())
+            {
+                JsonRootObject->SetBoolField(TEXT("withProfile"), this->Request->GetWithProfile().GetValue());
+            }
             if (this->Request->GetContextStack().IsSet())
             {
                 JsonRootObject->SetStringField(TEXT("contextStack"), this->Request->GetContextStack().GetValue());

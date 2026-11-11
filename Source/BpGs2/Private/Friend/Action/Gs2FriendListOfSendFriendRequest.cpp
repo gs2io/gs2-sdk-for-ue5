@@ -28,7 +28,8 @@ UGs2FriendListOfSendFriendRequestAsyncFunction::UGs2FriendListOfSendFriendReques
 
 UGs2FriendListOfSendFriendRequestAsyncFunction* UGs2FriendListOfSendFriendRequestAsyncFunction::ListOfSendFriendRequest(
     UObject* WorldContextObject,
-    FGs2FriendOwnUser User
+    FGs2FriendOwnUser User,
+    bool WithProfile
 )
 {
     UGs2FriendListOfSendFriendRequestAsyncFunction* Action = NewObject<UGs2FriendListOfSendFriendRequestAsyncFunction>();
@@ -38,6 +39,7 @@ UGs2FriendListOfSendFriendRequestAsyncFunction* UGs2FriendListOfSendFriendReques
         return Action;
     }
     Action->User = User;
+    Action->WithProfile = WithProfile;
     return Action;
 }
 
@@ -51,6 +53,7 @@ void UGs2FriendListOfSendFriendRequestAsyncFunction::Activate()
         return;
     }
     const auto It = User.Value->SendRequests(
+        WithProfile
     );
     for (auto v : *It)
     {

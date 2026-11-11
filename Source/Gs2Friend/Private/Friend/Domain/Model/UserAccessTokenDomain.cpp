@@ -151,6 +151,7 @@ namespace Gs2::Friend::Domain::Model
 
             Request->GetNamespaceName(),
             (CacheOwnerSnapshotUserId),
+            Request->GetWithProfile(),
             ResultModel->GetItem()->GetTargetUserId(),
             CacheOwnerSnapshotTimeOffset,
             MakeShared<Gs2::Friend::Model::FSendFriendRequest>()

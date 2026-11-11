@@ -66,11 +66,13 @@ namespace Gs2::UE5::Friend::Domain::Model
         {
             TSharedPtr<FEzUserGameSessionDomain> Self;
             FString TargetUserId;
+            TOptional<bool> WithProfile;
 
         public:
             explicit FSendRequestTask(
                 TSharedPtr<FEzUserGameSessionDomain> Self,
-                FString TargetUserId
+                FString TargetUserId,
+                TOptional<bool> WithProfile = TOptional<bool>()
             );
 
             virtual Gs2::Core::Model::FGs2ErrorPtr Action(
@@ -80,7 +82,8 @@ namespace Gs2::UE5::Friend::Domain::Model
         friend FSendRequestTask;
 
         TSharedPtr<FAsyncTask<FSendRequestTask>> SendRequest(
-            FString TargetUserId
+            FString TargetUserId,
+            TOptional<bool> WithProfile = TOptional<bool>()
         );
 
         Gs2::UE5::Friend::Domain::Iterator::FEzDescribeFriendsIteratorPtr Friends(

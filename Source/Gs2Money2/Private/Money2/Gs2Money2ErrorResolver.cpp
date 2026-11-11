@@ -84,6 +84,7 @@ namespace Gs2::Money2
             return Source;
         }
         Resolved->SetMetadata(Source->GetMetadata());
+        Resolved->SetResult(Source->GetResult());
         return Resolved;
     }
 }

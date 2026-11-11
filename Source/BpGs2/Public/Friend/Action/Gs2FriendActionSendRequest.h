@@ -37,6 +37,7 @@ class BPGS2_API UGs2FriendSendRequestAsyncFunction : public UBlueprintAsyncActio
 
     FGs2FriendOwnUser User;
     FString TargetUserId;
+    bool WithProfile; /* diff +++ */
 
 public:
 
@@ -52,7 +53,13 @@ public:
     static UGs2FriendSendRequestAsyncFunction* SendRequest(
         UObject* WorldContextObject,
         FGs2FriendOwnUser User,
+/* diff --- start
         FString TargetUserId
+ diff --- end */
+/* diff +++ start */
+        FString TargetUserId,
+        bool WithProfile
+/* diff +++ end */
     );
 
     virtual void Activate() override;

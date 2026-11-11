@@ -60,6 +60,7 @@ namespace Gs2::Inventory
             return Source;
         }
         Resolved->SetMetadata(Source->GetMetadata());
+        Resolved->SetResult(Source->GetResult());
         return Resolved;
     }
 }

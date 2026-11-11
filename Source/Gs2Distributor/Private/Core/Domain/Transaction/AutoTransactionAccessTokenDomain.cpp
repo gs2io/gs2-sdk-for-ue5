@@ -56,7 +56,8 @@ namespace Gs2::Core::Domain
 			const int32 RequestCount,
 			const int32 BodyCount,
 			const TSharedPtr<TArray<int32>>& Codes,
-			const TSharedPtr<TArray<FString>>& Bodies
+			const TSharedPtr<TArray<FString>>& Bodies,
+			int32* FailedIndex = nullptr
 		)
 		{
 			const int32 CodeCount = Codes.IsValid() ? Codes->Num() : 0;
@@ -72,10 +73,36 @@ namespace Gs2::Core::Domain
 				const auto Error = ValidateAccessTokenStatus(Status, TOptional<FString>((*Bodies)[Index]), Action);
 				if (Error.IsValid())
 				{
+					if (FailedIndex != nullptr) *FailedIndex = Index;
 					return Error;
 				}
 			}
 			return nullptr;
+		}
+
+		// 検証が失敗しても、サーバーは検証した時点の状態を result に入れて返す。成功したときと同じくハンドラに渡す
+		void NotifyAccessTokenFailedVerify(
+			const FGs2Ptr& Gs2,
+			const FString& TaskId,
+			const TOptional<int32>& TimeOffset,
+			const TOptional<FString>& Action,
+			const TOptional<FString>& Request,
+			const Gs2::Core::Model::FGs2ErrorPtr& Error
+		)
+		{
+			if (!Error.IsValid() || !Error->GetResult().IsSet() || !Gs2.IsValid() ||
+				!Gs2->TransactionConfiguration.IsValid() || !Gs2->TransactionConfiguration->VerifyActionEventHandler)
+			{
+				return;
+			}
+			Gs2->TransactionConfiguration->VerifyActionEventHandler(
+				Gs2->Cache,
+				TaskId,
+				TimeOffset,
+				Action.IsSet() ? *Action : FString(),
+				Request.IsSet() ? *Request : FString(),
+				*Error->GetResult()
+			);
 		}
 
 		Gs2::Core::Model::FGs2ErrorPtr AccessTokenTransactionFailed()
@@ -206,14 +233,30 @@ namespace Gs2::Core::Domain
 				}
 			}
 		}
+		int32 FailedVerifyIndex = INDEX_NONE;
 		Error = ValidateAccessTokenStampEntries(
 			VerifyRequests,
 			VerifyRequests.IsValid() ? VerifyRequests->Num() : 0,
 			VerifyBodies.IsValid() ? VerifyBodies->Num() : 0,
 			VerifyCodes,
-			VerifyBodies
+			VerifyBodies,
+			&FailedVerifyIndex
 		);
-		if (Error.IsValid()) return nullptr;
+		if (Error.IsValid())
+		{
+			if (FailedVerifyIndex != INDEX_NONE && (*VerifyRequests)[FailedVerifyIndex].IsValid())
+			{
+				NotifyAccessTokenFailedVerify(
+					Gs2,
+					TransactionId + FString::Printf(TEXT("[%d]"), FailedVerifyIndex),
+					AccessToken.IsValid() ? AccessToken->GetTimeOffset() : TOptional<int32>(),
+					(*VerifyRequests)[FailedVerifyIndex]->GetAction(),
+					(*VerifyRequests)[FailedVerifyIndex]->GetRequest(),
+					Error
+				);
+			}
+			return nullptr;
+		}
 
 		const auto TaskCodes = Result->GetTaskResultCodes();
 		const auto TaskBodies = Result->GetTaskResults();
@@ -356,8 +399,9 @@ namespace Gs2::Core::Domain
 
 		if (Result->GetVerifyResults().IsValid())
 		{
-			for (const auto& Item : *Result->GetVerifyResults())
+			for (int32 Index = 0; Index < Result->GetVerifyResults()->Num(); ++Index)
 			{
+				const auto& Item = (*Result->GetVerifyResults())[Index];
 				if (!Item.IsValid())
 				{
 					Error = MissingAccessTokenResult();
@@ -366,6 +410,14 @@ namespace Gs2::Core::Domain
 				Error = ValidateAccessTokenStatus(Item->GetStatusCode(), Item->GetVerifyResult(), Item->GetAction());
 				if (Error.IsValid())
 				{
+					NotifyAccessTokenFailedVerify(
+						Gs2,
+						TransactionId + FString::Printf(TEXT("[%d]"), Index),
+						AccessToken.IsValid() ? AccessToken->GetTimeOffset() : TOptional<int32>(),
+						Item->GetAction(),
+						Item->GetVerifyRequest(),
+						Error
+					);
 					return nullptr;
 				}
 			}

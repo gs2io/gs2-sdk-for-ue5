@@ -28,7 +28,6 @@
 // ReSharper disable CppUnusedIncludeDirective
 
 #include "Chat/Domain/Iterator/DescribeLatestMessagesByUserIdIterator.h"
-#include "Chat/Domain/Iterator/DescribeMessagesStartAt.h"
 #include "Chat/Domain/Model/Message.h"
 #include "Chat/Domain/Model/Room.h"
 #include "Chat/Model/Cache/Message.h"
@@ -88,7 +87,7 @@ namespace Gs2::Chat::Domain::Iterator
         Self(Iterable),
         bLast(false),
         bEnd(false),
-        StartAt(TOptional<int64>()),
+        PageToken(TOptional<FString>()),
         FetchSize(TOptional<int32>())
     {
     }
@@ -105,40 +104,17 @@ namespace Gs2::Chat::Domain::Iterator
             return *this;
         }
 
-        if (RangeIteratorOpt) ++*RangeIteratorOpt;
+        if (RangeIteratorOpt && *RangeIteratorOpt) ++*RangeIteratorOpt;
 
-        if (!RangeIteratorOpt || (!*RangeIteratorOpt && !bLast))
+        // TryGetList / SetListCached は使わない。Message のリストキャッシュは DescribeMessagesIterator と
+        // 同じ親キーで「古い順に StartAt まで揃っている」ことを前提にしており、新しい順のページや
+        // カテゴリで絞ったページを載せるとそちらの列挙が欠ける。
+        // 空のページでも NextPageToken が続くことがある（サーバーが期限切れのメッセージを除いてから返す）ので、
+        // 空のページで列挙を打ち切らずに次のページを読む。
+        while (!RangeIteratorOpt || (!*RangeIteratorOpt && !bLast))
         {
-            const auto ListParentKey = Gs2::Chat::Model::Cache::FMessageCache::CreateCacheParentKey(
-                Self->NamespaceName,
-                Self->UserId,
-                Self->RoomName,
-                TOptional<int32>()
-            );
-                TSharedPtr<FGs2Object> UpdateContext;
-            if (!RangeIteratorOpt)
-            {
-                Range = Self->Gs2->Cache->TryGetList<Gs2::Chat::Model::FMessage>(ListParentKey, &UpdateContext);
-
-                if (Range)
-                {
-                    if (UpdateContext)
-                    {
-                        auto UpdateContextValue = StaticCastSharedPtr<FDescribeMessagesStartAt>(UpdateContext)->Value;
-                        Range->RemoveAll([UpdateContextValue](const Gs2::Chat::Model::FMessagePtr& Message){ return *Message->GetCreatedAt() >= UpdateContextValue; });
-                        StartAt = UpdateContextValue;
-                        bLast = false;
-                    }
-                    else
-                    {
-                        bLast = true;
-                    }
-                    RangeIteratorOpt = Range->CreateIterator();
-                    bEnd = !static_cast<bool>(*RangeIteratorOpt) && bLast;
-                    return *this;
-                }
-            }
-
+            // Keep the previous page alive until its iterator has been replaced.
+            const auto PreviousRange = Range;
             const auto Request =
                 MakeShared<Gs2::Chat::Request::FDescribeLatestMessagesByUserIdRequest>()
                     ->WithContextStack(Self->Gs2->DefaultContextStack)
@@ -146,6 +122,8 @@ namespace Gs2::Chat::Domain::Iterator
                     ->WithRoomName(Self->RoomName)
                     ->WithPassword(Self->Password)
                     ->WithUserId(Self->UserId)
+                    ->WithCategory(Self->Category)
+                    ->WithPageToken(PageToken)
                     ->WithLimit(FetchSize)
             ;
             const auto Future = Self->Client->DescribeLatestMessagesByUserId(Request);
@@ -178,36 +156,9 @@ namespace Gs2::Chat::Domain::Iterator
                     );
                 }
             }
-            if (Range)
-            {
-                if (UpdateContext)
-                {
-                    auto UpdateContextValue = StaticCastSharedPtr<FDescribeMessagesStartAt>(UpdateContext)->Value;
-                    Range->RemoveAll([UpdateContextValue](const Gs2::Chat::Model::FMessagePtr& Message){ return *Message->GetCreatedAt() >= UpdateContextValue; });
-                    StartAt = UpdateContextValue;
-                    bLast = false;
-                }
-                else
-                {
-                    bLast = true;
-                }
-            }
             RangeIteratorOpt = Range->CreateIterator();
-            if (Range->Num() > 0) {
-                StartAt = *(*Range)[Range->Num()-1]->GetCreatedAt() + 1;
-            } else {
-                bLast = true;
-            }
-            if (bLast) {
-                Self->Gs2->Cache->SetListCached(
-                    Gs2::Chat::Model::FMessage::TypeName,
-                    ListParentKey,
-                    StartAt
-                        // ReSharper disable once CppSmartPointerVsMakeFunction
-                        ? TSharedPtr<FGs2Object>(new FDescribeMessagesStartAt(*StartAt))
-                        : nullptr
-                );
-            }
+            PageToken = R->GetNextPageToken();
+            bLast = !PageToken.IsSet();
         }
 
         bEnd = bLast && !*RangeIteratorOpt;

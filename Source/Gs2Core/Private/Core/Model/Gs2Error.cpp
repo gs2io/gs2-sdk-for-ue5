@@ -17,6 +17,9 @@
 
 #include "Core/Model/Gs2Error.h"
 #include "Core/Gs2Constant.h"
+#include "Dom/JsonObject.h"
+#include "Policies/CondensedJsonPrintPolicy.h"
+#include "Serialization/JsonSerializer.h"
 
 namespace Gs2::Core::Model
 {
@@ -123,7 +126,9 @@ namespace Gs2::Core::Model
             {
                 ParsedMetadata = FResultMetadata::FromJson(JsonRootObject->GetObjectField(ANSI_TO_TCHAR("metadata")));
             }
-            return FromJson(ResponseCode, JsonRootObject->GetArrayField(ANSI_TO_TCHAR("errors")), ParsedMetadata);
+            auto Error = FromJson(ResponseCode, JsonRootObject->GetArrayField(ANSI_TO_TCHAR("errors")), ParsedMetadata);
+            Error->SetResult(ExtractResult(JsonRootObject));
+            return Error;
         }
         if (!JsonRootObject.IsValid() ||
             !JsonRootObject->HasField(ANSI_TO_TCHAR("message")) ||
@@ -147,9 +152,33 @@ namespace Gs2::Core::Model
             MessageValue.IsValid() &&
             MessageValue->Type == EJson::Array)
         {
-            return FromJson(ResponseCode, MessageValue->AsArray(), ParsedMetadata);
+            auto Error = FromJson(ResponseCode, MessageValue->AsArray(), ParsedMetadata);
+            Error->SetResult(ExtractResult(JsonRootObject));
+            return Error;
         }
-        return FromJson(ResponseCode, TArray<TSharedPtr<FJsonValue>>(), ParsedMetadata);
+        auto Error = FromJson(ResponseCode, TArray<TSharedPtr<FJsonValue>>(), ParsedMetadata);
+        Error->SetResult(ExtractResult(JsonRootObject));
+        return Error;
+    }
+
+    TOptional<FString> FGs2Error::ExtractResult(const TSharedPtr<FJsonObject>& Body)
+    {
+        const TSharedPtr<FJsonObject>* ResultObject;
+        if (!Body.IsValid() ||
+            !Body->TryGetObjectField(ANSI_TO_TCHAR("result"), ResultObject) ||
+            !ResultObject->IsValid() ||
+            (*ResultObject)->Values.Num() == 0)
+        {
+            return TOptional<FString>();
+        }
+        FString Serialized;
+        const TSharedRef<TJsonWriter<TCHAR, TCondensedJsonPrintPolicy<TCHAR>>> Writer =
+            TJsonWriterFactory<TCHAR, TCondensedJsonPrintPolicy<TCHAR>>::Create(&Serialized);
+        if (!FJsonSerializer::Serialize(ResultObject->ToSharedRef(), Writer))
+        {
+            return TOptional<FString>();
+        }
+        return Serialized;
     }
 
     TSharedPtr<FGs2ErrorDetail> FGs2ErrorDetail::FromJson(TSharedPtr<FJsonValue> Object)
@@ -205,7 +234,7 @@ namespace Gs2::Core::Model
 
     FGs2Error::FGs2Error(
         const FGs2Error& From
-    ): Details(From.Details), Metadata(From.Metadata)
+    ): Details(From.Details), Metadata(From.Metadata), Result(From.Result)
     {
     }
 

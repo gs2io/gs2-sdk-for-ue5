@@ -63,7 +63,8 @@ namespace Gs2::Friend::Domain::Model
         const Friend::Domain::FGs2FriendDomainPtr& Service,
         const TOptional<FString> NamespaceName,
         const TOptional<FString> UserId,
-        const TOptional<FString> FromUserId
+        const TOptional<FString> FromUserId,
+        const TOptional<bool> WithProfile
         // ReSharper disable once CppMemberInitializersOrder
     ):
         Gs2(Gs2),
@@ -72,6 +73,7 @@ namespace Gs2::Friend::Domain::Model
         NamespaceName(NamespaceName),
         UserId(UserId),
         FromUserId(FromUserId),
+        WithProfile(WithProfile),
         ParentKey(Gs2::Friend::Domain::Model::FUserDomain::CreateCacheParentKey(
             NamespaceName,
             UserId,
@@ -89,6 +91,7 @@ namespace Gs2::Friend::Domain::Model
         NamespaceName(From.NamespaceName),
         UserId(From.UserId),
         FromUserId(From.FromUserId),
+        WithProfile(From.WithProfile),
         ParentKey(From.ParentKey)
     {
 
@@ -117,6 +120,7 @@ namespace Gs2::Friend::Domain::Model
             ->WithNamespaceName(Self->NamespaceName)
             ->WithUserId(Self->UserId)
             ->WithFromUserId(Self->FromUserId);
+        Request->WithWithProfile(Self->WithProfile);
         const auto Future = Self->Client->GetReceiveRequestByUserId(
             Request
         );
@@ -194,21 +198,26 @@ namespace Gs2::Friend::Domain::Model
             const auto Error = Future->GetTask().Error();
             if (Error.IsValid() && Error->IsChildOf(Gs2::Core::Model::FNotFoundError::Class))
             {
-                Gs2::Friend::Model::Cache::FReceiveFriendRequestCache::Delete(
-                    Self->Gs2->Cache,
-                    Request->GetNamespaceName(),
-                    Request->GetUserId(),
-                    Request->GetFromUserId(),
-                    TOptional<int32>()
-                );
-                Self->Gs2->Cache->ClearListCache(
-                    Gs2::Friend::Model::FReceiveFriendRequest::TypeName,
-                    Gs2::Friend::Model::Cache::FReceiveFriendRequestCache::CreateCacheParentKey(
+                for (const auto& CacheWithProfile : {TOptional<bool>(false), TOptional<bool>(true), TOptional<bool>()})
+                {
+                    Gs2::Friend::Model::Cache::FReceiveFriendRequestCache::Delete(
+                        Self->Gs2->Cache,
                         Request->GetNamespaceName(),
                         Request->GetUserId(),
+                        CacheWithProfile,
+                        Request->GetFromUserId(),
                         TOptional<int32>()
-                    )
-                );
+                    );
+                    Self->Gs2->Cache->ClearListCache(
+                        Gs2::Friend::Model::FReceiveFriendRequest::TypeName,
+                        Gs2::Friend::Model::Cache::FReceiveFriendRequestCache::CreateCacheParentKey(
+                            Request->GetNamespaceName(),
+                            Request->GetUserId(),
+                            CacheWithProfile,
+                            TOptional<int32>()
+                        )
+                    );
+                }
             }
             return Error;
         }
@@ -221,14 +230,18 @@ namespace Gs2::Friend::Domain::Model
                       Details->Add(MakeShared<Gs2::Core::Model::FGs2ErrorDetail>(TEXT("userId"), TEXT("userId is invalid."), TEXT("invalid_response")));
                       return MakeShared<Gs2::Core::Model::FUnknownError>(Details);
                     }
-              Gs2::Friend::Model::Cache::FReceiveFriendRequestCache::Delete(
-            Self->Gs2->Cache,
+              for (const auto& CacheWithProfile : {TOptional<bool>(false), TOptional<bool>(true), TOptional<bool>()})
+        {
+            Gs2::Friend::Model::Cache::FReceiveFriendRequestCache::Delete(
+                Self->Gs2->Cache,
 
-            Request->GetNamespaceName(),
-            Request->GetUserId(),
-            Request->GetFromUserId(),
-            TOptional<int32>()
-        );
+                Request->GetNamespaceName(),
+                Request->GetUserId(),
+                CacheWithProfile,
+                Request->GetFromUserId(),
+                TOptional<int32>()
+            );
+        };
         for (const auto& FriendUserId : {Request->GetUserId(), Request->GetFromUserId()})
         {
             for (const auto& WithProfile : {TOptional<bool>(false), TOptional<bool>(true), TOptional<bool>()})
@@ -244,13 +257,17 @@ namespace Gs2::Friend::Domain::Model
                 );
             }
         }
-        Gs2::Friend::Model::Cache::FSendFriendRequestCache::Delete(
-            Self->Gs2->Cache,
-            Request->GetNamespaceName(),
-            Request->GetFromUserId(),
-            Request->GetUserId(),
-            TOptional<int32>()
-        );
+        for (const auto& CacheWithProfile : {TOptional<bool>(false), TOptional<bool>(true), TOptional<bool>()})
+        {
+            Gs2::Friend::Model::Cache::FSendFriendRequestCache::Delete(
+                Self->Gs2->Cache,
+                Request->GetNamespaceName(),
+                Request->GetFromUserId(),
+                CacheWithProfile,
+                Request->GetUserId(),
+                TOptional<int32>()
+            );
+        }
         auto Domain = MakeShared<Gs2::Friend::Domain::Model::FReceiveFriendRequestDomain>(
             Self->Gs2,
             Self->Service,
@@ -301,21 +318,26 @@ namespace Gs2::Friend::Domain::Model
             const auto Error = Future->GetTask().Error();
             if (Error.IsValid() && Error->IsChildOf(Gs2::Core::Model::FNotFoundError::Class))
             {
-                Gs2::Friend::Model::Cache::FReceiveFriendRequestCache::Delete(
-                    Self->Gs2->Cache,
-                    Request->GetNamespaceName(),
-                    Request->GetUserId(),
-                    Request->GetFromUserId(),
-                    TOptional<int32>()
-                );
-                Self->Gs2->Cache->ClearListCache(
-                    Gs2::Friend::Model::FReceiveFriendRequest::TypeName,
-                    Gs2::Friend::Model::Cache::FReceiveFriendRequestCache::CreateCacheParentKey(
+                for (const auto& CacheWithProfile : {TOptional<bool>(false), TOptional<bool>(true), TOptional<bool>()})
+                {
+                    Gs2::Friend::Model::Cache::FReceiveFriendRequestCache::Delete(
+                        Self->Gs2->Cache,
                         Request->GetNamespaceName(),
                         Request->GetUserId(),
+                        CacheWithProfile,
+                        Request->GetFromUserId(),
                         TOptional<int32>()
-                    )
-                );
+                    );
+                    Self->Gs2->Cache->ClearListCache(
+                        Gs2::Friend::Model::FReceiveFriendRequest::TypeName,
+                        Gs2::Friend::Model::Cache::FReceiveFriendRequestCache::CreateCacheParentKey(
+                            Request->GetNamespaceName(),
+                            Request->GetUserId(),
+                            CacheWithProfile,
+                            TOptional<int32>()
+                        )
+                    );
+                }
             }
             return Error;
         }
@@ -328,21 +350,29 @@ namespace Gs2::Friend::Domain::Model
                       Details->Add(MakeShared<Gs2::Core::Model::FGs2ErrorDetail>(TEXT("userId"), TEXT("userId is invalid."), TEXT("invalid_response")));
                       return MakeShared<Gs2::Core::Model::FUnknownError>(Details);
                     }
-              Gs2::Friend::Model::Cache::FReceiveFriendRequestCache::Delete(
-            Self->Gs2->Cache,
+              for (const auto& CacheWithProfile : {TOptional<bool>(false), TOptional<bool>(true), TOptional<bool>()})
+        {
+            Gs2::Friend::Model::Cache::FReceiveFriendRequestCache::Delete(
+                Self->Gs2->Cache,
 
-            Request->GetNamespaceName(),
-            Request->GetUserId(),
-            Request->GetFromUserId(),
-            TOptional<int32>()
-        );
-        Gs2::Friend::Model::Cache::FSendFriendRequestCache::Delete(
-            Self->Gs2->Cache,
-            Request->GetNamespaceName(),
-            Request->GetFromUserId(),
-            Request->GetUserId(),
-            TOptional<int32>()
-        );
+                Request->GetNamespaceName(),
+                Request->GetUserId(),
+                CacheWithProfile,
+                Request->GetFromUserId(),
+                TOptional<int32>()
+            );
+        };
+        for (const auto& CacheWithProfile : {TOptional<bool>(false), TOptional<bool>(true), TOptional<bool>()})
+        {
+            Gs2::Friend::Model::Cache::FSendFriendRequestCache::Delete(
+                Self->Gs2->Cache,
+                Request->GetNamespaceName(),
+                Request->GetFromUserId(),
+                CacheWithProfile,
+                Request->GetUserId(),
+                TOptional<int32>()
+            );
+        }
         auto Domain = MakeShared<Gs2::Friend::Domain::Model::FReceiveFriendRequestDomain>(
             Self->Gs2,
             Self->Service,
@@ -364,6 +394,7 @@ namespace Gs2::Friend::Domain::Model
     FString FReceiveFriendRequestDomain::CreateCacheParentKey(
         TOptional<FString> NamespaceName,
         TOptional<FString> UserId,
+        TOptional<FString> WithProfile,
         TOptional<FString> FromUserId,
         FString ChildType
     )
@@ -371,6 +402,7 @@ namespace Gs2::Friend::Domain::Model
         return FString("") +
             (NamespaceName.IsSet() ? *NamespaceName : "null") + ":" +
             (UserId.IsSet() ? *UserId : "null") + ":" +
+            (WithProfile.IsSet() ? *WithProfile : "null") + ":" +
             (FromUserId.IsSet() ? *FromUserId : "null") + ":" +
             ChildType;
     }
@@ -405,6 +437,7 @@ namespace Gs2::Friend::Domain::Model
 
             Self->NamespaceName,
             Self->UserId,
+            Self->WithProfile,
             TOptional<int32>()
         );
         const auto CacheKey = Gs2::Friend::Model::Cache::FReceiveFriendRequestCache::CreateCacheKey(
@@ -423,6 +456,7 @@ namespace Gs2::Friend::Domain::Model
 
                     Self->NamespaceName,
                     Self->UserId,
+                    Self->WithProfile,
                     Self->FromUserId,
                     TOptional<int32>(),
                     &Value
@@ -445,6 +479,7 @@ namespace Gs2::Friend::Domain::Model
 
                             Self->NamespaceName,
                             Self->UserId,
+                            Self->WithProfile,
                             Self->FromUserId,
                             TOptional<int32>(),
                             nullptr
@@ -470,6 +505,7 @@ namespace Gs2::Friend::Domain::Model
 
                         Self->NamespaceName,
                         Self->UserId,
+                        Self->WithProfile,
                         Self->FromUserId,
                         TOptional<int32>(),
                         Value
@@ -492,6 +528,7 @@ namespace Gs2::Friend::Domain::Model
 
             NamespaceName,
             UserId,
+            WithProfile,
             FromUserId,
             TOptional<int32>()
         );
@@ -545,6 +582,7 @@ namespace Gs2::Friend::Domain::Model
 
             NamespaceName,
             UserId,
+            WithProfile,
             TOptional<int32>()
         );
         const auto SubscriptionCacheKey = Gs2::Friend::Model::Cache::FReceiveFriendRequestCache::CreateCacheKey(
@@ -594,6 +632,7 @@ namespace Gs2::Friend::Domain::Model
 
             NamespaceName,
             UserId,
+            WithProfile,
             TOptional<int32>()
         );
         const auto SubscriptionCacheKey = Gs2::Friend::Model::Cache::FReceiveFriendRequestCache::CreateCacheKey(

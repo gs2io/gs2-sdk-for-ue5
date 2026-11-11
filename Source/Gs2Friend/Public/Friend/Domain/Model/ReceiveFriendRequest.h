@@ -80,6 +80,7 @@ namespace Gs2::Friend::Domain::Model
         TOptional<FString> NamespaceName;
         TOptional<FString> UserId;
         TOptional<FString> FromUserId;
+        TOptional<bool> WithProfile;
     private:
 
         FString ParentKey;
@@ -91,7 +92,8 @@ namespace Gs2::Friend::Domain::Model
             const Friend::Domain::FGs2FriendDomainPtr& Service,
             const TOptional<FString> NamespaceName,
             const TOptional<FString> UserId,
-            const TOptional<FString> FromUserId
+            const TOptional<FString> FromUserId,
+            const TOptional<bool> WithProfile = TOptional<bool>()
             // ReSharper disable once CppMemberInitializersOrder
         );
 
@@ -186,6 +188,7 @@ namespace Gs2::Friend::Domain::Model
         static FString CreateCacheParentKey(
             TOptional<FString> NamespaceName,
             TOptional<FString> UserId,
+            TOptional<FString> WithProfile,
             TOptional<FString> FromUserId,
             FString ChildType
         );

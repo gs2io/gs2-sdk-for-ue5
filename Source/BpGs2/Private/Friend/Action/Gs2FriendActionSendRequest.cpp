@@ -27,7 +27,8 @@ UGs2FriendSendRequestAsyncFunction::UGs2FriendSendRequestAsyncFunction(
 UGs2FriendSendRequestAsyncFunction* UGs2FriendSendRequestAsyncFunction::SendRequest(
     UObject* WorldContextObject,
     FGs2FriendOwnUser User,
-    FString TargetUserId
+    FString TargetUserId,
+    bool WithProfile
 )
 {
     UGs2FriendSendRequestAsyncFunction* Action = NewObject<UGs2FriendSendRequestAsyncFunction>();
@@ -38,6 +39,7 @@ UGs2FriendSendRequestAsyncFunction* UGs2FriendSendRequestAsyncFunction::SendRequ
     }
     Action->User = User;
     Action->TargetUserId = TargetUserId;
+    Action->WithProfile = WithProfile;
     return Action;
 }
 
@@ -49,7 +51,8 @@ void UGs2FriendSendRequestAsyncFunction::Activate()
     }
 
     auto Future = User.Value->SendRequest(
-        TargetUserId
+        TargetUserId,
+        WithProfile
     );
     Future->GetTask().OnSuccessDelegate().BindLambda([&](auto Result)
     {

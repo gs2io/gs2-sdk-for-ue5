@@ -28,7 +28,8 @@ UGs2FriendListOfReceiveFriendRequestAsyncFunction::UGs2FriendListOfReceiveFriend
 
 UGs2FriendListOfReceiveFriendRequestAsyncFunction* UGs2FriendListOfReceiveFriendRequestAsyncFunction::ListOfReceiveFriendRequest(
     UObject* WorldContextObject,
-    FGs2FriendOwnUser User
+    FGs2FriendOwnUser User,
+    bool WithProfile
 )
 {
     UGs2FriendListOfReceiveFriendRequestAsyncFunction* Action = NewObject<UGs2FriendListOfReceiveFriendRequestAsyncFunction>();
@@ -38,6 +39,7 @@ UGs2FriendListOfReceiveFriendRequestAsyncFunction* UGs2FriendListOfReceiveFriend
         return Action;
     }
     Action->User = User;
+    Action->WithProfile = WithProfile;
     return Action;
 }
 
@@ -51,6 +53,7 @@ void UGs2FriendListOfReceiveFriendRequestAsyncFunction::Activate()
         return;
     }
     const auto It = User.Value->ReceiveRequests(
+        WithProfile
     );
     for (auto v : *It)
     {

@@ -70,7 +70,12 @@ namespace Gs2::Core::Model
         {
             return Error;
         }
-        return Resolver(Method, Error);
+        const auto Resolved = Resolver(Method, Error);
+        if (Resolved.IsValid() && !Resolved->GetResult().IsSet())
+        {
+            Resolved->SetResult(Error->GetResult());
+        }
+        return Resolved;
     }
 
     FGs2ErrorPtr FGs2ErrorResolver::ResolveAction(const FString& Action, FGs2ErrorPtr Error)

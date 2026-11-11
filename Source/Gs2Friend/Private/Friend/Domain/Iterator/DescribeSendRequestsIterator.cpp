@@ -102,6 +102,7 @@ namespace Gs2::Friend::Domain::Iterator
             const auto ListParentKey = Gs2::Friend::Model::Cache::FSendFriendRequestCache::CreateCacheParentKey(
                 Self->NamespaceName,
                 Self->AccessToken.IsValid() ? Self->AccessToken->GetUserId() : TOptional<FString>(),
+                Self->WithProfile,
                 Self->AccessToken.IsValid() ? Self->AccessToken->GetTimeOffset() : TOptional<int32>()
             );
             if (!RangeIteratorOpt && (!Self->WithProfile.Get(false)))
@@ -177,7 +178,7 @@ namespace Gs2::Friend::Domain::Iterator
                         if (!Item.IsValid()) continue;
                         Gs2::Friend::Model::Cache::FSendFriendRequestCache::Put(
                             Self->Gs2->Cache,
-                            Request->GetNamespaceName(), CacheOwnerSnapshotUserId, Item->GetTargetUserId(),
+                            Request->GetNamespaceName(), CacheOwnerSnapshotUserId, Request->GetWithProfile().Get(bool{}), Item->GetTargetUserId(),
                             CacheOwnerSnapshotTimeOffset, Item
                         );
                     }
@@ -195,6 +196,7 @@ namespace Gs2::Friend::Domain::Iterator
                     Gs2::Friend::Model::Cache::FSendFriendRequestCache::CreateCacheParentKey(
                         Self->NamespaceName,
                         Self->AccessToken.IsValid() ? Self->AccessToken->GetUserId() : TOptional<FString>(),
+                        Self->WithProfile,
                         Self->AccessToken.IsValid() ? Self->AccessToken->GetTimeOffset() : TOptional<int32>()
                     )
                 );

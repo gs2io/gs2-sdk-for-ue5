@@ -641,6 +641,48 @@ namespace Gs2::Matchmaking::Domain
         const FString Result,
         const TOptional<int32> TimeOffset
     ) {
+        if (Method == "VerifyIncludeParticipantByUserId") {
+            if (Result.IsEmpty())
+            {
+                return;
+            }
+            TSharedPtr<FJsonObject> RequestModelJson;
+            if (const TSharedRef<TJsonReader<>> JsonReader = TJsonReaderFactory<>::Create(Request);
+                !FJsonSerializer::Deserialize(JsonReader, RequestModelJson))
+            {
+                return;
+            }
+            TSharedPtr<FJsonObject> ResultModelJson;
+            if (const TSharedRef<TJsonReader<>> JsonReader = TJsonReaderFactory<>::Create(Result);
+                !FJsonSerializer::Deserialize(JsonReader, ResultModelJson))
+            {
+                return;
+            }
+            const auto RequestModel = Gs2::Matchmaking::Request::FVerifyIncludeParticipantByUserIdRequest::FromJson(RequestModelJson);
+            const auto ResultModel = Gs2::Matchmaking::Result::FVerifyIncludeParticipantByUserIdResult::FromJson(ResultModelJson);
+
+                    if (ResultModel.IsValid() && ResultModel->GetItem() != nullptr)
+                    {
+
+                if (!ResultModel.IsValid() || !ResultModel->GetItem().IsValid())
+                    {
+                      return;
+                      }
+                Gs2::Matchmaking::Model::Cache::FSeasonGatheringCache::Put(
+                    Gs2->Cache,
+
+                    RequestModel->GetNamespaceName(),
+                    RequestModel->GetUserId(),
+                    ResultModel->GetItem()->GetSeasonName(),
+                    ResultModel->GetItem()->GetSeason().Get(int64{}),
+                    ResultModel->GetItem()->GetTier().Get(int64{}),
+                    RequestModel->GetSeasonGatheringName(),
+                    TimeOffset,
+                    ResultModel->GetItem()
+                );
+                    }
+
+        }
     }
 
     void FGs2MatchmakingDomain::UpdateCacheFromJobResult(

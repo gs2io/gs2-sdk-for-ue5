@@ -148,6 +148,7 @@ namespace Gs2::Friend::Domain::Model
 
             Request->GetNamespaceName(),
             (ResultModel.IsValid() && ResultModel->GetItem().IsValid() ? ResultModel->GetItem()->GetUserId() : TOptional<FString>()),
+            Request->GetWithProfile(),
             ResultModel->GetItem()->GetTargetUserId(),
             TOptional<int32>(),
             MakeShared<Gs2::Friend::Model::FSendFriendRequest>()

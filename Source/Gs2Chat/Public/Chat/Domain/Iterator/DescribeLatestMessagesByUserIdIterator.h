@@ -12,6 +12,8 @@
  * on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either
  * express or implied. See the License for the specific language governing
  * permissions and limitations under the License.
+ *
+ * deny overwrite
  */
 
 // ReSharper disable CppUnusedIncludeDirective
@@ -82,7 +84,7 @@ namespace Gs2::Chat::Domain::Iterator
             Gs2::Core::Model::FGs2ErrorPtr ErrorValue;
             bool bLast;
             bool bEnd;
-            TOptional<int64> StartAt;
+            TOptional<FString> PageToken;
             TOptional<int32> FetchSize;
 
             class FOneBeforeBegin {};
@@ -117,7 +119,7 @@ namespace Gs2::Chat::Domain::Iterator
                 ErrorValue(Iterator.ErrorValue),
                 bLast(Iterator.bLast),
                 bEnd(Iterator.bEnd),
-                StartAt(Iterator.StartAt),
+                PageToken(Iterator.PageToken),
                 FetchSize(Iterator.FetchSize)
             {}
 

@@ -48,8 +48,9 @@ namespace Gs2::UE5::Friend::Domain::Model
 
     FEzUserGameSessionDomain::FSendRequestTask::FSendRequestTask(
         TSharedPtr<FEzUserGameSessionDomain> Self,
-        FString TargetUserId
-    ): Self(Self), TargetUserId(TargetUserId)
+        FString TargetUserId,
+        TOptional<bool> WithProfile
+    ): Self(Self), TargetUserId(TargetUserId), WithProfile(WithProfile)
     {
 
     }
@@ -63,6 +64,7 @@ namespace Gs2::UE5::Friend::Domain::Model
                 const auto Task = Self->Domain->SendRequest(
                     MakeShared<Gs2::Friend::Request::FSendRequestRequest>()
                         ->WithTargetUserId(TargetUserId)
+                        ->WithWithProfile(WithProfile)
                 );
                 Task->StartSynchronousTask();
                 if (Task->GetTask().IsError())
@@ -91,12 +93,14 @@ namespace Gs2::UE5::Friend::Domain::Model
     }
 
     TSharedPtr<FAsyncTask<FEzUserGameSessionDomain::FSendRequestTask>> FEzUserGameSessionDomain::SendRequest(
-        FString TargetUserId
+        FString TargetUserId,
+        TOptional<bool> WithProfile
     )
     {
         return Gs2::Core::Util::New<FAsyncTask<FSendRequestTask>>(
             this->AsShared(),
-            TargetUserId
+            TargetUserId,
+            WithProfile
         );
     }
 

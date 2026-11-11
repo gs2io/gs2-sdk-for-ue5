@@ -27,7 +27,8 @@ UGs2ChatListOfMessageAsyncFunction::UGs2ChatListOfMessageAsyncFunction(
 
 UGs2ChatListOfMessageAsyncFunction* UGs2ChatListOfMessageAsyncFunction::ListOfMessage(
     UObject* WorldContextObject,
-    FGs2ChatOwnRoom Room
+    FGs2ChatOwnRoom Room,
+    int32 Category
 )
 {
     UGs2ChatListOfMessageAsyncFunction* Action = NewObject<UGs2ChatListOfMessageAsyncFunction>();
@@ -37,6 +38,7 @@ UGs2ChatListOfMessageAsyncFunction* UGs2ChatListOfMessageAsyncFunction::ListOfMe
         return Action;
     }
     Action->Room = Room;
+    Action->Category = Category;
     return Action;
 }
 
@@ -50,6 +52,7 @@ void UGs2ChatListOfMessageAsyncFunction::Activate()
         return;
     }
     const auto It = Room.Value->Messages(
+        Category
     );
     for (auto v : *It)
     {

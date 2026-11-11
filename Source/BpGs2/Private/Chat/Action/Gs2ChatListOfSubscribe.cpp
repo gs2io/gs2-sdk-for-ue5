@@ -27,7 +27,8 @@ UGs2ChatListOfSubscribeAsyncFunction::UGs2ChatListOfSubscribeAsyncFunction(
 
 UGs2ChatListOfSubscribeAsyncFunction* UGs2ChatListOfSubscribeAsyncFunction::ListOfSubscribe(
     UObject* WorldContextObject,
-    FGs2ChatOwnUser User
+    FGs2ChatOwnUser User,
+    FString RoomNamePrefix
 )
 {
     UGs2ChatListOfSubscribeAsyncFunction* Action = NewObject<UGs2ChatListOfSubscribeAsyncFunction>();
@@ -37,6 +38,7 @@ UGs2ChatListOfSubscribeAsyncFunction* UGs2ChatListOfSubscribeAsyncFunction::List
         return Action;
     }
     Action->User = User;
+    Action->RoomNamePrefix = RoomNamePrefix;
     return Action;
 }
 
@@ -50,6 +52,7 @@ void UGs2ChatListOfSubscribeAsyncFunction::Activate()
         return;
     }
     const auto It = User.Value->Subscribes(
+        RoomNamePrefix
     );
     for (auto v : *It)
     {
