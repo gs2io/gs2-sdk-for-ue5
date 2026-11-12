@@ -21,6 +21,7 @@
 #include "../Model/TransactionSetting.h"
 #include "../Model/TransactionSettingV2.h"
 #include "../Model/ScriptSetting.h"
+#include "../Model/AccountDeletionSetting.h"
 #include "../Model/LogSetting.h"
 
 namespace Gs2::Account::Request
@@ -41,6 +42,10 @@ namespace Gs2::Account::Request
         TSharedPtr<Model::FScriptSetting> DoTakeOverScriptValue;
         TSharedPtr<Model::FScriptSetting> BanScriptValue;
         TSharedPtr<Model::FScriptSetting> UnBanScriptValue;
+        TSharedPtr<Model::FAccountDeletionSetting> AccountDeletionSettingValue;
+        TSharedPtr<Model::FScriptSetting> RequestDeletionScriptValue;
+        TSharedPtr<Model::FScriptSetting> CancelDeletionScriptValue;
+        TSharedPtr<Model::FScriptSetting> ExecuteDeletionScriptValue;
         TSharedPtr<Model::FLogSetting> LogSettingValue;
         
     public:
@@ -63,6 +68,10 @@ namespace Gs2::Account::Request
         TSharedPtr<FUpdateNamespaceRequest> WithDoTakeOverScript(const TSharedPtr<Model::FScriptSetting> DoTakeOverScript);
         TSharedPtr<FUpdateNamespaceRequest> WithBanScript(const TSharedPtr<Model::FScriptSetting> BanScript);
         TSharedPtr<FUpdateNamespaceRequest> WithUnBanScript(const TSharedPtr<Model::FScriptSetting> UnBanScript);
+        TSharedPtr<FUpdateNamespaceRequest> WithAccountDeletionSetting(const TSharedPtr<Model::FAccountDeletionSetting> AccountDeletionSetting);
+        TSharedPtr<FUpdateNamespaceRequest> WithRequestDeletionScript(const TSharedPtr<Model::FScriptSetting> RequestDeletionScript);
+        TSharedPtr<FUpdateNamespaceRequest> WithCancelDeletionScript(const TSharedPtr<Model::FScriptSetting> CancelDeletionScript);
+        TSharedPtr<FUpdateNamespaceRequest> WithExecuteDeletionScript(const TSharedPtr<Model::FScriptSetting> ExecuteDeletionScript);
         TSharedPtr<FUpdateNamespaceRequest> WithLogSetting(const TSharedPtr<Model::FLogSetting> LogSetting);
 
         TOptional<FString> GetContextStack() const;
@@ -78,6 +87,10 @@ namespace Gs2::Account::Request
         TSharedPtr<Model::FScriptSetting> GetDoTakeOverScript() const;
         TSharedPtr<Model::FScriptSetting> GetBanScript() const;
         TSharedPtr<Model::FScriptSetting> GetUnBanScript() const;
+        TSharedPtr<Model::FAccountDeletionSetting> GetAccountDeletionSetting() const;
+        TSharedPtr<Model::FScriptSetting> GetRequestDeletionScript() const;
+        TSharedPtr<Model::FScriptSetting> GetCancelDeletionScript() const;
+        TSharedPtr<Model::FScriptSetting> GetExecuteDeletionScript() const;
         TSharedPtr<Model::FLogSetting> GetLogSetting() const;
 
         static TSharedPtr<FUpdateNamespaceRequest> FromJson(const TSharedPtr<FJsonObject> Data);

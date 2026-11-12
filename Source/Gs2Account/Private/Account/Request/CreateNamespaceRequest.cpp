@@ -31,6 +31,10 @@ namespace Gs2::Account::Request
         DoTakeOverScriptValue(nullptr),
         BanScriptValue(nullptr),
         UnBanScriptValue(nullptr),
+        AccountDeletionSettingValue(nullptr),
+        RequestDeletionScriptValue(nullptr),
+        CancelDeletionScriptValue(nullptr),
+        ExecuteDeletionScriptValue(nullptr),
         LogSettingValue(nullptr)
     {
     }
@@ -50,6 +54,10 @@ namespace Gs2::Account::Request
         DoTakeOverScriptValue(From.DoTakeOverScriptValue),
         BanScriptValue(From.BanScriptValue),
         UnBanScriptValue(From.UnBanScriptValue),
+        AccountDeletionSettingValue(From.AccountDeletionSettingValue),
+        RequestDeletionScriptValue(From.RequestDeletionScriptValue),
+        CancelDeletionScriptValue(From.CancelDeletionScriptValue),
+        ExecuteDeletionScriptValue(From.ExecuteDeletionScriptValue),
         LogSettingValue(From.LogSettingValue)
     {
     }
@@ -155,6 +163,38 @@ namespace Gs2::Account::Request
     )
     {
         this->UnBanScriptValue = UnBanScript;
+        return SharedThis(this);
+    }
+
+    TSharedPtr<FCreateNamespaceRequest> FCreateNamespaceRequest::WithAccountDeletionSetting(
+        const TSharedPtr<Model::FAccountDeletionSetting> AccountDeletionSetting
+    )
+    {
+        this->AccountDeletionSettingValue = AccountDeletionSetting;
+        return SharedThis(this);
+    }
+
+    TSharedPtr<FCreateNamespaceRequest> FCreateNamespaceRequest::WithRequestDeletionScript(
+        const TSharedPtr<Model::FScriptSetting> RequestDeletionScript
+    )
+    {
+        this->RequestDeletionScriptValue = RequestDeletionScript;
+        return SharedThis(this);
+    }
+
+    TSharedPtr<FCreateNamespaceRequest> FCreateNamespaceRequest::WithCancelDeletionScript(
+        const TSharedPtr<Model::FScriptSetting> CancelDeletionScript
+    )
+    {
+        this->CancelDeletionScriptValue = CancelDeletionScript;
+        return SharedThis(this);
+    }
+
+    TSharedPtr<FCreateNamespaceRequest> FCreateNamespaceRequest::WithExecuteDeletionScript(
+        const TSharedPtr<Model::FScriptSetting> ExecuteDeletionScript
+    )
+    {
+        this->ExecuteDeletionScriptValue = ExecuteDeletionScript;
         return SharedThis(this);
     }
 
@@ -281,6 +321,42 @@ namespace Gs2::Account::Request
         return UnBanScriptValue;
     }
 
+    TSharedPtr<Model::FAccountDeletionSetting> FCreateNamespaceRequest::GetAccountDeletionSetting() const
+    {
+        if (!AccountDeletionSettingValue.IsValid())
+        {
+            return nullptr;
+        }
+        return AccountDeletionSettingValue;
+    }
+
+    TSharedPtr<Model::FScriptSetting> FCreateNamespaceRequest::GetRequestDeletionScript() const
+    {
+        if (!RequestDeletionScriptValue.IsValid())
+        {
+            return nullptr;
+        }
+        return RequestDeletionScriptValue;
+    }
+
+    TSharedPtr<Model::FScriptSetting> FCreateNamespaceRequest::GetCancelDeletionScript() const
+    {
+        if (!CancelDeletionScriptValue.IsValid())
+        {
+            return nullptr;
+        }
+        return CancelDeletionScriptValue;
+    }
+
+    TSharedPtr<Model::FScriptSetting> FCreateNamespaceRequest::GetExecuteDeletionScript() const
+    {
+        if (!ExecuteDeletionScriptValue.IsValid())
+        {
+            return nullptr;
+        }
+        return ExecuteDeletionScriptValue;
+    }
+
     TSharedPtr<Model::FLogSetting> FCreateNamespaceRequest::GetLogSetting() const
     {
         if (!LogSettingValue.IsValid())
@@ -397,6 +473,38 @@ namespace Gs2::Account::Request
                   }
                   return Model::FScriptSetting::FromJson(Data->GetObjectField(ANSI_TO_TCHAR("unBanScript")));
               }() : nullptr)
+          ->WithAccountDeletionSetting(Data->HasField(ANSI_TO_TCHAR("accountDeletionSetting")) ? [Data]() -> Model::FAccountDeletionSettingPtr
+              {
+                  if (Data->HasTypedField<EJson::Null>(ANSI_TO_TCHAR("accountDeletionSetting")))
+                  {
+                      return nullptr;
+                  }
+                  return Model::FAccountDeletionSetting::FromJson(Data->GetObjectField(ANSI_TO_TCHAR("accountDeletionSetting")));
+              }() : nullptr)
+          ->WithRequestDeletionScript(Data->HasField(ANSI_TO_TCHAR("requestDeletionScript")) ? [Data]() -> Model::FScriptSettingPtr
+              {
+                  if (Data->HasTypedField<EJson::Null>(ANSI_TO_TCHAR("requestDeletionScript")))
+                  {
+                      return nullptr;
+                  }
+                  return Model::FScriptSetting::FromJson(Data->GetObjectField(ANSI_TO_TCHAR("requestDeletionScript")));
+              }() : nullptr)
+          ->WithCancelDeletionScript(Data->HasField(ANSI_TO_TCHAR("cancelDeletionScript")) ? [Data]() -> Model::FScriptSettingPtr
+              {
+                  if (Data->HasTypedField<EJson::Null>(ANSI_TO_TCHAR("cancelDeletionScript")))
+                  {
+                      return nullptr;
+                  }
+                  return Model::FScriptSetting::FromJson(Data->GetObjectField(ANSI_TO_TCHAR("cancelDeletionScript")));
+              }() : nullptr)
+          ->WithExecuteDeletionScript(Data->HasField(ANSI_TO_TCHAR("executeDeletionScript")) ? [Data]() -> Model::FScriptSettingPtr
+              {
+                  if (Data->HasTypedField<EJson::Null>(ANSI_TO_TCHAR("executeDeletionScript")))
+                  {
+                      return nullptr;
+                  }
+                  return Model::FScriptSetting::FromJson(Data->GetObjectField(ANSI_TO_TCHAR("executeDeletionScript")));
+              }() : nullptr)
           ->WithLogSetting(Data->HasField(ANSI_TO_TCHAR("logSetting")) ? [Data]() -> Model::FLogSettingPtr
               {
                   if (Data->HasTypedField<EJson::Null>(ANSI_TO_TCHAR("logSetting")))
@@ -461,6 +569,22 @@ namespace Gs2::Account::Request
         if (UnBanScriptValue != nullptr && UnBanScriptValue.IsValid())
         {
             JsonRootObject->SetObjectField(TEXT("unBanScript"), UnBanScriptValue->ToJson());
+        }
+        if (AccountDeletionSettingValue != nullptr && AccountDeletionSettingValue.IsValid())
+        {
+            JsonRootObject->SetObjectField(TEXT("accountDeletionSetting"), AccountDeletionSettingValue->ToJson());
+        }
+        if (RequestDeletionScriptValue != nullptr && RequestDeletionScriptValue.IsValid())
+        {
+            JsonRootObject->SetObjectField(TEXT("requestDeletionScript"), RequestDeletionScriptValue->ToJson());
+        }
+        if (CancelDeletionScriptValue != nullptr && CancelDeletionScriptValue.IsValid())
+        {
+            JsonRootObject->SetObjectField(TEXT("cancelDeletionScript"), CancelDeletionScriptValue->ToJson());
+        }
+        if (ExecuteDeletionScriptValue != nullptr && ExecuteDeletionScriptValue.IsValid())
+        {
+            JsonRootObject->SetObjectField(TEXT("executeDeletionScript"), ExecuteDeletionScriptValue->ToJson());
         }
         if (LogSettingValue != nullptr && LogSettingValue.IsValid())
         {

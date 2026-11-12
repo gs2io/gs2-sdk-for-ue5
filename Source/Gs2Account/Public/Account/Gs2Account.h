@@ -32,6 +32,7 @@
 #include "Model/GitHubCheckoutSetting.h"
 #include "Model/ScriptSetting.h"
 #include "Model/LogSetting.h"
+#include "Model/AccountDeletionSetting.h"
 #include "Model/TransactionSetting.h"
 #include "Model/TransactionSettingV2.h"
 
@@ -172,6 +173,36 @@
 #include "Result/AuthenticationResult.h"
 #include "Task/Rest/AuthenticationTask.h"
 #include "Task/WebSocket/AuthenticationTask.h"
+
+// RequestDeletion
+#include "Request/RequestDeletionRequest.h"
+#include "Result/RequestDeletionResult.h"
+#include "Task/Rest/RequestDeletionTask.h"
+#include "Task/WebSocket/RequestDeletionTask.h"
+
+// RequestDeletionByUserId
+#include "Request/RequestDeletionByUserIdRequest.h"
+#include "Result/RequestDeletionByUserIdResult.h"
+#include "Task/Rest/RequestDeletionByUserIdTask.h"
+#include "Task/WebSocket/RequestDeletionByUserIdTask.h"
+
+// CancelDeletion
+#include "Request/CancelDeletionRequest.h"
+#include "Result/CancelDeletionResult.h"
+#include "Task/Rest/CancelDeletionTask.h"
+#include "Task/WebSocket/CancelDeletionTask.h"
+
+// CancelDeletionByUserId
+#include "Request/CancelDeletionByUserIdRequest.h"
+#include "Result/CancelDeletionByUserIdResult.h"
+#include "Task/Rest/CancelDeletionByUserIdTask.h"
+#include "Task/WebSocket/CancelDeletionByUserIdTask.h"
+
+// ExecuteDeletionByUserId
+#include "Request/ExecuteDeletionByUserIdRequest.h"
+#include "Result/ExecuteDeletionByUserIdResult.h"
+#include "Task/Rest/ExecuteDeletionByUserIdTask.h"
+#include "Task/WebSocket/ExecuteDeletionByUserIdTask.h"
 
 // DescribeTakeOvers
 #include "Request/DescribeTakeOversRequest.h"

@@ -307,6 +307,118 @@ namespace Gs2::Account::Domain::Model
 
 
 
+        class GS2ACCOUNT_API FRequestDeletionTask final :
+            public Gs2::Core::Util::TGs2Future<Gs2::Account::Domain::Model::FAccountDomain>,
+            public TSharedFromThis<FRequestDeletionTask>
+        {
+            const TSharedPtr<FAccountDomain> Self;
+            const Request::FRequestDeletionByUserIdRequestPtr Request;
+        public:
+            explicit FRequestDeletionTask(
+                const TSharedPtr<FAccountDomain>& Self,
+                const Request::FRequestDeletionByUserIdRequestPtr Request
+            );
+
+            FRequestDeletionTask(
+                const FRequestDeletionTask& From
+            );
+
+            virtual Gs2::Core::Model::FGs2ErrorPtr Action(
+                TSharedPtr<TSharedPtr<Gs2::Account::Domain::Model::FAccountDomain>> Result
+            ) override;
+        };
+        friend FRequestDeletionTask;
+
+        TSharedPtr<FAsyncTask<FRequestDeletionTask>> RequestDeletion(
+            Request::FRequestDeletionByUserIdRequestPtr Request
+        );
+
+
+
+        class GS2ACCOUNT_API FCancelDeletionTask final :
+            public Gs2::Core::Util::TGs2Future<Gs2::Account::Domain::Model::FAccountDomain>,
+            public TSharedFromThis<FCancelDeletionTask>
+        {
+            const TSharedPtr<FAccountDomain> Self;
+            const Request::FCancelDeletionRequestPtr Request;
+        public:
+            explicit FCancelDeletionTask(
+                const TSharedPtr<FAccountDomain>& Self,
+                const Request::FCancelDeletionRequestPtr Request
+            );
+
+            FCancelDeletionTask(
+                const FCancelDeletionTask& From
+            );
+
+            virtual Gs2::Core::Model::FGs2ErrorPtr Action(
+                TSharedPtr<TSharedPtr<Gs2::Account::Domain::Model::FAccountDomain>> Result
+            ) override;
+        };
+        friend FCancelDeletionTask;
+
+        TSharedPtr<FAsyncTask<FCancelDeletionTask>> CancelDeletion(
+            Request::FCancelDeletionRequestPtr Request
+        );
+
+
+
+        class GS2ACCOUNT_API FCancelDeletionTask final :
+            public Gs2::Core::Util::TGs2Future<Gs2::Account::Domain::Model::FAccountDomain>,
+            public TSharedFromThis<FCancelDeletionTask>
+        {
+            const TSharedPtr<FAccountDomain> Self;
+            const Request::FCancelDeletionByUserIdRequestPtr Request;
+        public:
+            explicit FCancelDeletionTask(
+                const TSharedPtr<FAccountDomain>& Self,
+                const Request::FCancelDeletionByUserIdRequestPtr Request
+            );
+
+            FCancelDeletionTask(
+                const FCancelDeletionTask& From
+            );
+
+            virtual Gs2::Core::Model::FGs2ErrorPtr Action(
+                TSharedPtr<TSharedPtr<Gs2::Account::Domain::Model::FAccountDomain>> Result
+            ) override;
+        };
+        friend FCancelDeletionTask;
+
+        TSharedPtr<FAsyncTask<FCancelDeletionTask>> CancelDeletion(
+            Request::FCancelDeletionByUserIdRequestPtr Request
+        );
+
+
+
+        class GS2ACCOUNT_API FExecuteDeletionTask final :
+            public Gs2::Core::Util::TGs2Future<Gs2::Account::Domain::Model::FAccountDomain>,
+            public TSharedFromThis<FExecuteDeletionTask>
+        {
+            const TSharedPtr<FAccountDomain> Self;
+            const Request::FExecuteDeletionByUserIdRequestPtr Request;
+        public:
+            explicit FExecuteDeletionTask(
+                const TSharedPtr<FAccountDomain>& Self,
+                const Request::FExecuteDeletionByUserIdRequestPtr Request
+            );
+
+            FExecuteDeletionTask(
+                const FExecuteDeletionTask& From
+            );
+
+            virtual Gs2::Core::Model::FGs2ErrorPtr Action(
+                TSharedPtr<TSharedPtr<Gs2::Account::Domain::Model::FAccountDomain>> Result
+            ) override;
+        };
+        friend FExecuteDeletionTask;
+
+        TSharedPtr<FAsyncTask<FExecuteDeletionTask>> ExecuteDeletion(
+            Request::FExecuteDeletionByUserIdRequestPtr Request
+        );
+
+
+
         class GS2ACCOUNT_API FCreateTakeOverOpenIdConnectAndTask final :
             public Gs2::Core::Util::TGs2Future<Gs2::Account::Domain::Model::FTakeOverDomain>,
             public TSharedFromThis<FCreateTakeOverOpenIdConnectAndTask>

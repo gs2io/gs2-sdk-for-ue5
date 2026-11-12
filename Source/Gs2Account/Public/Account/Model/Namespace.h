@@ -21,6 +21,7 @@
 #include "TransactionSetting.h"
 #include "TransactionSettingV2.h"
 #include "ScriptSetting.h"
+#include "AccountDeletionSetting.h"
 #include "LogSetting.h"
 
 namespace Gs2::Account::Model
@@ -40,6 +41,10 @@ namespace Gs2::Account::Model
         TSharedPtr<FScriptSetting> DoTakeOverScriptValue;
         TSharedPtr<FScriptSetting> BanScriptValue;
         TSharedPtr<FScriptSetting> UnBanScriptValue;
+        TSharedPtr<FAccountDeletionSetting> AccountDeletionSettingValue;
+        TSharedPtr<FScriptSetting> RequestDeletionScriptValue;
+        TSharedPtr<FScriptSetting> CancelDeletionScriptValue;
+        TSharedPtr<FScriptSetting> ExecuteDeletionScriptValue;
         TSharedPtr<FLogSetting> LogSettingValue;
         TOptional<int64> CreatedAtValue;
         TOptional<int64> UpdatedAtValue;
@@ -65,6 +70,10 @@ namespace Gs2::Account::Model
         TSharedPtr<FNamespace> WithDoTakeOverScript(const TSharedPtr<FScriptSetting> DoTakeOverScript);
         TSharedPtr<FNamespace> WithBanScript(const TSharedPtr<FScriptSetting> BanScript);
         TSharedPtr<FNamespace> WithUnBanScript(const TSharedPtr<FScriptSetting> UnBanScript);
+        TSharedPtr<FNamespace> WithAccountDeletionSetting(const TSharedPtr<FAccountDeletionSetting> AccountDeletionSetting);
+        TSharedPtr<FNamespace> WithRequestDeletionScript(const TSharedPtr<FScriptSetting> RequestDeletionScript);
+        TSharedPtr<FNamespace> WithCancelDeletionScript(const TSharedPtr<FScriptSetting> CancelDeletionScript);
+        TSharedPtr<FNamespace> WithExecuteDeletionScript(const TSharedPtr<FScriptSetting> ExecuteDeletionScript);
         TSharedPtr<FNamespace> WithLogSetting(const TSharedPtr<FLogSetting> LogSetting);
         TSharedPtr<FNamespace> WithCreatedAt(const TOptional<int64> CreatedAt);
         TSharedPtr<FNamespace> WithUpdatedAt(const TOptional<int64> UpdatedAt);
@@ -85,6 +94,10 @@ namespace Gs2::Account::Model
         TSharedPtr<FScriptSetting> GetDoTakeOverScript() const;
         TSharedPtr<FScriptSetting> GetBanScript() const;
         TSharedPtr<FScriptSetting> GetUnBanScript() const;
+        TSharedPtr<FAccountDeletionSetting> GetAccountDeletionSetting() const;
+        TSharedPtr<FScriptSetting> GetRequestDeletionScript() const;
+        TSharedPtr<FScriptSetting> GetCancelDeletionScript() const;
+        TSharedPtr<FScriptSetting> GetExecuteDeletionScript() const;
         TSharedPtr<FLogSetting> GetLogSetting() const;
         TOptional<int64> GetCreatedAt() const;
         FString GetCreatedAtString() const;

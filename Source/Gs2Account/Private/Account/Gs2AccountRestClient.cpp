@@ -226,6 +226,51 @@ namespace Gs2::Account
         );
     }
 
+    TSharedPtr<FAsyncTask<Task::Rest::FRequestDeletionTask>> FGs2AccountRestClient::RequestDeletion(
+        const Request::FRequestDeletionRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::Rest::FRequestDeletionTask>>(
+            Session,
+            Request
+        );
+    }
+
+    TSharedPtr<FAsyncTask<Task::Rest::FRequestDeletionByUserIdTask>> FGs2AccountRestClient::RequestDeletionByUserId(
+        const Request::FRequestDeletionByUserIdRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::Rest::FRequestDeletionByUserIdTask>>(
+            Session,
+            Request
+        );
+    }
+
+    TSharedPtr<FAsyncTask<Task::Rest::FCancelDeletionTask>> FGs2AccountRestClient::CancelDeletion(
+        const Request::FCancelDeletionRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::Rest::FCancelDeletionTask>>(
+            Session,
+            Request
+        );
+    }
+
+    TSharedPtr<FAsyncTask<Task::Rest::FCancelDeletionByUserIdTask>> FGs2AccountRestClient::CancelDeletionByUserId(
+        const Request::FCancelDeletionByUserIdRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::Rest::FCancelDeletionByUserIdTask>>(
+            Session,
+            Request
+        );
+    }
+
+    TSharedPtr<FAsyncTask<Task::Rest::FExecuteDeletionByUserIdTask>> FGs2AccountRestClient::ExecuteDeletionByUserId(
+        const Request::FExecuteDeletionByUserIdRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::Rest::FExecuteDeletionByUserIdTask>>(
+            Session,
+            Request
+        );
+    }
+
     TSharedPtr<FAsyncTask<Task::Rest::FDescribeTakeOversTask>> FGs2AccountRestClient::DescribeTakeOvers(
         const Request::FDescribeTakeOversRequestPtr Request) const
     {

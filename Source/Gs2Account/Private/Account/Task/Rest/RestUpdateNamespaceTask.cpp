@@ -124,6 +124,22 @@ namespace Gs2::Account::Task::Rest
             {
                 JsonRootObject->SetObjectField(TEXT("unBanScript"), this->Request->GetUnBanScript()->ToJson());
             }
+            if (this->Request->GetAccountDeletionSetting() != nullptr && this->Request->GetAccountDeletionSetting().IsValid())
+            {
+                JsonRootObject->SetObjectField(TEXT("accountDeletionSetting"), this->Request->GetAccountDeletionSetting()->ToJson());
+            }
+            if (this->Request->GetRequestDeletionScript() != nullptr && this->Request->GetRequestDeletionScript().IsValid())
+            {
+                JsonRootObject->SetObjectField(TEXT("requestDeletionScript"), this->Request->GetRequestDeletionScript()->ToJson());
+            }
+            if (this->Request->GetCancelDeletionScript() != nullptr && this->Request->GetCancelDeletionScript().IsValid())
+            {
+                JsonRootObject->SetObjectField(TEXT("cancelDeletionScript"), this->Request->GetCancelDeletionScript()->ToJson());
+            }
+            if (this->Request->GetExecuteDeletionScript() != nullptr && this->Request->GetExecuteDeletionScript().IsValid())
+            {
+                JsonRootObject->SetObjectField(TEXT("executeDeletionScript"), this->Request->GetExecuteDeletionScript()->ToJson());
+            }
             if (this->Request->GetLogSetting() != nullptr && this->Request->GetLogSetting().IsValid())
             {
                 JsonRootObject->SetObjectField(TEXT("logSetting"), this->Request->GetLogSetting()->ToJson());

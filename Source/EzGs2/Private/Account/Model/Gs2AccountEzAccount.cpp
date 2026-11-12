@@ -42,6 +42,14 @@ namespace Gs2::UE5::Account::Model
         this->CreatedAtValue = CreatedAt;
         return SharedThis(this);
     }
+
+    TSharedPtr<FEzAccount> FEzAccount::WithDeletionScheduledAt(
+        const TOptional<int64> DeletionScheduledAt
+    )
+    {
+        this->DeletionScheduledAtValue = DeletionScheduledAt;
+        return SharedThis(this);
+    }
     TOptional<FString> FEzAccount::GetUserId() const
     {
         return UserIdValue;
@@ -63,13 +71,27 @@ namespace Gs2::UE5::Account::Model
         }
         return FString::Printf(TEXT("%lld"), CreatedAtValue.GetValue());
     }
+    TOptional<int64> FEzAccount::GetDeletionScheduledAt() const
+    {
+        return DeletionScheduledAtValue;
+    }
+
+    FString FEzAccount::GetDeletionScheduledAtString() const
+    {
+        if (!DeletionScheduledAtValue.IsSet())
+        {
+            return FString("null");
+        }
+        return FString::Printf(TEXT("%lld"), DeletionScheduledAtValue.GetValue());
+    }
 
     Gs2::Account::Model::FAccountPtr FEzAccount::ToModel() const
     {
         return MakeShared<Gs2::Account::Model::FAccount>()
             ->WithUserId(UserIdValue)
             ->WithPassword(PasswordValue)
-            ->WithCreatedAt(CreatedAtValue);
+            ->WithCreatedAt(CreatedAtValue)
+            ->WithDeletionScheduledAt(DeletionScheduledAtValue);
     }
 
     TSharedPtr<FEzAccount> FEzAccount::FromModel(const Gs2::Account::Model::FAccountPtr Model)
@@ -81,6 +103,7 @@ namespace Gs2::UE5::Account::Model
         return MakeShared<FEzAccount>()
             ->WithUserId(Model->GetUserId())
             ->WithPassword(Model->GetPassword())
-            ->WithCreatedAt(Model->GetCreatedAt());
+            ->WithCreatedAt(Model->GetCreatedAt())
+            ->WithDeletionScheduledAt(Model->GetDeletionScheduledAt());
     }
 }

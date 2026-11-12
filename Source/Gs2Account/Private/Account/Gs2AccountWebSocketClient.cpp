@@ -226,6 +226,51 @@ namespace Gs2::Account
         );
     }
 
+    TSharedPtr<FAsyncTask<Task::WebSocket::FRequestDeletionTask>> FGs2AccountWebSocketClient::RequestDeletion(
+        const Request::FRequestDeletionRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::WebSocket::FRequestDeletionTask>>(
+            Session,
+            Request
+        );
+    }
+
+    TSharedPtr<FAsyncTask<Task::WebSocket::FRequestDeletionByUserIdTask>> FGs2AccountWebSocketClient::RequestDeletionByUserId(
+        const Request::FRequestDeletionByUserIdRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::WebSocket::FRequestDeletionByUserIdTask>>(
+            Session,
+            Request
+        );
+    }
+
+    TSharedPtr<FAsyncTask<Task::WebSocket::FCancelDeletionTask>> FGs2AccountWebSocketClient::CancelDeletion(
+        const Request::FCancelDeletionRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::WebSocket::FCancelDeletionTask>>(
+            Session,
+            Request
+        );
+    }
+
+    TSharedPtr<FAsyncTask<Task::WebSocket::FCancelDeletionByUserIdTask>> FGs2AccountWebSocketClient::CancelDeletionByUserId(
+        const Request::FCancelDeletionByUserIdRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::WebSocket::FCancelDeletionByUserIdTask>>(
+            Session,
+            Request
+        );
+    }
+
+    TSharedPtr<FAsyncTask<Task::WebSocket::FExecuteDeletionByUserIdTask>> FGs2AccountWebSocketClient::ExecuteDeletionByUserId(
+        const Request::FExecuteDeletionByUserIdRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::WebSocket::FExecuteDeletionByUserIdTask>>(
+            Session,
+            Request
+        );
+    }
+
     TSharedPtr<FAsyncTask<Task::WebSocket::FDescribeTakeOversTask>> FGs2AccountWebSocketClient::DescribeTakeOvers(
         const Request::FDescribeTakeOversRequestPtr Request) const
     {

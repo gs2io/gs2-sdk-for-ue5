@@ -64,6 +64,16 @@
 #include "Task/WebSocket/DeleteAccountTask.h"
 #include "Request/AuthenticationRequest.h"
 #include "Task/WebSocket/AuthenticationTask.h"
+#include "Request/RequestDeletionRequest.h"
+#include "Task/WebSocket/RequestDeletionTask.h"
+#include "Request/RequestDeletionByUserIdRequest.h"
+#include "Task/WebSocket/RequestDeletionByUserIdTask.h"
+#include "Request/CancelDeletionRequest.h"
+#include "Task/WebSocket/CancelDeletionTask.h"
+#include "Request/CancelDeletionByUserIdRequest.h"
+#include "Task/WebSocket/CancelDeletionByUserIdTask.h"
+#include "Request/ExecuteDeletionByUserIdRequest.h"
+#include "Task/WebSocket/ExecuteDeletionByUserIdTask.h"
 #include "Request/DescribeTakeOversRequest.h"
 #include "Task/WebSocket/DescribeTakeOversTask.h"
 #include "Request/DescribeTakeOversByUserIdRequest.h"
@@ -250,6 +260,26 @@ namespace Gs2::Account
 
         TSharedPtr<FAsyncTask<Task::WebSocket::FAuthenticationTask>> Authentication(
             const Request::FAuthenticationRequestPtr Request
+        ) const;
+
+        TSharedPtr<FAsyncTask<Task::WebSocket::FRequestDeletionTask>> RequestDeletion(
+            const Request::FRequestDeletionRequestPtr Request
+        ) const;
+
+        TSharedPtr<FAsyncTask<Task::WebSocket::FRequestDeletionByUserIdTask>> RequestDeletionByUserId(
+            const Request::FRequestDeletionByUserIdRequestPtr Request
+        ) const;
+
+        TSharedPtr<FAsyncTask<Task::WebSocket::FCancelDeletionTask>> CancelDeletion(
+            const Request::FCancelDeletionRequestPtr Request
+        ) const;
+
+        TSharedPtr<FAsyncTask<Task::WebSocket::FCancelDeletionByUserIdTask>> CancelDeletionByUserId(
+            const Request::FCancelDeletionByUserIdRequestPtr Request
+        ) const;
+
+        TSharedPtr<FAsyncTask<Task::WebSocket::FExecuteDeletionByUserIdTask>> ExecuteDeletionByUserId(
+            const Request::FExecuteDeletionByUserIdRequestPtr Request
         ) const;
 
         TSharedPtr<FAsyncTask<Task::WebSocket::FDescribeTakeOversTask>> DescribeTakeOvers(

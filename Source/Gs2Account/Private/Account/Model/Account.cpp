@@ -26,6 +26,8 @@ namespace Gs2::Account::Model
         BanStatusesValue(nullptr),
         BannedValue(TOptional<bool>()),
         LastAuthenticatedAtValue(TOptional<int64>()),
+        DeletionRequestedAtValue(TOptional<int64>()),
+        DeletionScheduledAtValue(TOptional<int64>()),
         CreatedAtValue(TOptional<int64>()),
         RevisionValue(TOptional<int64>())
     {
@@ -41,6 +43,8 @@ namespace Gs2::Account::Model
         BanStatusesValue(From.BanStatusesValue),
         BannedValue(From.BannedValue),
         LastAuthenticatedAtValue(From.LastAuthenticatedAtValue),
+        DeletionRequestedAtValue(From.DeletionRequestedAtValue),
+        DeletionScheduledAtValue(From.DeletionScheduledAtValue),
         CreatedAtValue(From.CreatedAtValue),
         RevisionValue(From.RevisionValue)
     {
@@ -99,6 +103,22 @@ namespace Gs2::Account::Model
     )
     {
         this->LastAuthenticatedAtValue = LastAuthenticatedAt;
+        return SharedThis(this);
+    }
+
+    TSharedPtr<FAccount> FAccount::WithDeletionRequestedAt(
+        const TOptional<int64> DeletionRequestedAt
+    )
+    {
+        this->DeletionRequestedAtValue = DeletionRequestedAt;
+        return SharedThis(this);
+    }
+
+    TSharedPtr<FAccount> FAccount::WithDeletionScheduledAt(
+        const TOptional<int64> DeletionScheduledAt
+    )
+    {
+        this->DeletionScheduledAtValue = DeletionScheduledAt;
         return SharedThis(this);
     }
 
@@ -171,6 +191,32 @@ namespace Gs2::Account::Model
             return FString("null");
         }
         return FString::Printf(TEXT("%lld"), LastAuthenticatedAtValue.GetValue());
+    }
+    TOptional<int64> FAccount::GetDeletionRequestedAt() const
+    {
+        return DeletionRequestedAtValue;
+    }
+
+    FString FAccount::GetDeletionRequestedAtString() const
+    {
+        if (!DeletionRequestedAtValue.IsSet())
+        {
+            return FString("null");
+        }
+        return FString::Printf(TEXT("%lld"), DeletionRequestedAtValue.GetValue());
+    }
+    TOptional<int64> FAccount::GetDeletionScheduledAt() const
+    {
+        return DeletionScheduledAtValue;
+    }
+
+    FString FAccount::GetDeletionScheduledAtString() const
+    {
+        if (!DeletionScheduledAtValue.IsSet())
+        {
+            return FString("null");
+        }
+        return FString::Printf(TEXT("%lld"), DeletionScheduledAtValue.GetValue());
     }
     TOptional<int64> FAccount::GetCreatedAt() const
     {
@@ -316,6 +362,24 @@ namespace Gs2::Account::Model
                     }
                     return TOptional<int64>();
                 }() : TOptional<int64>())
+            ->WithDeletionRequestedAt(Data->HasField(ANSI_TO_TCHAR("deletionRequestedAt")) ? [Data]() -> TOptional<int64>
+                {
+                    int64 v;
+                    if (Data->TryGetNumberField(ANSI_TO_TCHAR("deletionRequestedAt"), v))
+                    {
+                        return TOptional(v);
+                    }
+                    return TOptional<int64>();
+                }() : TOptional<int64>())
+            ->WithDeletionScheduledAt(Data->HasField(ANSI_TO_TCHAR("deletionScheduledAt")) ? [Data]() -> TOptional<int64>
+                {
+                    int64 v;
+                    if (Data->TryGetNumberField(ANSI_TO_TCHAR("deletionScheduledAt"), v))
+                    {
+                        return TOptional(v);
+                    }
+                    return TOptional<int64>();
+                }() : TOptional<int64>())
             ->WithCreatedAt(Data->HasField(ANSI_TO_TCHAR("createdAt")) ? [Data]() -> TOptional<int64>
                 {
                     int64 v;
@@ -371,6 +435,14 @@ namespace Gs2::Account::Model
         if (LastAuthenticatedAtValue.IsSet())
         {
             JsonRootObject->SetStringField(TEXT("lastAuthenticatedAt"), FString::Printf(TEXT("%lld"), LastAuthenticatedAtValue.GetValue()));
+        }
+        if (DeletionRequestedAtValue.IsSet())
+        {
+            JsonRootObject->SetStringField(TEXT("deletionRequestedAt"), FString::Printf(TEXT("%lld"), DeletionRequestedAtValue.GetValue()));
+        }
+        if (DeletionScheduledAtValue.IsSet())
+        {
+            JsonRootObject->SetStringField(TEXT("deletionScheduledAt"), FString::Printf(TEXT("%lld"), DeletionScheduledAtValue.GetValue()));
         }
         if (CreatedAtValue.IsSet())
         {

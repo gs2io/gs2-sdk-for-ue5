@@ -64,6 +64,16 @@
 #include "Task/Rest/DeleteAccountTask.h"
 #include "Request/AuthenticationRequest.h"
 #include "Task/Rest/AuthenticationTask.h"
+#include "Request/RequestDeletionRequest.h"
+#include "Task/Rest/RequestDeletionTask.h"
+#include "Request/RequestDeletionByUserIdRequest.h"
+#include "Task/Rest/RequestDeletionByUserIdTask.h"
+#include "Request/CancelDeletionRequest.h"
+#include "Task/Rest/CancelDeletionTask.h"
+#include "Request/CancelDeletionByUserIdRequest.h"
+#include "Task/Rest/CancelDeletionByUserIdTask.h"
+#include "Request/ExecuteDeletionByUserIdRequest.h"
+#include "Task/Rest/ExecuteDeletionByUserIdTask.h"
 #include "Request/DescribeTakeOversRequest.h"
 #include "Task/Rest/DescribeTakeOversTask.h"
 #include "Request/DescribeTakeOversByUserIdRequest.h"
@@ -250,6 +260,26 @@ namespace Gs2::Account
 
         TSharedPtr<FAsyncTask<Task::Rest::FAuthenticationTask>> Authentication(
             const Request::FAuthenticationRequestPtr Request
+        ) const;
+
+        TSharedPtr<FAsyncTask<Task::Rest::FRequestDeletionTask>> RequestDeletion(
+            const Request::FRequestDeletionRequestPtr Request
+        ) const;
+
+        TSharedPtr<FAsyncTask<Task::Rest::FRequestDeletionByUserIdTask>> RequestDeletionByUserId(
+            const Request::FRequestDeletionByUserIdRequestPtr Request
+        ) const;
+
+        TSharedPtr<FAsyncTask<Task::Rest::FCancelDeletionTask>> CancelDeletion(
+            const Request::FCancelDeletionRequestPtr Request
+        ) const;
+
+        TSharedPtr<FAsyncTask<Task::Rest::FCancelDeletionByUserIdTask>> CancelDeletionByUserId(
+            const Request::FCancelDeletionByUserIdRequestPtr Request
+        ) const;
+
+        TSharedPtr<FAsyncTask<Task::Rest::FExecuteDeletionByUserIdTask>> ExecuteDeletionByUserId(
+            const Request::FExecuteDeletionByUserIdRequestPtr Request
         ) const;
 
         TSharedPtr<FAsyncTask<Task::Rest::FDescribeTakeOversTask>> DescribeTakeOvers(

@@ -31,6 +31,8 @@ namespace Gs2::Account::Model
         TSharedPtr<TArray<TSharedPtr<FBanStatus>>> BanStatusesValue;
         TOptional<bool> BannedValue;
         TOptional<int64> LastAuthenticatedAtValue;
+        TOptional<int64> DeletionRequestedAtValue;
+        TOptional<int64> DeletionScheduledAtValue;
         TOptional<int64> CreatedAtValue;
         TOptional<int64> RevisionValue;
 
@@ -48,6 +50,8 @@ namespace Gs2::Account::Model
         TSharedPtr<FAccount> WithBanStatuses(const TSharedPtr<TArray<TSharedPtr<FBanStatus>>> BanStatuses);
         TSharedPtr<FAccount> WithBanned(const TOptional<bool> Banned);
         TSharedPtr<FAccount> WithLastAuthenticatedAt(const TOptional<int64> LastAuthenticatedAt);
+        TSharedPtr<FAccount> WithDeletionRequestedAt(const TOptional<int64> DeletionRequestedAt);
+        TSharedPtr<FAccount> WithDeletionScheduledAt(const TOptional<int64> DeletionScheduledAt);
         TSharedPtr<FAccount> WithCreatedAt(const TOptional<int64> CreatedAt);
         TSharedPtr<FAccount> WithRevision(const TOptional<int64> Revision);
 
@@ -61,6 +65,10 @@ namespace Gs2::Account::Model
         FString GetBannedString() const;
         TOptional<int64> GetLastAuthenticatedAt() const;
         FString GetLastAuthenticatedAtString() const;
+        TOptional<int64> GetDeletionRequestedAt() const;
+        FString GetDeletionRequestedAtString() const;
+        TOptional<int64> GetDeletionScheduledAt() const;
+        FString GetDeletionScheduledAtString() const;
         TOptional<int64> GetCreatedAt() const;
         FString GetCreatedAtString() const;
         TOptional<int64> GetRevision() const;

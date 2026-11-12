@@ -50,6 +50,13 @@ namespace Gs2::Account
                 Resolved = MakeShared<Gs2::Account::Error::FBannedInfinityError>(Source);
             }
         }
+        else if (Method == TEXT("CancelDeletion") || Method == TEXT("UpdateTakeOver") || Method == TEXT("UpdateTakeOverByUserId") || Method == TEXT("DoTakeOver"))
+        {
+            if (Core::Model::FGs2ErrorResolver::HasCode(Source, TEXT("account.password.invalid")))
+            {
+                Resolved = MakeShared<Gs2::Account::Error::FPasswordIncorrectError>(Source);
+            }
+        }
         else if (Method == TEXT("CreateTakeOver") || Method == TEXT("CreateTakeOverByUserId") || Method == TEXT("CreateTakeOverOpenIdConnect") || Method == TEXT("CreateTakeOverOpenIdConnectAndByUserId"))
         {
             if (Core::Model::FGs2ErrorResolver::HasCode(Source, TEXT("account.takeOver.alreadyExists")))
@@ -59,13 +66,6 @@ namespace Gs2::Account
             else if (Core::Model::FGs2ErrorResolver::HasCode(Source, TEXT("account.takeOver.userIdentifier.duplicate")))
             {
                 Resolved = MakeShared<Gs2::Account::Error::FTakeOverIdentifierAlreadyUsedError>(Source);
-            }
-        }
-        else if (Method == TEXT("UpdateTakeOver") || Method == TEXT("UpdateTakeOverByUserId") || Method == TEXT("DoTakeOver"))
-        {
-            if (Core::Model::FGs2ErrorResolver::HasCode(Source, TEXT("account.password.invalid")))
-            {
-                Resolved = MakeShared<Gs2::Account::Error::FPasswordIncorrectError>(Source);
             }
         }
         if (!Resolved.IsValid())

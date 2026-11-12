@@ -26,11 +26,13 @@ namespace Gs2::UE5::Account::Model
         TOptional<FString> UserIdValue;
         TOptional<FString> PasswordValue;
         TOptional<int64> CreatedAtValue;
+        TOptional<int64> DeletionScheduledAtValue;
 
 	public:
         TSharedPtr<FEzAccount> WithUserId(const TOptional<FString> UserId);
         TSharedPtr<FEzAccount> WithPassword(const TOptional<FString> Password);
         TSharedPtr<FEzAccount> WithCreatedAt(const TOptional<int64> CreatedAt);
+        TSharedPtr<FEzAccount> WithDeletionScheduledAt(const TOptional<int64> DeletionScheduledAt);
 
         TOptional<FString> GetUserId() const;
 
@@ -38,6 +40,9 @@ namespace Gs2::UE5::Account::Model
 
         TOptional<int64> GetCreatedAt() const;
         FString GetCreatedAtString() const;
+
+        TOptional<int64> GetDeletionScheduledAt() const;
+        FString GetDeletionScheduledAtString() const;
 
         Gs2::Account::Model::FAccountPtr ToModel() const;
         static TSharedPtr<FEzAccount> FromModel(Gs2::Account::Model::FAccountPtr Model);
