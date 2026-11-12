@@ -48,6 +48,9 @@ namespace Gs2::UE5::Account::Domain::Model
         TOptional<FString> UploadToken() const;
         TOptional<FString> UploadUrl() const;
         TOptional<FString> AuthorizationUrl() const;
+        TSharedPtr<TArray<TSharedPtr<Gs2::UE5::Account::Model::FEzBanStatus>>> BanStatuses() const;
+        TOptional<FString> Token() const;
+        TOptional<int64> Expire() const;
         TOptional<FString> NextPageToken() const;
         TOptional<FString> NamespaceName() const;
 
@@ -97,6 +100,61 @@ namespace Gs2::UE5::Account::Domain::Model
         friend FCreateTask;
 
         TSharedPtr<FAsyncTask<FCreateTask>> Create(
+        );
+
+        class EZGS2_API FPreviewTakeOverTask :
+            public Gs2::Core::Util::TGs2Future<Gs2::UE5::Account::Domain::Model::FEzAccountDomain>,
+            public TSharedFromThis<FPreviewTakeOverTask>
+        {
+            TSharedPtr<FEzNamespaceDomain> Self;
+            int32 Type;
+            FString UserIdentifier;
+            FString Password;
+
+        public:
+            explicit FPreviewTakeOverTask(
+                TSharedPtr<FEzNamespaceDomain> Self,
+                int32 Type,
+                FString UserIdentifier,
+                FString Password
+            );
+
+            virtual Gs2::Core::Model::FGs2ErrorPtr Action(
+                TSharedPtr<TSharedPtr<Gs2::UE5::Account::Domain::Model::FEzAccountDomain>> Result
+            ) override;
+        };
+        friend FPreviewTakeOverTask;
+
+        TSharedPtr<FAsyncTask<FPreviewTakeOverTask>> PreviewTakeOver(
+            int32 Type,
+            FString UserIdentifier,
+            FString Password
+        );
+
+        class EZGS2_API FPreviewTakeOverOpenIdConnectTask :
+            public Gs2::Core::Util::TGs2Future<Gs2::UE5::Account::Domain::Model::FEzAccountDomain>,
+            public TSharedFromThis<FPreviewTakeOverOpenIdConnectTask>
+        {
+            TSharedPtr<FEzNamespaceDomain> Self;
+            int32 Type;
+            FString IdToken;
+
+        public:
+            explicit FPreviewTakeOverOpenIdConnectTask(
+                TSharedPtr<FEzNamespaceDomain> Self,
+                int32 Type,
+                FString IdToken
+            );
+
+            virtual Gs2::Core::Model::FGs2ErrorPtr Action(
+                TSharedPtr<TSharedPtr<Gs2::UE5::Account::Domain::Model::FEzAccountDomain>> Result
+            ) override;
+        };
+        friend FPreviewTakeOverOpenIdConnectTask;
+
+        TSharedPtr<FAsyncTask<FPreviewTakeOverOpenIdConnectTask>> PreviewTakeOverOpenIdConnect(
+            int32 Type,
+            FString IdToken
         );
 
         class EZGS2_API FDoTakeOverTask :

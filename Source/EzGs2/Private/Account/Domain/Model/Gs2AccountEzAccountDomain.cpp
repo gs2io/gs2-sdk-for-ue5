@@ -46,6 +46,16 @@ namespace Gs2::UE5::Account::Domain::Model
         return Domain->Signature;
     }
 
+    TOptional<FString> FEzAccountDomain::Token() const
+    {
+        return Domain->Token;
+    }
+
+    TOptional<int64> FEzAccountDomain::Expire() const
+    {
+        return Domain->Expire;
+    }
+
     TOptional<FString> FEzAccountDomain::AuthorizationUrl() const
     {
         return Domain->AuthorizationUrl;
@@ -133,6 +143,59 @@ namespace Gs2::UE5::Account::Domain::Model
         );
     }
 
+    FEzAccountDomain::FCancelDeletionTask::FCancelDeletionTask(
+        TSharedPtr<FEzAccountDomain> Self,
+        FString Password
+    ): Self(Self), Password(Password)
+    {
+
+    }
+
+    Gs2::Core::Model::FGs2ErrorPtr FEzAccountDomain::FCancelDeletionTask::Action(
+        TSharedPtr<TSharedPtr<Gs2::UE5::Account::Domain::Model::FEzAccountDomain>> Result
+    )
+    {
+        const auto Future = Self->ConnectionValue->Run(
+            [&]() -> Gs2::Core::Model::FGs2ErrorPtr {
+                const auto Task = Self->Domain->CancelDeletion(
+                    MakeShared<Gs2::Account::Request::FCancelDeletionRequest>()
+                        ->WithPassword(Password)
+                );
+                Task->StartSynchronousTask();
+                if (Task->GetTask().IsError())
+                {
+                    Task->EnsureCompletion();
+                    return Task->GetTask().Error();
+                }
+                *Result = MakeShared<Gs2::UE5::Account::Domain::Model::FEzAccountDomain>(
+                    Task->GetTask().Result(),
+                    Self->ConnectionValue
+                );
+                Task->EnsureCompletion();
+                return nullptr;
+            },
+            nullptr
+        );
+        Future->StartSynchronousTask();
+        if (Future->GetTask().IsError())
+        {
+            Future->EnsureCompletion();
+            return Future->GetTask().Error();
+        }
+        Future->EnsureCompletion();
+        return nullptr;
+    }
+
+    TSharedPtr<FAsyncTask<FEzAccountDomain::FCancelDeletionTask>> FEzAccountDomain::CancelDeletion(
+        FString Password
+    )
+    {
+        return Gs2::Core::Util::New<FAsyncTask<FCancelDeletionTask>>(
+            this->AsShared(),
+            Password
+        );
+    }
+
     Gs2::UE5::Account::Domain::Model::FEzTakeOverDomainPtr FEzAccountDomain::TakeOver(
         const int32 Type
     ) const
@@ -212,5 +275,27 @@ namespace Gs2::UE5::Account::Domain::Model
         Domain->Unsubscribe(
             CallbackId
         );
+    }
+
+    Gs2::UE5::Util::FGameSessionPtr FEzAccountDomain::PreviewGameSession() const
+    {
+        if (!Domain->Token.IsSet() || Domain->Token->IsEmpty() || !Domain->UserId.IsSet())
+        {
+            return nullptr;
+        }
+        // Without an authenticator the session never re-authenticates, so it keeps the preview token.
+        const auto GameSession = MakeShared<Gs2::UE5::Util::FGameSession>(
+            nullptr,
+            ConnectionValue,
+            *Domain->UserId,
+            TEXT("")
+        );
+        GameSession->SetAccessToken(
+            MakeShared<Gs2::Auth::Model::FAccessToken>()
+                ->WithToken(Domain->Token)
+                ->WithUserId(Domain->UserId)
+                ->WithExpire(Domain->Expire)
+        );
+        return GameSession;
     }
 }

@@ -47,6 +47,8 @@ namespace Gs2::UE5::Account::Domain::Model
         TSharedPtr<TArray<TSharedPtr<Gs2::UE5::Account::Model::FEzBanStatus>>> BanStatuses() const;
         TOptional<FString> Body() const;
         TOptional<FString> Signature() const;
+        TOptional<FString> Token() const;
+        TOptional<int64> Expire() const;
         TOptional<FString> AuthorizationUrl() const;
         TOptional<FString> NextPageToken() const;
         TOptional<FString> NamespaceName() const;
@@ -81,6 +83,29 @@ namespace Gs2::UE5::Account::Domain::Model
         TSharedPtr<FAsyncTask<FAuthenticationTask>> Authentication(
             FString Password,
             TOptional<FString> KeyId = TOptional<FString>()
+        );
+
+        class EZGS2_API FCancelDeletionTask :
+            public Gs2::Core::Util::TGs2Future<Gs2::UE5::Account::Domain::Model::FEzAccountDomain>,
+            public TSharedFromThis<FCancelDeletionTask>
+        {
+            TSharedPtr<FEzAccountDomain> Self;
+            FString Password;
+
+        public:
+            explicit FCancelDeletionTask(
+                TSharedPtr<FEzAccountDomain> Self,
+                FString Password
+            );
+
+            virtual Gs2::Core::Model::FGs2ErrorPtr Action(
+                TSharedPtr<TSharedPtr<Gs2::UE5::Account::Domain::Model::FEzAccountDomain>> Result
+            ) override;
+        };
+        friend FCancelDeletionTask;
+
+        TSharedPtr<FAsyncTask<FCancelDeletionTask>> CancelDeletion(
+            FString Password
         );
 
         class EZGS2_API FGetAuthorizationUrlTask :
@@ -132,6 +157,13 @@ namespace Gs2::UE5::Account::Domain::Model
         Gs2::Core::Domain::CallbackID Subscribe(TFunction<void(Gs2::UE5::Account::Model::FEzAccountPtr)> Callback);
 
         void Unsubscribe(Gs2::Core::Domain::CallbackID CallbackId);
+
+        // A GameSession that reads the account returned by PreviewTakeOver / PreviewTakeOverOpenIdConnect.
+        // Read the profile or progress to show in the confirmation dialog with it, then call DoTakeOver
+        // once the user agrees. Its access token can only call Describe / Get APIs, expires in
+        // 10 minutes and is never refreshed.
+        // Returns nullptr when no token was issued (the account is banned, or has no data to read yet).
+        Gs2::UE5::Util::FGameSessionPtr PreviewGameSession() const;
 
     };
     typedef TSharedPtr<FEzAccountDomain> FEzAccountDomainPtr;

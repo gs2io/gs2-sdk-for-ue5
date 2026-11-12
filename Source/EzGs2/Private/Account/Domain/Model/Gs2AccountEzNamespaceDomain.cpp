@@ -46,6 +46,31 @@ namespace Gs2::UE5::Account::Domain::Model
         return Domain->AuthorizationUrl;
     }
 
+    TSharedPtr<TArray<TSharedPtr<Gs2::UE5::Account::Model::FEzBanStatus>>> FEzNamespaceDomain::BanStatuses() const
+    {
+        return [&]{
+            auto Result = MakeShared<TArray<TSharedPtr<Gs2::UE5::Account::Model::FEzBanStatus>>>();
+            for (auto Value : *Domain->BanStatuses) {
+                Result->Add(
+                    Gs2::UE5::Account::Model::FEzBanStatus::FromModel(
+                        Value
+                    )
+                );
+            }
+            return Result;
+        }();
+    }
+
+    TOptional<FString> FEzNamespaceDomain::Token() const
+    {
+        return Domain->Token;
+    }
+
+    TOptional<int64> FEzNamespaceDomain::Expire() const
+    {
+        return Domain->Expire;
+    }
+
     TOptional<FString> FEzNamespaceDomain::NextPageToken() const
     {
         return Domain->NextPageToken;
@@ -165,6 +190,124 @@ namespace Gs2::UE5::Account::Domain::Model
     {
         return Gs2::Core::Util::New<FAsyncTask<FCreateTask>>(
             this->AsShared()
+        );
+    }
+
+    FEzNamespaceDomain::FPreviewTakeOverTask::FPreviewTakeOverTask(
+        TSharedPtr<FEzNamespaceDomain> Self,
+        int32 Type,
+        FString UserIdentifier,
+        FString Password
+    ): Self(Self), Type(Type), UserIdentifier(UserIdentifier), Password(Password)
+    {
+
+    }
+
+    Gs2::Core::Model::FGs2ErrorPtr FEzNamespaceDomain::FPreviewTakeOverTask::Action(
+        TSharedPtr<TSharedPtr<Gs2::UE5::Account::Domain::Model::FEzAccountDomain>> Result
+    )
+    {
+        const auto Future = Self->ConnectionValue->Run(
+            [&]() -> Gs2::Core::Model::FGs2ErrorPtr {
+                const auto Task = Self->Domain->PreviewTakeOver(
+                    MakeShared<Gs2::Account::Request::FPreviewTakeOverRequest>()
+                        ->WithType(Type)
+                        ->WithUserIdentifier(UserIdentifier)
+                        ->WithPassword(Password)
+                );
+                Task->StartSynchronousTask();
+                if (Task->GetTask().IsError())
+                {
+                    Task->EnsureCompletion();
+                    return Task->GetTask().Error();
+                }
+                *Result = MakeShared<Gs2::UE5::Account::Domain::Model::FEzAccountDomain>(
+                    Task->GetTask().Result(),
+                    Self->ConnectionValue
+                );
+                Task->EnsureCompletion();
+                return nullptr;
+            },
+            nullptr
+        );
+        Future->StartSynchronousTask();
+        if (Future->GetTask().IsError())
+        {
+            Future->EnsureCompletion();
+            return Future->GetTask().Error();
+        }
+        Future->EnsureCompletion();
+        return nullptr;
+    }
+
+    TSharedPtr<FAsyncTask<FEzNamespaceDomain::FPreviewTakeOverTask>> FEzNamespaceDomain::PreviewTakeOver(
+        int32 Type,
+        FString UserIdentifier,
+        FString Password
+    )
+    {
+        return Gs2::Core::Util::New<FAsyncTask<FPreviewTakeOverTask>>(
+            this->AsShared(),
+            Type,
+            UserIdentifier,
+            Password
+        );
+    }
+
+    FEzNamespaceDomain::FPreviewTakeOverOpenIdConnectTask::FPreviewTakeOverOpenIdConnectTask(
+        TSharedPtr<FEzNamespaceDomain> Self,
+        int32 Type,
+        FString IdToken
+    ): Self(Self), Type(Type), IdToken(IdToken)
+    {
+
+    }
+
+    Gs2::Core::Model::FGs2ErrorPtr FEzNamespaceDomain::FPreviewTakeOverOpenIdConnectTask::Action(
+        TSharedPtr<TSharedPtr<Gs2::UE5::Account::Domain::Model::FEzAccountDomain>> Result
+    )
+    {
+        const auto Future = Self->ConnectionValue->Run(
+            [&]() -> Gs2::Core::Model::FGs2ErrorPtr {
+                const auto Task = Self->Domain->PreviewTakeOverOpenIdConnect(
+                    MakeShared<Gs2::Account::Request::FPreviewTakeOverOpenIdConnectRequest>()
+                        ->WithType(Type)
+                        ->WithIdToken(IdToken)
+                );
+                Task->StartSynchronousTask();
+                if (Task->GetTask().IsError())
+                {
+                    Task->EnsureCompletion();
+                    return Task->GetTask().Error();
+                }
+                *Result = MakeShared<Gs2::UE5::Account::Domain::Model::FEzAccountDomain>(
+                    Task->GetTask().Result(),
+                    Self->ConnectionValue
+                );
+                Task->EnsureCompletion();
+                return nullptr;
+            },
+            nullptr
+        );
+        Future->StartSynchronousTask();
+        if (Future->GetTask().IsError())
+        {
+            Future->EnsureCompletion();
+            return Future->GetTask().Error();
+        }
+        Future->EnsureCompletion();
+        return nullptr;
+    }
+
+    TSharedPtr<FAsyncTask<FEzNamespaceDomain::FPreviewTakeOverOpenIdConnectTask>> FEzNamespaceDomain::PreviewTakeOverOpenIdConnect(
+        int32 Type,
+        FString IdToken
+    )
+    {
+        return Gs2::Core::Util::New<FAsyncTask<FPreviewTakeOverOpenIdConnectTask>>(
+            this->AsShared(),
+            Type,
+            IdToken
         );
     }
 
