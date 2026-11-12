@@ -64,6 +64,10 @@
 #include "Task/Rest/DeleteAccountTask.h"
 #include "Request/AuthenticationRequest.h"
 #include "Task/Rest/AuthenticationTask.h"
+#include "Request/PreviewTakeOverRequest.h"
+#include "Task/Rest/PreviewTakeOverTask.h"
+#include "Request/PreviewTakeOverOpenIdConnectRequest.h"
+#include "Task/Rest/PreviewTakeOverOpenIdConnectTask.h"
 #include "Request/RequestDeletionRequest.h"
 #include "Task/Rest/RequestDeletionTask.h"
 #include "Request/RequestDeletionByUserIdRequest.h"
@@ -260,6 +264,14 @@ namespace Gs2::Account
 
         TSharedPtr<FAsyncTask<Task::Rest::FAuthenticationTask>> Authentication(
             const Request::FAuthenticationRequestPtr Request
+        ) const;
+
+        TSharedPtr<FAsyncTask<Task::Rest::FPreviewTakeOverTask>> PreviewTakeOver(
+            const Request::FPreviewTakeOverRequestPtr Request
+        ) const;
+
+        TSharedPtr<FAsyncTask<Task::Rest::FPreviewTakeOverOpenIdConnectTask>> PreviewTakeOverOpenIdConnect(
+            const Request::FPreviewTakeOverOpenIdConnectRequestPtr Request
         ) const;
 
         TSharedPtr<FAsyncTask<Task::Rest::FRequestDeletionTask>> RequestDeletion(

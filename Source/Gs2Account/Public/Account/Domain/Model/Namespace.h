@@ -71,6 +71,9 @@ namespace Gs2::Account::Domain::Model
         TOptional<FString> UploadToken;
         TOptional<FString> UploadUrl;
         TOptional<FString> AuthorizationUrl;
+        TSharedPtr<TArray<TSharedPtr<Gs2::Account::Model::FBanStatus>>> BanStatuses;
+        TOptional<FString> Token;
+        TOptional<int64> Expire;
         TOptional<FString> NextPageToken;
         TOptional<FString> GetStatus() const
         {
@@ -91,6 +94,18 @@ namespace Gs2::Account::Domain::Model
         TOptional<FString> GetAuthorizationUrl() const
         {
             return AuthorizationUrl;
+        }
+        TSharedPtr<TArray<TSharedPtr<Gs2::Account::Model::FBanStatus>>> GetBanStatuses() const
+        {
+            return BanStatuses;
+        }
+        TOptional<FString> GetToken() const
+        {
+            return Token;
+        }
+        TOptional<int64> GetExpire() const
+        {
+            return Expire;
         }
         TOptional<FString> GetNextPageToken() const
         {
@@ -269,6 +284,62 @@ namespace Gs2::Account::Domain::Model
         TSharedPtr<FAsyncTask<FCreateAccountTask>> CreateAccount(
             Request::FCreateAccountRequestPtr Request
         );
+
+        class GS2ACCOUNT_API FPreviewTakeOverTask final :
+            public Gs2::Core::Util::TGs2Future<Gs2::Account::Domain::Model::FAccountDomain>,
+            public TSharedFromThis<FPreviewTakeOverTask>
+        {
+            const TSharedPtr<FNamespaceDomain> Self;
+            const Request::FPreviewTakeOverRequestPtr Request;
+        public:
+            explicit FPreviewTakeOverTask(
+                const TSharedPtr<FNamespaceDomain>& Self,
+                const Request::FPreviewTakeOverRequestPtr Request
+            );
+
+            FPreviewTakeOverTask(
+                const FPreviewTakeOverTask& From
+            );
+
+            virtual Gs2::Core::Model::FGs2ErrorPtr Action(
+                TSharedPtr<TSharedPtr<Gs2::Account::Domain::Model::FAccountDomain>> Result
+            ) override;
+        };
+        friend FPreviewTakeOverTask;
+
+        TSharedPtr<FAsyncTask<FPreviewTakeOverTask>> PreviewTakeOver(
+            Request::FPreviewTakeOverRequestPtr Request
+        );
+
+
+
+        class GS2ACCOUNT_API FPreviewTakeOverOpenIdConnectTask final :
+            public Gs2::Core::Util::TGs2Future<Gs2::Account::Domain::Model::FAccountDomain>,
+            public TSharedFromThis<FPreviewTakeOverOpenIdConnectTask>
+        {
+            const TSharedPtr<FNamespaceDomain> Self;
+            const Request::FPreviewTakeOverOpenIdConnectRequestPtr Request;
+        public:
+            explicit FPreviewTakeOverOpenIdConnectTask(
+                const TSharedPtr<FNamespaceDomain>& Self,
+                const Request::FPreviewTakeOverOpenIdConnectRequestPtr Request
+            );
+
+            FPreviewTakeOverOpenIdConnectTask(
+                const FPreviewTakeOverOpenIdConnectTask& From
+            );
+
+            virtual Gs2::Core::Model::FGs2ErrorPtr Action(
+                TSharedPtr<TSharedPtr<Gs2::Account::Domain::Model::FAccountDomain>> Result
+            ) override;
+        };
+        friend FPreviewTakeOverOpenIdConnectTask;
+
+        TSharedPtr<FAsyncTask<FPreviewTakeOverOpenIdConnectTask>> PreviewTakeOverOpenIdConnect(
+            Request::FPreviewTakeOverOpenIdConnectRequestPtr Request
+        );
+
+
 
         class GS2ACCOUNT_API FDoTakeOverTask final :
             public Gs2::Core::Util::TGs2Future<Gs2::Account::Domain::Model::FAccountDomain>,

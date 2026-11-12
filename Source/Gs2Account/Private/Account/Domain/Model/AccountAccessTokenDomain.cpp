@@ -39,6 +39,7 @@
 #include "Account/Domain/Model/TakeOverTypeModelMaster.h"
 #include "Account/Domain/Model/CurrentModelMaster.h"
 
+#include "Account/Model/Cache/Account.h"
 #include "Account/Model/Cache/PlatformId.h"
 #include "Account/Model/Cache/TakeOver.h"
 #include "Core/Domain/Gs2.h"
@@ -79,6 +80,75 @@ namespace Gs2::Account::Domain::Model
         ParentKey(From.ParentKey)
     {
 
+    }
+
+    FAccountAccessTokenDomain::FRequestDeletionTask::FRequestDeletionTask(
+        const TSharedPtr<FAccountAccessTokenDomain>& Self,
+        const Request::FRequestDeletionRequestPtr Request
+    ): Self(Self), Request(Request)
+    {
+
+    }
+
+    FAccountAccessTokenDomain::FRequestDeletionTask::FRequestDeletionTask(
+        const FRequestDeletionTask& From
+    ): TGs2Future(From), Self(From.Self), Request(From.Request)
+    {
+    }
+
+    Gs2::Core::Model::FGs2ErrorPtr FAccountAccessTokenDomain::FRequestDeletionTask::Action(
+        TSharedPtr<TSharedPtr<Gs2::Account::Domain::Model::FAccountAccessTokenDomain>> Result
+    )
+    {
+        Request
+            ->WithContextStack((!Request->GetContextStack().IsSet() || Request->GetContextStack()->IsEmpty()) ? Self->Gs2->DefaultContextStack : Request->GetContextStack())
+            ->WithNamespaceName(Self->NamespaceName)
+            ->WithAccessToken(Self->AccessToken->GetToken());
+        const auto CacheOwnerSnapshotTimeOffset = Self->AccessToken.IsValid() ? Self->AccessToken->GetTimeOffset() : TOptional<int32>();
+        const auto Future = Self->Client->RequestDeletion(
+            Request
+        );
+        Future->StartSynchronousTask();
+        if (Future->GetTask().IsError())
+        {
+            return Future->GetTask().Error();
+        }
+        const auto ResultModel = Future->GetTask().Result();
+        Future->EnsureCompletion();
+
+            if (ResultModel.IsValid() && ResultModel->GetItem() != nullptr)
+            {
+
+        if (!ResultModel.IsValid() || !ResultModel->GetItem().IsValid())
+            {
+              const auto Details = MakeShared<TArray<TSharedPtr<Gs2::Core::Model::FGs2ErrorDetail>>>();
+                Details->Add(MakeShared<Gs2::Core::Model::FGs2ErrorDetail>(TEXT("result.item"), TEXT("result.item is invalid."), TEXT("invalid_response")));
+                return MakeShared<Gs2::Core::Model::FUnknownError>(Details);
+              }if (!(ResultModel->GetItem()->GetUserId()).IsSet())
+            {
+              const auto Details = MakeShared<TArray<TSharedPtr<Gs2::Core::Model::FGs2ErrorDetail>>>();
+                Details->Add(MakeShared<Gs2::Core::Model::FGs2ErrorDetail>(TEXT("userId"), TEXT("userId is invalid."), TEXT("invalid_response")));
+                return MakeShared<Gs2::Core::Model::FUnknownError>(Details);
+              }
+        Gs2::Account::Model::Cache::FAccountCache::Put(
+            Self->Gs2->Cache,
+
+            Request->GetNamespaceName(),
+            ResultModel->GetItem()->GetUserId(),
+            CacheOwnerSnapshotTimeOffset,
+            ResultModel->GetItem()
+        );
+            }
+        auto Domain = Self;
+
+        *Result = Domain;
+        return nullptr;
+    }
+
+    TSharedPtr<FAsyncTask<FAccountAccessTokenDomain::FRequestDeletionTask>> FAccountAccessTokenDomain::RequestDeletion(
+        Request::FRequestDeletionRequestPtr Request
+    ) {
+        return Gs2::Core::Util::New<FAsyncTask<FRequestDeletionTask>>(this->AsShared(), Request);
     }
 
     FAccountAccessTokenDomain::FDeleteTakeOverTask::FDeleteTakeOverTask(

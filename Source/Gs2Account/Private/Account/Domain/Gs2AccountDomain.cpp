@@ -37,9 +37,9 @@
 
 #include "Account/Model/Cache/Namespace.h"
 #include "Account/Model/Cache/Account.h"
+#include "Account/Model/Cache/BanStatus.h"
 #include "Account/Model/Cache/TakeOver.h"
 #include "Account/Model/Cache/PlatformId.h"
-#include "Account/Model/Cache/BanStatus.h"
 #include "Account/Model/Cache/DataOwner.h"
 #include "Account/Model/Cache/CurrentModelMaster.h"
 #include "Account/Model/Cache/TakeOverTypeModel.h"

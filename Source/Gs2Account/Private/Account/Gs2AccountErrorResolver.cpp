@@ -39,13 +39,20 @@ namespace Gs2::Account
             return Source;
         }
         Core::Model::FGs2ErrorPtr Resolved;
-        if (Method == TEXT("Authentication"))
+        if (Method == TEXT("Authentication") || Method == TEXT("PreviewTakeOver"))
         {
             if (Core::Model::FGs2ErrorResolver::HasCode(Source, TEXT("account.password.invalid")))
             {
                 Resolved = MakeShared<Gs2::Account::Error::FPasswordIncorrectError>(Source);
             }
             else if (Core::Model::FGs2ErrorResolver::HasCode(Source, TEXT("account.banned.infinity")))
+            {
+                Resolved = MakeShared<Gs2::Account::Error::FBannedInfinityError>(Source);
+            }
+        }
+        else if (Method == TEXT("PreviewTakeOverOpenIdConnect"))
+        {
+            if (Core::Model::FGs2ErrorResolver::HasCode(Source, TEXT("account.banned.infinity")))
             {
                 Resolved = MakeShared<Gs2::Account::Error::FBannedInfinityError>(Source);
             }

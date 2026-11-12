@@ -226,6 +226,24 @@ namespace Gs2::Account
         );
     }
 
+    TSharedPtr<FAsyncTask<Task::WebSocket::FPreviewTakeOverTask>> FGs2AccountWebSocketClient::PreviewTakeOver(
+        const Request::FPreviewTakeOverRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::WebSocket::FPreviewTakeOverTask>>(
+            Session,
+            Request
+        );
+    }
+
+    TSharedPtr<FAsyncTask<Task::WebSocket::FPreviewTakeOverOpenIdConnectTask>> FGs2AccountWebSocketClient::PreviewTakeOverOpenIdConnect(
+        const Request::FPreviewTakeOverOpenIdConnectRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::WebSocket::FPreviewTakeOverOpenIdConnectTask>>(
+            Session,
+            Request
+        );
+    }
+
     TSharedPtr<FAsyncTask<Task::WebSocket::FRequestDeletionTask>> FGs2AccountWebSocketClient::RequestDeletion(
         const Request::FRequestDeletionRequestPtr Request) const
     {

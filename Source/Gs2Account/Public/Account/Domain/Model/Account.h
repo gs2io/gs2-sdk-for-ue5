@@ -67,6 +67,8 @@ namespace Gs2::Account::Domain::Model
         TSharedPtr<TArray<TSharedPtr<Gs2::Account::Model::FBanStatus>>> BanStatuses;
         TOptional<FString> Body;
         TOptional<FString> Signature;
+        TOptional<FString> Token;
+        TOptional<int64> Expire;
         TOptional<FString> AuthorizationUrl;
         TOptional<FString> NextPageToken;
         TSharedPtr<TArray<TSharedPtr<Gs2::Account::Model::FBanStatus>>> GetBanStatuses() const
@@ -80,6 +82,14 @@ namespace Gs2::Account::Domain::Model
         TOptional<FString> GetSignature() const
         {
             return Signature;
+        }
+        TOptional<FString> GetToken() const
+        {
+            return Token;
+        }
+        TOptional<int64> GetExpire() const
+        {
+            return Expire;
         }
         TOptional<FString> GetAuthorizationUrl() const
         {
@@ -363,29 +373,29 @@ namespace Gs2::Account::Domain::Model
 
 
 
-        class GS2ACCOUNT_API FCancelDeletionTask final :
+        class GS2ACCOUNT_API FCancelDeletionByUserIdTask final :
             public Gs2::Core::Util::TGs2Future<Gs2::Account::Domain::Model::FAccountDomain>,
-            public TSharedFromThis<FCancelDeletionTask>
+            public TSharedFromThis<FCancelDeletionByUserIdTask>
         {
             const TSharedPtr<FAccountDomain> Self;
             const Request::FCancelDeletionByUserIdRequestPtr Request;
         public:
-            explicit FCancelDeletionTask(
+            explicit FCancelDeletionByUserIdTask(
                 const TSharedPtr<FAccountDomain>& Self,
                 const Request::FCancelDeletionByUserIdRequestPtr Request
             );
 
-            FCancelDeletionTask(
-                const FCancelDeletionTask& From
+            FCancelDeletionByUserIdTask(
+                const FCancelDeletionByUserIdTask& From
             );
 
             virtual Gs2::Core::Model::FGs2ErrorPtr Action(
                 TSharedPtr<TSharedPtr<Gs2::Account::Domain::Model::FAccountDomain>> Result
             ) override;
         };
-        friend FCancelDeletionTask;
+        friend FCancelDeletionByUserIdTask;
 
-        TSharedPtr<FAsyncTask<FCancelDeletionTask>> CancelDeletion(
+        TSharedPtr<FAsyncTask<FCancelDeletionByUserIdTask>> CancelDeletionByUserId(
             Request::FCancelDeletionByUserIdRequestPtr Request
         );
 

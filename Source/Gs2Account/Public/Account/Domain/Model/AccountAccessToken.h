@@ -110,6 +110,34 @@ namespace Gs2::Account::Domain::Model
 
 
 
+        class GS2ACCOUNT_API FRequestDeletionTask final :
+            public Gs2::Core::Util::TGs2Future<Gs2::Account::Domain::Model::FAccountAccessTokenDomain>,
+            public TSharedFromThis<FRequestDeletionTask>
+        {
+            const TSharedPtr<FAccountAccessTokenDomain> Self;
+            const Request::FRequestDeletionRequestPtr Request;
+        public:
+            explicit FRequestDeletionTask(
+                const TSharedPtr<FAccountAccessTokenDomain>& Self,
+                const Request::FRequestDeletionRequestPtr Request
+            );
+
+            FRequestDeletionTask(
+                const FRequestDeletionTask& From
+            );
+
+            virtual Gs2::Core::Model::FGs2ErrorPtr Action(
+                TSharedPtr<TSharedPtr<Gs2::Account::Domain::Model::FAccountAccessTokenDomain>> Result
+            ) override;
+        };
+        friend FRequestDeletionTask;
+
+        TSharedPtr<FAsyncTask<FRequestDeletionTask>> RequestDeletion(
+            Request::FRequestDeletionRequestPtr Request
+        );
+
+
+
         class GS2ACCOUNT_API FDeleteTakeOverTask final :
             public Gs2::Core::Util::TGs2Future<Gs2::Account::Domain::Model::FTakeOverAccessTokenDomain>,
             public TSharedFromThis<FDeleteTakeOverTask>

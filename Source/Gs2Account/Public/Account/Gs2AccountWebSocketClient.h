@@ -64,6 +64,10 @@
 #include "Task/WebSocket/DeleteAccountTask.h"
 #include "Request/AuthenticationRequest.h"
 #include "Task/WebSocket/AuthenticationTask.h"
+#include "Request/PreviewTakeOverRequest.h"
+#include "Task/WebSocket/PreviewTakeOverTask.h"
+#include "Request/PreviewTakeOverOpenIdConnectRequest.h"
+#include "Task/WebSocket/PreviewTakeOverOpenIdConnectTask.h"
 #include "Request/RequestDeletionRequest.h"
 #include "Task/WebSocket/RequestDeletionTask.h"
 #include "Request/RequestDeletionByUserIdRequest.h"
@@ -260,6 +264,14 @@ namespace Gs2::Account
 
         TSharedPtr<FAsyncTask<Task::WebSocket::FAuthenticationTask>> Authentication(
             const Request::FAuthenticationRequestPtr Request
+        ) const;
+
+        TSharedPtr<FAsyncTask<Task::WebSocket::FPreviewTakeOverTask>> PreviewTakeOver(
+            const Request::FPreviewTakeOverRequestPtr Request
+        ) const;
+
+        TSharedPtr<FAsyncTask<Task::WebSocket::FPreviewTakeOverOpenIdConnectTask>> PreviewTakeOverOpenIdConnect(
+            const Request::FPreviewTakeOverOpenIdConnectRequestPtr Request
         ) const;
 
         TSharedPtr<FAsyncTask<Task::WebSocket::FRequestDeletionTask>> RequestDeletion(

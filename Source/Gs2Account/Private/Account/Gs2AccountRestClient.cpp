@@ -226,6 +226,24 @@ namespace Gs2::Account
         );
     }
 
+    TSharedPtr<FAsyncTask<Task::Rest::FPreviewTakeOverTask>> FGs2AccountRestClient::PreviewTakeOver(
+        const Request::FPreviewTakeOverRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::Rest::FPreviewTakeOverTask>>(
+            Session,
+            Request
+        );
+    }
+
+    TSharedPtr<FAsyncTask<Task::Rest::FPreviewTakeOverOpenIdConnectTask>> FGs2AccountRestClient::PreviewTakeOverOpenIdConnect(
+        const Request::FPreviewTakeOverOpenIdConnectRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::Rest::FPreviewTakeOverOpenIdConnectTask>>(
+            Session,
+            Request
+        );
+    }
+
     TSharedPtr<FAsyncTask<Task::Rest::FRequestDeletionTask>> FGs2AccountRestClient::RequestDeletion(
         const Request::FRequestDeletionRequestPtr Request) const
     {

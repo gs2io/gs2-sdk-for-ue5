@@ -39,6 +39,7 @@
 #include "Account/Domain/Model/CurrentModelMaster.h"
 
 #include "Account/Model/Cache/Account.h"
+#include "Account/Model/Cache/BanStatus.h"
 #include "Account/Model/Cache/TakeOverTypeModelMaster.h"
 #include "Account/Model/Cache/TakeOverTypeModel.h"
 #include "Core/Domain/Gs2.h"
@@ -387,6 +388,196 @@ namespace Gs2::Account::Domain::Model
         Request::FCreateAccountRequestPtr Request
     ) {
         return Gs2::Core::Util::New<FAsyncTask<FCreateAccountTask>>(this->AsShared(), Request);
+    }
+
+    FNamespaceDomain::FPreviewTakeOverTask::FPreviewTakeOverTask(
+        const TSharedPtr<FNamespaceDomain>& Self,
+        const Request::FPreviewTakeOverRequestPtr Request
+    ): Self(Self), Request(Request)
+    {
+
+    }
+
+    FNamespaceDomain::FPreviewTakeOverTask::FPreviewTakeOverTask(
+        const FPreviewTakeOverTask& From
+    ): TGs2Future(From), Self(From.Self), Request(From.Request)
+    {
+    }
+
+    Gs2::Core::Model::FGs2ErrorPtr FNamespaceDomain::FPreviewTakeOverTask::Action(
+        TSharedPtr<TSharedPtr<Gs2::Account::Domain::Model::FAccountDomain>> Result
+    )
+    {
+        Request
+            ->WithContextStack((!Request->GetContextStack().IsSet() || Request->GetContextStack()->IsEmpty()) ? Self->Gs2->DefaultContextStack : Request->GetContextStack())
+            ->WithNamespaceName(Self->NamespaceName);
+        const auto Future = Self->Client->PreviewTakeOver(
+            Request
+        );
+        Future->StartSynchronousTask();
+        if (Future->GetTask().IsError())
+        {
+            return Future->GetTask().Error();
+        }
+        const auto ResultModel = Future->GetTask().Result();
+        Future->EnsureCompletion();
+        if (ResultModel.IsValid() && ResultModel->GetBanStatuses().IsValid())
+        {
+            for (const auto& Item : *ResultModel->GetBanStatuses())
+            {
+                if (!Item.IsValid()) continue;
+                Gs2::Account::Model::Cache::FBanStatusCache::Put(
+                    Self->Gs2->Cache,
+                    Item->GetName(),
+                    TOptional<int32>(), Item
+                );
+            }
+        }
+
+            if (ResultModel.IsValid() && ResultModel->GetItem() != nullptr)
+            {
+
+        if (!ResultModel.IsValid() || !ResultModel->GetItem().IsValid())
+            {
+              const auto Details = MakeShared<TArray<TSharedPtr<Gs2::Core::Model::FGs2ErrorDetail>>>();
+                Details->Add(MakeShared<Gs2::Core::Model::FGs2ErrorDetail>(TEXT("result.item"), TEXT("result.item is invalid."), TEXT("invalid_response")));
+                return MakeShared<Gs2::Core::Model::FUnknownError>(Details);
+              }if (!ResultModel.IsValid() || !(ResultModel->GetItem()->GetUserId()).IsSet())
+            {
+              const auto Details = MakeShared<TArray<TSharedPtr<Gs2::Core::Model::FGs2ErrorDetail>>>();
+                Details->Add(MakeShared<Gs2::Core::Model::FGs2ErrorDetail>(TEXT("userId"), TEXT("userId is invalid."), TEXT("invalid_response")));
+                return MakeShared<Gs2::Core::Model::FUnknownError>(Details);
+              }
+        Gs2::Account::Model::Cache::FAccountCache::Put(
+            Self->Gs2->Cache,
+
+            Request->GetNamespaceName(),
+            ResultModel->GetItem()->GetUserId(),
+            TOptional<int32>(),
+            ResultModel->GetItem()
+        );
+            }
+        auto Domain = MakeShared<Gs2::Account::Domain::Model::FAccountDomain>(
+            Self->Gs2,
+            Self->Service,
+            Request->GetNamespaceName(),
+            ResultModel->GetItem()->GetUserId()
+        );
+        if (ResultModel != nullptr)
+        {
+            if (ResultModel->GetToken().IsSet())
+            {
+                Domain->Token = *ResultModel->GetToken();
+            }
+            if (ResultModel->GetExpire().IsSet())
+            {
+                Domain->Expire = *ResultModel->GetExpire();
+            }
+        }
+
+        *Result = Domain;
+        return nullptr;
+    }
+
+    TSharedPtr<FAsyncTask<FNamespaceDomain::FPreviewTakeOverTask>> FNamespaceDomain::PreviewTakeOver(
+        Request::FPreviewTakeOverRequestPtr Request
+    ) {
+        return Gs2::Core::Util::New<FAsyncTask<FPreviewTakeOverTask>>(this->AsShared(), Request);
+    }
+
+    FNamespaceDomain::FPreviewTakeOverOpenIdConnectTask::FPreviewTakeOverOpenIdConnectTask(
+        const TSharedPtr<FNamespaceDomain>& Self,
+        const Request::FPreviewTakeOverOpenIdConnectRequestPtr Request
+    ): Self(Self), Request(Request)
+    {
+
+    }
+
+    FNamespaceDomain::FPreviewTakeOverOpenIdConnectTask::FPreviewTakeOverOpenIdConnectTask(
+        const FPreviewTakeOverOpenIdConnectTask& From
+    ): TGs2Future(From), Self(From.Self), Request(From.Request)
+    {
+    }
+
+    Gs2::Core::Model::FGs2ErrorPtr FNamespaceDomain::FPreviewTakeOverOpenIdConnectTask::Action(
+        TSharedPtr<TSharedPtr<Gs2::Account::Domain::Model::FAccountDomain>> Result
+    )
+    {
+        Request
+            ->WithContextStack((!Request->GetContextStack().IsSet() || Request->GetContextStack()->IsEmpty()) ? Self->Gs2->DefaultContextStack : Request->GetContextStack())
+            ->WithNamespaceName(Self->NamespaceName);
+        const auto Future = Self->Client->PreviewTakeOverOpenIdConnect(
+            Request
+        );
+        Future->StartSynchronousTask();
+        if (Future->GetTask().IsError())
+        {
+            return Future->GetTask().Error();
+        }
+        const auto ResultModel = Future->GetTask().Result();
+        Future->EnsureCompletion();
+        if (ResultModel.IsValid() && ResultModel->GetBanStatuses().IsValid())
+        {
+            for (const auto& Item : *ResultModel->GetBanStatuses())
+            {
+                if (!Item.IsValid()) continue;
+                Gs2::Account::Model::Cache::FBanStatusCache::Put(
+                    Self->Gs2->Cache,
+                    Item->GetName(),
+                    TOptional<int32>(), Item
+                );
+            }
+        }
+
+            if (ResultModel.IsValid() && ResultModel->GetItem() != nullptr)
+            {
+
+        if (!ResultModel.IsValid() || !ResultModel->GetItem().IsValid())
+            {
+              const auto Details = MakeShared<TArray<TSharedPtr<Gs2::Core::Model::FGs2ErrorDetail>>>();
+                Details->Add(MakeShared<Gs2::Core::Model::FGs2ErrorDetail>(TEXT("result.item"), TEXT("result.item is invalid."), TEXT("invalid_response")));
+                return MakeShared<Gs2::Core::Model::FUnknownError>(Details);
+              }if (!ResultModel.IsValid() || !(ResultModel->GetItem()->GetUserId()).IsSet())
+            {
+              const auto Details = MakeShared<TArray<TSharedPtr<Gs2::Core::Model::FGs2ErrorDetail>>>();
+                Details->Add(MakeShared<Gs2::Core::Model::FGs2ErrorDetail>(TEXT("userId"), TEXT("userId is invalid."), TEXT("invalid_response")));
+                return MakeShared<Gs2::Core::Model::FUnknownError>(Details);
+              }
+        Gs2::Account::Model::Cache::FAccountCache::Put(
+            Self->Gs2->Cache,
+
+            Request->GetNamespaceName(),
+            ResultModel->GetItem()->GetUserId(),
+            TOptional<int32>(),
+            ResultModel->GetItem()
+        );
+            }
+        auto Domain = MakeShared<Gs2::Account::Domain::Model::FAccountDomain>(
+            Self->Gs2,
+            Self->Service,
+            Request->GetNamespaceName(),
+            ResultModel->GetItem()->GetUserId()
+        );
+        if (ResultModel != nullptr)
+        {
+            if (ResultModel->GetToken().IsSet())
+            {
+                Domain->Token = *ResultModel->GetToken();
+            }
+            if (ResultModel->GetExpire().IsSet())
+            {
+                Domain->Expire = *ResultModel->GetExpire();
+            }
+        }
+
+        *Result = Domain;
+        return nullptr;
+    }
+
+    TSharedPtr<FAsyncTask<FNamespaceDomain::FPreviewTakeOverOpenIdConnectTask>> FNamespaceDomain::PreviewTakeOverOpenIdConnect(
+        Request::FPreviewTakeOverOpenIdConnectRequestPtr Request
+    ) {
+        return Gs2::Core::Util::New<FAsyncTask<FPreviewTakeOverOpenIdConnectTask>>(this->AsShared(), Request);
     }
 
     FNamespaceDomain::FDoTakeOverTask::FDoTakeOverTask(

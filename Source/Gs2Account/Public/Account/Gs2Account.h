@@ -174,6 +174,18 @@
 #include "Task/Rest/AuthenticationTask.h"
 #include "Task/WebSocket/AuthenticationTask.h"
 
+// PreviewTakeOver
+#include "Request/PreviewTakeOverRequest.h"
+#include "Result/PreviewTakeOverResult.h"
+#include "Task/Rest/PreviewTakeOverTask.h"
+#include "Task/WebSocket/PreviewTakeOverTask.h"
+
+// PreviewTakeOverOpenIdConnect
+#include "Request/PreviewTakeOverOpenIdConnectRequest.h"
+#include "Result/PreviewTakeOverOpenIdConnectResult.h"
+#include "Task/Rest/PreviewTakeOverOpenIdConnectTask.h"
+#include "Task/WebSocket/PreviewTakeOverOpenIdConnectTask.h"
+
 // RequestDeletion
 #include "Request/RequestDeletionRequest.h"
 #include "Result/RequestDeletionResult.h"
