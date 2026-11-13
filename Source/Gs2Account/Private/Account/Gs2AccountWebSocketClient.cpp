@@ -325,6 +325,24 @@ namespace Gs2::Account
         );
     }
 
+    TSharedPtr<FAsyncTask<Task::WebSocket::FIssueTakeOverCodeTask>> FGs2AccountWebSocketClient::IssueTakeOverCode(
+        const Request::FIssueTakeOverCodeRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::WebSocket::FIssueTakeOverCodeTask>>(
+            Session,
+            Request
+        );
+    }
+
+    TSharedPtr<FAsyncTask<Task::WebSocket::FIssueTakeOverCodeByUserIdTask>> FGs2AccountWebSocketClient::IssueTakeOverCodeByUserId(
+        const Request::FIssueTakeOverCodeByUserIdRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::WebSocket::FIssueTakeOverCodeByUserIdTask>>(
+            Session,
+            Request
+        );
+    }
+
     TSharedPtr<FAsyncTask<Task::WebSocket::FCreateTakeOverOpenIdConnectTask>> FGs2AccountWebSocketClient::CreateTakeOverOpenIdConnect(
         const Request::FCreateTakeOverOpenIdConnectRequestPtr Request) const
     {

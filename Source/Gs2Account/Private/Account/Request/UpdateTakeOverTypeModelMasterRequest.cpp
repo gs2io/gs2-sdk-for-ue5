@@ -23,7 +23,9 @@ namespace Gs2::Account::Request
         TypeValue(TOptional<int32>()),
         DescriptionValue(TOptional<FString>()),
         MetadataValue(TOptional<FString>()),
-        OpenIdConnectSettingValue(nullptr)
+        TakeOverMethodValue(TOptional<FString>()),
+        OpenIdConnectSettingValue(nullptr),
+        IssuedCodeSettingValue(nullptr)
     {
     }
 
@@ -34,7 +36,9 @@ namespace Gs2::Account::Request
         TypeValue(From.TypeValue),
         DescriptionValue(From.DescriptionValue),
         MetadataValue(From.MetadataValue),
-        OpenIdConnectSettingValue(From.OpenIdConnectSettingValue)
+        TakeOverMethodValue(From.TakeOverMethodValue),
+        OpenIdConnectSettingValue(From.OpenIdConnectSettingValue),
+        IssuedCodeSettingValue(From.IssuedCodeSettingValue)
     {
     }
 
@@ -78,11 +82,27 @@ namespace Gs2::Account::Request
         return SharedThis(this);
     }
 
+    TSharedPtr<FUpdateTakeOverTypeModelMasterRequest> FUpdateTakeOverTypeModelMasterRequest::WithTakeOverMethod(
+        const TOptional<FString> TakeOverMethod
+    )
+    {
+        this->TakeOverMethodValue = TakeOverMethod;
+        return SharedThis(this);
+    }
+
     TSharedPtr<FUpdateTakeOverTypeModelMasterRequest> FUpdateTakeOverTypeModelMasterRequest::WithOpenIdConnectSetting(
         const TSharedPtr<Model::FOpenIdConnectSetting> OpenIdConnectSetting
     )
     {
         this->OpenIdConnectSettingValue = OpenIdConnectSetting;
+        return SharedThis(this);
+    }
+
+    TSharedPtr<FUpdateTakeOverTypeModelMasterRequest> FUpdateTakeOverTypeModelMasterRequest::WithIssuedCodeSetting(
+        const TSharedPtr<Model::FIssuedCodeSetting> IssuedCodeSetting
+    )
+    {
+        this->IssuedCodeSettingValue = IssuedCodeSetting;
         return SharedThis(this);
     }
 
@@ -120,6 +140,11 @@ namespace Gs2::Account::Request
         return MetadataValue;
     }
 
+    TOptional<FString> FUpdateTakeOverTypeModelMasterRequest::GetTakeOverMethod() const
+    {
+        return TakeOverMethodValue;
+    }
+
     TSharedPtr<Model::FOpenIdConnectSetting> FUpdateTakeOverTypeModelMasterRequest::GetOpenIdConnectSetting() const
     {
         if (!OpenIdConnectSettingValue.IsValid())
@@ -127,6 +152,15 @@ namespace Gs2::Account::Request
             return nullptr;
         }
         return OpenIdConnectSettingValue;
+    }
+
+    TSharedPtr<Model::FIssuedCodeSetting> FUpdateTakeOverTypeModelMasterRequest::GetIssuedCodeSetting() const
+    {
+        if (!IssuedCodeSettingValue.IsValid())
+        {
+            return nullptr;
+        }
+        return IssuedCodeSettingValue;
     }
 
     TSharedPtr<FUpdateTakeOverTypeModelMasterRequest> FUpdateTakeOverTypeModelMasterRequest::FromJson(const TSharedPtr<FJsonObject> Data)
@@ -172,6 +206,15 @@ namespace Gs2::Account::Request
                   }
                   return TOptional<FString>();
               }() : TOptional<FString>())
+            ->WithTakeOverMethod(Data->HasField(ANSI_TO_TCHAR("takeOverMethod")) ? [Data]() -> TOptional<FString>
+              {
+                  FString v("");
+                    if (Data->TryGetStringField(ANSI_TO_TCHAR("takeOverMethod"), v))
+                  {
+                        return TOptional(v);
+                  }
+                  return TOptional<FString>();
+              }() : TOptional<FString>())
           ->WithOpenIdConnectSetting(Data->HasField(ANSI_TO_TCHAR("openIdConnectSetting")) ? [Data]() -> Model::FOpenIdConnectSettingPtr
               {
                   if (Data->HasTypedField<EJson::Null>(ANSI_TO_TCHAR("openIdConnectSetting")))
@@ -179,6 +222,14 @@ namespace Gs2::Account::Request
                       return nullptr;
                   }
                   return Model::FOpenIdConnectSetting::FromJson(Data->GetObjectField(ANSI_TO_TCHAR("openIdConnectSetting")));
+              }() : nullptr)
+          ->WithIssuedCodeSetting(Data->HasField(ANSI_TO_TCHAR("issuedCodeSetting")) ? [Data]() -> Model::FIssuedCodeSettingPtr
+              {
+                  if (Data->HasTypedField<EJson::Null>(ANSI_TO_TCHAR("issuedCodeSetting")))
+                  {
+                      return nullptr;
+                  }
+                  return Model::FIssuedCodeSetting::FromJson(Data->GetObjectField(ANSI_TO_TCHAR("issuedCodeSetting")));
               }() : nullptr);
     }
 
@@ -205,9 +256,17 @@ namespace Gs2::Account::Request
         {
             JsonRootObject->SetStringField(TEXT("metadata"), MetadataValue.GetValue());
         }
+        if (TakeOverMethodValue.IsSet())
+        {
+            JsonRootObject->SetStringField(TEXT("takeOverMethod"), TakeOverMethodValue.GetValue());
+        }
         if (OpenIdConnectSettingValue != nullptr && OpenIdConnectSettingValue.IsValid())
         {
             JsonRootObject->SetObjectField(TEXT("openIdConnectSetting"), OpenIdConnectSettingValue->ToJson());
+        }
+        if (IssuedCodeSettingValue != nullptr && IssuedCodeSettingValue.IsValid())
+        {
+            JsonRootObject->SetObjectField(TEXT("issuedCodeSetting"), IssuedCodeSettingValue->ToJson());
         }
         return JsonRootObject;
     }

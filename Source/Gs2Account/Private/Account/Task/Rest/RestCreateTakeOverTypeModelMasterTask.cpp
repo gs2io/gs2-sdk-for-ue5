@@ -96,9 +96,17 @@ namespace Gs2::Account::Task::Rest
             {
                 JsonRootObject->SetStringField(TEXT("metadata"), this->Request->GetMetadata().GetValue());
             }
+            if (this->Request->GetTakeOverMethod().IsSet())
+            {
+                JsonRootObject->SetStringField(TEXT("takeOverMethod"), this->Request->GetTakeOverMethod().GetValue());
+            }
             if (this->Request->GetOpenIdConnectSetting() != nullptr && this->Request->GetOpenIdConnectSetting().IsValid())
             {
                 JsonRootObject->SetObjectField(TEXT("openIdConnectSetting"), this->Request->GetOpenIdConnectSetting()->ToJson());
+            }
+            if (this->Request->GetIssuedCodeSetting() != nullptr && this->Request->GetIssuedCodeSetting().IsValid())
+            {
+                JsonRootObject->SetObjectField(TEXT("issuedCodeSetting"), this->Request->GetIssuedCodeSetting()->ToJson());
             }
             if (this->Request->GetContextStack().IsSet())
             {

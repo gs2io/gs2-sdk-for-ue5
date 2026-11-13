@@ -123,6 +123,60 @@ namespace Gs2::UE5::Account::Domain::Model
         );
     }
 
+    FEzAccountGameSessionDomain::FIssueTakeOverCodeTask::FIssueTakeOverCodeTask(
+        TSharedPtr<FEzAccountGameSessionDomain> Self,
+        int32 Type
+    ): Self(Self), Type(Type)
+    {
+
+    }
+
+    Gs2::Core::Model::FGs2ErrorPtr FEzAccountGameSessionDomain::FIssueTakeOverCodeTask::Action(
+        TSharedPtr<TSharedPtr<Gs2::UE5::Account::Domain::Model::FEzTakeOverGameSessionDomain>> Result
+    )
+    {
+        const auto Future = Self->ConnectionValue->Run(
+            [&]() -> Gs2::Core::Model::FGs2ErrorPtr {
+                const auto Task = Self->Domain->IssueTakeOverCode(
+                    MakeShared<Gs2::Account::Request::FIssueTakeOverCodeRequest>()
+                        ->WithType(Type)
+                );
+                Task->StartSynchronousTask();
+                if (Task->GetTask().IsError())
+                {
+                    Task->EnsureCompletion();
+                    return Task->GetTask().Error();
+                }
+                *Result = MakeShared<Gs2::UE5::Account::Domain::Model::FEzTakeOverGameSessionDomain>(
+                    Task->GetTask().Result(),
+                    Self->GameSession,
+                    Self->ConnectionValue
+                );
+                Task->EnsureCompletion();
+                return nullptr;
+            },
+            nullptr
+        );
+        Future->StartSynchronousTask();
+        if (Future->GetTask().IsError())
+        {
+            Future->EnsureCompletion();
+            return Future->GetTask().Error();
+        }
+        Future->EnsureCompletion();
+        return nullptr;
+    }
+
+    TSharedPtr<FAsyncTask<FEzAccountGameSessionDomain::FIssueTakeOverCodeTask>> FEzAccountGameSessionDomain::IssueTakeOverCode(
+        int32 Type
+    )
+    {
+        return Gs2::Core::Util::New<FAsyncTask<FIssueTakeOverCodeTask>>(
+            this->AsShared(),
+            Type
+        );
+    }
+
     FEzAccountGameSessionDomain::FDeleteTakeOverSettingTask::FDeleteTakeOverSettingTask(
         TSharedPtr<FEzAccountGameSessionDomain> Self,
         int32 Type

@@ -78,6 +78,29 @@ namespace Gs2::UE5::Account::Domain::Model
         TSharedPtr<FAsyncTask<FRequestDeletionTask>> RequestDeletion(
         );
 
+        class EZGS2_API FIssueTakeOverCodeTask :
+            public Gs2::Core::Util::TGs2Future<Gs2::UE5::Account::Domain::Model::FEzTakeOverGameSessionDomain>,
+            public TSharedFromThis<FIssueTakeOverCodeTask>
+        {
+            TSharedPtr<FEzAccountGameSessionDomain> Self;
+            int32 Type;
+
+        public:
+            explicit FIssueTakeOverCodeTask(
+                TSharedPtr<FEzAccountGameSessionDomain> Self,
+                int32 Type
+            );
+
+            virtual Gs2::Core::Model::FGs2ErrorPtr Action(
+                TSharedPtr<TSharedPtr<Gs2::UE5::Account::Domain::Model::FEzTakeOverGameSessionDomain>> Result
+            ) override;
+        };
+        friend FIssueTakeOverCodeTask;
+
+        TSharedPtr<FAsyncTask<FIssueTakeOverCodeTask>> IssueTakeOverCode(
+            int32 Type
+        );
+
         class EZGS2_API FDeleteTakeOverSettingTask :
             public Gs2::Core::Util::TGs2Future<Gs2::UE5::Account::Domain::Model::FEzTakeOverGameSessionDomain>,
             public TSharedFromThis<FDeleteTakeOverSettingTask>

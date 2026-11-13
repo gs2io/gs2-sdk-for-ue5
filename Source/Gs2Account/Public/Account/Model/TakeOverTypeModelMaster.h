@@ -19,6 +19,7 @@
 #include "CoreMinimal.h"
 #include "Core/Gs2Object.h"
 #include "OpenIdConnectSetting.h"
+#include "IssuedCodeSetting.h"
 
 namespace Gs2::Account::Model
 {
@@ -28,7 +29,9 @@ namespace Gs2::Account::Model
         TOptional<int32> TypeValue;
         TOptional<FString> DescriptionValue;
         TOptional<FString> MetadataValue;
+        TOptional<FString> TakeOverMethodValue;
         TSharedPtr<FOpenIdConnectSetting> OpenIdConnectSettingValue;
+        TSharedPtr<FIssuedCodeSetting> IssuedCodeSettingValue;
         TOptional<int64> CreatedAtValue;
         TOptional<int64> UpdatedAtValue;
         TOptional<int64> RevisionValue;
@@ -44,7 +47,9 @@ namespace Gs2::Account::Model
         TSharedPtr<FTakeOverTypeModelMaster> WithType(const TOptional<int32> Type);
         TSharedPtr<FTakeOverTypeModelMaster> WithDescription(const TOptional<FString> Description);
         TSharedPtr<FTakeOverTypeModelMaster> WithMetadata(const TOptional<FString> Metadata);
+        TSharedPtr<FTakeOverTypeModelMaster> WithTakeOverMethod(const TOptional<FString> TakeOverMethod);
         TSharedPtr<FTakeOverTypeModelMaster> WithOpenIdConnectSetting(const TSharedPtr<FOpenIdConnectSetting> OpenIdConnectSetting);
+        TSharedPtr<FTakeOverTypeModelMaster> WithIssuedCodeSetting(const TSharedPtr<FIssuedCodeSetting> IssuedCodeSetting);
         TSharedPtr<FTakeOverTypeModelMaster> WithCreatedAt(const TOptional<int64> CreatedAt);
         TSharedPtr<FTakeOverTypeModelMaster> WithUpdatedAt(const TOptional<int64> UpdatedAt);
         TSharedPtr<FTakeOverTypeModelMaster> WithRevision(const TOptional<int64> Revision);
@@ -54,7 +59,9 @@ namespace Gs2::Account::Model
         FString GetTypeString() const;
         TOptional<FString> GetDescription() const;
         TOptional<FString> GetMetadata() const;
+        TOptional<FString> GetTakeOverMethod() const;
         TSharedPtr<FOpenIdConnectSetting> GetOpenIdConnectSetting() const;
+        TSharedPtr<FIssuedCodeSetting> GetIssuedCodeSetting() const;
         TOptional<int64> GetCreatedAt() const;
         FString GetCreatedAtString() const;
         TOptional<int64> GetUpdatedAt() const;

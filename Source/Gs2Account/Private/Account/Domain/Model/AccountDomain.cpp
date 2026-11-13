@@ -44,6 +44,7 @@
 #include "Core/Domain/Transaction/ManualTransactionDomain.h"
 #include "Account/Error/BannedInfinityError.h"
 #include "Account/Model/Cache/Account.h"
+#include "Account/Model/Cache/TakeOver.h"
 
 namespace Gs2::Account::Domain::Model
 {
@@ -768,6 +769,88 @@ namespace Gs2::Account::Domain::Model
         Request::FExecuteDeletionByUserIdRequestPtr Request
     ) {
         return Gs2::Core::Util::New<FAsyncTask<FExecuteDeletionTask>>(this->AsShared(), Request);
+    }
+
+    FAccountDomain::FIssueTakeOverCodeTask::FIssueTakeOverCodeTask(
+        const TSharedPtr<FAccountDomain>& Self,
+        const Request::FIssueTakeOverCodeByUserIdRequestPtr Request
+    ): Self(Self), Request(Request)
+    {
+
+    }
+
+    FAccountDomain::FIssueTakeOverCodeTask::FIssueTakeOverCodeTask(
+        const FIssueTakeOverCodeTask& From
+    ): TGs2Future(From), Self(From.Self), Request(From.Request)
+    {
+    }
+
+    Gs2::Core::Model::FGs2ErrorPtr FAccountDomain::FIssueTakeOverCodeTask::Action(
+        TSharedPtr<TSharedPtr<Gs2::Account::Domain::Model::FTakeOverDomain>> Result
+    )
+    {
+        Request
+            ->WithContextStack((!Request->GetContextStack().IsSet() || Request->GetContextStack()->IsEmpty()) ? Self->Gs2->DefaultContextStack : Request->GetContextStack())
+            ->WithNamespaceName(Self->NamespaceName)
+            ->WithUserId(Self->UserId);
+        const auto Future = Self->Client->IssueTakeOverCodeByUserId(
+            Request
+        );
+        Future->StartSynchronousTask();
+        if (Future->GetTask().IsError())
+        {
+            return Future->GetTask().Error();
+        }
+        const auto ResultModel = Future->GetTask().Result();
+        Future->EnsureCompletion();
+
+            if (ResultModel.IsValid() && ResultModel->GetItem() != nullptr)
+            {
+
+        if (!ResultModel.IsValid() || !ResultModel->GetItem().IsValid())
+            {
+              const auto Details = MakeShared<TArray<TSharedPtr<Gs2::Core::Model::FGs2ErrorDetail>>>();
+                Details->Add(MakeShared<Gs2::Core::Model::FGs2ErrorDetail>(TEXT("result.item"), TEXT("result.item is invalid."), TEXT("invalid_response")));
+                return MakeShared<Gs2::Core::Model::FUnknownError>(Details);
+              }if (!ResultModel.IsValid() || !((ResultModel.IsValid() && ResultModel->GetItem().IsValid() ? ResultModel->GetItem()->GetUserId() : TOptional<FString>())).IsSet())
+            {
+              const auto Details = MakeShared<TArray<TSharedPtr<Gs2::Core::Model::FGs2ErrorDetail>>>();
+                Details->Add(MakeShared<Gs2::Core::Model::FGs2ErrorDetail>(TEXT("userId"), TEXT("userId is invalid."), TEXT("invalid_response")));
+                return MakeShared<Gs2::Core::Model::FUnknownError>(Details);
+              }
+        Gs2::Account::Model::Cache::FTakeOverCache::Put(
+            Self->Gs2->Cache,
+
+            Request->GetNamespaceName(),
+            (ResultModel.IsValid() && ResultModel->GetItem().IsValid() ? ResultModel->GetItem()->GetUserId() : TOptional<FString>()),
+            ResultModel->GetItem()->GetType().Get(int32{}),
+            TOptional<int32>(),
+            ResultModel->GetItem()
+        );
+            }
+        auto Domain = MakeShared<Gs2::Account::Domain::Model::FTakeOverDomain>(
+            Self->Gs2,
+            Self->Service,
+            Request->GetNamespaceName(),
+            ResultModel->GetItem()->GetUserId(),
+            ResultModel->GetItem()->GetType()
+        );
+        if (ResultModel != nullptr)
+        {
+            if (ResultModel->GetPassword().IsSet())
+            {
+                Domain->Password = *ResultModel->GetPassword();
+            }
+        }
+
+        *Result = Domain;
+        return nullptr;
+    }
+
+    TSharedPtr<FAsyncTask<FAccountDomain::FIssueTakeOverCodeTask>> FAccountDomain::IssueTakeOverCode(
+        Request::FIssueTakeOverCodeByUserIdRequestPtr Request
+    ) {
+        return Gs2::Core::Util::New<FAsyncTask<FIssueTakeOverCodeTask>>(this->AsShared(), Request);
     }
 
     FAccountDomain::FCreateTakeOverOpenIdConnectAndTask::FCreateTakeOverOpenIdConnectAndTask(

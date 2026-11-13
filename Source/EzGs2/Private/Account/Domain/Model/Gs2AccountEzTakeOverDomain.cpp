@@ -19,6 +19,11 @@
 namespace Gs2::UE5::Account::Domain::Model
 {
 
+    TOptional<FString> FEzTakeOverDomain::Password() const
+    {
+        return Domain->Password;
+    }
+
     TOptional<FString> FEzTakeOverDomain::AuthorizationUrl() const
     {
         return Domain->AuthorizationUrl;

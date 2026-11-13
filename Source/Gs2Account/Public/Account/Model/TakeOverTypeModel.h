@@ -19,6 +19,7 @@
 #include "CoreMinimal.h"
 #include "Core/Gs2Object.h"
 #include "OpenIdConnectSetting.h"
+#include "IssuedCodeSetting.h"
 
 namespace Gs2::Account::Model
 {
@@ -27,7 +28,9 @@ namespace Gs2::Account::Model
         TOptional<FString> TakeOverTypeModelIdValue;
         TOptional<int32> TypeValue;
         TOptional<FString> MetadataValue;
+        TOptional<FString> TakeOverMethodValue;
         TSharedPtr<FOpenIdConnectSetting> OpenIdConnectSettingValue;
+        TSharedPtr<FIssuedCodeSetting> IssuedCodeSettingValue;
 
     public:
         FTakeOverTypeModel();
@@ -39,13 +42,17 @@ namespace Gs2::Account::Model
         TSharedPtr<FTakeOverTypeModel> WithTakeOverTypeModelId(const TOptional<FString> TakeOverTypeModelId);
         TSharedPtr<FTakeOverTypeModel> WithType(const TOptional<int32> Type);
         TSharedPtr<FTakeOverTypeModel> WithMetadata(const TOptional<FString> Metadata);
+        TSharedPtr<FTakeOverTypeModel> WithTakeOverMethod(const TOptional<FString> TakeOverMethod);
         TSharedPtr<FTakeOverTypeModel> WithOpenIdConnectSetting(const TSharedPtr<FOpenIdConnectSetting> OpenIdConnectSetting);
+        TSharedPtr<FTakeOverTypeModel> WithIssuedCodeSetting(const TSharedPtr<FIssuedCodeSetting> IssuedCodeSetting);
 
         TOptional<FString> GetTakeOverTypeModelId() const;
         TOptional<int32> GetType() const;
         FString GetTypeString() const;
         TOptional<FString> GetMetadata() const;
+        TOptional<FString> GetTakeOverMethod() const;
         TSharedPtr<FOpenIdConnectSetting> GetOpenIdConnectSetting() const;
+        TSharedPtr<FIssuedCodeSetting> GetIssuedCodeSetting() const;
 
         static TOptional<FString> GetRegionFromGrn(const FString Grn);
         static TOptional<FString> GetOwnerIdFromGrn(const FString Grn);

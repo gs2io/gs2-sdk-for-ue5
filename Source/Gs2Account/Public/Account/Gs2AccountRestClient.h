@@ -86,6 +86,10 @@
 #include "Task/Rest/CreateTakeOverTask.h"
 #include "Request/CreateTakeOverByUserIdRequest.h"
 #include "Task/Rest/CreateTakeOverByUserIdTask.h"
+#include "Request/IssueTakeOverCodeRequest.h"
+#include "Task/Rest/IssueTakeOverCodeTask.h"
+#include "Request/IssueTakeOverCodeByUserIdRequest.h"
+#include "Task/Rest/IssueTakeOverCodeByUserIdTask.h"
 #include "Request/CreateTakeOverOpenIdConnectRequest.h"
 #include "Task/Rest/CreateTakeOverOpenIdConnectTask.h"
 #include "Request/CreateTakeOverOpenIdConnectAndByUserIdRequest.h"
@@ -308,6 +312,14 @@ namespace Gs2::Account
 
         TSharedPtr<FAsyncTask<Task::Rest::FCreateTakeOverByUserIdTask>> CreateTakeOverByUserId(
             const Request::FCreateTakeOverByUserIdRequestPtr Request
+        ) const;
+
+        TSharedPtr<FAsyncTask<Task::Rest::FIssueTakeOverCodeTask>> IssueTakeOverCode(
+            const Request::FIssueTakeOverCodeRequestPtr Request
+        ) const;
+
+        TSharedPtr<FAsyncTask<Task::Rest::FIssueTakeOverCodeByUserIdTask>> IssueTakeOverCodeByUserId(
+            const Request::FIssueTakeOverCodeByUserIdRequestPtr Request
         ) const;
 
         TSharedPtr<FAsyncTask<Task::Rest::FCreateTakeOverOpenIdConnectTask>> CreateTakeOverOpenIdConnect(

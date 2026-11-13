@@ -27,12 +27,14 @@ namespace Gs2::UE5::Account::Model
         TOptional<int32> TypeValue;
         TOptional<FString> UserIdentifierValue;
         TOptional<int64> CreatedAtValue;
+        TOptional<int64> ExpiresAtValue;
 
 	public:
         TSharedPtr<FEzTakeOver> WithUserId(const TOptional<FString> UserId);
         TSharedPtr<FEzTakeOver> WithType(const TOptional<int32> Type);
         TSharedPtr<FEzTakeOver> WithUserIdentifier(const TOptional<FString> UserIdentifier);
         TSharedPtr<FEzTakeOver> WithCreatedAt(const TOptional<int64> CreatedAt);
+        TSharedPtr<FEzTakeOver> WithExpiresAt(const TOptional<int64> ExpiresAt);
 
         TOptional<FString> GetUserId() const;
 
@@ -43,6 +45,9 @@ namespace Gs2::UE5::Account::Model
 
         TOptional<int64> GetCreatedAt() const;
         FString GetCreatedAtString() const;
+
+        TOptional<int64> GetExpiresAt() const;
+        FString GetExpiresAtString() const;
 
         Gs2::Account::Model::FTakeOverPtr ToModel() const;
         static TSharedPtr<FEzTakeOver> FromModel(Gs2::Account::Model::FTakeOverPtr Model);

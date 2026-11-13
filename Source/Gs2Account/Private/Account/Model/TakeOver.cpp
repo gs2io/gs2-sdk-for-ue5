@@ -25,6 +25,8 @@ namespace Gs2::Account::Model
         UserIdentifierValue(TOptional<FString>()),
         PasswordValue(TOptional<FString>()),
         CreatedAtValue(TOptional<int64>()),
+        ExpiresAtValue(TOptional<int64>()),
+        FailedAttemptsValue(TOptional<int32>()),
         RevisionValue(TOptional<int64>())
     {
     }
@@ -38,6 +40,8 @@ namespace Gs2::Account::Model
         UserIdentifierValue(From.UserIdentifierValue),
         PasswordValue(From.PasswordValue),
         CreatedAtValue(From.CreatedAtValue),
+        ExpiresAtValue(From.ExpiresAtValue),
+        FailedAttemptsValue(From.FailedAttemptsValue),
         RevisionValue(From.RevisionValue)
     {
     }
@@ -90,6 +94,22 @@ namespace Gs2::Account::Model
         return SharedThis(this);
     }
 
+    TSharedPtr<FTakeOver> FTakeOver::WithExpiresAt(
+        const TOptional<int64> ExpiresAt
+    )
+    {
+        this->ExpiresAtValue = ExpiresAt;
+        return SharedThis(this);
+    }
+
+    TSharedPtr<FTakeOver> FTakeOver::WithFailedAttempts(
+        const TOptional<int32> FailedAttempts
+    )
+    {
+        this->FailedAttemptsValue = FailedAttempts;
+        return SharedThis(this);
+    }
+
     TSharedPtr<FTakeOver> FTakeOver::WithRevision(
         const TOptional<int64> Revision
     )
@@ -138,6 +158,32 @@ namespace Gs2::Account::Model
             return FString("null");
         }
         return FString::Printf(TEXT("%lld"), CreatedAtValue.GetValue());
+    }
+    TOptional<int64> FTakeOver::GetExpiresAt() const
+    {
+        return ExpiresAtValue;
+    }
+
+    FString FTakeOver::GetExpiresAtString() const
+    {
+        if (!ExpiresAtValue.IsSet())
+        {
+            return FString("null");
+        }
+        return FString::Printf(TEXT("%lld"), ExpiresAtValue.GetValue());
+    }
+    TOptional<int32> FTakeOver::GetFailedAttempts() const
+    {
+        return FailedAttemptsValue;
+    }
+
+    FString FTakeOver::GetFailedAttemptsString() const
+    {
+        if (!FailedAttemptsValue.IsSet())
+        {
+            return FString("null");
+        }
+        return FString::Printf(TEXT("%d"), FailedAttemptsValue.GetValue());
     }
     TOptional<int64> FTakeOver::GetRevision() const
     {
@@ -268,6 +314,24 @@ namespace Gs2::Account::Model
                     }
                     return TOptional<int64>();
                 }() : TOptional<int64>())
+            ->WithExpiresAt(Data->HasField(ANSI_TO_TCHAR("expiresAt")) ? [Data]() -> TOptional<int64>
+                {
+                    int64 v;
+                    if (Data->TryGetNumberField(ANSI_TO_TCHAR("expiresAt"), v))
+                    {
+                        return TOptional(v);
+                    }
+                    return TOptional<int64>();
+                }() : TOptional<int64>())
+            ->WithFailedAttempts(Data->HasField(ANSI_TO_TCHAR("failedAttempts")) ? [Data]() -> TOptional<int32>
+                {
+                    int32 v;
+                    if (Data->TryGetNumberField(ANSI_TO_TCHAR("failedAttempts"), v))
+                    {
+                        return TOptional(v);
+                    }
+                    return TOptional<int32>();
+                }() : TOptional<int32>())
             ->WithRevision(Data->HasField(ANSI_TO_TCHAR("revision")) ? [Data]() -> TOptional<int64>
                 {
                     int64 v;
@@ -305,6 +369,14 @@ namespace Gs2::Account::Model
         if (CreatedAtValue.IsSet())
         {
             JsonRootObject->SetStringField(TEXT("createdAt"), FString::Printf(TEXT("%lld"), CreatedAtValue.GetValue()));
+        }
+        if (ExpiresAtValue.IsSet())
+        {
+            JsonRootObject->SetStringField(TEXT("expiresAt"), FString::Printf(TEXT("%lld"), ExpiresAtValue.GetValue()));
+        }
+        if (FailedAttemptsValue.IsSet())
+        {
+            JsonRootObject->SetNumberField(TEXT("failedAttempts"), FailedAttemptsValue.GetValue());
         }
         if (RevisionValue.IsSet())
         {
@@ -404,7 +476,9 @@ namespace Gs2::Account::Model::Cache
             if (CacheOwnerOldRevision == CacheOwnerNewRevision) return;
         }
         CacheSnapshot->Put(Gs2::Account::Model::FTakeOver::TypeName, CacheOwnerParentKey, CacheOwnerKey, CacheOwnerValue,
-            FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
+            CacheOwnerValue.IsValid() && CacheOwnerValue->GetExpiresAt().IsSet() && CacheOwnerValue->GetExpiresAt().Get(0) != 0
+                ? Gs2::Core::Domain::ToCacheExpiry(CacheOwnerValue->GetExpiresAt().Get(0))
+                : FDateTime::Now() + FTimespan::FromMinutes(Gs2::Core::Domain::DefaultCacheMinutes)
         );
     }
 

@@ -42,6 +42,7 @@ namespace Gs2::UE5::Account::Domain::Model
         Gs2::UE5::Util::FGs2ConnectionPtr ConnectionValue;
 
         public:
+        TOptional<FString> Password() const;
         TOptional<FString> AuthorizationUrl() const;
         TOptional<FString> Payload() const;
         TOptional<FString> NamespaceName() const;

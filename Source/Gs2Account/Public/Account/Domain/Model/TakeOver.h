@@ -64,8 +64,13 @@ namespace Gs2::Account::Domain::Model
         const Gs2::Account::FGs2AccountRestClientPtr Client;
 
         public:
+        TOptional<FString> Password;
         TOptional<FString> AuthorizationUrl;
         TOptional<FString> Payload;
+        TOptional<FString> GetPassword() const
+        {
+            return Password;
+        }
         TOptional<FString> GetAuthorizationUrl() const
         {
             return AuthorizationUrl;

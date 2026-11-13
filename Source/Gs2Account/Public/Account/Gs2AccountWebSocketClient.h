@@ -86,6 +86,10 @@
 #include "Task/WebSocket/CreateTakeOverTask.h"
 #include "Request/CreateTakeOverByUserIdRequest.h"
 #include "Task/WebSocket/CreateTakeOverByUserIdTask.h"
+#include "Request/IssueTakeOverCodeRequest.h"
+#include "Task/WebSocket/IssueTakeOverCodeTask.h"
+#include "Request/IssueTakeOverCodeByUserIdRequest.h"
+#include "Task/WebSocket/IssueTakeOverCodeByUserIdTask.h"
 #include "Request/CreateTakeOverOpenIdConnectRequest.h"
 #include "Task/WebSocket/CreateTakeOverOpenIdConnectTask.h"
 #include "Request/CreateTakeOverOpenIdConnectAndByUserIdRequest.h"
@@ -308,6 +312,14 @@ namespace Gs2::Account
 
         TSharedPtr<FAsyncTask<Task::WebSocket::FCreateTakeOverByUserIdTask>> CreateTakeOverByUserId(
             const Request::FCreateTakeOverByUserIdRequestPtr Request
+        ) const;
+
+        TSharedPtr<FAsyncTask<Task::WebSocket::FIssueTakeOverCodeTask>> IssueTakeOverCode(
+            const Request::FIssueTakeOverCodeRequestPtr Request
+        ) const;
+
+        TSharedPtr<FAsyncTask<Task::WebSocket::FIssueTakeOverCodeByUserIdTask>> IssueTakeOverCodeByUserId(
+            const Request::FIssueTakeOverCodeByUserIdRequestPtr Request
         ) const;
 
         TSharedPtr<FAsyncTask<Task::WebSocket::FCreateTakeOverOpenIdConnectTask>> CreateTakeOverOpenIdConnect(

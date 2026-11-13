@@ -138,6 +138,34 @@ namespace Gs2::Account::Domain::Model
 
 
 
+        class GS2ACCOUNT_API FIssueTakeOverCodeTask final :
+            public Gs2::Core::Util::TGs2Future<Gs2::Account::Domain::Model::FTakeOverAccessTokenDomain>,
+            public TSharedFromThis<FIssueTakeOverCodeTask>
+        {
+            const TSharedPtr<FAccountAccessTokenDomain> Self;
+            const Request::FIssueTakeOverCodeRequestPtr Request;
+        public:
+            explicit FIssueTakeOverCodeTask(
+                const TSharedPtr<FAccountAccessTokenDomain>& Self,
+                const Request::FIssueTakeOverCodeRequestPtr Request
+            );
+
+            FIssueTakeOverCodeTask(
+                const FIssueTakeOverCodeTask& From
+            );
+
+            virtual Gs2::Core::Model::FGs2ErrorPtr Action(
+                TSharedPtr<TSharedPtr<Gs2::Account::Domain::Model::FTakeOverAccessTokenDomain>> Result
+            ) override;
+        };
+        friend FIssueTakeOverCodeTask;
+
+        TSharedPtr<FAsyncTask<FIssueTakeOverCodeTask>> IssueTakeOverCode(
+            Request::FIssueTakeOverCodeRequestPtr Request
+        );
+
+
+
         class GS2ACCOUNT_API FDeleteTakeOverTask final :
             public Gs2::Core::Util::TGs2Future<Gs2::Account::Domain::Model::FTakeOverAccessTokenDomain>,
             public TSharedFromThis<FDeleteTakeOverTask>

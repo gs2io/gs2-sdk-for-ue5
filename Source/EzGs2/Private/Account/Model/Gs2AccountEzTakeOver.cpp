@@ -50,6 +50,14 @@ namespace Gs2::UE5::Account::Model
         this->CreatedAtValue = CreatedAt;
         return SharedThis(this);
     }
+
+    TSharedPtr<FEzTakeOver> FEzTakeOver::WithExpiresAt(
+        const TOptional<int64> ExpiresAt
+    )
+    {
+        this->ExpiresAtValue = ExpiresAt;
+        return SharedThis(this);
+    }
     TOptional<FString> FEzTakeOver::GetUserId() const
     {
         return UserIdValue;
@@ -84,6 +92,19 @@ namespace Gs2::UE5::Account::Model
         }
         return FString::Printf(TEXT("%lld"), CreatedAtValue.GetValue());
     }
+    TOptional<int64> FEzTakeOver::GetExpiresAt() const
+    {
+        return ExpiresAtValue;
+    }
+
+    FString FEzTakeOver::GetExpiresAtString() const
+    {
+        if (!ExpiresAtValue.IsSet())
+        {
+            return FString("null");
+        }
+        return FString::Printf(TEXT("%lld"), ExpiresAtValue.GetValue());
+    }
 
     Gs2::Account::Model::FTakeOverPtr FEzTakeOver::ToModel() const
     {
@@ -91,7 +112,8 @@ namespace Gs2::UE5::Account::Model
             ->WithUserId(UserIdValue)
             ->WithType(TypeValue)
             ->WithUserIdentifier(UserIdentifierValue)
-            ->WithCreatedAt(CreatedAtValue);
+            ->WithCreatedAt(CreatedAtValue)
+            ->WithExpiresAt(ExpiresAtValue);
     }
 
     TSharedPtr<FEzTakeOver> FEzTakeOver::FromModel(const Gs2::Account::Model::FTakeOverPtr Model)
@@ -104,6 +126,7 @@ namespace Gs2::UE5::Account::Model
             ->WithUserId(Model->GetUserId())
             ->WithType(Model->GetType())
             ->WithUserIdentifier(Model->GetUserIdentifier())
-            ->WithCreatedAt(Model->GetCreatedAt());
+            ->WithCreatedAt(Model->GetCreatedAt())
+            ->WithExpiresAt(Model->GetExpiresAt());
     }
 }

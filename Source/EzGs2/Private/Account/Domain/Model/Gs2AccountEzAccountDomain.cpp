@@ -56,6 +56,11 @@ namespace Gs2::UE5::Account::Domain::Model
         return Domain->Expire;
     }
 
+    TOptional<FString> FEzAccountDomain::Password() const
+    {
+        return Domain->Password;
+    }
+
     TOptional<FString> FEzAccountDomain::AuthorizationUrl() const
     {
         return Domain->AuthorizationUrl;

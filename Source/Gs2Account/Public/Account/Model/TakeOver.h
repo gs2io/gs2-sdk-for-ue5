@@ -29,6 +29,8 @@ namespace Gs2::Account::Model
         TOptional<FString> UserIdentifierValue;
         TOptional<FString> PasswordValue;
         TOptional<int64> CreatedAtValue;
+        TOptional<int64> ExpiresAtValue;
+        TOptional<int32> FailedAttemptsValue;
         TOptional<int64> RevisionValue;
 
     public:
@@ -44,6 +46,8 @@ namespace Gs2::Account::Model
         TSharedPtr<FTakeOver> WithUserIdentifier(const TOptional<FString> UserIdentifier);
         TSharedPtr<FTakeOver> WithPassword(const TOptional<FString> Password);
         TSharedPtr<FTakeOver> WithCreatedAt(const TOptional<int64> CreatedAt);
+        TSharedPtr<FTakeOver> WithExpiresAt(const TOptional<int64> ExpiresAt);
+        TSharedPtr<FTakeOver> WithFailedAttempts(const TOptional<int32> FailedAttempts);
         TSharedPtr<FTakeOver> WithRevision(const TOptional<int64> Revision);
 
         TOptional<FString> GetTakeOverId() const;
@@ -54,6 +58,10 @@ namespace Gs2::Account::Model
         TOptional<FString> GetPassword() const;
         TOptional<int64> GetCreatedAt() const;
         FString GetCreatedAtString() const;
+        TOptional<int64> GetExpiresAt() const;
+        FString GetExpiresAtString() const;
+        TOptional<int32> GetFailedAttempts() const;
+        FString GetFailedAttemptsString() const;
         TOptional<int64> GetRevision() const;
         FString GetRevisionString() const;
 

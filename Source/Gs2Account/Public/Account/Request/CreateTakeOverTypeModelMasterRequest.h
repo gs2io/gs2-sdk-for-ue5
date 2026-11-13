@@ -19,6 +19,7 @@
 #include "CoreMinimal.h"
 #include "Dom/JsonObject.h"
 #include "../Model/OpenIdConnectSetting.h"
+#include "../Model/IssuedCodeSetting.h"
 
 namespace Gs2::Account::Request
 {
@@ -31,7 +32,9 @@ namespace Gs2::Account::Request
         TOptional<int32> TypeValue;
         TOptional<FString> DescriptionValue;
         TOptional<FString> MetadataValue;
+        TOptional<FString> TakeOverMethodValue;
         TSharedPtr<Model::FOpenIdConnectSetting> OpenIdConnectSettingValue;
+        TSharedPtr<Model::FIssuedCodeSetting> IssuedCodeSettingValue;
         
     public:
         
@@ -46,7 +49,9 @@ namespace Gs2::Account::Request
         TSharedPtr<FCreateTakeOverTypeModelMasterRequest> WithType(const TOptional<int32> Type);
         TSharedPtr<FCreateTakeOverTypeModelMasterRequest> WithDescription(const TOptional<FString> Description);
         TSharedPtr<FCreateTakeOverTypeModelMasterRequest> WithMetadata(const TOptional<FString> Metadata);
+        TSharedPtr<FCreateTakeOverTypeModelMasterRequest> WithTakeOverMethod(const TOptional<FString> TakeOverMethod);
         TSharedPtr<FCreateTakeOverTypeModelMasterRequest> WithOpenIdConnectSetting(const TSharedPtr<Model::FOpenIdConnectSetting> OpenIdConnectSetting);
+        TSharedPtr<FCreateTakeOverTypeModelMasterRequest> WithIssuedCodeSetting(const TSharedPtr<Model::FIssuedCodeSetting> IssuedCodeSetting);
 
         TOptional<FString> GetContextStack() const;
         TOptional<FString> GetNamespaceName() const;
@@ -54,7 +59,9 @@ namespace Gs2::Account::Request
         FString GetTypeString() const;
         TOptional<FString> GetDescription() const;
         TOptional<FString> GetMetadata() const;
+        TOptional<FString> GetTakeOverMethod() const;
         TSharedPtr<Model::FOpenIdConnectSetting> GetOpenIdConnectSetting() const;
+        TSharedPtr<Model::FIssuedCodeSetting> GetIssuedCodeSetting() const;
 
         static TSharedPtr<FCreateTakeOverTypeModelMasterRequest> FromJson(const TSharedPtr<FJsonObject> Data);
         TSharedPtr<FJsonObject> ToJson() const;

@@ -51,6 +51,8 @@ struct FGs2AccountTakeOverValue
     FString UserIdentifier = "";
     UPROPERTY(Category = Gs2, BlueprintReadOnly)
     int64 CreatedAt = 0;
+    UPROPERTY(Category = Gs2, BlueprintReadOnly)
+    int64 ExpiresAt = 0;
 };
 
 inline FGs2AccountTakeOverValue EzTakeOverToFGs2AccountTakeOverValue(
@@ -66,6 +68,7 @@ inline FGs2AccountTakeOverValue EzTakeOverToFGs2AccountTakeOverValue(
     Value.Type = Model->GetType() ? *Model->GetType() : 0;
     Value.UserIdentifier = Model->GetUserIdentifier() ? *Model->GetUserIdentifier() : "";
     Value.CreatedAt = Model->GetCreatedAt() ? *Model->GetCreatedAt() : 0;
+    Value.ExpiresAt = Model->GetExpiresAt() ? *Model->GetExpiresAt() : 0;
     return Value;
 }
 
@@ -77,7 +80,8 @@ inline Gs2::UE5::Account::Model::FEzTakeOverPtr FGs2AccountTakeOverValueToEzTake
         ->WithUserId(Model.UserId)
         ->WithType(Model.Type)
         ->WithUserIdentifier(Model.UserIdentifier)
-        ->WithCreatedAt(Model.CreatedAt);
+        ->WithCreatedAt(Model.CreatedAt)
+        ->WithExpiresAt(Model.ExpiresAt);
 }
 
 UCLASS()

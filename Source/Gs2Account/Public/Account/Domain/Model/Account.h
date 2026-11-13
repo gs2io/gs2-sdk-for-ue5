@@ -69,6 +69,7 @@ namespace Gs2::Account::Domain::Model
         TOptional<FString> Signature;
         TOptional<FString> Token;
         TOptional<int64> Expire;
+        TOptional<FString> Password;
         TOptional<FString> AuthorizationUrl;
         TOptional<FString> NextPageToken;
         TSharedPtr<TArray<TSharedPtr<Gs2::Account::Model::FBanStatus>>> GetBanStatuses() const
@@ -90,6 +91,10 @@ namespace Gs2::Account::Domain::Model
         TOptional<int64> GetExpire() const
         {
             return Expire;
+        }
+        TOptional<FString> GetPassword() const
+        {
+            return Password;
         }
         TOptional<FString> GetAuthorizationUrl() const
         {
@@ -425,6 +430,34 @@ namespace Gs2::Account::Domain::Model
 
         TSharedPtr<FAsyncTask<FExecuteDeletionTask>> ExecuteDeletion(
             Request::FExecuteDeletionByUserIdRequestPtr Request
+        );
+
+
+
+        class GS2ACCOUNT_API FIssueTakeOverCodeTask final :
+            public Gs2::Core::Util::TGs2Future<Gs2::Account::Domain::Model::FTakeOverDomain>,
+            public TSharedFromThis<FIssueTakeOverCodeTask>
+        {
+            const TSharedPtr<FAccountDomain> Self;
+            const Request::FIssueTakeOverCodeByUserIdRequestPtr Request;
+        public:
+            explicit FIssueTakeOverCodeTask(
+                const TSharedPtr<FAccountDomain>& Self,
+                const Request::FIssueTakeOverCodeByUserIdRequestPtr Request
+            );
+
+            FIssueTakeOverCodeTask(
+                const FIssueTakeOverCodeTask& From
+            );
+
+            virtual Gs2::Core::Model::FGs2ErrorPtr Action(
+                TSharedPtr<TSharedPtr<Gs2::Account::Domain::Model::FTakeOverDomain>> Result
+            ) override;
+        };
+        friend FIssueTakeOverCodeTask;
+
+        TSharedPtr<FAsyncTask<FIssueTakeOverCodeTask>> IssueTakeOverCode(
+            Request::FIssueTakeOverCodeByUserIdRequestPtr Request
         );
 
 

@@ -49,6 +49,7 @@ namespace Gs2::UE5::Account::Domain::Model
         TOptional<FString> Signature() const;
         TOptional<FString> Token() const;
         TOptional<int64> Expire() const;
+        TOptional<FString> Password() const;
         TOptional<FString> AuthorizationUrl() const;
         TOptional<FString> NextPageToken() const;
         TOptional<FString> NamespaceName() const;

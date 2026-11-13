@@ -26,6 +26,7 @@
 #include "Model/TakeOverTypeModelMaster.h"
 #include "Model/CurrentModelMaster.h"
 #include "Model/OpenIdConnectSetting.h"
+#include "Model/IssuedCodeSetting.h"
 #include "Model/ScopeValue.h"
 #include "Model/PlatformUser.h"
 #include "Model/BanStatus.h"
@@ -239,6 +240,18 @@
 #include "Result/CreateTakeOverByUserIdResult.h"
 #include "Task/Rest/CreateTakeOverByUserIdTask.h"
 #include "Task/WebSocket/CreateTakeOverByUserIdTask.h"
+
+// IssueTakeOverCode
+#include "Request/IssueTakeOverCodeRequest.h"
+#include "Result/IssueTakeOverCodeResult.h"
+#include "Task/Rest/IssueTakeOverCodeTask.h"
+#include "Task/WebSocket/IssueTakeOverCodeTask.h"
+
+// IssueTakeOverCodeByUserId
+#include "Request/IssueTakeOverCodeByUserIdRequest.h"
+#include "Result/IssueTakeOverCodeByUserIdResult.h"
+#include "Task/Rest/IssueTakeOverCodeByUserIdTask.h"
+#include "Task/WebSocket/IssueTakeOverCodeByUserIdTask.h"
 
 // CreateTakeOverOpenIdConnect
 #include "Request/CreateTakeOverOpenIdConnectRequest.h"
