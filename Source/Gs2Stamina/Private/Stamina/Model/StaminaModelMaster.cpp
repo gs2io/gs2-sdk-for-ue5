@@ -638,7 +638,17 @@ namespace Gs2::Stamina::Model::Cache
         );
         auto CacheOwnerValue = CacheOwnerArgumentItem;
         Gs2::Stamina::Model::FStaminaModelMasterPtr CacheOwnerExisting;
-        if (CacheSnapshot->TryGet<Gs2::Stamina::Model::FStaminaModelMaster>(CacheOwnerParentKey, CacheOwnerKey, &CacheOwnerExisting))
+        bool CacheOwnerFound = CacheSnapshot->TryGet<Gs2::Stamina::Model::FStaminaModelMaster>(CacheOwnerParentKey, CacheOwnerKey, &CacheOwnerExisting);
+        if (CacheOwnerFound && CacheOwnerExisting.IsValid() && CacheOwnerValue.IsValid() &&
+            CacheOwnerExisting->GetCreatedAt().IsSet() && CacheOwnerValue->GetCreatedAt().IsSet() &&
+            CacheOwnerExisting->GetRevision().IsSet() && CacheOwnerValue->GetRevision().IsSet() &&
+            CacheOwnerExisting->GetCreatedAt() != CacheOwnerValue->GetCreatedAt())
+        {
+            if (*CacheOwnerExisting->GetCreatedAt() > *CacheOwnerValue->GetCreatedAt()) return;
+            // A recreated model starts a separate revision sequence.
+            CacheOwnerFound = false;
+        }
+        if (CacheOwnerFound)
         {
             const int64 CacheOwnerOldRevision = CacheOwnerExisting.IsValid() ? CacheOwnerExisting->GetRevision().Get(-1) : -1;
             const int64 CacheOwnerNewRevision = CacheOwnerValue.IsValid() ? CacheOwnerValue->GetRevision().Get(-1) : -1;

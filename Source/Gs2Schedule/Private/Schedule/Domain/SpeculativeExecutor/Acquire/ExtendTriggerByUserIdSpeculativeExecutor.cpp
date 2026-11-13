@@ -82,7 +82,7 @@ namespace Gs2::Schedule::Domain::SpeculativeExecutor
             if (!Clone.IsValid()) return nullptr;
             if (!Item.IsValid()) Clone->WithName(Request->GetTriggerName())->WithUserId(Request->GetUserId());
             if (Expired) Clone->WithTriggeredAt(Now);
-            Clone->WithExpiresAt(Base + Delta)->WithCreatedAt(Now)->WithRevision(0);
+            Clone->WithExpiresAt(Base + Delta)->WithRevision(0);
             return Clone;
         }
     }

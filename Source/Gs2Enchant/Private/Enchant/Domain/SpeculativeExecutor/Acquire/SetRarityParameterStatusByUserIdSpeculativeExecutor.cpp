@@ -317,7 +317,6 @@ namespace Gs2::Enchant::Domain::SpeculativeExecutor
                 ->WithParameterName(ParameterName)
                 ->WithPropertyId(PropertyId)
                 ->WithParameterValues(EmptyValues)
-                ->WithCreatedAt(CurrentTimeMillis)
                 ->WithUpdatedAt(CurrentTimeMillis)
                 ->WithRevision(0);
         }
