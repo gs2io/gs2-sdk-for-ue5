@@ -672,6 +672,44 @@ namespace Gs2::AdReward::Domain
                     }
 
         }
+        if (Method == "VerifyPointByUserId") {
+            if (Result.IsEmpty())
+            {
+                return;
+            }
+            TSharedPtr<FJsonObject> RequestModelJson;
+            if (const TSharedRef<TJsonReader<>> JsonReader = TJsonReaderFactory<>::Create(Request);
+                !FJsonSerializer::Deserialize(JsonReader, RequestModelJson))
+            {
+                return;
+            }
+            TSharedPtr<FJsonObject> ResultModelJson;
+            if (const TSharedRef<TJsonReader<>> JsonReader = TJsonReaderFactory<>::Create(Result);
+                !FJsonSerializer::Deserialize(JsonReader, ResultModelJson))
+            {
+                return;
+            }
+            const auto RequestModel = Gs2::AdReward::Request::FVerifyPointByUserIdRequest::FromJson(RequestModelJson);
+            const auto ResultModel = Gs2::AdReward::Result::FVerifyPointByUserIdResult::FromJson(ResultModelJson);
+
+                    if (ResultModel.IsValid() && ResultModel->GetItem() != nullptr)
+                    {
+
+                if (!ResultModel.IsValid() || !((ResultModel.IsValid() && ResultModel->GetItem().IsValid() ? ResultModel->GetItem()->GetUserId() : TOptional<FString>())).IsSet())
+                    {
+                      return;
+                      }
+                Gs2::AdReward::Model::Cache::FPointCache::Put(
+                    Gs2->Cache,
+
+                    RequestModel->GetNamespaceName(),
+                    (ResultModel.IsValid() && ResultModel->GetItem().IsValid() ? ResultModel->GetItem()->GetUserId() : TOptional<FString>()),
+                    TimeOffset,
+                    ResultModel->GetItem()
+                );
+                    }
+
+        }
     }
 
     void FGs2AdRewardDomain::UpdateCacheFromJobResult(

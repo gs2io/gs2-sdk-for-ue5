@@ -128,6 +128,34 @@ namespace Gs2::AdReward::Domain::Model
             Request::FConsumePointRequestPtr Request
         );
 
+
+
+        class GS2ADREWARD_API FVerifyTask final :
+            public Gs2::Core::Util::TGs2Future<Gs2::AdReward::Domain::Model::FPointAccessTokenDomain>,
+            public TSharedFromThis<FVerifyTask>
+        {
+            const TSharedPtr<FPointAccessTokenDomain> Self;
+            const Request::FVerifyPointRequestPtr Request;
+        public:
+            explicit FVerifyTask(
+                const TSharedPtr<FPointAccessTokenDomain>& Self,
+                const Request::FVerifyPointRequestPtr Request
+            );
+
+            FVerifyTask(
+                const FVerifyTask& From
+            );
+
+            virtual Gs2::Core::Model::FGs2ErrorPtr Action(
+                TSharedPtr<TSharedPtr<Gs2::AdReward::Domain::Model::FPointAccessTokenDomain>> Result
+            ) override;
+        };
+        friend FVerifyTask;
+
+        TSharedPtr<FAsyncTask<FVerifyTask>> Verify(
+            Request::FVerifyPointRequestPtr Request
+        );
+
         static FString CreateCacheParentKey(
             TOptional<FString> NamespaceName,
             TOptional<FString> UserId,

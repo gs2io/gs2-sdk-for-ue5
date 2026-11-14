@@ -437,17 +437,7 @@ namespace Gs2::LoginReward::Model::Cache
         );
         auto CacheOwnerValue = CacheOwnerArgumentItem;
         Gs2::LoginReward::Model::FNamespacePtr CacheOwnerExisting;
-        bool CacheOwnerFound = CacheSnapshot->TryGet<Gs2::LoginReward::Model::FNamespace>(CacheOwnerParentKey, CacheOwnerKey, &CacheOwnerExisting);
-        if (CacheOwnerFound && CacheOwnerExisting.IsValid() && CacheOwnerValue.IsValid() &&
-            CacheOwnerExisting->GetCreatedAt().IsSet() && CacheOwnerValue->GetCreatedAt().IsSet() &&
-            CacheOwnerExisting->GetRevision().IsSet() && CacheOwnerValue->GetRevision().IsSet() &&
-            CacheOwnerExisting->GetCreatedAt() != CacheOwnerValue->GetCreatedAt())
-        {
-            if (*CacheOwnerExisting->GetCreatedAt() > *CacheOwnerValue->GetCreatedAt()) return;
-            // A recreated model starts a separate revision sequence.
-            CacheOwnerFound = false;
-        }
-        if (CacheOwnerFound)
+        if (CacheSnapshot->TryGet<Gs2::LoginReward::Model::FNamespace>(CacheOwnerParentKey, CacheOwnerKey, &CacheOwnerExisting))
         {
             const int64 CacheOwnerOldRevision = CacheOwnerExisting.IsValid() ? CacheOwnerExisting->GetRevision().Get(-1) : -1;
             const int64 CacheOwnerNewRevision = CacheOwnerValue.IsValid() ? CacheOwnerValue->GetRevision().Get(-1) : -1;

@@ -190,6 +190,24 @@ namespace Gs2::AdReward
         );
     }
 
+    TSharedPtr<FAsyncTask<Task::Rest::FVerifyPointTask>> FGs2AdRewardRestClient::VerifyPoint(
+        const Request::FVerifyPointRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::Rest::FVerifyPointTask>>(
+            Session,
+            Request
+        );
+    }
+
+    TSharedPtr<FAsyncTask<Task::Rest::FVerifyPointByUserIdTask>> FGs2AdRewardRestClient::VerifyPointByUserId(
+        const Request::FVerifyPointByUserIdRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::Rest::FVerifyPointByUserIdTask>>(
+            Session,
+            Request
+        );
+    }
+
     TSharedPtr<FAsyncTask<Task::Rest::FDeletePointByUserIdTask>> FGs2AdRewardRestClient::DeletePointByUserId(
         const Request::FDeletePointByUserIdRequestPtr Request) const
     {
@@ -203,6 +221,15 @@ namespace Gs2::AdReward
         const Request::FConsumePointByStampTaskRequestPtr Request) const
     {
         return Gs2::Core::Util::New<FAsyncTask<Task::Rest::FConsumePointByStampTaskTask>>(
+            Session,
+            Request
+        );
+    }
+
+    TSharedPtr<FAsyncTask<Task::Rest::FVerifyPointByStampTaskTask>> FGs2AdRewardRestClient::VerifyPointByStampTask(
+        const Request::FVerifyPointByStampTaskRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::Rest::FVerifyPointByStampTaskTask>>(
             Session,
             Request
         );

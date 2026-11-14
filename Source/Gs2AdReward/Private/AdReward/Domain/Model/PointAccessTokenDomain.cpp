@@ -200,6 +200,71 @@ namespace Gs2::AdReward::Domain::Model
         return Gs2::Core::Util::New<FAsyncTask<FConsumeTask>>(this->AsShared(), Request);
     }
 
+    FPointAccessTokenDomain::FVerifyTask::FVerifyTask(
+        const TSharedPtr<FPointAccessTokenDomain>& Self,
+        const Request::FVerifyPointRequestPtr Request
+    ): Self(Self), Request(Request)
+    {
+
+    }
+
+    FPointAccessTokenDomain::FVerifyTask::FVerifyTask(
+        const FVerifyTask& From
+    ): TGs2Future(From), Self(From.Self), Request(From.Request)
+    {
+    }
+
+    Gs2::Core::Model::FGs2ErrorPtr FPointAccessTokenDomain::FVerifyTask::Action(
+        TSharedPtr<TSharedPtr<Gs2::AdReward::Domain::Model::FPointAccessTokenDomain>> Result
+    )
+    {
+        Request
+            ->WithContextStack((!Request->GetContextStack().IsSet() || Request->GetContextStack()->IsEmpty()) ? Self->Gs2->DefaultContextStack : Request->GetContextStack())
+            ->WithNamespaceName(Self->NamespaceName)
+            ->WithAccessToken(Self->AccessToken->GetToken());
+        const auto CacheOwnerSnapshotUserId = Self->AccessToken.IsValid() ? Self->UserId() : TOptional<FString>();
+        const auto CacheOwnerSnapshotTimeOffset = Self->AccessToken.IsValid() ? Self->AccessToken->GetTimeOffset() : TOptional<int32>();
+        const auto Future = Self->Client->VerifyPoint(
+            Request
+        );
+        Future->StartSynchronousTask();
+        if (Future->GetTask().IsError())
+        {
+            return Future->GetTask().Error();
+        }
+        const auto ResultModel = Future->GetTask().Result();
+        Future->EnsureCompletion();
+
+            if (ResultModel.IsValid() && ResultModel->GetItem() != nullptr)
+            {
+
+        if (!((CacheOwnerSnapshotUserId)).IsSet())
+            {
+              const auto Details = MakeShared<TArray<TSharedPtr<Gs2::Core::Model::FGs2ErrorDetail>>>();
+                Details->Add(MakeShared<Gs2::Core::Model::FGs2ErrorDetail>(TEXT("userId"), TEXT("userId is invalid."), TEXT("invalid_response")));
+                return MakeShared<Gs2::Core::Model::FUnknownError>(Details);
+              }
+        Gs2::AdReward::Model::Cache::FPointCache::Put(
+            Self->Gs2->Cache,
+
+            Request->GetNamespaceName(),
+            (CacheOwnerSnapshotUserId),
+            CacheOwnerSnapshotTimeOffset,
+            ResultModel->GetItem()
+        );
+            }
+        auto Domain = Self;
+
+        *Result = Domain;
+        return nullptr;
+    }
+
+    TSharedPtr<FAsyncTask<FPointAccessTokenDomain::FVerifyTask>> FPointAccessTokenDomain::Verify(
+        Request::FVerifyPointRequestPtr Request
+    ) {
+        return Gs2::Core::Util::New<FAsyncTask<FVerifyTask>>(this->AsShared(), Request);
+    }
+
     FString FPointAccessTokenDomain::CreateCacheParentKey(
         TOptional<FString> NamespaceName,
         TOptional<FString> UserId,

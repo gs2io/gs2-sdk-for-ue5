@@ -143,6 +143,18 @@
 #include "Task/Rest/ConsumePointByUserIdTask.h"
 #include "Task/WebSocket/ConsumePointByUserIdTask.h"
 
+// VerifyPoint
+#include "Request/VerifyPointRequest.h"
+#include "Result/VerifyPointResult.h"
+#include "Task/Rest/VerifyPointTask.h"
+#include "Task/WebSocket/VerifyPointTask.h"
+
+// VerifyPointByUserId
+#include "Request/VerifyPointByUserIdRequest.h"
+#include "Result/VerifyPointByUserIdResult.h"
+#include "Task/Rest/VerifyPointByUserIdTask.h"
+#include "Task/WebSocket/VerifyPointByUserIdTask.h"
+
 // DeletePointByUserId
 #include "Request/DeletePointByUserIdRequest.h"
 #include "Result/DeletePointByUserIdResult.h"
@@ -154,6 +166,12 @@
 #include "Result/ConsumePointByStampTaskResult.h"
 #include "Task/Rest/ConsumePointByStampTaskTask.h"
 #include "Task/WebSocket/ConsumePointByStampTaskTask.h"
+
+// VerifyPointByStampTask
+#include "Request/VerifyPointByStampTaskRequest.h"
+#include "Result/VerifyPointByStampTaskResult.h"
+#include "Task/Rest/VerifyPointByStampTaskTask.h"
+#include "Task/WebSocket/VerifyPointByStampTaskTask.h"
 
 // AcquirePointByStampSheet
 #include "Request/AcquirePointByStampSheetRequest.h"

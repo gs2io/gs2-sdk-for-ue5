@@ -56,10 +56,16 @@
 #include "Task/Rest/ConsumePointTask.h"
 #include "Request/ConsumePointByUserIdRequest.h"
 #include "Task/Rest/ConsumePointByUserIdTask.h"
+#include "Request/VerifyPointRequest.h"
+#include "Task/Rest/VerifyPointTask.h"
+#include "Request/VerifyPointByUserIdRequest.h"
+#include "Task/Rest/VerifyPointByUserIdTask.h"
 #include "Request/DeletePointByUserIdRequest.h"
 #include "Task/Rest/DeletePointByUserIdTask.h"
 #include "Request/ConsumePointByStampTaskRequest.h"
 #include "Task/Rest/ConsumePointByStampTaskTask.h"
+#include "Request/VerifyPointByStampTaskRequest.h"
+#include "Task/Rest/VerifyPointByStampTaskTask.h"
 #include "Request/AcquirePointByStampSheetRequest.h"
 #include "Task/Rest/AcquirePointByStampSheetTask.h"
 
@@ -150,12 +156,24 @@ namespace Gs2::AdReward
             const Request::FConsumePointByUserIdRequestPtr Request
         ) const;
 
+        TSharedPtr<FAsyncTask<Task::Rest::FVerifyPointTask>> VerifyPoint(
+            const Request::FVerifyPointRequestPtr Request
+        ) const;
+
+        TSharedPtr<FAsyncTask<Task::Rest::FVerifyPointByUserIdTask>> VerifyPointByUserId(
+            const Request::FVerifyPointByUserIdRequestPtr Request
+        ) const;
+
         TSharedPtr<FAsyncTask<Task::Rest::FDeletePointByUserIdTask>> DeletePointByUserId(
             const Request::FDeletePointByUserIdRequestPtr Request
         ) const;
 
         TSharedPtr<FAsyncTask<Task::Rest::FConsumePointByStampTaskTask>> ConsumePointByStampTask(
             const Request::FConsumePointByStampTaskRequestPtr Request
+        ) const;
+
+        TSharedPtr<FAsyncTask<Task::Rest::FVerifyPointByStampTaskTask>> VerifyPointByStampTask(
+            const Request::FVerifyPointByStampTaskRequestPtr Request
         ) const;
 
         TSharedPtr<FAsyncTask<Task::Rest::FAcquirePointByStampSheetTask>> AcquirePointByStampSheet(

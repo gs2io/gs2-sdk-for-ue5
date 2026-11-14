@@ -258,6 +258,69 @@ namespace Gs2::AdReward::Domain::Model
         return Gs2::Core::Util::New<FAsyncTask<FConsumeTask>>(this->AsShared(), Request);
     }
 
+    FPointDomain::FVerifyTask::FVerifyTask(
+        const TSharedPtr<FPointDomain>& Self,
+        const Request::FVerifyPointByUserIdRequestPtr Request
+    ): Self(Self), Request(Request)
+    {
+
+    }
+
+    FPointDomain::FVerifyTask::FVerifyTask(
+        const FVerifyTask& From
+    ): TGs2Future(From), Self(From.Self), Request(From.Request)
+    {
+    }
+
+    Gs2::Core::Model::FGs2ErrorPtr FPointDomain::FVerifyTask::Action(
+        TSharedPtr<TSharedPtr<Gs2::AdReward::Domain::Model::FPointDomain>> Result
+    )
+    {
+        Request
+            ->WithContextStack((!Request->GetContextStack().IsSet() || Request->GetContextStack()->IsEmpty()) ? Self->Gs2->DefaultContextStack : Request->GetContextStack())
+            ->WithNamespaceName(Self->NamespaceName)
+            ->WithUserId(Self->UserId);
+        const auto Future = Self->Client->VerifyPointByUserId(
+            Request
+        );
+        Future->StartSynchronousTask();
+        if (Future->GetTask().IsError())
+        {
+            return Future->GetTask().Error();
+        }
+        const auto ResultModel = Future->GetTask().Result();
+        Future->EnsureCompletion();
+
+            if (ResultModel.IsValid() && ResultModel->GetItem() != nullptr)
+            {
+
+        if (!ResultModel.IsValid() || !((ResultModel.IsValid() && ResultModel->GetItem().IsValid() ? ResultModel->GetItem()->GetUserId() : TOptional<FString>())).IsSet())
+            {
+              const auto Details = MakeShared<TArray<TSharedPtr<Gs2::Core::Model::FGs2ErrorDetail>>>();
+                Details->Add(MakeShared<Gs2::Core::Model::FGs2ErrorDetail>(TEXT("userId"), TEXT("userId is invalid."), TEXT("invalid_response")));
+                return MakeShared<Gs2::Core::Model::FUnknownError>(Details);
+              }
+        Gs2::AdReward::Model::Cache::FPointCache::Put(
+            Self->Gs2->Cache,
+
+            Request->GetNamespaceName(),
+            (ResultModel.IsValid() && ResultModel->GetItem().IsValid() ? ResultModel->GetItem()->GetUserId() : TOptional<FString>()),
+            TOptional<int32>(),
+            ResultModel->GetItem()
+        );
+            }
+        auto Domain = Self;
+
+        *Result = Domain;
+        return nullptr;
+    }
+
+    TSharedPtr<FAsyncTask<FPointDomain::FVerifyTask>> FPointDomain::Verify(
+        Request::FVerifyPointByUserIdRequestPtr Request
+    ) {
+        return Gs2::Core::Util::New<FAsyncTask<FVerifyTask>>(this->AsShared(), Request);
+    }
+
     FPointDomain::FDeleteTask::FDeleteTask(
         const TSharedPtr<FPointDomain>& Self,
         const Request::FDeletePointByUserIdRequestPtr Request

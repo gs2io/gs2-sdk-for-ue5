@@ -156,6 +156,34 @@ namespace Gs2::AdReward::Domain::Model
 
 
 
+        class GS2ADREWARD_API FVerifyTask final :
+            public Gs2::Core::Util::TGs2Future<Gs2::AdReward::Domain::Model::FPointDomain>,
+            public TSharedFromThis<FVerifyTask>
+        {
+            const TSharedPtr<FPointDomain> Self;
+            const Request::FVerifyPointByUserIdRequestPtr Request;
+        public:
+            explicit FVerifyTask(
+                const TSharedPtr<FPointDomain>& Self,
+                const Request::FVerifyPointByUserIdRequestPtr Request
+            );
+
+            FVerifyTask(
+                const FVerifyTask& From
+            );
+
+            virtual Gs2::Core::Model::FGs2ErrorPtr Action(
+                TSharedPtr<TSharedPtr<Gs2::AdReward::Domain::Model::FPointDomain>> Result
+            ) override;
+        };
+        friend FVerifyTask;
+
+        TSharedPtr<FAsyncTask<FVerifyTask>> Verify(
+            Request::FVerifyPointByUserIdRequestPtr Request
+        );
+
+
+
         class GS2ADREWARD_API FDeleteTask final :
             public Gs2::Core::Util::TGs2Future<Gs2::AdReward::Domain::Model::FPointDomain>,
             public TSharedFromThis<FDeleteTask>

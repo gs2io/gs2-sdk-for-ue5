@@ -56,10 +56,16 @@
 #include "Task/WebSocket/ConsumePointTask.h"
 #include "Request/ConsumePointByUserIdRequest.h"
 #include "Task/WebSocket/ConsumePointByUserIdTask.h"
+#include "Request/VerifyPointRequest.h"
+#include "Task/WebSocket/VerifyPointTask.h"
+#include "Request/VerifyPointByUserIdRequest.h"
+#include "Task/WebSocket/VerifyPointByUserIdTask.h"
 #include "Request/DeletePointByUserIdRequest.h"
 #include "Task/WebSocket/DeletePointByUserIdTask.h"
 #include "Request/ConsumePointByStampTaskRequest.h"
 #include "Task/WebSocket/ConsumePointByStampTaskTask.h"
+#include "Request/VerifyPointByStampTaskRequest.h"
+#include "Task/WebSocket/VerifyPointByStampTaskTask.h"
 #include "Request/AcquirePointByStampSheetRequest.h"
 #include "Task/WebSocket/AcquirePointByStampSheetTask.h"
 
@@ -150,12 +156,24 @@ namespace Gs2::AdReward
             const Request::FConsumePointByUserIdRequestPtr Request
         ) const;
 
+        TSharedPtr<FAsyncTask<Task::WebSocket::FVerifyPointTask>> VerifyPoint(
+            const Request::FVerifyPointRequestPtr Request
+        ) const;
+
+        TSharedPtr<FAsyncTask<Task::WebSocket::FVerifyPointByUserIdTask>> VerifyPointByUserId(
+            const Request::FVerifyPointByUserIdRequestPtr Request
+        ) const;
+
         TSharedPtr<FAsyncTask<Task::WebSocket::FDeletePointByUserIdTask>> DeletePointByUserId(
             const Request::FDeletePointByUserIdRequestPtr Request
         ) const;
 
         TSharedPtr<FAsyncTask<Task::WebSocket::FConsumePointByStampTaskTask>> ConsumePointByStampTask(
             const Request::FConsumePointByStampTaskRequestPtr Request
+        ) const;
+
+        TSharedPtr<FAsyncTask<Task::WebSocket::FVerifyPointByStampTaskTask>> VerifyPointByStampTask(
+            const Request::FVerifyPointByStampTaskRequestPtr Request
         ) const;
 
         TSharedPtr<FAsyncTask<Task::WebSocket::FAcquirePointByStampSheetTask>> AcquirePointByStampSheet(
