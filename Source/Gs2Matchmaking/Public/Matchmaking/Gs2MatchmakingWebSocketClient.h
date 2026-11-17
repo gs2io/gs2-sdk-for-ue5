@@ -150,10 +150,16 @@
 #include "Task/WebSocket/GetRatingTask.h"
 #include "Request/GetRatingByUserIdRequest.h"
 #include "Task/WebSocket/GetRatingByUserIdTask.h"
+#include "Request/VerifyRatingRequest.h"
+#include "Task/WebSocket/VerifyRatingTask.h"
+#include "Request/VerifyRatingByUserIdRequest.h"
+#include "Task/WebSocket/VerifyRatingByUserIdTask.h"
 #include "Request/PutResultRequest.h"
 #include "Task/WebSocket/PutResultTask.h"
 #include "Request/DeleteRatingRequest.h"
 #include "Task/WebSocket/DeleteRatingTask.h"
+#include "Request/VerifyRatingByStampTaskRequest.h"
+#include "Task/WebSocket/VerifyRatingByStampTaskTask.h"
 #include "Request/GetBallotRequest.h"
 #include "Task/WebSocket/GetBallotTask.h"
 #include "Request/GetBallotByUserIdRequest.h"
@@ -440,12 +446,24 @@ namespace Gs2::Matchmaking
             const Request::FGetRatingByUserIdRequestPtr Request
         ) const;
 
+        TSharedPtr<FAsyncTask<Task::WebSocket::FVerifyRatingTask>> VerifyRating(
+            const Request::FVerifyRatingRequestPtr Request
+        ) const;
+
+        TSharedPtr<FAsyncTask<Task::WebSocket::FVerifyRatingByUserIdTask>> VerifyRatingByUserId(
+            const Request::FVerifyRatingByUserIdRequestPtr Request
+        ) const;
+
         TSharedPtr<FAsyncTask<Task::WebSocket::FPutResultTask>> PutResult(
             const Request::FPutResultRequestPtr Request
         ) const;
 
         TSharedPtr<FAsyncTask<Task::WebSocket::FDeleteRatingTask>> DeleteRating(
             const Request::FDeleteRatingRequestPtr Request
+        ) const;
+
+        TSharedPtr<FAsyncTask<Task::WebSocket::FVerifyRatingByStampTaskTask>> VerifyRatingByStampTask(
+            const Request::FVerifyRatingByStampTaskRequestPtr Request
         ) const;
 
         TSharedPtr<FAsyncTask<Task::WebSocket::FGetBallotTask>> GetBallot(

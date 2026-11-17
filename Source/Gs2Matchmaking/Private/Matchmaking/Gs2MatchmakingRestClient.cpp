@@ -613,6 +613,24 @@ namespace Gs2::Matchmaking
         );
     }
 
+    TSharedPtr<FAsyncTask<Task::Rest::FVerifyRatingTask>> FGs2MatchmakingRestClient::VerifyRating(
+        const Request::FVerifyRatingRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::Rest::FVerifyRatingTask>>(
+            Session,
+            Request
+        );
+    }
+
+    TSharedPtr<FAsyncTask<Task::Rest::FVerifyRatingByUserIdTask>> FGs2MatchmakingRestClient::VerifyRatingByUserId(
+        const Request::FVerifyRatingByUserIdRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::Rest::FVerifyRatingByUserIdTask>>(
+            Session,
+            Request
+        );
+    }
+
     TSharedPtr<FAsyncTask<Task::Rest::FPutResultTask>> FGs2MatchmakingRestClient::PutResult(
         const Request::FPutResultRequestPtr Request) const
     {
@@ -626,6 +644,15 @@ namespace Gs2::Matchmaking
         const Request::FDeleteRatingRequestPtr Request) const
     {
         return Gs2::Core::Util::New<FAsyncTask<Task::Rest::FDeleteRatingTask>>(
+            Session,
+            Request
+        );
+    }
+
+    TSharedPtr<FAsyncTask<Task::Rest::FVerifyRatingByStampTaskTask>> FGs2MatchmakingRestClient::VerifyRatingByStampTask(
+        const Request::FVerifyRatingByStampTaskRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::Rest::FVerifyRatingByStampTaskTask>>(
             Session,
             Request
         );

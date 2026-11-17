@@ -441,6 +441,18 @@
 #include "Task/Rest/GetRatingByUserIdTask.h"
 #include "Task/WebSocket/GetRatingByUserIdTask.h"
 
+// VerifyRating
+#include "Request/VerifyRatingRequest.h"
+#include "Result/VerifyRatingResult.h"
+#include "Task/Rest/VerifyRatingTask.h"
+#include "Task/WebSocket/VerifyRatingTask.h"
+
+// VerifyRatingByUserId
+#include "Request/VerifyRatingByUserIdRequest.h"
+#include "Result/VerifyRatingByUserIdResult.h"
+#include "Task/Rest/VerifyRatingByUserIdTask.h"
+#include "Task/WebSocket/VerifyRatingByUserIdTask.h"
+
 // PutResult
 #include "Request/PutResultRequest.h"
 #include "Result/PutResultResult.h"
@@ -452,6 +464,12 @@
 #include "Result/DeleteRatingResult.h"
 #include "Task/Rest/DeleteRatingTask.h"
 #include "Task/WebSocket/DeleteRatingTask.h"
+
+// VerifyRatingByStampTask
+#include "Request/VerifyRatingByStampTaskRequest.h"
+#include "Result/VerifyRatingByStampTaskResult.h"
+#include "Task/Rest/VerifyRatingByStampTaskTask.h"
+#include "Task/WebSocket/VerifyRatingByStampTaskTask.h"
 
 // GetBallot
 #include "Request/GetBallotRequest.h"

@@ -150,10 +150,16 @@
 #include "Task/Rest/GetRatingTask.h"
 #include "Request/GetRatingByUserIdRequest.h"
 #include "Task/Rest/GetRatingByUserIdTask.h"
+#include "Request/VerifyRatingRequest.h"
+#include "Task/Rest/VerifyRatingTask.h"
+#include "Request/VerifyRatingByUserIdRequest.h"
+#include "Task/Rest/VerifyRatingByUserIdTask.h"
 #include "Request/PutResultRequest.h"
 #include "Task/Rest/PutResultTask.h"
 #include "Request/DeleteRatingRequest.h"
 #include "Task/Rest/DeleteRatingTask.h"
+#include "Request/VerifyRatingByStampTaskRequest.h"
+#include "Task/Rest/VerifyRatingByStampTaskTask.h"
 #include "Request/GetBallotRequest.h"
 #include "Task/Rest/GetBallotTask.h"
 #include "Request/GetBallotByUserIdRequest.h"
@@ -440,12 +446,24 @@ namespace Gs2::Matchmaking
             const Request::FGetRatingByUserIdRequestPtr Request
         ) const;
 
+        TSharedPtr<FAsyncTask<Task::Rest::FVerifyRatingTask>> VerifyRating(
+            const Request::FVerifyRatingRequestPtr Request
+        ) const;
+
+        TSharedPtr<FAsyncTask<Task::Rest::FVerifyRatingByUserIdTask>> VerifyRatingByUserId(
+            const Request::FVerifyRatingByUserIdRequestPtr Request
+        ) const;
+
         TSharedPtr<FAsyncTask<Task::Rest::FPutResultTask>> PutResult(
             const Request::FPutResultRequestPtr Request
         ) const;
 
         TSharedPtr<FAsyncTask<Task::Rest::FDeleteRatingTask>> DeleteRating(
             const Request::FDeleteRatingRequestPtr Request
+        ) const;
+
+        TSharedPtr<FAsyncTask<Task::Rest::FVerifyRatingByStampTaskTask>> VerifyRatingByStampTask(
+            const Request::FVerifyRatingByStampTaskRequestPtr Request
         ) const;
 
         TSharedPtr<FAsyncTask<Task::Rest::FGetBallotTask>> GetBallot(

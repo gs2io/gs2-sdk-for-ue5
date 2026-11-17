@@ -134,6 +134,34 @@ namespace Gs2::Matchmaking::Domain::Model
 
 
 
+        class GS2MATCHMAKING_API FVerifyTask final :
+            public Gs2::Core::Util::TGs2Future<Gs2::Matchmaking::Domain::Model::FRatingDomain>,
+            public TSharedFromThis<FVerifyTask>
+        {
+            const TSharedPtr<FRatingDomain> Self;
+            const Request::FVerifyRatingByUserIdRequestPtr Request;
+        public:
+            explicit FVerifyTask(
+                const TSharedPtr<FRatingDomain>& Self,
+                const Request::FVerifyRatingByUserIdRequestPtr Request
+            );
+
+            FVerifyTask(
+                const FVerifyTask& From
+            );
+
+            virtual Gs2::Core::Model::FGs2ErrorPtr Action(
+                TSharedPtr<TSharedPtr<Gs2::Matchmaking::Domain::Model::FRatingDomain>> Result
+            ) override;
+        };
+        friend FVerifyTask;
+
+        TSharedPtr<FAsyncTask<FVerifyTask>> Verify(
+            Request::FVerifyRatingByUserIdRequestPtr Request
+        );
+
+
+
         class GS2MATCHMAKING_API FDeleteTask final :
             public Gs2::Core::Util::TGs2Future<Gs2::Matchmaking::Domain::Model::FRatingDomain>,
             public TSharedFromThis<FDeleteTask>
