@@ -453,6 +453,76 @@ namespace Gs2::SkillTree::Domain::Model
         return Gs2::Core::Util::New<FAsyncTask<FGetTask>>(this->AsShared(), Request);
     }
 
+    FStatusDomain::FVerifyTask::FVerifyTask(
+        const TSharedPtr<FStatusDomain>& Self,
+        const Request::FVerifyStatusByUserIdRequestPtr Request
+    ): Self(Self), Request(Request)
+    {
+
+    }
+
+    FStatusDomain::FVerifyTask::FVerifyTask(
+        const FVerifyTask& From
+    ): TGs2Future(From), Self(From.Self), Request(From.Request)
+    {
+    }
+
+    Gs2::Core::Model::FGs2ErrorPtr FStatusDomain::FVerifyTask::Action(
+        TSharedPtr<TSharedPtr<Gs2::SkillTree::Domain::Model::FStatusDomain>> Result
+    )
+    {
+        Request
+            ->WithContextStack((!Request->GetContextStack().IsSet() || Request->GetContextStack()->IsEmpty()) ? Self->Gs2->DefaultContextStack : Request->GetContextStack())
+            ->WithNamespaceName(Self->NamespaceName)
+            ->WithUserId(Self->UserId)
+            ->WithPropertyId(Self->PropertyId);
+        const auto Future = Self->Client->VerifyStatusByUserId(
+            Request
+        );
+        Future->StartSynchronousTask();
+        if (Future->GetTask().IsError())
+        {
+            return Future->GetTask().Error();
+        }
+        const auto ResultModel = Future->GetTask().Result();
+        Future->EnsureCompletion();
+
+            if (ResultModel.IsValid() && ResultModel->GetItem() != nullptr)
+            {
+
+        if (!ResultModel.IsValid() || !ResultModel->GetItem().IsValid())
+            {
+              const auto Details = MakeShared<TArray<TSharedPtr<Gs2::Core::Model::FGs2ErrorDetail>>>();
+                Details->Add(MakeShared<Gs2::Core::Model::FGs2ErrorDetail>(TEXT("result.item"), TEXT("result.item is invalid."), TEXT("invalid_response")));
+                return MakeShared<Gs2::Core::Model::FUnknownError>(Details);
+              }if (!ResultModel.IsValid() || !((ResultModel.IsValid() && ResultModel->GetItem().IsValid() ? ResultModel->GetItem()->GetUserId() : TOptional<FString>())).IsSet())
+            {
+              const auto Details = MakeShared<TArray<TSharedPtr<Gs2::Core::Model::FGs2ErrorDetail>>>();
+                Details->Add(MakeShared<Gs2::Core::Model::FGs2ErrorDetail>(TEXT("userId"), TEXT("userId is invalid."), TEXT("invalid_response")));
+                return MakeShared<Gs2::Core::Model::FUnknownError>(Details);
+              }
+        Gs2::SkillTree::Model::Cache::FStatusCache::Put(
+            Self->Gs2->Cache,
+
+            Request->GetNamespaceName(),
+            (ResultModel.IsValid() && ResultModel->GetItem().IsValid() ? ResultModel->GetItem()->GetUserId() : TOptional<FString>()),
+            ResultModel->GetItem()->GetPropertyId(),
+            TOptional<int32>(),
+            ResultModel->GetItem()
+        );
+            }
+        auto Domain = Self;
+
+        *Result = Domain;
+        return nullptr;
+    }
+
+    TSharedPtr<FAsyncTask<FStatusDomain::FVerifyTask>> FStatusDomain::Verify(
+        Request::FVerifyStatusByUserIdRequestPtr Request
+    ) {
+        return Gs2::Core::Util::New<FAsyncTask<FVerifyTask>>(this->AsShared(), Request);
+    }
+
     FStatusDomain::FResetTask::FResetTask(
         const TSharedPtr<FStatusDomain>& Self,
         const Request::FResetByUserIdRequestPtr Request

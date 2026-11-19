@@ -82,6 +82,10 @@
 #include "Task/Rest/GetStatusTask.h"
 #include "Request/GetStatusByUserIdRequest.h"
 #include "Task/Rest/GetStatusByUserIdTask.h"
+#include "Request/VerifyStatusRequest.h"
+#include "Task/Rest/VerifyStatusTask.h"
+#include "Request/VerifyStatusByUserIdRequest.h"
+#include "Task/Rest/VerifyStatusByUserIdTask.h"
 #include "Request/ResetRequest.h"
 #include "Task/Rest/ResetTask.h"
 #include "Request/ResetByUserIdRequest.h"
@@ -90,6 +94,8 @@
 #include "Task/Rest/MarkReleaseByStampSheetTask.h"
 #include "Request/MarkRestrainByStampTaskRequest.h"
 #include "Task/Rest/MarkRestrainByStampTaskTask.h"
+#include "Request/VerifyStatusByStampTaskRequest.h"
+#include "Task/Rest/VerifyStatusByStampTaskTask.h"
 #include "Request/ExportMasterRequest.h"
 #include "Task/Rest/ExportMasterTask.h"
 #include "Request/GetCurrentTreeMasterRequest.h"
@@ -240,6 +246,14 @@ namespace Gs2::SkillTree
             const Request::FGetStatusByUserIdRequestPtr Request
         ) const;
 
+        TSharedPtr<FAsyncTask<Task::Rest::FVerifyStatusTask>> VerifyStatus(
+            const Request::FVerifyStatusRequestPtr Request
+        ) const;
+
+        TSharedPtr<FAsyncTask<Task::Rest::FVerifyStatusByUserIdTask>> VerifyStatusByUserId(
+            const Request::FVerifyStatusByUserIdRequestPtr Request
+        ) const;
+
         TSharedPtr<FAsyncTask<Task::Rest::FResetTask>> Reset(
             const Request::FResetRequestPtr Request
         ) const;
@@ -254,6 +268,10 @@ namespace Gs2::SkillTree
 
         TSharedPtr<FAsyncTask<Task::Rest::FMarkRestrainByStampTaskTask>> MarkRestrainByStampTask(
             const Request::FMarkRestrainByStampTaskRequestPtr Request
+        ) const;
+
+        TSharedPtr<FAsyncTask<Task::Rest::FVerifyStatusByStampTaskTask>> VerifyStatusByStampTask(
+            const Request::FVerifyStatusByStampTaskRequestPtr Request
         ) const;
 
         TSharedPtr<FAsyncTask<Task::Rest::FExportMasterTask>> ExportMaster(

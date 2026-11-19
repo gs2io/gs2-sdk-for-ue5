@@ -82,6 +82,10 @@
 #include "Task/WebSocket/GetStatusTask.h"
 #include "Request/GetStatusByUserIdRequest.h"
 #include "Task/WebSocket/GetStatusByUserIdTask.h"
+#include "Request/VerifyStatusRequest.h"
+#include "Task/WebSocket/VerifyStatusTask.h"
+#include "Request/VerifyStatusByUserIdRequest.h"
+#include "Task/WebSocket/VerifyStatusByUserIdTask.h"
 #include "Request/ResetRequest.h"
 #include "Task/WebSocket/ResetTask.h"
 #include "Request/ResetByUserIdRequest.h"
@@ -90,6 +94,8 @@
 #include "Task/WebSocket/MarkReleaseByStampSheetTask.h"
 #include "Request/MarkRestrainByStampTaskRequest.h"
 #include "Task/WebSocket/MarkRestrainByStampTaskTask.h"
+#include "Request/VerifyStatusByStampTaskRequest.h"
+#include "Task/WebSocket/VerifyStatusByStampTaskTask.h"
 #include "Request/ExportMasterRequest.h"
 #include "Task/WebSocket/ExportMasterTask.h"
 #include "Request/GetCurrentTreeMasterRequest.h"
@@ -240,6 +246,14 @@ namespace Gs2::SkillTree
             const Request::FGetStatusByUserIdRequestPtr Request
         ) const;
 
+        TSharedPtr<FAsyncTask<Task::WebSocket::FVerifyStatusTask>> VerifyStatus(
+            const Request::FVerifyStatusRequestPtr Request
+        ) const;
+
+        TSharedPtr<FAsyncTask<Task::WebSocket::FVerifyStatusByUserIdTask>> VerifyStatusByUserId(
+            const Request::FVerifyStatusByUserIdRequestPtr Request
+        ) const;
+
         TSharedPtr<FAsyncTask<Task::WebSocket::FResetTask>> Reset(
             const Request::FResetRequestPtr Request
         ) const;
@@ -254,6 +268,10 @@ namespace Gs2::SkillTree
 
         TSharedPtr<FAsyncTask<Task::WebSocket::FMarkRestrainByStampTaskTask>> MarkRestrainByStampTask(
             const Request::FMarkRestrainByStampTaskRequestPtr Request
+        ) const;
+
+        TSharedPtr<FAsyncTask<Task::WebSocket::FVerifyStatusByStampTaskTask>> VerifyStatusByStampTask(
+            const Request::FVerifyStatusByStampTaskRequestPtr Request
         ) const;
 
         TSharedPtr<FAsyncTask<Task::WebSocket::FExportMasterTask>> ExportMaster(

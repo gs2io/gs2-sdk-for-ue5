@@ -228,6 +228,18 @@
 #include "Task/Rest/GetStatusByUserIdTask.h"
 #include "Task/WebSocket/GetStatusByUserIdTask.h"
 
+// VerifyStatus
+#include "Request/VerifyStatusRequest.h"
+#include "Result/VerifyStatusResult.h"
+#include "Task/Rest/VerifyStatusTask.h"
+#include "Task/WebSocket/VerifyStatusTask.h"
+
+// VerifyStatusByUserId
+#include "Request/VerifyStatusByUserIdRequest.h"
+#include "Result/VerifyStatusByUserIdResult.h"
+#include "Task/Rest/VerifyStatusByUserIdTask.h"
+#include "Task/WebSocket/VerifyStatusByUserIdTask.h"
+
 // Reset
 #include "Request/ResetRequest.h"
 #include "Result/ResetResult.h"
@@ -251,6 +263,12 @@
 #include "Result/MarkRestrainByStampTaskResult.h"
 #include "Task/Rest/MarkRestrainByStampTaskTask.h"
 #include "Task/WebSocket/MarkRestrainByStampTaskTask.h"
+
+// VerifyStatusByStampTask
+#include "Request/VerifyStatusByStampTaskRequest.h"
+#include "Result/VerifyStatusByStampTaskResult.h"
+#include "Task/Rest/VerifyStatusByStampTaskTask.h"
+#include "Task/WebSocket/VerifyStatusByStampTaskTask.h"
 
 // ExportMaster
 #include "Request/ExportMasterRequest.h"

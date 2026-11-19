@@ -686,6 +686,48 @@ namespace Gs2::SkillTree::Domain
                     }
 
         }
+        if (Method == "VerifyStatusByUserId") {
+            if (Result.IsEmpty())
+            {
+                return;
+            }
+            TSharedPtr<FJsonObject> RequestModelJson;
+            if (const TSharedRef<TJsonReader<>> JsonReader = TJsonReaderFactory<>::Create(Request);
+                !FJsonSerializer::Deserialize(JsonReader, RequestModelJson))
+            {
+                return;
+            }
+            TSharedPtr<FJsonObject> ResultModelJson;
+            if (const TSharedRef<TJsonReader<>> JsonReader = TJsonReaderFactory<>::Create(Result);
+                !FJsonSerializer::Deserialize(JsonReader, ResultModelJson))
+            {
+                return;
+            }
+            const auto RequestModel = Gs2::SkillTree::Request::FVerifyStatusByUserIdRequest::FromJson(RequestModelJson);
+            const auto ResultModel = Gs2::SkillTree::Result::FVerifyStatusByUserIdResult::FromJson(ResultModelJson);
+
+                    if (ResultModel.IsValid() && ResultModel->GetItem() != nullptr)
+                    {
+
+                if (!ResultModel.IsValid() || !ResultModel->GetItem().IsValid())
+                    {
+                      return;
+                      }if (!ResultModel.IsValid() || !((ResultModel.IsValid() && ResultModel->GetItem().IsValid() ? ResultModel->GetItem()->GetUserId() : TOptional<FString>())).IsSet())
+                    {
+                      return;
+                      }
+                Gs2::SkillTree::Model::Cache::FStatusCache::Put(
+                    Gs2->Cache,
+
+                    RequestModel->GetNamespaceName(),
+                    (ResultModel.IsValid() && ResultModel->GetItem().IsValid() ? ResultModel->GetItem()->GetUserId() : TOptional<FString>()),
+                    ResultModel->GetItem()->GetPropertyId(),
+                    TimeOffset,
+                    ResultModel->GetItem()
+                );
+                    }
+
+        }
     }
 
     void FGs2SkillTreeDomain::UpdateCacheFromJobResult(

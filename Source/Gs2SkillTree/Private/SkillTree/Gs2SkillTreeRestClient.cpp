@@ -307,6 +307,24 @@ namespace Gs2::SkillTree
         );
     }
 
+    TSharedPtr<FAsyncTask<Task::Rest::FVerifyStatusTask>> FGs2SkillTreeRestClient::VerifyStatus(
+        const Request::FVerifyStatusRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::Rest::FVerifyStatusTask>>(
+            Session,
+            Request
+        );
+    }
+
+    TSharedPtr<FAsyncTask<Task::Rest::FVerifyStatusByUserIdTask>> FGs2SkillTreeRestClient::VerifyStatusByUserId(
+        const Request::FVerifyStatusByUserIdRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::Rest::FVerifyStatusByUserIdTask>>(
+            Session,
+            Request
+        );
+    }
+
     TSharedPtr<FAsyncTask<Task::Rest::FResetTask>> FGs2SkillTreeRestClient::Reset(
         const Request::FResetRequestPtr Request) const
     {
@@ -338,6 +356,15 @@ namespace Gs2::SkillTree
         const Request::FMarkRestrainByStampTaskRequestPtr Request) const
     {
         return Gs2::Core::Util::New<FAsyncTask<Task::Rest::FMarkRestrainByStampTaskTask>>(
+            Session,
+            Request
+        );
+    }
+
+    TSharedPtr<FAsyncTask<Task::Rest::FVerifyStatusByStampTaskTask>> FGs2SkillTreeRestClient::VerifyStatusByStampTask(
+        const Request::FVerifyStatusByStampTaskRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::Rest::FVerifyStatusByStampTaskTask>>(
             Session,
             Request
         );

@@ -307,6 +307,24 @@ namespace Gs2::SkillTree
         );
     }
 
+    TSharedPtr<FAsyncTask<Task::WebSocket::FVerifyStatusTask>> FGs2SkillTreeWebSocketClient::VerifyStatus(
+        const Request::FVerifyStatusRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::WebSocket::FVerifyStatusTask>>(
+            Session,
+            Request
+        );
+    }
+
+    TSharedPtr<FAsyncTask<Task::WebSocket::FVerifyStatusByUserIdTask>> FGs2SkillTreeWebSocketClient::VerifyStatusByUserId(
+        const Request::FVerifyStatusByUserIdRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::WebSocket::FVerifyStatusByUserIdTask>>(
+            Session,
+            Request
+        );
+    }
+
     TSharedPtr<FAsyncTask<Task::WebSocket::FResetTask>> FGs2SkillTreeWebSocketClient::Reset(
         const Request::FResetRequestPtr Request) const
     {
@@ -338,6 +356,15 @@ namespace Gs2::SkillTree
         const Request::FMarkRestrainByStampTaskRequestPtr Request) const
     {
         return Gs2::Core::Util::New<FAsyncTask<Task::WebSocket::FMarkRestrainByStampTaskTask>>(
+            Session,
+            Request
+        );
+    }
+
+    TSharedPtr<FAsyncTask<Task::WebSocket::FVerifyStatusByStampTaskTask>> FGs2SkillTreeWebSocketClient::VerifyStatusByStampTask(
+        const Request::FVerifyStatusByStampTaskRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::WebSocket::FVerifyStatusByStampTaskTask>>(
             Session,
             Request
         );

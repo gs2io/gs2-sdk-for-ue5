@@ -221,6 +221,34 @@ namespace Gs2::SkillTree::Domain::Model
 
 
 
+        class GS2SKILLTREE_API FVerifyTask final :
+            public Gs2::Core::Util::TGs2Future<Gs2::SkillTree::Domain::Model::FStatusDomain>,
+            public TSharedFromThis<FVerifyTask>
+        {
+            const TSharedPtr<FStatusDomain> Self;
+            const Request::FVerifyStatusByUserIdRequestPtr Request;
+        public:
+            explicit FVerifyTask(
+                const TSharedPtr<FStatusDomain>& Self,
+                const Request::FVerifyStatusByUserIdRequestPtr Request
+            );
+
+            FVerifyTask(
+                const FVerifyTask& From
+            );
+
+            virtual Gs2::Core::Model::FGs2ErrorPtr Action(
+                TSharedPtr<TSharedPtr<Gs2::SkillTree::Domain::Model::FStatusDomain>> Result
+            ) override;
+        };
+        friend FVerifyTask;
+
+        TSharedPtr<FAsyncTask<FVerifyTask>> Verify(
+            Request::FVerifyStatusByUserIdRequestPtr Request
+        );
+
+
+
         class GS2SKILLTREE_API FResetTask final :
             public Gs2::Core::Util::TGs2Future<Gs2::Core::Domain::FTransactionDomain>,
             public TSharedFromThis<FResetTask>
