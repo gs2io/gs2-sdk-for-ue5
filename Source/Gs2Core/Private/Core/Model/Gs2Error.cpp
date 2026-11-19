@@ -163,7 +163,7 @@ namespace Gs2::Core::Model
 
     TOptional<FString> FGs2Error::ExtractResult(const TSharedPtr<FJsonObject>& Body)
     {
-        const TSharedPtr<FJsonObject>* ResultObject;
+        const TSharedPtr<FJsonObject>* ResultObject = nullptr;
         if (!Body.IsValid() ||
             !Body->TryGetObjectField(ANSI_TO_TCHAR("result"), ResultObject) ||
             !ResultObject->IsValid() ||
