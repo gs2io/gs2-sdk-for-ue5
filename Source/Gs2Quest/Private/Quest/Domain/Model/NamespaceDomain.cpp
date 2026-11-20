@@ -40,8 +40,8 @@
 #include "Quest/Model/Cache/CurrentQuestMaster.h"
 #include "Quest/Model/Cache/QuestGroupModel.h"
 #include "Quest/Model/Cache/QuestModel.h"
-#include "Quest/Model/Cache/Progress.h"
 #include "Quest/Model/Cache/CompletedQuestList.h"
+#include "Quest/Model/Cache/Progress.h"
 #include "Quest/Model/Cache/QuestModelMaster.h"
 
 #include "Core/Domain/Gs2.h"

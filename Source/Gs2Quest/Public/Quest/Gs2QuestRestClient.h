@@ -108,8 +108,14 @@
 #include "Task/Rest/GetCompletedQuestListTask.h"
 #include "Request/GetCompletedQuestListByUserIdRequest.h"
 #include "Task/Rest/GetCompletedQuestListByUserIdTask.h"
+#include "Request/VerifyCompletedQuestListRequest.h"
+#include "Task/Rest/VerifyCompletedQuestListTask.h"
+#include "Request/VerifyCompletedQuestListByUserIdRequest.h"
+#include "Task/Rest/VerifyCompletedQuestListByUserIdTask.h"
 #include "Request/DeleteCompletedQuestListByUserIdRequest.h"
 #include "Task/Rest/DeleteCompletedQuestListByUserIdTask.h"
+#include "Request/VerifyCompletedQuestListByStampTaskRequest.h"
+#include "Task/Rest/VerifyCompletedQuestListByStampTaskTask.h"
 #include "Request/DescribeQuestGroupModelsRequest.h"
 #include "Task/Rest/DescribeQuestGroupModelsTask.h"
 #include "Request/GetQuestGroupModelRequest.h"
@@ -310,8 +316,20 @@ namespace Gs2::Quest
             const Request::FGetCompletedQuestListByUserIdRequestPtr Request
         ) const;
 
+        TSharedPtr<FAsyncTask<Task::Rest::FVerifyCompletedQuestListTask>> VerifyCompletedQuestList(
+            const Request::FVerifyCompletedQuestListRequestPtr Request
+        ) const;
+
+        TSharedPtr<FAsyncTask<Task::Rest::FVerifyCompletedQuestListByUserIdTask>> VerifyCompletedQuestListByUserId(
+            const Request::FVerifyCompletedQuestListByUserIdRequestPtr Request
+        ) const;
+
         TSharedPtr<FAsyncTask<Task::Rest::FDeleteCompletedQuestListByUserIdTask>> DeleteCompletedQuestListByUserId(
             const Request::FDeleteCompletedQuestListByUserIdRequestPtr Request
+        ) const;
+
+        TSharedPtr<FAsyncTask<Task::Rest::FVerifyCompletedQuestListByStampTaskTask>> VerifyCompletedQuestListByStampTask(
+            const Request::FVerifyCompletedQuestListByStampTaskRequestPtr Request
         ) const;
 
         TSharedPtr<FAsyncTask<Task::Rest::FDescribeQuestGroupModelsTask>> DescribeQuestGroupModels(

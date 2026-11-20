@@ -37,8 +37,8 @@
 #include "Quest/Domain/Model/User.h"
 #include "Quest/Domain/Model/UserAccessToken.h"
 #include "Quest/Domain/SpeculativeExecutor/Transaction/StartByUserIdSpeculativeExecutor.h"
-#include "Quest/Model/Cache/Progress.h"
 #include "Quest/Model/Cache/CompletedQuestList.h"
+#include "Quest/Model/Cache/Progress.h"
 #include "Quest/Model/Cache/QuestGroupModel.h"
 #include "Quest/Model/Cache/QuestModel.h"
 

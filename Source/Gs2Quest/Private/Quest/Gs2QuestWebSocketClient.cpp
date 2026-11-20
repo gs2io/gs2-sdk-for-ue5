@@ -424,10 +424,37 @@ namespace Gs2::Quest
         );
     }
 
+    TSharedPtr<FAsyncTask<Task::WebSocket::FVerifyCompletedQuestListTask>> FGs2QuestWebSocketClient::VerifyCompletedQuestList(
+        const Request::FVerifyCompletedQuestListRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::WebSocket::FVerifyCompletedQuestListTask>>(
+            Session,
+            Request
+        );
+    }
+
+    TSharedPtr<FAsyncTask<Task::WebSocket::FVerifyCompletedQuestListByUserIdTask>> FGs2QuestWebSocketClient::VerifyCompletedQuestListByUserId(
+        const Request::FVerifyCompletedQuestListByUserIdRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::WebSocket::FVerifyCompletedQuestListByUserIdTask>>(
+            Session,
+            Request
+        );
+    }
+
     TSharedPtr<FAsyncTask<Task::WebSocket::FDeleteCompletedQuestListByUserIdTask>> FGs2QuestWebSocketClient::DeleteCompletedQuestListByUserId(
         const Request::FDeleteCompletedQuestListByUserIdRequestPtr Request) const
     {
         return Gs2::Core::Util::New<FAsyncTask<Task::WebSocket::FDeleteCompletedQuestListByUserIdTask>>(
+            Session,
+            Request
+        );
+    }
+
+    TSharedPtr<FAsyncTask<Task::WebSocket::FVerifyCompletedQuestListByStampTaskTask>> FGs2QuestWebSocketClient::VerifyCompletedQuestListByStampTask(
+        const Request::FVerifyCompletedQuestListByStampTaskRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::WebSocket::FVerifyCompletedQuestListByStampTaskTask>>(
             Session,
             Request
         );

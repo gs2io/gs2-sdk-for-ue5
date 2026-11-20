@@ -311,11 +311,29 @@
 #include "Task/Rest/GetCompletedQuestListByUserIdTask.h"
 #include "Task/WebSocket/GetCompletedQuestListByUserIdTask.h"
 
+// VerifyCompletedQuestList
+#include "Request/VerifyCompletedQuestListRequest.h"
+#include "Result/VerifyCompletedQuestListResult.h"
+#include "Task/Rest/VerifyCompletedQuestListTask.h"
+#include "Task/WebSocket/VerifyCompletedQuestListTask.h"
+
+// VerifyCompletedQuestListByUserId
+#include "Request/VerifyCompletedQuestListByUserIdRequest.h"
+#include "Result/VerifyCompletedQuestListByUserIdResult.h"
+#include "Task/Rest/VerifyCompletedQuestListByUserIdTask.h"
+#include "Task/WebSocket/VerifyCompletedQuestListByUserIdTask.h"
+
 // DeleteCompletedQuestListByUserId
 #include "Request/DeleteCompletedQuestListByUserIdRequest.h"
 #include "Result/DeleteCompletedQuestListByUserIdResult.h"
 #include "Task/Rest/DeleteCompletedQuestListByUserIdTask.h"
 #include "Task/WebSocket/DeleteCompletedQuestListByUserIdTask.h"
+
+// VerifyCompletedQuestListByStampTask
+#include "Request/VerifyCompletedQuestListByStampTaskRequest.h"
+#include "Result/VerifyCompletedQuestListByStampTaskResult.h"
+#include "Task/Rest/VerifyCompletedQuestListByStampTaskTask.h"
+#include "Task/WebSocket/VerifyCompletedQuestListByStampTaskTask.h"
 
 // DescribeQuestGroupModels
 #include "Request/DescribeQuestGroupModelsRequest.h"

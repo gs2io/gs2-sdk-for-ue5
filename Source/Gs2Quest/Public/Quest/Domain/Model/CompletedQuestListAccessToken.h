@@ -116,6 +116,34 @@ namespace Gs2::Quest::Domain::Model
             Request::FGetCompletedQuestListRequestPtr Request
         );
 
+
+
+        class GS2QUEST_API FVerifyTask final :
+            public Gs2::Core::Util::TGs2Future<Gs2::Quest::Domain::Model::FCompletedQuestListAccessTokenDomain>,
+            public TSharedFromThis<FVerifyTask>
+        {
+            const TSharedPtr<FCompletedQuestListAccessTokenDomain> Self;
+            const Request::FVerifyCompletedQuestListRequestPtr Request;
+        public:
+            explicit FVerifyTask(
+                const TSharedPtr<FCompletedQuestListAccessTokenDomain>& Self,
+                const Request::FVerifyCompletedQuestListRequestPtr Request
+            );
+
+            FVerifyTask(
+                const FVerifyTask& From
+            );
+
+            virtual Gs2::Core::Model::FGs2ErrorPtr Action(
+                TSharedPtr<TSharedPtr<Gs2::Quest::Domain::Model::FCompletedQuestListAccessTokenDomain>> Result
+            ) override;
+        };
+        friend FVerifyTask;
+
+        TSharedPtr<FAsyncTask<FVerifyTask>> Verify(
+            Request::FVerifyCompletedQuestListRequestPtr Request
+        );
+
         static FString CreateCacheParentKey(
             TOptional<FString> NamespaceName,
             TOptional<FString> UserId,

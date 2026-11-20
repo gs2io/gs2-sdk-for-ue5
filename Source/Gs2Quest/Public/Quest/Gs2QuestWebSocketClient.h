@@ -108,8 +108,14 @@
 #include "Task/WebSocket/GetCompletedQuestListTask.h"
 #include "Request/GetCompletedQuestListByUserIdRequest.h"
 #include "Task/WebSocket/GetCompletedQuestListByUserIdTask.h"
+#include "Request/VerifyCompletedQuestListRequest.h"
+#include "Task/WebSocket/VerifyCompletedQuestListTask.h"
+#include "Request/VerifyCompletedQuestListByUserIdRequest.h"
+#include "Task/WebSocket/VerifyCompletedQuestListByUserIdTask.h"
 #include "Request/DeleteCompletedQuestListByUserIdRequest.h"
 #include "Task/WebSocket/DeleteCompletedQuestListByUserIdTask.h"
+#include "Request/VerifyCompletedQuestListByStampTaskRequest.h"
+#include "Task/WebSocket/VerifyCompletedQuestListByStampTaskTask.h"
 #include "Request/DescribeQuestGroupModelsRequest.h"
 #include "Task/WebSocket/DescribeQuestGroupModelsTask.h"
 #include "Request/GetQuestGroupModelRequest.h"
@@ -310,8 +316,20 @@ namespace Gs2::Quest
             const Request::FGetCompletedQuestListByUserIdRequestPtr Request
         ) const;
 
+        TSharedPtr<FAsyncTask<Task::WebSocket::FVerifyCompletedQuestListTask>> VerifyCompletedQuestList(
+            const Request::FVerifyCompletedQuestListRequestPtr Request
+        ) const;
+
+        TSharedPtr<FAsyncTask<Task::WebSocket::FVerifyCompletedQuestListByUserIdTask>> VerifyCompletedQuestListByUserId(
+            const Request::FVerifyCompletedQuestListByUserIdRequestPtr Request
+        ) const;
+
         TSharedPtr<FAsyncTask<Task::WebSocket::FDeleteCompletedQuestListByUserIdTask>> DeleteCompletedQuestListByUserId(
             const Request::FDeleteCompletedQuestListByUserIdRequestPtr Request
+        ) const;
+
+        TSharedPtr<FAsyncTask<Task::WebSocket::FVerifyCompletedQuestListByStampTaskTask>> VerifyCompletedQuestListByStampTask(
+            const Request::FVerifyCompletedQuestListByStampTaskRequestPtr Request
         ) const;
 
         TSharedPtr<FAsyncTask<Task::WebSocket::FDescribeQuestGroupModelsTask>> DescribeQuestGroupModels(

@@ -42,8 +42,8 @@
 #include "Quest/Model/Cache/CurrentQuestMaster.h"
 #include "Quest/Model/Cache/QuestGroupModel.h"
 #include "Quest/Model/Cache/QuestModel.h"
-#include "Quest/Model/Cache/Progress.h"
 #include "Quest/Model/Cache/CompletedQuestList.h"
+#include "Quest/Model/Cache/Progress.h"
 #include "Quest/Model/Cache/QuestModelMaster.h"
 #include "Quest/Model/Cache/CompletedQuestList.h"
 #include "Quest/Model/Cache/Progress.h"
@@ -694,6 +694,48 @@ namespace Gs2::Quest::Domain
                     (ResultModel.IsValid() && ResultModel->GetItem().IsValid() ? ResultModel->GetItem()->GetUserId() : TOptional<FString>()),
                     TimeOffset
                 );
+
+        }
+        if (Method == "VerifyCompletedQuestListByUserId") {
+            if (Result.IsEmpty())
+            {
+                return;
+            }
+            TSharedPtr<FJsonObject> RequestModelJson;
+            if (const TSharedRef<TJsonReader<>> JsonReader = TJsonReaderFactory<>::Create(Request);
+                !FJsonSerializer::Deserialize(JsonReader, RequestModelJson))
+            {
+                return;
+            }
+            TSharedPtr<FJsonObject> ResultModelJson;
+            if (const TSharedRef<TJsonReader<>> JsonReader = TJsonReaderFactory<>::Create(Result);
+                !FJsonSerializer::Deserialize(JsonReader, ResultModelJson))
+            {
+                return;
+            }
+            const auto RequestModel = Gs2::Quest::Request::FVerifyCompletedQuestListByUserIdRequest::FromJson(RequestModelJson);
+            const auto ResultModel = Gs2::Quest::Result::FVerifyCompletedQuestListByUserIdResult::FromJson(ResultModelJson);
+
+                    if (ResultModel.IsValid() && ResultModel->GetItem() != nullptr)
+                    {
+
+                if (!ResultModel.IsValid() || !ResultModel->GetItem().IsValid())
+                    {
+                      return;
+                      }if (!ResultModel.IsValid() || !((ResultModel.IsValid() && ResultModel->GetItem().IsValid() ? ResultModel->GetItem()->GetUserId() : TOptional<FString>())).IsSet())
+                    {
+                      return;
+                      }
+                Gs2::Quest::Model::Cache::FCompletedQuestListCache::Put(
+                    Gs2->Cache,
+
+                    RequestModel->GetNamespaceName(),
+                    (ResultModel.IsValid() && ResultModel->GetItem().IsValid() ? ResultModel->GetItem()->GetUserId() : TOptional<FString>()),
+                    ResultModel->GetItem()->GetQuestGroupName(),
+                    TimeOffset,
+                    ResultModel->GetItem()
+                );
+                    }
 
         }
     }
