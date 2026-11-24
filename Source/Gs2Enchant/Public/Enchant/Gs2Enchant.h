@@ -263,6 +263,18 @@
 #include "Task/Rest/GetBalanceParameterStatusByUserIdTask.h"
 #include "Task/WebSocket/GetBalanceParameterStatusByUserIdTask.h"
 
+// VerifyBalanceParameterStatus
+#include "Request/VerifyBalanceParameterStatusRequest.h"
+#include "Result/VerifyBalanceParameterStatusResult.h"
+#include "Task/Rest/VerifyBalanceParameterStatusTask.h"
+#include "Task/WebSocket/VerifyBalanceParameterStatusTask.h"
+
+// VerifyBalanceParameterStatusByUserId
+#include "Request/VerifyBalanceParameterStatusByUserIdRequest.h"
+#include "Result/VerifyBalanceParameterStatusByUserIdResult.h"
+#include "Task/Rest/VerifyBalanceParameterStatusByUserIdTask.h"
+#include "Task/WebSocket/VerifyBalanceParameterStatusByUserIdTask.h"
+
 // DeleteBalanceParameterStatusByUserId
 #include "Request/DeleteBalanceParameterStatusByUserIdRequest.h"
 #include "Result/DeleteBalanceParameterStatusByUserIdResult.h"
@@ -292,6 +304,12 @@
 #include "Result/SetBalanceParameterStatusByStampSheetResult.h"
 #include "Task/Rest/SetBalanceParameterStatusByStampSheetTask.h"
 #include "Task/WebSocket/SetBalanceParameterStatusByStampSheetTask.h"
+
+// VerifyBalanceParameterStatusByStampTask
+#include "Request/VerifyBalanceParameterStatusByStampTaskRequest.h"
+#include "Result/VerifyBalanceParameterStatusByStampTaskResult.h"
+#include "Task/Rest/VerifyBalanceParameterStatusByStampTaskTask.h"
+#include "Task/WebSocket/VerifyBalanceParameterStatusByStampTaskTask.h"
 
 // DescribeRarityParameterStatuses
 #include "Request/DescribeRarityParameterStatusesRequest.h"

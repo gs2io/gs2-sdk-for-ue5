@@ -92,6 +92,10 @@
 #include "Task/Rest/GetBalanceParameterStatusTask.h"
 #include "Request/GetBalanceParameterStatusByUserIdRequest.h"
 #include "Task/Rest/GetBalanceParameterStatusByUserIdTask.h"
+#include "Request/VerifyBalanceParameterStatusRequest.h"
+#include "Task/Rest/VerifyBalanceParameterStatusTask.h"
+#include "Request/VerifyBalanceParameterStatusByUserIdRequest.h"
+#include "Task/Rest/VerifyBalanceParameterStatusByUserIdTask.h"
 #include "Request/DeleteBalanceParameterStatusByUserIdRequest.h"
 #include "Task/Rest/DeleteBalanceParameterStatusByUserIdTask.h"
 #include "Request/ReDrawBalanceParameterStatusByUserIdRequest.h"
@@ -102,6 +106,8 @@
 #include "Task/Rest/SetBalanceParameterStatusByUserIdTask.h"
 #include "Request/SetBalanceParameterStatusByStampSheetRequest.h"
 #include "Task/Rest/SetBalanceParameterStatusByStampSheetTask.h"
+#include "Request/VerifyBalanceParameterStatusByStampTaskRequest.h"
+#include "Task/Rest/VerifyBalanceParameterStatusByStampTaskTask.h"
 #include "Request/DescribeRarityParameterStatusesRequest.h"
 #include "Task/Rest/DescribeRarityParameterStatusesTask.h"
 #include "Request/DescribeRarityParameterStatusesByUserIdRequest.h"
@@ -290,6 +296,14 @@ namespace Gs2::Enchant
             const Request::FGetBalanceParameterStatusByUserIdRequestPtr Request
         ) const;
 
+        TSharedPtr<FAsyncTask<Task::Rest::FVerifyBalanceParameterStatusTask>> VerifyBalanceParameterStatus(
+            const Request::FVerifyBalanceParameterStatusRequestPtr Request
+        ) const;
+
+        TSharedPtr<FAsyncTask<Task::Rest::FVerifyBalanceParameterStatusByUserIdTask>> VerifyBalanceParameterStatusByUserId(
+            const Request::FVerifyBalanceParameterStatusByUserIdRequestPtr Request
+        ) const;
+
         TSharedPtr<FAsyncTask<Task::Rest::FDeleteBalanceParameterStatusByUserIdTask>> DeleteBalanceParameterStatusByUserId(
             const Request::FDeleteBalanceParameterStatusByUserIdRequestPtr Request
         ) const;
@@ -308,6 +322,10 @@ namespace Gs2::Enchant
 
         TSharedPtr<FAsyncTask<Task::Rest::FSetBalanceParameterStatusByStampSheetTask>> SetBalanceParameterStatusByStampSheet(
             const Request::FSetBalanceParameterStatusByStampSheetRequestPtr Request
+        ) const;
+
+        TSharedPtr<FAsyncTask<Task::Rest::FVerifyBalanceParameterStatusByStampTaskTask>> VerifyBalanceParameterStatusByStampTask(
+            const Request::FVerifyBalanceParameterStatusByStampTaskRequestPtr Request
         ) const;
 
         TSharedPtr<FAsyncTask<Task::Rest::FDescribeRarityParameterStatusesTask>> DescribeRarityParameterStatuses(

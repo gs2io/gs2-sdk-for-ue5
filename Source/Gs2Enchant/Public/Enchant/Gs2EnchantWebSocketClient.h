@@ -92,6 +92,10 @@
 #include "Task/WebSocket/GetBalanceParameterStatusTask.h"
 #include "Request/GetBalanceParameterStatusByUserIdRequest.h"
 #include "Task/WebSocket/GetBalanceParameterStatusByUserIdTask.h"
+#include "Request/VerifyBalanceParameterStatusRequest.h"
+#include "Task/WebSocket/VerifyBalanceParameterStatusTask.h"
+#include "Request/VerifyBalanceParameterStatusByUserIdRequest.h"
+#include "Task/WebSocket/VerifyBalanceParameterStatusByUserIdTask.h"
 #include "Request/DeleteBalanceParameterStatusByUserIdRequest.h"
 #include "Task/WebSocket/DeleteBalanceParameterStatusByUserIdTask.h"
 #include "Request/ReDrawBalanceParameterStatusByUserIdRequest.h"
@@ -102,6 +106,8 @@
 #include "Task/WebSocket/SetBalanceParameterStatusByUserIdTask.h"
 #include "Request/SetBalanceParameterStatusByStampSheetRequest.h"
 #include "Task/WebSocket/SetBalanceParameterStatusByStampSheetTask.h"
+#include "Request/VerifyBalanceParameterStatusByStampTaskRequest.h"
+#include "Task/WebSocket/VerifyBalanceParameterStatusByStampTaskTask.h"
 #include "Request/DescribeRarityParameterStatusesRequest.h"
 #include "Task/WebSocket/DescribeRarityParameterStatusesTask.h"
 #include "Request/DescribeRarityParameterStatusesByUserIdRequest.h"
@@ -290,6 +296,14 @@ namespace Gs2::Enchant
             const Request::FGetBalanceParameterStatusByUserIdRequestPtr Request
         ) const;
 
+        TSharedPtr<FAsyncTask<Task::WebSocket::FVerifyBalanceParameterStatusTask>> VerifyBalanceParameterStatus(
+            const Request::FVerifyBalanceParameterStatusRequestPtr Request
+        ) const;
+
+        TSharedPtr<FAsyncTask<Task::WebSocket::FVerifyBalanceParameterStatusByUserIdTask>> VerifyBalanceParameterStatusByUserId(
+            const Request::FVerifyBalanceParameterStatusByUserIdRequestPtr Request
+        ) const;
+
         TSharedPtr<FAsyncTask<Task::WebSocket::FDeleteBalanceParameterStatusByUserIdTask>> DeleteBalanceParameterStatusByUserId(
             const Request::FDeleteBalanceParameterStatusByUserIdRequestPtr Request
         ) const;
@@ -308,6 +322,10 @@ namespace Gs2::Enchant
 
         TSharedPtr<FAsyncTask<Task::WebSocket::FSetBalanceParameterStatusByStampSheetTask>> SetBalanceParameterStatusByStampSheet(
             const Request::FSetBalanceParameterStatusByStampSheetRequestPtr Request
+        ) const;
+
+        TSharedPtr<FAsyncTask<Task::WebSocket::FVerifyBalanceParameterStatusByStampTaskTask>> VerifyBalanceParameterStatusByStampTask(
+            const Request::FVerifyBalanceParameterStatusByStampTaskRequestPtr Request
         ) const;
 
         TSharedPtr<FAsyncTask<Task::WebSocket::FDescribeRarityParameterStatusesTask>> DescribeRarityParameterStatuses(

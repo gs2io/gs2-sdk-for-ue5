@@ -352,6 +352,24 @@ namespace Gs2::Enchant
         );
     }
 
+    TSharedPtr<FAsyncTask<Task::Rest::FVerifyBalanceParameterStatusTask>> FGs2EnchantRestClient::VerifyBalanceParameterStatus(
+        const Request::FVerifyBalanceParameterStatusRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::Rest::FVerifyBalanceParameterStatusTask>>(
+            Session,
+            Request
+        );
+    }
+
+    TSharedPtr<FAsyncTask<Task::Rest::FVerifyBalanceParameterStatusByUserIdTask>> FGs2EnchantRestClient::VerifyBalanceParameterStatusByUserId(
+        const Request::FVerifyBalanceParameterStatusByUserIdRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::Rest::FVerifyBalanceParameterStatusByUserIdTask>>(
+            Session,
+            Request
+        );
+    }
+
     TSharedPtr<FAsyncTask<Task::Rest::FDeleteBalanceParameterStatusByUserIdTask>> FGs2EnchantRestClient::DeleteBalanceParameterStatusByUserId(
         const Request::FDeleteBalanceParameterStatusByUserIdRequestPtr Request) const
     {
@@ -392,6 +410,15 @@ namespace Gs2::Enchant
         const Request::FSetBalanceParameterStatusByStampSheetRequestPtr Request) const
     {
         return Gs2::Core::Util::New<FAsyncTask<Task::Rest::FSetBalanceParameterStatusByStampSheetTask>>(
+            Session,
+            Request
+        );
+    }
+
+    TSharedPtr<FAsyncTask<Task::Rest::FVerifyBalanceParameterStatusByStampTaskTask>> FGs2EnchantRestClient::VerifyBalanceParameterStatusByStampTask(
+        const Request::FVerifyBalanceParameterStatusByStampTaskRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::Rest::FVerifyBalanceParameterStatusByStampTaskTask>>(
             Session,
             Request
         );

@@ -119,6 +119,34 @@ namespace Gs2::Enchant::Domain::Model
 
 
 
+        class GS2ENCHANT_API FVerifyTask final :
+            public Gs2::Core::Util::TGs2Future<Gs2::Enchant::Domain::Model::FBalanceParameterStatusDomain>,
+            public TSharedFromThis<FVerifyTask>
+        {
+            const TSharedPtr<FBalanceParameterStatusDomain> Self;
+            const Request::FVerifyBalanceParameterStatusByUserIdRequestPtr Request;
+        public:
+            explicit FVerifyTask(
+                const TSharedPtr<FBalanceParameterStatusDomain>& Self,
+                const Request::FVerifyBalanceParameterStatusByUserIdRequestPtr Request
+            );
+
+            FVerifyTask(
+                const FVerifyTask& From
+            );
+
+            virtual Gs2::Core::Model::FGs2ErrorPtr Action(
+                TSharedPtr<TSharedPtr<Gs2::Enchant::Domain::Model::FBalanceParameterStatusDomain>> Result
+            ) override;
+        };
+        friend FVerifyTask;
+
+        TSharedPtr<FAsyncTask<FVerifyTask>> Verify(
+            Request::FVerifyBalanceParameterStatusByUserIdRequestPtr Request
+        );
+
+
+
         class GS2ENCHANT_API FDeleteTask final :
             public Gs2::Core::Util::TGs2Future<Gs2::Enchant::Domain::Model::FBalanceParameterStatusDomain>,
             public TSharedFromThis<FDeleteTask>

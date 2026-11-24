@@ -352,6 +352,24 @@ namespace Gs2::Enchant
         );
     }
 
+    TSharedPtr<FAsyncTask<Task::WebSocket::FVerifyBalanceParameterStatusTask>> FGs2EnchantWebSocketClient::VerifyBalanceParameterStatus(
+        const Request::FVerifyBalanceParameterStatusRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::WebSocket::FVerifyBalanceParameterStatusTask>>(
+            Session,
+            Request
+        );
+    }
+
+    TSharedPtr<FAsyncTask<Task::WebSocket::FVerifyBalanceParameterStatusByUserIdTask>> FGs2EnchantWebSocketClient::VerifyBalanceParameterStatusByUserId(
+        const Request::FVerifyBalanceParameterStatusByUserIdRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::WebSocket::FVerifyBalanceParameterStatusByUserIdTask>>(
+            Session,
+            Request
+        );
+    }
+
     TSharedPtr<FAsyncTask<Task::WebSocket::FDeleteBalanceParameterStatusByUserIdTask>> FGs2EnchantWebSocketClient::DeleteBalanceParameterStatusByUserId(
         const Request::FDeleteBalanceParameterStatusByUserIdRequestPtr Request) const
     {
@@ -392,6 +410,15 @@ namespace Gs2::Enchant
         const Request::FSetBalanceParameterStatusByStampSheetRequestPtr Request) const
     {
         return Gs2::Core::Util::New<FAsyncTask<Task::WebSocket::FSetBalanceParameterStatusByStampSheetTask>>(
+            Session,
+            Request
+        );
+    }
+
+    TSharedPtr<FAsyncTask<Task::WebSocket::FVerifyBalanceParameterStatusByStampTaskTask>> FGs2EnchantWebSocketClient::VerifyBalanceParameterStatusByStampTask(
+        const Request::FVerifyBalanceParameterStatusByStampTaskRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::WebSocket::FVerifyBalanceParameterStatusByStampTaskTask>>(
             Session,
             Request
         );

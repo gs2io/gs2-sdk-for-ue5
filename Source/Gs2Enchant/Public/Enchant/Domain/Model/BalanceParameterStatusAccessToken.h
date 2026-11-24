@@ -119,6 +119,34 @@ namespace Gs2::Enchant::Domain::Model
             Request::FGetBalanceParameterStatusRequestPtr Request
         );
 
+
+
+        class GS2ENCHANT_API FVerifyTask final :
+            public Gs2::Core::Util::TGs2Future<Gs2::Enchant::Domain::Model::FBalanceParameterStatusAccessTokenDomain>,
+            public TSharedFromThis<FVerifyTask>
+        {
+            const TSharedPtr<FBalanceParameterStatusAccessTokenDomain> Self;
+            const Request::FVerifyBalanceParameterStatusRequestPtr Request;
+        public:
+            explicit FVerifyTask(
+                const TSharedPtr<FBalanceParameterStatusAccessTokenDomain>& Self,
+                const Request::FVerifyBalanceParameterStatusRequestPtr Request
+            );
+
+            FVerifyTask(
+                const FVerifyTask& From
+            );
+
+            virtual Gs2::Core::Model::FGs2ErrorPtr Action(
+                TSharedPtr<TSharedPtr<Gs2::Enchant::Domain::Model::FBalanceParameterStatusAccessTokenDomain>> Result
+            ) override;
+        };
+        friend FVerifyTask;
+
+        TSharedPtr<FAsyncTask<FVerifyTask>> Verify(
+            Request::FVerifyBalanceParameterStatusRequestPtr Request
+        );
+
         static FString CreateCacheParentKey(
             TOptional<FString> NamespaceName,
             TOptional<FString> UserId,
