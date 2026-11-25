@@ -157,6 +157,24 @@
 #include "Task/Rest/UpdateProfileByStampSheetTask.h"
 #include "Task/WebSocket/UpdateProfileByStampSheetTask.h"
 
+// VerifyFollow
+#include "Request/VerifyFollowRequest.h"
+#include "Result/VerifyFollowResult.h"
+#include "Task/Rest/VerifyFollowTask.h"
+#include "Task/WebSocket/VerifyFollowTask.h"
+
+// VerifyFollowByUserId
+#include "Request/VerifyFollowByUserIdRequest.h"
+#include "Result/VerifyFollowByUserIdResult.h"
+#include "Task/Rest/VerifyFollowByUserIdTask.h"
+#include "Task/WebSocket/VerifyFollowByUserIdTask.h"
+
+// VerifyFollowByStampTask
+#include "Request/VerifyFollowByStampTaskRequest.h"
+#include "Result/VerifyFollowByStampTaskResult.h"
+#include "Task/Rest/VerifyFollowByStampTaskTask.h"
+#include "Task/WebSocket/VerifyFollowByStampTaskTask.h"
+
 // DescribeFriends
 #include "Request/DescribeFriendsRequest.h"
 #include "Result/DescribeFriendsResult.h"
@@ -168,6 +186,42 @@
 #include "Result/DescribeFriendsByUserIdResult.h"
 #include "Task/Rest/DescribeFriendsByUserIdTask.h"
 #include "Task/WebSocket/DescribeFriendsByUserIdTask.h"
+
+// VerifyFriend
+#include "Request/VerifyFriendRequest.h"
+#include "Result/VerifyFriendResult.h"
+#include "Task/Rest/VerifyFriendTask.h"
+#include "Task/WebSocket/VerifyFriendTask.h"
+
+// VerifyFriendByUserId
+#include "Request/VerifyFriendByUserIdRequest.h"
+#include "Result/VerifyFriendByUserIdResult.h"
+#include "Task/Rest/VerifyFriendByUserIdTask.h"
+#include "Task/WebSocket/VerifyFriendByUserIdTask.h"
+
+// VerifyFriendByStampTask
+#include "Request/VerifyFriendByStampTaskRequest.h"
+#include "Result/VerifyFriendByStampTaskResult.h"
+#include "Task/Rest/VerifyFriendByStampTaskTask.h"
+#include "Task/WebSocket/VerifyFriendByStampTaskTask.h"
+
+// VerifyFriendCount
+#include "Request/VerifyFriendCountRequest.h"
+#include "Result/VerifyFriendCountResult.h"
+#include "Task/Rest/VerifyFriendCountTask.h"
+#include "Task/WebSocket/VerifyFriendCountTask.h"
+
+// VerifyFriendCountByUserId
+#include "Request/VerifyFriendCountByUserIdRequest.h"
+#include "Result/VerifyFriendCountByUserIdResult.h"
+#include "Task/Rest/VerifyFriendCountByUserIdTask.h"
+#include "Task/WebSocket/VerifyFriendCountByUserIdTask.h"
+
+// VerifyFriendCountByStampTask
+#include "Request/VerifyFriendCountByStampTaskRequest.h"
+#include "Result/VerifyFriendCountByStampTaskResult.h"
+#include "Task/Rest/VerifyFriendCountByStampTaskTask.h"
+#include "Task/WebSocket/VerifyFriendCountByStampTaskTask.h"
 
 // DescribeBlackList
 #include "Request/DescribeBlackListRequest.h"

@@ -199,6 +199,33 @@ namespace Gs2::Friend
         );
     }
 
+    TSharedPtr<FAsyncTask<Task::Rest::FVerifyFollowTask>> FGs2FriendRestClient::VerifyFollow(
+        const Request::FVerifyFollowRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::Rest::FVerifyFollowTask>>(
+            Session,
+            Request
+        );
+    }
+
+    TSharedPtr<FAsyncTask<Task::Rest::FVerifyFollowByUserIdTask>> FGs2FriendRestClient::VerifyFollowByUserId(
+        const Request::FVerifyFollowByUserIdRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::Rest::FVerifyFollowByUserIdTask>>(
+            Session,
+            Request
+        );
+    }
+
+    TSharedPtr<FAsyncTask<Task::Rest::FVerifyFollowByStampTaskTask>> FGs2FriendRestClient::VerifyFollowByStampTask(
+        const Request::FVerifyFollowByStampTaskRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::Rest::FVerifyFollowByStampTaskTask>>(
+            Session,
+            Request
+        );
+    }
+
     TSharedPtr<FAsyncTask<Task::Rest::FDescribeFriendsTask>> FGs2FriendRestClient::DescribeFriends(
         const Request::FDescribeFriendsRequestPtr Request) const
     {
@@ -212,6 +239,60 @@ namespace Gs2::Friend
         const Request::FDescribeFriendsByUserIdRequestPtr Request) const
     {
         return Gs2::Core::Util::New<FAsyncTask<Task::Rest::FDescribeFriendsByUserIdTask>>(
+            Session,
+            Request
+        );
+    }
+
+    TSharedPtr<FAsyncTask<Task::Rest::FVerifyFriendTask>> FGs2FriendRestClient::VerifyFriend(
+        const Request::FVerifyFriendRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::Rest::FVerifyFriendTask>>(
+            Session,
+            Request
+        );
+    }
+
+    TSharedPtr<FAsyncTask<Task::Rest::FVerifyFriendByUserIdTask>> FGs2FriendRestClient::VerifyFriendByUserId(
+        const Request::FVerifyFriendByUserIdRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::Rest::FVerifyFriendByUserIdTask>>(
+            Session,
+            Request
+        );
+    }
+
+    TSharedPtr<FAsyncTask<Task::Rest::FVerifyFriendByStampTaskTask>> FGs2FriendRestClient::VerifyFriendByStampTask(
+        const Request::FVerifyFriendByStampTaskRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::Rest::FVerifyFriendByStampTaskTask>>(
+            Session,
+            Request
+        );
+    }
+
+    TSharedPtr<FAsyncTask<Task::Rest::FVerifyFriendCountTask>> FGs2FriendRestClient::VerifyFriendCount(
+        const Request::FVerifyFriendCountRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::Rest::FVerifyFriendCountTask>>(
+            Session,
+            Request
+        );
+    }
+
+    TSharedPtr<FAsyncTask<Task::Rest::FVerifyFriendCountByUserIdTask>> FGs2FriendRestClient::VerifyFriendCountByUserId(
+        const Request::FVerifyFriendCountByUserIdRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::Rest::FVerifyFriendCountByUserIdTask>>(
+            Session,
+            Request
+        );
+    }
+
+    TSharedPtr<FAsyncTask<Task::Rest::FVerifyFriendCountByStampTaskTask>> FGs2FriendRestClient::VerifyFriendCountByStampTask(
+        const Request::FVerifyFriendCountByStampTaskRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::Rest::FVerifyFriendCountByStampTaskTask>>(
             Session,
             Request
         );

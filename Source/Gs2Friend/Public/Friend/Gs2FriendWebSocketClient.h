@@ -58,10 +58,28 @@
 #include "Task/WebSocket/DeleteProfileByUserIdTask.h"
 #include "Request/UpdateProfileByStampSheetRequest.h"
 #include "Task/WebSocket/UpdateProfileByStampSheetTask.h"
+#include "Request/VerifyFollowRequest.h"
+#include "Task/WebSocket/VerifyFollowTask.h"
+#include "Request/VerifyFollowByUserIdRequest.h"
+#include "Task/WebSocket/VerifyFollowByUserIdTask.h"
+#include "Request/VerifyFollowByStampTaskRequest.h"
+#include "Task/WebSocket/VerifyFollowByStampTaskTask.h"
 #include "Request/DescribeFriendsRequest.h"
 #include "Task/WebSocket/DescribeFriendsTask.h"
 #include "Request/DescribeFriendsByUserIdRequest.h"
 #include "Task/WebSocket/DescribeFriendsByUserIdTask.h"
+#include "Request/VerifyFriendRequest.h"
+#include "Task/WebSocket/VerifyFriendTask.h"
+#include "Request/VerifyFriendByUserIdRequest.h"
+#include "Task/WebSocket/VerifyFriendByUserIdTask.h"
+#include "Request/VerifyFriendByStampTaskRequest.h"
+#include "Task/WebSocket/VerifyFriendByStampTaskTask.h"
+#include "Request/VerifyFriendCountRequest.h"
+#include "Task/WebSocket/VerifyFriendCountTask.h"
+#include "Request/VerifyFriendCountByUserIdRequest.h"
+#include "Task/WebSocket/VerifyFriendCountByUserIdTask.h"
+#include "Request/VerifyFriendCountByStampTaskRequest.h"
+#include "Task/WebSocket/VerifyFriendCountByStampTaskTask.h"
 #include "Request/DescribeBlackListRequest.h"
 #include "Task/WebSocket/DescribeBlackListTask.h"
 #include "Request/DescribeBlackListByUserIdRequest.h"
@@ -228,12 +246,48 @@ namespace Gs2::Friend
             const Request::FUpdateProfileByStampSheetRequestPtr Request
         ) const;
 
+        TSharedPtr<FAsyncTask<Task::WebSocket::FVerifyFollowTask>> VerifyFollow(
+            const Request::FVerifyFollowRequestPtr Request
+        ) const;
+
+        TSharedPtr<FAsyncTask<Task::WebSocket::FVerifyFollowByUserIdTask>> VerifyFollowByUserId(
+            const Request::FVerifyFollowByUserIdRequestPtr Request
+        ) const;
+
+        TSharedPtr<FAsyncTask<Task::WebSocket::FVerifyFollowByStampTaskTask>> VerifyFollowByStampTask(
+            const Request::FVerifyFollowByStampTaskRequestPtr Request
+        ) const;
+
         TSharedPtr<FAsyncTask<Task::WebSocket::FDescribeFriendsTask>> DescribeFriends(
             const Request::FDescribeFriendsRequestPtr Request
         ) const;
 
         TSharedPtr<FAsyncTask<Task::WebSocket::FDescribeFriendsByUserIdTask>> DescribeFriendsByUserId(
             const Request::FDescribeFriendsByUserIdRequestPtr Request
+        ) const;
+
+        TSharedPtr<FAsyncTask<Task::WebSocket::FVerifyFriendTask>> VerifyFriend(
+            const Request::FVerifyFriendRequestPtr Request
+        ) const;
+
+        TSharedPtr<FAsyncTask<Task::WebSocket::FVerifyFriendByUserIdTask>> VerifyFriendByUserId(
+            const Request::FVerifyFriendByUserIdRequestPtr Request
+        ) const;
+
+        TSharedPtr<FAsyncTask<Task::WebSocket::FVerifyFriendByStampTaskTask>> VerifyFriendByStampTask(
+            const Request::FVerifyFriendByStampTaskRequestPtr Request
+        ) const;
+
+        TSharedPtr<FAsyncTask<Task::WebSocket::FVerifyFriendCountTask>> VerifyFriendCount(
+            const Request::FVerifyFriendCountRequestPtr Request
+        ) const;
+
+        TSharedPtr<FAsyncTask<Task::WebSocket::FVerifyFriendCountByUserIdTask>> VerifyFriendCountByUserId(
+            const Request::FVerifyFriendCountByUserIdRequestPtr Request
+        ) const;
+
+        TSharedPtr<FAsyncTask<Task::WebSocket::FVerifyFriendCountByStampTaskTask>> VerifyFriendCountByStampTask(
+            const Request::FVerifyFriendCountByStampTaskRequestPtr Request
         ) const;
 
         TSharedPtr<FAsyncTask<Task::WebSocket::FDescribeBlackListTask>> DescribeBlackList(

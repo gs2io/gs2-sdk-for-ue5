@@ -106,6 +106,90 @@ namespace Gs2::Friend::Domain::Model
 
 
 
+        class GS2FRIEND_API FVerifyFollowTask final :
+            public Gs2::Core::Util::TGs2Future<Gs2::Friend::Domain::Model::FUserAccessTokenDomain>,
+            public TSharedFromThis<FVerifyFollowTask>
+        {
+            const TSharedPtr<FUserAccessTokenDomain> Self;
+            const Request::FVerifyFollowRequestPtr Request;
+        public:
+            explicit FVerifyFollowTask(
+                const TSharedPtr<FUserAccessTokenDomain>& Self,
+                const Request::FVerifyFollowRequestPtr Request
+            );
+
+            FVerifyFollowTask(
+                const FVerifyFollowTask& From
+            );
+
+            virtual Gs2::Core::Model::FGs2ErrorPtr Action(
+                TSharedPtr<TSharedPtr<Gs2::Friend::Domain::Model::FUserAccessTokenDomain>> Result
+            ) override;
+        };
+        friend FVerifyFollowTask;
+
+        TSharedPtr<FAsyncTask<FVerifyFollowTask>> VerifyFollow(
+            Request::FVerifyFollowRequestPtr Request
+        );
+
+
+
+        class GS2FRIEND_API FVerifyFriendTask final :
+            public Gs2::Core::Util::TGs2Future<Gs2::Friend::Domain::Model::FUserAccessTokenDomain>,
+            public TSharedFromThis<FVerifyFriendTask>
+        {
+            const TSharedPtr<FUserAccessTokenDomain> Self;
+            const Request::FVerifyFriendRequestPtr Request;
+        public:
+            explicit FVerifyFriendTask(
+                const TSharedPtr<FUserAccessTokenDomain>& Self,
+                const Request::FVerifyFriendRequestPtr Request
+            );
+
+            FVerifyFriendTask(
+                const FVerifyFriendTask& From
+            );
+
+            virtual Gs2::Core::Model::FGs2ErrorPtr Action(
+                TSharedPtr<TSharedPtr<Gs2::Friend::Domain::Model::FUserAccessTokenDomain>> Result
+            ) override;
+        };
+        friend FVerifyFriendTask;
+
+        TSharedPtr<FAsyncTask<FVerifyFriendTask>> VerifyFriend(
+            Request::FVerifyFriendRequestPtr Request
+        );
+
+
+
+        class GS2FRIEND_API FVerifyFriendCountTask final :
+            public Gs2::Core::Util::TGs2Future<Gs2::Friend::Domain::Model::FUserAccessTokenDomain>,
+            public TSharedFromThis<FVerifyFriendCountTask>
+        {
+            const TSharedPtr<FUserAccessTokenDomain> Self;
+            const Request::FVerifyFriendCountRequestPtr Request;
+        public:
+            explicit FVerifyFriendCountTask(
+                const TSharedPtr<FUserAccessTokenDomain>& Self,
+                const Request::FVerifyFriendCountRequestPtr Request
+            );
+
+            FVerifyFriendCountTask(
+                const FVerifyFriendCountTask& From
+            );
+
+            virtual Gs2::Core::Model::FGs2ErrorPtr Action(
+                TSharedPtr<TSharedPtr<Gs2::Friend::Domain::Model::FUserAccessTokenDomain>> Result
+            ) override;
+        };
+        friend FVerifyFriendCountTask;
+
+        TSharedPtr<FAsyncTask<FVerifyFriendCountTask>> VerifyFriendCount(
+            Request::FVerifyFriendCountRequestPtr Request
+        );
+
+
+
         class GS2FRIEND_API FSendRequestTask final :
             public Gs2::Core::Util::TGs2Future<Gs2::Friend::Domain::Model::FSendFriendRequestAccessTokenDomain>,
             public TSharedFromThis<FSendRequestTask>

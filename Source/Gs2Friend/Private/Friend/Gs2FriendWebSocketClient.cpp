@@ -199,6 +199,33 @@ namespace Gs2::Friend
         );
     }
 
+    TSharedPtr<FAsyncTask<Task::WebSocket::FVerifyFollowTask>> FGs2FriendWebSocketClient::VerifyFollow(
+        const Request::FVerifyFollowRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::WebSocket::FVerifyFollowTask>>(
+            Session,
+            Request
+        );
+    }
+
+    TSharedPtr<FAsyncTask<Task::WebSocket::FVerifyFollowByUserIdTask>> FGs2FriendWebSocketClient::VerifyFollowByUserId(
+        const Request::FVerifyFollowByUserIdRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::WebSocket::FVerifyFollowByUserIdTask>>(
+            Session,
+            Request
+        );
+    }
+
+    TSharedPtr<FAsyncTask<Task::WebSocket::FVerifyFollowByStampTaskTask>> FGs2FriendWebSocketClient::VerifyFollowByStampTask(
+        const Request::FVerifyFollowByStampTaskRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::WebSocket::FVerifyFollowByStampTaskTask>>(
+            Session,
+            Request
+        );
+    }
+
     TSharedPtr<FAsyncTask<Task::WebSocket::FDescribeFriendsTask>> FGs2FriendWebSocketClient::DescribeFriends(
         const Request::FDescribeFriendsRequestPtr Request) const
     {
@@ -212,6 +239,60 @@ namespace Gs2::Friend
         const Request::FDescribeFriendsByUserIdRequestPtr Request) const
     {
         return Gs2::Core::Util::New<FAsyncTask<Task::WebSocket::FDescribeFriendsByUserIdTask>>(
+            Session,
+            Request
+        );
+    }
+
+    TSharedPtr<FAsyncTask<Task::WebSocket::FVerifyFriendTask>> FGs2FriendWebSocketClient::VerifyFriend(
+        const Request::FVerifyFriendRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::WebSocket::FVerifyFriendTask>>(
+            Session,
+            Request
+        );
+    }
+
+    TSharedPtr<FAsyncTask<Task::WebSocket::FVerifyFriendByUserIdTask>> FGs2FriendWebSocketClient::VerifyFriendByUserId(
+        const Request::FVerifyFriendByUserIdRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::WebSocket::FVerifyFriendByUserIdTask>>(
+            Session,
+            Request
+        );
+    }
+
+    TSharedPtr<FAsyncTask<Task::WebSocket::FVerifyFriendByStampTaskTask>> FGs2FriendWebSocketClient::VerifyFriendByStampTask(
+        const Request::FVerifyFriendByStampTaskRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::WebSocket::FVerifyFriendByStampTaskTask>>(
+            Session,
+            Request
+        );
+    }
+
+    TSharedPtr<FAsyncTask<Task::WebSocket::FVerifyFriendCountTask>> FGs2FriendWebSocketClient::VerifyFriendCount(
+        const Request::FVerifyFriendCountRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::WebSocket::FVerifyFriendCountTask>>(
+            Session,
+            Request
+        );
+    }
+
+    TSharedPtr<FAsyncTask<Task::WebSocket::FVerifyFriendCountByUserIdTask>> FGs2FriendWebSocketClient::VerifyFriendCountByUserId(
+        const Request::FVerifyFriendCountByUserIdRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::WebSocket::FVerifyFriendCountByUserIdTask>>(
+            Session,
+            Request
+        );
+    }
+
+    TSharedPtr<FAsyncTask<Task::WebSocket::FVerifyFriendCountByStampTaskTask>> FGs2FriendWebSocketClient::VerifyFriendCountByStampTask(
+        const Request::FVerifyFriendCountByStampTaskRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::WebSocket::FVerifyFriendCountByStampTaskTask>>(
             Session,
             Request
         );

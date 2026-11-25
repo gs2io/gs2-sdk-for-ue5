@@ -47,13 +47,13 @@
 #include "Friend/Domain/Model/PublicProfileAccessToken.h"
 #include "Friend/Domain/Model/FriendRequestAccessToken.h"
 #include "Friend/Model/Cache/Profile.h"
+#include "Friend/Model/Cache/Follow.h"
+#include "Friend/Model/Cache/Friend.h"
 #include "Friend/Model/Cache/SendFriendRequest.h"
 #include "Friend/Model/Cache/FriendRequest.h"
 #include "Friend/Model/Cache/PublicProfile.h"
 #include "Friend/Model/Cache/BlackList.h"
 #include "Friend/Model/Cache/FollowUser.h"
-#include "Friend/Model/Cache/Follow.h"
-#include "Friend/Model/Cache/Friend.h"
 #include "Friend/Model/Cache/FriendUser.h"
 #include "Friend/Model/Cache/ReceiveFriendRequest.h"
 
@@ -95,6 +95,138 @@ namespace Gs2::Friend::Domain::Model
         ParentKey(From.ParentKey)
     {
 
+    }
+
+    FUserAccessTokenDomain::FVerifyFollowTask::FVerifyFollowTask(
+        const TSharedPtr<FUserAccessTokenDomain>& Self,
+        const Request::FVerifyFollowRequestPtr Request
+    ): Self(Self), Request(Request)
+    {
+
+    }
+
+    FUserAccessTokenDomain::FVerifyFollowTask::FVerifyFollowTask(
+        const FVerifyFollowTask& From
+    ): TGs2Future(From), Self(From.Self), Request(From.Request)
+    {
+    }
+
+    Gs2::Core::Model::FGs2ErrorPtr FUserAccessTokenDomain::FVerifyFollowTask::Action(
+        TSharedPtr<TSharedPtr<Gs2::Friend::Domain::Model::FUserAccessTokenDomain>> Result
+    )
+    {
+        Request
+            ->WithContextStack((!Request->GetContextStack().IsSet() || Request->GetContextStack()->IsEmpty()) ? Self->Gs2->DefaultContextStack : Request->GetContextStack())
+            ->WithNamespaceName(Self->NamespaceName)
+            ->WithAccessToken(Self->AccessToken->GetToken());
+        const auto Future = Self->Client->VerifyFollow(
+            Request
+        );
+        Future->StartSynchronousTask();
+        if (Future->GetTask().IsError())
+        {
+            return Future->GetTask().Error();
+        }
+        const auto ResultModel = Future->GetTask().Result();
+        Future->EnsureCompletion();
+
+        const auto Domain = Self;
+        *Result = Domain;
+        return nullptr;
+    }
+
+    TSharedPtr<FAsyncTask<FUserAccessTokenDomain::FVerifyFollowTask>> FUserAccessTokenDomain::VerifyFollow(
+        Request::FVerifyFollowRequestPtr Request
+    ) {
+        return Gs2::Core::Util::New<FAsyncTask<FVerifyFollowTask>>(this->AsShared(), Request);
+    }
+
+    FUserAccessTokenDomain::FVerifyFriendTask::FVerifyFriendTask(
+        const TSharedPtr<FUserAccessTokenDomain>& Self,
+        const Request::FVerifyFriendRequestPtr Request
+    ): Self(Self), Request(Request)
+    {
+
+    }
+
+    FUserAccessTokenDomain::FVerifyFriendTask::FVerifyFriendTask(
+        const FVerifyFriendTask& From
+    ): TGs2Future(From), Self(From.Self), Request(From.Request)
+    {
+    }
+
+    Gs2::Core::Model::FGs2ErrorPtr FUserAccessTokenDomain::FVerifyFriendTask::Action(
+        TSharedPtr<TSharedPtr<Gs2::Friend::Domain::Model::FUserAccessTokenDomain>> Result
+    )
+    {
+        Request
+            ->WithContextStack((!Request->GetContextStack().IsSet() || Request->GetContextStack()->IsEmpty()) ? Self->Gs2->DefaultContextStack : Request->GetContextStack())
+            ->WithNamespaceName(Self->NamespaceName)
+            ->WithAccessToken(Self->AccessToken->GetToken());
+        const auto Future = Self->Client->VerifyFriend(
+            Request
+        );
+        Future->StartSynchronousTask();
+        if (Future->GetTask().IsError())
+        {
+            return Future->GetTask().Error();
+        }
+        const auto ResultModel = Future->GetTask().Result();
+        Future->EnsureCompletion();
+
+        const auto Domain = Self;
+        *Result = Domain;
+        return nullptr;
+    }
+
+    TSharedPtr<FAsyncTask<FUserAccessTokenDomain::FVerifyFriendTask>> FUserAccessTokenDomain::VerifyFriend(
+        Request::FVerifyFriendRequestPtr Request
+    ) {
+        return Gs2::Core::Util::New<FAsyncTask<FVerifyFriendTask>>(this->AsShared(), Request);
+    }
+
+    FUserAccessTokenDomain::FVerifyFriendCountTask::FVerifyFriendCountTask(
+        const TSharedPtr<FUserAccessTokenDomain>& Self,
+        const Request::FVerifyFriendCountRequestPtr Request
+    ): Self(Self), Request(Request)
+    {
+
+    }
+
+    FUserAccessTokenDomain::FVerifyFriendCountTask::FVerifyFriendCountTask(
+        const FVerifyFriendCountTask& From
+    ): TGs2Future(From), Self(From.Self), Request(From.Request)
+    {
+    }
+
+    Gs2::Core::Model::FGs2ErrorPtr FUserAccessTokenDomain::FVerifyFriendCountTask::Action(
+        TSharedPtr<TSharedPtr<Gs2::Friend::Domain::Model::FUserAccessTokenDomain>> Result
+    )
+    {
+        Request
+            ->WithContextStack((!Request->GetContextStack().IsSet() || Request->GetContextStack()->IsEmpty()) ? Self->Gs2->DefaultContextStack : Request->GetContextStack())
+            ->WithNamespaceName(Self->NamespaceName)
+            ->WithAccessToken(Self->AccessToken->GetToken());
+        const auto Future = Self->Client->VerifyFriendCount(
+            Request
+        );
+        Future->StartSynchronousTask();
+        if (Future->GetTask().IsError())
+        {
+            return Future->GetTask().Error();
+        }
+        const auto ResultModel = Future->GetTask().Result();
+        Future->EnsureCompletion();
+
+        const auto Domain = Self;
+        *Result = Domain;
+        return nullptr;
+    }
+
+    TSharedPtr<FAsyncTask<FUserAccessTokenDomain::FVerifyFriendCountTask>> FUserAccessTokenDomain::VerifyFriendCount(
+        Request::FVerifyFriendCountRequestPtr Request
+    ) {
+        return Gs2::Core::Util::New<FAsyncTask<FVerifyFriendCountTask>>(this->AsShared(), Request);
     }
 
     FUserAccessTokenDomain::FSendRequestTask::FSendRequestTask(

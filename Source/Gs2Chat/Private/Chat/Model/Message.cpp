@@ -427,7 +427,17 @@ namespace Gs2::Chat::Model::Cache
         );
         auto CacheOwnerValue = CacheOwnerArgumentItem;
         Gs2::Chat::Model::FMessagePtr CacheOwnerExisting;
-        if (CacheSnapshot->TryGet<Gs2::Chat::Model::FMessage>(CacheOwnerParentKey, CacheOwnerKey, &CacheOwnerExisting))
+        bool CacheOwnerFound = CacheSnapshot->TryGet<Gs2::Chat::Model::FMessage>(CacheOwnerParentKey, CacheOwnerKey, &CacheOwnerExisting);
+        if (CacheOwnerFound && CacheOwnerExisting.IsValid() && CacheOwnerValue.IsValid() &&
+            CacheOwnerExisting->GetCreatedAt().IsSet() && CacheOwnerValue->GetCreatedAt().IsSet() &&
+            CacheOwnerExisting->GetRevision().IsSet() && CacheOwnerValue->GetRevision().IsSet() &&
+            CacheOwnerExisting->GetCreatedAt() != CacheOwnerValue->GetCreatedAt())
+        {
+            if (*CacheOwnerExisting->GetCreatedAt() > *CacheOwnerValue->GetCreatedAt()) return;
+            // A recreated model starts a separate revision sequence.
+            CacheOwnerFound = false;
+        }
+        if (CacheOwnerFound)
         {
             const int64 CacheOwnerOldRevision = CacheOwnerExisting.IsValid() ? CacheOwnerExisting->GetRevision().Get(-1) : -1;
             const int64 CacheOwnerNewRevision = CacheOwnerValue.IsValid() ? CacheOwnerValue->GetRevision().Get(-1) : -1;
