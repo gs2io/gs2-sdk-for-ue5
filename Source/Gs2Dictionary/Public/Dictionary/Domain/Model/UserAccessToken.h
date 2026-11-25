@@ -118,6 +118,34 @@ namespace Gs2::Dictionary::Domain::Model
 
 
 
+        class GS2DICTIONARY_API FVerifyEntryCountTask final :
+            public Gs2::Core::Util::TGs2Future<Gs2::Dictionary::Domain::Model::FUserAccessTokenDomain>,
+            public TSharedFromThis<FVerifyEntryCountTask>
+        {
+            const TSharedPtr<FUserAccessTokenDomain> Self;
+            const Request::FVerifyEntryCountRequestPtr Request;
+        public:
+            explicit FVerifyEntryCountTask(
+                const TSharedPtr<FUserAccessTokenDomain>& Self,
+                const Request::FVerifyEntryCountRequestPtr Request
+            );
+
+            FVerifyEntryCountTask(
+                const FVerifyEntryCountTask& From
+            );
+
+            virtual Gs2::Core::Model::FGs2ErrorPtr Action(
+                TSharedPtr<TSharedPtr<Gs2::Dictionary::Domain::Model::FUserAccessTokenDomain>> Result
+            ) override;
+        };
+        friend FVerifyEntryCountTask;
+
+        TSharedPtr<FAsyncTask<FVerifyEntryCountTask>> VerifyEntryCount(
+            Request::FVerifyEntryCountRequestPtr Request
+        );
+
+
+
         class GS2DICTIONARY_API FAddLikesTask final :
             public Gs2::Core::Util::TGs2Future<TArray<TSharedPtr<Gs2::Dictionary::Domain::Model::FLikeAccessTokenDomain>>>,
             public TSharedFromThis<FAddLikesTask>

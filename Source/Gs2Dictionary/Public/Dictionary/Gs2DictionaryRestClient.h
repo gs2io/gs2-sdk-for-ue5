@@ -90,6 +90,12 @@
 #include "Task/Rest/DeleteEntriesByStampTaskTask.h"
 #include "Request/VerifyEntryByStampTaskRequest.h"
 #include "Task/Rest/VerifyEntryByStampTaskTask.h"
+#include "Request/VerifyEntryCountRequest.h"
+#include "Task/Rest/VerifyEntryCountTask.h"
+#include "Request/VerifyEntryCountByUserIdRequest.h"
+#include "Task/Rest/VerifyEntryCountByUserIdTask.h"
+#include "Request/VerifyEntryCountByStampTaskRequest.h"
+#include "Task/Rest/VerifyEntryCountByStampTaskTask.h"
 #include "Request/DescribeLikesRequest.h"
 #include "Task/Rest/DescribeLikesTask.h"
 #include "Request/DescribeLikesByUserIdRequest.h"
@@ -274,6 +280,18 @@ namespace Gs2::Dictionary
 
         TSharedPtr<FAsyncTask<Task::Rest::FVerifyEntryByStampTaskTask>> VerifyEntryByStampTask(
             const Request::FVerifyEntryByStampTaskRequestPtr Request
+        ) const;
+
+        TSharedPtr<FAsyncTask<Task::Rest::FVerifyEntryCountTask>> VerifyEntryCount(
+            const Request::FVerifyEntryCountRequestPtr Request
+        ) const;
+
+        TSharedPtr<FAsyncTask<Task::Rest::FVerifyEntryCountByUserIdTask>> VerifyEntryCountByUserId(
+            const Request::FVerifyEntryCountByUserIdRequestPtr Request
+        ) const;
+
+        TSharedPtr<FAsyncTask<Task::Rest::FVerifyEntryCountByStampTaskTask>> VerifyEntryCountByStampTask(
+            const Request::FVerifyEntryCountByStampTaskRequestPtr Request
         ) const;
 
         TSharedPtr<FAsyncTask<Task::Rest::FDescribeLikesTask>> DescribeLikes(

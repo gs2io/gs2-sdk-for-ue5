@@ -246,6 +246,24 @@
 #include "Task/Rest/VerifyEntryByStampTaskTask.h"
 #include "Task/WebSocket/VerifyEntryByStampTaskTask.h"
 
+// VerifyEntryCount
+#include "Request/VerifyEntryCountRequest.h"
+#include "Result/VerifyEntryCountResult.h"
+#include "Task/Rest/VerifyEntryCountTask.h"
+#include "Task/WebSocket/VerifyEntryCountTask.h"
+
+// VerifyEntryCountByUserId
+#include "Request/VerifyEntryCountByUserIdRequest.h"
+#include "Result/VerifyEntryCountByUserIdResult.h"
+#include "Task/Rest/VerifyEntryCountByUserIdTask.h"
+#include "Task/WebSocket/VerifyEntryCountByUserIdTask.h"
+
+// VerifyEntryCountByStampTask
+#include "Request/VerifyEntryCountByStampTaskRequest.h"
+#include "Result/VerifyEntryCountByStampTaskResult.h"
+#include "Task/Rest/VerifyEntryCountByStampTaskTask.h"
+#include "Task/WebSocket/VerifyEntryCountByStampTaskTask.h"
+
 // DescribeLikes
 #include "Request/DescribeLikesRequest.h"
 #include "Result/DescribeLikesResult.h"

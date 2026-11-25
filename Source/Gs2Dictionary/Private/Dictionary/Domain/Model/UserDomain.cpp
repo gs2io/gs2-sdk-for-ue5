@@ -268,6 +268,50 @@ namespace Gs2::Dictionary::Domain::Model
         return Gs2::Core::Util::New<FAsyncTask<FDeleteEntriesTask>>(this->AsShared(), Request);
     }
 
+    FUserDomain::FVerifyEntryCountTask::FVerifyEntryCountTask(
+        const TSharedPtr<FUserDomain>& Self,
+        const Request::FVerifyEntryCountByUserIdRequestPtr Request
+    ): Self(Self), Request(Request)
+    {
+
+    }
+
+    FUserDomain::FVerifyEntryCountTask::FVerifyEntryCountTask(
+        const FVerifyEntryCountTask& From
+    ): TGs2Future(From), Self(From.Self), Request(From.Request)
+    {
+    }
+
+    Gs2::Core::Model::FGs2ErrorPtr FUserDomain::FVerifyEntryCountTask::Action(
+        TSharedPtr<TSharedPtr<Gs2::Dictionary::Domain::Model::FUserDomain>> Result
+    )
+    {
+        Request
+            ->WithContextStack((!Request->GetContextStack().IsSet() || Request->GetContextStack()->IsEmpty()) ? Self->Gs2->DefaultContextStack : Request->GetContextStack())
+            ->WithNamespaceName(Self->NamespaceName)
+            ->WithUserId(Self->UserId);
+        const auto Future = Self->Client->VerifyEntryCountByUserId(
+            Request
+        );
+        Future->StartSynchronousTask();
+        if (Future->GetTask().IsError())
+        {
+            return Future->GetTask().Error();
+        }
+        const auto ResultModel = Future->GetTask().Result();
+        Future->EnsureCompletion();
+
+        const auto Domain = Self;
+        *Result = Domain;
+        return nullptr;
+    }
+
+    TSharedPtr<FAsyncTask<FUserDomain::FVerifyEntryCountTask>> FUserDomain::VerifyEntryCount(
+        Request::FVerifyEntryCountByUserIdRequestPtr Request
+    ) {
+        return Gs2::Core::Util::New<FAsyncTask<FVerifyEntryCountTask>>(this->AsShared(), Request);
+    }
+
     FUserDomain::FAddLikesTask::FAddLikesTask(
         const TSharedPtr<FUserDomain>& Self,
         const Request::FAddLikesByUserIdRequestPtr Request

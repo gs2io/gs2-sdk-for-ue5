@@ -343,6 +343,33 @@ namespace Gs2::Dictionary
         );
     }
 
+    TSharedPtr<FAsyncTask<Task::WebSocket::FVerifyEntryCountTask>> FGs2DictionaryWebSocketClient::VerifyEntryCount(
+        const Request::FVerifyEntryCountRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::WebSocket::FVerifyEntryCountTask>>(
+            Session,
+            Request
+        );
+    }
+
+    TSharedPtr<FAsyncTask<Task::WebSocket::FVerifyEntryCountByUserIdTask>> FGs2DictionaryWebSocketClient::VerifyEntryCountByUserId(
+        const Request::FVerifyEntryCountByUserIdRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::WebSocket::FVerifyEntryCountByUserIdTask>>(
+            Session,
+            Request
+        );
+    }
+
+    TSharedPtr<FAsyncTask<Task::WebSocket::FVerifyEntryCountByStampTaskTask>> FGs2DictionaryWebSocketClient::VerifyEntryCountByStampTask(
+        const Request::FVerifyEntryCountByStampTaskRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::WebSocket::FVerifyEntryCountByStampTaskTask>>(
+            Session,
+            Request
+        );
+    }
+
     TSharedPtr<FAsyncTask<Task::WebSocket::FDescribeLikesTask>> FGs2DictionaryWebSocketClient::DescribeLikes(
         const Request::FDescribeLikesRequestPtr Request) const
     {

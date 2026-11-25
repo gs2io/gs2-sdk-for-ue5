@@ -90,6 +90,12 @@
 #include "Task/WebSocket/DeleteEntriesByStampTaskTask.h"
 #include "Request/VerifyEntryByStampTaskRequest.h"
 #include "Task/WebSocket/VerifyEntryByStampTaskTask.h"
+#include "Request/VerifyEntryCountRequest.h"
+#include "Task/WebSocket/VerifyEntryCountTask.h"
+#include "Request/VerifyEntryCountByUserIdRequest.h"
+#include "Task/WebSocket/VerifyEntryCountByUserIdTask.h"
+#include "Request/VerifyEntryCountByStampTaskRequest.h"
+#include "Task/WebSocket/VerifyEntryCountByStampTaskTask.h"
 #include "Request/DescribeLikesRequest.h"
 #include "Task/WebSocket/DescribeLikesTask.h"
 #include "Request/DescribeLikesByUserIdRequest.h"
@@ -274,6 +280,18 @@ namespace Gs2::Dictionary
 
         TSharedPtr<FAsyncTask<Task::WebSocket::FVerifyEntryByStampTaskTask>> VerifyEntryByStampTask(
             const Request::FVerifyEntryByStampTaskRequestPtr Request
+        ) const;
+
+        TSharedPtr<FAsyncTask<Task::WebSocket::FVerifyEntryCountTask>> VerifyEntryCount(
+            const Request::FVerifyEntryCountRequestPtr Request
+        ) const;
+
+        TSharedPtr<FAsyncTask<Task::WebSocket::FVerifyEntryCountByUserIdTask>> VerifyEntryCountByUserId(
+            const Request::FVerifyEntryCountByUserIdRequestPtr Request
+        ) const;
+
+        TSharedPtr<FAsyncTask<Task::WebSocket::FVerifyEntryCountByStampTaskTask>> VerifyEntryCountByStampTask(
+            const Request::FVerifyEntryCountByStampTaskRequestPtr Request
         ) const;
 
         TSharedPtr<FAsyncTask<Task::WebSocket::FDescribeLikesTask>> DescribeLikes(

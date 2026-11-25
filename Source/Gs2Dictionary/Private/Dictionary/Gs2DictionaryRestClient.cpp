@@ -343,6 +343,33 @@ namespace Gs2::Dictionary
         );
     }
 
+    TSharedPtr<FAsyncTask<Task::Rest::FVerifyEntryCountTask>> FGs2DictionaryRestClient::VerifyEntryCount(
+        const Request::FVerifyEntryCountRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::Rest::FVerifyEntryCountTask>>(
+            Session,
+            Request
+        );
+    }
+
+    TSharedPtr<FAsyncTask<Task::Rest::FVerifyEntryCountByUserIdTask>> FGs2DictionaryRestClient::VerifyEntryCountByUserId(
+        const Request::FVerifyEntryCountByUserIdRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::Rest::FVerifyEntryCountByUserIdTask>>(
+            Session,
+            Request
+        );
+    }
+
+    TSharedPtr<FAsyncTask<Task::Rest::FVerifyEntryCountByStampTaskTask>> FGs2DictionaryRestClient::VerifyEntryCountByStampTask(
+        const Request::FVerifyEntryCountByStampTaskRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::Rest::FVerifyEntryCountByStampTaskTask>>(
+            Session,
+            Request
+        );
+    }
+
     TSharedPtr<FAsyncTask<Task::Rest::FDescribeLikesTask>> FGs2DictionaryRestClient::DescribeLikes(
         const Request::FDescribeLikesRequestPtr Request) const
     {
