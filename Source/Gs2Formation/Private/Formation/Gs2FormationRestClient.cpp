@@ -613,6 +613,33 @@ namespace Gs2::Formation
         );
     }
 
+    TSharedPtr<FAsyncTask<Task::Rest::FVerifyFormTask>> FGs2FormationRestClient::VerifyForm(
+        const Request::FVerifyFormRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::Rest::FVerifyFormTask>>(
+            Session,
+            Request
+        );
+    }
+
+    TSharedPtr<FAsyncTask<Task::Rest::FVerifyFormByUserIdTask>> FGs2FormationRestClient::VerifyFormByUserId(
+        const Request::FVerifyFormByUserIdRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::Rest::FVerifyFormByUserIdTask>>(
+            Session,
+            Request
+        );
+    }
+
+    TSharedPtr<FAsyncTask<Task::Rest::FVerifyFormByStampTaskTask>> FGs2FormationRestClient::VerifyFormByStampTask(
+        const Request::FVerifyFormByStampTaskRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::Rest::FVerifyFormByStampTaskTask>>(
+            Session,
+            Request
+        );
+    }
+
     TSharedPtr<FAsyncTask<Task::Rest::FDescribePropertyFormsTask>> FGs2FormationRestClient::DescribePropertyForms(
         const Request::FDescribePropertyFormsRequestPtr Request) const
     {

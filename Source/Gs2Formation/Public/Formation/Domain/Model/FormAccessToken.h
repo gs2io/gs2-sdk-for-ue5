@@ -248,6 +248,34 @@ namespace Gs2::Formation::Domain::Model
             Request::FDeleteFormRequestPtr Request
         );
 
+
+
+        class GS2FORMATION_API FVerifyTask final :
+            public Gs2::Core::Util::TGs2Future<Gs2::Formation::Domain::Model::FFormAccessTokenDomain>,
+            public TSharedFromThis<FVerifyTask>
+        {
+            const TSharedPtr<FFormAccessTokenDomain> Self;
+            const Request::FVerifyFormRequestPtr Request;
+        public:
+            explicit FVerifyTask(
+                const TSharedPtr<FFormAccessTokenDomain>& Self,
+                const Request::FVerifyFormRequestPtr Request
+            );
+
+            FVerifyTask(
+                const FVerifyTask& From
+            );
+
+            virtual Gs2::Core::Model::FGs2ErrorPtr Action(
+                TSharedPtr<TSharedPtr<Gs2::Formation::Domain::Model::FFormAccessTokenDomain>> Result
+            ) override;
+        };
+        friend FVerifyTask;
+
+        TSharedPtr<FAsyncTask<FVerifyTask>> Verify(
+            Request::FVerifyFormRequestPtr Request
+        );
+
         static FString CreateCacheParentKey(
             TOptional<FString> NamespaceName,
             TOptional<FString> UserId,

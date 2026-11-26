@@ -439,6 +439,24 @@
 #include "Task/Rest/SetFormByStampSheetTask.h"
 #include "Task/WebSocket/SetFormByStampSheetTask.h"
 
+// VerifyForm
+#include "Request/VerifyFormRequest.h"
+#include "Result/VerifyFormResult.h"
+#include "Task/Rest/VerifyFormTask.h"
+#include "Task/WebSocket/VerifyFormTask.h"
+
+// VerifyFormByUserId
+#include "Request/VerifyFormByUserIdRequest.h"
+#include "Result/VerifyFormByUserIdResult.h"
+#include "Task/Rest/VerifyFormByUserIdTask.h"
+#include "Task/WebSocket/VerifyFormByUserIdTask.h"
+
+// VerifyFormByStampTask
+#include "Request/VerifyFormByStampTaskRequest.h"
+#include "Result/VerifyFormByStampTaskResult.h"
+#include "Task/Rest/VerifyFormByStampTaskTask.h"
+#include "Task/WebSocket/VerifyFormByStampTaskTask.h"
+
 // DescribePropertyForms
 #include "Request/DescribePropertyFormsRequest.h"
 #include "Result/DescribePropertyFormsResult.h"

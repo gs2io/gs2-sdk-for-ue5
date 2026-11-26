@@ -150,6 +150,12 @@
 #include "Task/WebSocket/AcquireActionToFormPropertiesByStampSheetTask.h"
 #include "Request/SetFormByStampSheetRequest.h"
 #include "Task/WebSocket/SetFormByStampSheetTask.h"
+#include "Request/VerifyFormRequest.h"
+#include "Task/WebSocket/VerifyFormTask.h"
+#include "Request/VerifyFormByUserIdRequest.h"
+#include "Task/WebSocket/VerifyFormByUserIdTask.h"
+#include "Request/VerifyFormByStampTaskRequest.h"
+#include "Task/WebSocket/VerifyFormByStampTaskTask.h"
 #include "Request/DescribePropertyFormsRequest.h"
 #include "Task/WebSocket/DescribePropertyFormsTask.h"
 #include "Request/DescribePropertyFormsByUserIdRequest.h"
@@ -450,6 +456,18 @@ namespace Gs2::Formation
 
         TSharedPtr<FAsyncTask<Task::WebSocket::FSetFormByStampSheetTask>> SetFormByStampSheet(
             const Request::FSetFormByStampSheetRequestPtr Request
+        ) const;
+
+        TSharedPtr<FAsyncTask<Task::WebSocket::FVerifyFormTask>> VerifyForm(
+            const Request::FVerifyFormRequestPtr Request
+        ) const;
+
+        TSharedPtr<FAsyncTask<Task::WebSocket::FVerifyFormByUserIdTask>> VerifyFormByUserId(
+            const Request::FVerifyFormByUserIdRequestPtr Request
+        ) const;
+
+        TSharedPtr<FAsyncTask<Task::WebSocket::FVerifyFormByStampTaskTask>> VerifyFormByStampTask(
+            const Request::FVerifyFormByStampTaskRequestPtr Request
         ) const;
 
         TSharedPtr<FAsyncTask<Task::WebSocket::FDescribePropertyFormsTask>> DescribePropertyForms(

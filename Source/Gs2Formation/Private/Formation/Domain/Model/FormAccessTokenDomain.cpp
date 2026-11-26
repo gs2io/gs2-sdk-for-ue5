@@ -684,6 +684,52 @@ namespace Gs2::Formation::Domain::Model
         return Gs2::Core::Util::New<FAsyncTask<FDeleteTask>>(this->AsShared(), Request);
     }
 
+    FFormAccessTokenDomain::FVerifyTask::FVerifyTask(
+        const TSharedPtr<FFormAccessTokenDomain>& Self,
+        const Request::FVerifyFormRequestPtr Request
+    ): Self(Self), Request(Request)
+    {
+
+    }
+
+    FFormAccessTokenDomain::FVerifyTask::FVerifyTask(
+        const FVerifyTask& From
+    ): TGs2Future(From), Self(From.Self), Request(From.Request)
+    {
+    }
+
+    Gs2::Core::Model::FGs2ErrorPtr FFormAccessTokenDomain::FVerifyTask::Action(
+        TSharedPtr<TSharedPtr<Gs2::Formation::Domain::Model::FFormAccessTokenDomain>> Result
+    )
+    {
+        Request
+            ->WithContextStack((!Request->GetContextStack().IsSet() || Request->GetContextStack()->IsEmpty()) ? Self->Gs2->DefaultContextStack : Request->GetContextStack())
+            ->WithNamespaceName(Self->NamespaceName)
+            ->WithAccessToken(Self->AccessToken->GetToken())
+            ->WithMoldModelName(Self->MoldModelName)
+            ->WithIndex(Self->Index);
+        const auto Future = Self->Client->VerifyForm(
+            Request
+        );
+        Future->StartSynchronousTask();
+        if (Future->GetTask().IsError())
+        {
+            return Future->GetTask().Error();
+        }
+        const auto ResultModel = Future->GetTask().Result();
+        Future->EnsureCompletion();
+
+        const auto Domain = Self;
+        *Result = Domain;
+        return nullptr;
+    }
+
+    TSharedPtr<FAsyncTask<FFormAccessTokenDomain::FVerifyTask>> FFormAccessTokenDomain::Verify(
+        Request::FVerifyFormRequestPtr Request
+    ) {
+        return Gs2::Core::Util::New<FAsyncTask<FVerifyTask>>(this->AsShared(), Request);
+    }
+
     FString FFormAccessTokenDomain::CreateCacheParentKey(
         TOptional<FString> NamespaceName,
         TOptional<FString> UserId,

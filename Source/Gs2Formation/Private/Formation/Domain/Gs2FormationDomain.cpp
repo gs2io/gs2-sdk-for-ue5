@@ -988,6 +988,27 @@ namespace Gs2::Formation::Domain
 
 
         }
+        if (Method == "VerifyFormByUserId") {
+            if (Result.IsEmpty())
+            {
+                return;
+            }
+            TSharedPtr<FJsonObject> RequestModelJson;
+            if (const TSharedRef<TJsonReader<>> JsonReader = TJsonReaderFactory<>::Create(Request);
+                !FJsonSerializer::Deserialize(JsonReader, RequestModelJson))
+            {
+                return;
+            }
+            TSharedPtr<FJsonObject> ResultModelJson;
+            if (const TSharedRef<TJsonReader<>> JsonReader = TJsonReaderFactory<>::Create(Result);
+                !FJsonSerializer::Deserialize(JsonReader, ResultModelJson))
+            {
+                return;
+            }
+            const auto RequestModel = Gs2::Formation::Request::FVerifyFormByUserIdRequest::FromJson(RequestModelJson);
+            const auto ResultModel = Gs2::Formation::Result::FVerifyFormByUserIdResult::FromJson(ResultModelJson);
+
+        }
     }
 
     void FGs2FormationDomain::UpdateCacheFromJobResult(

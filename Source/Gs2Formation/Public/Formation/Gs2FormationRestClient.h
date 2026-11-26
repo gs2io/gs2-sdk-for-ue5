@@ -150,6 +150,12 @@
 #include "Task/Rest/AcquireActionToFormPropertiesByStampSheetTask.h"
 #include "Request/SetFormByStampSheetRequest.h"
 #include "Task/Rest/SetFormByStampSheetTask.h"
+#include "Request/VerifyFormRequest.h"
+#include "Task/Rest/VerifyFormTask.h"
+#include "Request/VerifyFormByUserIdRequest.h"
+#include "Task/Rest/VerifyFormByUserIdTask.h"
+#include "Request/VerifyFormByStampTaskRequest.h"
+#include "Task/Rest/VerifyFormByStampTaskTask.h"
 #include "Request/DescribePropertyFormsRequest.h"
 #include "Task/Rest/DescribePropertyFormsTask.h"
 #include "Request/DescribePropertyFormsByUserIdRequest.h"
@@ -450,6 +456,18 @@ namespace Gs2::Formation
 
         TSharedPtr<FAsyncTask<Task::Rest::FSetFormByStampSheetTask>> SetFormByStampSheet(
             const Request::FSetFormByStampSheetRequestPtr Request
+        ) const;
+
+        TSharedPtr<FAsyncTask<Task::Rest::FVerifyFormTask>> VerifyForm(
+            const Request::FVerifyFormRequestPtr Request
+        ) const;
+
+        TSharedPtr<FAsyncTask<Task::Rest::FVerifyFormByUserIdTask>> VerifyFormByUserId(
+            const Request::FVerifyFormByUserIdRequestPtr Request
+        ) const;
+
+        TSharedPtr<FAsyncTask<Task::Rest::FVerifyFormByStampTaskTask>> VerifyFormByStampTask(
+            const Request::FVerifyFormByStampTaskRequestPtr Request
         ) const;
 
         TSharedPtr<FAsyncTask<Task::Rest::FDescribePropertyFormsTask>> DescribePropertyForms(

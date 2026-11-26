@@ -246,6 +246,34 @@ namespace Gs2::Formation::Domain::Model
             Request::FDeleteFormByUserIdRequestPtr Request
         );
 
+
+
+        class GS2FORMATION_API FVerifyTask final :
+            public Gs2::Core::Util::TGs2Future<Gs2::Formation::Domain::Model::FFormDomain>,
+            public TSharedFromThis<FVerifyTask>
+        {
+            const TSharedPtr<FFormDomain> Self;
+            const Request::FVerifyFormByUserIdRequestPtr Request;
+        public:
+            explicit FVerifyTask(
+                const TSharedPtr<FFormDomain>& Self,
+                const Request::FVerifyFormByUserIdRequestPtr Request
+            );
+
+            FVerifyTask(
+                const FVerifyTask& From
+            );
+
+            virtual Gs2::Core::Model::FGs2ErrorPtr Action(
+                TSharedPtr<TSharedPtr<Gs2::Formation::Domain::Model::FFormDomain>> Result
+            ) override;
+        };
+        friend FVerifyTask;
+
+        TSharedPtr<FAsyncTask<FVerifyTask>> Verify(
+            Request::FVerifyFormByUserIdRequestPtr Request
+        );
+
         static FString CreateCacheParentKey(
             TOptional<FString> NamespaceName,
             TOptional<FString> UserId,

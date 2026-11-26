@@ -613,6 +613,33 @@ namespace Gs2::Formation
         );
     }
 
+    TSharedPtr<FAsyncTask<Task::WebSocket::FVerifyFormTask>> FGs2FormationWebSocketClient::VerifyForm(
+        const Request::FVerifyFormRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::WebSocket::FVerifyFormTask>>(
+            Session,
+            Request
+        );
+    }
+
+    TSharedPtr<FAsyncTask<Task::WebSocket::FVerifyFormByUserIdTask>> FGs2FormationWebSocketClient::VerifyFormByUserId(
+        const Request::FVerifyFormByUserIdRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::WebSocket::FVerifyFormByUserIdTask>>(
+            Session,
+            Request
+        );
+    }
+
+    TSharedPtr<FAsyncTask<Task::WebSocket::FVerifyFormByStampTaskTask>> FGs2FormationWebSocketClient::VerifyFormByStampTask(
+        const Request::FVerifyFormByStampTaskRequestPtr Request) const
+    {
+        return Gs2::Core::Util::New<FAsyncTask<Task::WebSocket::FVerifyFormByStampTaskTask>>(
+            Session,
+            Request
+        );
+    }
+
     TSharedPtr<FAsyncTask<Task::WebSocket::FDescribePropertyFormsTask>> FGs2FormationWebSocketClient::DescribePropertyForms(
         const Request::FDescribePropertyFormsRequestPtr Request) const
     {
