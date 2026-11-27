@@ -20,6 +20,7 @@
 #include "Core/Gs2Object.h"
 #include "AcquireAction.h"
 #include "TimeSpan.h"
+#include "VerifyAction.h"
 
 namespace Gs2::Inbox::Model
 {
@@ -32,6 +33,7 @@ namespace Gs2::Inbox::Model
         TSharedPtr<FTimeSpan> ExpiresTimeSpanValue;
         TOptional<int64> ExpiresAtValue;
         TOptional<FString> MessageReceptionPeriodEventIdValue;
+        TSharedPtr<TArray<TSharedPtr<FVerifyAction>>> VerifyActionsValue;
         TOptional<int64> CreatedAtValue;
         TOptional<int64> RevisionValue;
 
@@ -49,6 +51,7 @@ namespace Gs2::Inbox::Model
         TSharedPtr<FGlobalMessageMaster> WithExpiresTimeSpan(const TSharedPtr<FTimeSpan> ExpiresTimeSpan);
         TSharedPtr<FGlobalMessageMaster> WithExpiresAt(const TOptional<int64> ExpiresAt);
         TSharedPtr<FGlobalMessageMaster> WithMessageReceptionPeriodEventId(const TOptional<FString> MessageReceptionPeriodEventId);
+        TSharedPtr<FGlobalMessageMaster> WithVerifyActions(const TSharedPtr<TArray<TSharedPtr<FVerifyAction>>> VerifyActions);
         TSharedPtr<FGlobalMessageMaster> WithCreatedAt(const TOptional<int64> CreatedAt);
         TSharedPtr<FGlobalMessageMaster> WithRevision(const TOptional<int64> Revision);
 
@@ -60,6 +63,7 @@ namespace Gs2::Inbox::Model
         TOptional<int64> GetExpiresAt() const;
         FString GetExpiresAtString() const;
         TOptional<FString> GetMessageReceptionPeriodEventId() const;
+        TSharedPtr<TArray<TSharedPtr<FVerifyAction>>> GetVerifyActions() const;
         TOptional<int64> GetCreatedAt() const;
         FString GetCreatedAtString() const;
         TOptional<int64> GetRevision() const;

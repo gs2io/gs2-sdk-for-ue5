@@ -114,6 +114,15 @@ namespace Gs2::Inbox::Task::Rest
             {
                 JsonRootObject->SetStringField(TEXT("messageReceptionPeriodEventId"), this->Request->GetMessageReceptionPeriodEventId().GetValue());
             }
+            if (this->Request->GetVerifyActions() != nullptr && this->Request->GetVerifyActions().IsValid())
+            {
+                TArray<TSharedPtr<FJsonValue>> v;
+                for (auto JsonObjectValue : *this->Request->GetVerifyActions())
+                {
+                    v.Add(MakeShared<FJsonValueObject>(JsonObjectValue->ToJson()));
+                }
+                JsonRootObject->SetArrayField(TEXT("verifyActions"), v);
+            }
             if (this->Request->GetContextStack().IsSet())
             {
                 JsonRootObject->SetStringField(TEXT("contextStack"), this->Request->GetContextStack().GetValue());

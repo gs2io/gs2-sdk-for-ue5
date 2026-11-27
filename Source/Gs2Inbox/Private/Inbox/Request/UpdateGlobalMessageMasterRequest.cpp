@@ -25,7 +25,8 @@ namespace Gs2::Inbox::Request
         ReadAcquireActionsValue(nullptr),
         ExpiresTimeSpanValue(nullptr),
         ExpiresAtValue(TOptional<int64>()),
-        MessageReceptionPeriodEventIdValue(TOptional<FString>())
+        MessageReceptionPeriodEventIdValue(TOptional<FString>()),
+        VerifyActionsValue(nullptr)
     {
     }
 
@@ -38,7 +39,8 @@ namespace Gs2::Inbox::Request
         ReadAcquireActionsValue(From.ReadAcquireActionsValue),
         ExpiresTimeSpanValue(From.ExpiresTimeSpanValue),
         ExpiresAtValue(From.ExpiresAtValue),
-        MessageReceptionPeriodEventIdValue(From.MessageReceptionPeriodEventIdValue)
+        MessageReceptionPeriodEventIdValue(From.MessageReceptionPeriodEventIdValue),
+        VerifyActionsValue(From.VerifyActionsValue)
     {
     }
 
@@ -106,6 +108,14 @@ namespace Gs2::Inbox::Request
         return SharedThis(this);
     }
 
+    TSharedPtr<FUpdateGlobalMessageMasterRequest> FUpdateGlobalMessageMasterRequest::WithVerifyActions(
+        const TSharedPtr<TArray<TSharedPtr<Model::FVerifyAction>>> VerifyActions
+    )
+    {
+        this->VerifyActionsValue = VerifyActions;
+        return SharedThis(this);
+    }
+
     TOptional<FString> FUpdateGlobalMessageMasterRequest::GetContextStack() const
     {
         return ContextStackValue;
@@ -161,6 +171,15 @@ namespace Gs2::Inbox::Request
     TOptional<FString> FUpdateGlobalMessageMasterRequest::GetMessageReceptionPeriodEventId() const
     {
         return MessageReceptionPeriodEventIdValue;
+    }
+
+    TSharedPtr<TArray<TSharedPtr<Model::FVerifyAction>>> FUpdateGlobalMessageMasterRequest::GetVerifyActions() const
+    {
+        if (!VerifyActionsValue.IsValid())
+        {
+            return nullptr;
+        }
+        return VerifyActionsValue;
     }
 
     TSharedPtr<FUpdateGlobalMessageMasterRequest> FUpdateGlobalMessageMasterRequest::FromJson(const TSharedPtr<FJsonObject> Data)
@@ -235,7 +254,20 @@ namespace Gs2::Inbox::Request
                         return TOptional(v);
                   }
                   return TOptional<FString>();
-              }() : TOptional<FString>());
+              }() : TOptional<FString>())
+          ->WithVerifyActions(Data->HasField(ANSI_TO_TCHAR("verifyActions")) ? [Data]() -> TSharedPtr<TArray<Model::FVerifyActionPtr>>
+              {
+                  if (!Data->HasTypedField<EJson::Array>(ANSI_TO_TCHAR("verifyActions")))
+                  {
+                      return nullptr;
+                  }
+                  auto v = MakeShared<TArray<Model::FVerifyActionPtr>>();
+                  for (auto JsonObjectValue : Data->GetArrayField(ANSI_TO_TCHAR("verifyActions")))
+                      {
+                      v->Add(Model::FVerifyAction::FromJson(JsonObjectValue->AsObject()));
+                      }
+                  return v;
+              }() : nullptr);
     }
 
     TSharedPtr<FJsonObject> FUpdateGlobalMessageMasterRequest::ToJson() const
@@ -277,6 +309,15 @@ namespace Gs2::Inbox::Request
         if (MessageReceptionPeriodEventIdValue.IsSet())
         {
             JsonRootObject->SetStringField(TEXT("messageReceptionPeriodEventId"), MessageReceptionPeriodEventIdValue.GetValue());
+        }
+        if (VerifyActionsValue != nullptr && VerifyActionsValue.IsValid())
+        {
+            TArray<TSharedPtr<FJsonValue>> v;
+            for (auto JsonObjectValue : *VerifyActionsValue)
+            {
+                v.Add(MakeShared<FJsonValueObject>(JsonObjectValue->ToJson()));
+            }
+            JsonRootObject->SetArrayField(TEXT("verifyActions"), v);
         }
         return JsonRootObject;
     }

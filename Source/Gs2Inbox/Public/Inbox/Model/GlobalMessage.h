@@ -20,6 +20,7 @@
 #include "Core/Gs2Object.h"
 #include "AcquireAction.h"
 #include "TimeSpan.h"
+#include "VerifyAction.h"
 
 namespace Gs2::Inbox::Model
 {
@@ -32,6 +33,7 @@ namespace Gs2::Inbox::Model
         TSharedPtr<FTimeSpan> ExpiresTimeSpanValue;
         TOptional<int64> ExpiresAtValue;
         TOptional<FString> MessageReceptionPeriodEventIdValue;
+        TSharedPtr<TArray<TSharedPtr<FVerifyAction>>> VerifyActionsValue;
 
     public:
         FGlobalMessage();
@@ -47,6 +49,7 @@ namespace Gs2::Inbox::Model
         TSharedPtr<FGlobalMessage> WithExpiresTimeSpan(const TSharedPtr<FTimeSpan> ExpiresTimeSpan);
         TSharedPtr<FGlobalMessage> WithExpiresAt(const TOptional<int64> ExpiresAt);
         TSharedPtr<FGlobalMessage> WithMessageReceptionPeriodEventId(const TOptional<FString> MessageReceptionPeriodEventId);
+        TSharedPtr<FGlobalMessage> WithVerifyActions(const TSharedPtr<TArray<TSharedPtr<FVerifyAction>>> VerifyActions);
 
         TOptional<FString> GetGlobalMessageId() const;
         TOptional<FString> GetName() const;
@@ -56,6 +59,7 @@ namespace Gs2::Inbox::Model
         TOptional<int64> GetExpiresAt() const;
         FString GetExpiresAtString() const;
         TOptional<FString> GetMessageReceptionPeriodEventId() const;
+        TSharedPtr<TArray<TSharedPtr<FVerifyAction>>> GetVerifyActions() const;
 
         static TOptional<FString> GetRegionFromGrn(const FString Grn);
         static TOptional<FString> GetOwnerIdFromGrn(const FString Grn);

@@ -25,6 +25,7 @@
 #include "Model/Received.h"
 #include "Model/TimeSpan.h"
 #include "Model/AcquireAction.h"
+#include "Model/VerifyAction.h"
 #include "Model/Config.h"
 #include "Model/VerifyActionResult.h"
 #include "Model/ConsumeActionResult.h"

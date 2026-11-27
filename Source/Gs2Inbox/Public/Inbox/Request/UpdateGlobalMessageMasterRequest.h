@@ -20,6 +20,7 @@
 #include "Dom/JsonObject.h"
 #include "../Model/AcquireAction.h"
 #include "../Model/TimeSpan.h"
+#include "../Model/VerifyAction.h"
 
 namespace Gs2::Inbox::Request
 {
@@ -35,6 +36,7 @@ namespace Gs2::Inbox::Request
         TSharedPtr<Model::FTimeSpan> ExpiresTimeSpanValue;
         TOptional<int64> ExpiresAtValue;
         TOptional<FString> MessageReceptionPeriodEventIdValue;
+        TSharedPtr<TArray<TSharedPtr<Model::FVerifyAction>>> VerifyActionsValue;
         
     public:
         
@@ -52,6 +54,7 @@ namespace Gs2::Inbox::Request
         TSharedPtr<FUpdateGlobalMessageMasterRequest> WithExpiresTimeSpan(const TSharedPtr<Model::FTimeSpan> ExpiresTimeSpan);
         TSharedPtr<FUpdateGlobalMessageMasterRequest> WithExpiresAt(const TOptional<int64> ExpiresAt);
         TSharedPtr<FUpdateGlobalMessageMasterRequest> WithMessageReceptionPeriodEventId(const TOptional<FString> MessageReceptionPeriodEventId);
+        TSharedPtr<FUpdateGlobalMessageMasterRequest> WithVerifyActions(const TSharedPtr<TArray<TSharedPtr<Model::FVerifyAction>>> VerifyActions);
 
         TOptional<FString> GetContextStack() const;
         TOptional<FString> GetNamespaceName() const;
@@ -60,7 +63,7 @@ namespace Gs2::Inbox::Request
         TSharedPtr<Model::FTimeSpan> GetExpiresTimeSpan() const;
         TOptional<int64> GetExpiresAt() const;
         FString GetExpiresAtString() const;
-        TOptional<FString> GetMessageReceptionPeriodEventId() const;
+        TOptional<FString> GetMessageReceptionPeriodEventId() const;TSharedPtr<TArray<TSharedPtr<Model::FVerifyAction>>> GetVerifyActions() const;
 
         static TSharedPtr<FUpdateGlobalMessageMasterRequest> FromJson(const TSharedPtr<FJsonObject> Data);
         TSharedPtr<FJsonObject> ToJson() const;
